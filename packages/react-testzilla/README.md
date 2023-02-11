@@ -1,2 +1,1 @@
-# react-testzilla
-
+# @testzilla/react-testzilla
