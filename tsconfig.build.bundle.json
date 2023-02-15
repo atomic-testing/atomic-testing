@@ -1,0 +1,11 @@
+{
+  // useful for bundling because esbuild can then tree-shake via the paths
+  "extends": "./tsconfig.build.regular.json",
+  "compilerOptions": {
+    "paths": {
+      "@testzilla/core": ["./packages/core/src"],
+      "@testzilla/integration-core": ["./packages/integration-core/src"],
+      "@testzilla/react": ["./packages/react-testzilla/src"]
+    }
+  }
+}
