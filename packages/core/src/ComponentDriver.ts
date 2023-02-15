@@ -1,29 +1,12 @@
-export type StepFunction = (work: () => Promise<void>) => Promise<void>;
-
-export async function defaultStep(work: () => Promise<void>): Promise<void> {
-  await work();
-}
-
-export async function defaultOnFinishUpdate(): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 0);
-  });
-}
-
-export interface IComponentDriverOption {
-  step: StepFunction;
-  // Call upon react has finished update
-  onFinishUpdate?: () => Promise<void>;
-}
+import { defaultOnFinishUpdate, defaultStep } from './defaultValues';
+import { IComponentDriverOption, StepFunction } from './types';
 
 export class ComponentDriver {
   protected readonly step: StepFunction;
   protected readonly onFinishUpdate: () => Promise<void>;
   readonly driverName: string = '';
 
-  constructor(readonly baseElement?: HTMLElement, option?: IComponentDriverOption) {
+  constructor(readonly baseElement: Element | null, option: Partial<IComponentDriverOption>) {
     this.step = option?.step ?? defaultStep;
     this.onFinishUpdate = option?.onFinishUpdate ?? defaultOnFinishUpdate;
   }
@@ -32,15 +15,21 @@ export class ComponentDriver {
     return Promise.resolve(!!this.baseElement);
   }
 
-  async text(): Promise<string | void | null> {
-    return Promise.resolve(this.baseElement?.textContent);
+  async text(): Promise<string | null> {
+    if (this.baseElement == null) {
+      return Promise.resolve(null);
+    }
+    return Promise.resolve(this.baseElement.textContent);
   }
 
-  get html(): string | void {
-    return this.baseElement?.outerHTML;
+  get html(): string | null {
+    if (this.baseElement == null) {
+      return null;
+    }
+    return this.baseElement.outerHTML;
   }
 
-  get dom(): HTMLElement | void {
+  get dom(): Element | null {
     return this.baseElement;
   }
 }
