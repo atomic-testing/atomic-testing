@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/react",
+  "name": "@testzilla/integration-driver-mui-v5",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,11 @@
     "testing",
     "react",
     "unit",
-    "integration"
+    "integration",
+    "mui",
+    "material-ui",
+    "v5",
+    "integration-driver"
   ],
   "license": "MIT",
   "repository": {
@@ -23,6 +27,8 @@
     "@testzilla/integration-core": "workspace:*"
   },
   "devDependencies": {
+    "@mui/material": "^5.0.0",
+    "@testzilla/react": "workspace:*",
     "@types/node": "^16.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
