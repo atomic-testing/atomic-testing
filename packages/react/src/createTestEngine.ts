@@ -1,16 +1,15 @@
-import { defaultOnFinishUpdate, ITestEngine, PartDriverLookup, ScenePart } from '@testzilla/core';
-import { IntegrationEngine } from '@testzilla/integration-core';
+import { defaultOnFinishUpdate, IntegrationTestEngine, ScenePart } from '@testzilla/core';
 import { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
 import { IReactTestEngineOption, IReactTestEngineResult } from './types';
 
-export function createTestEngine<T extends PartDriverLookup>(
+export function createTestEngine<T extends ScenePart>(
   node: ReactNode,
-  partDefinitions: ScenePart<T>,
+  partDefinitions: T,
   option?: Readonly<Partial<IReactTestEngineOption>>,
-): IReactTestEngineResult {
+): IReactTestEngineResult<T> {
   const rootEl = option?.rootElement ?? document.body;
   const step = option?.step ?? act;
   const onFinishUpdate = option?.onFinishUpdate ?? defaultOnFinishUpdate;
@@ -19,7 +18,7 @@ export function createTestEngine<T extends PartDriverLookup>(
   const reactRoot = createRoot(container);
   reactRoot.render(node);
 
-  const engine = new IntegrationEngine(
+  const engine = new IntegrationTestEngine(
     partDefinitions,
     rootEl,
     {

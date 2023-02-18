@@ -5,7 +5,8 @@
     "paths": {
       "@testzilla/core": ["./packages/core/src"],
       "@testzilla/integration-core": ["./packages/integration-core/src"],
-      "@testzilla/react": ["./packages/react-testzilla/src"]
+      "@testzilla/react": ["./packages/react-testzilla/src"],
+      "@testzilla/integration-driver-mui-v5": ["./packages/integration-driver-mui-v5/src"]
     }
   }
 }
