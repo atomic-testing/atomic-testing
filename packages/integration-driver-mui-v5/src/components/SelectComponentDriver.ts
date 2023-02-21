@@ -1,8 +1,10 @@
+import userEvent from '@testing-library/user-event';
 import {
   ComponentDriver,
   IInputDriver,
   ScenePart,
   ScenePartDriver,
+  SelectorRelativePosition,
   SelectorType,
   SimpleComponentDriver,
 } from '@testzilla/core';
@@ -16,6 +18,7 @@ export const selectComponentPart: ScenePart = {
     selector: {
       type: SelectorType.css,
       selector: '[role=presentation].MuiPopover-root [role=listbox].MuiList-root',
+      relative: SelectorRelativePosition.documentRoot,
     },
     driver: ComponentDriver,
   },
@@ -36,25 +39,21 @@ export class SelectComponentDriver
     if (this.baseElement == null) {
       return Promise.resolve(null);
     }
-
+    this.getInnerEngine()?.enforcePartExistence('input');
     const input = this.getInnerEngine()?.getParts?.()?.input;
-    if (input == null) {
-      return Promise.resolve(null);
-    }
-    const value = input.dom?.getAttribute('value') ?? null;
+    const value = input?.dom?.getAttribute('value') ?? null;
     return Promise.resolve(value);
   }
 
   async setValue(value: string | null): Promise<boolean> {
-    if (this.getInnerEngine() == null) {
+    if (this.baseElement == null) {
       return Promise.resolve(false);
     }
-
     let success = false;
     await this.step(async () => {
       this.getInnerEngine()?.enforcePartExistence('trigger');
       const trigger = this.getInnerEngine()?.getParts?.()?.trigger as SelectComponentScenePartDriver['trigger'];
-      (trigger?.dom as HTMLElement).click();
+      await userEvent.click(trigger?.dom as HTMLElement);
       return Promise.resolve();
     });
 
@@ -63,7 +62,7 @@ export class SelectComponentDriver
       const dropdown = this.getInnerEngine()?.getParts?.()?.dropdown as SelectComponentScenePartDriver['dropdown'];
       const option = dropdown?.dom?.querySelector(`[data-value="${value}"]`);
       if (option != null) {
-        (option as HTMLElement).click();
+        await userEvent.click(option);
         success = true;
       }
       return Promise.resolve();
@@ -72,7 +71,7 @@ export class SelectComponentDriver
     return Promise.resolve(success);
   }
 
-  override getInnerPartDefinition(): SelectComponentScenePart {
+  protected override getInnerPartDefinition(): SelectComponentScenePart {
     return selectComponentPart;
   }
 

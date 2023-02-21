@@ -3,6 +3,8 @@ import { PartSelectorType } from './selectors/PartSelectorType';
 
 export type StepFunction = (work: () => Promise<void>) => Promise<void>;
 
+export type PartName<T extends ScenePart> = keyof T;
+
 /**
  * Part name to driver definition map
  */
@@ -40,8 +42,8 @@ export interface ITestEngine<T extends ScenePart = {}> {
   updateBinding(): void;
   getParentEngine(): ITestEngine | null;
   getParts(): ScenePartDriver<T>;
-  enforcePartExistence(partName: keyof T | ReadonlyArray<keyof T>): void;
-  getMissingPartNames(partName?: keyof T | ReadonlyArray<keyof T>): ReadonlyArray<keyof T>;
+  enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): void;
+  getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): ReadonlyArray<PartName<T>>;
 }
 
 export interface ITestEngineOption {
@@ -51,6 +53,6 @@ export interface ITestEngineOption {
 
 export interface IComponentDriverOption {
   step: StepFunction;
-  engine: ITestEngine;
+  engine: ITestEngine<any>;
   onFinishUpdate?: () => Promise<void>;
 }
