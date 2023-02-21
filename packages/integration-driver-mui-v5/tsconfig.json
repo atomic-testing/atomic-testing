@@ -1,4 +1,14 @@
 {
   "extends": "../../tsconfig.json",
-  "exclude": ["node_modules", "declaration", "generator-build", "runtime"]
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "./dist", // Your outDir,
+    "emitDeclarationOnly": true,
+  },
+  "include": ["./src","__tests__/**/**.ts","__tests__/**/**.tsx"],
+  "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../react/" }
+  ],
 }

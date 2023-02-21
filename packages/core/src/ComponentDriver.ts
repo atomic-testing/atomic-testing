@@ -6,13 +6,13 @@ import {
   IComponentDriverOption,
   ITestEngine,
   ITestEngineOption,
+  PartName,
   ScenePart,
   ScenePartDriver,
   StepFunction,
 } from './types';
 import * as domUtil from './utils/domUtil';
 
-type PartName<T extends ScenePart> = keyof T;
 
 export abstract class ComponentDriver<InnerPart extends ScenePart = {}> {
   protected readonly step: StepFunction;
@@ -55,7 +55,7 @@ export abstract class ComponentDriver<InnerPart extends ScenePart = {}> {
   protected getInnerEngine(): ITestEngine<InnerPart> | null {
     let engine: ITestEngine<InnerPart> | null = this.innerPartEngine;
 
-    const part = this.getInnerPartDefinition();
+    const part = this.getInnerPartDefinition?.();
     if (part != this.lastBoundPartDefinition || this.baseElement != this.lastBoundBaseElement) {
       this.lastBoundPartDefinition = part;
       this.lastBoundBaseElement = this.baseElement;
@@ -70,9 +70,7 @@ export abstract class ComponentDriver<InnerPart extends ScenePart = {}> {
     return engine;
   }
 
-  protected getInnerPartDefinition(): Readonly<InnerPart> | null {
-    return null;
-  }
+  protected abstract getInnerPartDefinition(): Readonly<InnerPart> | null;
 
   get html(): string | null {
     if (this.baseElement == null) {
@@ -88,7 +86,7 @@ export abstract class ComponentDriver<InnerPart extends ScenePart = {}> {
   abstract get driverName(): string;
 }
 
-export class IntegrationTestEngine<T extends ScenePart> implements ITestEngine {
+export class IntegrationTestEngine<T extends ScenePart> implements ITestEngine<T> {
   private _parts: ScenePartDriver<T> = {} as ScenePartDriver<T>;
   private readonly _option: ITestEngineOption;
   constructor(
@@ -146,21 +144,21 @@ export class IntegrationTestEngine<T extends ScenePart> implements ITestEngine {
     throw new TooManyMatchingElementError(query);
   }
 
-  enforcePartExistence(partName: keyof T | ReadonlyArray<keyof T>): void {
+  enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): void {
     const missingPartNames = this.getMissingPartNames(partName);
     if (missingPartNames.length > 0) {
       throw new MissingPartError(missingPartNames);
     }
   }
 
-  getMissingPartNames(partName?: keyof T | ReadonlyArray<keyof T>): ReadonlyArray<keyof T> {
+  getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): ReadonlyArray<PartName<T>> {
     let partNames: ReadonlyArray<keyof T>;
     if (partName == null) {
       partNames = Object.keys(this._parts) as ReadonlyArray<keyof T>;
     } else {
       partNames = Array.isArray(partName) ? partName : [partName];
     }
-    return partNames.filter((x) => this._parts[x] != null);
+    return partNames.filter((x) => this._parts[x] == null);
   }
 
   getParts(): ScenePartDriver<T> {
