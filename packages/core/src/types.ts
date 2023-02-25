@@ -1,5 +1,5 @@
 import { ComponentDriver } from './ComponentDriver';
-import { PartSelectorType } from './selectors/PartSelectorType';
+import { PartLocatorType as PartLocatorType } from './locators/PartLocatorType';
 
 export type StepFunction = (work: () => Promise<void>) => Promise<void>;
 
@@ -15,7 +15,7 @@ export interface ScenePart {
     /**
      * Query which is used to locate the element
      */
-    selector?: PartSelectorType;
+    locator?: PartLocatorType;
 
     /**
      * The class of driver which is used to interact with the element
