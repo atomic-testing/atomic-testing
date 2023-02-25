@@ -11,11 +11,11 @@ import {
 
 export const selectComponentPart: ScenePart = {
   trigger: {
-    selector: '[role=button]',
+    locator: '[role=button]',
     driver: ComponentDriver,
   },
   dropdown: {
-    selector: {
+    locator: {
       type: SelectorType.css,
       selector: '[role=presentation].MuiPopover-root [role=listbox].MuiList-root',
       relative: SelectorRelativePosition.documentRoot,
@@ -23,7 +23,7 @@ export const selectComponentPart: ScenePart = {
     driver: ComponentDriver,
   },
   input: {
-    selector: 'input.MuiSelect-nativeInput',
+    locator: 'input.MuiSelect-nativeInput',
     driver: SimpleComponentDriver,
   },
 };

@@ -9,6 +9,9 @@ charm.ts
 pnpm-lock.yaml
 generated-dmmf.ts
 
+# experiments
+/packages/experiment-*
+
 # client
 packages/client/generator-build/
 packages/client/declaration/

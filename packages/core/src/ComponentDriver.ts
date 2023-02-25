@@ -1,7 +1,7 @@
 import { defaultOnFinishUpdate, defaultStep, defaultTestEngineOption } from './defaultValues';
 import { MissingPartError } from './errors/MissingPartError';
 import { TooManyMatchingElementError } from './errors/TooManyMatchingElementError';
-import { PartSelectorType, SelectorRelativePosition } from './selectors/PartSelectorType';
+import { LocatorRelativePosition, PartLocatorType } from './locators/PartLocatorType';
 import {
   IComponentDriverOption,
   ITestEngine,
@@ -12,7 +12,6 @@ import {
   StepFunction,
 } from './types';
 import * as domUtil from './utils/domUtil';
-
 
 export abstract class ComponentDriver<InnerPart extends ScenePart = {}> {
   protected readonly step: StepFunction;
@@ -107,7 +106,7 @@ export class IntegrationTestEngine<T extends ScenePart> implements ITestEngine<T
     const result: Partial<ScenePartDriver<T>> = {};
 
     for (const [nestedComponentName, scenePart] of Object.entries(this.partDefinitions)) {
-      const { selector: query = nestedComponentName as string, driver, option: optionOverride } = scenePart;
+      const { locator: query = nestedComponentName as string, driver, option: optionOverride } = scenePart;
 
       const option: IComponentDriverOption = {
         step: optionOverride?.step ?? this._option.step,
@@ -124,12 +123,12 @@ export class IntegrationTestEngine<T extends ScenePart> implements ITestEngine<T
     this._parts = result as ScenePartDriver<T>;
   }
 
-  findElement(el: Element, query: PartSelectorType): Element | null {
+  findElement(el: Element, query: PartLocatorType): Element | null {
     let elements: NodeListOf<Element>;
     if (typeof query === 'string') {
       elements = el.querySelectorAll(query);
     } else {
-      const baseEl = query.relative === SelectorRelativePosition.documentRoot ? document.documentElement : el;
+      const baseEl = query.relative === LocatorRelativePosition.documentRoot ? document.documentElement : el;
       elements = baseEl.querySelectorAll(query.selector);
     }
 

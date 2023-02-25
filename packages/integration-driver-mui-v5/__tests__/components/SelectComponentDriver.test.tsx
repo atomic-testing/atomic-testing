@@ -29,7 +29,7 @@ const Component = () => {
 
 const testScenePart = {
   select: {
-    selector: byDataTestId('select'),
+    locator: byDataTestId('select'),
     driver: SelectComponentDriver,
   },
 } satisfies ScenePart;
