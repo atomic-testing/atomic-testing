@@ -1,8 +1,7 @@
-import { StepFunction, TestEngine } from '@testzilla/core';
+import { ScenePart, StepFunction, TestEngine } from '@testzilla/core';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
-import { ScenePart } from '../../core/src/types';
 import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';
 

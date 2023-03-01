@@ -7,8 +7,7 @@ export class DOMInteractor implements IInteractor {
   }
 
   getElement(locator: LocatorChain): Optional<Element> {
-    const effectiveLocator = locatorUtil.getEffectiveLocator(locator);
-    const cssLocator = locatorUtil.toCssLocator(effectiveLocator);
+    const cssLocator = locatorUtil.toCssSelector(locator);
     return document.querySelector(cssLocator) ?? undefined;
   }
 

@@ -6,7 +6,16 @@
       "@testzilla/core": ["./packages/core/src"],
       "@testzilla/dom-core": ["./packages/dom-core/src"],
       "@testzilla/react": ["./packages/react/src"],
+      "@testzilla/playwright": ["./packages/playwright/src"],
+      
       "@testzilla/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"]
     }
-  }
+  },
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/dom-core" },
+    { "path": "./packages/react" },
+    { "path": "./packages/playwright" },
+    { "path": "./packages/component-driver-mui-v5" }
+  ]
 }

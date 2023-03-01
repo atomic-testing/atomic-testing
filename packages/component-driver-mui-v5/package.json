@@ -2,8 +2,12 @@
   "name": "@testzilla/component-driver-mui-v5",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/src/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsc",
     "test": "jest --maxConcurrency=1"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
