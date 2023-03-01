@@ -2,14 +2,14 @@ import { ComponentDriver } from './ComponentDriver';
 import { PartLocatorType as PartLocatorType } from './locators/PartLocatorType';
 
 export type StepFunction = (work: () => Promise<void>) => Promise<void>;
+export type Optional<T> = T | undefined;
+export type Nullable<T> = T | null;
 
 export type PartName<T extends ScenePart> = keyof T;
 
 /**
  * Part name to driver definition map
  */
-
-// export type ScenePart<T extends PartDriverLookup> = {
 export interface ScenePart {
   [partName: string]: {
     /**
@@ -30,29 +30,40 @@ export interface ScenePart {
   };
 }
 
-// export interface ScenePartDriver<T extends ScenePart> {
-//   [partName: string]: typeof ComponentDriver;
-// }
-
 export type ScenePartDriver<T extends ScenePart> = {
-  [gearName in keyof T]: InstanceType<T[gearName]['driver']> | null;
+  [partName in keyof T]: InstanceType<T[partName]['driver']>;
 };
 
-export interface ITestEngine<T extends ScenePart = {}> {
-  updateBinding(): void;
-  getParentEngine(): ITestEngine | null;
-  getParts(): ScenePartDriver<T>;
-  enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): void;
-  getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): ReadonlyArray<PartName<T>>;
+export type LocatorChain = readonly PartLocatorType[];
+
+export interface IClickOption {}
+
+export interface IInteractor {
+  click(locator: LocatorChain, option?: IClickOption): Promise<void>;
+  getAttribute(locator: LocatorChain): Promise<Optional<string>>;
+  getText(locator: LocatorChain): Promise<Optional<string>>;
+  exists(locator: LocatorChain): Promise<boolean>;
+  clone(): IInteractor;
 }
 
-export interface ITestEngineOption {
-  step: StepFunction;
-  onFinishUpdate?: () => Promise<void>;
+export interface IComponentDriverOption<T extends ScenePart = {}> {
+  perform: StepFunction;
+  parts?: T;
 }
 
-export interface IComponentDriverOption {
-  step: StepFunction;
-  engine: ITestEngine<any>;
-  onFinishUpdate?: () => Promise<void>;
+export interface IComponentDriver<T extends ScenePart = {}> {
+  readonly parts: ScenePartDriver<T>;
+
+  /**
+   * The locator which helps locate the root of the component
+   */
+  readonly locator: LocatorChain;
+
+  /**
+   * Function wrapper which performs a step
+   */
+  readonly perform: StepFunction;
+
+  enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void>;
+  getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): Promise<ReadonlyArray<PartName<T>>>;
 }

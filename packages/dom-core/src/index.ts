@@ -1,0 +1,1 @@
+export { DOMInteractor } from './DOMInteractor';
