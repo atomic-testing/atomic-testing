@@ -17,4 +17,5 @@ export type {
   StepFunction,
 } from './types';
 export * as domUtil from './utils/domUtil';
+export * as locatorUtil from './utils/locatorUtil';
 export * as timingUtil from './utils/timingUtil';
