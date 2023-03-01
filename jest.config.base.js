@@ -6,12 +6,18 @@ const packages = readdirSync(basePath).filter((name) => {
   return lstatSync(path.join(basePath, name)).isDirectory();
 });
 
-// jestconfig.base.js
+const tsJestConfig = [
+  'ts-jest',
+  {
+    tsconfig: '<rootDir>/tsconfig.test.json',
+  },
+];
+
 module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/__tests__'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
-    '^.+\\.tsx$': 'ts-jest',
+    '^.+\\.ts$': tsJestConfig,
+    '^.+\\.tsx$': tsJestConfig,
   },
   testRegex: '(/__tests__/.*.(test|spec)).(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],

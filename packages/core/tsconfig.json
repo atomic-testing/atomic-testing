@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
   "include": ["./src"],
   "compilerOptions": {
     "outDir": "./dist",
-    "composite": true
   },
 }

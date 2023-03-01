@@ -1,6 +1,7 @@
 import {
   ComponentDriver,
   defaultStep,
+  IComponentDriverOption,
   IInputDriver,
   IInteractor,
   LocatorChain,
@@ -9,7 +10,6 @@ import {
   ScenePart,
   ScenePartDriver,
 } from '@testzilla/core';
-import { IComponentDriverOption } from '@testzilla/core/src/types';
 
 export const selectComponentPart: ScenePart = {
   trigger: {
