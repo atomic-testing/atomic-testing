@@ -1,5 +1,5 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { byDataTestId, ITestEngine, ScenePart } from '@testzilla/core';
+import { byDataTestId, ScenePart, TestEngine } from '@testzilla/core';
 import { createTestEngine } from '@testzilla/react';
 import React, { useCallback } from 'react';
 
@@ -35,22 +35,20 @@ const testScenePart = {
 } satisfies ScenePart;
 
 describe('SelectComponentDriver', () => {
-  let testEngine: ITestEngine<typeof testScenePart>;
-  let cleanup: () => void;
+  let testEngine: TestEngine<typeof testScenePart>;
+  // let cleanup: () => void;
   beforeEach(() => {
-    const result = createTestEngine(<Component />, testScenePart);
-    testEngine = result.engine;
-    cleanup = result.cleanUp;
+    testEngine = createTestEngine(<Component />, testScenePart);
   });
 
   afterEach(() => {
-    cleanup();
+    // cleanup();
   });
 
   test('happy path selection', async () => {
     const targetValue = '30';
-    await testEngine.getParts().select?.setValue(targetValue);
-    const val = await testEngine.getParts().select?.getValue();
+    await testEngine.parts.select.setValue(targetValue);
+    const val = await testEngine.parts.select.getValue();
     expect(val).toBe(targetValue);
   });
 });

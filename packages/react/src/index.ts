@@ -1,2 +1,2 @@
 export { createTestEngine } from './createTestEngine';
-export type { IReactTestEngineOption, IReactTestEngineResult } from './types';
+export type { IReactTestEngineOption } from './types';

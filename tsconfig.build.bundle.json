@@ -4,9 +4,9 @@
   "compilerOptions": {
     "paths": {
       "@testzilla/core": ["./packages/core/src"],
-      "@testzilla/integration-core": ["./packages/integration-core/src"],
+      "@testzilla/dom-core": ["./packages/dom-core/src"],
       "@testzilla/react": ["./packages/react/src"],
-      "@testzilla/integration-driver-mui-v5": ["./packages/integration-driver-mui-v5/src"]
+      "@testzilla/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"]
     }
   }
 }

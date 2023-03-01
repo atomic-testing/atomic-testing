@@ -1,8 +1,10 @@
-import { defaultOnFinishUpdate, IntegrationTestEngine, ScenePart, StepFunction } from '@testzilla/core';
+import { StepFunction, TestEngine } from '@testzilla/core';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
-import { IReactTestEngineOption, IReactTestEngineResult } from './types';
+import { ScenePart } from '../../core/src/types';
+import { ReactInteractor } from './ReactInteractor';
+import { IReactTestEngineOption } from './types';
 
 const wrapAct: StepFunction = async (fn) => {
   await act(fn);
@@ -12,30 +14,18 @@ export function createTestEngine<T extends ScenePart>(
   node: JSX.Element,
   partDefinitions: T,
   option?: Readonly<Partial<IReactTestEngineOption>>,
-): IReactTestEngineResult<T> {
+): TestEngine<T> {
   const rootEl = option?.rootElement ?? document.body;
-  const step = option?.step ?? wrapAct;
-  const onFinishUpdate = option?.onFinishUpdate ?? defaultOnFinishUpdate;
+  const step = option?.perform ?? wrapAct;
   const container = rootEl.appendChild(document.createElement('div'));
 
   const root = createRoot(container);
   act(() => root.render(node));
 
-  const engine = new IntegrationTestEngine(
-    partDefinitions,
-    rootEl,
-    {
-      step,
-      onFinishUpdate,
-    },
-    option?.parentEngine,
-  );
+  const engine = new TestEngine([], new ReactInteractor(), {
+    perform: step,
+    parts: partDefinitions,
+  });
 
-  return {
-    engine,
-    cleanUp: () => {
-      act(() => root.unmount());
-      rootEl.removeChild(container);
-    },
-  };
+  return engine;
 }

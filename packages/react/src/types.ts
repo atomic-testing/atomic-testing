@@ -1,11 +1,5 @@
-import { ITestEngine, ITestEngineOption, ScenePart } from '@testzilla/core';
+import { IComponentDriverOption } from '@testzilla/core';
 
-export interface IReactTestEngineOption extends ITestEngineOption {
+export interface IReactTestEngineOption extends IComponentDriverOption {
   rootElement?: Element;
-  parentEngine?: ITestEngine;
-}
-
-export interface IReactTestEngineResult<T extends ScenePart> {
-  engine: ITestEngine<T>;
-  cleanUp: () => void;
 }
