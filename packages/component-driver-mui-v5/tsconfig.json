@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react",
-    "outDir": "./dist", // Your outDir,
+    "outDir": "./dist",
     "emitDeclarationOnly": true,
   },
   "include": ["./src","__tests__/**/**.ts","__tests__/**/**.tsx"],
