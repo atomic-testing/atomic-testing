@@ -13,7 +13,7 @@ const testScenePart = {
 
 test('happy path selection', async ({ page }) => {
   await page.goto(
-    'http://testzilla-mui-v5.s3-website-us-east-1.amazonaws.com/iframe.html?id=select--secondary-button&viewMode=story',
+    'http://testzilla-mui-v5.s3-website-us-east-1.amazonaws.com/select',
   );
   const testEngine = createTestEngine(page, testScenePart);
   const targetValue = '30';
