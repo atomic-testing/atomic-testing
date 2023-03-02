@@ -84,7 +84,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   // webServer: {
-  //   command: 'npm run start',
-  //   port: 3000,
+  //   command: 'cd .. && cd e2e-mui-v5 && pnpm start',
+  //   port: 6066,
   // },
 });
