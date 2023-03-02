@@ -1,3 +1,7 @@
 .sl/**/*
 .vscode
 pnpm-lock.yaml
+**/storybook-static/**/*
+**/coverage/**/*
+**/playwright-report/**/*
+**/dist/**/*

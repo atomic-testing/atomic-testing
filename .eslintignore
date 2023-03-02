@@ -23,3 +23,8 @@ packages/cli/prisma-client/
 packages/cli/install/
 packages/cli/preinstall/
 packages/cli/**/tmp-*
+
+**/storybook-static/**/*
+**/coverage/**/*
+**/playwright-report/**/*
+**/dist/**/*
