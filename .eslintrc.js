@@ -15,6 +15,13 @@ module.exports = {
     {
       files: ['*.ts'],
     },
+    {
+      // Avoid Cypress Mocha/Chai clash with Jest
+      files: ['packages/cypress/__tests__/**/*.test.ts'],
+      rules: {
+        'jest/valid-expect': 'off',
+      },
+    },
   ],
   extends: [
     'eslint:recommended',
