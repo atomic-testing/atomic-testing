@@ -2,12 +2,14 @@
   "name": "@testzilla/react",
   "version": "0.0.0",
   "description": "",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "tsc",
+    "postbuild": "node ../../scripts/postBuild.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",

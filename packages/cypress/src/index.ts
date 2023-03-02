@@ -1,2 +1,2 @@
 export { createTestEngine } from './createTestEngine';
-export { PlaywrightInteractor } from './PlaywrightInteractor';
+export { CypressInteractor } from './CypressInteractor';
