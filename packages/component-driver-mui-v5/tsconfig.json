@@ -3,7 +3,7 @@
   "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
   "include": ["./src"],
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "./build",
     "composite": true,
   },
   "references": [

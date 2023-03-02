@@ -1,10 +1,10 @@
 {
-  "name": "@testzilla/e2e-test-ui",
+  "name": "@testzilla/e2e-mui-v5",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "start-storybook -p 6066 -s public",
-    "build": "build-storybook -s public"
+    "build": "echo build-storybook -s public"
   },
   "eslintConfig": {
     "extends": [

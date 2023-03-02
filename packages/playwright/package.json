@@ -2,12 +2,14 @@
   "name": "@testzilla/playwright",
   "version": "0.0.0",
   "description": "TestZilla Playwright Adapter",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "tsc",
+    "postbuild": "node ../../scripts/postBuild.js",
     "test:e2e": "playwright test"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
