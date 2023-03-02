@@ -12,7 +12,7 @@ const testScenePart = {
 } satisfies ScenePart;
 
 test('happy path selection', async ({ page }) => {
-  await page.goto('http://localhost:6006/iframe.html?args=&id=mui-v5-select--secondary-button&viewMode=story');
+  await page.goto('http://testzilla-mui-v5.s3-website-us-east-1.amazonaws.com/iframe.html?id=select--secondary-button&viewMode=story');
   const testEngine = createTestEngine(page, testScenePart);
   const targetValue = '30';
   await testEngine.parts.select.setValue(targetValue);
