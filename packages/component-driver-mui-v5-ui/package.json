@@ -1,5 +1,6 @@
 {
-  "name": "@testzilla/e2e-mui-v5",
+  "name": "@testzilla/component-drivre-mui-v5-ui",
+  "description": "UI render to be tested against with e2e tests",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
