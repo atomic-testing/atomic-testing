@@ -52,17 +52,17 @@ export function App() {
 
   return (
     <React.Fragment>
-        <CssBaseline />
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        {
-          examples.map((example) => (
-            <Route key={example.path} path={example.path} element={example.ui} />
-          ))
-        }
-      </Route>
-    </Routes>
+      <CssBaseline />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          {
+            examples.map((example) => (
+              <Route key={example.path} path={example.path} element={example.ui} />
+            ))
+          }
+        </Route>
+      </Routes>
     </React.Fragment>
   );
 }
