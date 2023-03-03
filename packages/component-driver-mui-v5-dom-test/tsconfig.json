@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
+  "include": ["./src"],
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "./build",
+    "composite": true,
+  },
+  "references": [
+    { "path": "../core" },
+    { "path": "../dom-core" },
+    { "path": "../react" },
+    { "path": "../component-driver-mui-v5" },
+  ],
+}

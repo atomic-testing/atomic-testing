@@ -1,0 +1,58 @@
+{
+  "name": "@testzilla/component-driver-mui-v5-dom-test",
+  "version": "0.0.0",
+  "description": "Examples and tests for @testzilla/component-driver-mui-v5",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "node ../../scripts/postBuild.js",
+    "test": "jest --maxConcurrency=1"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "keywords": [
+    "testing",
+    "react",
+    "unit",
+    "integration",
+    "mui",
+    "material-ui",
+    "v5",
+    "integration-driver"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tangentlin/testzilla.git"
+  },
+  "dependencies": {
+    "@testzilla/core": "workspace:*",
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^9.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "@testzilla/react": "workspace:*",
+    "@testzilla/component-driver-mui-v5": "workspace:*",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^16.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "jest": "^29.2.0",
+    "jest-environment-jsdom": "^29.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^4.9.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
+  }
+}

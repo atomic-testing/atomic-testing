@@ -11,12 +11,9 @@ const testScenePart = {
 } satisfies ScenePart;
 
 it('happy path selection', async () => {
-  cy.visit( 
-    'http://testzilla-mui-v5.s3-website-us-east-1.amazonaws.com/select',
-    {
-      failOnStatusCode: false,
-    }
-  );
+  cy.visit('http://testzilla-mui-v5.s3-website-us-east-1.amazonaws.com/select', {
+    failOnStatusCode: false,
+  });
   const testEngine = createTestEngine(testScenePart);
   const targetValue = '30';
   await testEngine.parts.select.setValue(targetValue);

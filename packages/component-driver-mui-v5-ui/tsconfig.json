@@ -23,5 +23,11 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "references": [
+    { "path": "../core" },
+    { "path": "../dom-core" },
+    { "path": "../react" },
+    { "path": "../component-driver-mui-v5-dom-test" },
+  ],
 }
