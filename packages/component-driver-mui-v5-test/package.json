@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/component-driver-mui-v5-dom-test",
+  "name": "@testzilla/component-driver-mui-v5-test",
   "version": "0.0.0",
   "description": "Examples and tests for @testzilla/component-driver-mui-v5",
   "main": "dist/index.js",
