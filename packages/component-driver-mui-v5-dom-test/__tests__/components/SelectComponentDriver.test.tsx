@@ -3,7 +3,7 @@ import React from 'react';
 
 import { BasicSelectExample, basicSelectExampleScenePart } from '../../src/examples/Select.examples';
 
-describe('SelectComponentDriver', () => {  
+describe('SelectComponentDriver', () => {
   test('basic select', async () => {
     const testEngine = createTestEngine(<BasicSelectExample />, basicSelectExampleScenePart);
     const targetValue = '30';
