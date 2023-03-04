@@ -44,5 +44,5 @@ export const selectExamples = [
     title: 'Basic Select',
     scene: basicSelectExampleScenePart,
     ui: <BasicSelectExample />,
-  }
+  },
 ] satisfies IExampleUnit<ScenePart, JSX.Element>[];
