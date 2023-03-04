@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Outlet, Link, useLocation } from "react-router-dom";
-import { examples } from './examples';
+import { tocs } from './directory';
 import { Home } from './Home';
 import { Link as MuiLink } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -25,14 +25,14 @@ const Content = styled.div`
 export const Layout:React.FunctionComponent = () => {
   const location = useLocation();
 
-  const title = examples.find((example) => example.path === location.pathname)?.label || 'Home';
+  const title = tocs.find((example) => example.path === location.pathname)?.label || 'Home';
 
   return (
     <Container>
       <Nav>
         <ul>
           {
-            examples.map((example) => (
+            tocs.map((example) => (
               <li key={example.path}>
                 <MuiLink component={Link} to={example.path} >{example.label}</MuiLink>
               </li>
@@ -57,7 +57,7 @@ export function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           {
-            examples.map((example) => (
+            tocs.map((example) => (
               <Route key={example.path} path={example.path} element={example.ui} />
             ))
           }

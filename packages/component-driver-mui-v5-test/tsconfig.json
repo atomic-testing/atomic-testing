@@ -3,7 +3,7 @@
   "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
   "include": ["./src"],
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "outDir": "./build",
     "composite": true,
   },
@@ -12,5 +12,6 @@
     { "path": "../dom-core" },
     { "path": "../react" },
     { "path": "../component-driver-mui-v5" },
+    { "path": "../playwright" },
   ],
 }

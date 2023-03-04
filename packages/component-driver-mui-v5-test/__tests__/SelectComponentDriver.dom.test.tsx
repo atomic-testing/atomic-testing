@@ -1,7 +1,7 @@
 import { createTestEngine } from '@testzilla/react';
 import React from 'react';
 
-import { BasicSelectExample, basicSelectExampleScenePart } from '../../src/examples/Select.examples';
+import { BasicSelectExample, basicSelectExampleScenePart } from '../src/examples/Select.examples';
 
 describe('SelectComponentDriver', () => {
   test('basic select', async () => {
