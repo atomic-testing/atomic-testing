@@ -67,3 +67,7 @@ export interface IComponentDriver<T extends ScenePart = {}> {
   enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void>;
   getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): Promise<ReadonlyArray<PartName<T>>>;
 }
+
+export interface ITestEngine<T extends ScenePart = {}> extends IComponentDriver<T> {
+  cleanUp(): Promise<void>;
+}
