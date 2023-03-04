@@ -1,10 +1,7 @@
-import { MenuItem, Select } from '@mui/material';
+import { selectExamples } from '@testzilla/component-driver-mui-v5-dom-test';
 import React from 'react';
+import { ExampleList } from '../components/ExampleList';
 
 export const SelectExample: React.FunctionComponent = () => (
-  <Select data-testid="demo-simple-select" label="Age">
-    <MenuItem value={10}>Ten</MenuItem>
-    <MenuItem value={20}>Twenty</MenuItem>
-    <MenuItem value={30}>Thirty</MenuItem>
-  </Select>
+  <ExampleList examples={selectExamples} />
 );

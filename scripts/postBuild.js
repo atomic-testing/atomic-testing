@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const skipPostBuildPackages = ['e2e-mui-v5'];
+const skipPostBuildPackages = [
+  'component-driver-mui-v5-ui',
+  'component-driver-mui-v5-cypress-test',
+  'component-driver-mui-v5-playwright-test',
+];
 
 function postBuild(dir) {
   // Rename package/build/src to package/dist
