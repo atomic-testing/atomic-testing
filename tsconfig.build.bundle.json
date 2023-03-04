@@ -9,7 +9,7 @@
       "@testzilla/playwright": ["./packages/playwright/src"],
       
       "@testzilla/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"],
-      "@testzilla/component-driver-mui-v5-dom-test": ["./packages/component-driver-mui-v5-dom-test/src"]
+      "@testzilla/component-driver-mui-v5-dom-test": ["./packages/component-driver-mui-v5-test/src"]
     }
   },
   "references": [
@@ -18,6 +18,6 @@
     { "path": "./packages/react" },
     { "path": "./packages/playwright" },
     { "path": "./packages/component-driver-mui-v5" },
-    { "path": "./packages/component-driver-mui-v5-dom-test" }
+    { "path": "./packages/component-driver-mui-v5-test" }
   ]
 }

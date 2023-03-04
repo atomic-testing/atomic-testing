@@ -1,7 +1,6 @@
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { SelectComponentDriver } from '@testzilla/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@testzilla/core';
-import { IComponentDriver, ITestEngine } from '@testzilla/core/src/types';
 import React, { useCallback } from 'react';
 
 export const basicSelectExampleData = {
@@ -17,24 +16,27 @@ export const basicSelectExampleData = {
  * @see https://mui.com/material-ui/react-select/#basic-select
  */
 export const BasicSelectExample = () => {
-  const [value, setValue] = React.useState('20');
+  const [value, setValue] = React.useState('');
   const onChange = useCallback((event: SelectChangeEvent<string>) => {
     setValue(event.target.value);
   }, []);
   return (
-    <Select data-testid="select" value={value} onChange={onChange}>
-      {basicSelectExampleData.options.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
-        </MenuItem>
-      ))}
-    </Select>
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">Age</InputLabel>
+      <Select data-testid="demo-simple-select" labelId="demo-simple-select-label" value={value} onChange={onChange}>
+        {basicSelectExampleData.options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
 export const basicSelectExampleScenePart = {
   select: {
-    locator: byDataTestId('select'),
+    locator: byDataTestId('demo-simple-select'),
     driver: SelectComponentDriver,
   },
 } satisfies ScenePart;

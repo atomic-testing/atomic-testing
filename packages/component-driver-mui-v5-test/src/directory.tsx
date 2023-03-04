@@ -2,13 +2,13 @@ import React from 'react';
 
 import { SelectExample } from './views/Select';
 
-interface IExample {
+interface IToc {
   label: string;
   path: string;
   ui: JSX.Element;
 }
 
-export const examples: IExample[] = [
+export const tocs: IToc[] = [
   {
     label: 'Button',
     path: '/button',
