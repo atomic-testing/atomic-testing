@@ -1,5 +1,4 @@
-import { ScenePart } from "@testzilla/core";
-import { IExampleUnit } from "@testzilla/core";
+import { IExampleUnit, ScenePart } from "@testzilla/core";
 import React from "react";
 
 export interface ExampleListProps {

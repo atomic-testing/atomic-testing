@@ -1,6 +1,7 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { SelectComponentDriver } from '@testzilla/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@testzilla/core';
+import { IComponentDriver, ITestEngine } from '@testzilla/core/src/types';
 import React, { useCallback } from 'react';
 
 export const basicSelectExampleData = {
@@ -38,10 +39,10 @@ export const basicSelectExampleScenePart = {
   },
 } satisfies ScenePart;
 
-export const selectExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
+export const selectExamples = [
   {
     title: 'Basic Select',
     scene: basicSelectExampleScenePart,
     ui: <BasicSelectExample />,
-  },
-];
+  }
+] satisfies IExampleUnit<ScenePart, JSX.Element>[];
