@@ -9,6 +9,7 @@
   "references": [
     { "path": "../core" },
     { "path": "../dom-core" },
+    { "path": "../component-driver-html" },
     { "path": "../react" }
   ],
 }

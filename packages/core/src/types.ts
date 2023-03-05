@@ -20,7 +20,6 @@ export interface ScenePart {
     /**
      * The class of driver which is used to interact with the element
      */
-    //driver: T[partName];
     driver: typeof ComponentDriver<any>;
 
     /**

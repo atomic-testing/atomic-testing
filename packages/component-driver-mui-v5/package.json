@@ -29,7 +29,8 @@
     "url": "https://github.com/tangentlin/testzilla.git"
   },
   "dependencies": {
-    "@testzilla/core": "workspace:*"
+    "@testzilla/core": "workspace:*",
+    "@testzilla/component-driver-html": "workspace:*"
   },
   "devDependencies": {
     "@emotion/react": "^11.6.0",
