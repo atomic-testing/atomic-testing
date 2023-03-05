@@ -47,7 +47,7 @@ export class SelectComponentDriver
 
   async getValue(): Promise<string | null> {
     await this.enforcePartExistence('input');
-    const value = await this.interactor.getAttribute(this.parts.input.locator);
+    const value = await this.interactor.getAttribute(this.parts.input.locator, 'value');
     return value ?? null;
   }
 

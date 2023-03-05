@@ -37,10 +37,20 @@ export type ScenePartDriver<T extends ScenePart> = {
 export type LocatorChain = readonly PartLocatorType[];
 
 export interface IClickOption {}
+export interface IEnterTextOption {}
 
 export interface IInteractor {
-  click(locator: LocatorChain, option?: IClickOption): Promise<void>;
-  getAttribute(locator: LocatorChain): Promise<Optional<string>>;
+  click(locator: LocatorChain, option?: Partial<IClickOption>): Promise<void>;
+
+  /**
+   * Type text into the desired element
+   * @param locator
+   * @param value
+   */
+  enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption>): Promise<void>;
+
+  getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
+  setAttribute(locator: LocatorChain, name: string, value: string): Promise<void>;
   getText(locator: LocatorChain): Promise<Optional<string>>;
   exists(locator: LocatorChain): Promise<boolean>;
   clone(): IInteractor;

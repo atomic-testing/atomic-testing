@@ -1,10 +1,9 @@
+/* eslint @typescript-eslint/no-unsafe-argument: 0 */
 const fs = require('fs');
 const path = require('path');
 
 const skipPostBuildPackages = [
   'component-driver-mui-v5-ui',
-  'component-driver-mui-v5-cypress-test',
-  'component-driver-mui-v5-playwright-test',
 ];
 
 /**

@@ -1,8 +1,14 @@
 import { Page } from '@playwright/test';
 import { IClickOption, IInteractor, LocatorChain, locatorUtil, Optional } from '@testzilla/core';
+import { IEnterTextOption } from '@testzilla/core/src/types';
 
 export class PlaywrightInteractor implements IInteractor {
   constructor(public readonly page: Page) {}
+
+  async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    await this.page.locator(cssLocator).type(text);
+  }
 
   async click(locator: LocatorChain, option?: IClickOption): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
@@ -13,6 +19,10 @@ export class PlaywrightInteractor implements IInteractor {
     const cssLocator = locatorUtil.toCssSelector(locator);
     const value = await this.page.locator(cssLocator).getAttribute('value');
     return value ?? undefined;
+  }
+
+  setAttribute(locator: LocatorChain, name: string, value: string): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 
   async getText(locator: LocatorChain): Promise<Optional<string>> {
