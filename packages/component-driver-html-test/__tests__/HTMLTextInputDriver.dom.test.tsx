@@ -7,8 +7,8 @@ describe('HTMLTextInput', () => {
   test('basic input', async () => {
     const testEngine = createTestEngine(<BasicTextInputExample />, basicTextInputExampleScenePart);
     const targetValue = 'abc';
-    await testEngine.parts.select.setValue(targetValue);
-    const val = await testEngine.parts.select.getValue();
+    await testEngine.parts.input.setValue(targetValue);
+    const val = await testEngine.parts.input.getValue();
     expect(val).toBe(targetValue);
   });
 });

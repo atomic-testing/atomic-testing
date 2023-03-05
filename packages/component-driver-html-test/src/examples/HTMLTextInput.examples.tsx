@@ -16,7 +16,7 @@ export const BasicTextInputExample = () => {
 };
 
 export const basicTextInputExampleScenePart = {
-  select: {
+  input: {
     locator: byDataTestId('basic-text-input'),
     driver: HTMLTextInputDriver,
   },

@@ -3,10 +3,10 @@ import { createTestEngine } from '@testzilla/playwright'
 import { basicTextInputExampleScenePart } from '../src/examples';
 
 test('HTMLTextInput', async ({ page }) => {
-  await page.goto('/select');
+  await page.goto('/input');
   const testEngine = createTestEngine(page, basicTextInputExampleScenePart);
   const targetValue = 'abc';
-  await testEngine.parts.select.setValue(targetValue);
-  const val = await testEngine.parts.select.getValue();
-  expect(val).toBe(targetValue);
+  await testEngine.parts.input.setValue(targetValue);
+    const val = await testEngine.parts.input.getValue();
+    expect(val).toBe(targetValue);
 });

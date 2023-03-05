@@ -17,7 +17,7 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
   }
 
   async getValue(): Promise<string | null> {
-    const value = await this.interactor.getAttribute(this.locator, 'value');
+    const value = await this.interactor.getInputValue(this.locator);
     return value ?? null;
   }
 

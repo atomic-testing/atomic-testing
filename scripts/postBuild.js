@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 const skipPostBuildPackages = [
-  'component-driver-mui-v5-ui',
+  'component-driver-html-test',
+  'component-driver-mui-v5-test'
 ];
 
 /**

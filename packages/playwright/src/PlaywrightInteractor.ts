@@ -4,6 +4,11 @@ import { IEnterTextOption } from '@testzilla/core/src/types';
 
 export class PlaywrightInteractor implements IInteractor {
   constructor(public readonly page: Page) {}
+  async getInputValue(locator: LocatorChain): Promise<Optional<string>> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    console.log(cssLocator);
+    return this.page.locator(cssLocator).inputValue();
+  }
 
   async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
