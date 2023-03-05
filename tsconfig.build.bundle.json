@@ -8,8 +8,11 @@
       "@testzilla/react": ["./packages/react/src"],
       "@testzilla/playwright": ["./packages/playwright/src"],
       
+      "@testzilla/component-driver-html": ["./packages/component-driver-html/src"],
+      "@testzilla/component-driver-html-test": ["./packages/component-driver-html-test/src"],
+      
       "@testzilla/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"],
-      "@testzilla/component-driver-mui-v5-dom-test": ["./packages/component-driver-mui-v5-test/src"]
+      "@testzilla/component-driver-mui-v5-test": ["./packages/component-driver-mui-v5-test/src"]
     }
   },
   "references": [
