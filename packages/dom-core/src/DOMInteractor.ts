@@ -14,7 +14,6 @@ export class DOMInteractor implements IInteractor {
     const el = this.getElement(locator);
     if (el != null) {
       await userEvent.type(el, text);
-      console.log(el.outerHTML);
     }
   }
 

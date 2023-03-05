@@ -21,10 +21,21 @@ export function createTestEngine<T extends ScenePart>(
   const root = createRoot(container);
   act(() => root.render(node));
 
-  const engine = new TestEngine([], new ReactInteractor(), {
-    perform: step,
-    parts: partDefinitions,
-  });
+  const cleanup = () => {
+    act(() => root.unmount());
+    rootEl.removeChild(container);
+    return Promise.resolve();
+  };
+
+  const engine = new TestEngine(
+    [],
+    new ReactInteractor(),
+    {
+      perform: step,
+      parts: partDefinitions,
+    },
+    cleanup,
+  );
 
   return engine;
 }

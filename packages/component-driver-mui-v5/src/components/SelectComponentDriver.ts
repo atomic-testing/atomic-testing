@@ -1,3 +1,4 @@
+import { HTMLTextInputDriver } from '@testzilla/component-driver-html';
 import {
   ComponentDriver,
   defaultStep,
@@ -11,7 +12,7 @@ import {
   ScenePartDriver,
 } from '@testzilla/core';
 
-export const selectComponentPart: ScenePart = {
+export const selectComponentPart = {
   trigger: {
     locator: '[role=button]',
     driver: ComponentDriver,
@@ -26,9 +27,9 @@ export const selectComponentPart: ScenePart = {
   },
   input: {
     locator: 'input.MuiSelect-nativeInput',
-    driver: ComponentDriver,
+    driver: HTMLTextInputDriver,
   },
-};
+} satisfies ScenePart;
 
 export type SelectComponentScenePart = typeof selectComponentPart;
 export type SelectComponentScenePartDriver = ScenePartDriver<SelectComponentScenePart>;
@@ -47,7 +48,7 @@ export class SelectComponentDriver
 
   async getValue(): Promise<string | null> {
     await this.enforcePartExistence('input');
-    const value = await this.interactor.getAttribute(this.parts.input.locator, 'value');
+    const value = await this.parts.input.getValue();
     return value ?? null;
   }
 

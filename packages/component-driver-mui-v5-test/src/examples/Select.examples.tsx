@@ -11,10 +11,6 @@ export const basicSelectExampleData = {
   ],
 };
 
-/**
- * Basic select example from MUI's website
- * @see https://mui.com/material-ui/react-select/#basic-select
- */
 export const BasicSelectExample = () => {
   const [value, setValue] = React.useState('');
   const onChange = useCallback((event: SelectChangeEvent<string>) => {
@@ -41,10 +37,16 @@ export const basicSelectExampleScenePart = {
   },
 } satisfies ScenePart;
 
+/**
+ * Basic select example from MUI's website
+ * @see https://mui.com/material-ui/react-select/#basic-select
+ */
+export const basicSelectExample: IExampleUnit<typeof basicSelectExampleScenePart, JSX.Element> = {
+  title: 'Basic Select',
+  scene: basicSelectExampleScenePart,
+  ui: <BasicSelectExample />,
+};
+
 export const selectExamples = [
-  {
-    title: 'Basic Select',
-    scene: basicSelectExampleScenePart,
-    ui: <BasicSelectExample />,
-  },
+  basicSelectExample,
 ] satisfies IExampleUnit<ScenePart, JSX.Element>[];
