@@ -9,4 +9,5 @@ test('happy path selection', async ({ page }) => {
   await testEngine.parts.select.setValue(targetValue);
   const val = await testEngine.parts.select.getValue();
   expect(val).toBe(targetValue);
+  await testEngine.cleanUp();
 });

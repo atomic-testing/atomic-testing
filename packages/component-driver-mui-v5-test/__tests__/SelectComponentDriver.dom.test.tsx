@@ -10,5 +10,6 @@ describe('SelectComponentDriver', () => {
     await testEngine.parts.select.setValue(targetValue);
     const val = await testEngine.parts.select.getValue();
     expect(val).toBe(targetValue);
+    await testEngine.cleanUp();
   });
 });
