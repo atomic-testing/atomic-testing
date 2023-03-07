@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { HTMLInputExample } from './views/Select';
+import { HTMLInputExample } from './views/HTMLInputExample';
+import { HTMLRadioButtonGroupExample } from './views/HTMLRadioButtonGroupExample';
 
 interface IToc {
   label: string;
@@ -13,5 +14,10 @@ export const tocs: IToc[] = [
     label: 'Text Input',
     path: '/input',
     ui: <HTMLInputExample />,
+  },
+  {
+    label: 'Radio Buttons',
+    path: '/radio-buttons',
+    ui: <HTMLRadioButtonGroupExample />,
   },
 ];

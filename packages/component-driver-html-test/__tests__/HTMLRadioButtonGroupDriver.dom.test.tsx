@@ -1,11 +1,11 @@
 import { createTestEngine } from '@testzilla/react';
-import { textInputExamples } from '../src/examples';
+import { radioButtonGroupExamples } from '../src/examples/HTMLRadioButtonGroup.examples';
 
-describe('HTMLTextInputDriver', () => {
-  textInputExamples.forEach((example) => {
+describe('HTMLRadioButtonGroupDriver', () => {
+  radioButtonGroupExamples.forEach((example) => {
     test(`${example.title}`, async () => {
       const testEngine = createTestEngine(example.ui, example.scene);
-      const targetValue = 'abc';
+      const targetValue = '3';
       await testEngine.parts.input.setValue(targetValue);
       const val = await testEngine.parts.input.getValue();
       expect(val).toBe(targetValue);

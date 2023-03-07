@@ -2,58 +2,55 @@ import React from 'react';
 import { byDataTestId, IExampleUnit, ScenePart } from '@testzilla/core';
 import { HTMLTextInputDriver } from '@testzilla/component-driver-html';
 
-export const UncontrolTextInputExample = () => {
+export const UncontrolledTextInputExample = () => {
   return (
     <React.Fragment>
-      <input type="text" data-testid="basic-text-input" />
+      <input type="text" data-testid="uncontrolled-text-input" />
     </React.Fragment>
   );
 };
 
-export const uncontrolTextInputExampleScenePart = {
+export const uncontrolledTextInputExampleScenePart = {
   input: {
-    locator: byDataTestId('basic-text-input'),
+    locator: byDataTestId('uncontrolled-text-input'),
     driver: HTMLTextInputDriver,
   },
 } satisfies ScenePart;
 
-export const uncontrolTextInputExample: IExampleUnit<typeof uncontrolTextInputExampleScenePart, JSX.Element> = {
+export const uncontrolledTextInputExample: IExampleUnit<typeof uncontrolledTextInputExampleScenePart, JSX.Element> = {
   title: 'Uncontrol text input',
-  scene: uncontrolTextInputExampleScenePart,
-  ui: <UncontrolTextInputExample />,
+  scene: uncontrolledTextInputExampleScenePart,
+  ui: <UncontrolledTextInputExample />,
 }
 
 
 
-export const ControlTextInputExample = () => {
+export const ControlledTextInputExample = () => {
   const [value, setValue] = React.useState('');
   const input_onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   }, []);
   return (
     <React.Fragment>
-      <input type="text" data-testid="basic-text-input" value={value} onChange={input_onChange} />
+      <input type="text" data-testid="controlled-text-input" value={value} onChange={input_onChange} />
     </React.Fragment>
   );
 };
 
-export const controlTextInputExampleScenePart = {
+export const controlledTextInputExampleScenePart = {
   input: {
-    locator: byDataTestId('basic-text-input'),
+    locator: byDataTestId('controlled-text-input'),
     driver: HTMLTextInputDriver,
   },
 } satisfies ScenePart;
 
-export const controlTextInputExample: IExampleUnit<typeof uncontrolTextInputExampleScenePart, JSX.Element> = {
+export const controlledTextInputExample: IExampleUnit<typeof uncontrolledTextInputExampleScenePart, JSX.Element> = {
   title: 'Control text input',
-  scene: controlTextInputExampleScenePart,
-  ui: <ControlTextInputExample />,
+  scene: controlledTextInputExampleScenePart,
+  ui: <ControlledTextInputExample />,
 }
 
-
-
-
 export const textInputExamples = [
-  uncontrolTextInputExample,
-  controlTextInputExample,
+  uncontrolledTextInputExample,
+  controlledTextInputExample,
 ] satisfies IExampleUnit<ScenePart, JSX.Element>[];

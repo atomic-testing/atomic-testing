@@ -1,15 +1,25 @@
 export enum LocatorRelativePosition {
-  documentRoot = 'documentRoot',
-  baseElement = 'baseElement',
+  Root = 'Root',
+
+  /**
+   * Descendent of the base element
+   */
+  Descendent = 'Descendent',
+
+  /**
+   * Locator would be within the same element(s), used for finding
+   * elements' by state or value
+   */
+  Same = 'Same',
 }
 
 export enum LocatorType {
-  css = 'css',
-  xpath = 'xpath',
+  Css = 'css',
+  Xpath = 'xpath',
 }
 
 export type CssLocator = {
-  type: LocatorType.css;
+  type: LocatorType.Css;
   selector: string;
   relative?: LocatorRelativePosition;
 };

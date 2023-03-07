@@ -19,9 +19,9 @@ export const selectComponentPart = {
   },
   dropdown: {
     locator: {
-      type: LocatorType.css,
+      type: LocatorType.Css,
       selector: '[role=presentation].MuiPopover-root [role=listbox].MuiList-root',
-      relative: LocatorRelativePosition.documentRoot,
+      relative: LocatorRelativePosition.Root,
     },
     driver: ComponentDriver,
   },
