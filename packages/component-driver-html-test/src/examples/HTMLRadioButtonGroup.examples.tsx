@@ -2,7 +2,7 @@ import React from 'react';
 import { byName, IExampleUnit, ScenePart } from '@testzilla/core';
 import { HTMLRadioButtonGroupDriver } from '@testzilla/component-driver-html';
 
-export const UncontrolTextInputExample = () => {
+export const UncontrolRadioButtonGroupExample = () => {
   return (
     <React.Fragment>
       <form>
@@ -22,17 +22,17 @@ export const UncontrolTextInputExample = () => {
   );
 };
 
-export const uncontrolTextInputExampleScenePart = {
+export const uncontrolRadioButtonGroupExampleScenePart = {
   input: {
     locator: byName('uncontrolled-group'),
     driver: HTMLRadioButtonGroupDriver,
   },
 } satisfies ScenePart;
 
-export const uncontrolledRadioButtonGroupExample: IExampleUnit<typeof uncontrolTextInputExampleScenePart, JSX.Element> = {
+export const uncontrolledRadioButtonGroupExample: IExampleUnit<typeof uncontrolRadioButtonGroupExampleScenePart, JSX.Element> = {
   title: 'Uncontrolled radio button group',
-  scene: uncontrolTextInputExampleScenePart,
-  ui: <UncontrolTextInputExample />,
+  scene: uncontrolRadioButtonGroupExampleScenePart,
+  ui: <UncontrolRadioButtonGroupExample />,
 }
 
 export const radioButtonGroupExamples = [
