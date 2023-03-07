@@ -21,9 +21,9 @@ export class HTMLHiddenInputDriver extends ComponentDriver<{}> implements IInput
     return value ?? null;
   }
 
-  async setValue(value: string | null): Promise<boolean> {
-    await this.interactor.setAttribute(this.locator, 'value', value ?? '');
-    return true;
+  setValue(value: string | null): Promise<boolean> {
+    // Setting value of a hidden input should not be part of user interaction
+    throw new Error('Not implemented');
   }
 
   get driverName(): string {

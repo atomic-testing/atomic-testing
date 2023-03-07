@@ -26,10 +26,6 @@ export class PlaywrightInteractor implements IInteractor {
     return value ?? undefined;
   }
 
-  setAttribute(locator: LocatorChain, name: string, value: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
   async getText(locator: LocatorChain): Promise<Optional<string>> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     const text = await this.page.locator(cssLocator).textContent();

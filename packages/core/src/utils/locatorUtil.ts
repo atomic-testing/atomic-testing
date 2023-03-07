@@ -1,7 +1,7 @@
-import { CssLocator, LocatorRelativePosition, LocatorType } from '../locators/PartLocatorType';
+import { CssLocator, LocatorRelativePosition, PartLocatorType } from '../locators/PartLocatorType';
 import { LocatorChain } from '../types';
 
-export function append(locator: Readonly<LocatorChain>, selector: LocatorType): LocatorChain {
+export function append(locator: Readonly<LocatorChain>, selector: PartLocatorType): LocatorChain {
   return locator.concat(selector);
 }
 
@@ -11,7 +11,7 @@ export function findRootLocatorIndex(locator: LocatorChain): number {
     const loc = locator[i];
     if (typeof loc === 'object') {
       const l = loc as CssLocator;
-      if (l.relative === LocatorRelativePosition.documentRoot) {
+      if (l.relative === LocatorRelativePosition.Root) {
         return i;
       }
     }
@@ -28,13 +28,20 @@ export function getEffectiveLocator(locator: LocatorChain): LocatorChain {
 export function toCssSelector(locator: LocatorChain): string {
   const effectiveLocator = getEffectiveLocator(locator);
   const statements = effectiveLocator.map((loc) => {
+    let separator = ' ';
+    let statement = '';
     if (typeof loc === 'string') {
-      return loc;
+      statement = loc;
+    } else {
+      const l = loc as CssLocator;
+      statement = l.selector;
+      if (l.relative === LocatorRelativePosition.Same) {
+        separator = '';
+      }
     }
 
-    const l = loc as CssLocator;
-    return l.selector;
+    return separator + statement;
   });
 
-  return statements.join(' ');
+  return statements.join('').trim();
 }

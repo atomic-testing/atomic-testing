@@ -51,14 +51,6 @@ export class DOMInteractor implements IInteractor {
     }
   }
 
-  async setAttribute(locator: LocatorChain, name: string, value: string): Promise<void> {
-    const el = this.getElement(locator);
-    if (el != null) {
-      el.setAttribute(name, value);
-    }
-    return Promise.resolve();
-  }
-
   clone(): IInteractor {
     return new DOMInteractor();
   }

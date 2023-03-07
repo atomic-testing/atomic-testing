@@ -212,12 +212,17 @@ importers:
 
   packages/core:
     specifiers:
+      '@types/css.escape': ^1.5.0
       '@types/node': ^16.0.0
+      css.escape: ^1.5.0
       jest: ^29.2.0
       ts-jest: ^29.0.0
       ts-node: ^10.9.0
       typescript: ^4.9.0
+    dependencies:
+      css.escape: 1.5.1
     devDependencies:
+      '@types/css.escape': 1.5.0
       '@types/node': 16.18.12
       jest: 29.4.3_ghv2zugsw3zjg5rog5rhyka5ja
       ts-jest: 29.0.5_cslgewaznsjxirw6ogkiwclmbu
@@ -3051,6 +3056,10 @@ packages:
       '@types/node': 16.18.14
     dev: true
 
+  /@types/css.escape/1.5.0:
+    resolution: {integrity: sha512-671nGwh8AQrhdjS584m9wypN0cJEzy7A97sReLuwypIXPiRqRcjKVnrO7Z72sS0QrwxlU7HraNgNITyr9u9Rpw==}
+    dev: true
+
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -4724,6 +4733,10 @@ packages:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
     engines: {node: '>= 6'}
     dev: true
+
+  /css.escape/1.5.1:
+    resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
+    dev: false
 
   /cssdb/7.4.1:
     resolution: {integrity: sha512-0Q8NOMpXJ3iTDDbUv9grcmQAfdDx4qz+fN/+Md2FGbevT+6+bJNQ2LjB2YIUlLbpBTM32idU1Sb+tb/uGt6/XQ==}

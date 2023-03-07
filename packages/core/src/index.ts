@@ -3,9 +3,8 @@ export { defaultOnFinishUpdate, defaultStep } from './defaultValues';
 export type { IInputDriver } from './driverTypes';
 export { TooManyMatchingElementError, TooManyMatchingElementErrorId } from './errors/TooManyMatchingElementError';
 export * from './example/types';
+export * from './locators/';
 export { byDataTestId } from './locators/byDataTestId';
-export type { CssLocator, PartLocatorType } from './locators/PartLocatorType';
-export { LocatorRelativePosition, LocatorType } from './locators/PartLocatorType';
 export { TestEngine } from './TestEngine';
 export type { ScenePart, ScenePartDriver } from './types';
 export type {
