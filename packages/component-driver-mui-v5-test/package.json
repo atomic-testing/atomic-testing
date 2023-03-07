@@ -40,7 +40,7 @@
     "react-router-dom": "^6.0.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.31.1",
+    "@playwright/test": "^1.31.2",
     "@testing-library/dom": "^9.0.0",
     "@testing-library/user-event": "^14.0.0",
     "@testzilla/component-driver-mui-v5": "workspace:*",

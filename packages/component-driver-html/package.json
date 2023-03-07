@@ -1,6 +1,6 @@
 {
   "name": "@testzilla/component-driver-html",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "HTML component driver for Testzilla",
   "main": "dist/index.js",
   "files": [
@@ -15,9 +15,10 @@
   "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [
     "testing",
-    "react",
     "unit",
     "integration",
+    "functional",
+    "e2e",
     "html"
   ],
   "license": "MIT",

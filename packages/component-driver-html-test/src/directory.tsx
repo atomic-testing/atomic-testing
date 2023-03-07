@@ -1,4 +1,5 @@
 import React from 'react';
+import { HTMLCheckboxExample } from './views/HTMLCheckboxExample';
 
 import { HTMLInputExample } from './views/HTMLInputExample';
 import { HTMLRadioButtonGroupExample } from './views/HTMLRadioButtonGroupExample';
@@ -20,6 +21,11 @@ export const tocs: IToc[] = [
     label: 'Radio Buttons',
     path: '/radio-buttons',
     ui: <HTMLRadioButtonGroupExample />,
+  },
+  {
+    label: 'Checkbox',
+    path: '/checkbox',
+    ui: <HTMLCheckboxExample />,
   },
   {
     label: 'Select',
