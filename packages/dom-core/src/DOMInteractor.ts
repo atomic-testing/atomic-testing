@@ -17,6 +17,18 @@ export class DOMInteractor implements IInteractor {
     }
   }
 
+  async selectOptionValue(locator: LocatorChain, values: string[]): Promise<void> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    console.log({
+      cssLocator,
+      values,
+    });
+    const el = this.getElement(locator);
+    if (el != null) {
+      await userEvent.selectOptions(el, values);
+    }
+  }
+
   exists(locator: LocatorChain): Promise<boolean> {
     return Promise.resolve(this.getElement(locator) != null);
   }
@@ -42,6 +54,18 @@ export class DOMInteractor implements IInteractor {
         return Promise.resolve((el as HTMLTextAreaElement).value ?? undefined);
       }
     }
+  }
+
+  async getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>> {
+    const el = this.getElement(locator);
+    if (el != null) {
+      if (el.nodeName === 'SELECT') {
+        const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
+        const values = Array.from(options).map((o) => o.value);
+        return Promise.resolve(values);
+      }
+    }
+    return Promise.resolve(undefined);
   }
 
   async getText(locator: LocatorChain): Promise<Optional<string>> {

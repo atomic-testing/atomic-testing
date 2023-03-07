@@ -48,7 +48,15 @@ export interface IInteractor {
    */
   enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption>): Promise<void>;
 
+  /**
+   *
+   * @param locator Select option by value from a select element
+   * @param values
+   */
+  selectOptionValue(locator: LocatorChain, values: string[]): Promise<void>;
+
   getInputValue(locator: LocatorChain): Promise<Optional<string>>;
+  getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>>;
   getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
   getText(locator: LocatorChain): Promise<Optional<string>>;
   exists(locator: LocatorChain): Promise<boolean>;
