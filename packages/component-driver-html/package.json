@@ -1,7 +1,7 @@
 {
   "name": "@atomic-testing/component-driver-html",
   "version": "0.1.0",
-  "description": "HTML component driver for Testzilla",
+  "description": "HTML component driver for atomic-testing",
   "main": "dist/index.js",
   "files": [
     "dist",

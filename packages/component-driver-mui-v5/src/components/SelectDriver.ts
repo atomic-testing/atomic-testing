@@ -12,7 +12,7 @@ import {
   ScenePartDriver,
 } from '@atomic-testing/core';
 
-export const selectComponentPart = {
+export const selectPart = {
   trigger: {
     locator: '[role=button]',
     driver: ComponentDriver,
@@ -31,18 +31,15 @@ export const selectComponentPart = {
   },
 } satisfies ScenePart;
 
-export type SelectComponentScenePart = typeof selectComponentPart;
-export type SelectComponentScenePartDriver = ScenePartDriver<SelectComponentScenePart>;
+export type SelectScenePart = typeof selectPart;
+export type SelectScenePartDriver = ScenePartDriver<SelectScenePart>;
 
-export class SelectComponentDriver
-  extends ComponentDriver<SelectComponentScenePart>
-  implements IInputDriver<string | null>
-{
+export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
   constructor(locator: LocatorChain, interactor: IInteractor, option?: IComponentDriverOption) {
     super(locator, interactor, {
       perform: defaultStep,
       ...option,
-      parts: selectComponentPart,
+      parts: selectPart,
     });
   }
 
@@ -72,6 +69,6 @@ export class SelectComponentDriver
   }
 
   get driverName(): string {
-    return 'MuiV5Select';
+    return 'MuiV5SelectDriver';
   }
 }

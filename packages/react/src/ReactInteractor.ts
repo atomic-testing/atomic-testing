@@ -16,6 +16,12 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
+  override async selectOptionValue(locator: LocatorChain, values: string[]): Promise<void> {
+    await act(async () => {
+      await super.selectOptionValue(locator, values);
+    });
+  }
+
   override clone(): IInteractor {
     return new ReactInteractor();
   }

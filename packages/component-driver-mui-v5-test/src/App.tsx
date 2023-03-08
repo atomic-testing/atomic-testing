@@ -1,10 +1,9 @@
+import styled from '@emotion/styled';
+import { Link as MuiLink } from '@mui/material';
 import React from 'react';
-import { Routes, Route, Outlet, Link, useLocation } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { tocs } from './directory';
 import { Home } from './Home';
-import { Link as MuiLink } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import styled from '@emotion/styled';
 
 const Container = styled.div`
   display: flex;
@@ -20,9 +19,10 @@ const Nav = styled.nav`
 const Content = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
+  padding: 0 2rem 2rem 1rem;
 `;
 
-export const Layout:React.FunctionComponent = () => {
+export const Layout: React.FunctionComponent = () => {
   const location = useLocation();
 
   const title = tocs.find((example) => example.path === location.pathname)?.label || 'Home';
@@ -31,13 +31,13 @@ export const Layout:React.FunctionComponent = () => {
     <Container>
       <Nav>
         <ul>
-          {
-            tocs.map((example) => (
-              <li key={example.path}>
-                <MuiLink component={Link} to={example.path} >{example.label}</MuiLink>
-              </li>
-            ))
-          }
+          {tocs.map((example) => (
+            <li key={example.path}>
+              <MuiLink component={Link} to={example.path}>
+                {example.label}
+              </MuiLink>
+            </li>
+          ))}
         </ul>
       </Nav>
       <Content>
@@ -45,25 +45,18 @@ export const Layout:React.FunctionComponent = () => {
         <Outlet />
       </Content>
     </Container>
-  )
-}
+  );
+};
 
 export function App() {
-
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          {
-            tocs.map((example) => (
-              <Route key={example.path} path={example.path} element={example.ui} />
-            ))
-          }
-        </Route>
-      </Routes>
-    </React.Fragment>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        {tocs.map((example) => (
+          <Route key={example.path} path={example.path} element={example.ui} />
+        ))}
+      </Route>
+    </Routes>
   );
 }
-
