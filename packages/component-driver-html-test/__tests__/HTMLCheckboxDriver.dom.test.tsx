@@ -1,5 +1,5 @@
-import { TestEngine } from '@testzilla/core';
-import { createTestEngine } from '@testzilla/react';
+import { TestEngine } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/react';
 import { checkboxGroupExample, singleCheckboxExample } from '../src/examples';
 
 describe('HTMLCheckboxDriver', () => {
@@ -28,11 +28,11 @@ describe('HTMLCheckboxDriver', () => {
       await testEngine.parts.toggle.setSelected(true);
     });
 
-    test('isSelected() should be false', async () => {
+    test('isSelected() should be true', async () => {
       const val = await testEngine.parts.toggle.isSelected();
       expect(val).toBe(true);
     });
-    test('value should be null because it is not checked', async () => {
+    test("value should be the checkbox's value", async () => {
       const val = await testEngine.parts.toggle.getValue();
       expect(val).toEqual('1');
     });

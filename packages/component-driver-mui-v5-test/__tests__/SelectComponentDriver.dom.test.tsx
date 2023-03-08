@@ -1,4 +1,4 @@
-import { createTestEngine } from '@testzilla/react';
+import { createTestEngine } from '@atomic-testing/react';
 import React from 'react';
 
 import { BasicSelectExample, basicSelectExampleScenePart } from '../src/examples/Select.examples';

@@ -1,6 +1,6 @@
+import { TestEngine } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, test } from '@playwright/test';
-import { TestEngine } from '@testzilla/core';
-import { createTestEngine } from '@testzilla/playwright';
 
 import { checkboxGroupExample, singleCheckboxExample } from '../src/examples';
 
@@ -31,11 +31,11 @@ test.describe('HTMLCheckboxDriver', () => {
       await testEngine.parts.toggle.setSelected(true);
     });
 
-    test('isSelected() should be false', async () => {
+    test('isSelected() should be true', async () => {
       const val = await testEngine.parts.toggle.isSelected();
       expect(val).toBe(true);
     });
-    test('value should be null because it is not checked', async () => {
+    test('value should be the checkbox value attribute', async () => {
       const val = await testEngine.parts.toggle.getValue();
       expect(val).toEqual('1');
     });

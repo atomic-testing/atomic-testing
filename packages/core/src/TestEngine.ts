@@ -1,4 +1,4 @@
-import { IComponentDriverOption, IInteractor, LocatorChain } from '@testzilla/core';
+import { IComponentDriverOption, IInteractor, LocatorChain } from '@atomic-testing/core';
 
 import { ComponentDriver } from './ComponentDriver';
 import { ScenePart } from './types';

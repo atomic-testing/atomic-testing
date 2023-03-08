@@ -1,4 +1,4 @@
-import { ScenePart, StepFunction, TestEngine } from '@testzilla/core';
+import { ScenePart, StepFunction, TestEngine } from '@atomic-testing/core';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 

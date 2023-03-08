@@ -3,16 +3,16 @@
   "extends": "./tsconfig.build.regular.json",
   "compilerOptions": {
     "paths": {
-      "@testzilla/core": ["./packages/core/src"],
-      "@testzilla/dom-core": ["./packages/dom-core/src"],
-      "@testzilla/react": ["./packages/react/src"],
-      "@testzilla/playwright": ["./packages/playwright/src"],
-      
-      "@testzilla/component-driver-html": ["./packages/component-driver-html/src"],
-      "@testzilla/component-driver-html-test": ["./packages/component-driver-html-test/src"],
-      
-      "@testzilla/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"],
-      "@testzilla/component-driver-mui-v5-test": ["./packages/component-driver-mui-v5-test/src"]
+      "@atomic-testing/core": ["./packages/core/src"],
+      "@atomic-testing/dom-core": ["./packages/dom-core/src"],
+      "@atomic-testing/react": ["./packages/react/src"],
+      "@atomic-testing/playwright": ["./packages/playwright/src"],
+
+      "@atomic-testing/component-driver-html": ["./packages/component-driver-html/src"],
+      "@atomic-testing/component-driver-html-test": ["./packages/component-driver-html-test/src"],
+
+      "@atomic-testing/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"],
+      "@atomic-testing/component-driver-mui-v5-test": ["./packages/component-driver-mui-v5-test/src"]
     }
   },
   "references": [

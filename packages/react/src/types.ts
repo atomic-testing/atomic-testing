@@ -1,4 +1,4 @@
-import { IComponentDriverOption } from '@testzilla/core';
+import { IComponentDriverOption } from '@atomic-testing/core';
 
 export interface IReactTestEngineOption extends IComponentDriverOption {
   rootElement?: Element;

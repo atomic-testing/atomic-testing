@@ -1,5 +1,5 @@
+import { defaultStep, ScenePart, TestEngine } from '@atomic-testing/core';
 import { Page } from '@playwright/test';
-import { defaultStep, ScenePart, TestEngine } from '@testzilla/core';
 
 import { PlaywrightInteractor } from './PlaywrightInteractor';
 

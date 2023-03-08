@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/component-driver-mui-v5",
+  "name": "@atomic-testing/component-driver-mui-v5",
   "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -29,8 +29,8 @@
     "url": "https://github.com/tangentlin/testzilla.git"
   },
   "dependencies": {
-    "@testzilla/core": "workspace:*",
-    "@testzilla/component-driver-html": "workspace:*"
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/component-driver-html": "workspace:*"
   },
   "devDependencies": {
     "@emotion/react": "^11.6.0",
@@ -38,7 +38,7 @@
     "@mui/material": "^5.0.0",
     "@testing-library/dom": "^9.0.0",
     "@testing-library/user-event": "^14.0.0",
-    "@testzilla/react": "workspace:*",
+    "@atomic-testing/react": "workspace:*",
     "@types/jest": "^29.0.0",
     "@types/node": "^16.0.0",
     "@types/react": "^18.0.0",

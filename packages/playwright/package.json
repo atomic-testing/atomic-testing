@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/playwright",
+  "name": "@atomic-testing/playwright",
   "version": "0.2.0",
   "description": "TestZilla Playwright Adapter",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
     "url": "https://github.com/tangentlin/testzilla.git"
   },
   "dependencies": {
-    "@testzilla/core": "workspace:*"
+    "@atomic-testing/core": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.31.2",

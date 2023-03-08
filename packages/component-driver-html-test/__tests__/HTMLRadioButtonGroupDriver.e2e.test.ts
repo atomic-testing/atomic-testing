@@ -1,9 +1,9 @@
+import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, test } from '@playwright/test';
-import { createTestEngine } from '@testzilla/playwright'
 
 import { uncontrolRadioButtonGroupExampleScenePart } from '../src/examples/HTMLRadioButtonGroup.examples';
 
-test("HTMLRadioButtonGroup", async ({ page }) => {
+test('HTMLRadioButtonGroup', async ({ page }) => {
   await page.goto('/radio-buttons');
   const testEngine = createTestEngine(page, uncontrolRadioButtonGroupExampleScenePart);
   const targetValue = '3';

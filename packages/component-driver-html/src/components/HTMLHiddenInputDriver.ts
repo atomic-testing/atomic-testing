@@ -5,7 +5,7 @@ import {
   IInputDriver,
   IInteractor,
   LocatorChain,
-} from '@testzilla/core';
+} from '@atomic-testing/core';
 
 export class HTMLHiddenInputDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
   constructor(locator: LocatorChain, interactor: IInteractor, option?: IComponentDriverOption) {

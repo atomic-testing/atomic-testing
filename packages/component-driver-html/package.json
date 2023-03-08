@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/component-driver-html",
+  "name": "@atomic-testing/component-driver-html",
   "version": "0.1.0",
   "description": "HTML component driver for Testzilla",
   "main": "dist/index.js",
@@ -27,7 +27,7 @@
     "url": "https://github.com/tangentlin/testzilla.git"
   },
   "dependencies": {
-    "@testzilla/core": "workspace:*"
+    "@atomic-testing/core": "workspace:*"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.0.0",

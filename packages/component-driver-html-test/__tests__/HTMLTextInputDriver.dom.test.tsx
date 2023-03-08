@@ -1,4 +1,4 @@
-import { createTestEngine } from '@testzilla/react';
+import { createTestEngine } from '@atomic-testing/react';
 import { textInputExamples } from '../src/examples';
 
 describe('HTMLTextInputDriver', () => {

@@ -1,1 +1,1 @@
-# @testzilla/playwright
+# @atomic-testing/playwright

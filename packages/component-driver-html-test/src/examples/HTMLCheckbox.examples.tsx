@@ -1,5 +1,5 @@
-import { HTMLCheckboxDriver, HTMLCheckboxGroupDriver } from '@testzilla/component-driver-html';
-import { byName, IExampleUnit, ScenePart } from '@testzilla/core';
+import { HTMLCheckboxDriver, HTMLCheckboxGroupDriver } from '@atomic-testing/component-driver-html';
+import { byName, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import React from 'react';
 
 //#region Multiple checkbox

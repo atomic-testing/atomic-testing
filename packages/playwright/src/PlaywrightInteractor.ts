@@ -1,4 +1,3 @@
-import { Page } from '@playwright/test';
 import {
   IClickOption,
   IInteractor,
@@ -7,8 +6,9 @@ import {
   locatorUtil,
   Optional,
   PartLocatorType,
-} from '@testzilla/core';
-import { IEnterTextOption } from '@testzilla/core/src/types';
+} from '@atomic-testing/core';
+import { IEnterTextOption } from '@atomic-testing/core/src/types';
+import { Page } from '@playwright/test';
 
 export class PlaywrightInteractor implements IInteractor {
   constructor(public readonly page: Page) {}

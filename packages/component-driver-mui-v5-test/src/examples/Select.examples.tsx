@@ -1,6 +1,6 @@
+import { SelectComponentDriver } from '@atomic-testing/component-driver-mui-v5';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { SelectComponentDriver } from '@testzilla/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart } from '@testzilla/core';
 import React, { useCallback } from 'react';
 
 export const basicSelectExampleData = {
@@ -47,6 +47,4 @@ export const basicSelectExample: IExampleUnit<typeof basicSelectExampleScenePart
   ui: <BasicSelectExample />,
 };
 
-export const selectExamples = [
-  basicSelectExample,
-] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const selectExamples = [basicSelectExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];

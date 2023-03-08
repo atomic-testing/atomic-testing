@@ -1,5 +1,5 @@
+import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, test } from '@playwright/test';
-import { createTestEngine } from '@testzilla/playwright'
 import { basicSelectExampleScenePart } from '../src/examples';
 
 test('happy path selection', async ({ page }) => {

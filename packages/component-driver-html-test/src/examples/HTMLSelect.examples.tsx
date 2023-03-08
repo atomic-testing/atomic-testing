@@ -1,6 +1,6 @@
+import { HTMLSelectDriver } from '@atomic-testing/component-driver-html';
+import { byName, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import React from 'react';
-import { byName, IExampleUnit, ScenePart } from '@testzilla/core';
-import { HTMLSelectDriver } from '@testzilla/component-driver-html';
 
 export const SingleSelectExample = () => {
   return (
@@ -29,8 +29,7 @@ export const singleSelectExample: IExampleUnit<typeof singleSelectExampleScenePa
   title: 'Single Select',
   scene: singleSelectExampleScenePart,
   ui: <SingleSelectExample />,
-}
-
+};
 
 export const MultipleSelectExample = () => {
   return (
@@ -59,11 +58,9 @@ export const multipleSelectExample: IExampleUnit<typeof multipleSelectExampleSce
   title: 'Multiple Select',
   scene: multipleSelectExampleScenePart,
   ui: <MultipleSelectExample />,
-}
+};
 
-
-
-export const selectExamples = [
-  singleSelectExample,
-  multipleSelectExample,
-] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const selectExamples = [singleSelectExample, multipleSelectExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];
