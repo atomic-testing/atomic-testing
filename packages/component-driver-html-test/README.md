@@ -1,1 +1,1 @@
-# @atomic-testing/react-testzilla
+# @atomic-testing/component-driver-html-test
