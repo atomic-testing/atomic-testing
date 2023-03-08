@@ -37,11 +37,6 @@ export class DOMInteractor implements IInteractor {
   }
 
   async selectOptionValue(locator: LocatorChain, values: string[]): Promise<void> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
-    console.log({
-      cssLocator,
-      values,
-    });
     const el = this.getElement(locator);
     if (el != null) {
       await userEvent.selectOptions(el, values);

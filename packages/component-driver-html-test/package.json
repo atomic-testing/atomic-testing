@@ -12,7 +12,8 @@
     "build": "react-scripts build",
     "postbuild": "node ../../scripts/postBuild.js",
     "test:dom": "jest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [
