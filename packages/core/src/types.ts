@@ -1,4 +1,5 @@
 import { ComponentDriver } from './ComponentDriver';
+import { IClickOption } from './driverTypes';
 import { PartLocatorType } from './locators/PartLocatorType';
 
 export type StepFunction = (work: () => Promise<void>) => Promise<void>;
@@ -35,7 +36,6 @@ export type ScenePartDriver<T extends ScenePart> = {
 
 export type LocatorChain = readonly PartLocatorType[];
 
-export interface IClickOption {}
 export interface IEnterTextOption {}
 
 document.querySelector('input');

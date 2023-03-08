@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix --ext .ts,.tsx,.js .",
     "format": "prettier --write .",
-    "test:types": "tsc --noEmit"
+    "types": "tsc --noEmit"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
   "license": "MIT",

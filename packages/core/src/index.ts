@@ -1,13 +1,12 @@
 export { ComponentDriver } from './ComponentDriver';
 export { defaultOnFinishUpdate, defaultStep } from './defaultValues';
-export type { IInputDriver } from './driverTypes';
+export type { IClickableDriver, IClickOption, IFormFieldDriver, IInputDriver, IToggleDriver } from './driverTypes';
 export { TooManyMatchingElementError, TooManyMatchingElementErrorId } from './errors/TooManyMatchingElementError';
 export * from './example/types';
 export * from './locators/';
 export { byDataTestId } from './locators/byDataTestId';
 export { TestEngine } from './TestEngine';
 export type {
-  IClickOption,
   IComponentDriverOption,
   IInteractor,
   LocatorChain,

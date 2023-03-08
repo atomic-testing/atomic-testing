@@ -1,7 +1,6 @@
 import { defaultStep } from './defaultValues';
 import { MissingPartError } from './errors/MissingPartError';
 import {
-  IClickOption,
   IComponentDriver,
   IComponentDriverOption,
   IInteractor,
@@ -64,10 +63,6 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
     await Promise.all(promises);
     return missingParts;
-  }
-
-  async click(option?: IClickOption): Promise<void> {
-    await this.interactor.click(this._locator, option);
   }
 
   abstract get driverName(): string;

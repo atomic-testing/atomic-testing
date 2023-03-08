@@ -1,4 +1,4 @@
-import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
   ComponentDriver,
   defaultStep,
@@ -15,7 +15,7 @@ import {
 export const selectPart = {
   trigger: {
     locator: '[role=button]',
-    driver: ComponentDriver,
+    driver: HTMLButtonDriver,
   },
   dropdown: {
     locator: {
@@ -23,7 +23,7 @@ export const selectPart = {
       selector: '[role=presentation].MuiPopover-root [role=listbox].MuiList-root',
       relative: LocatorRelativePosition.Root,
     },
-    driver: ComponentDriver,
+    driver: HTMLElementDriver,
   },
   input: {
     locator: 'input.MuiSelect-nativeInput',

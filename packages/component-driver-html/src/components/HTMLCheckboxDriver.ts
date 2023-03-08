@@ -1,6 +1,6 @@
-import { ComponentDriver } from '@atomic-testing/core';
+import { ComponentDriver, IFormFieldDriver, IToggleDriver } from '@atomic-testing/core';
 
-export class HTMLCheckboxDriver extends ComponentDriver<{}> {
+export class HTMLCheckboxDriver extends ComponentDriver<{}> implements IFormFieldDriver<string | null>, IToggleDriver {
   async getValue(): Promise<string | null> {
     const isChecked = await this.interactor.isChecked(this.locator);
     if (!isChecked) {
