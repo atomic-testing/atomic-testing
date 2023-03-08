@@ -1,9 +1,5 @@
-import React from 'react';
-import { HTMLCheckboxExample } from './views/HTMLCheckboxExample';
-
-import { HTMLInputExample } from './views/HTMLInputExample';
-import { HTMLRadioButtonGroupExample } from './views/HTMLRadioButtonGroupExample';
-import { HTMLSelectExample } from './views/HTMLSelectExample';
+import { ExampleList } from './components/ExampleList';
+import { checkboxExamples, radioButtonGroupExamples, selectExamples, textInputExamples } from './examples';
 
 interface IToc {
   label: string;
@@ -15,21 +11,21 @@ export const tocs: IToc[] = [
   {
     label: 'Text Input',
     path: '/input',
-    ui: <HTMLInputExample />,
+    ui: <ExampleList examples={textInputExamples} />,
   },
   {
     label: 'Radio Buttons',
     path: '/radio-buttons',
-    ui: <HTMLRadioButtonGroupExample />,
+    ui: <ExampleList examples={radioButtonGroupExamples} />,
   },
   {
     label: 'Checkbox',
     path: '/checkbox',
-    ui: <HTMLCheckboxExample />,
+    ui: <ExampleList examples={checkboxExamples} />,
   },
   {
     label: 'Select',
     path: '/select',
-    ui: <HTMLSelectExample />,
+    ui: <ExampleList examples={selectExamples} />,
   },
 ];
