@@ -1,1 +1,3 @@
-# @atomic-testing/react-testzilla
+# @atomic-testing/react
+
+Atomic testing adapter for [ReactJS](https://reactjs.org)
