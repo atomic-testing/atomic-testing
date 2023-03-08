@@ -1,6 +1,6 @@
-import React from 'react';
-
-import { SelectExample } from './views/Select';
+import { ExampleList } from './components/ExampleList';
+import { selectExamples } from './examples';
+import { buttonExamples } from './examples/Button.examples';
 
 interface IToc {
   label: string;
@@ -12,11 +12,11 @@ export const tocs: IToc[] = [
   {
     label: 'Button',
     path: '/button',
-    ui: <SelectExample />,
+    ui: <ExampleList examples={buttonExamples} />,
   },
   {
     label: 'Select',
     path: '/select',
-    ui: <SelectExample />,
+    ui: <ExampleList examples={selectExamples} />,
   },
 ];

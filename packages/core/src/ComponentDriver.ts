@@ -5,6 +5,7 @@ import {
   IComponentDriverOption,
   IInteractor,
   LocatorChain,
+  Optional,
   PartName,
   ScenePart,
   ScenePartDriver,
@@ -63,6 +64,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
     await Promise.all(promises);
     return missingParts;
+  }
+
+  getText(): Promise<Optional<string>> {
+    return this.interactor.getText(this.locator);
   }
 
   abstract get driverName(): string;

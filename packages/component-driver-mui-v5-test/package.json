@@ -36,6 +36,7 @@
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@mui/material": "^5.0.0",
+    "@mui/icons-material": "^5.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.0.2"
@@ -44,6 +45,7 @@
     "@playwright/test": "^1.31.2",
     "@testing-library/dom": "^9.0.0",
     "@testing-library/user-event": "^14.0.0",
+    "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/component-driver-mui-v5": "workspace:*",
     "@atomic-testing/react": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
