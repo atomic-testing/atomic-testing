@@ -1,31 +1,29 @@
-import {
-  byChecked,
-  byValue,
-  ComponentDriver,
-  IInputDriver,
-  LocatorRelativePosition,
-  locatorUtil,
-} from '@testzilla/core';
+import { ComponentDriver } from '@testzilla/core';
 
-export class HTMLCheckboxDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
+export class HTMLCheckboxDriver extends ComponentDriver<{}> {
   async getValue(): Promise<string | null> {
-    const checkedLocator = byChecked(true);
-    const locator = locatorUtil.append(this.locator, checkedLocator);
-    const value = await this.interactor.getAttribute(locator, 'value');
+    const isChecked = await this.interactor.isChecked(this.locator);
+    if (!isChecked) {
+      return null;
+    }
+
+    const value = await this.interactor.getAttribute(this.locator, 'value');
     return value ?? null;
   }
 
-  async setValue(value: string | null): Promise<boolean> {
-    if (value == null) {
-      throw new Error('Cannot be done');
+  async isSelected(): Promise<boolean> {
+    const val = await this.getValue();
+    return val != null;
+  }
+
+  async setSelected(selected: boolean): Promise<void> {
+    const currentSelected = await this.isSelected();
+    if (currentSelected !== selected) {
+      await this.interactor.click(this.locator);
     }
-    const valueLocator = byValue(value, LocatorRelativePosition.Same);
-    const locator = locatorUtil.append(this.locator, valueLocator);
-    await this.interactor.click(locator);
-    return true;
   }
 
   get driverName(): string {
-    throw 'HTMLRadioButtonGroupDriver';
+    return 'HTMLCheckboxDriver';
   }
 }

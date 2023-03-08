@@ -1,6 +1,6 @@
-import React from 'react';
+import { HTMLCheckboxDriver, HTMLCheckboxGroupDriver } from '@testzilla/component-driver-html';
 import { byName, IExampleUnit, ScenePart } from '@testzilla/core';
-import { HTMLRadioButtonGroupDriver } from '@testzilla/component-driver-html';
+import React from 'react';
 
 //#region Multiple checkbox
 export const SingleCheckbox = () => {
@@ -15,11 +15,10 @@ export const SingleCheckbox = () => {
   );
 };
 
-
 export const singleCheckboxScenePart = {
-  input: {
+  toggle: {
     locator: byName('single-checkbox'),
-    driver: HTMLRadioButtonGroupDriver,
+    driver: HTMLCheckboxDriver,
   },
 } satisfies ScenePart;
 
@@ -27,7 +26,7 @@ export const singleCheckboxExample: IExampleUnit<typeof singleCheckboxScenePart,
   title: 'Single checkbox',
   scene: singleCheckboxScenePart,
   ui: <SingleCheckbox />,
-}
+};
 //#endregion
 
 //#region Checkbox group
@@ -60,24 +59,21 @@ export const CheckboxGroup = () => {
   );
 };
 
-
 export const checkboxGroupScenePart = {
-  input: {
+  toggles: {
     locator: byName('checkbox-group'),
-    driver: HTMLRadioButtonGroupDriver,
+    driver: HTMLCheckboxGroupDriver,
   },
 } satisfies ScenePart;
 
-export const checkboxGroupExample: IExampleUnit<typeof singleCheckboxScenePart, JSX.Element> = {
+export const checkboxGroupExample: IExampleUnit<typeof checkboxGroupScenePart, JSX.Element> = {
   title: 'Checkbox group',
-  scene: singleCheckboxScenePart,
+  scene: checkboxGroupScenePart,
   ui: <CheckboxGroup />,
-}
+};
 //#endregion
 
-
-
-export const checkboxExamples = [
-  singleCheckboxExample,
-  checkboxGroupExample,
-] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const checkboxExamples = [singleCheckboxExample, checkboxGroupExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];

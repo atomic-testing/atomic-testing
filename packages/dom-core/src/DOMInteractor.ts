@@ -3,6 +3,25 @@ import { IClickOption, IInteractor, LocatorChain, locatorUtil, Optional } from '
 import { IEnterTextOption } from '@testzilla/core/src/types';
 
 export class DOMInteractor implements IInteractor {
+  async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
+  async getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
+  async getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
+  async getAttribute(
+    locator: LocatorChain,
+    name: string,
+    isMultiple?: boolean,
+  ): Promise<Optional<string> | readonly string[]> {
+    if (isMultiple) {
+      const elements = this.getElement(locator, true);
+      return Promise.resolve(elements.map((el) => el.getAttribute(name)!));
+    } else {
+      const el = this.getElement(locator);
+      if (el != null) {
+        return Promise.resolve(el.getAttribute(name) ?? undefined);
+      }
+    }
+  }
+
   async click(locator: LocatorChain, option?: IClickOption): Promise<void> {
     const el = this.getElement(locator);
     if (el != null) {
@@ -33,16 +52,19 @@ export class DOMInteractor implements IInteractor {
     return Promise.resolve(this.getElement(locator) != null);
   }
 
-  getElement(locator: LocatorChain): Optional<Element> {
+  getElement<T extends Element = Element>(locator: LocatorChain, isMultiple: true): readonly T[];
+  getElement<T extends Element = Element>(locator: LocatorChain, isMultiple: false): Optional<T>;
+  getElement<T extends Element = Element>(locator: LocatorChain): Optional<T>;
+  getElement<T extends Element = Element>(locator: LocatorChain, isMultiple = false) {
     const cssLocator = locatorUtil.toCssSelector(locator);
-    return document.querySelector(cssLocator) ?? undefined;
-  }
-
-  async getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>> {
-    const el = this.getElement(locator);
-    if (el != null) {
-      return Promise.resolve(el.getAttribute(name) ?? undefined);
+    if (isMultiple) {
+      const elList = document.querySelectorAll<T>(cssLocator);
+      const result: T[] = [];
+      elList.forEach((el) => result.push(el));
+      return result;
     }
+
+    return document.querySelector<T>(cssLocator) ?? undefined;
   }
 
   async getInputValue(locator: LocatorChain): Promise<Optional<string>> {
@@ -73,6 +95,14 @@ export class DOMInteractor implements IInteractor {
     if (el != null) {
       return Promise.resolve(el.textContent ?? undefined);
     }
+  }
+
+  async isChecked(locator: LocatorChain): Promise<boolean> {
+    const el = this.getElement<HTMLInputElement>(locator);
+    if (el != null && el.nodeName === 'INPUT') {
+      return Promise.resolve(el.checked);
+    }
+    return Promise.resolve(false);
   }
 
   clone(): IInteractor {

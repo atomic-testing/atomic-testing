@@ -1,5 +1,5 @@
 import { ComponentDriver } from './ComponentDriver';
-import { PartLocatorType as PartLocatorType } from './locators/PartLocatorType';
+import { PartLocatorType } from './locators/PartLocatorType';
 
 export type StepFunction = (work: () => Promise<void>) => Promise<void>;
 export type Optional<T> = T | undefined;
@@ -38,6 +38,8 @@ export type LocatorChain = readonly PartLocatorType[];
 export interface IClickOption {}
 export interface IEnterTextOption {}
 
+document.querySelector('input');
+
 export interface IInteractor {
   click(locator: LocatorChain, option?: Partial<IClickOption>): Promise<void>;
 
@@ -57,9 +59,14 @@ export interface IInteractor {
 
   getInputValue(locator: LocatorChain): Promise<Optional<string>>;
   getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>>;
+
+  getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
+  getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
   getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
+
   getText(locator: LocatorChain): Promise<Optional<string>>;
   exists(locator: LocatorChain): Promise<boolean>;
+  isChecked(locator: LocatorChain): Promise<boolean>;
 
   clone(): IInteractor;
 }
