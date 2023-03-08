@@ -81,7 +81,7 @@ export const nativeSelectExampleScenePart = {
 
 /**
  * Basic select example from MUI's website
- * @see https://mui.com/material-ui/react-select/#basic-select
+ * @see https://mui.com/material-ui/react-select/#native-select
  */
 export const nativeSelectExample: IExampleUnit<typeof nativeSelectExampleScenePart, JSX.Element> = {
   title: 'Native Select',
