@@ -6,7 +6,6 @@ export * from './example/types';
 export * from './locators/';
 export { byDataTestId } from './locators/byDataTestId';
 export { TestEngine } from './TestEngine';
-export type { ScenePart, ScenePartDriver } from './types';
 export type {
   IClickOption,
   IComponentDriverOption,
@@ -14,8 +13,11 @@ export type {
   LocatorChain,
   Nullable,
   Optional,
+  ScenePart,
+  ScenePartDriver,
   StepFunction,
 } from './types';
+export * as collectionUtil from './utils/collectionUtil';
 export * as domUtil from './utils/domUtil';
 export * as locatorUtil from './utils/locatorUtil';
 export * as timingUtil from './utils/timingUtil';

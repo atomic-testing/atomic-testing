@@ -1,3 +1,5 @@
+export { HTMLCheckboxDriver } from './components/HTMLCheckboxDriver';
+export { HTMLCheckboxGroupDriver } from './components/HTMLCheckboxGroupDriver';
 export { HTMLHiddenInputDriver } from './components/HTMLHiddenInputDriver';
 export { HTMLRadioButtonGroupDriver } from './components/HTMLRadioButtonGroupDriver';
 export { HTMLSelectDriver } from './components/HTMLSelectDriver';

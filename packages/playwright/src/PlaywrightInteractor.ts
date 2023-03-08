@@ -50,9 +50,28 @@ export class PlaywrightInteractor implements IInteractor {
     await this.page.locator(cssLocator).click();
   }
 
-  async getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>> {
+  async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
+  async getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
+  async getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
+  async getAttribute(
+    locator: LocatorChain,
+    name: string,
+    isMultiple?: boolean,
+  ): Promise<Optional<string> | readonly string[]> {
     const cssLocator = locatorUtil.toCssSelector(locator);
-    const value = await this.page.locator(cssLocator).getAttribute(name);
+    const elLocator = this.page.locator(cssLocator);
+    if (isMultiple) {
+      const locators = await elLocator.all();
+      const values: string[] = [];
+      for (const locator of locators) {
+        const value = await locator.getAttribute(name);
+        if (value != null) {
+          values.push(value);
+        }
+      }
+      return values;
+    }
+    const value = await elLocator.getAttribute(name);
     return value ?? undefined;
   }
 
@@ -66,6 +85,12 @@ export class PlaywrightInteractor implements IInteractor {
     const cssLocator = locatorUtil.toCssSelector(locator);
     const count = await this.page.locator(cssLocator).count();
     return count > 0;
+  }
+
+  async isChecked(locator: LocatorChain): Promise<boolean> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    const checked = await this.page.locator(cssLocator).isChecked();
+    return checked;
   }
 
   clone(): IInteractor {

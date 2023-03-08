@@ -164,7 +164,7 @@ importers:
       '@emotion/react': ^11.6.0
       '@emotion/styled': ^11.6.0
       '@mui/material': ^5.0.0
-      '@playwright/test': ^1.31.1
+      '@playwright/test': ^1.31.2
       '@testing-library/dom': ^9.0.0
       '@testing-library/user-event': ^14.0.0
       '@testzilla/component-driver-mui-v5': workspace:*
@@ -193,7 +193,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.8.2_biqbaboplfbrettd7655fr4n2y
     devDependencies:
-      '@playwright/test': 1.31.1
+      '@playwright/test': 1.31.2
       '@testing-library/dom': 9.0.0
       '@testing-library/user-event': 14.4.3_@testing-library+dom@9.0.0
       '@testzilla/component-driver-mui-v5': link:../component-driver-mui-v5
@@ -252,7 +252,7 @@ importers:
 
   packages/playwright:
     specifiers:
-      '@playwright/test': ^1.31.1
+      '@playwright/test': ^1.31.2
       '@testzilla/core': workspace:*
       '@types/node': ^16.0.0
       jest: ^29.2.0
@@ -262,7 +262,7 @@ importers:
     dependencies:
       '@testzilla/core': link:../core
     devDependencies:
-      '@playwright/test': 1.31.1
+      '@playwright/test': 1.31.2
       '@types/node': 16.18.12
       jest: 29.4.3_ghv2zugsw3zjg5rog5rhyka5ja
       ts-jest: 29.0.5_cslgewaznsjxirw6ogkiwclmbu
@@ -2677,17 +2677,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
-    dev: true
-
-  /@playwright/test/1.31.1:
-    resolution: {integrity: sha512-IsytVZ+0QLDh1Hj83XatGp/GsI1CDJWbyDaBGbainsh0p2zC7F4toUocqowmjS6sQff2NGT3D9WbDj/3K2CJiA==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dependencies:
-      '@types/node': 16.18.14
-      playwright-core: 1.31.1
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /@playwright/test/1.31.2:
@@ -8799,12 +8788,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 3.0.0
-    dev: true
-
-  /playwright-core/1.31.1:
-    resolution: {integrity: sha512-JTyX4kV3/LXsvpHkLzL2I36aCdml4zeE35x+G5aPc4bkLsiRiQshU5lWeVpHFAuC8xAcbI6FDcw/8z3q2xtJSQ==}
-    engines: {node: '>=14'}
-    hasBin: true
     dev: true
 
   /playwright-core/1.31.2:
