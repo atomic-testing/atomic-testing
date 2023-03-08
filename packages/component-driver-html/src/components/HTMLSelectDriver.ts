@@ -1,4 +1,4 @@
-import { ComponentDriver, IInputDriver, Nullable } from '@testzilla/core';
+import { ComponentDriver, IInputDriver, Nullable } from '@atomic-testing/core';
 
 type ValueT = string | readonly string[];
 

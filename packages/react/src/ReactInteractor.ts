@@ -1,5 +1,5 @@
-import { IClickOption, IInteractor, LocatorChain } from '@testzilla/core';
-import { DOMInteractor } from '@testzilla/dom-core';
+import { IClickOption, IInteractor, LocatorChain } from '@atomic-testing/core';
+import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from 'react-dom/test-utils';
 
 export class ReactInteractor extends DOMInteractor {

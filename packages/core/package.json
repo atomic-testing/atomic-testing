@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/core",
+  "name": "@atomic-testing/core",
   "version": "0.2.0",
   "description": "",
   "main": "dist/index.js",

@@ -5,7 +5,7 @@ import {
   IInputDriver,
   LocatorRelativePosition,
   locatorUtil,
-} from '@testzilla/core';
+} from '@atomic-testing/core';
 
 export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
   async getValue(): Promise<string | null> {

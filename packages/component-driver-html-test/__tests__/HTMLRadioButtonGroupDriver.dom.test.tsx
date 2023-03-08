@@ -1,4 +1,4 @@
-import { createTestEngine } from '@testzilla/react';
+import { createTestEngine } from '@atomic-testing/react';
 import { radioButtonGroupExamples } from '../src/examples/HTMLRadioButtonGroup.examples';
 
 describe('HTMLRadioButtonGroupDriver', () => {

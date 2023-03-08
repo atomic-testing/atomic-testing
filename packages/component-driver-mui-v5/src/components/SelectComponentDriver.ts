@@ -1,4 +1,4 @@
-import { HTMLTextInputDriver } from '@testzilla/component-driver-html';
+import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
   ComponentDriver,
   defaultStep,
@@ -10,7 +10,7 @@ import {
   LocatorType,
   ScenePart,
   ScenePartDriver,
-} from '@testzilla/core';
+} from '@atomic-testing/core';
 
 export const selectComponentPart = {
   trigger: {

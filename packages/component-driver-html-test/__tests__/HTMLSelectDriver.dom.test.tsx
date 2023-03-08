@@ -1,14 +1,14 @@
-import { createTestEngine } from '@testzilla/react';
+import { createTestEngine } from '@atomic-testing/react';
 import { multipleSelectExample, singleSelectExample } from '../src/examples/HTMLSelect.examples';
 
 describe('HTMLSelectDriver', () => {
   test('Single Select', async () => {
     const testEngine = createTestEngine(singleSelectExample.ui, singleSelectExample.scene);
     const targetValue = '3';
-      await testEngine.parts.select.setValue(targetValue);
-      const val = await testEngine.parts.select.getValue();
-      expect(val).toBe(targetValue);
-      await testEngine.cleanUp();
+    await testEngine.parts.select.setValue(targetValue);
+    const val = await testEngine.parts.select.getValue();
+    expect(val).toBe(targetValue);
+    await testEngine.cleanUp();
   });
 
   test('Multiple Select', async () => {
@@ -18,5 +18,5 @@ describe('HTMLSelectDriver', () => {
     const val = await testEngine.parts.select.getValue();
     expect(val).toEqual(targetValue);
     await testEngine.cleanUp();
-  });  
+  });
 });

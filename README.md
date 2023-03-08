@@ -1,3 +1,3 @@
-# testzilla
+# atomic-testing
 
-Testzilla is a test library which makes UI testing easier to write.
+Atomic Testing is a test library which makes UI testing easier to write.

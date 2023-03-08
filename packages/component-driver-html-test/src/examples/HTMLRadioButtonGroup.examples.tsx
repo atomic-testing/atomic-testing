@@ -1,6 +1,6 @@
+import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
+import { byName, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import React from 'react';
-import { byName, IExampleUnit, ScenePart } from '@testzilla/core';
-import { HTMLRadioButtonGroupDriver } from '@testzilla/component-driver-html';
 
 export const UncontrolRadioButtonGroupExample = () => {
   return (
@@ -29,12 +29,16 @@ export const uncontrolRadioButtonGroupExampleScenePart = {
   },
 } satisfies ScenePart;
 
-export const uncontrolledRadioButtonGroupExample: IExampleUnit<typeof uncontrolRadioButtonGroupExampleScenePart, JSX.Element> = {
+export const uncontrolledRadioButtonGroupExample: IExampleUnit<
+  typeof uncontrolRadioButtonGroupExampleScenePart,
+  JSX.Element
+> = {
   title: 'Uncontrolled radio button group',
   scene: uncontrolRadioButtonGroupExampleScenePart,
   ui: <UncontrolRadioButtonGroupExample />,
-}
+};
 
-export const radioButtonGroupExamples = [
-  uncontrolledRadioButtonGroupExample,
-] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const radioButtonGroupExamples = [uncontrolledRadioButtonGroupExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];

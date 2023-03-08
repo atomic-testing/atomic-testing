@@ -1,6 +1,6 @@
+import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import React from 'react';
-import { byDataTestId, IExampleUnit, ScenePart } from '@testzilla/core';
-import { HTMLTextInputDriver } from '@testzilla/component-driver-html';
 
 export const UncontrolledTextInputExample = () => {
   return (
@@ -21,9 +21,7 @@ export const uncontrolledTextInputExample: IExampleUnit<typeof uncontrolledTextI
   title: 'Uncontrol text input',
   scene: uncontrolledTextInputExampleScenePart,
   ui: <UncontrolledTextInputExample />,
-}
-
-
+};
 
 export const ControlledTextInputExample = () => {
   const [value, setValue] = React.useState('');
@@ -48,9 +46,9 @@ export const controlledTextInputExample: IExampleUnit<typeof uncontrolledTextInp
   title: 'Control text input',
   scene: controlledTextInputExampleScenePart,
   ui: <ControlledTextInputExample />,
-}
+};
 
-export const textInputExamples = [
-  uncontrolledTextInputExample,
-  controlledTextInputExample,
-] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const textInputExamples = [uncontrolledTextInputExample, controlledTextInputExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];

@@ -1,5 +1,5 @@
 {
-  "name": "@testzilla/react",
+  "name": "@atomic-testing/react",
   "version": "0.2.0",
   "description": "",
   "main": "dist/index.js",
@@ -25,8 +25,8 @@
     "url": "https://github.com/tangentlin/testzilla.git"
   },
   "dependencies": {
-    "@testzilla/core": "workspace:*",
-    "@testzilla/dom-core": "workspace:*"
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^16.0.0",

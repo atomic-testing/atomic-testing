@@ -1,6 +1,6 @@
+import { IClickOption, IInteractor, LocatorChain, locatorUtil, Optional } from '@atomic-testing/core';
+import { IEnterTextOption } from '@atomic-testing/core/src/types';
 import userEvent from '@testing-library/user-event';
-import { IClickOption, IInteractor, LocatorChain, locatorUtil, Optional } from '@testzilla/core';
-import { IEnterTextOption } from '@testzilla/core/src/types';
 
 export class DOMInteractor implements IInteractor {
   async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;

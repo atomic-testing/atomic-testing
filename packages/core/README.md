@@ -1,1 +1,1 @@
-# @testzilla/core
+# @atomic-testing/core

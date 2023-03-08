@@ -1,5 +1,5 @@
+import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, test } from '@playwright/test';
-import { createTestEngine } from '@testzilla/playwright'
 import { uncontrolledTextInputExampleScenePart } from '../src/examples';
 
 test('HTMLTextInputDriver', async ({ page }) => {
@@ -7,6 +7,6 @@ test('HTMLTextInputDriver', async ({ page }) => {
   const testEngine = createTestEngine(page, uncontrolledTextInputExampleScenePart);
   const targetValue = 'abc';
   await testEngine.parts.input.setValue(targetValue);
-    const val = await testEngine.parts.input.getValue();
-    expect(val).toBe(targetValue);
+  const val = await testEngine.parts.input.getValue();
+  expect(val).toBe(targetValue);
 });

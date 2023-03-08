@@ -1,1 +1,1 @@
-# @testzilla/react-testzilla
+# @atomic-testing/react-testzilla

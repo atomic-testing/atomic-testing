@@ -5,7 +5,7 @@ import {
   IInputDriver,
   LocatorRelativePosition,
   locatorUtil,
-} from '@testzilla/core';
+} from '@atomic-testing/core';
 
 import { HTMLCheckboxDriver } from './HTMLCheckboxDriver';
 

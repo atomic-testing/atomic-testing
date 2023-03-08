@@ -1,4 +1,4 @@
-import { ComponentDriver } from '@testzilla/core';
+import { ComponentDriver } from '@atomic-testing/core';
 
 export class HTMLCheckboxDriver extends ComponentDriver<{}> {
   async getValue(): Promise<string | null> {
