@@ -12,8 +12,8 @@ export class HTMLCheckboxDriver extends ComponentDriver<{}> implements IFormFiel
   }
 
   async isSelected(): Promise<boolean> {
-    const val = await this.getValue();
-    return val != null;
+    const isChecked = await this.interactor.isChecked(this.locator);
+    return isChecked;
   }
 
   async setSelected(selected: boolean): Promise<void> {
