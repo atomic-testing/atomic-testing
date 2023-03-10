@@ -1,4 +1,4 @@
-import { NativeSelectDriver, SelectDriver } from '@atomic-testing/component-driver-mui-v5';
+import { SelectDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { Box, FormControl, InputLabel, MenuItem, NativeSelect, Select, SelectChangeEvent } from '@mui/material';
 import React, { useCallback } from 'react';
@@ -75,7 +75,7 @@ export const NativeSelectExample = () => (
 export const nativeSelectExampleScenePart = {
   select: {
     locator: byDataTestId('native-select'),
-    driver: NativeSelectDriver,
+    driver: SelectDriver,
   },
 } satisfies ScenePart;
 

@@ -40,8 +40,11 @@ export class PlaywrightInteractor implements IInteractor {
     return values;
   }
 
-  async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
+  async enterText(locator: LocatorChain, text: string, option?: Optional<Partial<IEnterTextOption>>): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
+    if (!option?.append) {
+      await this.page.locator(cssLocator).clear();
+    }
     await this.page.locator(cssLocator).type(text);
   }
 

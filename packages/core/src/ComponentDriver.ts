@@ -17,7 +17,11 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   private readonly _perform: StepFunction;
   private readonly _parts: ScenePartDriver<T>;
 
-  constructor(locator: LocatorChain, public readonly interactor: IInteractor, option?: IComponentDriverOption<T>) {
+  constructor(
+    locator: LocatorChain,
+    public readonly interactor: IInteractor,
+    option?: Partial<IComponentDriverOption<T>>,
+  ) {
     this._locator = locator;
     this._perform = option?.perform ?? defaultStep;
     this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});

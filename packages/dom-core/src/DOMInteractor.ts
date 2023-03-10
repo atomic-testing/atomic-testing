@@ -32,6 +32,9 @@ export class DOMInteractor implements IInteractor {
   async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
     const el = this.getElement(locator);
     if (el != null) {
+      if (!option?.append) {
+        await userEvent.clear(el);
+      }
       await userEvent.type(el, text);
     }
   }
