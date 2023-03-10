@@ -1,5 +1,6 @@
 import { HTMLSelectDriver } from '@atomic-testing/component-driver-html';
 import {
+  byTagName,
   ComponentDriver,
   defaultStep,
   IComponentDriverOption,
@@ -12,7 +13,7 @@ import {
 
 export const nativeSelectPart = {
   select: {
-    locator: 'select',
+    locator: byTagName('select'),
     driver: HTMLSelectDriver,
   },
 } satisfies ScenePart;
