@@ -1,18 +1,20 @@
 import { TestEngine } from '@atomic-testing/core';
-import { createTestEngine } from '@atomic-testing/react';
+import { createTestEngine } from '@atomic-testing/playwright';
+import { expect, test } from '@playwright/test';
 import {
   iconCheckboxExample,
   indeterminateCheckboxExample,
   labelCheckboxExample,
 } from '../src/examples/Checkbox.examples';
 
-describe(`${labelCheckboxExample.title}`, () => {
+test.describe(`${labelCheckboxExample.title}`, () => {
   let testEngine: TestEngine<typeof labelCheckboxExample.scene>;
-  beforeEach(() => {
-    testEngine = createTestEngine(labelCheckboxExample.ui, labelCheckboxExample.scene);
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/checkbox');
+    testEngine = createTestEngine(page, labelCheckboxExample.scene);
   });
 
-  afterEach(async () => {
+  test.afterEach(async () => {
     await testEngine.cleanUp();
   });
 
@@ -33,13 +35,14 @@ describe(`${labelCheckboxExample.title}`, () => {
   });
 });
 
-describe(`${iconCheckboxExample.title}`, () => {
+test.describe(`${iconCheckboxExample.title}`, () => {
   let testEngine: TestEngine<typeof iconCheckboxExample.scene>;
-  beforeEach(() => {
-    testEngine = createTestEngine(iconCheckboxExample.ui, iconCheckboxExample.scene);
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/checkbox');
+    testEngine = createTestEngine(page, iconCheckboxExample.scene);
   });
 
-  afterEach(async () => {
+  test.afterEach(async () => {
     await testEngine.cleanUp();
   });
 
@@ -60,13 +63,14 @@ describe(`${iconCheckboxExample.title}`, () => {
   });
 });
 
-describe(`${indeterminateCheckboxExample.title}`, () => {
+test.describe(`${indeterminateCheckboxExample.title}`, () => {
   let testEngine: TestEngine<typeof indeterminateCheckboxExample.scene>;
-  beforeEach(() => {
-    testEngine = createTestEngine(indeterminateCheckboxExample.ui, indeterminateCheckboxExample.scene);
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/checkbox');
+    testEngine = createTestEngine(page, indeterminateCheckboxExample.scene);
   });
 
-  afterEach(async () => {
+  test.afterEach(async () => {
     await testEngine.cleanUp();
   });
 
@@ -80,8 +84,8 @@ describe(`${indeterminateCheckboxExample.title}`, () => {
     expect(selected).toBe(true);
   });
 
-  describe(`When checking all the children`, () => {
-    beforeEach(async () => {
+  test.describe(`When checking all the children`, () => {
+    test.beforeEach(async () => {
       await testEngine.parts.child1.setSelected(true);
       await testEngine.parts.child2.setSelected(true);
     });
@@ -97,8 +101,8 @@ describe(`${indeterminateCheckboxExample.title}`, () => {
     });
   });
 
-  describe(`When unchecking all the children`, () => {
-    beforeEach(async () => {
+  test.describe(`When unchecking all the children`, () => {
+    test.beforeEach(async () => {
       await testEngine.parts.child1.setSelected(false);
       await testEngine.parts.child2.setSelected(false);
     });
@@ -108,17 +112,19 @@ describe(`${indeterminateCheckboxExample.title}`, () => {
       expect(selected).toBe(false);
     });
 
+    // eslint-disable-next-line jest/no-identical-title
     test(`parent should not be indeterminate`, async () => {
       const selected = await testEngine.parts.parent.isIndeterminate();
       expect(selected).toBe(false);
     });
   });
 
-  describe('When checking parent', () => {
-    beforeEach(async () => {
+  test.describe('When checking parent', () => {
+    test.beforeEach(async () => {
       await testEngine.parts.parent.setSelected(true);
     });
 
+    // eslint-disable-next-line jest/no-identical-title
     test(`parent should not be indeterminate`, async () => {
       const selected = await testEngine.parts.child1.isIndeterminate();
       expect(selected).toBe(false);
@@ -135,11 +141,12 @@ describe(`${indeterminateCheckboxExample.title}`, () => {
     });
   });
 
-  describe('When unchecking parent', () => {
-    beforeEach(async () => {
+  test.describe('When unchecking parent', () => {
+    test.beforeEach(async () => {
       await testEngine.parts.parent.setSelected(false);
     });
 
+    // eslint-disable-next-line jest/no-identical-title
     test(`parent should not be indeterminate`, async () => {
       const selected = await testEngine.parts.child1.isIndeterminate();
       expect(selected).toBe(false);

@@ -1,5 +1,6 @@
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import {
+  byTagName,
   ComponentDriver,
   defaultStep,
   IComponentDriverOption,
@@ -7,17 +8,13 @@ import {
   IInteractor,
   IToggleDriver,
   LocatorChain,
-  LocatorType,
   ScenePart,
   ScenePartDriver,
 } from '@atomic-testing/core';
 
 export const checkboxPart = {
   checkbox: {
-    locator: {
-      type: LocatorType.Css,
-      selector: 'input',
-    },
+    locator: byTagName('input'),
     driver: HTMLCheckboxDriver,
   },
 } satisfies ScenePart;
@@ -39,8 +36,15 @@ export class CheckboxDriver
   isSelected(): Promise<boolean> {
     return this.parts.checkbox.isSelected();
   }
-  setSelected(selected: boolean): Promise<void> {
-    return this.parts.checkbox.setSelected(selected);
+  async setSelected(selected: boolean): Promise<void> {
+    const isIndeterminate = await this.isIndeterminate();
+    if (isIndeterminate && selected === false) {
+      // if the checkbox is indeterminate and we want to set it to false, we need to click it twice
+      // this is done through setting it to true first, then to false
+      await this.parts.checkbox.setSelected(true);
+    }
+
+    await this.parts.checkbox.setSelected(selected);
   }
 
   getValue(): Promise<string | null> {

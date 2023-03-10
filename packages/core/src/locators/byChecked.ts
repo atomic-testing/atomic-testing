@@ -3,7 +3,10 @@
 import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
 
 // to implementaiton other than CSS selector
-export function byChecked(checked = true): PartLocatorType {
+export function byChecked(
+  checked = true,
+  relative: LocatorRelativePosition = LocatorRelativePosition.Same,
+): PartLocatorType {
   let selector = ':checked';
   if (!checked) {
     selector = `:not(${selector})`;
@@ -11,6 +14,6 @@ export function byChecked(checked = true): PartLocatorType {
   return {
     type: LocatorType.Css,
     selector,
-    relative: LocatorRelativePosition.Same,
+    relative,
   };
 }

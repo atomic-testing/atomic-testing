@@ -58,7 +58,6 @@ export class DOMInteractor implements IInteractor {
       elList.forEach((el) => result.push(el));
       return result;
     }
-
     return document.querySelector<T>(cssLocator) ?? undefined;
   }
 

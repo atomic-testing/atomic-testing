@@ -1,4 +1,4 @@
-import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
+import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -20,11 +20,11 @@ export const LabelCheckbox = () => {
 export const labelCheckboxExampleScenePart = {
   apple: {
     locator: byDataTestId('apple'),
-    driver: ButtonDriver,
+    driver: CheckboxDriver,
   },
   banana: {
     locator: byDataTestId('banana'),
-    driver: ButtonDriver,
+    driver: CheckboxDriver,
   },
 } satisfies ScenePart;
 
@@ -51,12 +51,12 @@ export const IconCheckbox = () => {
 
 export const iconCheckboxExampleScenePart = {
   favorite: {
-    locator: byDataTestId('icon-checked'),
-    driver: ButtonDriver,
+    locator: byDataTestId('favorite'),
+    driver: CheckboxDriver,
   },
   bookmark: {
-    locator: byDataTestId('icon-unchecked'),
-    driver: ButtonDriver,
+    locator: byDataTestId('bookmark'),
+    driver: CheckboxDriver,
   },
 } satisfies ScenePart;
 
@@ -122,15 +122,15 @@ export const IndeterminateCheckbox = () => {
 export const indeterminateCheckboxExampleScenePart = {
   parent: {
     locator: byDataTestId('parent'),
-    driver: ButtonDriver,
+    driver: CheckboxDriver,
   },
   child1: {
     locator: byDataTestId('child1'),
-    driver: ButtonDriver,
+    driver: CheckboxDriver,
   },
   child2: {
     locator: byDataTestId('child2'),
-    driver: ButtonDriver,
+    driver: CheckboxDriver,
   },
 } satisfies ScenePart;
 
