@@ -102,6 +102,36 @@ export class DOMInteractor implements IInteractor {
     return Promise.resolve(false);
   }
 
+  async isDisabled(locator: LocatorChain): Promise<boolean> {
+    const el = this.getElement(locator);
+    if (el != null) {
+      // @ts-ignore
+      const isDisabled = Boolean(el.disabled);
+      return Promise.resolve(isDisabled);
+    }
+    return Promise.resolve(false);
+  }
+
+  async isReadonly(locator: LocatorChain): Promise<boolean> {
+    return this.hasAttribute(locator, 'readonly');
+  }
+
+  hasCssClass(locator: LocatorChain, className: string): Promise<boolean> {
+    const el = this.getElement(locator);
+    if (el != null) {
+      return Promise.resolve(el.classList.contains(className));
+    }
+    return Promise.resolve(false);
+  }
+
+  hasAttribute(locator: LocatorChain, name: string): Promise<boolean> {
+    const el = this.getElement(locator);
+    if (el != null) {
+      return Promise.resolve(el.hasAttribute(name));
+    }
+    return Promise.resolve(false);
+  }
+
   clone(): IInteractor {
     return new DOMInteractor();
   }

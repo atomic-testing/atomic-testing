@@ -102,6 +102,27 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     return nativeExists;
   }
 
+  async isDisabled(): Promise<boolean> {
+    const isNative = await this.isNative();
+    if (isNative) {
+      return this.parts.nativeSelect.isDisabled();
+    } else {
+      await this.enforcePartExistence('trigger');
+      const isDisabled = await this.interactor.hasCssClass(this.parts.trigger.locator, 'Mui-disabled');
+      return isDisabled;
+    }
+  }
+
+  async isReadonly(): Promise<boolean> {
+    const isNative = await this.isNative();
+    if (isNative) {
+      return this.parts.nativeSelect.isReadonly();
+    } else {
+      // Cannot deterimine readonly state of a select input.
+      return false;
+    }
+  }
+
   get driverName(): string {
     return 'MuiV5SelectDriver';
   }

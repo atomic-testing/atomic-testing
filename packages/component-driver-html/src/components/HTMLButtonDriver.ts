@@ -5,6 +5,14 @@ export class HTMLButtonDriver extends ComponentDriver<{}> implements IClickableD
     await this.interactor.click(this.locator, option);
   }
 
+  isDisabled(): Promise<boolean> {
+    return this.interactor.isDisabled(this.locator);
+  }
+
+  isReadonly(): Promise<boolean> {
+    return this.interactor.isReadonly(this.locator);
+  }
+
   get driverName(): string {
     return 'HTMLButtonDriver';
   }

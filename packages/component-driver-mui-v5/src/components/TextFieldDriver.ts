@@ -58,6 +58,7 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
       parts,
     });
   }
+
   private async getInputType(): Promise<TextFieldInputType> {
     // TODO: Detection of both input types can be done in parallel.
     const textInputExists = await this.interactor.exists(this.parts.singlelineInput.locator);
@@ -110,6 +111,30 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
     const helperTextExists = await this.interactor.exists(this.parts.helperText.locator);
     if (helperTextExists) {
       return this.parts.helperText.getText();
+    }
+  }
+
+  async isDisabled(): Promise<boolean> {
+    const inputType = await this.getInputType();
+    switch (inputType) {
+      case TextFieldInputType.Singleline:
+        return this.parts.singlelineInput.isDisabled();
+      case TextFieldInputType.Select:
+        return this.parts.selectInput.isDisabled();
+      case TextFieldInputType.Multiline:
+        return this.parts.multilineInput.isDisabled();
+    }
+  }
+
+  async isReadonly(): Promise<boolean> {
+    const inputType = await this.getInputType();
+    switch (inputType) {
+      case TextFieldInputType.Singleline:
+        return this.parts.singlelineInput.isReadonly();
+      case TextFieldInputType.Select:
+        return this.interactor.hasCssClass(this.parts.selectInput.locator, 'MuiInputBase-readOnly');
+      case TextFieldInputType.Multiline:
+        return this.parts.multilineInput.isReadonly();
     }
   }
 
