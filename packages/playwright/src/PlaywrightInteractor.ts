@@ -53,6 +53,11 @@ export class PlaywrightInteractor implements IInteractor {
     await this.page.locator(cssLocator).click();
   }
 
+  async hover(locator: LocatorChain): Promise<void> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    await this.page.locator(cssLocator).hover();
+  }
+
   async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;

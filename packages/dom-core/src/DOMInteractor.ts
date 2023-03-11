@@ -29,6 +29,13 @@ export class DOMInteractor implements IInteractor {
     }
   }
 
+  async hover(locator: LocatorChain): Promise<void> {
+    const el = this.getElement(locator);
+    if (el != null) {
+      await userEvent.hover(el);
+    }
+  }
+
   async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
     const el = this.getElement(locator);
     if (el != null) {
