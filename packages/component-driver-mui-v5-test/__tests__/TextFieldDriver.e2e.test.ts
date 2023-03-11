@@ -5,6 +5,7 @@ import { expect, test } from '@playwright/test';
 import {
   basicTextFieldExample,
   multilineTextFieldExample,
+  readonlyAndDisabledTextFieldExample,
   selectTextFieldExample,
 } from '../src/examples/TextField.examples';
 
@@ -98,6 +99,98 @@ test.describe(`${selectTextFieldExample.title}`, () => {
   test(`Alter value to 60 should change to 60`, async () => {
     await testEngine.parts.select.setValue('60');
     const value = await testEngine.parts.select.getValue();
+    expect(value).toBe('60');
+  });
+});
+
+test.describe(`${readonlyAndDisabledTextFieldExample.title}`, () => {
+  let testEngine: TestEngine<typeof readonlyAndDisabledTextFieldExample.scene>;
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/textfield');
+    testEngine = createTestEngine(page, readonlyAndDisabledTextFieldExample.scene);
+  });
+
+  test.afterEach(async () => {
+    await testEngine.cleanUp();
+  });
+
+  test(`Readonly TextField should be readonly`, async () => {
+    const isReadOnly = await testEngine.parts.textReadonly.isReadonly();
+    expect(isReadOnly).toBe(true);
+  });
+
+  test(`Readonly TextField value should be Hello World`, async () => {
+    const value = await testEngine.parts.textReadonly.getValue();
+    expect(value).toBe('Hello World');
+  });
+
+  test(`Disabled TextField should be disabled`, async () => {
+    const isDisabled = await testEngine.parts.textDisabled.isDisabled();
+    expect(isDisabled).toBe(true);
+  });
+
+  test(`Disabled TextField value should be Hello World`, async () => {
+    const value = await testEngine.parts.textDisabled.getValue();
+    expect(value).toBe('Hello World');
+  });
+
+  test(`Readonly Multi-TextField should be readonly`, async () => {
+    const isReadOnly = await testEngine.parts.multilineReadonly.isReadonly();
+    expect(isReadOnly).toBe(true);
+  });
+
+  test(`Readonly Multi-TextField value should be Hello World`, async () => {
+    const value = await testEngine.parts.multilineReadonly.getValue();
+    expect(value).toBe('Hello World');
+  });
+
+  test(`Disabled Multi-TextField should be disabled`, async () => {
+    const isDisabled = await testEngine.parts.multilineDisabled.isDisabled();
+    expect(isDisabled).toBe(true);
+  });
+
+  test(`Disabled Multi-TextField value should be Hello World`, async () => {
+    const value = await testEngine.parts.multilineDisabled.getValue();
+    expect(value).toBe('Hello World');
+  });
+
+  test(`Readonly Select TextField should be readonly`, async () => {
+    const isReadOnly = await testEngine.parts.selectReadonly.isReadonly();
+    expect(isReadOnly).toBe(true);
+  });
+
+  test(`Readonly Select TextField value should be 20`, async () => {
+    const value = await testEngine.parts.selectReadonly.getValue();
+    expect(value).toBe('20');
+  });
+
+  test(`Disabled Select TextField should be disabled`, async () => {
+    const isDisabled = await testEngine.parts.selectDisabled.isDisabled();
+    expect(isDisabled).toBe(true);
+  });
+
+  test(`Disabled Select TextField value should be 60`, async () => {
+    const value = await testEngine.parts.selectDisabled.getValue();
+    expect(value).toBe('60');
+  });
+
+  test(`Readonly Native Select TextField should be readonly`, async () => {
+    const isReadOnly = await testEngine.parts.nativeSelectReadonly.isReadonly();
+    expect(isReadOnly).toBe(true);
+  });
+
+  test(`Readonly Native Select TextField value should be 20`, async () => {
+    const value = await testEngine.parts.nativeSelectReadonly.getValue();
+    expect(value).toBe('20');
+  });
+
+  test(`Disabled Native Select TextField should be disabled`, async () => {
+    const isDisabled = await testEngine.parts.nativeSelectDisabled.isDisabled();
+    expect(isDisabled).toBe(true);
+  });
+
+  test(`Disabled Native Select TextField value should be 60`, async () => {
+    const value = await testEngine.parts.nativeSelectDisabled.getValue();
     expect(value).toBe('60');
   });
 });
