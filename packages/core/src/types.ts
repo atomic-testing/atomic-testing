@@ -45,8 +45,6 @@ export interface IEnterTextOption {
   append: boolean;
 }
 
-document.querySelector('input');
-
 export interface IInteractor {
   click(locator: LocatorChain, option?: Partial<IClickOption>): Promise<void>;
 
@@ -74,6 +72,11 @@ export interface IInteractor {
   getText(locator: LocatorChain): Promise<Optional<string>>;
   exists(locator: LocatorChain): Promise<boolean>;
   isChecked(locator: LocatorChain): Promise<boolean>;
+  isDisabled(locator: LocatorChain): Promise<boolean>;
+  isReadonly(locator: LocatorChain): Promise<boolean>;
+
+  hasCssClass(locator: LocatorChain, className: string): Promise<boolean>;
+  hasAttribute(locator: LocatorChain, name: string): Promise<boolean>;
 
   clone(): IInteractor;
 }

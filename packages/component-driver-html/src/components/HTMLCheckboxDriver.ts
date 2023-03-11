@@ -23,6 +23,14 @@ export class HTMLCheckboxDriver extends ComponentDriver<{}> implements IFormFiel
     }
   }
 
+  isDisabled(): Promise<boolean> {
+    return this.interactor.isDisabled(this.locator);
+  }
+
+  isReadonly(): Promise<boolean> {
+    return this.interactor.isReadonly(this.locator);
+  }
+
   get driverName(): string {
     return 'HTMLCheckboxDriver';
   }
