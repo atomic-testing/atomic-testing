@@ -26,6 +26,14 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
     return true;
   }
 
+  isDisabled(): Promise<boolean> {
+    return this.interactor.isDisabled(this.locator);
+  }
+
+  isReadonly(): Promise<boolean> {
+    return this.interactor.isReadonly(this.locator);
+  }
+
   get driverName(): string {
     return 'HTMLTextInput';
   }

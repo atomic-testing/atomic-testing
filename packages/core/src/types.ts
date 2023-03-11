@@ -8,26 +8,28 @@ export type Nullable<T> = T | null;
 
 export type PartName<T extends ScenePart> = keyof T;
 
+export interface ScenePartDefinition<T extends ScenePart> {
+  /**
+   * The locator of the part
+   */
+  locator?: PartLocatorType;
+
+  /**
+   * The class of driver which is used to interact with the element
+   */
+  driver: typeof ComponentDriver<T>;
+
+  /**
+   * Option for the driver
+   */
+  option?: Partial<IComponentDriverOption>;
+}
+
 /**
  * Part name to driver definition map
  */
 export interface ScenePart {
-  [partName: string]: {
-    /**
-     * Query which is used to locate the element
-     */
-    locator?: PartLocatorType;
-
-    /**
-     * The class of driver which is used to interact with the element
-     */
-    driver: typeof ComponentDriver<any>;
-
-    /**
-     * Option for the driver
-     */
-    option?: Partial<IComponentDriverOption>;
-  };
+  [partName: string]: ScenePartDefinition<any>;
 }
 
 export type ScenePartDriver<T extends ScenePart> = {
@@ -36,9 +38,12 @@ export type ScenePartDriver<T extends ScenePart> = {
 
 export type LocatorChain = readonly PartLocatorType[];
 
-export interface IEnterTextOption {}
-
-document.querySelector('input');
+export interface IEnterTextOption {
+  /**
+   * Append text to the target, default to false
+   */
+  append: boolean;
+}
 
 export interface IInteractor {
   click(locator: LocatorChain, option?: Partial<IClickOption>): Promise<void>;
@@ -67,6 +72,11 @@ export interface IInteractor {
   getText(locator: LocatorChain): Promise<Optional<string>>;
   exists(locator: LocatorChain): Promise<boolean>;
   isChecked(locator: LocatorChain): Promise<boolean>;
+  isDisabled(locator: LocatorChain): Promise<boolean>;
+  isReadonly(locator: LocatorChain): Promise<boolean>;
+
+  hasCssClass(locator: LocatorChain, className: string): Promise<boolean>;
+  hasAttribute(locator: LocatorChain, name: string): Promise<boolean>;
 
   clone(): IInteractor;
 }

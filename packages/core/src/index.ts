@@ -4,7 +4,6 @@ export type { IClickableDriver, IClickOption, IFormFieldDriver, IInputDriver, IT
 export { TooManyMatchingElementError, TooManyMatchingElementErrorId } from './errors/TooManyMatchingElementError';
 export * from './example/types';
 export * from './locators/';
-export { byDataTestId } from './locators/byDataTestId';
 export { TestEngine } from './TestEngine';
 export type {
   IComponentDriverOption,
@@ -13,6 +12,7 @@ export type {
   Nullable,
   Optional,
   ScenePart,
+  ScenePartDefinition,
   ScenePartDriver,
   StepFunction,
 } from './types';

@@ -1,12 +1,13 @@
-import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
+import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { Box, MenuItem, TextField } from '@mui/material';
+import React from 'react';
 
 //#region Label checkbox
-export const BasicTextField = () => {
+export const BasicTextField: React.FunctionComponent = () => {
   return (
     <Box component="form" noValidate autoComplete="off">
-      <TextField data-testid="basic" label="Outlined" variant="outlined" helperText="Enter text here" />
+      <TextField data-testid="basic" label="Basic Field" variant="outlined" helperText="Enter text here" />
     </Box>
   );
 };
@@ -14,7 +15,7 @@ export const BasicTextField = () => {
 export const basicTextFieldExampleScenePart = {
   basic: {
     locator: byDataTestId('basic'),
-    driver: CheckboxDriver,
+    driver: TextFieldDriver,
   },
 } satisfies ScenePart;
 
@@ -41,7 +42,7 @@ export const MultilineTextField = () => {
 export const multilineTextFieldExampleScenePart = {
   multiline: {
     locator: byDataTestId('multiline'),
-    driver: CheckboxDriver,
+    driver: TextFieldDriver,
   },
 } satisfies ScenePart;
 
@@ -82,7 +83,7 @@ export const SelectTextField = () => {
 export const selectTextFieldExampleScenePart = {
   select: {
     locator: byDataTestId('select'),
-    driver: CheckboxDriver,
+    driver: TextFieldDriver,
   },
 } satisfies ScenePart;
 

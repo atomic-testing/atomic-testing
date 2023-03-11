@@ -29,12 +29,9 @@ export function toCssSelector(locator: LocatorChain): string {
   const effectiveLocator = getEffectiveLocator(locator);
   const statements = effectiveLocator.map((loc) => {
     let separator = ' ';
-    let statement = '';
-    if (typeof loc === 'string') {
-      statement = loc;
-    } else {
+    const statement = getLocatorStatement(loc);
+    if (typeof loc !== 'string') {
       const l = loc as CssLocator;
-      statement = l.selector;
       if (l.relative === LocatorRelativePosition.Same) {
         separator = '';
       }
@@ -44,4 +41,16 @@ export function toCssSelector(locator: LocatorChain): string {
   });
 
   return statements.join('').trim();
+}
+
+export function getLocatorStatement(locator: PartLocatorType): string {
+  let statement = '';
+  if (typeof locator === 'string') {
+    statement = locator;
+  } else {
+    const l = locator as CssLocator;
+    statement = l.selector;
+  }
+
+  return statement;
 }

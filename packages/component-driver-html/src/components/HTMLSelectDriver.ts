@@ -20,6 +20,14 @@ export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDrive
     return true;
   }
 
+  isDisabled(): Promise<boolean> {
+    return this.interactor.isDisabled(this.locator);
+  }
+
+  isReadonly(): Promise<boolean> {
+    return this.interactor.isReadonly(this.locator);
+  }
+
   get driverName(): string {
     throw 'HTMLSelectDriver';
   }

@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build:ui": "react-scripts build",
     "postbuild": "node ../../scripts/postBuild.js",
     "test:dom": "jest",
     "test:e2e": "playwright test",

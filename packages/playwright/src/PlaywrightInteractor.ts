@@ -40,8 +40,11 @@ export class PlaywrightInteractor implements IInteractor {
     return values;
   }
 
-  async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
+  async enterText(locator: LocatorChain, text: string, option?: Optional<Partial<IEnterTextOption>>): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
+    if (!option?.append) {
+      await this.page.locator(cssLocator).clear();
+    }
     await this.page.locator(cssLocator).type(text);
   }
 
@@ -91,6 +94,32 @@ export class PlaywrightInteractor implements IInteractor {
     const cssLocator = locatorUtil.toCssSelector(locator);
     const checked = await this.page.locator(cssLocator).isChecked();
     return checked;
+  }
+
+  async isDisabled(locator: LocatorChain): Promise<boolean> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    const isDisabled = await this.page.locator(cssLocator).isDisabled();
+    return isDisabled;
+  }
+
+  async isReadonly(locator: LocatorChain): Promise<boolean> {
+    const readonly = await this.getAttribute(locator, 'readonly');
+    return readonly != null;
+  }
+
+  async hasCssClass(locator: LocatorChain, className: string): Promise<boolean> {
+    const classNames = await this.getAttribute(locator, 'class');
+    if (classNames == null) {
+      return false;
+    }
+
+    const names = classNames.split(/\s+/);
+    return names.includes(className);
+  }
+
+  async hasAttribute(locator: LocatorChain, name: string): Promise<boolean> {
+    const attrValue = await this.getAttribute(locator, name);
+    return attrValue != null;
   }
 
   clone(): IInteractor {

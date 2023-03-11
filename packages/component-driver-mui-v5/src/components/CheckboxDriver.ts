@@ -56,6 +56,14 @@ export class CheckboxDriver
     return indeterminate === 'true';
   }
 
+  isDisabled(): Promise<boolean> {
+    return this.parts.checkbox.isDisabled();
+  }
+
+  isReadonly(): Promise<boolean> {
+    return this.parts.checkbox.isReadonly();
+  }
+
   get driverName(): string {
     return 'MuiV5SelectDriver';
   }
