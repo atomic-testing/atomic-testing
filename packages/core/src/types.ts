@@ -46,6 +46,12 @@ export interface IEnterTextOption {
 }
 
 export interface IInteractor {
+  //#region Potentially DOM mutative interactions
+  /**
+   * Click on the desired element
+   * @param locator
+   * @param option
+   */
   click(locator: LocatorChain, option?: Partial<IClickOption>): Promise<void>;
 
   /**
@@ -56,12 +62,20 @@ export interface IInteractor {
   enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption>): Promise<void>;
 
   /**
-   *
-   * @param locator Select option by value from a select element
+   * Select option by value from a select element
+   * @param locator
    * @param values
    */
   selectOptionValue(locator: LocatorChain, values: string[]): Promise<void>;
 
+  /**
+   * Perform a mouse hover on the desired element
+   * @param locator
+   */
+  hover(locator: LocatorChain): Promise<void>;
+  //#endregion
+
+  //#region Read only interactions
   getInputValue(locator: LocatorChain): Promise<Optional<string>>;
   getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>>;
 
@@ -77,6 +91,7 @@ export interface IInteractor {
 
   hasCssClass(locator: LocatorChain, className: string): Promise<boolean>;
   hasAttribute(locator: LocatorChain, name: string): Promise<boolean>;
+  //#endregion
 
   clone(): IInteractor;
 }
