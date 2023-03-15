@@ -3,7 +3,7 @@ import { IEnterTextOption } from '@atomic-testing/core/src/types';
 import userEvent from '@testing-library/user-event';
 
 export class DOMInteractor implements IInteractor {
-  constructor(protected readonly doc: Document = document) {}
+  constructor(protected readonly rootEl: HTMLElement = document.documentElement) {}
   async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
@@ -64,12 +64,12 @@ export class DOMInteractor implements IInteractor {
   getElement<T extends Element = Element>(locator: LocatorChain, isMultiple = false) {
     const cssLocator = locatorUtil.toCssSelector(locator);
     if (isMultiple) {
-      const elList = this.doc.querySelectorAll<T>(cssLocator);
+      const elList = this.rootEl.querySelectorAll<T>(cssLocator);
       const result: T[] = [];
       elList.forEach((el) => result.push(el));
       return result;
     }
-    return this.doc.querySelector<T>(cssLocator) ?? undefined;
+    return this.rootEl.querySelector<T>(cssLocator) ?? undefined;
   }
 
   async getInputValue(locator: LocatorChain): Promise<Optional<string>> {
