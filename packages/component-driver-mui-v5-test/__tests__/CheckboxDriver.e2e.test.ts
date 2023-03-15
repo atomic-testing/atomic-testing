@@ -74,7 +74,7 @@ test.describe(`${indeterminateCheckboxExample.title}`, () => {
     await testEngine.cleanUp();
   });
 
-  test(`parent is checked initially`, async () => {
+  test(`parent is not checked initially`, async () => {
     const selected = await testEngine.parts.parent.isSelected();
     expect(selected).toBe(false);
   });
