@@ -74,6 +74,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return this.interactor.getText(this.locator);
   }
 
+  exists(): Promise<boolean> {
+    return this.interactor.exists(this.locator);
+  }
+
   abstract get driverName(): string;
 }
 
