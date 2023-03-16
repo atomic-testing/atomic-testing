@@ -1,5 +1,6 @@
 import { ScenePart, StepFunction, TestEngine } from '@atomic-testing/core';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
+import * as ReactDomClient from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
 import { ReactInteractor } from './ReactInteractor';
@@ -18,24 +19,45 @@ export function createTestEngine<T extends ScenePart>(
   const step = option?.perform ?? wrapAct;
   const container = rootEl.appendChild(document.createElement('div'));
 
-  const root = createRoot(container);
-  act(() => root.render(node));
+  let engine: TestEngine<T>;
 
-  const cleanup = () => {
-    act(() => root.unmount());
-    rootEl.removeChild(container);
-    return Promise.resolve();
-  };
+  if (option?.legacyRender) {
+    act(() => ReactDOM.render(node, container));
+    const cleanup = () => {
+      ReactDOM.unmountComponentAtNode(container);
+      rootEl.removeChild(container);
+      return Promise.resolve();
+    };
 
-  const engine = new TestEngine(
-    [],
-    new ReactInteractor(),
-    {
-      perform: step,
-      parts: partDefinitions,
-    },
-    cleanup,
-  );
+    engine = new TestEngine(
+      [],
+      new ReactInteractor(),
+      {
+        perform: step,
+        parts: partDefinitions,
+      },
+      cleanup,
+    );
+  } else {
+    const root = ReactDomClient.createRoot(container);
+    act(() => root.render(node));
+
+    const cleanup = () => {
+      act(() => root.unmount());
+      rootEl.removeChild(container);
+      return Promise.resolve();
+    };
+
+    engine = new TestEngine(
+      [],
+      new ReactInteractor(),
+      {
+        perform: step,
+        parts: partDefinitions,
+      },
+      cleanup,
+    );
+  }
 
   return engine;
 }
