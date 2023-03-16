@@ -1,15 +1,16 @@
-import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
+import { InputDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { Box, FilledInput } from '@mui/material';
+import { Box, FilledInput, OutlinedInput } from '@mui/material';
 import React from 'react';
 
 //#region Label checkbox
 export const BasicInput: React.FunctionComponent = () => {
   return (
-    <Box component="form" noValidate autoComplete="off">
+    <Box component="form" noValidate autoComplete="off" gap="2rem" display="flex" alignItems="flex-start">
       <FilledInput data-testid="basic" />
       <FilledInput data-testid="readonly" readOnly />
       <FilledInput data-testid="disabled" disabled />
+      <OutlinedInput data-testid="multiline" multiline rows={5} />
     </Box>
   );
 };
@@ -17,15 +18,19 @@ export const BasicInput: React.FunctionComponent = () => {
 export const basicInputExampleScenePart = {
   basic: {
     locator: byDataTestId('basic'),
-    driver: TextFieldDriver,
+    driver: InputDriver,
+  },
+  multiline: {
+    locator: byDataTestId('multiline'),
+    driver: InputDriver,
   },
   readonly: {
     locator: byDataTestId('readonly'),
-    driver: TextFieldDriver,
+    driver: InputDriver,
   },
   disabled: {
     locator: byDataTestId('disabled'),
-    driver: TextFieldDriver,
+    driver: InputDriver,
   },
 } satisfies ScenePart;
 

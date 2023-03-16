@@ -13,7 +13,7 @@ describe(`${basicInputExample.title}`, () => {
     await testEngine.cleanUp();
   });
 
-  test(`Value should be empty`, async () => {
+  test(`Basic input's Value should be empty`, async () => {
     const value = await testEngine.parts.basic.getValue();
     expect(value).toBe('');
   });
@@ -21,6 +21,17 @@ describe(`${basicInputExample.title}`, () => {
   test(`Alter value should change the value`, async () => {
     await testEngine.parts.basic.setValue('Hello World');
     const value = await testEngine.parts.basic.getValue();
+    expect(value).toBe('Hello World');
+  });
+
+  test(`Multiline input's Value should be empty`, async () => {
+    const value = await testEngine.parts.multiline.getValue();
+    expect(value).toBe('');
+  });
+
+  test(`Alter multiline value should change the value`, async () => {
+    await testEngine.parts.multiline.setValue('Hello World');
+    const value = await testEngine.parts.multiline.getValue();
     expect(value).toBe('Hello World');
   });
 

@@ -2,6 +2,7 @@ import { ExampleList } from './components/ExampleList';
 import { selectExamples } from './examples';
 import { buttonExamples } from './examples/Button.examples';
 import { checkboxExamples } from './examples/Checkbox.examples';
+import { inputExamples } from './examples/Input.examples';
 import { textFieldExamples } from './examples/TextField.examples';
 
 interface IToc {
@@ -20,6 +21,11 @@ export const tocs: IToc[] = [
     label: 'Checkbox',
     path: '/checkbox',
     ui: <ExampleList examples={checkboxExamples} />,
+  },
+  {
+    label: 'Input',
+    path: '/input',
+    ui: <ExampleList examples={inputExamples} />,
   },
   {
     label: 'Select',
