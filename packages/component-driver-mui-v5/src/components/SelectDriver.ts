@@ -6,6 +6,7 @@ import {
 } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
+  byRole,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -20,7 +21,7 @@ import {
 
 export const selectPart = {
   trigger: {
-    locator: '[role=button]',
+    locator: byRole('button'),
     driver: HTMLButtonDriver,
   },
   dropdown: {
@@ -92,7 +93,7 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     return success;
   }
 
-  async exists(): Promise<boolean> {
+  override async exists(): Promise<boolean> {
     const triggerExists = await this.interactor.exists(this.parts.trigger.locator);
     if (triggerExists) {
       return true;
