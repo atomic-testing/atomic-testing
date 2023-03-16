@@ -32,9 +32,9 @@ enum TextFieldInputType {
 }
 
 /**
- * A driver for the Material UI v5 TextField component with single line or multiline text input.
+ * A driver for the Material UI v5 Input, FilledInput, OutlinedInput, and StandardInput components.
  */
-export class TextFieldDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
+export class InputDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
   constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
