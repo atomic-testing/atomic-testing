@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react",
-  "version": "0.7.1",
+  "version": "0.7.5",
   "description": "",
   "main": "dist/index.js",
   "files": [
