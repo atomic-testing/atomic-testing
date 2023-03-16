@@ -1,7 +1,7 @@
 {
   "name": "@atomic-testing/core",
-  "version": "0.7.1",
-  "description": "",
+  "version": "0.7.5",
+  "description": "Core library for atomic-testing",
   "main": "dist/index.js",
   "files": [
     "dist",

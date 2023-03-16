@@ -1,6 +1,5 @@
 import { ScenePart, StepFunction, TestEngine } from '@atomic-testing/core';
-import ReactDOM from 'react-dom';
-import * as ReactDomClient from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
 import { ReactInteractor } from './ReactInteractor';
@@ -10,6 +9,13 @@ const wrapAct: StepFunction = async (fn) => {
   await act(fn);
 };
 
+/**
+ * Create test engine for React 18 or later, for React 17 or before, use createLegacyTestEngine
+ * @param node The React node to render
+ * @param partDefinitions The scene part definitions
+ * @param option
+ * @returns The test engine
+ */
 export function createTestEngine<T extends ScenePart>(
   node: JSX.Element,
   partDefinitions: T,
@@ -19,45 +25,24 @@ export function createTestEngine<T extends ScenePart>(
   const step = option?.perform ?? wrapAct;
   const container = rootEl.appendChild(document.createElement('div'));
 
-  let engine: TestEngine<T>;
+  const root = createRoot(container);
+  act(() => root.render(node));
 
-  if (option?.legacyRender) {
-    act(() => ReactDOM.render(node, container));
-    const cleanup = () => {
-      ReactDOM.unmountComponentAtNode(container);
-      rootEl.removeChild(container);
-      return Promise.resolve();
-    };
+  const cleanup = () => {
+    act(() => root.unmount());
+    rootEl.removeChild(container);
+    return Promise.resolve();
+  };
 
-    engine = new TestEngine(
-      [],
-      new ReactInteractor(),
-      {
-        perform: step,
-        parts: partDefinitions,
-      },
-      cleanup,
-    );
-  } else {
-    const root = ReactDomClient.createRoot(container);
-    act(() => root.render(node));
-
-    const cleanup = () => {
-      act(() => root.unmount());
-      rootEl.removeChild(container);
-      return Promise.resolve();
-    };
-
-    engine = new TestEngine(
-      [],
-      new ReactInteractor(),
-      {
-        perform: step,
-        parts: partDefinitions,
-      },
-      cleanup,
-    );
-  }
+  const engine = new TestEngine(
+    [],
+    new ReactInteractor(),
+    {
+      perform: step,
+      parts: partDefinitions,
+    },
+    cleanup,
+  );
 
   return engine;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/playwright",
-  "version": "0.7.1",
+  "version": "0.7.5",
   "description": "Atomic Testing Playwright Adapter",
   "main": "dist/index.js",
   "files": [
