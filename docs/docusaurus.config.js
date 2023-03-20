@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Atomic Testing',
-  tagline: 'Make your UI testing simpler and more reliable',
+  tagline: 'Make UI testing simpler and more reliable',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -20,9 +20,12 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'tangentlin', // Usually your GitHub org/user name.
   projectName: 'atomic-testing', // Usually your repo name.
+  deploymentBranch: 'gh-pages', // Branch that GitHub pages will deploy from.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+
+  trailingSlash: true,
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
