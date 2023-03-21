@@ -1,6 +1,7 @@
 export { byChecked } from './byChecked';
 export { byCssClass } from './byCssClass';
 export { byDataTestId } from './byDataTestId';
+export { byInputType } from './byInputType';
 export { byName } from './byName';
 export { byRole } from './byRole';
 export { byTagName } from './byTagName';

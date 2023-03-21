@@ -3,6 +3,7 @@ import { selectExamples } from './examples';
 import { buttonExamples } from './examples/Button.examples';
 import { checkboxExamples } from './examples/Checkbox.examples';
 import { inputExamples } from './examples/Input.examples';
+import { ratingExamples } from './examples/Rating.examples';
 import { textFieldExamples } from './examples/TextField.examples';
 
 interface IToc {
@@ -26,6 +27,11 @@ export const tocs: IToc[] = [
     label: 'Input',
     path: '/input',
     ui: <ExampleList examples={inputExamples} />,
+  },
+  {
+    label: 'Rating',
+    path: '/rating',
+    ui: <ExampleList examples={ratingExamples} />,
   },
   {
     label: 'Select',
