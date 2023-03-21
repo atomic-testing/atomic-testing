@@ -3,14 +3,11 @@
 import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
 
 // to implementation other than CSS selector
-export function byChecked(
-  checked = true,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Same,
+export function byInputType(
+  type: string,
+  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
-  let selector = ':checked';
-  if (!checked) {
-    selector = `:not(${selector})`;
-  }
+  const selector = `input[type=${type}]`;
   return {
     type: LocatorType.Css,
     selector,
