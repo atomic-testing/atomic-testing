@@ -33,7 +33,7 @@ export const selectPart = {
     driver: HTMLElementDriver,
   },
   input: {
-    locator: 'input.MuiSelect-nativeInput',
+    locator: byCssClass('MuiSelect-nativeInput'),
     driver: HTMLTextInputDriver,
   },
   nativeSelect: {

@@ -1,3 +1,4 @@
+export { byAttribute } from './byAttribute';
 export { byChecked } from './byChecked';
 export { byCssClass } from './byCssClass';
 export { byDataTestId } from './byDataTestId';

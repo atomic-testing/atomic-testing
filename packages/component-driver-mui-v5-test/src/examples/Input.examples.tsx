@@ -34,10 +34,6 @@ export const basicInputExampleScenePart = {
   },
 } satisfies ScenePart;
 
-/**
- * Basic TextField example from MUI's website
- * @see https://mui.com/material-ui/react-text-field/#basic-textfield
- */
 export const basicInputExample: IExampleUnit<typeof basicInputExampleScenePart, JSX.Element> = {
   title: 'Basic TextField',
   scene: basicInputExampleScenePart,
