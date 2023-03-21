@@ -14,7 +14,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./docs
+        working-directory: ./docs/
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -23,10 +23,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        working-directory: docs
+        working-directory: ./docs/
         run: npm ci
       - name: Build website
-        working-directory: docs
+        working-directory: ./docs/
         run: npm build
 
       # Popular action to deploy to GitHub Pages:
