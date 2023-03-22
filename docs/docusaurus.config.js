@@ -124,7 +124,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Atomic Testing, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © 2022-${new Date().getFullYear()} Tangent Lin`,
       },
       prism: {
         theme: lightCodeTheme,
