@@ -18,7 +18,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'tangentlin', // Usually your GitHub org/user name.
+  organizationName: 'atomic-testing', // Usually your GitHub org/user name.
   projectName: 'atomic-testing', // Usually your repo name.
   deploymentBranch: 'gh-pages', // Branch that GitHub pages will deploy from.
 
@@ -72,7 +72,7 @@ const config = {
             label: 'Get Started',
           },
           {
-            href: 'https://github.com/tangentlin/atomic-testing',
+            href: 'https://github.com/atomic-testing/atomic-testing',
             label: 'GitHub',
             position: 'right',
           },
@@ -112,7 +112,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/tangentlin/atomic-testing',
+                href: 'https://github.com/atomic-testing/atomic-testing',
               },
             ],
           },
