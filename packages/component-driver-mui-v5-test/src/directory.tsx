@@ -5,6 +5,7 @@ import {
   inputExamples,
   ratingExamples,
   selectExamples,
+  sliderExamples,
   switchExamples,
   textFieldExamples,
 } from './examples';
@@ -40,6 +41,11 @@ export const tocs: IToc[] = [
     label: 'Select',
     path: '/select',
     ui: <ExampleList examples={selectExamples} />,
+  },
+  {
+    label: 'Slider',
+    path: '/slider',
+    ui: <ExampleList examples={sliderExamples} />,
   },
   {
     label: 'Switch',

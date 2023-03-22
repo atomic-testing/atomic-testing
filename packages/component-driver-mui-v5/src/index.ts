@@ -4,5 +4,6 @@ export { FabDriver } from './components/FabDriver';
 export { InputDriver } from './components/InputDriver';
 export { RatingDriver } from './components/RatingDriver';
 export { SelectDriver } from './components/SelectDriver';
+export { SliderDriver } from './components/SliderDriver';
 export { SwitchDriver } from './components/SwitchDriver';
 export { TextFieldDriver } from './components/TextFieldDriver';
