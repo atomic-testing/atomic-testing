@@ -18,11 +18,6 @@ describe(`${basicRatingExample.title}`, () => {
     expect(value).toBe(2);
   });
 
-  // test(`Readonly rating's value should be 2`, async () => {
-  //   const value = await testEngine.parts.readonly.getValue();
-  //   expect(value).toBe(2);
-  // });
-
   test(`Disabled rating's value should be 2`, async () => {
     const value = await testEngine.parts.disabled.getValue();
     expect(value).toBe(2);
@@ -79,6 +74,4 @@ describe(`${basicRatingExample.title}`, () => {
       expect(value).toBe(null);
     });
   });
-
-  // TODO: Test set to null
 });

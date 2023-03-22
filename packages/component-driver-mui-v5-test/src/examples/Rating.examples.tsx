@@ -3,7 +3,7 @@ import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { Divider, Rating, Stack, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
-//#region Label checkbox
+//#region Label rating
 export const BasicRating: React.FunctionComponent = () => {
   const [basicValue, setBasicValue] = useState<number | null>(2);
   const [initiallyEmptyValue, setInitiallyEmptyValue] = useState<number | null>(null);
@@ -59,11 +59,11 @@ export const basicRatingExampleScenePart = {
 } satisfies ScenePart;
 
 /**
- * Basic TextField example from MUI's website
- * @see https://mui.com/material-ui/react-text-field/#basic-textfield
+ * Basic Rating example from MUI's website
+ * @see https://mui.com/material-ui/react-rating
  */
 export const basicRatingExample: IExampleUnit<typeof basicRatingExampleScenePart, JSX.Element> = {
-  title: 'Basic TextField',
+  title: 'Basic Rating',
   scene: basicRatingExampleScenePart,
   ui: <BasicRating />,
 };
