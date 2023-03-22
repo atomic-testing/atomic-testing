@@ -41,7 +41,7 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
   /**
    * Set slider's range value.  Do not use as it will throw an error
    * @param values
-   * @see https://github.com/tangentlin/atomic-testing/issues/73
+   * @see https://github.com/atomic-testing/atomic-testing/issues/73
    */
   async setValue(value: number): Promise<boolean> {
     const success = await this.setRangeValues([value]);
@@ -76,7 +76,7 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
   /**
    * Set slider's range values.  Do not use as it will throw an error
    * @param values
-   * @see https://github.com/tangentlin/atomic-testing/issues/73
+   * @see https://github.com/atomic-testing/atomic-testing/issues/73
    */
   async setRangeValues(values: readonly number[]): Promise<boolean> {
     await this.enforcePartExistence('input');

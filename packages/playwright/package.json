@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/playwright",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Atomic Testing Playwright Adapter",
   "main": "dist/index.js",
   "files": [
@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tangentlin/atomic-testing.git"
+    "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*"

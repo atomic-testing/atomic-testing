@@ -29,7 +29,7 @@ describe(`${basicSliderExample.title}`, () => {
   });
 
   test.skip(`Setting basic slider's value should change its state`, async () => {
-    // TODO: https://github.com/tangentlin/atomic-testing/issues/73
+    // TODO: https://github.com/atomic-testing/atomic-testing/issues/73
     await testEngine.parts.basic.setValue(50);
     const value = await testEngine.parts.basic.getValue();
     expect(value).toBe(50);

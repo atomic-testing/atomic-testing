@@ -29,7 +29,7 @@ export class RatingDriver extends ComponentDriver<typeof parts> implements IInpu
   }
 
   async getValue(): Promise<number | null> {
-    // TODO: https://github.com/tangentlin/atomic-testing/issues/69
+    // TODO: https://github.com/atomic-testing/atomic-testing/issues/69
     // getValue() does not work when readonly
     await this.enforcePartExistence('choices');
     const value = await this.parts.choices.getValue();
@@ -40,7 +40,7 @@ export class RatingDriver extends ComponentDriver<typeof parts> implements IInpu
   }
 
   async setValue(value: number | null): Promise<boolean> {
-    // TODO: Setting value to null is not supported.  https://github.com/tangentlin/atomic-testing/issues/68
+    // TODO: Setting value to null is not supported.  https://github.com/atomic-testing/atomic-testing/issues/68
     const currentValue = await this.getValue();
     if (value === currentValue) {
       return true;

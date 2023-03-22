@@ -68,7 +68,7 @@ describe(`${basicRatingExample.title}`, () => {
       expect(success).toBe(true);
     });
 
-    // TODO: https://github.com/tangentlin/atomic-testing/issues/68
+    // TODO: https://github.com/atomic-testing/atomic-testing/issues/68
     test.skip(`The component's value should remain to be null`, async () => {
       const value = await testEngine.parts.basic.getValue();
       expect(value).toBe(null);
