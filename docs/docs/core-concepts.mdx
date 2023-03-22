@@ -1,5 +1,140 @@
 ---
 id: concepts
-title: Core Concepts
 sidebar_position: 2
 ---
+
+# Core Concepts
+
+Below are a few key concepts that you should be familiar with before you start using Atomic Testing.
+
+## Component Driver
+
+Component drivers are the core of Atomic Testing. They are responsible for describing how to interact with UI components programmatically, such as how to click on a button, select a value from a dropdown, or read a row from a grid.
+
+There are growing number of component drivers available for popular UI frameworks such as Material UI, each component offers a set of methods that can be used to interact with the component. If TypeScript is used for writing tests,
+auto-completion can be used to discover the available methods.
+
+:::info
+See [API Reference](./api.mdx#component-drivers) for a list of available component drivers.
+:::
+
+## Locator
+
+Locators are used to find a component on the page. There are number of number of locator strategies available such as byDataTestId, byRole etc.
+
+:::tip
+Use of `data-testid` attribute is recommended for finding components on the page. See [Best Practices](./best-practices.mdx#data-testid) for more details. Use the `byDataTestId(value)` API to the recommended to build locators.
+:::
+
+## ScenePart
+
+ScenePart is a map that describes all the components of interest (part) in a scene (a page or a rich UI component). Each entry in a scene part describes the part name, the locator of the component and the component driver.
+
+<details>
+  <summary>A sample ScenePart of a typical login screen</summary>
+
+```ts
+import { ScenePart } from '@atomic-testing/core';
+import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
+import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
+
+const loginScenePart: ScenePart = {
+  username: {
+    locator: byDataTestId('username'),
+    driver: TextFieldDriver,
+  },
+  password: {
+    locator: byDataTestId('password'),
+    driver: TextFieldDriver,
+  },
+  error: {
+    locator: byDataTestId('error-display'),
+    driver: HTMLElementDriver,
+  },
+  submit: {
+    locator: byDataTestId('submit'),
+    driver: ButtonDriver,
+  },
+  forgetPassword: {
+    locator: byDataTestId('forget-password'),
+    driver: HTMLAnchorDriver,
+  },
+} satisfies ScenePart;
+```
+
+</details>
+
+## Test Engine
+
+TestEngine is place where all the pieces come together. It is responsible for rendering a scene, finding all the components in the scene, and providing a set of methods to interact with the components.
+
+Use `createTestEngine` to create an instance of TestEngine. `createTestEngine` function is specific for each rendering framework, such as React, Cypress and Playwright.
+
+Below are examples of creating a Test Engine for the loginScenePart described above.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+
+<TabItem value="react" label="React 18+">
+
+```tsx
+import { createTestEngine } from '@atomic-testing/react';
+import { loginScenePart } from './loginScenePart';
+import { Login } from './components/Login';
+
+const testEngine = createTestEngine(<Login />, loginScenePart);
+```
+
+</TabItem>
+
+<TabItem value="react-legacy" label="React 17">
+
+```tsx
+import { createLegacyTestEngine } from '@atomic-testing/react/dist/createLegacyTestEngine';
+import { loginScenePart } from './loginScenePart';
+import { Login } from './components/Login';
+
+const testEngine = createLegacyTestEngine(<Login />, loginScenePart);
+```
+
+</TabItem>
+
+<TabItem value="playwright" label="Playwright">
+
+```tsx
+import { createTestEngine } from '@atomic-testing/playwright';
+import { loginScenePart } from './loginScenePart';
+
+await page.goto('/login');
+const testEngine = createTestEngine(page, loginScenePart);
+```
+
+</TabItem>
+
+<TabItem value="cypress" label="Cypress">
+
+```tsx
+import { createTestEngine } from '@atomic-testing/cypress';
+import { loginScenePart } from './loginScenePart';
+
+cy.visit('/login');
+const testEngine = createTestEngine(loginScenePart);
+```
+
+</TabItem>
+</Tabs>
+
+Once the test engine is created, it can be used to interact with the components in the scene.
+
+```ts
+// Test code is agnostic to the rendering framework
+
+await testEngine.parts.username.setValue('john@example.com');
+await testEngine.parts.password.setValue('');
+await testEngine.parts.submit.click();
+
+const error = await testEngine.parts.error.getText();
+expect(error).toEqual('Password is required'); // Jest assertion, but any assertion library can be used
+```
