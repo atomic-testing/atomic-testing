@@ -1,3 +1,5 @@
-# atomic-testing
+# <img src="./docs/static/img/logo.svg" width="22" height="22" hspace="10" /> atomic-testing
 
-Atomic Testing is a test library which makes UI testing easier to write.
+Make UI testing simpler and more reliable
+
+See https://atomic-testing.dev/
