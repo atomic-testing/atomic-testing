@@ -1,4 +1,4 @@
-import { TestFrameworkMapper } from '@atomic-testing/core';
+import { TestFrameworkMapper } from '@atomic-testing/test-runner';
 
 export const jestTestAdapter: TestFrameworkMapper = {
   assertEqual: (actual, expected) => expect(actual).toEqual(expected),

@@ -2,26 +2,20 @@
 # Bulk publish all packages
 # Use inconjunction with pnpm bumpVersion #.#.# to update all package versions
 
-pnpm -r build
+declare -a packages=("core" "dom-core" "test-runner" "jest" "playwright" "react" "component-driver-html" "component-driver-mui-v5")
 
-cd packages/core
-pnpm publish --access=public
+cd packages
 
-cd ../dom-core
-pnpm publish --access=public
+for package in "${packages[@]}"
+do
+    cd $package
+    rm -rf build
+    rm -rf dist
+    pnpm build
+    pnpm publish --access=public
+    cd ..
+done
 
-cd ../playwright
-pnpm publish --access=public
-
-cd ../react
-pnpm publish --access=public
-
-cd ../component-driver-html
-pnpm publish --access=public
-
-cd ../component-driver-mui-v5
-pnpm publish --access=public
-
-cd ../../
+cd ../
 echo "Done!"
 

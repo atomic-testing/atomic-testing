@@ -1,5 +1,4 @@
-import { IClickOption, IInteractor, LocatorChain, locatorUtil, Optional } from '@atomic-testing/core';
-import { IEnterTextOption } from '@atomic-testing/core/src/types';
+import { IClickOption, IEnterTextOption, IInteractor, LocatorChain, locatorUtil, Optional } from '@atomic-testing/core';
 import userEvent from '@testing-library/user-event';
 
 export class DOMInteractor implements IInteractor {

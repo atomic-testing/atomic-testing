@@ -5,9 +5,9 @@ export { TooManyMatchingElementError, TooManyMatchingElementErrorId } from './er
 export * from './example/types';
 export * from './locators/';
 export { TestEngine } from './TestEngine';
-export * from './testing';
 export type {
   IComponentDriverOption,
+  IEnterTextOption,
   IInteractor,
   LocatorChain,
   Nullable,
