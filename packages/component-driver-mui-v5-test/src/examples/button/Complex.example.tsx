@@ -1,66 +1,12 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import AlarmIcon from '@mui/icons-material/Alarm';
-import SendIcon from '@mui/icons-material/Send';
-import { Button, Stack } from '@mui/material';
+import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
+import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { Stack } from '@mui/material';
 import ButtonBase from '@mui/material/ButtonBase';
-import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import React from 'react';
-
-//#region Icon and label
-export const IconAndLabelExample = () => {
-  const [target, setTarget] = React.useState('');
-  return (
-    <Stack direction="row" spacing={10}>
-      <IconButton
-        color="secondary"
-        aria-label="add an alarm"
-        data-testid="icon-button"
-        onClick={() => setTarget('icon-button')}
-      >
-        <AlarmIcon />
-      </IconButton>
-      <Button
-        variant="contained"
-        endIcon={<SendIcon />}
-        data-testid="icon-label-button"
-        onClick={() => setTarget('icon-label-button')}
-      >
-        Send
-      </Button>
-      <div data-testid="target">{target}</div>
-    </Stack>
-  );
-};
-
-export const iconAndLabelExampleScenePart = {
-  iconButton: {
-    locator: byDataTestId('icon-button'),
-    driver: ButtonDriver,
-  },
-  iconLabelButton: {
-    locator: byDataTestId('icon-label-button'),
-    driver: ButtonDriver,
-  },
-  target: {
-    locator: byDataTestId('target'),
-    driver: HTMLElementDriver,
-  },
-} satisfies ScenePart;
-
-/**
- * Icon button example from MUI's website
- * @see https://mui.com/material-ui/react-button/#icon-button
- */
-export const iconAndLabelExample: IExampleUnit<typeof iconAndLabelExampleScenePart, JSX.Element> = {
-  title: 'Icon & Label',
-  scene: iconAndLabelExampleScenePart,
-  ui: <IconAndLabelExample />,
-};
-//#endregion
 
 //#region Complex example
 
@@ -186,4 +132,37 @@ export const complexExample: IExampleUnit<typeof complexExampleScenePart, JSX.El
 };
 //#endregion
 
-export const buttonExamples = [iconAndLabelExample, complexExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const complexButtonTestSuite: TestSuiteInfo<typeof complexExample.scene> = {
+  title: 'Complex button',
+  url: '/button',
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+    describe(`${complexExample.title}`, () => {
+      let testEngine: TestEngine<typeof complexExample.scene>;
+
+      // Use the following beforeEach to work around the issue of Playwright's page being undefined
+      // @ts-ignore
+      beforeEach(function ({ page }) {
+        // @ts-ignore
+        testEngine = getTestEngine(complexExample.scene, { page });
+        if (typeof arguments[0] === 'function') {
+          arguments[0]();
+        }
+      });
+
+      afterEach(async () => {
+        await testEngine.cleanUp();
+      });
+
+      test(`Image target should be empty initially`, async () => {
+        const text = await testEngine.parts.target.getText();
+        assertEqual(text, '');
+      });
+
+      test(`Click on image-button should display image-button`, async () => {
+        await testEngine.parts.imageButton.click();
+        const text = await testEngine.parts.target.getText();
+        assertEqual(text, 'image-button');
+      });
+    });
+  },
+};
