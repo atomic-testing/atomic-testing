@@ -1,30 +1,32 @@
 import { ScenePart } from '../types';
-import { GetTestEngine, TestInterface, TestSuiteInfo } from './testRunnerAdapter';
+import { E2eTestRunEnvironmentFixture, Goto, InteractionInterface, TestFrameworkMapper, TestSuiteInfo } from './types';
+
+export const emptyGoto: Goto = () => {};
 
 export function testRunner<T extends ScenePart>(
   testSuiteInfo: TestSuiteInfo<T> | TestSuiteInfo<T>[],
-  testInterface: TestInterface,
-  e2eTestEngineCreate?: GetTestEngine<T>,
+  testMethod: TestFrameworkMapper,
+  interactionInterface: InteractionInterface<T>,
 ) {
   const suites: TestSuiteInfo<T>[] = Array.isArray(testSuiteInfo) ? testSuiteInfo : [testSuiteInfo];
+  const { getTestEngine } = interactionInterface;
   suites.forEach((suite) => {
-    const { title, url, domTestEngine, tests } = suite;
-    testInterface.describe(title ?? '', () => {
-      if (domTestEngine == null && e2eTestEngineCreate == null) {
-        throw new Error('No test engine provided, please provide a domTestEngine or e2eTestEngineCreate');
-      }
-
+    const { title, tests, url } = suite;
+    testMethod.describe(title ?? '', () => {
       // @ts-ignore
-      testInterface.beforeEach(function (context) {
+      testMethod.beforeEach(function ({ page }) {
         let done: Function | undefined = undefined;
-        let parameters: any = undefined;
-        if (typeof context === 'function') {
-          done = context;
+        let parameters: E2eTestRunEnvironmentFixture | undefined = undefined;
+        // eslint-disable-next-line prefer-rest-params
+        const passIn = arguments[0];
+        if (typeof passIn === 'function') {
+          done = passIn;
         } else {
-          parameters = context;
+          parameters = passIn;
         }
-        if (url) {
-          const cb = testInterface.goto(url, parameters);
+
+        if ('goto' in interactionInterface) {
+          const cb = interactionInterface.goto(url, parameters);
           if (cb instanceof Promise) {
             return cb.finally(() => {
               done?.();
@@ -36,7 +38,7 @@ export function testRunner<T extends ScenePart>(
         return done?.();
       });
 
-      tests((e2eTestEngineCreate ?? domTestEngine)!, testInterface);
+      tests(getTestEngine, testMethod);
     });
   });
 }
