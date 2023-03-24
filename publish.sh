@@ -10,6 +10,12 @@ pnpm publish --access=public
 cd ../dom-core
 pnpm publish --access=public
 
+cd ../test-runner
+pnpm publish --access=public
+
+cd ../jest
+pnpm publish --access=public
+
 cd ../playwright
 pnpm publish --access=public
 

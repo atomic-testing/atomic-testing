@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/playwright",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Atomic Testing Playwright Adapter",
   "main": "dist/index.js",
   "files": [
@@ -19,7 +19,8 @@
     "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
   "dependencies": {
-    "@atomic-testing/core": "workspace:*"
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/test-runner": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.31.2",

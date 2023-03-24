@@ -1,4 +1,5 @@
-import { ScenePart } from '../types';
+import { ScenePart } from '@atomic-testing/core';
+
 import { E2eTestRunEnvironmentFixture, Goto, InteractionInterface, TestFrameworkMapper, TestSuiteInfo } from './types';
 
 export const emptyGoto: Goto = () => {};

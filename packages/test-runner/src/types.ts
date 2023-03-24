@@ -1,5 +1,4 @@
-import { TestEngine } from '..';
-import { ScenePart } from '../types';
+import { ScenePart, TestEngine } from '@atomic-testing/core';
 
 /**
  * Simple assert equal function

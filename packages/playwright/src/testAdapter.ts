@@ -1,4 +1,5 @@
-import { E2eTestRunEnvironmentFixture, ScenePart, TestEngine, TestFrameworkMapper } from '@atomic-testing/core';
+import { ScenePart, TestEngine } from '@atomic-testing/core';
+import { E2eTestRunEnvironmentFixture, TestFrameworkMapper } from '@atomic-testing/test-runner';
 import { expect, Page, test } from '@playwright/test';
 
 import { createTestEngine } from './createTestEngine';
