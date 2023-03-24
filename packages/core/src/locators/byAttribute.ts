@@ -1,3 +1,4 @@
+import { escapeName, escapeValue } from '../utils/escapeUtil';
 import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
 
 export function byAttribute(
@@ -5,7 +6,7 @@ export function byAttribute(
   value: string,
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
-  const selector = `[${name}="${encodeURIComponent(value)}"]`;
+  const selector = `[${escapeName(name)}="${escapeValue(value)}"]`;
 
   return {
     type: LocatorType.Css,

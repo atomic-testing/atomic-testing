@@ -1,3 +1,4 @@
+import { escapeValue } from '../utils/escapeUtil';
 import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
 
 export function byDataTestId(
@@ -5,7 +6,7 @@ export function byDataTestId(
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
   const ids = Array.isArray(id) ? id : [id];
-  const selector = ids.map((idVal) => `[data-testid="${idVal}"]`).join(' ');
+  const selector = ids.map((idVal) => `[data-testid="${escapeValue(idVal)}"]`).join(' ');
 
   return {
     type: LocatorType.Css,

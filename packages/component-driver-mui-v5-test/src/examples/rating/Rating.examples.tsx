@@ -1,5 +1,6 @@
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine, TestSuiteInfo } from '@atomic-testing/core';
+import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
+import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Divider, Rating, Stack, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
