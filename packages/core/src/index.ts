@@ -7,6 +7,7 @@ export * from './locators/';
 export { TestEngine } from './TestEngine';
 export type {
   IComponentDriverOption,
+  IEnterTextOption,
   IInteractor,
   LocatorChain,
   Nullable,

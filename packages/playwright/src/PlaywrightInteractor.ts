@@ -1,5 +1,6 @@
 import {
   IClickOption,
+  IEnterTextOption,
   IInteractor,
   LocatorChain,
   LocatorType,
@@ -7,7 +8,6 @@ import {
   Optional,
   PartLocatorType,
 } from '@atomic-testing/core';
-import { IEnterTextOption } from '@atomic-testing/core/src/types';
 import { Page } from '@playwright/test';
 
 export class PlaywrightInteractor implements IInteractor {
