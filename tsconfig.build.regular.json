@@ -20,7 +20,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "composite": true,
+    "composite": true
   },
   "exclude": ["**/*/dist", "node_modules", "**/*/node_modules", "**/__tests__"]
 }

@@ -52,7 +52,7 @@ export interface TestInterface {
   visit: Goto;
 }
 
-export type GetTestEngine<T extends ScenePart> = (scenePart: T) => TestEngine<T>;
+export type GetTestEngine<T extends ScenePart> = (scenePart: T, context?: any) => TestEngine<T>;
 
 export interface TestSuiteInfo<T extends ScenePart> {
   title?: string;

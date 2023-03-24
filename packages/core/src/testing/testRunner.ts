@@ -24,7 +24,6 @@ export function testRunner<T extends ScenePart>(
           parameters = context;
         }
         if (url) {
-          // @ts-ignore
           const cb = testInterface.goto(url, parameters);
           if (cb instanceof Promise) {
             return cb.finally(() => {
