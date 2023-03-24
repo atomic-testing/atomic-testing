@@ -1,11 +1,10 @@
-import { TestEngine } from '../TestEngine';
 import { ScenePart } from '../types';
-import { TestInterface, TestSuiteInfo } from './testRunnerAdapter';
+import { GetTestEngine, TestInterface, TestSuiteInfo } from './testRunnerAdapter';
 
 export function testRunner<T extends ScenePart>(
   testSuiteInfo: TestSuiteInfo<T> | TestSuiteInfo<T>[],
   testInterface: TestInterface,
-  e2eTestEngineCreate?: () => TestEngine<T>,
+  e2eTestEngineCreate?: GetTestEngine<T>,
 ) {
   const suites: TestSuiteInfo<T>[] = Array.isArray(testSuiteInfo) ? testSuiteInfo : [testSuiteInfo];
   suites.forEach((suite) => {
@@ -15,14 +14,30 @@ export function testRunner<T extends ScenePart>(
         throw new Error('No test engine provided, please provide a domTestEngine or e2eTestEngineCreate');
       }
 
-      if (url) {
-        testInterface.beforeEach(() => {
-          return testInterface.goto(url);
-        });
-      }
+      // @ts-ignore
+      testInterface.beforeEach(function (context) {
+        let done: Function | undefined = undefined;
+        let parameters: any = undefined;
+        if (typeof context === 'function') {
+          done = context;
+        } else {
+          parameters = context;
+        }
+        if (url) {
+          // @ts-ignore
+          const cb = testInterface.goto(url, parameters);
+          if (cb instanceof Promise) {
+            return cb.finally(() => {
+              done?.();
+            });
+          } else {
+            return done?.();
+          }
+        }
+        return done?.();
+      });
 
-      const getTestEngine = domTestEngine ?? e2eTestEngineCreate;
-      tests(getTestEngine!, testInterface);
+      tests((e2eTestEngineCreate ?? domTestEngine)!, testInterface);
     });
   });
 }
