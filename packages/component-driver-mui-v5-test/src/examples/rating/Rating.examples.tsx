@@ -1,6 +1,5 @@
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine, TestSuiteInfo } from '@atomic-testing/core';
-import { createTestEngine } from '@atomic-testing/react';
 import { Divider, Rating, Stack, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
@@ -73,9 +72,6 @@ export const basicRatingExample: IExampleUnit<typeof basicRatingExampleScenePart
 export const ratingTestSuite: TestSuiteInfo<typeof basicRatingExampleScenePart> = {
   title: 'Basic Rating',
   url: '/rating',
-  domTestEngine: (scenePart: typeof basicRatingExample.scene) => {
-    return createTestEngine(basicRatingExample.ui, scenePart);
-  },
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof basicRatingExample.scene>;
 
@@ -115,6 +111,25 @@ export const ratingTestSuite: TestSuiteInfo<typeof basicRatingExampleScenePart> 
       });
 
       test(`The component's value should be set to the new value`, async () => {
+        const value = await testEngine.parts.basic.getValue();
+        assertEqual(value, targetValue);
+      });
+    });
+
+    // TODO: Test is skipped because of Playwright's issue with setting a fraction value
+    // @see https://github.com/atomic-testing/atomic-testing/issues/86
+    describe.skip('Setting rating value to a valid new fraction value', () => {
+      const targetValue = 3;
+      let success: boolean;
+      beforeEach(async () => {
+        success = await testEngine.parts.basic.setValue(targetValue);
+      });
+
+      test(`Success of setting fraction value should be true`, async () => {
+        assertEqual(success, true);
+      });
+
+      test(`The component's value should be set to the new fraction value`, async () => {
         const value = await testEngine.parts.basic.getValue();
         assertEqual(value, targetValue);
       });

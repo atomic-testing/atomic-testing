@@ -1,2 +1,8 @@
-export { testRunner } from './testRunner';
-export type { GetTestEngine, TestInterface, TestSuiteInfo } from './testRunnerAdapter';
+export { emptyGoto, testRunner } from './testRunner';
+export type {
+  E2eTestRunEnvironmentFixture,
+  GetTestEngine,
+  InteractionInterface,
+  TestFrameworkMapper,
+  TestSuiteInfo,
+} from './types';
