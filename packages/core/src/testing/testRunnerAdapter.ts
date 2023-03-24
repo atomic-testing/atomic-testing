@@ -30,7 +30,7 @@ interface Test {
 }
 
 interface Goto {
-  (url: string): Promise<void> | any;
+  (url: string, context?: { page: any }): Promise<void> | any;
 }
 
 export interface TestInterface {
@@ -52,6 +52,8 @@ export interface TestInterface {
   visit: Goto;
 }
 
+export type GetTestEngine<T extends ScenePart> = (scenePart: T) => TestEngine<T>;
+
 export interface TestSuiteInfo<T extends ScenePart> {
   title?: string;
 
@@ -64,7 +66,7 @@ export interface TestSuiteInfo<T extends ScenePart> {
    * TestEngine to instantiate for DOM tests
    * @returns TestEngine instance
    */
-  domTestEngine?: () => TestEngine<T>;
+  domTestEngine?: GetTestEngine<T>;
 
-  tests: (getTestEngine: () => TestEngine<T>, testInterface: TestInterface) => void;
+  tests: (getTestEngine: GetTestEngine<T>, testInterface: TestInterface) => void;
 }
