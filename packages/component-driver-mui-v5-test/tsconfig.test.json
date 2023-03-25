@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx"
   },
-  "include": ["./src","__tests__/**/**.ts","__tests__/**/**.tsx"],
+  "include": ["./src", "__tests__/**/**.ts", "__tests__/**/**.tsx"]
 }

@@ -1,5 +1,5 @@
 export * from './button';
-export * from './Checkbox.examples';
+export * from './checkbox';
 export * from './Input.examples';
 export * from './rating';
 export * from './Select.examples';

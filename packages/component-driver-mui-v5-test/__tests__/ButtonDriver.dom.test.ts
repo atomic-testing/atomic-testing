@@ -1,9 +1,12 @@
 import { jestTestAdapter } from '@atomic-testing/jest';
 import { createTestEngine } from '@atomic-testing/react';
 import { testRunner } from '@atomic-testing/test-runner';
-import { complexExample, iconAndLabelExample } from '../src/examples';
-import { complexButtonTestSuite } from '../src/examples/button/Complex.example';
-import { iconAndLabelButtonTestSuite } from '../src/examples/button/IconAndLabel.example';
+import {
+  complexButtonTestSuite,
+  complexExample,
+  iconAndLabelButtonTestSuite,
+  iconAndLabelExample,
+} from '../src/examples';
 
 testRunner(iconAndLabelButtonTestSuite, jestTestAdapter, {
   getTestEngine: (scenePart: typeof iconAndLabelExample.scene) => {
