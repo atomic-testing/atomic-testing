@@ -39,10 +39,6 @@ interface Test {
   skip: Test;
 }
 
-export interface Goto {
-  (url: string, context?: E2eTestRunEnvironmentFixture): Promise<void> | any;
-}
-
 /**
  * Mapping aiming to normalize the differences of test runners such as Jest, Mocha, Jasmine, etc.
  */
@@ -65,17 +61,22 @@ export type GetTestEngine<T extends ScenePart> = (scenePart: T, context?: any) =
 /**
  * Interface for Dom tests which don't involve navigating to a URL
  */
-export interface DomTestInterface<T extends ScenePart> {
+export type DomTestInterface<T extends ScenePart> = {
   getTestEngine: GetTestEngine<T>;
-}
+};
+
+type GotoReturn = Promise<void> | any;
 
 /**
  * Interface for E2e tests which involve navigating to a URL
  */
-export interface E2eTestInterface<T extends ScenePart> {
+export type E2eTestInterface<T extends ScenePart> = {
   getTestEngine: GetTestEngine<T>;
-  goto: Goto;
-}
+
+  goto(url: string): GotoReturn;
+  goto(url: string, context: E2eTestRunEnvironmentFixture): GotoReturn;
+  goto(url: string, context?: E2eTestRunEnvironmentFixture): GotoReturn;
+};
 
 export type InteractionInterface<T extends ScenePart> = DomTestInterface<T> | E2eTestInterface<T>;
 
