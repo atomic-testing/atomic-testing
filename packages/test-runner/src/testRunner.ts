@@ -1,8 +1,9 @@
 import { ScenePart } from '@atomic-testing/core';
 
-import { E2eTestRunEnvironmentFixture, Goto, InteractionInterface, TestFrameworkMapper, TestSuiteInfo } from './types';
+import { E2eTestRunEnvironmentFixture, InteractionInterface, TestFrameworkMapper, TestSuiteInfo } from './types';
 
-export const emptyGoto: Goto = () => {};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const emptyGoto = (url: string) => {};
 
 export function testRunner<T extends ScenePart>(
   testSuiteInfo: TestSuiteInfo<T> | TestSuiteInfo<T>[],

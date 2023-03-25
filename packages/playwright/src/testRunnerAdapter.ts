@@ -1,11 +1,13 @@
 import { ScenePart, TestEngine } from '@atomic-testing/core';
-import { E2eTestRunEnvironmentFixture, TestFrameworkMapper } from '@atomic-testing/test-runner';
+import { E2eTestInterface, E2eTestRunEnvironmentFixture, TestFrameworkMapper } from '@atomic-testing/test-runner';
 import { expect, Page, test } from '@playwright/test';
 
 import { createTestEngine } from './createTestEngine';
 
-export async function goto(url: string, fixture: E2eTestRunEnvironmentFixture): Promise<void> {
-  const page = fixture.page as Page;
+export async function goto(url: string): Promise<void>;
+export async function goto(url: string, fixture: E2eTestRunEnvironmentFixture): Promise<void>;
+export async function goto(url: string, fixture?: E2eTestRunEnvironmentFixture): Promise<void> {
+  const page = fixture!.page as Page;
   await page.goto(url);
 }
 
@@ -17,7 +19,7 @@ export function playwrightGetTestEngine<T extends ScenePart>(
   return createTestEngine(page, scenePart);
 }
 
-export const playWrightTestAdapter: TestFrameworkMapper = {
+export const playWrightTestFrameworkMapper: TestFrameworkMapper = {
   assertEqual: (a, b) => expect(a).toEqual(b),
   // @ts-ignore
   describe: test.describe,
@@ -35,3 +37,10 @@ export const playWrightTestAdapter: TestFrameworkMapper = {
   // @ts-ignore
   it: test,
 };
+
+export function getTestRunnerInterface<T extends ScenePart>(): E2eTestInterface<T> {
+  return {
+    getTestEngine: playwrightGetTestEngine,
+    goto,
+  };
+}
