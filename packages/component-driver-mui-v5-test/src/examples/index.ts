@@ -1,6 +1,6 @@
 export * from './button';
 export * from './checkbox';
-export * from './Input.examples';
+export * from './input';
 export * from './rating';
 export * from './Select.examples';
 export * from './Slider.examples';
