@@ -1,15 +1,21 @@
+import { jestTestAdapter } from '@atomic-testing/jest';
 import { createTestEngine } from '@atomic-testing/react';
-import { textInputExamples } from '../src/examples';
+import { testRunner } from '@atomic-testing/test-runner';
+import {
+  controlledTextInputExample,
+  controlledTextInputExampleTestSuite,
+  uncontrolledTextInputExample,
+  uncontrolledTextInputExampleTestSuite,
+} from '../src/examples';
 
-describe('HTMLTextInputDriver', () => {
-  textInputExamples.forEach((example) => {
-    test(`${example.title}`, async () => {
-      const testEngine = createTestEngine(example.ui, example.scene);
-      const targetValue = 'abc';
-      await testEngine.parts.input.setValue(targetValue);
-      const val = await testEngine.parts.input.getValue();
-      expect(val).toBe(targetValue);
-      await testEngine.cleanUp();
-    });
-  });
+testRunner(uncontrolledTextInputExampleTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof uncontrolledTextInputExample.scene) => {
+    return createTestEngine(uncontrolledTextInputExample.ui, scenePart);
+  },
+});
+
+testRunner(controlledTextInputExampleTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof controlledTextInputExample.scene) => {
+    return createTestEngine(controlledTextInputExample.ui, scenePart);
+  },
 });

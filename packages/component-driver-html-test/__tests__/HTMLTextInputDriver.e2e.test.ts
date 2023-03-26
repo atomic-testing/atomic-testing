@@ -1,12 +1,7 @@
-import { createTestEngine } from '@atomic-testing/playwright';
-import { expect, test } from '@playwright/test';
-import { uncontrolledTextInputExampleScenePart } from '../src/examples';
+import { getTestRunnerInterface, playWrightTestFrameworkMapper } from '@atomic-testing/playwright';
+import { testRunner } from '@atomic-testing/test-runner';
+import { controlledTextInputExampleTestSuite, uncontrolledTextInputExampleTestSuite } from '../src/examples';
 
-test('HTMLTextInputDriver', async ({ page }) => {
-  await page.goto('/input');
-  const testEngine = createTestEngine(page, uncontrolledTextInputExampleScenePart);
-  const targetValue = 'abc';
-  await testEngine.parts.input.setValue(targetValue);
-  const val = await testEngine.parts.input.getValue();
-  expect(val).toBe(targetValue);
-});
+testRunner(uncontrolledTextInputExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
+
+testRunner(controlledTextInputExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
