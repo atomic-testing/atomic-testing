@@ -1,6 +1,7 @@
 import { SelectDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { Box, FormControl, InputLabel, MenuItem, NativeSelect, Select, SelectChangeEvent } from '@mui/material';
+import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
+import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useCallback } from 'react';
 
 //#region Basic select
@@ -51,46 +52,33 @@ export const basicSelectExample: IExampleUnit<typeof basicSelectExampleScenePart
 };
 //#endregion
 
-//#region Native select
-export const NativeSelectExample = () => (
-  <FormControl fullWidth>
-    <InputLabel variant="standard" htmlFor="uncontrolled-native">
-      Age
-    </InputLabel>
-    <NativeSelect
-      data-testid="native-select"
-      defaultValue={30}
-      inputProps={{
-        name: 'age',
-        id: 'uncontrolled-native',
-      }}
-    >
-      <option value={10}>Ten</option>
-      <option value={20}>Twenty</option>
-      <option value={30}>Thirty</option>
-    </NativeSelect>
-  </FormControl>
-);
+export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExample.scene> = {
+  title: 'Basic non-native select',
+  url: '/select',
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+    describe(`${basicSelectExample.title}`, () => {
+      let testEngine: TestEngine<typeof basicSelectExample.scene>;
 
-export const nativeSelectExampleScenePart = {
-  select: {
-    locator: byDataTestId('native-select'),
-    driver: SelectDriver,
+      // Use the following beforeEach to work around the issue of Playwright's page being undefined
+      // @ts-ignore
+      beforeEach(function ({ page }) {
+        // @ts-ignore
+        testEngine = getTestEngine(basicSelectExample.scene, { page });
+        if (typeof arguments[0] === 'function') {
+          arguments[0]();
+        }
+      });
+
+      afterEach(async () => {
+        await testEngine.cleanUp();
+      });
+
+      test(`setValue of rich select`, async () => {
+        const targetValue = '30';
+        await testEngine.parts.select.setValue(targetValue);
+        const val = await testEngine.parts.select.getValue();
+        assertEqual(val, targetValue);
+      });
+    });
   },
-} satisfies ScenePart;
-
-/**
- * Basic select example from MUI's website
- * @see https://mui.com/material-ui/react-select/#native-select
- */
-export const nativeSelectExample: IExampleUnit<typeof nativeSelectExampleScenePart, JSX.Element> = {
-  title: 'Native Select',
-  scene: nativeSelectExampleScenePart,
-  ui: <NativeSelectExample />,
 };
-//#endregion
-
-export const selectExamples = [basicSelectExample, nativeSelectExample] satisfies IExampleUnit<
-  ScenePart,
-  JSX.Element
->[];
