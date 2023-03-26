@@ -4,5 +4,5 @@ export * from './input';
 export * from './rating';
 export * from './select';
 export * from './slider';
-export * from './Switch.examples';
-export * from './TextField.examples';
+export * from './switch';
+export * from './textField';
