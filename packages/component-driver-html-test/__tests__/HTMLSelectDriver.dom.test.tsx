@@ -1,22 +1,21 @@
+import { jestTestAdapter } from '@atomic-testing/jest';
 import { createTestEngine } from '@atomic-testing/react';
-import { multipleSelectExample, singleSelectExample } from '../src/examples/HTMLSelect.examples';
+import { testRunner } from '@atomic-testing/test-runner';
+import {
+  multipleSelectExample,
+  multipleSelectTestSuite,
+  singleSelectExample,
+  singleSelectTestSuite,
+} from '../src/examples';
 
-describe('HTMLSelectDriver', () => {
-  test('Single Select', async () => {
-    const testEngine = createTestEngine(singleSelectExample.ui, singleSelectExample.scene);
-    const targetValue = '3';
-    await testEngine.parts.select.setValue(targetValue);
-    const val = await testEngine.parts.select.getValue();
-    expect(val).toBe(targetValue);
-    await testEngine.cleanUp();
-  });
+testRunner(singleSelectTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof singleSelectExample.scene) => {
+    return createTestEngine(singleSelectExample.ui, scenePart);
+  },
+});
 
-  test('Multiple Select', async () => {
-    const testEngine = createTestEngine(multipleSelectExample.ui, multipleSelectExample.scene);
-    const targetValue = ['3', '5'];
-    await testEngine.parts.select.setValue(targetValue);
-    const val = await testEngine.parts.select.getValue();
-    expect(val).toEqual(targetValue);
-    await testEngine.cleanUp();
-  });
+testRunner(multipleSelectTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof multipleSelectExample.scene) => {
+    return createTestEngine(multipleSelectExample.ui, scenePart);
+  },
 });
