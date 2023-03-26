@@ -1,15 +1,10 @@
+import { jestTestAdapter } from '@atomic-testing/jest';
 import { createTestEngine } from '@atomic-testing/react';
-import { radioButtonGroupExamples } from '../src/examples/HTMLRadioButtonGroup.examples';
+import { testRunner } from '@atomic-testing/test-runner';
+import { uncontrolledRadioButtonGroupExample, uncontrolledRadioButtonGroupTestSuite } from '../src/examples';
 
-describe('HTMLRadioButtonGroupDriver', () => {
-  radioButtonGroupExamples.forEach((example) => {
-    test(`${example.title}`, async () => {
-      const testEngine = createTestEngine(example.ui, example.scene);
-      const targetValue = '3';
-      await testEngine.parts.input.setValue(targetValue);
-      const val = await testEngine.parts.input.getValue();
-      expect(val).toBe(targetValue);
-      await testEngine.cleanUp();
-    });
-  });
+testRunner(uncontrolledRadioButtonGroupTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof uncontrolledRadioButtonGroupExample.scene) => {
+    return createTestEngine(uncontrolledRadioButtonGroupExample.ui, scenePart);
+  },
 });
