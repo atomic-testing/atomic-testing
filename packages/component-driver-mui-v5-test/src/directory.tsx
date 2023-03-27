@@ -2,6 +2,7 @@ import { ExampleList } from './components/ExampleList';
 import {
   buttonExamples,
   checkboxExamples,
+  dialogExamples,
   inputExamples,
   ratingExamples,
   selectExamples,
@@ -26,6 +27,11 @@ export const tocs: IToc[] = [
     label: 'Checkbox',
     path: '/checkbox',
     ui: <ExampleList examples={checkboxExamples} />,
+  },
+  {
+    label: 'Dialog',
+    path: '/dialog',
+    ui: <ExampleList examples={dialogExamples} />,
   },
   {
     label: 'Input',

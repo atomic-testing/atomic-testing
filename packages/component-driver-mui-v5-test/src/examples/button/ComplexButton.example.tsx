@@ -122,7 +122,7 @@ export const complexExampleScenePart = {
 } satisfies ScenePart;
 
 /**
- * Icon button complext example from MUI's website
+ * Icon button complex example from MUI's website
  * @see https://mui.com/material-ui/react-button/#complex-button
  */
 export const complexExample: IExampleUnit<typeof complexExampleScenePart, JSX.Element> = {
