@@ -1,5 +1,6 @@
-import { defaultStep } from './defaultValues';
-import { MissingPartError } from './errors/MissingPartError';
+import { LocatorRelativePosition, locatorUtil, PartLocatorType } from '..';
+import { defaultStep } from '../defaultValues';
+import { MissingPartError } from '../errors/MissingPartError';
 import {
   IComponentDriver,
   IComponentDriverOption,
@@ -10,7 +11,7 @@ import {
   ScenePart,
   ScenePartDriver,
   StepFunction,
-} from './types';
+} from '../types';
 
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
   private _locator: LocatorChain;
@@ -25,6 +26,34 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     this._locator = locator;
     this._perform = option?.perform ?? defaultStep;
     this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});
+  }
+
+  /**
+   * Usually this should be undefined as the component driver corresponds to a component nested inside the parent DOM, thus
+   * the driver's locator would automatically chain with its parent's locator.
+   *
+   * When the component is rendered outside the parent's DOM, which usually happens when the component is a modal or popup,
+   * supply the LocatorChain on how to locate the component with the component's own locator.
+   *
+   * Caution of usage: this function is called before the construction of the driver, so it should not use any instance properties
+   */
+  overriddenParentLocator(): Optional<LocatorChain> {
+    return undefined;
+  }
+
+  /**
+   * Usually this should be undefined when the locator is defined by the ScenePart, thus it reflects the natural relative position
+   * of the component
+   *
+   * However, in some implementation such as MUI v5 dialog, the actual dialog DOM is rendered outside the parent DOM,
+   * and the selector is "siblings", by defining this function, it allows the driver to have the knowledge of the actual relative position
+   * instead of offloading the knowledge to the consumer.
+   *
+   * Caution of usage: this function is called before the construction of the driver, so it should not use any instance properties
+   * @returns
+   */
+  overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
+    return undefined;
   }
 
   get parts(): ScenePartDriver<T> {
@@ -96,7 +125,13 @@ export function getPartFromDefinition<T extends ScenePart>(
       perform: optionOverride?.perform ?? option.perform ?? defaultStep,
     };
 
-    const componentLocator = parentLocator.concat(locator);
+    const locatorContext: LocatorChain = driver.prototype.overriddenParentLocator() ?? parentLocator;
+    const actualLocator: PartLocatorType =
+      driver.prototype.overrideLocatorRelativePosition() != null
+        ? locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
+        : locator;
+
+    const componentLocator = locatorUtil.append(locatorContext, actualLocator);
 
     // @ts-ignore
     result[nestedComponentName] = new driver(componentLocator, interactor, componentOption);

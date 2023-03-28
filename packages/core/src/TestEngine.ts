@@ -1,6 +1,6 @@
 import { IComponentDriverOption, IInteractor, LocatorChain } from '@atomic-testing/core';
 
-import { ComponentDriver } from './ComponentDriver';
+import { ComponentDriver } from './drivers/ComponentDriver';
 import { ScenePart } from './types';
 
 export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
