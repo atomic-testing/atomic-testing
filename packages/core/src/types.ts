@@ -95,7 +95,6 @@ export interface IInteractor {
 }
 
 export interface IComponentDriverOption<T extends ScenePart = {}> {
-  perform: StepFunction;
   parts?: T;
 }
 
@@ -106,11 +105,6 @@ export interface IComponentDriver<T extends ScenePart = {}> {
    * The locator which helps locate the root of the component
    */
   readonly locator: LocatorChain;
-
-  /**
-   * Function wrapper which performs a step
-   */
-  readonly perform: StepFunction;
 
   enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void>;
   getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): Promise<ReadonlyArray<PartName<T>>>;

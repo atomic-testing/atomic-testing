@@ -1,16 +1,8 @@
-import {
-  ComponentDriver,
-  defaultStep,
-  IComponentDriverOption,
-  IInputDriver,
-  IInteractor,
-  LocatorChain,
-} from '@atomic-testing/core';
+import { ComponentDriver, IComponentDriverOption, IInputDriver, IInteractor, LocatorChain } from '@atomic-testing/core';
 
 export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
   constructor(locator: LocatorChain, interactor: IInteractor, option?: IComponentDriverOption) {
     super(locator, interactor, {
-      perform: defaultStep,
       ...option,
       parts: {},
     });

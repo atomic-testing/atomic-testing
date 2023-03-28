@@ -1,5 +1,4 @@
 import { LocatorRelativePosition, locatorUtil, PartLocatorType } from '..';
-import { defaultStep } from '../defaultValues';
 import { MissingPartError } from '../errors/MissingPartError';
 import {
   IComponentDriver,
@@ -10,12 +9,10 @@ import {
   PartName,
   ScenePart,
   ScenePartDriver,
-  StepFunction,
 } from '../types';
 
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
   private _locator: LocatorChain;
-  private readonly _perform: StepFunction;
   private readonly _parts: ScenePartDriver<T>;
 
   constructor(
@@ -24,7 +21,6 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     option?: Partial<IComponentDriverOption<T>>,
   ) {
     this._locator = locator;
-    this._perform = option?.perform ?? defaultStep;
     this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});
   }
 
@@ -62,10 +58,6 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   get locator(): LocatorChain {
     return this._locator;
-  }
-
-  get perform(): StepFunction {
-    return this._perform;
   }
 
   async enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void> {
@@ -122,7 +114,8 @@ export function getPartFromDefinition<T extends ScenePart>(
     const { locator = nestedComponentName as string, driver, option: optionOverride } = scenePart2;
 
     const componentOption: IComponentDriverOption = {
-      perform: optionOverride?.perform ?? option.perform ?? defaultStep,
+      ...option,
+      ...optionOverride,
     };
 
     const locatorContext: LocatorChain = driver.prototype.overriddenParentLocator() ?? parentLocator;

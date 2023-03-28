@@ -2,7 +2,6 @@ import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import {
   byTagName,
   ComponentDriver,
-  defaultStep,
   IComponentDriverOption,
   IFormFieldDriver,
   IInteractor,
@@ -28,7 +27,6 @@ export class CheckboxDriver
 {
   constructor(locator: LocatorChain, interactor: IInteractor, option?: IComponentDriverOption) {
     super(locator, interactor, {
-      perform: defaultStep,
       ...option,
       parts: checkboxPart,
     });

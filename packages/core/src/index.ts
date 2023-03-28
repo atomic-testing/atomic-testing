@@ -1,4 +1,3 @@
-export { defaultOnFinishUpdate, defaultStep } from './defaultValues';
 export { ComponentDriver } from './drivers/ComponentDriver';
 export type {
   IClickableDriver,
