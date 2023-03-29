@@ -1,1 +1,1 @@
-# @atomic-testing/core
+# @atomic-testing/dom-core
