@@ -17,6 +17,10 @@ export const parts = {
     locator: byCssClass('MuiDialogTitle-root'),
     driver: HTMLElementDriver,
   },
+  dialogContainer: {
+    locator: byCssClass('MuiDialog-container'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 const dialogRootLocator: PartLocatorType = {
@@ -49,7 +53,12 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   async isOpen(): Promise<boolean> {
-    return this.exists();
+    const exists = await this.exists();
+    if (!exists) {
+      return false;
+    }
+    const isVisible = await this.interactor.isVisible(this.parts.dialogContainer.locator);
+    return isVisible;
   }
 
   get driverName(): string {

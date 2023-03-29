@@ -138,7 +138,7 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
             await testEngine.parts.dialog.content.agree.click();
           });
 
-          test.skip('isOpen turns false', async () => {
+          test('isOpen turns false', async () => {
             // This test fails because the dialog still exists in DOM
             // but it is not visible (opacity: 0)
             // isOpen should perform visibility/opacity check on the dialog container (MuiDialog-container)
