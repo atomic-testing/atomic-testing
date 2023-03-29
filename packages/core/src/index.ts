@@ -1,4 +1,5 @@
 export { ComponentDriver } from './drivers/ComponentDriver';
+export { ContainerDriver } from './drivers/ContainerDriver';
 export type {
   IClickableDriver,
   IClickOption,
@@ -12,6 +13,7 @@ export * from './locators/';
 export { TestEngine } from './TestEngine';
 export type {
   IComponentDriverOption,
+  IContainerDriverOption,
   IEnterTextOption,
   IInteractor,
   LocatorChain,

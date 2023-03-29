@@ -1,4 +1,5 @@
 import { ComponentDriver } from './drivers/ComponentDriver';
+import { ContainerDriver } from './drivers/ContainerDriver';
 import { IClickOption } from './drivers/driverTypes';
 import { PartLocatorType } from './locators/PartLocatorType';
 
@@ -8,7 +9,7 @@ export type Nullable<T> = T | null;
 
 export type PartName<T extends ScenePart> = keyof T;
 
-export interface ScenePartDefinition<T extends ScenePart> {
+export interface ComponentPartDefinition<T extends ScenePart> {
   /**
    * The locator of the part
    */
@@ -22,13 +23,32 @@ export interface ScenePartDefinition<T extends ScenePart> {
   /**
    * Option for the driver
    */
-  option?: Partial<IComponentDriverOption>;
+  option?: Partial<IComponentDriverOption<T>>;
 }
+
+export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
+  /**
+   * The locator of the part
+   */
+  locator?: PartLocatorType;
+
+  /**
+   * The class of driver which is used to interact with the element
+   */
+  driver: typeof ContainerDriver<ContentT, T>;
+
+  /**
+   * Option for the driver
+   */
+  option: Partial<IContainerDriverOption<ContentT, T>>;
+}
+
+export type ScenePartDefinition = ComponentPartDefinition<any> | ContainerPartDefinition<any, any>;
 
 /**
  * Part name to driver definition map
  */
-export interface ScenePart extends Record<string, ScenePartDefinition<any>> {}
+export interface ScenePart extends Record<string, ScenePartDefinition> {}
 
 export type ScenePartDriver<T extends ScenePart> = {
   [partName in keyof T]: InstanceType<T[partName]['driver']>;
@@ -95,7 +115,12 @@ export interface IInteractor {
 }
 
 export interface IComponentDriverOption<T extends ScenePart = {}> {
-  parts?: T;
+  parts: T;
+}
+
+export interface IContainerDriverOption<ContentT extends ScenePart = {}, T extends ScenePart = {}>
+  extends IComponentDriverOption<T> {
+  content: ContentT;
 }
 
 export interface IComponentDriver<T extends ScenePart = {}> {
