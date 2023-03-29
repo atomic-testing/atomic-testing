@@ -1,6 +1,7 @@
 import { Optional } from '../dataTypes';
 import { LocatorChain } from '../locators';
 import { ClickOption } from './ClickOption';
+import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
 
 export interface Interactor {
@@ -31,6 +32,12 @@ export interface Interactor {
    * @param locator
    */
   hover(locator: LocatorChain): Promise<void>;
+
+  /**
+   * Wait for a given amount of time in milliseconds
+   * @param ms
+   */
+  wait(ms: number): Promise<void>;
   //#endregion
 
   //#region Read only interactions
@@ -41,11 +48,19 @@ export interface Interactor {
   getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
   getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
 
+  /**
+   * Get the value of a style property
+   * @param locator
+   * @param propertyName
+   */
+  getStyleValue(locator: LocatorChain, propertyName: CssProperty): Promise<Optional<string>>;
+
   getText(locator: LocatorChain): Promise<Optional<string>>;
   exists(locator: LocatorChain): Promise<boolean>;
   isChecked(locator: LocatorChain): Promise<boolean>;
   isDisabled(locator: LocatorChain): Promise<boolean>;
   isReadonly(locator: LocatorChain): Promise<boolean>;
+  isVisible(locator: LocatorChain): Promise<boolean>;
 
   hasCssClass(locator: LocatorChain, className: string): Promise<boolean>;
   hasAttribute(locator: LocatorChain, name: string): Promise<boolean>;
