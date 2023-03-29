@@ -77,8 +77,8 @@ export const alertDialogExample: IExampleUnit<typeof alertExampleScenePart, JSX.
 };
 
 export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene> = {
-  title: 'Single Select',
-  url: '/select',
+  title: 'Alert dialog',
+  url: '/dialog',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${alertDialogExample.title}`, () => {
       let testEngine: TestEngine<typeof alertDialogExample.scene>;
@@ -109,8 +109,6 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
 
         test('isOpen turns true', async () => {
           const val = await testEngine.parts.dialog.isOpen();
-
-          console.log(testEngine.parts.dialog.locator);
           assertEqual(val, true);
         });
 
