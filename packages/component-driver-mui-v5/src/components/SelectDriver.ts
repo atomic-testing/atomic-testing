@@ -10,7 +10,7 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
-  IInteractor,
+  Interactor,
   LocatorChain,
   LocatorRelativePosition,
   LocatorType,
@@ -46,7 +46,7 @@ export type SelectScenePart = typeof selectPart;
 export type SelectScenePartDriver = ScenePartDriver<SelectScenePart>;
 
 export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: selectPart,

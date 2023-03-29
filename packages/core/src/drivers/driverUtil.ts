@@ -1,10 +1,12 @@
 import { locatorUtil, PartLocatorType } from '..';
-import { IComponentDriverOption, IInteractor, LocatorChain, ScenePart, ScenePartDriver } from '../types';
+import { Interactor } from '../interactor';
+import { LocatorChain } from '../locators';
+import { IComponentDriverOption, ScenePart, ScenePartDriver } from '../partTypes';
 
 export function getPartFromDefinition<T extends ScenePart>(
   partDefinition: T,
   parentLocator: LocatorChain,
-  interactor: IInteractor,
+  interactor: Interactor,
   option: Partial<IComponentDriverOption<T>>,
 ): ScenePartDriver<T> {
   const result: Partial<ScenePartDriver<T>> = {};

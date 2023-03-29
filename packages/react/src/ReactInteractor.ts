@@ -1,15 +1,15 @@
-import { IClickOption, IInteractor, LocatorChain } from '@atomic-testing/core';
+import { ClickOption, Interactor, LocatorChain } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from 'react-dom/test-utils';
 
 export class ReactInteractor extends DOMInteractor {
-  override async enterText(locator: LocatorChain, text: string, option?: Partial<IClickOption>): Promise<void> {
+  override async enterText(locator: LocatorChain, text: string, option?: Partial<ClickOption>): Promise<void> {
     await act(async () => {
       await super.enterText(locator, text, option);
     });
   }
 
-  override async click(locator: LocatorChain, option?: IClickOption): Promise<void> {
+  override async click(locator: LocatorChain, option?: ClickOption): Promise<void> {
     // TODO: Use perforrm function
     await act(async () => {
       await super.click(locator, option);
@@ -28,7 +28,7 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
-  override clone(): IInteractor {
+  override clone(): Interactor {
     return new ReactInteractor();
   }
 }

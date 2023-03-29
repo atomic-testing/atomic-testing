@@ -1,15 +1,8 @@
-import { LocatorRelativePosition } from '..';
+import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
-import {
-  IComponentDriver,
-  IComponentDriverOption,
-  IInteractor,
-  LocatorChain,
-  Optional,
-  PartName,
-  ScenePart,
-  ScenePartDriver,
-} from '../types';
+import { Interactor } from '../interactor';
+import { LocatorChain, LocatorRelativePosition } from '../locators';
+import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
 import { getPartFromDefinition } from './driverUtil';
 
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
@@ -18,7 +11,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   constructor(
     locator: LocatorChain,
-    public readonly interactor: IInteractor,
+    public readonly interactor: Interactor,
     option?: Partial<IComponentDriverOption<T>>,
   ) {
     this._locator = locator;

@@ -3,7 +3,7 @@ import {
   byCssClass,
   ContainerDriver,
   IContainerDriverOption,
-  IInteractor,
+  Interactor,
   LocatorChain,
   LocatorRelativePosition,
   LocatorType,
@@ -26,7 +26,7 @@ const dialogRootLocator: PartLocatorType = {
 };
 
 export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IContainerDriverOption>) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,

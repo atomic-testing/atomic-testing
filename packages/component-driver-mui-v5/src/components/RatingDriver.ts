@@ -5,7 +5,7 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
-  IInteractor,
+  Interactor,
   LocatorChain,
   LocatorRelativePosition,
   LocatorType,
@@ -21,7 +21,7 @@ export const parts = {
 } satisfies ScenePart;
 
 export class RatingDriver extends ComponentDriver<typeof parts> implements IInputDriver<number | null> {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,
