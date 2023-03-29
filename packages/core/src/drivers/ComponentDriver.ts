@@ -1,4 +1,4 @@
-import { LocatorRelativePosition, locatorUtil, PartLocatorType } from '..';
+import { LocatorRelativePosition } from '..';
 import { MissingPartError } from '../errors/MissingPartError';
 import {
   IComponentDriver,
@@ -10,6 +10,7 @@ import {
   ScenePart,
   ScenePartDriver,
 } from '../types';
+import { getPartFromDefinition } from './driverUtil';
 
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
   private _locator: LocatorChain;
@@ -100,35 +101,4 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   abstract get driverName(): string;
-}
-
-export function getPartFromDefinition<T extends ScenePart>(
-  partDefinition: T,
-  parentLocator: LocatorChain,
-  interactor: IInteractor,
-  option: Partial<IComponentDriverOption<T>>,
-): ScenePartDriver<T> {
-  const result: Partial<ScenePartDriver<T>> = {};
-
-  for (const [nestedComponentName, scenePart2] of Object.entries(partDefinition)) {
-    const { locator = nestedComponentName as string, driver, option: optionOverride } = scenePart2;
-
-    const componentOption: IComponentDriverOption = {
-      ...option,
-      ...optionOverride,
-    };
-
-    const locatorContext: LocatorChain = driver.prototype.overriddenParentLocator() ?? parentLocator;
-    const actualLocator: PartLocatorType =
-      driver.prototype.overrideLocatorRelativePosition() != null
-        ? locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
-        : locator;
-
-    const componentLocator = locatorUtil.append(locatorContext, actualLocator);
-
-    // @ts-ignore
-    result[nestedComponentName] = new driver(componentLocator, interactor, componentOption);
-  }
-
-  return result as ScenePartDriver<T>;
 }
