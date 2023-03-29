@@ -10,6 +10,7 @@ import {
   Optional,
   PartLocatorType,
   ScenePart,
+  timingUtil,
 } from '@atomic-testing/core';
 
 export const parts = {
@@ -28,6 +29,8 @@ const dialogRootLocator: PartLocatorType = {
   selector: '[role=presentation].MuiDialog-root',
   relative: LocatorRelativePosition.Root,
 };
+
+const defaultTransitionDuration = 250;
 
 export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
   constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
@@ -52,6 +55,31 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
     return title ?? null;
   }
 
+  /**
+   * Wait for dialog to open
+   * @param timeoutMs
+   * @returns true open has performed successfully
+   */
+  async waitForOpen(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
+    const isOpened = await timingUtil.waitUntil(this.isOpen.bind(this), true, timeoutMs);
+    return isOpened === true;
+  }
+
+  /**
+   * Wait for dialog to close
+   * @param timeoutMs
+   * @returns true open has performed successfully
+   */
+  async waitForClose(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
+    const isOpened = await timingUtil.waitUntil(this.isOpen.bind(this), false, timeoutMs);
+    return isOpened === false;
+  }
+
+  /**
+   * Check if the dialog box is open.  Caution, because of animation, upon an open/close action is performed
+   * use waitForOpen() or waitForClose() before using isOpen() would result a more accurate open state of the dialog
+   * @returns true if dialog box is open
+   */
   async isOpen(): Promise<boolean> {
     const exists = await this.exists();
     if (!exists) {

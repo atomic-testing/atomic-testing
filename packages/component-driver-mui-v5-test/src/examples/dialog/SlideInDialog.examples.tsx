@@ -1,14 +1,24 @@
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
+import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 /**
- * Based on Alert dialog example from MUI
- * @see https://mui.com/material-ui/react-dialog/#alerts
+ * Based on Transitions example from MUI dialog
+ * @see https://mui.com/material-ui/react-dialog/#transitions
  */
-export const AlertExample = () => {
+export const SlideInExample = () => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -21,19 +31,21 @@ export const AlertExample = () => {
 
   return (
     <div>
-      <Button data-testid="alert-open-trigger" variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
+      <Button data-testid="slidein-open-trigger" variant="outlined" onClick={handleClickOpen}>
+        Open slide in dialog
       </Button>
       <Dialog
-        data-testid="alert-dialog"
+        data-testid="slidein-dialog"
         open={open}
+        TransitionComponent={Transition}
+        keepMounted
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby="slidein-dialog-title"
+        aria-describedby="slidein-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle id="slidein-dialog-title">{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="slidein-dialog-description">
             Let Google help apps determine location. This means sending anonymous location data to Google, even when no
             apps are running.
           </DialogContentText>
@@ -62,13 +74,13 @@ const dialogContentPart = {
   },
 } satisfies ScenePart;
 
-export const alertExampleScenePart = {
+export const slideinExampleScenePart = {
   openTrigger: {
-    locator: byDataTestId('alert-open-trigger'),
+    locator: byDataTestId('slidein-open-trigger'),
     driver: ButtonDriver,
   },
   dialog: {
-    locator: byDataTestId('alert-dialog'),
+    locator: byDataTestId('slidein-dialog'),
     driver: DialogDriver<typeof dialogContentPart>,
     option: {
       content: dialogContentPart,
@@ -76,24 +88,24 @@ export const alertExampleScenePart = {
   },
 } satisfies ScenePart;
 
-export const alertDialogExample: IExampleUnit<typeof alertExampleScenePart, JSX.Element> = {
-  title: 'Alert dialog',
-  scene: alertExampleScenePart,
-  ui: <AlertExample />,
+export const slideinDialogExample: IExampleUnit<typeof slideinExampleScenePart, JSX.Element> = {
+  title: 'SlideIn dialog',
+  scene: slideinExampleScenePart,
+  ui: <SlideInExample />,
 };
 
-export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene> = {
-  title: 'Alert dialog',
+export const slideinDialogTestSuite: TestSuiteInfo<typeof slideinDialogExample.scene> = {
+  title: 'SlideIn dialog',
   url: '/dialog',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
-    describe(`${alertDialogExample.title}`, () => {
-      let testEngine: TestEngine<typeof alertDialogExample.scene>;
+    describe(`${slideinDialogExample.title}`, () => {
+      let testEngine: TestEngine<typeof slideinDialogExample.scene>;
 
       // Use the following beforeEach to work around the issue of Playwright's page being undefined
       // @ts-ignore
       beforeEach(function ({ page }) {
         // @ts-ignore
-        testEngine = getTestEngine(alertDialogExample.scene, { page });
+        testEngine = getTestEngine(slideinDialogExample.scene, { page });
         if (typeof arguments[0] === 'function') {
           arguments[0]();
         }
@@ -105,11 +117,6 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
 
       test('Initially dialog isOpen is false', async () => {
         const val = await testEngine.parts.dialog.isOpen();
-        assertEqual(val, false);
-      });
-
-      test('agree button should not exist', async () => {
-        const val = await testEngine.parts.dialog.content.agree.exists();
         assertEqual(val, false);
       });
 
