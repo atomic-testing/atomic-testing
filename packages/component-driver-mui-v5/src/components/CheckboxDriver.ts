@@ -4,7 +4,7 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   IFormFieldDriver,
-  IInteractor,
+  Interactor,
   IToggleDriver,
   LocatorChain,
   ScenePart,
@@ -25,7 +25,7 @@ export class CheckboxDriver
   extends ComponentDriver<CheckboxScenePart>
   implements IFormFieldDriver<string | null>, IToggleDriver
 {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: IComponentDriverOption) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: IComponentDriverOption) {
     super(locator, interactor, {
       ...option,
       parts: checkboxPart,

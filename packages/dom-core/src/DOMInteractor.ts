@@ -1,7 +1,7 @@
-import { IClickOption, IEnterTextOption, IInteractor, LocatorChain, locatorUtil, Optional } from '@atomic-testing/core';
+import { ClickOption, EnterTextOption, Interactor, LocatorChain, locatorUtil, Optional } from '@atomic-testing/core';
 import userEvent from '@testing-library/user-event';
 
-export class DOMInteractor implements IInteractor {
+export class DOMInteractor implements Interactor {
   constructor(protected readonly rootEl: HTMLElement = document.documentElement) {}
   async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
@@ -22,7 +22,7 @@ export class DOMInteractor implements IInteractor {
     }
   }
 
-  async click(locator: LocatorChain, option?: IClickOption): Promise<void> {
+  async click(locator: LocatorChain, option?: ClickOption): Promise<void> {
     const el = this.getElement(locator);
     if (el != null) {
       await userEvent.click(el);
@@ -36,7 +36,7 @@ export class DOMInteractor implements IInteractor {
     }
   }
 
-  async enterText(locator: LocatorChain, text: string, option?: Partial<IEnterTextOption> | undefined): Promise<void> {
+  async enterText(locator: LocatorChain, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {
     const el = this.getElement(locator);
     if (el != null) {
       if (!option?.append) {
@@ -139,7 +139,7 @@ export class DOMInteractor implements IInteractor {
     return Promise.resolve(false);
   }
 
-  clone(): IInteractor {
+  clone(): Interactor {
     return new DOMInteractor();
   }
 }

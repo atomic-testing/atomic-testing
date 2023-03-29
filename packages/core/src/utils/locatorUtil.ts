@@ -1,5 +1,5 @@
+import type { LocatorChain } from '../locators/LocatorChain';
 import { CssLocator, LocatorRelativePosition, LocatorType, PartLocatorType } from '../locators/PartLocatorType';
-import { LocatorChain } from '../types';
 
 export function append(
   locator: Readonly<LocatorChain> | Readonly<PartLocatorType>,

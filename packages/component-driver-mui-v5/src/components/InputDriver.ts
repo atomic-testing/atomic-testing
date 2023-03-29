@@ -3,7 +3,7 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
-  IInteractor,
+  Interactor,
   LocatorChain,
   LocatorType,
   ScenePart,
@@ -35,7 +35,7 @@ enum TextFieldInputType {
  * A driver for the Material UI v5 Input, FilledInput, OutlinedInput, and StandardInput components.
  */
 export class InputDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

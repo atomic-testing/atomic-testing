@@ -1,3 +1,5 @@
+import { ClickOption } from '../interactor/ClickOption';
+
 export interface IFormFieldDriver<T> {
   getValue(): Promise<T>;
 }
@@ -11,7 +13,6 @@ export interface IToggleDriver {
   setSelected(selected: boolean): Promise<void>;
 }
 
-export interface IClickOption {}
 export interface IClickableDriver {
-  click(option?: IClickOption): Promise<void>;
+  click(option?: ClickOption): Promise<void>;
 }

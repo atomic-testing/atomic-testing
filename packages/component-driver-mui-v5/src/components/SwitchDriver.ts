@@ -4,7 +4,7 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   IFormFieldDriver,
-  IInteractor,
+  Interactor,
   IToggleDriver,
   LocatorChain,
   ScenePart,
@@ -21,7 +21,7 @@ export class SwitchDriver
   extends ComponentDriver<typeof parts>
   implements IFormFieldDriver<string | null>, IToggleDriver
 {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

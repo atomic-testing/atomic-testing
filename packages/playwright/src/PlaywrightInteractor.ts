@@ -1,7 +1,7 @@
 import {
-  IClickOption,
-  IEnterTextOption,
-  IInteractor,
+  ClickOption,
+  EnterTextOption,
+  Interactor,
   LocatorChain,
   LocatorType,
   locatorUtil,
@@ -10,7 +10,7 @@ import {
 } from '@atomic-testing/core';
 import { Page } from '@playwright/test';
 
-export class PlaywrightInteractor implements IInteractor {
+export class PlaywrightInteractor implements Interactor {
   constructor(public readonly page: Page) {}
   async selectOptionValue(locator: LocatorChain, values: string[]): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
@@ -40,7 +40,7 @@ export class PlaywrightInteractor implements IInteractor {
     return values;
   }
 
-  async enterText(locator: LocatorChain, text: string, option?: Optional<Partial<IEnterTextOption>>): Promise<void> {
+  async enterText(locator: LocatorChain, text: string, option?: Optional<Partial<EnterTextOption>>): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     if (!option?.append) {
       await this.page.locator(cssLocator).clear();
@@ -48,7 +48,7 @@ export class PlaywrightInteractor implements IInteractor {
     await this.page.locator(cssLocator).type(text);
   }
 
-  async click(locator: LocatorChain, option?: IClickOption): Promise<void> {
+  async click(locator: LocatorChain, option?: ClickOption): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     await this.page.locator(cssLocator).click();
   }
@@ -127,7 +127,7 @@ export class PlaywrightInteractor implements IInteractor {
     return attrValue != null;
   }
 
-  clone(): IInteractor {
+  clone(): Interactor {
     return new PlaywrightInteractor(this.page);
   }
 }

@@ -1,4 +1,4 @@
-import { ScenePart } from '../types';
+import { ScenePart } from '../partTypes';
 
 export const MissingPartErrorId = 'MissingPartError';
 

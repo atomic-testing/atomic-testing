@@ -4,7 +4,7 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
-  IInteractor,
+  Interactor,
   LocatorChain,
   LocatorType,
   Optional,
@@ -52,7 +52,7 @@ enum TextFieldInputType {
  * A driver for the Material UI v5 TextField component with single line or multiline text input.
  */
 export class TextFieldDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

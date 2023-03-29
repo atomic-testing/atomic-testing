@@ -7,5 +7,6 @@ export { byName } from './byName';
 export { byRole } from './byRole';
 export { byTagName } from './byTagName';
 export { byValue } from './byValue';
-export { LocatorRelativePosition, LocatorType } from './PartLocatorType';
+export type { LocatorChain } from './LocatorChain';
 export type { CssLocator, PartLocatorType } from './PartLocatorType';
+export { LocatorRelativePosition, LocatorType } from './PartLocatorType';

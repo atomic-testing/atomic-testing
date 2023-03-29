@@ -1,4 +1,4 @@
-import { ScenePart } from '../types';
+import { ScenePart } from '../partTypes';
 
 export interface IExampleUnit<T extends ScenePart, ExampleT> {
   title: string;
