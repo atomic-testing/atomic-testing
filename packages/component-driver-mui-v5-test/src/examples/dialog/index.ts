@@ -1,9 +1,10 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { alertDialogExample as alertDialog } from './AlertDialog.examples';
+import { alertDialogExample, alertDialogTestSuite } from './AlertDialog.examples';
+import { slideinDialogExample, slideinDialogTestSuite } from './SlideInDialog.examples';
 
-export const alertDialogExample = alertDialog;
+export { alertDialogTestSuite, slideinDialogExample, alertDialogExample, slideinDialogTestSuite };
 
-export const dialogExamples: IExampleUnit<ScenePart, JSX.Element>[] = [alertDialogExample] satisfies IExampleUnit<
-  ScenePart,
-  JSX.Element
->[];
+export const dialogExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
+  alertDialogExample,
+  slideinDialogExample,
+] satisfies IExampleUnit<ScenePart, JSX.Element>[];
