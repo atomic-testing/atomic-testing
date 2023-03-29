@@ -28,6 +28,12 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
+  override async wait(ms: number): Promise<void> {
+    await act(async () => {
+      await super.wait(ms);
+    });
+  }
+
   override clone(): Interactor {
     return new ReactInteractor();
   }

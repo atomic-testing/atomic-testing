@@ -4,7 +4,7 @@ export { ContainerDriver } from './drivers/ContainerDriver';
 export type { IClickableDriver, IFormFieldDriver, IInputDriver, IToggleDriver } from './drivers/driverTypes';
 export { TooManyMatchingElementError, TooManyMatchingElementErrorId } from './errors/TooManyMatchingElementError';
 export * from './example/types';
-export type { ClickOption, EnterTextOption, Interactor } from './interactor';
+export type { ClickOption, CssProperty, EnterTextOption, Interactor } from './interactor';
 export * from './locators/';
 export type {
   IComponentDriverOption,

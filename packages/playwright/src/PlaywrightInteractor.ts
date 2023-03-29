@@ -1,5 +1,6 @@
 import {
   ClickOption,
+  CssProperty,
   EnterTextOption,
   Interactor,
   LocatorChain,
@@ -7,11 +8,13 @@ import {
   locatorUtil,
   Optional,
   PartLocatorType,
+  timingUtil,
 } from '@atomic-testing/core';
 import { Page } from '@playwright/test';
 
 export class PlaywrightInteractor implements Interactor {
   constructor(public readonly page: Page) {}
+
   async selectOptionValue(locator: LocatorChain, values: string[]): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     await this.page.locator(cssLocator).selectOption(values);
@@ -40,6 +43,15 @@ export class PlaywrightInteractor implements Interactor {
     return values;
   }
 
+  async getStyleValue(locator: LocatorChain, propertyName: CssProperty): Promise<Optional<string>> {
+    const cssLocator = locatorUtil.toCssSelector(locator);
+    const elLocator = this.page.locator(cssLocator);
+    const value = await elLocator.evaluate((element, prop) => {
+      return window.getComputedStyle(element).getPropertyValue(prop as string);
+    }, propertyName);
+    return value;
+  }
+
   async enterText(locator: LocatorChain, text: string, option?: Optional<Partial<EnterTextOption>>): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     if (!option?.append) {
@@ -56,6 +68,10 @@ export class PlaywrightInteractor implements Interactor {
   async hover(locator: LocatorChain): Promise<void> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     await this.page.locator(cssLocator).hover();
+  }
+
+  wait(ms: number): Promise<void> {
+    return timingUtil.wait(ms);
   }
 
   async getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
@@ -110,6 +126,30 @@ export class PlaywrightInteractor implements Interactor {
   async isReadonly(locator: LocatorChain): Promise<boolean> {
     const readonly = await this.getAttribute(locator, 'readonly');
     return readonly != null;
+  }
+
+  async isVisible(locator: LocatorChain): Promise<boolean> {
+    const exists = await this.exists(locator);
+    if (!exists) {
+      return false;
+    }
+
+    const opacity = await this.getStyleValue(locator, 'opacity');
+    if (opacity === '0') {
+      return false;
+    }
+
+    const visibility = await this.getStyleValue(locator, 'visibility');
+    if (visibility === 'hidden') {
+      return false;
+    }
+
+    const display = await this.getStyleValue(locator, 'display');
+    if (display === 'none') {
+      return false;
+    }
+
+    return true;
   }
 
   async hasCssClass(locator: LocatorChain, className: string): Promise<boolean> {
