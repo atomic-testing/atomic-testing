@@ -51,11 +51,7 @@ export const AlertExample = () => {
   );
 };
 
-export const alertExampleScenePart = {
-  openTrigger: {
-    locator: byDataTestId('open-trigger'),
-    driver: ButtonDriver,
-  },
+const dialogContentPart = {
   disagree: {
     locator: byDataTestId('disagree-button'),
     driver: ButtonDriver,
@@ -64,9 +60,19 @@ export const alertExampleScenePart = {
     locator: byDataTestId('agree-button'),
     driver: ButtonDriver,
   },
+} satisfies ScenePart;
+
+export const alertExampleScenePart = {
+  openTrigger: {
+    locator: byDataTestId('open-trigger'),
+    driver: ButtonDriver,
+  },
   dialog: {
     locator: byDataTestId('alert-dialog'),
-    driver: DialogDriver,
+    driver: DialogDriver<typeof dialogContentPart>,
+    option: {
+      content: dialogContentPart,
+    },
   },
 } satisfies ScenePart;
 
@@ -102,6 +108,11 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
         assertEqual(val, false);
       });
 
+      test('agree button should not exist', async () => {
+        const val = await testEngine.parts.dialog.content.agree.exists();
+        assertEqual(val, false);
+      });
+
       describe('When dialog is open', () => {
         beforeEach(async () => {
           await testEngine.parts.openTrigger.click();
@@ -115,6 +126,25 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
         test('title should return dialog title content', async () => {
           const val = await testEngine.parts.dialog.getTitle();
           assertEqual(val, "Use Google's location service?");
+        });
+
+        test('agree button should exist', async () => {
+          const val = await testEngine.parts.dialog.content.agree.exists();
+          assertEqual(val, true);
+        });
+
+        describe('When agree button is clicked', () => {
+          beforeEach(async () => {
+            await testEngine.parts.dialog.content.agree.click();
+          });
+
+          test.skip('isOpen turns false', async () => {
+            // This test fails because the dialog still exists in DOM
+            // but it is not visible (opacity: 0)
+            // isOpen should perform visibility/opacity check on the dialog container (MuiDialog-container)
+            const val = await testEngine.parts.dialog.isOpen();
+            assertEqual(val, false);
+          });
         });
       });
     });

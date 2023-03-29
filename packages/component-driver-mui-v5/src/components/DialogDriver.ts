@@ -1,8 +1,8 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
-  ComponentDriver,
-  IComponentDriverOption,
+  ContainerDriver,
+  IContainerDriverOption,
   IInteractor,
   LocatorChain,
   LocatorRelativePosition,
@@ -25,11 +25,12 @@ const dialogRootLocator: PartLocatorType = {
   relative: LocatorRelativePosition.Root,
 };
 
-export class DialogDriver extends ComponentDriver<typeof parts> {
-  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IComponentDriverOption>) {
+export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
+  constructor(locator: LocatorChain, interactor: IInteractor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
+      content: (option?.content ?? {}) as ContentT,
     });
   }
 
