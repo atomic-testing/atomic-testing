@@ -1,7 +1,7 @@
 {
   "name": "@atomic-testing/component-driver-mui-v5",
-  "version": "0.19.0",
-  "description": "",
+  "version": "0.20.0",
+  "description": "Atomic Testing Component driver to help drive Material UI v5 components",
   "main": "dist/index.js",
   "files": [
     "dist",
