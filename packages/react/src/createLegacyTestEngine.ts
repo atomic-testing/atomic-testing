@@ -1,13 +1,9 @@
-import { ScenePart, StepFunction, TestEngine } from '@atomic-testing/core';
+import { ScenePart, TestEngine } from '@atomic-testing/core';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 
 import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';
-
-const wrapAct: StepFunction = async (fn) => {
-  await act(fn);
-};
 
 /**
  * Create test engine for React 17 or before, for React 18 or later, use createTestEngine
@@ -22,7 +18,6 @@ export function createLegacyTestEngine<T extends ScenePart>(
   option?: Readonly<Partial<IReactTestEngineOption>>,
 ): TestEngine<T> {
   const rootEl = option?.rootElement ?? document.body;
-  const step = option?.perform ?? wrapAct;
   const container = rootEl.appendChild(document.createElement('div'));
 
   act(() => {
@@ -38,7 +33,6 @@ export function createLegacyTestEngine<T extends ScenePart>(
     [],
     new ReactInteractor(),
     {
-      perform: step,
       parts: partDefinitions,
     },
     cleanup,
