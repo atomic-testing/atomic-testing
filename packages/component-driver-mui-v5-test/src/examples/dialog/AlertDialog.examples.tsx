@@ -1,5 +1,6 @@
-import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v5';
+import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
+import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import * as React from 'react';
 
@@ -63,10 +64,59 @@ export const alertExampleScenePart = {
     locator: byDataTestId('agree-button'),
     driver: ButtonDriver,
   },
+  dialog: {
+    locator: byDataTestId('alert-dialog'),
+    driver: DialogDriver,
+  },
 } satisfies ScenePart;
 
 export const alertDialogExample: IExampleUnit<typeof alertExampleScenePart, JSX.Element> = {
   title: 'Alert dialog',
   scene: alertExampleScenePart,
   ui: <AlertExample />,
+};
+
+export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene> = {
+  title: 'Alert dialog',
+  url: '/dialog',
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+    describe(`${alertDialogExample.title}`, () => {
+      let testEngine: TestEngine<typeof alertDialogExample.scene>;
+
+      // Use the following beforeEach to work around the issue of Playwright's page being undefined
+      // @ts-ignore
+      beforeEach(function ({ page }) {
+        // @ts-ignore
+        testEngine = getTestEngine(alertDialogExample.scene, { page });
+        if (typeof arguments[0] === 'function') {
+          arguments[0]();
+        }
+      });
+
+      afterEach(async () => {
+        await testEngine.cleanUp();
+      });
+
+      test('Initially dialog isOpen is false', async () => {
+        const val = await testEngine.parts.dialog.isOpen();
+        assertEqual(val, false);
+      });
+
+      describe('When dialog is open', () => {
+        beforeEach(async () => {
+          await testEngine.parts.openTrigger.click();
+        });
+
+        test('isOpen turns true', async () => {
+          const val = await testEngine.parts.dialog.isOpen();
+          assertEqual(val, true);
+        });
+
+        test('title should return dialog title content', async () => {
+          const val = await testEngine.parts.dialog.getTitle();
+          assertEqual(val, "Use Google's location service?");
+        });
+      });
+    });
+  },
 };
