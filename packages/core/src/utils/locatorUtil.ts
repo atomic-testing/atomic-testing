@@ -1,8 +1,12 @@
-import { CssLocator, LocatorRelativePosition, PartLocatorType } from '../locators/PartLocatorType';
+import { CssLocator, LocatorRelativePosition, LocatorType, PartLocatorType } from '../locators/PartLocatorType';
 import { LocatorChain } from '../types';
 
-export function append(locator: Readonly<LocatorChain>, selector: PartLocatorType): LocatorChain {
-  return locator.concat(selector);
+export function append(
+  locator: Readonly<LocatorChain> | Readonly<PartLocatorType>,
+  selector: PartLocatorType,
+): LocatorChain {
+  const baseLocator: LocatorChain = Array.isArray(locator) ? locator : [locator];
+  return baseLocator.concat(selector);
 }
 
 export function findRootLocatorIndex(locator: LocatorChain): number {
@@ -53,4 +57,22 @@ export function getLocatorStatement(locator: PartLocatorType): string {
   }
 
   return statement;
+}
+
+export function overrideLocatorRelativePosition(
+  locator: PartLocatorType,
+  relative: LocatorRelativePosition,
+): PartLocatorType {
+  if (typeof locator === 'string') {
+    return {
+      type: LocatorType.Css,
+      selector: locator,
+      relative,
+    };
+  }
+
+  return {
+    ...locator,
+    relative,
+  };
 }

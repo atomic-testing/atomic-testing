@@ -1,5 +1,5 @@
-import { ComponentDriver } from './ComponentDriver';
-import { IClickOption } from './driverTypes';
+import { ComponentDriver } from './drivers/ComponentDriver';
+import { IClickOption } from './drivers/driverTypes';
 import { PartLocatorType } from './locators/PartLocatorType';
 
 export type StepFunction = (work: () => Promise<void>) => Promise<void>;
@@ -28,9 +28,7 @@ export interface ScenePartDefinition<T extends ScenePart> {
 /**
  * Part name to driver definition map
  */
-export interface ScenePart {
-  [partName: string]: ScenePartDefinition<any>;
-}
+export interface ScenePart extends Record<string, ScenePartDefinition<any>> {}
 
 export type ScenePartDriver<T extends ScenePart> = {
   [partName in keyof T]: InstanceType<T[partName]['driver']>;
