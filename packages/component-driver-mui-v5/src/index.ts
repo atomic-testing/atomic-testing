@@ -1,3 +1,4 @@
+export { AlertDriver } from './components/AlertDriver';
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
 export { DialogDriver } from './components/DialogDriver';
