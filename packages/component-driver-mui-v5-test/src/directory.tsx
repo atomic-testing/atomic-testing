@@ -1,5 +1,6 @@
 import { ExampleList } from './components/ExampleList';
 import {
+  alertExamples,
   buttonExamples,
   checkboxExamples,
   dialogExamples,
@@ -18,6 +19,11 @@ interface IToc {
 }
 
 export const tocs: IToc[] = [
+  {
+    label: 'Alert',
+    path: '/alert',
+    ui: <ExampleList examples={alertExamples} />,
+  },
   {
     label: 'Button',
     path: '/button',
