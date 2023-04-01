@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    # Review gh actions docs if you want to further define triggers, paths, etc
-    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
 jobs:
   deploy:
@@ -13,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # defaults:
-    #   run:
-    #     working-directory: "docs"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -28,10 +23,10 @@ jobs:
         with:
           version: 8
           run_install: false
-          
+
       - name: Install documentation dependencies
-        run: pnpm install --frozen-lockfile --strict-peer-dependencies
-        working-directory: ./docs    
+        run: pnpm install . --frozen-lockfile --strict-peer-dependencies
+        working-directory: ./docs
 
       - name: Build documentation
         run: pnpm build
