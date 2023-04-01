@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Atomic Testing',
-  tagline: 'UI Testing Reinvented: Seamless Integration, Simplified Testing, and Boundless Compatibility',
+  tagline: 'Portable UI testing library: Simplify and unify across frameworks and libraries',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -85,7 +85,7 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
+                label: 'Getting started',
                 to: '/docs/intro',
               },
             ],
@@ -122,6 +122,11 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+      },
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
       },
     }),
 };
