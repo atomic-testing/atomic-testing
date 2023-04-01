@@ -1,5 +1,7 @@
+[![NPM version](https://img.shields.io/npm/v/@atomic-testing/core.svg?style=flat)](https://www.npmjs.com/package/@atomic-testing/core) ![NPM license](https://img.shields.io/npm/l/@atomic-testing/core.svg?style=flat)
+
 # <img src="./docs/static/img/logo.svg" width="22" height="22" hspace="10" /> atomic-testing
 
-Make UI testing simpler and more reliable
+UI Testing Reinvented: Seamless Integration, Simplified Testing, and Boundless Compatibility
 
-See https://atomic-testing.dev/
+Learn more at https://atomic-testing.dev/
