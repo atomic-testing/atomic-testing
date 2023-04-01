@@ -3,7 +3,7 @@
   "name": "development-environment",
   "engines": {
     "node": ">=14.17",
-    "pnpm": ">=7.3.0 <8"
+    "pnpm": ">=7.3.0 <9"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
