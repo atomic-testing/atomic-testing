@@ -92,10 +92,37 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return this.interactor.getText(this.locator);
   }
 
+  /**
+   * Whether the component exists/attached to the DOM
+   * @returns true if the component is attached to the DOM, false otherwise
+   */
   exists(): Promise<boolean> {
     return this.interactor.exists(this.locator);
   }
 
+  /**
+   * Whether the component is visible.  Visibility is defined
+   * that the component does not have the CSS property `display: none`,
+   * `visibility: hidden`, or `opacity: 0`.  However this does not
+   * check wether the component is within the viewport.
+   *
+   * @returns true if the component is visible, false otherwise
+   */
+  isVisible(): Promise<boolean> {
+    return this.interactor.isVisible(this.locator);
+  }
+
+  /**
+   * Wait until the component is in the expected state such as
+   * the component's visibility or existence. If the component has
+   * not reached the expected state within the timeout, it will throw
+   * an error.
+   *
+   * By default it waits until the component is attached to the DOM
+   * within 30 seconds.
+   *
+   * @param option The option to configure the wait behavior
+   */
   async waitUntil(option: Partial<Readonly<WaitForOption>> = defaultWaitForOption): Promise<void> {
     const actualOption = { ...defaultWaitForOption, ...option };
     let probeFn: () => Promise<boolean>;
