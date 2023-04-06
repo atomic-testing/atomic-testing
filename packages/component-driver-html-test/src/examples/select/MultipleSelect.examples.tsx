@@ -59,6 +59,22 @@ export const multipleSelectTestSuite: TestSuiteInfo<typeof multipleSelectExample
         const val = await testEngine.parts.select.getValue();
         assertEqual(val, targetValue);
       });
+
+      describe('Select by label', () => {
+        beforeEach(async () => {
+          await testEngine.parts.select.selectByLabel(['One', 'Three']);
+        });
+
+        test('Selected labels should reflect the selection', async () => {
+          const val = await testEngine.parts.select.getSelectedLabel(true);
+          assertEqual(val, ['One', 'Three']);
+        });
+
+        test('Selected values should reflect the selection', async () => {
+          const val = await testEngine.parts.select.getValue();
+          assertEqual(val, ['1', '3']);
+        });
+      });
     });
   },
 };
