@@ -8,7 +8,7 @@
     "src"
   ],
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=5110 TSC_COMPILE_ON_ERROR=true react-scripts start",
     "build:ui": "react-scripts build",
     "postbuild": "node ../../scripts/postBuild.js",
     "test:dom": "jest",

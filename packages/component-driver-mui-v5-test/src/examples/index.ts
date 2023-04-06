@@ -3,6 +3,7 @@ export * from './button';
 export * from './checkbox';
 export * from './dialog';
 export * from './input';
+export * from './menu';
 export * from './rating';
 export * from './select';
 export * from './slider';
