@@ -5,8 +5,6 @@ import {
   HTMLTextInputDriver,
 } from '@atomic-testing/component-driver-html';
 import {
-  byCssClass,
-  byRole,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -15,9 +13,16 @@ import {
   LocatorRelativePosition,
   LocatorType,
   Nullable,
+  PartLocatorType,
   ScenePart,
   ScenePartDriver,
+  byCssClass,
+  byRole,
+  locatorUtil,
 } from '@atomic-testing/core';
+
+import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
+import { MenuItemDriver } from './MenuItemDriver';
 
 export const selectPart = {
   trigger: {
@@ -91,6 +96,74 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     }
 
     return success;
+  }
+
+  async getMenuItemByLocator(itemLocator: PartLocatorType): Promise<MenuItemDriver | null> {
+    const locator = locatorUtil.append(this.parts.dropdown.locator, itemLocator);
+    const exists = await this.interactor.exists(locator);
+    if (exists) {
+      return new MenuItemDriver(locator, this.interactor);
+    } else {
+      return null;
+    }
+  }
+
+  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+    const itemLocator: PartLocatorType = {
+      type: LocatorType.Css,
+      selector: `[role=option]:nth-of-type(${index + 1})`,
+    };
+    return this.getMenuItemByLocator(itemLocator);
+  }
+
+  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
+    let index = 0;
+    let item: MenuItemDriver | null = await this.getMenuItemByIndex(index);
+    while (item != null) {
+      const itemLabel = await item.label();
+      if (itemLabel === label) {
+        return item;
+      }
+      index++;
+      item = await this.getMenuItemByIndex(index);
+    }
+    return null;
+  }
+
+  /**
+   * Selects an option by its label
+   * @param label
+   * @returns
+   */
+  async selectByLabel(label: string): Promise<void> {
+    const isNative = await this.isNative();
+    if (isNative) {
+      await this.parts.nativeSelect.selectByLabel(label);
+      return;
+    }
+
+    await this.enforcePartExistence('trigger');
+    await this.parts.trigger.click();
+
+    await this.enforcePartExistence('dropdown');
+    const item = await this.getMenuItemByLabel(label);
+
+    if (item) {
+      await item.click();
+    } else {
+      throw new MenuItemNotFoundError(label);
+    }
+  }
+
+  async getSelectedLabel(): Promise<string | null> {
+    const isNative = await this.isNative();
+    if (isNative) {
+      return await this.parts.nativeSelect.getSelectedLabel();
+    }
+
+    await this.enforcePartExistence('trigger');
+    const label = await this.parts.trigger.getText();
+    return label ?? null;
   }
 
   override async exists(): Promise<boolean> {

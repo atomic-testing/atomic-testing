@@ -45,7 +45,7 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     return LocatorRelativePosition.Same;
   }
 
-  async getByLocator(itemLocator: PartLocatorType): Promise<MenuItemDriver | null> {
+  async getMenuItemByLocator(itemLocator: PartLocatorType): Promise<MenuItemDriver | null> {
     const locator = locatorUtil.append(this.parts.menu.locator, itemLocator);
     const exists = await this.interactor.exists(locator);
     if (exists) {
@@ -55,30 +55,30 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     }
   }
 
-  async getByIndex(index: number): Promise<MenuItemDriver | null> {
+  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
     const itemLocator: PartLocatorType = {
       type: LocatorType.Css,
       selector: `[role=menuitem]:nth-of-type(${index + 1})`,
     };
-    return this.getByLocator(itemLocator);
+    return this.getMenuItemByLocator(itemLocator);
   }
 
-  async getByLabel(label: string): Promise<MenuItemDriver | null> {
+  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
     let index = 0;
-    let item: MenuItemDriver | null = await this.getByIndex(index);
+    let item: MenuItemDriver | null = await this.getMenuItemByIndex(index);
     while (item != null) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
       }
       index++;
-      item = await this.getByIndex(index);
+      item = await this.getMenuItemByIndex(index);
     }
     return null;
   }
 
   async selectByLabel(label: string): Promise<void> {
-    const item = await this.getByLabel(label);
+    const item = await this.getMenuItemByLabel(label);
     if (item) {
       await item.click();
     } else {
