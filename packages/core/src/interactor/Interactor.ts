@@ -42,7 +42,16 @@ export interface Interactor {
 
   //#region Read only interactions
   getInputValue(locator: LocatorChain): Promise<Optional<string>>;
+  /**
+   * Get the select element's selected options' values
+   * @param locator
+   */
   getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>>;
+  /**
+   * Get the select element's selected options' labels
+   * @param locator
+   */
+  getSelectLabels(locator: LocatorChain): Promise<Optional<readonly string[]>>;
 
   getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
   getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;

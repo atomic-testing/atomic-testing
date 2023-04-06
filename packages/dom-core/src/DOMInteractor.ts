@@ -106,12 +106,20 @@ export class DOMInteractor implements Interactor {
 
   async getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>> {
     const el = this.getElement(locator);
-    if (el != null) {
-      if (el.nodeName === 'SELECT') {
-        const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
-        const values = Array.from(options).map((o) => o.value);
-        return Promise.resolve(values);
-      }
+    if (el != null && el.nodeName === 'SELECT') {
+      const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
+      const values = Array.from(options).map((o) => o.value);
+      return Promise.resolve(values);
+    }
+    return Promise.resolve(undefined);
+  }
+
+  async getSelectLabels(locator: LocatorChain): Promise<Optional<readonly string[]>> {
+    const el = this.getElement(locator);
+    if (el != null && el.nodeName === 'SELECT') {
+      const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
+      const values = Array.from(options).map((o) => o.text);
+      return Promise.resolve(values);
     }
     return Promise.resolve(undefined);
   }
