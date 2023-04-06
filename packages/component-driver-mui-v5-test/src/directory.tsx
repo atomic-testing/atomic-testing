@@ -5,6 +5,7 @@ import {
   checkboxExamples,
   dialogExamples,
   inputExamples,
+  menuExamples,
   ratingExamples,
   selectExamples,
   sliderExamples,
@@ -43,6 +44,11 @@ export const tocs: IToc[] = [
     label: 'Input',
     path: '/input',
     ui: <ExampleList examples={inputExamples} />,
+  },
+  {
+    label: 'Menu',
+    path: '/menu',
+    ui: <ExampleList examples={menuExamples} />,
   },
   {
     label: 'Rating',
