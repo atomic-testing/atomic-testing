@@ -43,6 +43,24 @@ export class PlaywrightInteractor implements Interactor {
     return values;
   }
 
+  async getSelectLabels(locator: LocatorChain): Promise<Optional<readonly string[]>> {
+    const optionLocator: PartLocatorType = {
+      type: LocatorType.Css,
+      selector: 'option:checked',
+    };
+    const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
+    const cssLocator = locatorUtil.toCssSelector(selectedOptionLocator);
+    const allOptions = await this.page.locator(cssLocator).all();
+    const labels: string[] = [];
+    for (const option of allOptions) {
+      const label = await option.textContent();
+      if (label != null) {
+        labels.push(label);
+      }
+    }
+    return labels;
+  }
+
   async getStyleValue(locator: LocatorChain, propertyName: CssProperty): Promise<Optional<string>> {
     const cssLocator = locatorUtil.toCssSelector(locator);
     const elLocator = this.page.locator(cssLocator);
