@@ -157,13 +157,13 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExampleSceneP
       });
 
       test('Settings menu item should be selected', async () => {
-        const item = await testEngine.parts.menu.getByLabel('Settings');
+        const item = await testEngine.parts.menu.getMenuItemByLabel('Settings');
         const isSelected = await item?.isSelected();
         assertEqual(isSelected, true);
       });
 
       test('Profile menu item should not be selected', async () => {
-        const item = await testEngine.parts.menu.getByLabel('Profile');
+        const item = await testEngine.parts.menu.getMenuItemByLabel('Profile');
         const isSelected = await item?.isSelected();
         assertEqual(isSelected, false);
       });
@@ -175,7 +175,7 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExampleSceneP
       });
 
       test('Logout menu item should be disabled', async () => {
-        const item = await testEngine.parts.menu.getByLabel('Logout');
+        const item = await testEngine.parts.menu.getMenuItemByLabel('Logout');
         const isDisabled = await item?.isDisabled();
         assertEqual(isDisabled, true);
       });

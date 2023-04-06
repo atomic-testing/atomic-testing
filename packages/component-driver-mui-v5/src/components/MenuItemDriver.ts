@@ -2,13 +2,18 @@ import { ComponentDriver } from '@atomic-testing/core';
 
 import { MenuItemDisabledError } from '../errors/MenuItemDisabledError';
 
-// Mui-selected
-// aria-selected="true"
-
+/**
+ * @internal
+ */
 export class MenuItemDriver extends ComponentDriver {
   async label(): Promise<string | null> {
     const label = await this.getText();
     return label?.trim() || null;
+  }
+
+  async value(): Promise<string | null> {
+    const value = await this.interactor.getAttribute(this.locator, 'data-value');
+    return value ?? null;
   }
 
   async isSelected(): Promise<boolean> {

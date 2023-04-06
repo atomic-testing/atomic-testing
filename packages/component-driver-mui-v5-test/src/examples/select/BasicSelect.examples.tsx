@@ -79,6 +79,19 @@ export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExample.scene
         const val = await testEngine.parts.select.getValue();
         assertEqual(val, targetValue);
       });
+
+      test(`get label of rich select`, async () => {
+        const targetValue = '30';
+        await testEngine.parts.select.setValue(targetValue);
+        const val = await testEngine.parts.select.getSelectedLabel();
+        assertEqual(val, 'Thirty');
+      });
+
+      test(`set label of rich select`, async () => {
+        await testEngine.parts.select.selectByLabel('Thirty');
+        const val = await testEngine.parts.select.getValue();
+        assertEqual(val, '30');
+      });
     });
   },
 };
