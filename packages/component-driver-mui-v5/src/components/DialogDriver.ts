@@ -1,12 +1,12 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
+  byRole,
   ContainerDriver,
   IContainerDriverOption,
   Interactor,
   LocatorChain,
   LocatorRelativePosition,
-  LocatorType,
   Optional,
   PartLocatorType,
   ScenePart,
@@ -19,16 +19,12 @@ export const parts = {
     driver: HTMLElementDriver,
   },
   dialogContainer: {
-    locator: byCssClass('MuiDialog-container'),
+    locator: byRole('presentation'),
     driver: HTMLElementDriver,
   },
 } satisfies ScenePart;
 
-const dialogRootLocator: PartLocatorType = {
-  type: LocatorType.Css,
-  selector: '[role=presentation].MuiDialog-root',
-  relative: LocatorRelativePosition.Root,
-};
+const dialogRootLocator: PartLocatorType = byRole('presentation', LocatorRelativePosition.Root);
 
 const defaultTransitionDuration = 250;
 

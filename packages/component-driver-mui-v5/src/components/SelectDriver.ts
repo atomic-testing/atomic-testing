@@ -16,8 +16,9 @@ import {
   PartLocatorType,
   ScenePart,
   ScenePartDriver,
-  byCssClass,
+  byAttribute,
   byRole,
+  byTagName,
   locatorUtil,
 } from '@atomic-testing/core';
 
@@ -32,17 +33,17 @@ export const selectPart = {
   dropdown: {
     locator: {
       type: LocatorType.Css,
-      selector: '[role=presentation].MuiPopover-root [role=listbox].MuiList-root',
+      selector: '[role=presentation] [role=listbox]',
       relative: LocatorRelativePosition.Root,
     },
     driver: HTMLElementDriver,
   },
   input: {
-    locator: byCssClass('MuiSelect-nativeInput'),
+    locator: byTagName('input'),
     driver: HTMLTextInputDriver,
   },
   nativeSelect: {
-    locator: byCssClass('MuiNativeSelect-select'),
+    locator: byTagName('select'),
     driver: HTMLSelectDriver,
   },
 } satisfies ScenePart;
@@ -86,8 +87,8 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     await this.parts.trigger.click();
 
     await this.enforcePartExistence('dropdown');
-    const optionSelector = `[data-value="${value}"]`;
-    const optionLocator = this.parts.dropdown.locator.concat(optionSelector);
+    const optionSelector = byAttribute('data-value', value!);
+    const optionLocator = locatorUtil.append(this.parts.dropdown.locator, optionSelector);
     const optionExists = await this.interactor.exists(optionLocator);
 
     if (optionExists) {
@@ -182,8 +183,8 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
       return this.parts.nativeSelect.isDisabled();
     } else {
       await this.enforcePartExistence('trigger');
-      const isDisabled = await this.interactor.hasCssClass(this.parts.trigger.locator, 'Mui-disabled');
-      return isDisabled;
+      const isDisabled = await this.interactor.getAttribute(this.parts.trigger.locator, 'aria-disabled');
+      return isDisabled === 'true';
     }
   }
 
