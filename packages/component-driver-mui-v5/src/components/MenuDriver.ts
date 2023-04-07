@@ -23,11 +23,7 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-const menuRootLocator: PartLocatorType = {
-  type: LocatorType.Css,
-  selector: '[role=presentation].MuiMenu-root',
-  relative: LocatorRelativePosition.Root,
-};
+const menuRootLocator: PartLocatorType = byRole('presentation', LocatorRelativePosition.Root);
 
 export class MenuDriver extends ComponentDriver<typeof parts> {
   constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {

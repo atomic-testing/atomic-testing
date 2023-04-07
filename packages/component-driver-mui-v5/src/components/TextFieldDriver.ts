@@ -1,6 +1,5 @@
 import { HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
-  byCssClass,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -15,11 +14,17 @@ import { SelectDriver } from './SelectDriver';
 
 export const parts = {
   label: {
-    locator: byCssClass('MuiFormLabel-root'),
+    locator: {
+      type: LocatorType.Css,
+      selector: '>label',
+    },
     driver: HTMLElementDriver,
   },
   helperText: {
-    locator: byCssClass('MuiFormHelperText-root'),
+    locator: {
+      type: LocatorType.Css,
+      selector: '>p',
+    },
     driver: HTMLElementDriver,
   },
   singlelineInput: {
@@ -37,7 +42,10 @@ export const parts = {
     driver: HTMLTextInputDriver,
   },
   selectInput: {
-    locator: byCssClass('MuiInputBase-root'),
+    locator: {
+      type: LocatorType.Css,
+      selector: '>div',
+    },
     driver: SelectDriver,
   },
 } satisfies ScenePart;

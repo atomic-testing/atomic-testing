@@ -1,6 +1,6 @@
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import {
-  byCssClass,
+  byAttribute,
   ComponentDriver,
   IComponentDriverOption,
   IFormFieldDriver,
@@ -12,7 +12,7 @@ import {
 
 export const parts = {
   input: {
-    locator: byCssClass('MuiSwitch-input'),
+    locator: byAttribute('type', 'checkbox'),
     driver: HTMLCheckboxDriver,
   },
 } satisfies ScenePart;
