@@ -49,15 +49,26 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return undefined;
   }
 
+  /**
+   * Return driver instance of all the named parts
+   */
   get parts(): ScenePartDriver<T> {
     return this._parts;
   }
 
+  /**
+   * Return the locator of the component
+   */
   get locator(): LocatorChain {
     return this._locator;
   }
 
-  async enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void> {
+  /**
+   * Check the specified parts' existences, and throw MissPartError if any of the part is found not existence.
+   * Existence is defined by the part's existence in the DOM regardless of its visibility on the screen
+   * @param partName Single or array of the names of the parts to be enforced
+   */
+  protected async enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void> {
     const missingPartNames = await this.getMissingPartNames(partName);
     if (missingPartNames.length > 0) {
       // @ts-ignore
@@ -65,7 +76,14 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     }
   }
 
-  async getMissingPartNames(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<readonly PartName<T>[]> {
+  /**
+   * Get the names of parts not in the DOM
+   * @param partName Single or array of the names of the parts to be examined
+   * @returns
+   */
+  protected async getMissingPartNames(
+    partName: PartName<T> | ReadonlyArray<PartName<T>>,
+  ): Promise<readonly PartName<T>[]> {
     let partNames: ReadonlyArray<keyof T>;
     if (partName == null) {
       partNames = Object.keys(this._parts) as ReadonlyArray<keyof T>;
@@ -88,6 +106,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return missingParts;
   }
 
+  /**
+   * Get the combined text content of the component
+   * @returns If the component exists and has content, it should return the text or otherwise undefined
+   */
   getText(): Promise<Optional<string>> {
     return this.interactor.getText(this.locator);
   }
