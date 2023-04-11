@@ -1,6 +1,7 @@
 import { Optional } from './dataTypes';
 import { ComponentDriver } from './drivers/ComponentDriver';
 import { ContainerDriver } from './drivers/ContainerDriver';
+import { WaitForOption } from './drivers/WaitForOption';
 import { LocatorChain } from './locators/LocatorChain';
 import { PartLocatorType } from './locators/PartLocatorType';
 
@@ -61,6 +62,9 @@ export interface IContainerDriverOption<ContentT extends ScenePart = {}, T exten
 }
 
 export interface IComponentDriver<T extends ScenePart = {}> {
+  /**
+   * Return driver instance of all the named parts
+   */
   readonly parts: ScenePartDriver<T>;
 
   /**
@@ -68,10 +72,40 @@ export interface IComponentDriver<T extends ScenePart = {}> {
    */
   readonly locator: LocatorChain;
 
-  enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void>;
-  getMissingPartNames(partName?: PartName<T> | ReadonlyArray<PartName<T>>): Promise<ReadonlyArray<PartName<T>>>;
-
+  /**
+   * Get the combined text content of the component
+   * @returns If the component exists and has content, it should return the text or otherwise undefined
+   */
   getText(): Promise<Optional<string>>;
+
+  /**
+   * Whether the component exists/attached to the DOM
+   * @returns true if the component is attached to the DOM, false otherwise
+   */
+  exists(): Promise<boolean>;
+
+  /**
+   * Whether the component is visible.  Visibility is defined
+   * that the component does not have the CSS property `display: none`,
+   * `visibility: hidden`, or `opacity: 0`.  However this does not
+   * check wether the component is within the viewport.
+   *
+   * @returns true if the component is visible, false otherwise
+   */
+  isVisible(): Promise<boolean>;
+
+  /**
+   * Wait until the component is in the expected state such as
+   * the component's visibility or existence. If the component has
+   * not reached the expected state within the timeout, it will throw
+   * an error.
+   *
+   * By default it waits until the component is attached to the DOM
+   * within 30 seconds.
+   *
+   * @param option The option to configure the wait behavior
+   */
+  waitUntil(option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
 export interface ITestEngine<T extends ScenePart = {}> extends IComponentDriver<T> {
