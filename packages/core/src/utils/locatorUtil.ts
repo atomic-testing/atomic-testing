@@ -2,11 +2,15 @@ import type { LocatorChain } from '../locators/LocatorChain';
 import { CssLocator, LocatorRelativePosition, LocatorType, PartLocatorType } from '../locators/PartLocatorType';
 
 export function append(
-  locator: Readonly<LocatorChain> | Readonly<PartLocatorType>,
-  selector: PartLocatorType,
+  locatorBase: Readonly<LocatorChain> | Readonly<PartLocatorType>,
+  ...locatorsToAppend: (PartLocatorType | Readonly<LocatorChain>)[]
 ): LocatorChain {
-  const baseLocator: LocatorChain = Array.isArray(locator) ? locator : [locator];
-  return baseLocator.concat(selector);
+  const baseLocator: LocatorChain = Array.isArray(locatorBase) ? locatorBase : [locatorBase];
+  const toAppend: PartLocatorType[] = locatorsToAppend.reduce((acc: PartLocatorType[], locator) => {
+    return acc.concat(locator);
+  }, []);
+
+  return baseLocator.concat(toAppend);
 }
 
 export function findRootLocatorIndex(locator: LocatorChain): number {

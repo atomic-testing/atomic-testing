@@ -12,6 +12,14 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   private _locator: LocatorChain;
   private readonly _parts: ScenePartDriver<T>;
 
+  /**
+   * Option passed to the constructor includes both universal options which can be shared across
+   * all component driver tree, and component specific options which are only applicable to the component.
+   *
+   * Commutable option is the option that can be shared across all component driver tree.
+   */
+  public readonly commutableOption: IComponentDriverOption<T>;
+
   constructor(
     locator: LocatorChain,
     public readonly interactor: Interactor,
@@ -19,6 +27,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   ) {
     this._locator = locator;
     this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});
+    this.commutableOption = {
+      ...option,
+      parts: {} as T,
+    };
   }
 
   /**

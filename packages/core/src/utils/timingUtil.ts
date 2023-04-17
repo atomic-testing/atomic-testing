@@ -44,6 +44,7 @@ export async function waitUntil<T>(
 
     const currentTime = Date.now();
     const elapsed = currentTime - startMs;
+
     if (elapsed >= timeoutMs) {
       return val;
     }
@@ -52,8 +53,7 @@ export async function waitUntil<T>(
     if (nextStart - startMs >= timeoutMs) {
       return val;
     }
-
-    await wait(nextStart - currentTime);
+    await wait(nextStart);
   }
 
   return val!;
