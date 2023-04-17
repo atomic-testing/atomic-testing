@@ -20,6 +20,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@swc/jest": ">=0.2.26",
     "@types/node": "^16.0.0",
     "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.30.0",

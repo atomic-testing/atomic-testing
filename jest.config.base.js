@@ -16,8 +16,19 @@ const tsJestConfig = [
 module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/__tests__'],
   transform: {
-    '^.+\\.ts$': tsJestConfig,
-    '^.+\\.tsx$': tsJestConfig,
+    '^.+\\.ts$': '@swc/jest',
+    '^.+\\.tsx$': [
+      '@swc/jest',
+      {
+        jsc: {
+          transform: {
+            react: {
+              runtime: 'automatic',
+            },
+          },
+        },
+      },
+    ],
   },
   testRegex: '(/__tests__/.*.(test|spec)).(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
