@@ -4,12 +4,12 @@
   "include": ["./src"],
   "compilerOptions": {
     "outDir": "./build",
-    "composite": true,
+    "composite": true
   },
   "references": [
     { "path": "../core" },
     { "path": "../dom-core" },
     { "path": "../component-driver-html" },
     { "path": "../react" }
-  ],
+  ]
 }
