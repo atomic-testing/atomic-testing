@@ -13,12 +13,12 @@ import {
   LocatorRelativePosition,
   LocatorType,
   Nullable,
-  PartLocatorType,
   ScenePart,
   ScenePartDriver,
   byAttribute,
   byRole,
   byTagName,
+  driverHelper,
   locatorUtil,
 } from '@atomic-testing/core';
 
@@ -50,6 +50,7 @@ export const selectPart = {
 
 export type SelectScenePart = typeof selectPart;
 export type SelectScenePartDriver = ScenePartDriver<SelectScenePart>;
+const optionLocator = byRole('option');
 
 export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
   constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
@@ -99,34 +100,20 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     return success;
   }
 
-  async getMenuItemByLocator(itemLocator: PartLocatorType): Promise<MenuItemDriver | null> {
-    const locator = locatorUtil.append(this.parts.dropdown.locator, itemLocator);
-    const exists = await this.interactor.exists(locator);
-    if (exists) {
-      return new MenuItemDriver(locator, this.interactor);
-    } else {
-      return null;
-    }
-  }
-
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
-    const itemLocator: PartLocatorType = {
-      type: LocatorType.Css,
-      selector: `[role=option]:nth-of-type(${index + 1})`,
-    };
-    return this.getMenuItemByLocator(itemLocator);
+  async getOptionByIndex(index: number): Promise<MenuItemDriver | null> {
+    return driverHelper.getListItemByIndex(this, optionLocator, index, MenuItemDriver);
   }
 
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
     let index = 0;
-    let item: MenuItemDriver | null = await this.getMenuItemByIndex(index);
+    let item: MenuItemDriver | null = await this.getOptionByIndex(index);
     while (item != null) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
       }
       index++;
-      item = await this.getMenuItemByIndex(index);
+      item = await this.getOptionByIndex(index);
     }
     return null;
   }
@@ -193,7 +180,7 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     if (isNative) {
       return this.parts.nativeSelect.isReadonly();
     } else {
-      // Cannot deterimine readonly state of a select input.
+      // Cannot determine readonly state of a select input.
       return false;
     }
   }
