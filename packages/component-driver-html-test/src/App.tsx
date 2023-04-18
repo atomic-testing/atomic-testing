@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Outlet, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
 import { tocs } from './directory';
 import { Home } from './Home';
 import styled from '@emotion/styled';
@@ -20,7 +20,7 @@ const Content = styled.div`
   flex-shrink: 1;
 `;
 
-export const Layout:React.FunctionComponent = () => {
+export const Layout: React.FunctionComponent = () => {
   const location = useLocation();
 
   const title = tocs.find((example) => example.path === location.pathname)?.label || 'Home';
@@ -29,13 +29,11 @@ export const Layout:React.FunctionComponent = () => {
     <Container>
       <Nav>
         <ul>
-          {
-            tocs.map((example) => (
-              <li key={example.path}>
-                <Link to={example.path}>{example.label}</Link>
-              </li>
-            ))
-          }
+          {tocs.map((example) => (
+            <li key={example.path}>
+              <Link to={example.path}>{example.label}</Link>
+            </li>
+          ))}
         </ul>
       </Nav>
       <Content>
@@ -43,24 +41,20 @@ export const Layout:React.FunctionComponent = () => {
         <Outlet />
       </Content>
     </Container>
-  )
-}
+  );
+};
 
 export function App() {
-
   return (
     <React.Fragment>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          {
-            tocs.map((example) => (
-              <Route key={example.path} path={example.path} element={example.ui} />
-            ))
-          }
+          {tocs.map((example) => (
+            <Route key={example.path} path={example.path} element={example.ui} />
+          ))}
         </Route>
       </Routes>
     </React.Fragment>
   );
 }
-

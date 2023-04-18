@@ -1,4 +1,3 @@
-export { TestEngine } from './TestEngine';
 export type { Nullable, Optional } from './dataTypes';
 export * from './drivers';
 export * from './errors';
@@ -12,6 +11,7 @@ export type {
   ScenePartDefinition,
   ScenePartDriver,
 } from './partTypes';
+export { TestEngine } from './TestEngine';
 export * as collectionUtil from './utils/collectionUtil';
 export * as domUtil from './utils/domUtil';
 export * as escapeUtil from './utils/escapeUtil';
