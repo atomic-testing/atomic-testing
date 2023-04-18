@@ -1,15 +1,9 @@
-import {
-  ComponentDriver,
-  IInputDriver,
-  LocatorType,
-  locatorUtil,
-  Nullable,
-  PartLocatorType,
-} from '@atomic-testing/core';
+import { byTagName, ComponentDriver, driverHelper, IInputDriver, locatorUtil, Nullable } from '@atomic-testing/core';
 
 import { HTMLOptionDriver } from './HTMLOptionDriver';
 
 type ValueT = string | readonly string[];
+const optionLocator = byTagName('option');
 
 export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDriver<Nullable<ValueT>> {
   async isMultiple(): Promise<boolean> {
@@ -33,22 +27,9 @@ export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDrive
     return true;
   }
 
-  async getOptionByLocator(itemLocator: PartLocatorType): Promise<HTMLOptionDriver | null> {
-    const locator = locatorUtil.append(this.locator, itemLocator);
-    const exists = await this.interactor.exists(locator);
-    if (exists) {
-      return new HTMLOptionDriver(locator, this.interactor);
-    } else {
-      return null;
-    }
-  }
-
   async getOptionByIndex(index: number): Promise<HTMLOptionDriver | null> {
-    const itemLocator: PartLocatorType = {
-      type: LocatorType.Css,
-      selector: `option:nth-of-type(${index + 1})`,
-    };
-    return this.getOptionByLocator(itemLocator);
+    const itemLocatorBase = locatorUtil.append(this.locator, optionLocator);
+    return driverHelper.getListItemByIndex(this, itemLocatorBase, index, HTMLOptionDriver);
   }
 
   async getValuesByLabels(labels: readonly string[]): Promise<readonly string[]> {
