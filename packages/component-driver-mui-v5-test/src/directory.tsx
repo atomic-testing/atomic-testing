@@ -11,6 +11,7 @@ import {
   sliderExamples,
   switchExamples,
   textFieldExamples,
+  toggleButtonExamples,
 } from './examples';
 
 interface IToc {
@@ -74,5 +75,10 @@ export const tocs: IToc[] = [
     label: 'TextField',
     path: '/textfield',
     ui: <ExampleList examples={textFieldExamples} />,
+  },
+  {
+    label: 'ToggleButton',
+    path: '/toggle-button',
+    ui: <ExampleList examples={toggleButtonExamples} />,
   },
 ];

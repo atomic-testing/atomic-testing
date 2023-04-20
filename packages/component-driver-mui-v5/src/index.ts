@@ -11,5 +11,7 @@ export { SelectDriver } from './components/SelectDriver';
 export { SliderDriver } from './components/SliderDriver';
 export { SwitchDriver } from './components/SwitchDriver';
 export { TextFieldDriver } from './components/TextFieldDriver';
+export { ToggleButtonDriver } from './components/ToggleButtonDriver';
+export { ExclusiveToggleButtonGroupDriver, ToggleButtonGroupDriver } from './components/ToggleButtonGroupDriver';
 export { MenuItemDisabledError, MenuItemDisabledErrorId } from './errors/MenuItemDisabledError';
 export { MenuItemNotFoundError, MenuItemNotFoundErrorId } from './errors/MenuItemNotFoundError';
