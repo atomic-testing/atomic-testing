@@ -5,21 +5,21 @@ import {
   HTMLTextInputDriver,
 } from '@atomic-testing/component-driver-html';
 import {
-  byAttribute,
-  byRole,
-  byTagName,
   ComponentDriver,
-  driverHelper,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
   LocatorChain,
   LocatorRelativePosition,
   LocatorType,
-  locatorUtil,
   Nullable,
   ScenePart,
   ScenePartDriver,
+  byAttribute,
+  byRole,
+  byTagName,
+  driverHelper,
+  locatorUtil,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -100,20 +100,12 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     return success;
   }
 
-  async getOptionByIndex(index: number): Promise<MenuItemDriver | null> {
-    return driverHelper.getListItemByIndex(this, optionLocator, index, MenuItemDriver);
-  }
-
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
-    let index = 0;
-    let item: MenuItemDriver | null = await this.getOptionByIndex(index);
-    while (item != null) {
+    for await (let item of driverHelper.getListItemIterator(this, optionLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
       }
-      index++;
-      item = await this.getOptionByIndex(index);
     }
     return null;
   }

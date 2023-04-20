@@ -27,24 +27,16 @@ export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDrive
     return true;
   }
 
-  async getOptionByIndex(index: number): Promise<HTMLOptionDriver | null> {
-    const itemLocatorBase = locatorUtil.append(this.locator, optionLocator);
-    return driverHelper.getListItemByIndex(this, itemLocatorBase, index, HTMLOptionDriver);
-  }
-
   async getValuesByLabels(labels: readonly string[]): Promise<readonly string[]> {
     const labelSet = new Set(labels);
-    let index = 0;
-    let item: HTMLOptionDriver | null = await this.getOptionByIndex(index);
     const values: string[] = [];
-    while (item != null) {
+    const itemLocatorBase = locatorUtil.append(this.locator, optionLocator);
+    for await (let item of driverHelper.getListItemIterator(this, itemLocatorBase, HTMLOptionDriver)) {
       const label = await item.label();
       const value = await item.value();
       if (label != null && labelSet.has(label) && value != null) {
         values.push(value);
       }
-      index++;
-      item = await this.getOptionByIndex(index);
     }
     return values;
   }
