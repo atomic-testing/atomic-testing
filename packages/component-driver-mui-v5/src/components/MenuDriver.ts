@@ -41,20 +41,12 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     return LocatorRelativePosition.Same;
   }
 
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
-    return driverHelper.getListItemByIndex(this, menuItemLocator, index, MenuItemDriver);
-  }
-
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
-    let index = 0;
-    let item: MenuItemDriver | null = await this.getMenuItemByIndex(index);
-    while (item != null) {
+    for await (let item of driverHelper.getListItemIterator(this, menuItemLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
       }
-      index++;
-      item = await this.getMenuItemByIndex(index);
     }
     return null;
   }

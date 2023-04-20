@@ -11,11 +11,12 @@ type ComponentDriverClass<T extends ComponentDriver> = new (
 ) => T;
 
 /**
- *
+ * Get list item driver within host by index.  List item is an indefinite number of items under the same host
+ * with similar characteristics defined by the itemLocatorBase.
  * @param host The component the list item is under
  * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
- * @param index
- * @param driverClass
+ * @param index The index of the list item
+ * @param driverClass The driver class of the list item
  * @returns
  */
 export async function getListItemByIndex<T extends ComponentDriver>(
@@ -35,4 +36,25 @@ export async function getListItemByIndex<T extends ComponentDriver>(
     return new driverClass(itemLocator, host.interactor, host.commutableOption);
   }
   return null;
+}
+
+/**
+ * Get an iterator of list item driver.
+ * List item is an indefinite number of items under the same host
+ * @param host The component the list item is under
+ * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
+ * @param driverClass The driver class of the list item
+ */
+export async function* getListItemIterator<T extends ComponentDriver>(
+  host: ComponentDriver<any>,
+  itemLocatorBase: LocatorChain | PartLocatorType,
+  driverClass: ComponentDriverClass<T>,
+): AsyncGenerator<T, void, unknown> {
+  let index = 0;
+  let item: T | null = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
+  while (item != null) {
+    yield item;
+    index++;
+    item = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
+  }
 }
