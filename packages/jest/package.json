@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/jest",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "Jest adapter for atomic-testing",
   "main": "dist/index.js",
   "files": [
