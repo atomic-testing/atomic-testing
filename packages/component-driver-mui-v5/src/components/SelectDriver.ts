@@ -5,21 +5,21 @@ import {
   HTMLTextInputDriver,
 } from '@atomic-testing/component-driver-html';
 import {
+  byAttribute,
+  byRole,
+  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
+  listHelper,
   LocatorChain,
   LocatorRelativePosition,
   LocatorType,
+  locatorUtil,
   Nullable,
   ScenePart,
   ScenePartDriver,
-  byAttribute,
-  byRole,
-  byTagName,
-  listHelper,
-  locatorUtil,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';

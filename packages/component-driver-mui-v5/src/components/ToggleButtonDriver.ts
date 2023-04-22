@@ -1,4 +1,5 @@
 import { IToggleDriver } from '@atomic-testing/core';
+
 import { ButtonDriver } from './ButtonDriver';
 
 export class ToggleButtonDriver extends ButtonDriver implements IToggleDriver {
