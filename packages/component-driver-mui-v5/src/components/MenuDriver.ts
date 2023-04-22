@@ -56,7 +56,7 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     if (item) {
       await item.click();
     } else {
-      throw new MenuItemNotFoundError(label);
+      throw new MenuItemNotFoundError(label, this);
     }
   }
 

@@ -28,7 +28,7 @@ export class MenuItemDriver extends ComponentDriver {
   async click(): Promise<void> {
     if (await this.isDisabled()) {
       const label = await this.label();
-      throw new MenuItemDisabledError(label ?? '');
+      throw new MenuItemDisabledError(label ?? '', this);
     }
     await this.interactor.click(this.locator);
   }
