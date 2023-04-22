@@ -1,4 +1,4 @@
-import { byTagName, ComponentDriver, driverHelper, IInputDriver, locatorUtil, Nullable } from '@atomic-testing/core';
+import { byTagName, ComponentDriver, IInputDriver, listHelper, locatorUtil, Nullable } from '@atomic-testing/core';
 
 import { HTMLOptionDriver } from './HTMLOptionDriver';
 
@@ -31,7 +31,7 @@ export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDrive
     const labelSet = new Set(labels);
     const values: string[] = [];
     const itemLocatorBase = locatorUtil.append(this.locator, optionLocator);
-    for await (let item of driverHelper.getListItemIterator(this, itemLocatorBase, HTMLOptionDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, itemLocatorBase, HTMLOptionDriver)) {
       const label = await item.label();
       const value = await item.value();
       if (label != null && labelSet.has(label) && value != null) {

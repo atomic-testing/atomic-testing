@@ -1,14 +1,7 @@
-import { Interactor } from '../interactor';
 import { CssLocator, LocatorChain, LocatorRelativePosition, LocatorType, PartLocatorType } from '../locators';
-import { IComponentDriverOption } from '../partTypes';
+import { ComponentDriverClass } from '../partTypes';
 import { append } from '../utils/locatorUtil';
 import { ComponentDriver } from './ComponentDriver';
-
-type ComponentDriverClass<T extends ComponentDriver> = new (
-  locator: LocatorChain,
-  interactor: Interactor,
-  option?: Partial<IComponentDriverOption<any>>,
-) => T;
 
 /**
  * Get list item driver within host by index.  List item is an indefinite number of items under the same host

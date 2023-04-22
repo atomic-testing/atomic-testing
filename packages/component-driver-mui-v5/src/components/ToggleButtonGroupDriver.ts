@@ -1,4 +1,5 @@
-import { ComponentDriver, IInputDriver, byTagName, driverHelper, locatorUtil } from '@atomic-testing/core';
+import { byTagName, ComponentDriver, IInputDriver, listHelper, locatorUtil } from '@atomic-testing/core';
+
 import { ToggleButtonDriver } from './ToggleButtonDriver';
 
 const toggleButtonLocator = byTagName('button');
@@ -11,7 +12,7 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
    */
   async getValue(): Promise<readonly string[]> {
     const result: string[] = [];
-    for await (let itemDriver of driverHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
+    for await (const itemDriver of listHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
       const isSelected = await itemDriver.isSelected();
       if (isSelected) {
         const value = await itemDriver.getValue();
@@ -30,7 +31,7 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
    */
   async setValue(value: readonly string[]): Promise<boolean> {
     const valueSet = new Set(value);
-    for await (let itemDriver of driverHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
+    for await (const itemDriver of listHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
       const value = await itemDriver.getValue();
       await itemDriver.setSelected(valueSet.has(value!));
     }

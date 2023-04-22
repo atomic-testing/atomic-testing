@@ -18,7 +18,7 @@ import {
   byAttribute,
   byRole,
   byTagName,
-  driverHelper,
+  listHelper,
   locatorUtil,
 } from '@atomic-testing/core';
 
@@ -101,7 +101,7 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
   }
 
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
-    for await (let item of driverHelper.getListItemIterator(this, optionLocator, MenuItemDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, optionLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;

@@ -2,9 +2,9 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byRole,
   ComponentDriver,
-  driverHelper,
   IComponentDriverOption,
   Interactor,
+  listHelper,
   LocatorChain,
   LocatorRelativePosition,
   Optional,
@@ -42,7 +42,7 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
   }
 
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
-    for await (let item of driverHelper.getListItemIterator(this, menuItemLocator, MenuItemDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, menuItemLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
