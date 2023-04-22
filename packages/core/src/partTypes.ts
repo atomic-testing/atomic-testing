@@ -2,10 +2,17 @@ import { Optional } from './dataTypes';
 import { ComponentDriver } from './drivers/ComponentDriver';
 import { ContainerDriver } from './drivers/ContainerDriver';
 import { WaitForOption } from './drivers/WaitForOption';
+import { Interactor } from './interactor';
 import { LocatorChain } from './locators/LocatorChain';
 import { PartLocatorType } from './locators/PartLocatorType';
 
 export type PartName<T extends ScenePart> = keyof T;
+
+export type ComponentDriverClass<T extends ComponentDriver<P>, P extends ScenePart = {}> = new (
+  locator: LocatorChain,
+  interactor: Interactor,
+  option?: Partial<IComponentDriverOption<P>>,
+) => T;
 
 export interface ComponentPartDefinition<T extends ScenePart> {
   /**
@@ -16,7 +23,7 @@ export interface ComponentPartDefinition<T extends ScenePart> {
   /**
    * The class of driver which is used to interact with the element
    */
-  driver: typeof ComponentDriver<T>;
+  driver: typeof ComponentDriver<T> | ComponentDriverClass<ComponentDriver<T>, T>;
 
   /**
    * Option for the driver
@@ -33,7 +40,13 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
   /**
    * The class of driver which is used to interact with the element
    */
-  driver: typeof ContainerDriver<ContentT, T>;
+  driver:
+    | typeof ContainerDriver<ContentT, T>
+    | (new (
+        locator: LocatorChain,
+        interactor: Interactor,
+        option?: Partial<IContainerDriverOption<ContentT, T>>,
+      ) => ContainerDriver<ContentT, T>);
 
   /**
    * Option for the driver

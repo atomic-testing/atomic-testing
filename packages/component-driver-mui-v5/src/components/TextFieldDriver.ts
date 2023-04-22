@@ -83,7 +83,6 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
     if (multilineExists) {
       return TextFieldInputType.Multiline;
     }
-
     throw new Error('Unable to determine input type in TextFieldInput');
   }
 
