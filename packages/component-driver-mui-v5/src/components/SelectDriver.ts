@@ -131,7 +131,7 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     if (item) {
       await item.click();
     } else {
-      throw new MenuItemNotFoundError(label);
+      throw new MenuItemNotFoundError(label, this);
     }
   }
 

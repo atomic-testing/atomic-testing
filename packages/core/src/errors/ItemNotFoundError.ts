@@ -1,5 +1,7 @@
+import { ComponentDriver } from '../drivers/ComponentDriver';
 import { LocatorChain } from '../locators';
 import { toCssSelector } from '../utils/locatorUtil';
+import { ErrorBase } from './ErrorBase';
 
 export const ItemNotFoundErrorId = 'ItemNotFoundError';
 
@@ -8,9 +10,9 @@ function getErrorMessage(locator: LocatorChain): string {
   return `Item not found.  Locator: ${cssLocator}`;
 }
 
-export class ItemNotFoundError extends Error {
-  constructor(public readonly locator: LocatorChain) {
-    super(getErrorMessage(locator));
+export class ItemNotFoundError extends ErrorBase {
+  constructor(public readonly locator: LocatorChain, public readonly driver: ComponentDriver<any>) {
+    super(getErrorMessage(locator), driver);
     this.name = ItemNotFoundErrorId;
   }
 }

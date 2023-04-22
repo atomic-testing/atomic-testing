@@ -84,7 +84,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     const missingPartNames = await this.getMissingPartNames(partName);
     if (missingPartNames.length > 0) {
       // @ts-ignore
-      throw new MissingPartError(missingPartNames);
+      throw new MissingPartError(missingPartNames, this);
     }
   }
 
@@ -182,7 +182,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
     const actual = await timingUtil.waitUntil(probeFn, expected, actualOption.timeoutMs);
     if (actual !== expected) {
-      throw new WaitForFailureError(this.locator, actualOption);
+      throw new WaitForFailureError(this.locator, actualOption, this);
     }
   }
 
