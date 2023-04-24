@@ -18,7 +18,7 @@ export interface ComponentPartDefinition<T extends ScenePart> {
   /**
    * The locator of the part
    */
-  locator?: PartLocatorType;
+  locator: PartLocatorType;
 
   /**
    * The class of driver which is used to interact with the element
@@ -35,7 +35,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
   /**
    * The locator of the part
    */
-  locator?: PartLocatorType;
+  locator: PartLocatorType;
 
   /**
    * The class of driver which is used to interact with the element
