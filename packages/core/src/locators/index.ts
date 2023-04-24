@@ -1,12 +1,13 @@
+export type { LocatorChain } from './LocatorChain';
+export { LocatorRelativePosition, LocatorType } from './PartLocatorType';
+export type { CssLocator, PartLocatorType } from './PartLocatorType';
 export { byAttribute } from './byAttribute';
 export { byChecked } from './byChecked';
 export { byCssClass } from './byCssClass';
+export { byCssSelector } from './byCssSelector';
 export { byDataTestId } from './byDataTestId';
 export { byInputType } from './byInputType';
 export { byName } from './byName';
 export { byRole } from './byRole';
 export { byTagName } from './byTagName';
 export { byValue } from './byValue';
-export type { LocatorChain } from './LocatorChain';
-export type { CssLocator, PartLocatorType } from './PartLocatorType';
-export { LocatorRelativePosition, LocatorType } from './PartLocatorType';

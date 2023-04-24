@@ -12,7 +12,7 @@ export function getPartFromDefinition<T extends ScenePart>(
   const result: Partial<ScenePartDriver<T>> = {};
 
   for (const [nestedComponentName, scenePart2] of Object.entries(partDefinition)) {
-    const { locator = nestedComponentName as string, driver, option: optionOverride } = scenePart2;
+    const { locator, driver, option: optionOverride } = scenePart2;
 
     const componentOption: Partial<IComponentDriverOption> = {
       ...option,

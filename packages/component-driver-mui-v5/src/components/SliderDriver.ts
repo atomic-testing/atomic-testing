@@ -1,5 +1,6 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssSelector,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -13,7 +14,7 @@ import {
 
 export const parts = {
   input: {
-    locator: 'input[type="range"][data-index="0"]',
+    locator: byCssSelector('input[type="range"][data-index="0"]'),
     driver: HTMLTextInputDriver,
   },
 } satisfies ScenePart;
@@ -70,7 +71,7 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
   }
 
   private getInputLocator(index: number): PartLocatorType {
-    return `input[type="range"][data-index="${index}"]`;
+    return byCssSelector(`input[type="range"][data-index="${index}"]`);
   }
 
   /**

@@ -24,4 +24,4 @@ export type CssLocator = {
   relative?: LocatorRelativePosition;
 };
 
-export type PartLocatorType = string | CssLocator;
+export type PartLocatorType = CssLocator;
