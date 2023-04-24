@@ -1,4 +1,5 @@
 export * from './alert';
+export * from './autocomplete';
 export * from './button';
 export * from './checkbox';
 export * from './dialog';
