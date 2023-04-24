@@ -1,27 +1,21 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssSelector,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
   LocatorChain,
-  LocatorType,
   ScenePart,
 } from '@atomic-testing/core';
 
 export const parts = {
   singlelineInput: {
-    locator: {
-      type: LocatorType.Css,
-      selector: 'input:not([aria-hidden])',
-    },
+    locator: byCssSelector('input:not([aria-hidden])'),
     driver: HTMLTextInputDriver,
   },
   multilineInput: {
-    locator: {
-      type: LocatorType.Css,
-      selector: 'textarea:not([aria-hidden])',
-    },
+    locator: byCssSelector('textarea:not([aria-hidden])'),
     driver: HTMLTextInputDriver,
   },
 } satisfies ScenePart;

@@ -1,5 +1,6 @@
 import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssSelector,
   byInputType,
   byValue,
   ComponentDriver,
@@ -8,7 +9,6 @@ import {
   Interactor,
   LocatorChain,
   LocatorRelativePosition,
-  LocatorType,
   locatorUtil,
   ScenePart,
 } from '@atomic-testing/core';
@@ -55,7 +55,7 @@ export class RatingDriver extends ComponentDriver<typeof parts> implements IInpu
     const targetExists = await this.interactor.exists(targetLocator);
     if (targetExists) {
       const id = await this.interactor.getAttribute(targetLocator, 'id');
-      const labelLocator = locatorUtil.append(this.locator, { type: LocatorType.Css, selector: `label[for="${id}"]` });
+      const labelLocator = locatorUtil.append(this.locator, byCssSelector(`label[for="${id}"]`));
       await this.interactor.click(labelLocator);
     }
     // TODO: throw error if the value does not exist

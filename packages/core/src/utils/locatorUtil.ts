@@ -1,5 +1,5 @@
 import type { LocatorChain } from '../locators/LocatorChain';
-import { CssLocator, LocatorRelativePosition, LocatorType, PartLocatorType } from '../locators/PartLocatorType';
+import { CssLocator, LocatorRelativePosition, LocatorTypeLookup, PartLocatorType } from '../locators/PartLocatorType';
 
 export function append(
   locatorBase: Readonly<LocatorChain> | Readonly<PartLocatorType>,
@@ -69,7 +69,7 @@ export function overrideLocatorRelativePosition(
 ): PartLocatorType {
   if (typeof locator === 'string') {
     return {
-      type: LocatorType.Css,
+      type: LocatorTypeLookup.Css,
       selector: locator,
       relative,
     };

@@ -1,3 +1,5 @@
+import { CssLocatorSource } from './CssLocatorSource';
+
 export enum LocatorRelativePosition {
   Root = 'Root',
 
@@ -13,15 +15,19 @@ export enum LocatorRelativePosition {
   Same = 'Same',
 }
 
-export enum LocatorType {
-  Css = 'css',
-  Xpath = 'xpath',
-}
+export type LocatorType = 'css' | 'xpath';
 
-export type CssLocator = {
-  type: LocatorType.Css;
-  selector: string;
-  relative?: LocatorRelativePosition;
-};
+export const LocatorTypeLookup: Record<string, LocatorType> = Object.freeze({
+  Css: 'css',
+  Xpath: 'xpath',
+});
+
+export class CssLocator {
+  type: LocatorType = 'css';
+  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent;
+  source?: CssLocatorSource;
+
+  constructor(public readonly selector: string) {}
+}
 
 export type PartLocatorType = CssLocator;

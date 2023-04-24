@@ -1,5 +1,11 @@
 import { escapeValue } from '../utils/escapeUtil';
-import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
+import { CssLocator, LocatorRelativePosition, PartLocatorType } from './PartLocatorType';
+
+export type ByDataTestIdSource = {
+  _id: 'byDataTestId';
+  id: string | string[];
+  relative: LocatorRelativePosition;
+};
 
 export function byDataTestId(
   id: string | string[],
@@ -7,10 +13,12 @@ export function byDataTestId(
 ): PartLocatorType {
   const ids = Array.isArray(id) ? id : [id];
   const selector = ids.map((idVal) => `[data-testid="${escapeValue(idVal)}"]`).join(' ');
-
-  return {
-    type: LocatorType.Css,
-    selector,
+  const result = new CssLocator(selector);
+  result.source = {
+    _id: 'byDataTestId',
+    id,
     relative: relativeTo,
   };
+
+  return result;
 }

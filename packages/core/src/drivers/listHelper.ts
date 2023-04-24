@@ -1,4 +1,4 @@
-import { CssLocator, LocatorChain, LocatorRelativePosition, LocatorType, PartLocatorType } from '../locators';
+import { byCssSelector, CssLocator, LocatorChain, LocatorRelativePosition, PartLocatorType } from '../locators';
 import { ComponentDriverClass } from '../partTypes';
 import { append } from '../utils/locatorUtil';
 import { ComponentDriver } from './ComponentDriver';
@@ -18,11 +18,7 @@ export async function getListItemByIndex<T extends ComponentDriver>(
   index: number,
   driverClass: ComponentDriverClass<T>,
 ): Promise<T | null> {
-  const nthLocator: CssLocator = {
-    type: LocatorType.Css,
-    selector: `:nth-of-type(${index + 1})`,
-    relative: LocatorRelativePosition.Same,
-  };
+  const nthLocator: CssLocator = byCssSelector(`:nth-of-type(${index + 1})`, LocatorRelativePosition.Same);
   const itemLocator = append(itemLocatorBase, nthLocator);
   const exists = await host.interactor.exists(itemLocator);
   if (exists) {

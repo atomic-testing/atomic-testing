@@ -1,5 +1,5 @@
 import { escapeValue } from '../utils/escapeUtil';
-import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
+import { LocatorRelativePosition, LocatorTypeLookup, PartLocatorType } from './PartLocatorType';
 
 export function byRole(
   value: string,
@@ -7,7 +7,7 @@ export function byRole(
 ): PartLocatorType {
   const sanitized = escapeValue(value);
   return {
-    type: LocatorType.Css,
+    type: LocatorTypeLookup.Css,
     selector: `[role="${sanitized}"]`,
     relative,
   };
