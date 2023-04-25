@@ -3,13 +3,12 @@ import { ComponentDriver } from './drivers/ComponentDriver';
 import { ContainerDriver } from './drivers/ContainerDriver';
 import { WaitForOption } from './drivers/WaitForOption';
 import { Interactor } from './interactor';
-import { LocatorChain } from './locators/LocatorChain';
-import { PartLocatorType } from './locators/PartLocatorType';
+import { PartLocator } from './locators/PartLocator';
 
 export type PartName<T extends ScenePart> = keyof T;
 
 export type ComponentDriverClass<T extends ComponentDriver<P>, P extends ScenePart = {}> = new (
-  locator: LocatorChain,
+  locator: PartLocator,
   interactor: Interactor,
   option?: Partial<IComponentDriverOption<P>>,
 ) => T;
@@ -18,7 +17,7 @@ export interface ComponentPartDefinition<T extends ScenePart> {
   /**
    * The locator of the part
    */
-  locator: PartLocatorType;
+  locator: PartLocator;
 
   /**
    * The class of driver which is used to interact with the element
@@ -35,7 +34,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
   /**
    * The locator of the part
    */
-  locator: PartLocatorType;
+  locator: PartLocator;
 
   /**
    * The class of driver which is used to interact with the element
@@ -43,7 +42,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
   driver:
     | typeof ContainerDriver<ContentT, T>
     | (new (
-        locator: LocatorChain,
+        locator: PartLocator,
         interactor: Interactor,
         option?: Partial<IContainerDriverOption<ContentT, T>>,
       ) => ContainerDriver<ContentT, T>);
@@ -83,7 +82,7 @@ export interface IComponentDriver<T extends ScenePart = {}> {
   /**
    * The locator which helps locate the root of the component
    */
-  readonly locator: LocatorChain;
+  readonly locator: PartLocator;
 
   /**
    * Get the combined text content of the component

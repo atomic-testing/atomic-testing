@@ -7,9 +7,9 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  LocatorChain,
   LocatorRelativePosition,
   locatorUtil,
+  PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
@@ -21,7 +21,7 @@ export const parts = {
 } satisfies ScenePart;
 
 export class RatingDriver extends ComponentDriver<typeof parts> implements IInputDriver<number | null> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

@@ -5,10 +5,9 @@ import {
   IComponentDriverOption,
   Interactor,
   listHelper,
-  LocatorChain,
   LocatorRelativePosition,
   Optional,
-  PartLocatorType,
+  PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
@@ -22,19 +21,19 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-const menuRootLocator: PartLocatorType = byRole('presentation', LocatorRelativePosition.Root);
+const menuRootLocator: PartLocator = byRole('presentation', LocatorRelativePosition.Root);
 const menuItemLocator = byRole('menuitem');
 
 export class MenuDriver extends ComponentDriver<typeof parts> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,
     });
   }
 
-  override overriddenParentLocator(): Optional<LocatorChain> {
-    return [menuRootLocator];
+  override overriddenParentLocator(): Optional<PartLocator> {
+    return menuRootLocator;
   }
 
   override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {

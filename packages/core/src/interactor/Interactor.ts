@@ -1,5 +1,5 @@
 import { Optional } from '../dataTypes';
-import { LocatorChain } from '../locators';
+import { PartLocator } from '../locators';
 import { ClickOption } from './ClickOption';
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
@@ -11,27 +11,27 @@ export interface Interactor {
    * @param locator
    * @param option
    */
-  click(locator: LocatorChain, option?: Partial<ClickOption>): Promise<void>;
+  click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
 
   /**
    * Type text into the desired element
    * @param locator
    * @param value
    */
-  enterText(locator: LocatorChain, text: string, option?: Partial<EnterTextOption>): Promise<void>;
+  enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void>;
 
   /**
    * Select option by value from a select element
    * @param locator
    * @param values
    */
-  selectOptionValue(locator: LocatorChain, values: string[]): Promise<void>;
+  selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
 
   /**
    * Perform a mouse hover on the desired element
    * @param locator
    */
-  hover(locator: LocatorChain): Promise<void>;
+  hover(locator: PartLocator): Promise<void>;
 
   /**
    * Wait for a given amount of time in milliseconds
@@ -41,38 +41,38 @@ export interface Interactor {
   //#endregion
 
   //#region Read only interactions
-  getInputValue(locator: LocatorChain): Promise<Optional<string>>;
+  getInputValue(locator: PartLocator): Promise<Optional<string>>;
   /**
    * Get the select element's selected options' values
    * @param locator
    */
-  getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>>;
+  getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>>;
   /**
    * Get the select element's selected options' labels
    * @param locator
    */
-  getSelectLabels(locator: LocatorChain): Promise<Optional<readonly string[]>>;
+  getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
 
-  getAttribute(locator: LocatorChain, name: string, isMultiple: true): Promise<readonly string[]>;
-  getAttribute(locator: LocatorChain, name: string, isMultiple: false): Promise<Optional<string>>;
-  getAttribute(locator: LocatorChain, name: string): Promise<Optional<string>>;
+  getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+  getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
+  getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
 
   /**
    * Get the value of a style property
    * @param locator
    * @param propertyName
    */
-  getStyleValue(locator: LocatorChain, propertyName: CssProperty): Promise<Optional<string>>;
+  getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>>;
 
-  getText(locator: LocatorChain): Promise<Optional<string>>;
-  exists(locator: LocatorChain): Promise<boolean>;
-  isChecked(locator: LocatorChain): Promise<boolean>;
-  isDisabled(locator: LocatorChain): Promise<boolean>;
-  isReadonly(locator: LocatorChain): Promise<boolean>;
-  isVisible(locator: LocatorChain): Promise<boolean>;
+  getText(locator: PartLocator): Promise<Optional<string>>;
+  exists(locator: PartLocator): Promise<boolean>;
+  isChecked(locator: PartLocator): Promise<boolean>;
+  isDisabled(locator: PartLocator): Promise<boolean>;
+  isReadonly(locator: PartLocator): Promise<boolean>;
+  isVisible(locator: PartLocator): Promise<boolean>;
 
-  hasCssClass(locator: LocatorChain, className: string): Promise<boolean>;
-  hasAttribute(locator: LocatorChain, name: string): Promise<boolean>;
+  hasCssClass(locator: PartLocator, className: string): Promise<boolean>;
+  hasAttribute(locator: PartLocator, name: string): Promise<boolean>;
   //#endregion
 
   clone(): Interactor;

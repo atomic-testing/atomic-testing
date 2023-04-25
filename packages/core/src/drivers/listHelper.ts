@@ -1,4 +1,4 @@
-import { byCssSelector, CssLocator, LocatorChain, LocatorRelativePosition, PartLocatorType } from '../locators';
+import { byCssSelector, CssLocator, LocatorRelativePosition, PartLocator } from '../locators';
 import { ComponentDriverClass } from '../partTypes';
 import { append } from '../utils/locatorUtil';
 import { ComponentDriver } from './ComponentDriver';
@@ -14,7 +14,7 @@ import { ComponentDriver } from './ComponentDriver';
  */
 export async function getListItemByIndex<T extends ComponentDriver>(
   host: ComponentDriver<any>,
-  itemLocatorBase: LocatorChain | PartLocatorType,
+  itemLocatorBase: PartLocator,
   index: number,
   driverClass: ComponentDriverClass<T>,
 ): Promise<T | null> {
@@ -36,7 +36,7 @@ export async function getListItemByIndex<T extends ComponentDriver>(
  */
 export async function* getListItemIterator<T extends ComponentDriver>(
   host: ComponentDriver<any>,
-  itemLocatorBase: LocatorChain | PartLocatorType,
+  itemLocatorBase: PartLocator | PartLocator,
   driverClass: ComponentDriverClass<T>,
 ): AsyncGenerator<T, void, unknown> {
   let index = 0;

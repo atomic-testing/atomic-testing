@@ -5,7 +5,7 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  LocatorChain,
+  PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
@@ -29,7 +29,7 @@ enum TextFieldInputType {
  * A driver for the Material UI v5 Input, FilledInput, OutlinedInput, and StandardInput components.
  */
 export class InputDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

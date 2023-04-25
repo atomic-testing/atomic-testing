@@ -1,5 +1,5 @@
 import { Interactor } from '../interactor';
-import { LocatorChain } from '../locators';
+import { PartLocator } from '../locators';
 import { IComponentDriver, IContainerDriverOption, ScenePart, ScenePartDriver } from '../partTypes';
 import { ComponentDriver } from './ComponentDriver';
 import { getPartFromDefinition } from './driverUtil';
@@ -10,7 +10,7 @@ export abstract class ContainerDriver<ContentT extends ScenePart, T extends Scen
 {
   private readonly _content: ScenePartDriver<ContentT>;
 
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) {
     super(locator, interactor, option);
     const contentOption = {
       ...option,

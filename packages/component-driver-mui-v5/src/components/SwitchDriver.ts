@@ -6,7 +6,7 @@ import {
   IFormFieldDriver,
   Interactor,
   IToggleDriver,
-  LocatorChain,
+  PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
@@ -21,7 +21,7 @@ export class SwitchDriver
   extends ComponentDriver<typeof parts>
   implements IFormFieldDriver<string | null>, IToggleDriver
 {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

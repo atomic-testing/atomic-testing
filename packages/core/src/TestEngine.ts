@@ -1,4 +1,4 @@
-import { IComponentDriverOption, Interactor, LocatorChain } from '@atomic-testing/core';
+import { IComponentDriverOption, Interactor, PartLocator } from '@atomic-testing/core';
 
 import { ComponentDriver } from './drivers/ComponentDriver';
 import { ScenePart } from './partTypes';
@@ -7,7 +7,7 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
   private readonly _cleanUp: () => Promise<void>;
 
   constructor(
-    locator: LocatorChain,
+    locator: PartLocator,
     public readonly interactor: Interactor,
     option?: IComponentDriverOption<T>,
     cleanUp?: () => Promise<void>,
