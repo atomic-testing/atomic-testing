@@ -14,6 +14,7 @@ export function byDataTestId(
   const ids = Array.isArray(id) ? id : [id];
   const selector = ids.map((idVal) => `[data-testid="${escapeValue(idVal)}"]`).join(' ');
   const result = new CssLocator(selector);
+  result.relative = relativeTo;
   result.source = {
     _id: 'byDataTestId',
     id,

@@ -26,8 +26,31 @@ export class CssLocator {
   type: LocatorType = 'css';
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent;
   source?: CssLocatorSource;
+  readonly after?: readonly CssLocator[];
 
-  constructor(public readonly selector: string) {}
+  constructor(public readonly selector: string, after?: readonly CssLocator[]) {
+    if (this.after && after) {
+      this.after = this.after.concat(after);
+    } else if (after) {
+      this.after = after;
+    }
+  }
+
+  append(...after: readonly CssLocator[]): CssLocator {
+    let fullAfter = this.after ?? [];
+    fullAfter = fullAfter.concat(after);
+    const result = new CssLocator(this.selector, fullAfter);
+    result.source = this.source;
+    result.relative = this.relative;
+    return result;
+  }
+
+  clone(): CssLocator {
+    const result = new CssLocator(this.selector, this.after);
+    result.source = this.source;
+    result.relative = this.relative;
+    return result;
+  }
 }
 
 export type PartLocatorType = CssLocator;

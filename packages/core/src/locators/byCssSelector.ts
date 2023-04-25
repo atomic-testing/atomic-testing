@@ -11,6 +11,7 @@ export function byCssSelector(
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
   const result = new CssLocator(selector);
+  result.relative = relativeTo;
   result.source = {
     _id: 'byCssSelector',
     selector,

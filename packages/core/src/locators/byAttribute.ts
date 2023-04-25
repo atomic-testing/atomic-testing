@@ -15,6 +15,7 @@ export function byAttribute(
 ): PartLocatorType {
   const selector = `[${escapeName(name)}="${escapeValue(value)}"]`;
   const result = new CssLocator(selector);
+  result.relative = relativeTo;
   result.source = {
     _id: 'byAttribute',
     name,

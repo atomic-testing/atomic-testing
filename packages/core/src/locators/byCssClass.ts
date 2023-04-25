@@ -14,6 +14,7 @@ export function byCssClass(
   const classNames = Array.isArray(className) ? className : [className];
   const selector = classNames.map((cls) => `.${escapeCssClassName(cls)}`).join('');
   const result = new CssLocator(selector);
+  result.relative = relativeTo;
   result.source = {
     _id: 'byCssClass',
     className,

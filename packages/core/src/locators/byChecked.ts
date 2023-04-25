@@ -15,6 +15,7 @@ export function byChecked(
     selector = `:not(${selector})`;
   }
   const result = new CssLocator(selector);
+  result.relative = relative;
   result.source = {
     _id: 'byChecked',
     checked,
