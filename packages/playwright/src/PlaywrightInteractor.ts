@@ -1,10 +1,10 @@
 import {
+  byCssSelector,
   ClickOption,
   CssProperty,
   EnterTextOption,
   Interactor,
   LocatorChain,
-  LocatorType,
   locatorUtil,
   Optional,
   PartLocatorType,
@@ -26,10 +26,7 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async getSelectValues(locator: LocatorChain): Promise<Optional<readonly string[]>> {
-    const optionLocator: PartLocatorType = {
-      type: LocatorType.Css,
-      selector: 'option:checked',
-    };
+    const optionLocator: PartLocatorType = byCssSelector('option:checked');
     const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
     const cssLocator = locatorUtil.toCssSelector(selectedOptionLocator);
     const allOptions = await this.page.locator(cssLocator).all();
@@ -44,10 +41,7 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async getSelectLabels(locator: LocatorChain): Promise<Optional<readonly string[]>> {
-    const optionLocator: PartLocatorType = {
-      type: LocatorType.Css,
-      selector: 'option:checked',
-    };
+    const optionLocator: PartLocatorType = byCssSelector('option:checked');
     const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
     const cssLocator = locatorUtil.toCssSelector(selectedOptionLocator);
     const allOptions = await this.page.locator(cssLocator).all();

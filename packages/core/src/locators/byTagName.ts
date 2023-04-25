@@ -1,12 +1,22 @@
-import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
+import { CssLocator } from './CssLocator';
+import { LocatorRelativePosition } from './LocatorRelativePosition';
+
+export type ByTagNameSource = {
+  _id: 'byTagName';
+  tagName: string;
+  relative: LocatorRelativePosition;
+};
 
 export function byTagName(
   tagName: string,
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
-): PartLocatorType {
-  return {
-    type: LocatorType.Css,
-    selector: tagName,
+): CssLocator {
+  return new CssLocator(tagName, {
     relative,
-  };
+    source: {
+      _id: 'byTagName',
+      tagName,
+      relative,
+    },
+  });
 }

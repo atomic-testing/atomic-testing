@@ -5,47 +5,32 @@ import {
   IInputDriver,
   Interactor,
   LocatorChain,
-  LocatorType,
   Optional,
   ScenePart,
+  byCssSelector,
 } from '@atomic-testing/core';
 
 import { SelectDriver } from './SelectDriver';
 
 export const parts = {
   label: {
-    locator: {
-      type: LocatorType.Css,
-      selector: '>label',
-    },
+    locator: byCssSelector('>label'),
     driver: HTMLElementDriver,
   },
   helperText: {
-    locator: {
-      type: LocatorType.Css,
-      selector: '>p',
-    },
+    locator: byCssSelector('>p'),
     driver: HTMLElementDriver,
   },
   singlelineInput: {
-    locator: {
-      type: LocatorType.Css,
-      selector: 'input:not([aria-hidden])',
-    },
+    locator: byCssSelector('input:not([aria-hidden])'),
     driver: HTMLTextInputDriver,
   },
   multilineInput: {
-    locator: {
-      type: LocatorType.Css,
-      selector: 'textarea:not([aria-hidden])',
-    },
+    locator: byCssSelector('textarea:not([aria-hidden])'),
     driver: HTMLTextInputDriver,
   },
   selectInput: {
-    locator: {
-      type: LocatorType.Css,
-      selector: '>div',
-    },
+    locator: byCssSelector('>div'),
     driver: SelectDriver,
   },
 } satisfies ScenePart;

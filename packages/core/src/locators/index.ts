@@ -1,6 +1,9 @@
+export { CssLocator } from './CssLocator';
 export type { LocatorChain } from './LocatorChain';
-export { LocatorRelativePosition, LocatorType } from './PartLocatorType';
-export type { CssLocator, PartLocatorType } from './PartLocatorType';
+export { LocatorRelativePosition } from './LocatorRelativePosition';
+export { LocatorTypeLookup } from './LocatorType';
+export type { LocatorType } from './LocatorType';
+export type { PartLocatorType } from './PartLocatorType';
 export { byAttribute } from './byAttribute';
 export { byChecked } from './byChecked';
 export { byCssClass } from './byCssClass';

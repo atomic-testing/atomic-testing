@@ -1,19 +1,26 @@
-// TODO: Use descriptive selector instead of css selector so the selector can be reintepreted
+import { CssLocator } from './CssLocator';
+import { LocatorRelativePosition } from './LocatorRelativePosition';
 
-import { LocatorRelativePosition, LocatorType, PartLocatorType } from './PartLocatorType';
+export type ByCheckedSource = {
+  _id: 'byChecked';
+  checked: boolean;
+  relative: LocatorRelativePosition;
+};
 
-// to implementation other than CSS selector
 export function byChecked(
   checked = true,
   relative: LocatorRelativePosition = LocatorRelativePosition.Same,
-): PartLocatorType {
+): CssLocator {
   let selector = ':checked';
   if (!checked) {
     selector = `:not(${selector})`;
   }
-  return {
-    type: LocatorType.Css,
-    selector,
+  return new CssLocator(selector, {
     relative,
-  };
+    source: {
+      _id: 'byChecked',
+      checked,
+      relative,
+    },
+  });
 }

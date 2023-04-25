@@ -5,21 +5,21 @@ import {
   HTMLTextInputDriver,
 } from '@atomic-testing/component-driver-html';
 import {
-  byAttribute,
-  byRole,
-  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  listHelper,
   LocatorChain,
   LocatorRelativePosition,
-  LocatorType,
-  locatorUtil,
   Nullable,
   ScenePart,
   ScenePartDriver,
+  byAttribute,
+  byCssSelector,
+  byRole,
+  byTagName,
+  listHelper,
+  locatorUtil,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -31,11 +31,7 @@ export const selectPart = {
     driver: HTMLButtonDriver,
   },
   dropdown: {
-    locator: {
-      type: LocatorType.Css,
-      selector: '[role=presentation] [role=listbox]',
-      relative: LocatorRelativePosition.Root,
-    },
+    locator: byCssSelector('[role=presentation] [role=listbox]', LocatorRelativePosition.Root),
     driver: HTMLElementDriver,
   },
   input: {
