@@ -3,7 +3,6 @@
 import { escapeValue } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { PartLocatorType } from './PartLocatorType';
 
 export type ByInputTypeSource = {
   _id: 'byInputType';
@@ -15,7 +14,7 @@ export type ByInputTypeSource = {
 export function byInputType(
   type: string,
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
-): PartLocatorType {
+): CssLocator {
   const selector = `input[type=${escapeValue(type)}]`;
   return new CssLocator(selector, {
     relative,

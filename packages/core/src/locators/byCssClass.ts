@@ -1,7 +1,6 @@
 import { escapeCssClassName } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { PartLocatorType } from './PartLocatorType';
 
 export type ByCssClassSource = {
   _id: 'byCssClass';
@@ -12,7 +11,7 @@ export type ByCssClassSource = {
 export function byCssClass(
   className: string | string[],
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
-): PartLocatorType {
+): CssLocator {
   const classNames = Array.isArray(className) ? className : [className];
   const selector = classNames.map((cls) => `.${escapeCssClassName(cls)}`).join('');
   return new CssLocator(selector, {

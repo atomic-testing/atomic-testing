@@ -1,6 +1,5 @@
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { PartLocatorType } from './PartLocatorType';
 
 export type ByCssSelectorSource = {
   _id: 'byCssSelector';
@@ -11,7 +10,7 @@ export type ByCssSelectorSource = {
 export function byCssSelector(
   selector: string,
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
-): PartLocatorType {
+): CssLocator {
   return new CssLocator(selector, {
     relative: relativeTo,
     source: {

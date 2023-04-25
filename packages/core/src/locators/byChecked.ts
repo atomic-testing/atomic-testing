@@ -1,6 +1,5 @@
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { PartLocatorType } from './PartLocatorType';
 
 export type ByCheckedSource = {
   _id: 'byChecked';
@@ -11,7 +10,7 @@ export type ByCheckedSource = {
 export function byChecked(
   checked = true,
   relative: LocatorRelativePosition = LocatorRelativePosition.Same,
-): PartLocatorType {
+): CssLocator {
   let selector = ':checked';
   if (!checked) {
     selector = `:not(${selector})`;

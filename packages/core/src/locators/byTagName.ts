@@ -1,6 +1,5 @@
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { PartLocatorType } from './PartLocatorType';
 
 export type ByTagNameSource = {
   _id: 'byTagName';
@@ -11,7 +10,7 @@ export type ByTagNameSource = {
 export function byTagName(
   tagName: string,
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
-): PartLocatorType {
+): CssLocator {
   return new CssLocator(tagName, {
     relative,
     source: {
