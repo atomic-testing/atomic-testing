@@ -5,7 +5,7 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  LocatorChain,
+  PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
@@ -17,7 +17,7 @@ export const parts = {
 } satisfies ScenePart;
 
 export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,

@@ -5,10 +5,9 @@ import {
   ContainerDriver,
   IContainerDriverOption,
   Interactor,
-  LocatorChain,
   LocatorRelativePosition,
   Optional,
-  PartLocatorType,
+  PartLocator,
   ScenePart,
   timingUtil,
 } from '@atomic-testing/core';
@@ -24,12 +23,12 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-const dialogRootLocator: PartLocatorType = byRole('presentation', LocatorRelativePosition.Root);
+const dialogRootLocator: PartLocator = byRole('presentation', LocatorRelativePosition.Root);
 
 const defaultTransitionDuration = 250;
 
 export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
@@ -37,8 +36,8 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
     });
   }
 
-  override overriddenParentLocator(): Optional<LocatorChain> {
-    return [dialogRootLocator];
+  override overriddenParentLocator(): Optional<PartLocator> {
+    return dialogRootLocator;
   }
 
   override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {

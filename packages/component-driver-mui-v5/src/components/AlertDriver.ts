@@ -4,7 +4,7 @@ import {
   ContainerDriver,
   IContainerDriverOption,
   Interactor,
-  LocatorChain,
+  PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
@@ -35,7 +35,7 @@ const alertSeverityEvaluators: AlertSeverityEvaluator[] = [
  * @see https://mui.com/material-ui/react-alert/
  */
 export class AlertDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,

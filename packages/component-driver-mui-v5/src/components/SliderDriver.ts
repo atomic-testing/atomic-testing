@@ -5,9 +5,8 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  LocatorChain,
   locatorUtil,
-  PartLocatorType,
+  PartLocator,
   ScenePart,
   ScenePartDriver,
 } from '@atomic-testing/core';
@@ -23,7 +22,7 @@ export type SelectScenePart = typeof parts;
 export type SelectScenePartDriver = ScenePartDriver<SelectScenePart>;
 
 export class SliderDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<number> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
@@ -70,7 +69,7 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
     return result;
   }
 
-  private getInputLocator(index: number): PartLocatorType {
+  private getInputLocator(index: number): PartLocator {
     return byCssSelector(`input[type="range"][data-index="${index}"]`);
   }
 

@@ -1,11 +1,10 @@
-import { locatorUtil, PartLocatorType } from '..';
+import { locatorUtil, PartLocator } from '..';
 import { Interactor } from '../interactor';
-import { LocatorChain } from '../locators';
 import { IComponentDriverOption, ScenePart, ScenePartDriver } from '../partTypes';
 
 export function getPartFromDefinition<T extends ScenePart>(
   partDefinition: T,
-  parentLocator: LocatorChain,
+  parentLocator: PartLocator,
   interactor: Interactor,
   option: Partial<IComponentDriverOption<T>>,
 ): ScenePartDriver<T> {
@@ -20,8 +19,8 @@ export function getPartFromDefinition<T extends ScenePart>(
       parts: undefined,
     };
 
-    const locatorContext: LocatorChain = driver.prototype.overriddenParentLocator() ?? parentLocator;
-    const actualLocator: PartLocatorType =
+    const locatorContext: PartLocator = driver.prototype.overriddenParentLocator() ?? parentLocator;
+    const actualLocator: PartLocator =
       driver.prototype.overrideLocatorRelativePosition() != null
         ? locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
         : locator;

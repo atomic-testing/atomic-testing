@@ -2,14 +2,14 @@ import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
 import { WaitForFailureError } from '../errors/WaitForFailureError';
 import { Interactor } from '../interactor';
-import { LocatorChain, LocatorRelativePosition } from '../locators';
+import { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
 import * as timingUtil from '../utils/timingUtil';
 import { getPartFromDefinition } from './driverUtil';
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
 
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
-  private _locator: LocatorChain;
+  private _locator: PartLocator;
   private readonly _parts: ScenePartDriver<T>;
 
   /**
@@ -21,7 +21,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   public readonly commutableOption: IComponentDriverOption<T>;
 
   constructor(
-    locator: LocatorChain,
+    locator: PartLocator,
     public readonly interactor: Interactor,
     option?: Partial<IComponentDriverOption<T>>,
   ) {
@@ -38,11 +38,11 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * the driver's locator would automatically chain with its parent's locator.
    *
    * When the component is rendered outside the parent's DOM, which usually happens when the component is a modal or popup,
-   * supply the LocatorChain on how to locate the component with the component's own locator.
+   * supply the PartLocator on how to locate the component with the component's own locator.
    *
    * Caution of usage: this function is called before the construction of the driver, so it should not use any instance properties
    */
-  overriddenParentLocator(): Optional<LocatorChain> {
+  overriddenParentLocator(): Optional<PartLocator> {
     return undefined;
   }
 
@@ -71,7 +71,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   /**
    * Return the locator of the component
    */
-  get locator(): LocatorChain {
+  get locator(): PartLocator {
     return this._locator;
   }
 

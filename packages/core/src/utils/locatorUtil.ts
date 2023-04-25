@@ -1,24 +1,21 @@
 import { CssLocator } from '../locators/CssLocator';
-import type { LocatorChain } from '../locators/LocatorChain';
 import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
-import { PartLocatorType } from '../locators/PartLocatorType';
+import { PartLocator } from '../locators/PartLocator';
 
-export function append(
-  locatorBase: Readonly<LocatorChain> | Readonly<PartLocatorType>,
-  ...locatorsToAppend: (PartLocatorType | Readonly<LocatorChain>)[]
-): LocatorChain {
-  const baseLocator: LocatorChain = Array.isArray(locatorBase) ? locatorBase : [locatorBase];
-  const toAppend: PartLocatorType[] = locatorsToAppend.reduce((acc: PartLocatorType[], locator) => {
+export function append(locatorBase: PartLocator, ...locatorsToAppend: PartLocator[]): PartLocator {
+  const baseLocator: CssLocator[] = Array.isArray(locatorBase) ? locatorBase : [locatorBase];
+  const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator) => {
     return acc.concat(locator);
   }, []);
 
   return baseLocator.concat(toAppend);
 }
 
-export function findRootLocatorIndex(locator: LocatorChain): number {
-  const length = locator.length;
+export function findRootLocatorIndex(locator: PartLocator): number {
+  const list = Array.isArray(locator) ? locator : [locator];
+  const length = list.length;
   for (let i = length - 1; i >= 0; i--) {
-    const loc = locator[i];
+    const loc = list[i];
     if (loc.relative === LocatorRelativePosition.Root) {
       return i;
     }
@@ -27,12 +24,13 @@ export function findRootLocatorIndex(locator: LocatorChain): number {
   return -1;
 }
 
-export function getEffectiveLocator(locator: LocatorChain): LocatorChain {
-  const rootLocatorIndex = findRootLocatorIndex(locator);
-  return rootLocatorIndex === -1 ? locator : locator.slice(rootLocatorIndex);
+export function getEffectiveLocator(locator: PartLocator): CssLocator[] {
+  const list = Array.isArray(locator) ? locator : [locator];
+  const rootLocatorIndex = findRootLocatorIndex(list);
+  return rootLocatorIndex === -1 ? list : list.slice(rootLocatorIndex);
 }
 
-export function toCssSelector(locator: LocatorChain): string {
+export function toCssSelector(locator: PartLocator): string {
   const effectiveLocator = getEffectiveLocator(locator);
   const statements = effectiveLocator.map((loc) => {
     let separator = ' ';
@@ -50,15 +48,19 @@ export function toCssSelector(locator: LocatorChain): string {
   return statements.join('').trim();
 }
 
-export function getLocatorStatement(locator: PartLocatorType): string {
+export function getLocatorStatement(locator: CssLocator): string {
   return locator.selector;
 }
 
-export function overrideLocatorRelativePosition(
-  locator: PartLocatorType,
-  relative: LocatorRelativePosition,
-): PartLocatorType {
-  return locator.clone({
+export function overrideLocatorRelativePosition(locator: PartLocator, relative: LocatorRelativePosition): PartLocator {
+  if (Array.isArray(locator)) {
+    return (locator as readonly CssLocator[]).map((loc) =>
+      loc.clone({
+        relative,
+      }),
+    );
+  }
+  return (locator as CssLocator).clone({
     relative,
   });
 }

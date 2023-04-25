@@ -6,7 +6,7 @@ import {
   IFormFieldDriver,
   Interactor,
   IToggleDriver,
-  LocatorChain,
+  PartLocator,
   ScenePart,
   ScenePartDriver,
 } from '@atomic-testing/core';
@@ -25,7 +25,7 @@ export class CheckboxDriver
   extends ComponentDriver<CheckboxScenePart>
   implements IFormFieldDriver<string | null>, IToggleDriver
 {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: IComponentDriverOption) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: IComponentDriverOption) {
     super(locator, interactor, {
       ...option,
       parts: checkboxPart,

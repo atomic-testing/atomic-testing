@@ -9,9 +9,9 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  LocatorChain,
   LocatorRelativePosition,
   Nullable,
+  PartLocator,
   ScenePart,
   ScenePartDriver,
   byAttribute,
@@ -49,7 +49,7 @@ export type SelectScenePartDriver = ScenePartDriver<SelectScenePart>;
 const optionLocator = byRole('option');
 
 export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
-  constructor(locator: LocatorChain, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: selectPart,
