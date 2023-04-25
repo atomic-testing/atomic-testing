@@ -1,6 +1,7 @@
+import { CssLocator } from '../locators/CssLocator';
 import type { LocatorChain } from '../locators/LocatorChain';
 import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
-import { CssLocator, PartLocatorType } from '../locators/PartLocatorType';
+import { PartLocatorType } from '../locators/PartLocatorType';
 
 export function append(
   locatorBase: Readonly<LocatorChain> | Readonly<PartLocatorType>,

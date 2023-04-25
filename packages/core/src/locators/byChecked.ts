@@ -1,5 +1,6 @@
+import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { CssLocator, PartLocatorType } from './PartLocatorType';
+import { PartLocatorType } from './PartLocatorType';
 
 export type ByCheckedSource = {
   _id: 'byChecked';

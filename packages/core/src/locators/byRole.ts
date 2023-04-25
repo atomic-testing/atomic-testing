@@ -1,6 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
+import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { CssLocator, PartLocatorType } from './PartLocatorType';
+import { PartLocatorType } from './PartLocatorType';
 
 export type ByRoleSource = {
   _id: 'byRole';

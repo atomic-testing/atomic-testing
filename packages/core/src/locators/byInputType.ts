@@ -1,8 +1,9 @@
 // TODO: Use descriptive selector instead of css selector so the selector can be reintepreted
 
 import { escapeValue } from '../utils/escapeUtil';
+import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
-import { CssLocator, PartLocatorType } from './PartLocatorType';
+import { PartLocatorType } from './PartLocatorType';
 
 export type ByInputTypeSource = {
   _id: 'byInputType';
