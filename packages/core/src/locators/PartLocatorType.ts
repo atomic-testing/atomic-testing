@@ -1,55 +1,44 @@
+import { Optional } from '../dataTypes';
 import { CssLocatorSource } from './CssLocatorSource';
+import { LocatorRelativePosition } from './LocatorRelativePosition';
+import { LocatorType } from './LocatorType';
 
-export enum LocatorRelativePosition {
-  Root = 'Root',
-
-  /**
-   * Descendent of the base element
-   */
-  Descendent = 'Descendent',
-
-  /**
-   * Locator would be within the same element(s), used for finding
-   * elements' by state or value
-   */
-  Same = 'Same',
+export interface CssLocatorInitializer {
+  type: LocatorType;
+  relative: LocatorRelativePosition;
+  source: CssLocatorSource;
 }
 
-export type LocatorType = 'css' | 'xpath';
-
-export const LocatorTypeLookup: Record<string, LocatorType> = Object.freeze({
-  Css: 'css',
-  Xpath: 'xpath',
-});
-
 export class CssLocator {
-  type: LocatorType = 'css';
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent;
-  source?: CssLocatorSource;
-  readonly after?: readonly CssLocator[];
+  private _relativePosition: LocatorRelativePosition = LocatorRelativePosition.Descendent;
+  private _type: LocatorType = 'css';
+  private _source?: CssLocatorSource;
 
-  constructor(public readonly selector: string, after?: readonly CssLocator[]) {
-    if (this.after && after) {
-      this.after = this.after.concat(after);
-    } else if (after) {
-      this.after = after;
+  constructor(public readonly selector: string, initializeValue?: Partial<CssLocatorInitializer>) {
+    if (initializeValue) {
+      this._type = initializeValue.type || this.type;
+      this._relativePosition = initializeValue.relative || this.relative;
+      this._source = initializeValue.source || this.source;
     }
   }
 
-  append(...after: readonly CssLocator[]): CssLocator {
-    let fullAfter = this.after ?? [];
-    fullAfter = fullAfter.concat(after);
-    const result = new CssLocator(this.selector, fullAfter);
-    result.source = this.source;
-    result.relative = this.relative;
-    return result;
+  get relative(): LocatorRelativePosition {
+    return this._relativePosition;
   }
 
-  clone(): CssLocator {
-    const result = new CssLocator(this.selector, this.after);
-    result.source = this.source;
-    result.relative = this.relative;
-    return result;
+  get type(): LocatorType {
+    return this._type;
+  }
+
+  get source(): Optional<CssLocatorSource> {
+    return this._source;
+  }
+
+  clone(override?: Partial<CssLocatorInitializer>): CssLocator {
+    return new CssLocator(this.selector, {
+      relative: override?.relative ?? this._relativePosition,
+      source: override?.source ?? this._source,
+    });
   }
 }
 

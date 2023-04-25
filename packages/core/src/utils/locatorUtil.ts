@@ -1,5 +1,6 @@
 import type { LocatorChain } from '../locators/LocatorChain';
-import { CssLocator, LocatorRelativePosition, PartLocatorType } from '../locators/PartLocatorType';
+import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
+import { CssLocator, PartLocatorType } from '../locators/PartLocatorType';
 
 export function append(
   locatorBase: Readonly<LocatorChain> | Readonly<PartLocatorType>,
@@ -17,11 +18,8 @@ export function findRootLocatorIndex(locator: LocatorChain): number {
   const length = locator.length;
   for (let i = length - 1; i >= 0; i--) {
     const loc = locator[i];
-    if (typeof loc === 'object') {
-      const l = loc as CssLocator;
-      if (l.relative === LocatorRelativePosition.Root) {
-        return i;
-      }
+    if (loc.relative === LocatorRelativePosition.Root) {
+      return i;
     }
   }
 
@@ -52,22 +50,14 @@ export function toCssSelector(locator: LocatorChain): string {
 }
 
 export function getLocatorStatement(locator: PartLocatorType): string {
-  let statement = '';
-  if (typeof locator === 'string') {
-    statement = locator;
-  } else {
-    const l = locator as CssLocator;
-    statement = l.selector;
-  }
-
-  return statement;
+  return locator.selector;
 }
 
 export function overrideLocatorRelativePosition(
   locator: PartLocatorType,
   relative: LocatorRelativePosition,
 ): PartLocatorType {
-  const cloned = locator.clone();
-  cloned.relative = relative;
-  return cloned;
+  return locator.clone({
+    relative,
+  });
 }

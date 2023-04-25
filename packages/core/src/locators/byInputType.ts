@@ -1,7 +1,8 @@
 // TODO: Use descriptive selector instead of css selector so the selector can be reintepreted
 
 import { escapeValue } from '../utils/escapeUtil';
-import { CssLocator, LocatorRelativePosition, PartLocatorType } from './PartLocatorType';
+import { LocatorRelativePosition } from './LocatorRelativePosition';
+import { CssLocator, PartLocatorType } from './PartLocatorType';
 
 export type ByInputTypeSource = {
   _id: 'byInputType';
@@ -15,12 +16,12 @@ export function byInputType(
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
   const selector = `input[type=${escapeValue(type)}]`;
-  const result = new CssLocator(selector);
-  result.relative = relative;
-  result.source = {
-    _id: 'byInputType',
-    type,
+  return new CssLocator(selector, {
     relative,
-  };
-  return result;
+    source: {
+      _id: 'byInputType',
+      type,
+      relative,
+    },
+  });
 }

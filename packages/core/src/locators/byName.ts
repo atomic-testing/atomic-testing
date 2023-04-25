@@ -1,5 +1,6 @@
 import { escapeValue } from '../utils/escapeUtil';
-import { CssLocator, LocatorRelativePosition, PartLocatorType } from './PartLocatorType';
+import { LocatorRelativePosition } from './LocatorRelativePosition';
+import { CssLocator, PartLocatorType } from './PartLocatorType';
 
 export type ByNameSource = {
   _id: 'byName';
@@ -12,12 +13,12 @@ export function byName(
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
   const sanitized = escapeValue(value);
-  const result = new CssLocator(`[name="${sanitized}"]`);
-  result.relative = relative;
-  result.source = {
-    _id: 'byName',
-    value,
+  return new CssLocator(`[name="${sanitized}"]`, {
     relative,
-  };
-  return result;
+    source: {
+      _id: 'byName',
+      value,
+      relative,
+    },
+  });
 }

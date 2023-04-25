@@ -116,3 +116,6 @@ storybook-static
 # Playwright
 playwright-report
 test-results
+
+# Personal shell script
+my*.sh

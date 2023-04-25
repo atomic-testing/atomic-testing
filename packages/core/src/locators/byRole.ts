@@ -1,5 +1,6 @@
 import { escapeValue } from '../utils/escapeUtil';
-import { CssLocator, LocatorRelativePosition, PartLocatorType } from './PartLocatorType';
+import { LocatorRelativePosition } from './LocatorRelativePosition';
+import { CssLocator, PartLocatorType } from './PartLocatorType';
 
 export type ByRoleSource = {
   _id: 'byRole';
@@ -12,12 +13,12 @@ export function byRole(
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): PartLocatorType {
   const sanitized = escapeValue(value);
-  const result = new CssLocator(`[role="${sanitized}"]`);
-  result.relative = relative;
-  result.source = {
-    _id: 'byRole',
-    value,
+  return new CssLocator(`[role="${sanitized}"]`, {
     relative,
-  };
-  return result;
+    source: {
+      _id: 'byRole',
+      value,
+      relative,
+    },
+  });
 }
