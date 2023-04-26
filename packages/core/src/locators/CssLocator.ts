@@ -2,6 +2,7 @@ import { Optional } from '../dataTypes';
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
 import { LocatorType } from './LocatorType';
+import { PartLocator } from './PartLocator';
 
 export interface CssLocatorInitializer {
   type: LocatorType;
@@ -32,6 +33,15 @@ export class CssLocator {
 
   get source(): Optional<CssLocatorSource> {
     return this._source;
+  }
+
+  chain(...locatorsToAppend: PartLocator[]): PartLocator {
+    const baseLocator: CssLocator[] = [this];
+    const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator) => {
+      return acc.concat(locator);
+    }, []);
+
+    return baseLocator.concat(toAppend);
   }
 
   clone(override?: Partial<CssLocatorInitializer>): CssLocator {
