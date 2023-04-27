@@ -1,4 +1,12 @@
-import { byTagName, ComponentDriver, IInputDriver, listHelper, locatorUtil, Nullable } from '@atomic-testing/core';
+import {
+  byTagName,
+  collectionUtil,
+  ComponentDriver,
+  IInputDriver,
+  listHelper,
+  locatorUtil,
+  Nullable,
+} from '@atomic-testing/core';
 
 import { HTMLOptionDriver } from './HTMLOptionDriver';
 
@@ -42,7 +50,7 @@ export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDrive
   }
 
   async selectByLabel(label: string | readonly string[]): Promise<void> {
-    const labels = Array.isArray(label) ? label : [label];
+    const labels = collectionUtil.toArray(label);
     const values = await this.getValuesByLabels(labels);
     await this.setValue(values);
   }

@@ -27,3 +27,7 @@ function findNotIn<T>(a: ReadonlySet<T>, b: ReadonlySet<T>): ReadonlySet<T> {
   }
   return result;
 }
+
+export function toArray<T>(item: T | readonly T[]): T[] {
+  return Array.isArray(item) ? item : ([item] as T[]);
+}

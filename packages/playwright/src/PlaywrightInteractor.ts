@@ -15,19 +15,19 @@ export class PlaywrightInteractor implements Interactor {
   constructor(public readonly page: Page) {}
 
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).selectOption(values);
   }
 
   async getInputValue(locator: PartLocator): Promise<Optional<string>> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     return this.page.locator(cssLocator).inputValue();
   }
 
   async getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>> {
     const optionLocator: PartLocator = byCssSelector('option:checked');
     const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
-    const cssLocator = locatorUtil.toCssSelector(selectedOptionLocator);
+    const cssLocator = await locatorUtil.toCssSelector(selectedOptionLocator, this);
     const allOptions = await this.page.locator(cssLocator).all();
     const values: string[] = [];
     for (const option of allOptions) {
@@ -42,7 +42,7 @@ export class PlaywrightInteractor implements Interactor {
   async getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>> {
     const optionLocator: PartLocator = byCssSelector('option:checked');
     const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
-    const cssLocator = locatorUtil.toCssSelector(selectedOptionLocator);
+    const cssLocator = await locatorUtil.toCssSelector(selectedOptionLocator, this);
     const allOptions = await this.page.locator(cssLocator).all();
     const labels: string[] = [];
     for (const option of allOptions) {
@@ -55,7 +55,7 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const elLocator = this.page.locator(cssLocator);
     const value = await elLocator.evaluate((element, prop) => {
       return window.getComputedStyle(element).getPropertyValue(prop as string);
@@ -64,7 +64,7 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async enterText(locator: PartLocator, text: string, option?: Optional<Partial<EnterTextOption>>): Promise<void> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     if (!option?.append) {
       await this.page.locator(cssLocator).clear();
     }
@@ -72,12 +72,12 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).click();
   }
 
   async hover(locator: PartLocator): Promise<void> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).hover();
   }
 
@@ -93,7 +93,7 @@ export class PlaywrightInteractor implements Interactor {
     name: string,
     isMultiple?: boolean,
   ): Promise<Optional<string> | readonly string[]> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const elLocator = this.page.locator(cssLocator);
     if (isMultiple) {
       const locators = await elLocator.all();
@@ -111,25 +111,25 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async getText(locator: PartLocator): Promise<Optional<string>> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const text = await this.page.locator(cssLocator).textContent();
     return text ?? undefined;
   }
 
   async exists(locator: PartLocator): Promise<boolean> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const count = await this.page.locator(cssLocator).count();
     return count > 0;
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const checked = await this.page.locator(cssLocator).isChecked();
     return checked;
   }
 
   async isDisabled(locator: PartLocator): Promise<boolean> {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const isDisabled = await this.page.locator(cssLocator).isDisabled();
     return isDisabled;
   }
