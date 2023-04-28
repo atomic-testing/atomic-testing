@@ -22,10 +22,10 @@ export class DOMInteractor implements Interactor {
     isMultiple?: boolean,
   ): Promise<Optional<string> | readonly string[]> {
     if (isMultiple) {
-      const elements = this.getElement(locator, true);
+      const elements = await this.getElement(locator, true);
       return Promise.resolve(elements.map((el) => el.getAttribute(name)!));
     } else {
-      const el = this.getElement(locator);
+      const el = await this.getElement(locator);
       if (el != null) {
         return Promise.resolve(el.getAttribute(name) ?? undefined);
       }
@@ -33,7 +33,7 @@ export class DOMInteractor implements Interactor {
   }
 
   async getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       const val = (el as HTMLElement).style?.[propertyName] as string;
       return Promise.resolve(val ?? undefined);
@@ -41,21 +41,21 @@ export class DOMInteractor implements Interactor {
   }
 
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       await userEvent.click(el);
     }
   }
 
   async hover(locator: PartLocator): Promise<void> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       await userEvent.hover(el);
     }
   }
 
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       if (!option?.append) {
         await userEvent.clear(el);
@@ -65,7 +65,7 @@ export class DOMInteractor implements Interactor {
   }
 
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       await userEvent.selectOptions(el, values);
     }
@@ -75,15 +75,16 @@ export class DOMInteractor implements Interactor {
     return timingUtil.wait(ms);
   }
 
-  exists(locator: PartLocator): Promise<boolean> {
-    return Promise.resolve(this.getElement(locator) != null);
+  async exists(locator: PartLocator): Promise<boolean> {
+    const el = await this.getElement(locator);
+    return Promise.resolve(el != null);
   }
 
-  getElement<T extends Element = Element>(locator: PartLocator, isMultiple: true): readonly T[];
-  getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Optional<T>;
-  getElement<T extends Element = Element>(locator: PartLocator): Optional<T>;
-  getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
-    const cssLocator = locatorUtil.toCssSelector(locator);
+  async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: true): Promise<readonly T[]>;
+  async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Promise<Optional<T>>;
+  async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
+  async getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
     if (isMultiple) {
       const elList = this.rootEl.querySelectorAll<T>(cssLocator);
       const result: T[] = [];
@@ -94,7 +95,7 @@ export class DOMInteractor implements Interactor {
   }
 
   async getInputValue(locator: PartLocator): Promise<Optional<string>> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       if (el.nodeName === 'INPUT') {
         return Promise.resolve((el as HTMLInputElement).value ?? undefined);
@@ -105,7 +106,7 @@ export class DOMInteractor implements Interactor {
   }
 
   async getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null && el.nodeName === 'SELECT') {
       const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
       const values = Array.from(options).map((o) => o.value);
@@ -115,7 +116,7 @@ export class DOMInteractor implements Interactor {
   }
 
   async getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null && el.nodeName === 'SELECT') {
       const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
       const values = Array.from(options).map((o) => o.text);
@@ -125,14 +126,14 @@ export class DOMInteractor implements Interactor {
   }
 
   async getText(locator: PartLocator): Promise<Optional<string>> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       return Promise.resolve(el.textContent ?? undefined);
     }
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {
-    const el = this.getElement<HTMLInputElement>(locator);
+    const el = await this.getElement<HTMLInputElement>(locator);
     if (el != null && el.nodeName === 'INPUT') {
       return Promise.resolve(el.checked);
     }
@@ -140,7 +141,7 @@ export class DOMInteractor implements Interactor {
   }
 
   async isDisabled(locator: PartLocator): Promise<boolean> {
-    const el = this.getElement(locator);
+    const el = await this.getElement(locator);
     if (el != null) {
       // @ts-ignore
       const isDisabled = Boolean(el.disabled);
@@ -177,16 +178,16 @@ export class DOMInteractor implements Interactor {
     return true;
   }
 
-  hasCssClass(locator: PartLocator, className: string): Promise<boolean> {
-    const el = this.getElement(locator);
+  async hasCssClass(locator: PartLocator, className: string): Promise<boolean> {
+    const el = await this.getElement(locator);
     if (el != null) {
       return Promise.resolve(el.classList.contains(className));
     }
     return Promise.resolve(false);
   }
 
-  hasAttribute(locator: PartLocator, name: string): Promise<boolean> {
-    const el = this.getElement(locator);
+  async hasAttribute(locator: PartLocator, name: string): Promise<boolean> {
+    const el = await this.getElement(locator);
     if (el != null) {
       return Promise.resolve(el.hasAttribute(name));
     }

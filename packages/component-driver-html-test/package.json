@@ -42,6 +42,7 @@
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/jest": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
+    "@atomic-testing/react": "workspace:*",
     "@atomic-testing/test-runner": "workspace:*",
     "@types/jest": "^29.5.0",
     "@types/node": "^16.0.0",
