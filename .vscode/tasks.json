@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build All",
+      "type": "shell",
+      "command": "pnpm -r build",
+      "group": {
+        "kind": "none",
+      }
+    },
+    {
+      "label": "Doc",
+      "type": "shell",
+      "command": "cd docs && pnpm start",
+      "isBackground": true
+    },
+  ]
+}
