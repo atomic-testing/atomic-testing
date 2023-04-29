@@ -11,31 +11,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Work with popular UI libraries',
+    title: 'Unified Testing Solution',
     // Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Atomic testings lets you write tests working with popular UI libraries like Material UI, Xyz, and many more
-        easily.
+        Seamlessly integrate with top UI frameworks (React, Angular, Vue) and testing tools (Playwright, Cypress, DOM
+        testing) for a streamlined and efficient testing experience
       </>
     ),
   },
   {
-    title: 'Work with many UI frameworks',
+    title: 'Broad Compatibility',
     // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Atomic testing lets you write tests working with popular UI frameworks like React, Angular, Vue, and many more
+        Effortlessly drive applications using popular UI libraries like Material UI and Bootstrap, ensuring a consistent
+        and flawless user experience across platforms.
       </>
     ),
   },
   {
-    title: 'Work with many testing strategies',
+    title: 'Simplified Testing',
     // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Whether you prefer to write integration tests with Jest, or end-to-end tests with Playwright, Puppeteer,
-        Cypress, etc., Atomic testing gets you covered
+        Our portable library reduces the complexity of UI testing, enabling developers to focus on building high-quality
+        applications with ease and confidence.
       </>
     ),
   },
@@ -46,14 +47,21 @@ const FeatureList: FeatureItem[] = [
   },
 ];
 
-function Feature({ title, Svg, description }: FeatureItem) {
+function Feature({ title, Svg, description, index }: FeatureItem & { index: number }) {
+  const isOdd = index % 2 === 1;
+  const padder = <div className={clsx('col col--6')}></div>;
+  console.log('isOdd', isOdd, index);
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">{Svg ? <Svg className={styles.featureSvg} role="img" /> : null}</div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
+    <div className="row">
+      {isOdd ? padder : null}
+      <div className={clsx('col col--6')}>
+        <div>{Svg ? <Svg className={styles.featureSvg} role="img" /> : null}</div>
+        <div className="padding-horiz--md">
+          <h3>{title}</h3>
+          <p>{description}</p>
+        </div>
       </div>
+      {!isOdd ? padder : null}
     </div>
   );
 }
@@ -62,11 +70,9 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
-        </div>
+        {FeatureList.map((props, idx) => (
+          <Feature key={idx} index={idx} {...props} />
+        ))}
       </div>
     </section>
   );
