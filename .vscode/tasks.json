@@ -15,5 +15,11 @@
       "command": "cd docs && pnpm start",
       "isBackground": true
     },
+    {
+      "label": "MUI",
+      "type": "shell",
+      "command": "cd packages/component-driver-mui-v5-test && pnpm start",
+      "isBackground": true
+    },
   ]
 }

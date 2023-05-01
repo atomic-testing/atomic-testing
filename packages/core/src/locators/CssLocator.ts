@@ -1,11 +1,11 @@
 import { Optional } from '../dataTypes';
 import { CssLocatorSource } from './CssLocatorSource';
+import { LocatorComplexity } from './LocatorComplexity';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
 import { LocatorType } from './LocatorType';
 import { PartLocator } from './PartLocator';
 
 export interface CssLocatorInitializer {
-  type: LocatorType;
   relative: LocatorRelativePosition;
   source: CssLocatorSource;
 }
@@ -17,7 +17,6 @@ export class CssLocator {
 
   constructor(public readonly selector: string, initializeValue?: Partial<CssLocatorInitializer>) {
     if (initializeValue) {
-      this._type = initializeValue.type || this.type;
       this._relativePosition = initializeValue.relative || this.relative;
       this._source = initializeValue.source || this.source;
     }
@@ -42,6 +41,10 @@ export class CssLocator {
     }, []);
 
     return baseLocator.concat(toAppend);
+  }
+
+  public get complexity(): LocatorComplexity {
+    return 'primitive';
   }
 
   clone(override?: Partial<CssLocatorInitializer>): CssLocator {
