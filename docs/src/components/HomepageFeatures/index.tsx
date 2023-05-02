@@ -50,7 +50,6 @@ const FeatureList: FeatureItem[] = [
 function Feature({ title, Svg, description, index }: FeatureItem & { index: number }) {
   const isOdd = index % 2 === 1;
   const padder = <div className={clsx('col col--6')}></div>;
-  console.log('isOdd', isOdd, index);
   return (
     <div className="row">
       {isOdd ? padder : null}

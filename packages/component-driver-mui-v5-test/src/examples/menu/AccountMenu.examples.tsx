@@ -16,7 +16,6 @@ export const AccountMenu: React.FunctionComponent = () => {
   };
   const handleClose = (s: string | null = null) => {
     setSelection(s);
-    console.log({ s });
     setAnchorEl(null);
   };
   return (
