@@ -4,6 +4,7 @@ import {
   autoCompleteExamples,
   buttonExamples,
   checkboxExamples,
+  dataGridProExamples,
   dialogExamples,
   inputExamples,
   menuExamples,
@@ -41,6 +42,11 @@ export const tocs: IToc[] = [
     label: 'Checkbox',
     path: '/checkbox',
     ui: <ExampleList examples={checkboxExamples} />,
+  },
+  {
+    label: 'DataGrid Pro',
+    path: '/datagridpro',
+    ui: <ExampleList examples={dataGridProExamples} />,
   },
   {
     label: 'Dialog',

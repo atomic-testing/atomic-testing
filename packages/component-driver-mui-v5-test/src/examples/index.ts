@@ -2,6 +2,7 @@ export * from './alert';
 export * from './autocomplete';
 export * from './button';
 export * from './checkbox';
+export * from './datagridpro';
 export * from './dialog';
 export * from './input';
 export * from './menu';
