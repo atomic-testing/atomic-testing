@@ -5,30 +5,30 @@ sidebar_position: 2
 
 # Core Concepts
 
-Below are a few key concepts that you should be familiar with before you start using Atomic Testing.
+Before using Atomic Testing, familiarize yourself with the following key concepts:
 
 ## Component Driver
 
-Component drivers are the core of Atomic Testing. They are responsible for describing how to interact with UI components programmatically, such as how to click on a button, select a value from a dropdown, or read a row from a grid.
+At the heart of Atomic Testing are component drivers. They define how to programmatically interact with UI components, such as clicking a button, selecting a value from a dropdown, or reading a row from a grid.
 
-There are growing number of component drivers available for popular UI frameworks such as Material UI, each component offers a set of methods that can be used to interact with the component. If TypeScript is used for writing tests,
-auto-completion can be used to discover the available methods.
+A growing number of component drivers are available for popular UI frameworks like [Material UI](https://mui.com). Each component driver offers a set of methods for interacting with the component. When using TypeScript for writing tests, auto-completion can help discover available methods.
 
 :::info
-See [API Reference](./api.mdx#component-drivers) for a list of available component drivers.
+Refer to the [API Reference](./api.mdx#component-drivers) for a list of available component drivers.
 :::
 
 ## Locator
 
-Locators are used to find a component on the page. There are number of number of locator strategies available such as byDataTestId, byRole etc.
+Locators help find components on a page, using various [locator strategies](<(./api.mdx#locator)>) such as `byDataTestId` and `byRole`.
 
 :::tip
-Use of `data-testid` attribute is recommended for finding components on the page. See [Best Practices](./best-practices.mdx#data-testid) for more details. Use the `byDataTestId(value)` API to the recommended to build locators.
+The use of the data-testid attribute is recommended for locating components on a page. Refer to [Best Practices](./best-practices.mdx#data-testid) for more details. Use the `byDataTestId(value)` API as the recommended approach for building locators.
+
 :::
 
 ## ScenePart
 
-ScenePart is a map that describes all the components of interest (part) in a scene (a page or a rich UI component). Each entry in a scene part describes the part name, the locator of the component and the component driver.
+A ScenePart is a map describing all components of interest (part) within a scene (a page or a rich UI component). Each entry in a ScenePart outlines the part name, the component locator, and the component driver.
 
 <details>
   <summary>A sample ScenePart of a typical login screen</summary>
@@ -66,11 +66,11 @@ const loginScenePart: ScenePart = {
 
 ## Test Engine
 
-TestEngine is place where all the pieces come together. It is responsible for rendering a scene, finding all the components in the scene, and providing a set of methods to interact with the components.
+The Test Engine is where all the pieces come together. It is responsible for rendering a scene, locating all the components in the scene, and providing a set of methods to interact with the components.
 
-Use `createTestEngine` to create an instance of TestEngine. `createTestEngine` function is specific for each rendering framework, such as React, Cypress and Playwright.
+Use `createTestEngine` to create a Test Engine instance. The `createTestEngine` function is specific to each rendering framework, such as React, Cypress, and Playwright.
 
-Below are examples of creating a Test Engine for the loginScenePart described above.
+The examples below demonstrate how to create a Test Engine for the loginScenePart described earlier.
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';

@@ -7,20 +7,18 @@ sidebar_position: 1
 
 ## The problem
 
-You want to write maintainable tests for your UI built with popular 3rd-party component libraries such as Material UI or Bootstrap.
-However, you lack the documentations on how to have tests to talk to 3rd-party components.
+Writing maintainable tests for your UI, built using popular third-party component libraries like Material UI or Bootstrap, can be challenging due to insufficient documentation on establishing communication between tests and these components.
 
-Furthermore, you also want your tests to avoid including details on interacting with 3rd-party components, so that you can easily update your tests
-when the 3rd-party components change.
+Moreover, you want your tests to exclude intricate details about interacting with third-party components, enabling seamless test updates when the components change. This approach enhances the maintainability and adaptability of your test suite.
+
+Furthermore, as your application scale, you also want a testing library that can scale with your application. You want to be able to compose reusable test strategies to test more complex components.
 
 ## The solution
 
-Coming soon
+Atomic Testing is designed to offer a consistent way to interact with third-party or first-party components across different testing environments, such as DOM testing or end-to-end testing.
 
-### What this library is:
+The core principles of Atomic Testing are:
 
-Coming soon
-
-### What this library is not:
-
-Coming soon
+- **Reusability**: Deliver a standard and reusable method for interacting with components.
+- **Composability**: Enable developers to compose reusable test strategies for testing more complex components.
+- **Adaptability**: Ensure testing strategies can adapt to various test environments, including DOM testing (React, Angular, Vue) and end-to-end testing (Cypress, Playwright, Selenium/WebDriver).

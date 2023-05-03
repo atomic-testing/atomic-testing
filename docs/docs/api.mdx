@@ -5,6 +5,23 @@ sidebar_position: 4
 
 # API
 
+## Locator
+
+In a nutshell, locators represent a way to find element on a page or within a test element.
+
+| Locator                  | Description                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| byAttribute(name, value) | Locate element by attribute                                                                                            |
+| byChecked(checked)       | Locate checkbox which is checked, usually it can be chained with checkbox locator                                      |
+| byCssClass(className)    | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily. |
+| byCssSelector(selector)  | Locate by CSS selector.                                                                                                |
+| byDataTestId(dataTestId) | Locate by data-testid attribute.                                                                                       |
+| byInputType(type)        | Locate by input element by its type, such as text, radio, checkbox etc.                                                |
+| byName(name)             | Locate by the value of name attribute.                                                                                 |
+| byRole(role)             | Locate by the value of role attribute.                                                                                 |
+| byTagName(tagName)       | Locate by HTML tag name (not recommended).                                                                             |
+| byValue(value)           | Locate by the value of value attribute                                                                                 |
+
 ## Component Drivers
 
 ### Raw HTML components
@@ -34,6 +51,7 @@ Package: [@atomic-testing/component-driver-material-ui-v5](https://github.com/at
 | ButtonDriver    | Driver for Button or any clickable component                                                     |
 | CheckboxDriver  | Driver for Checkbox component                                                                    |
 | FabDriver       | Driver for Floating Action Button component                                                      |
+| DataGridPro     | Driver for DataGrid/DataGridPro component                                                        |
 | DialogDriver    | Driver for Dialog component                                                                      |
 | MenuDriver      | Driver for Menu component                                                                        |
 | InputDriver     | Driver for Input component and its variants                                                      |
