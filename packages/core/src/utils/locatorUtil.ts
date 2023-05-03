@@ -1,5 +1,6 @@
 import { Interactor } from '../interactor';
 import { CssLocator } from '../locators/CssLocator';
+import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
 import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
 
@@ -39,15 +40,31 @@ export function getEffectiveLocator(locator: PartLocator): CssLocator[] {
   return rootLocatorIndex === -1 ? list : list.slice(rootLocatorIndex);
 }
 
-export function toCssSelector(locator: PartLocator, interactor: Interactor): Promise<string> {
+export async function toCssSelector(locator: PartLocator, interactor: Interactor): Promise<string> {
   const effectiveLocator = getEffectiveLocator(locator);
-  const statements: string[] = effectiveLocator.map((loc) => {
-    const statement = getLocatorStatement(loc);
+  const statements: string[] = [];
+  for (const loc of effectiveLocator) {
+    let statement = '';
+    if (loc instanceof LinkedCssLocator) {
+      statement = await getLinkedCssLocatorStatement(loc, interactor);
+    } else {
+      statement = getLocatorStatement(loc);
+    }
     const separator = loc.relative === LocatorRelativePosition.Same ? '' : ' ';
-    return separator + statement;
-  });
+    statements.push(separator + statement);
+  }
 
   return Promise.resolve(statements.join('').trim());
+}
+
+export async function getLinkedCssLocatorStatement(locator: LinkedCssLocator, interactor: Interactor): Promise<string> {
+  const targetLocator = locator.matchingTargetLocator;
+
+  if (locator.matchingTargetValueExtract.type === 'attribute') {
+    const matchedValue = await interactor.getAttribute(targetLocator, locator.matchingTargetValueExtract.attributeName);
+  }
+
+  return Promise.resolve('');
 }
 
 export function getLocatorStatement(locator: CssLocator): string {
