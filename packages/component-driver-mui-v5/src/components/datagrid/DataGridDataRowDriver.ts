@@ -2,7 +2,7 @@ import { byRole, IComponentDriverOption, Interactor, locatorUtil, PartLocator } 
 
 import { DataGridRowDriver } from './DataGridRowDriver';
 
-export class DataGridHeaderRowDriver extends DataGridRowDriver {
+export class DataGridDataRowDriver extends DataGridRowDriver {
   private readonly _headerCellLocator: PartLocator;
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
@@ -10,11 +10,7 @@ export class DataGridHeaderRowDriver extends DataGridRowDriver {
       parts: {},
     });
 
-    this._headerCellLocator = locatorUtil.append(locator, byRole('columnheader'));
-  }
-
-  getColumnCount(): Promise<number> {
-    return this.getCellCount();
+    this._headerCellLocator = locatorUtil.append(locator, byRole('cell'));
   }
 
   protected override getCellLocator(): PartLocator {
@@ -22,6 +18,6 @@ export class DataGridHeaderRowDriver extends DataGridRowDriver {
   }
 
   override get driverName(): string {
-    return 'MuiV5DataGridHeaderRowDriver';
+    return 'MuiV5DataGridDataRowDriver';
   }
 }

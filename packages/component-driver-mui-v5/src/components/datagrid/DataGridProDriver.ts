@@ -60,6 +60,15 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   }
 
   /**
+   * The array text of the header row, note that columns not shown in the viewport may not be included because of virtualize rendering
+   * @returns The array of text of the header row
+   */
+  async getHeaderText(): Promise<string[]> {
+    await this.waitForLoading();
+    return this.parts.headerRow.getRowText();
+  }
+
+  /**
    * The number of rows currently displayed in the data grid, note that data grid pro
    * uses virtualize rendering, therefore the row count heavily depends on the viewport size
    * @returns The number of columns currently displayed in the data grid
@@ -74,26 +83,75 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
     return count;
   }
 
+  /**
+   * Return the row driver for the row at the specified index, if the row does not exist, return null
+   * @param rowIndex
+   * @returns
+   */
+  async getRow(rowIndex: number): Promise<DataGridHeaderRowDriver | null> {
+    const rowLocator = locatorUtil.append(this.locator, byCssSelector(`[role=row][data-rowindex="${rowIndex}"]`));
+    const rowExists = await this.interactor.exists(rowLocator);
+    if (rowExists) {
+      return new DataGridHeaderRowDriver(rowLocator, this.interactor, this.commutableOption);
+    }
+
+    return null;
+  }
+
+  /**
+   * The array text of the specified row, note that columns not shown in the viewport may not be included because of virtualize rendering
+   * @param rowIndex The index of the row
+   * @returns The array of text of the specified row
+   */
+  async getRowText(rowIndex: number): Promise<string[]> {
+    await this.waitForLoading();
+    const row = await this.getRow(rowIndex);
+    if (row != null) {
+      return row.getRowText();
+    }
+    throw new Error(`Row ${rowIndex} does not exist`);
+  }
+
+  /**
+   * Get the cell driver for the cell, if the cell does not exist, return null
+   * The cell driver is default to HTMLElementDriver, you can specify a different driver class
+   * @param query The query to locate the cell, query is an object that is either {rowIndex: number, columnIndex: number} or {rowIndex: number, columnField: string}
+   * @param driverClass Optional, the driver class to use for the cell, default to HTMLElementDriver
+   * @returns
+   */
   async getCell<DriverT extends ComponentDriver>(
     query: DataGridCellQuery,
     // @ts-ignore
     driverClass: typeof ComponentDriver = HTMLElementDriver,
   ): Promise<DriverT | null> {
-    const rowLocator = byCssSelector(`[role=row][data-rowindex="${query.rowIndex}"]`);
-    let cellLocator: PartLocator;
-    if ('columnIndex' in query) {
-      cellLocator = byCssSelector(`[data-colindex="${query.columnIndex}"]`);
-    } else {
-      cellLocator = byCssSelector(`[data-field="${query.columnField}"]`);
-    }
-    const locator = locatorUtil.append(this.locator, rowLocator, cellLocator);
-    const cellExists = await this.interactor.exists(locator);
-    if (cellExists) {
-      // @ts-ignore
-      return new driverClass(locator, this.interactor, this.commutableOption);
+    await this.waitForLoading();
+    const rowDriver = await this.getRow(query.rowIndex);
+
+    if (rowDriver === null) {
+      return null;
     }
 
-    return null;
+    if ('columnIndex' in query) {
+      return rowDriver.getCell(query.columnIndex, driverClass);
+    }
+
+    return rowDriver.getCell(query.columnField, driverClass);
+  }
+
+  /**
+   * Get the text content of the cell, if the cell does not exist, throw an error
+   * @param query The query to locate the cell, query is an object that is either {rowIndex: number, columnIndex: number} or {rowIndex: number, columnField: string}
+   * @returns
+   */
+  async getCellText(query: DataGridCellQuery): Promise<string> {
+    const cell = await this.getCell(query);
+    if (cell != null) {
+      const text = await cell.getText();
+      return text!;
+    }
+
+    //@ts-ignore
+    throw new Error(`Cell at row:${query.rowIndex} column:${query.columnIndex ?? query.columnField} does not exist`);
   }
 
   override get driverName(): string {
