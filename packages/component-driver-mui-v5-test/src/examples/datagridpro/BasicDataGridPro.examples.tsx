@@ -8,8 +8,9 @@ import { basicGridColumnConfig, initialState } from './gridConfig';
 import { gridData } from './gridData';
 
 export const BasicDataGridPro: React.FunctionComponent = () => {
+  // Giving minWidth so in DOM test the grid will not be too small
   return (
-    <Box data-testid="basic-grid-pro" sx={{ height: 520, width: '100%' }}>
+    <Box data-testid="basic-grid-pro" sx={{ height: 520, minWidth: 1200, width: '100%' }}>
       <DataGridPro
         columns={basicGridColumnConfig}
         rows={gridData}
@@ -73,9 +74,27 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
     });
 
     test('Get cell should return cell with some text', async () => {
-      const cellDriver = await testEngine.parts.basicGrid.getCell({ rowIndex: 1, columnIndex: 1 });
-      const text = await cellDriver?.getText();
-      assertEqual((text ?? '').length > 0, true);
+      const text = await testEngine.parts.basicGrid.getCellText({ rowIndex: 1, columnIndex: 1 });
+      assertEqual((text ?? '').length > 1, true);
+    });
+
+    test('Header Row should contain columns desk, commodity, trader name ...', async () => {
+      const columnText = await testEngine.parts.basicGrid.getHeaderText();
+      const expectedColumns = ['Desk', 'Commodity'];
+      const columnTextSet = new Set(columnText);
+      const columnExists = expectedColumns.every((column) => columnTextSet.has(column));
+      assertEqual(columnExists, true);
+    });
+
+    test('Data Row 1 should have content in all cells except the first one because it is a checkbox', async () => {
+      const rowText = await testEngine.parts.basicGrid.getRowText(1);
+      const textCorrect = rowText.every((column, index) => {
+        if (index === 0) {
+          return column === '';
+        }
+        return column.length > 1;
+      });
+      assertEqual(textCorrect, true);
     });
   },
 };
