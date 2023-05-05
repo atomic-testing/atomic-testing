@@ -79,7 +79,7 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
     });
 
     test('Header Row should contain columns desk, commodity, trader name ...', async () => {
-      const columnText = await testEngine.parts.basicGrid.getColumnText();
+      const columnText = await testEngine.parts.basicGrid.getHeaderText();
       const expectedColumns = ['Desk', 'Commodity'];
       const columnTextSet = new Set(columnText);
       const columnExists = expectedColumns.every((column) => columnTextSet.has(column));

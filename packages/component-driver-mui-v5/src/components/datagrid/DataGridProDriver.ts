@@ -63,7 +63,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * The array text of the header row, note that columns not shown in the viewport may not be included because of virtualize rendering
    * @returns The array of text of the header row
    */
-  async getColumnText(): Promise<string[]> {
+  async getHeaderText(): Promise<string[]> {
     await this.waitForLoading();
     return this.parts.headerRow.getRowText();
   }
