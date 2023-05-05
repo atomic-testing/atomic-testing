@@ -1,4 +1,6 @@
+import { Optional } from '../dataTypes';
 import { Interactor } from '../interactor';
+import { byAttribute } from '../locators';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
@@ -58,13 +60,35 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
 }
 
 export async function getLinkedCssLocatorStatement(locator: LinkedCssLocator, interactor: Interactor): Promise<string> {
-  const targetLocator = locator.matchingTargetLocator;
+  const matchTargetValue = await getLinkedCssLocatorMatchingTargetValue(locator, interactor);
 
-  if (locator.matchingTargetValueExtract.type === 'attribute') {
-    const matchedValue = await interactor.getAttribute(targetLocator, locator.matchingTargetValueExtract.attributeName);
+  if (matchTargetValue == null) {
+    // TODO: Produce more descriptive error to help with troubleshooting
+    throw new Error('Match target not found for LinkedCssLocator');
   }
 
-  return Promise.resolve('');
+  let resolvedLocator: CssLocator;
+  if (locator.valueExtract.type === 'attribute') {
+    resolvedLocator = byAttribute(locator.valueExtract.attributeName, matchTargetValue);
+  } else {
+    throw new Error(`Cannot handle valueExtract method type ${locator.valueExtract.type}`);
+  }
+
+  return getLocatorStatement(resolvedLocator);
+}
+
+export async function getLinkedCssLocatorMatchingTargetValue(
+  locator: LinkedCssLocator,
+  interactor: Interactor,
+): Promise<Optional<string>> {
+  if (locator.matchingTargetValueExtract.type === 'attribute') {
+    return await interactor.getAttribute(
+      locator.matchingTargetLocator,
+      locator.matchingTargetValueExtract.attributeName,
+    );
+  }
+
+  throw new Error(`Cannot handle valueExtract method type ${locator.matchingTargetValueExtract.type}`);
 }
 
 export function getLocatorStatement(locator: CssLocator): string {
