@@ -35,8 +35,8 @@ export class LinkedCssLocator extends CssLocator {
     attributeName: 'value',
   };
 
-  _matchingTargetLocator: PartLocator = byDataTestId('not-set');
-  _matchingTargetValueExtract: LinkedCssLocatorValueExtract = {
+  private _matchingTargetLocator: PartLocator = byDataTestId('not-set');
+  private _matchingTargetValueExtract: LinkedCssLocatorValueExtract = {
     type: 'attribute',
     attributeName: 'value',
   };

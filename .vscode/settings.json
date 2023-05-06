@@ -25,5 +25,6 @@
   "cSpell.words": [
     "endregion",
     "Interactor"
-  ]
+  ],
+  "eslint.enable": true,
 }

@@ -1,5 +1,11 @@
 import { ExampleList } from './components/ExampleList';
-import { checkboxExamples, radioButtonGroupExamples, selectExamples, textInputExamples } from './examples';
+import {
+  checkboxExamples,
+  formExamples,
+  radioButtonGroupExamples,
+  selectExamples,
+  textInputExamples,
+} from './examples';
 
 interface IToc {
   label: string;
@@ -8,6 +14,11 @@ interface IToc {
 }
 
 export const tocs: IToc[] = [
+  {
+    label: 'Form',
+    path: '/form',
+    ui: <ExampleList examples={formExamples} />,
+  },
   {
     label: 'Text Input',
     path: '/input',
