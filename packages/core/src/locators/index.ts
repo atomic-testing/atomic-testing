@@ -1,4 +1,5 @@
 export { CssLocator } from './CssLocator';
+export * from './LinkedCssLocator';
 export { LocatorRelativePosition } from './LocatorRelativePosition';
 export { LocatorTypeLookup } from './LocatorType';
 export type { LocatorType } from './LocatorType';
@@ -9,6 +10,7 @@ export { byCssClass } from './byCssClass';
 export { byCssSelector } from './byCssSelector';
 export { byDataTestId } from './byDataTestId';
 export { byInputType } from './byInputType';
+export { byLinkedElement } from './byLinkedElement';
 export { byName } from './byName';
 export { byRole } from './byRole';
 export { byTagName } from './byTagName';

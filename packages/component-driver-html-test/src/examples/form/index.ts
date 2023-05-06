@@ -1,13 +1,6 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { multipleSelectExample as multipleSelect } from './MultipleSelect.examples';
-import { singleSelectExample as singleSelect } from './SingleSelect.examples';
-export { multipleSelectTestSuite } from './MultipleSelect.examples';
-export { singleSelectTestSuite } from './SingleSelect.examples';
+import { linkedElementExample, linkedElementExampleScenePart } from './LinkedElement.examples';
 
-export const multipleSelectExample = multipleSelect;
-export const singleSelectExample = singleSelect;
+export { linkedElementExample, linkedElementExampleScenePart };
 
-export const selectExamples = [singleSelectExample, multipleSelectExample] satisfies IExampleUnit<
-  ScenePart,
-  JSX.Element
->[];
+export const formExamples = [linkedElementExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];
