@@ -3,18 +3,18 @@ import { byRole, IComponentDriverOption, Interactor, locatorUtil, PartLocator } 
 import { DataGridRowDriver } from './DataGridRowDriver';
 
 export class DataGridDataRowDriver extends DataGridRowDriver {
-  private readonly _headerCellLocator: PartLocator;
+  private readonly _dataCellLocator: PartLocator;
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: {},
     });
 
-    this._headerCellLocator = locatorUtil.append(locator, byRole('cell'));
+    this._dataCellLocator = locatorUtil.append(locator, byRole('cell'));
   }
 
   protected override getCellLocator(): PartLocator {
-    return this._headerCellLocator;
+    return this._dataCellLocator;
   }
 
   override get driverName(): string {
