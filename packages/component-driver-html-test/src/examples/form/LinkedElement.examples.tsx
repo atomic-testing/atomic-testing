@@ -15,11 +15,10 @@ export const LinkedElementExample = () => {
 
 export const linkedElementExampleScenePart = {
   textInput: {
-    locator: byLinkedElement(
-      byDataTestId('input-label'),
-      { type: 'attribute', attributeName: 'for' },
-      { type: 'attribute', attributeName: 'id' },
-    ), // { type: 'attribute', attribute: 'htmlFor'
+    locator: byLinkedElement()
+      .onLinkedElement(byDataTestId('input-label'))
+      .extractAttribute('for')
+      .toMatchMyAttribute('id'),
     driver: HTMLTextInputDriver,
   },
 } satisfies ScenePart;
