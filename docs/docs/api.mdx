@@ -17,6 +17,7 @@ In a nutshell, locators represent a way to find element on a page or within a te
 | byCssSelector(selector)  | Locate by CSS selector.                                                                                                |
 | byDataTestId(dataTestId) | Locate by data-testid attribute.                                                                                       |
 | byInputType(type)        | Locate by input element by its type, such as text, radio, checkbox etc.                                                |
+| byLinkedElement()        | (Experimental) A complex locator where the element is located through matching another known element's attribute value |
 | byName(name)             | Locate by the value of name attribute.                                                                                 |
 | byRole(role)             | Locate by the value of role attribute.                                                                                 |
 | byTagName(tagName)       | Locate by HTML tag name (not recommended).                                                                             |
@@ -43,11 +44,14 @@ Package: [@atomic-testing/component-driver-html](https://github.com/atomic-testi
 
 ### [MUI V5](https://mui.com/material-ui/getting-started/overview/) components
 
-Package: [@atomic-testing/component-driver-material-mui-v5](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v5/src/components)
+Package: [@atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v5/src/components)
+
+Test examples can be found in [the example folder under component-driver-mui-v5-test package](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v5-test/src/examples)
 
 | Driver          | Description                                                                                      |
 | --------------- | ------------------------------------------------------------------------------------------------ |
 | AlertDriver     | Driver for Alert component                                                                       |
+| Autocomplete    | Driver for Autocomplete component (single selection only, multiple selection planned)            |
 | ButtonDriver    | Driver for Button or any clickable component                                                     |
 | CheckboxDriver  | Driver for Checkbox component                                                                    |
 | FabDriver       | Driver for Floating Action Button component                                                      |

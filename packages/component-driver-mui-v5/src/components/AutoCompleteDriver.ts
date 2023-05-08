@@ -1,12 +1,18 @@
-import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
-  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
+  LocatorRelativePosition,
   PartLocator,
   ScenePart,
+  byCssSelector,
+  byLinkedElement,
+  byRole,
+  byTagName,
+  listHelper,
+  locatorUtil,
 } from '@atomic-testing/core';
 
 export const parts = {
@@ -14,30 +20,106 @@ export const parts = {
     locator: byTagName('input'),
     driver: HTMLTextInputDriver,
   },
+  dropdown: {
+    locator: byLinkedElement(LocatorRelativePosition.Root)
+      .onLinkedElement(byCssSelector('', LocatorRelativePosition.Same))
+      .extractAttribute('aria-owns')
+      .toMatchMyAttribute('id'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
+const optionLocator = byRole('option');
+
+/**
+ * The match type of the autocomplete, default to 'exact'
+ * 'exact': The value must match exactly to one of the options
+ * 'first-available': The value will be set to the first available option
+ */
+export type AutoCompleteMatchType = 'exact' | 'first-available';
+
+export interface AutoCompleteDriverSpecificOption {
+  matchType: AutoCompleteMatchType;
+}
+
+export interface AutoCompleteDriverOption extends IComponentDriverOption, AutoCompleteDriverSpecificOption {}
+
+export const defaultAutoCompleteDriverOption: AutoCompleteDriverSpecificOption = {
+  matchType: 'exact',
+};
+
 export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+  private _option: Partial<AutoCompleteDriverOption> = {};
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<AutoCompleteDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,
     });
+
+    this._option = option ?? {};
   }
 
-  getValue(): Promise<string | null> {
-    throw new Error('Method not implemented.');
+  /**
+   * Get the display of the autocomplete
+   */
+  async getValue(): Promise<string | null> {
+    const value = await this.parts.input.getValue();
+    return value ?? null;
   }
 
-  setValue(value: string | null): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  /**
+   * Set the value of the autocomplete, how selection happens
+   * depends on the option assigned to AutoCompleteDriver
+   * By default, when the option has matchType set to exact, only option with matching text would be selected
+   * When the option has matchType set to first-available, the first option would be selected regardless of the text
+   *
+   * Option of auto complete can be set at the time of part definition, for example
+   * ```
+   * {
+   *   myAutoComplete: {
+   *     locator: byCssSelector('my-auto-complete'),
+   *     driver: AutoCompleteDriver,
+   *     option: {
+   *       matchType: 'first-available',
+   *     },
+   *   },
+   * }
+   * ```
+   *
+   * @param value
+   * @returns
+   */
+  async setValue(value: string | null): Promise<boolean> {
+    await this.parts.input.setValue(value ?? '');
+
+    if (value === null) {
+      return true;
+    }
+
+    const option = locatorUtil.append(this.parts.dropdown.locator, optionLocator);
+    let index = 0;
+    const matchType: AutoCompleteMatchType = this._option?.matchType ?? defaultAutoCompleteDriverOption.matchType;
+    for await (const optionDriver of listHelper.getListItemIterator(this, option, HTMLButtonDriver)) {
+      const optionValue = await optionDriver.getText();
+      const isMatched =
+        (matchType === 'exact' && optionValue === value) || (matchType === 'first-available' && index === 0);
+      if (optionValue?.trim() === value) {
+        await optionDriver.click();
+        return true;
+      }
+
+      index++;
+    }
+
+    return false;
   }
 
-  isDisabled(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async isDisabled(): Promise<boolean> {
+    return this.parts.input.isDisabled();
   }
 
-  isReadonly(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async isReadonly(): Promise<boolean> {
+    return this.parts.input.isReadonly();
   }
 
   get driverName(): string {
