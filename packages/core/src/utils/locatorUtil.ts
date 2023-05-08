@@ -36,24 +36,39 @@ export function findRootLocatorIndex(locator: PartLocator): number {
   return -1;
 }
 
-export function getEffectiveLocator(locator: PartLocator): CssLocator[] {
+export async function toPrimitiveLocators(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
   const list = toChain(locator);
+  let result: CssLocator[] = [];
+  for (let i = 0; i < list.length; i++) {
+    const loc = list[i];
+    if (loc instanceof LinkedCssLocator) {
+      const currentContext = list.slice(0, i);
+      const resolved = await getLinkedCssLocator(loc, currentContext, interactor);
+      result = result.concat(resolved);
+    } else {
+      result.push(loc);
+    }
+  }
+
+  return result;
+}
+
+export async function getEffectiveLocator(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
+  const list = await toPrimitiveLocators(locator, interactor);
   const rootLocatorIndex = findRootLocatorIndex(list);
-  return rootLocatorIndex === -1 ? list : list.slice(rootLocatorIndex);
+  // If the locator is linked, we should skip because it has matching locator
+  // would need the context
+  const shouldSkip = rootLocatorIndex === -1 || list[rootLocatorIndex].complexity === 'linked';
+  return shouldSkip ? list : list.slice(rootLocatorIndex);
 }
 
 export async function toCssSelector(locator: PartLocator, interactor: Interactor): Promise<string> {
-  const effectiveLocator = getEffectiveLocator(locator);
+  const effectiveLocator = await getEffectiveLocator(locator, interactor);
   const statements: string[] = [];
   for (let i = 0; i < effectiveLocator.length; i++) {
     let statement = '';
     const loc = effectiveLocator[i];
-    if (loc instanceof LinkedCssLocator) {
-      const currentContext = effectiveLocator.slice(0, i);
-      statement = await getLinkedCssLocatorStatement(loc, currentContext, interactor);
-    } else {
-      statement = getLocatorStatement(loc);
-    }
+    statement = getLocatorStatement(loc);
     const separator = loc.relative === LocatorRelativePosition.Same ? '' : ' ';
     statements.push(separator + statement);
   }
@@ -61,11 +76,11 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
   return Promise.resolve(statements.join('').trim());
 }
 
-export async function getLinkedCssLocatorStatement(
+export async function getLinkedCssLocator(
   locator: LinkedCssLocator,
   context: PartLocator,
   interactor: Interactor,
-): Promise<string> {
+): Promise<PartLocator> {
   const matchTargetValue = await getLinkedCssLocatorMatchingTargetValue(locator, context, interactor);
 
   if (matchTargetValue == null) {
@@ -75,11 +90,11 @@ export async function getLinkedCssLocatorStatement(
 
   let resolvedLocator: CssLocator;
   if (locator.valueExtract.type === 'attribute') {
-    resolvedLocator = byAttribute(locator.valueExtract.attributeName, matchTargetValue);
+    resolvedLocator = byAttribute(locator.valueExtract.attributeName, matchTargetValue, locator.relative);
   } else {
     throw new Error(`Cannot handle valueExtract method type ${locator.valueExtract.type}`);
   }
-  return getLocatorStatement(resolvedLocator);
+  return resolvedLocator;
 }
 
 export async function getLinkedCssLocatorMatchingTargetValue(
