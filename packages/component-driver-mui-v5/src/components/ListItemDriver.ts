@@ -25,7 +25,7 @@ export class ListItemDriver extends ComponentDriver {
       const label = await this.label();
       throw new MenuItemDisabledError(label ?? '', this);
     }
-    await this.interactor.click(this.locator);
+    await this.interactor.click(this.locator, { bubble: true });
   }
 
   get driverName(): string {

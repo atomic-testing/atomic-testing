@@ -43,7 +43,7 @@ export class DOMInteractor implements Interactor {
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {
-      await userEvent.click(el);
+      await userEvent.click(el, option);
     }
   }
 
