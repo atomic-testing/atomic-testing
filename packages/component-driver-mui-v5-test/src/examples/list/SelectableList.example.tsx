@@ -96,6 +96,17 @@ export const selectableListTestSuite: TestSuiteInfo<typeof selectableListExample
         const selectedText = await selected?.getText();
         assertEqual(selectedText, 'Inbox');
       });
+
+      test('Drafts (use getItemByLabel) should be selected', async () => {
+        const draft = await testEngine.parts.selectableList.getItemByLabel('Drafts');
+        const selected = await draft?.isSelected();
+        assertEqual(selected, true);
+      });
+
+      test('There should be 4 items in the list', async () => {
+        const items = await testEngine.parts.selectableList.getItems();
+        assertEqual(items.length, 4);
+      });
     });
   },
 };

@@ -36,6 +36,12 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
     return itemDriverClass ?? (this._option.itemClass as unknown as ItemClass);
   }
 
+  /**
+   * Get the item's driver instance at the given index
+   * @param index
+   * @param itemDriverClass
+   * @returns The item's driver instance at the given index, if the index is out of range, return null
+   */
   async getItemByIndex<ItemClass extends ComponentDriver = ItemT>(
     index: number,
     itemDriverClass?: ItemClass,
@@ -45,6 +51,12 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
     return listHelper.getListItemByIndex(this, this._itemLocator, index, driverClass);
   }
 
+  /**
+   * Get the item's driver instance by the given text
+   * @param text
+   * @param itemDriverClass
+   * @returns The item's driver instance by the given text, if the text is not found, return null
+   */
   async getItemByLabel<ItemClass extends ComponentDriver = ItemT>(
     text: string,
     itemDriverClass?: ItemClass,
@@ -61,6 +73,11 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
     return null;
   }
 
+  /**
+   * Get all the items' driver instances in the list
+   * @param itemDriverClass
+   * @returns
+   */
   async getItems<ItemClass extends ComponentDriver = ItemT>(itemDriverClass?: ItemClass): Promise<ItemClass[]> {
     const driverClass = this.getItemClass(itemDriverClass);
     const result: ItemClass[] = [];
