@@ -1,6 +1,7 @@
 import { Optional } from './dataTypes';
 import { ComponentDriver } from './drivers/ComponentDriver';
 import { ContainerDriver } from './drivers/ContainerDriver';
+import { ListComponentDriver, ListComponentDriverSpecificOption } from './drivers/ListComponentDriver';
 import { WaitForOption } from './drivers/WaitForOption';
 import { Interactor } from './interactor';
 import { PartLocator } from './locators/PartLocator';
@@ -53,7 +54,33 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
   option: Partial<IContainerDriverOption<ContentT, T>>;
 }
 
-export type ScenePartDefinition = ComponentPartDefinition<any> | ContainerPartDefinition<any, any>;
+export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>> {
+  /**
+   * The locator of the part
+   */
+  locator: PartLocator;
+
+  /**
+   * The class of driver which is used to interact with the element
+   */
+  driver:
+    | typeof ListComponentDriver<ItemT>
+    | (new (
+        locator: PartLocator,
+        interactor: Interactor,
+        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>,
+      ) => ListComponentDriver<ItemT>);
+
+  /**
+   * Option for the driver
+   */
+  option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>;
+}
+
+export type ScenePartDefinition =
+  | ComponentPartDefinition<any>
+  | ContainerPartDefinition<any, any>
+  | ListComponentPartDefinition<any>;
 
 /**
  * Part name to driver definition map

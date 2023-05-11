@@ -7,6 +7,7 @@ import {
   dataGridProExamples,
   dialogExamples,
   inputExamples,
+  listExamples,
   menuExamples,
   ratingExamples,
   selectExamples,
@@ -57,6 +58,11 @@ export const tocs: IToc[] = [
     label: 'Input',
     path: '/input',
     ui: <ExampleList examples={inputExamples} />,
+  },
+  {
+    label: 'List',
+    path: '/list',
+    ui: <ExampleList examples={listExamples} />,
   },
   {
     label: 'Menu',

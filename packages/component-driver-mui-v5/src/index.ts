@@ -10,6 +10,8 @@ export { CheckboxDriver } from './components/CheckboxDriver';
 export { DialogDriver } from './components/DialogDriver';
 export { FabDriver } from './components/FabDriver';
 export { InputDriver } from './components/InputDriver';
+export { ListDriver } from './components/ListDriver';
+export { ListItemDriver } from './components/ListItemDriver';
 export { MenuDriver } from './components/MenuDriver';
 export { MenuItemDriver } from './components/MenuItemDriver';
 export { RatingDriver } from './components/RatingDriver';
