@@ -126,6 +126,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return this.interactor.getText(this.locator);
   }
 
+  getAttribute(attributeName: string): Promise<Optional<string>> {
+    return this.interactor.getAttribute(this.locator, attributeName);
+  }
+
   /**
    * Whether the component exists/attached to the DOM
    * @returns true if the component is attached to the DOM, false otherwise
