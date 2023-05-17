@@ -1,7 +1,7 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { basicDataGridProExample, basicDataGridProTestSuite } from './BasicDataGridPro.examples';
+import { basicDatePickerExample, basicDatePickerTestSuite } from './BasicDataTimePicker.examples';
 
-export { basicDataGridProExample, basicDataGridProTestSuite };
-export const dataGridProExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
-  basicDataGridProExample,
+export { basicDatePickerExample, basicDatePickerTestSuite };
+export const datePickerExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
+  basicDatePickerExample,
 ] satisfies IExampleUnit<ScenePart, JSX.Element>[];

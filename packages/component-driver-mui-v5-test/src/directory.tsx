@@ -5,6 +5,7 @@ import {
   buttonExamples,
   checkboxExamples,
   dataGridProExamples,
+  datePickerExamples,
   dialogExamples,
   inputExamples,
   listExamples,
@@ -48,6 +49,11 @@ export const tocs: IToc[] = [
     label: 'DataGrid Pro',
     path: '/datagridpro',
     ui: <ExampleList examples={dataGridProExamples} />,
+  },
+  {
+    label: 'DatePicker',
+    path: '/datepicker',
+    ui: <ExampleList examples={datePickerExamples} />,
   },
   {
     label: 'Dialog',
