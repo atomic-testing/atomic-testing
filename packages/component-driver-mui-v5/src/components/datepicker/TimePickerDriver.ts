@@ -8,7 +8,7 @@ import {
   ScenePart,
   byTagName,
 } from '@atomic-testing/core';
-import { dateToTextEntry, textEntryToDate } from './dateUtil';
+import { textEntryToTime, timeToTextEntry } from './dateUtil';
 
 const parts = {
   dateInput: {
@@ -17,7 +17,7 @@ const parts = {
   },
 } satisfies ScenePart;
 
-export class DesktopDatePickerDriver extends ComponentDriver<typeof parts> implements IInputDriver<Date | null> {
+export class TimePickerDriver extends ComponentDriver<typeof parts> implements IInputDriver<Date | null> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
@@ -30,7 +30,7 @@ export class DesktopDatePickerDriver extends ComponentDriver<typeof parts> imple
     let textToEnter = '';
     if (value != null) {
       const format = await this.getFormat();
-      textToEnter = dateToTextEntry(value, format);
+      textToEnter = timeToTextEntry(value, format);
     }
     await this.interactor.enterText(this.parts.dateInput.locator, textToEnter);
 
@@ -42,17 +42,17 @@ export class DesktopDatePickerDriver extends ComponentDriver<typeof parts> imple
     const value = await this.interactor.getInputValue(this.parts.dateInput.locator);
     if (value != null) {
       const format = await this.getFormat();
-      return textEntryToDate(value, format);
+      return textEntryToTime(value, format);
     }
     return null;
   }
 
-  async getFormat(defaultFormat: string = 'mm/dd/yyyy'): Promise<string> {
+  async getFormat(defaultFormat: string = 'hh:mm (a|pm)'): Promise<string> {
     const placeHolder = await this.parts.dateInput.getAttribute('placeholder');
     return placeHolder ?? defaultFormat;
   }
 
   get driverName(): string {
-    return 'MuiV5DesktopDatePicker';
+    return 'MuiV5TimePicker';
   }
 }

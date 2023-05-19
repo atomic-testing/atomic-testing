@@ -83,6 +83,6 @@ export class MobileDatePickerDialogDriver extends ComponentDriver<typeof parts> 
   }
 
   get driverName(): string {
-    return 'MuiV5MobileDatePicker';
+    return 'MuiV5MobileDateDialogPicker';
   }
 }

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 /**
  * A data type that describes what should be included with the date
  */
@@ -22,6 +23,16 @@ export function dateToTextEntry(date: Date, format: string): string {
 
 export function textEntryToDate(text: string, format: string): Date {
   return new Date(text);
+}
+
+export function timeToTextEntry(date: Date, format: string): string {
+  // assume hh:mm a|pm for now
+  return dayjs(date).format('hhmmA');
+}
+
+export function textEntryToTime(text: string, format: string): Date {
+  const datePart = dayjs().format('YYYY-MM-DD');
+  return new Date(`${datePart} ${text}`);
 }
 
 /**
