@@ -1,4 +1,4 @@
-import { DesktopDatePickerDriver } from '@atomic-testing/component-driver-mui-v5';
+import { DesktopDatePickerDriver, MobileDatePickerDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Stack from '@mui/material/Stack';
@@ -66,6 +66,10 @@ export const basicDatePickerExampleScenePart = {
     locator: byDataTestId('desktop-date-picker'),
     driver: DesktopDatePickerDriver,
   },
+  mobilePicker: {
+    locator: byDataTestId('mobile-date-picker'),
+    driver: MobileDatePickerDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -99,11 +103,22 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
       await testEngine.cleanUp();
     });
 
-    test('desktop date driver should set date correctly', async () => {
-      const date = new Date('2016/03/02');
-      await testEngine.parts.desktopPicker.setValue(date);
-      const retrieved = await testEngine.parts.desktopPicker.getValue();
-      assertEqual(retrieved?.toDateString(), date.toDateString());
+    describe('DesktopDatePickerDriver', () => {
+      test('Driver should set date correctly', async () => {
+        const date = new Date('2016/03/02');
+        await testEngine.parts.desktopPicker.setValue(date);
+        const retrieved = await testEngine.parts.desktopPicker.getValue();
+        assertEqual(retrieved?.toDateString(), date.toDateString());
+      });
+    });
+
+    describe('MobileDatePickerDriver', () => {
+      test('Driver should set date correctly', async () => {
+        const date = new Date('2019/09/21');
+        await testEngine.parts.mobilePicker.setValue(date);
+        const retrieved = await testEngine.parts.mobilePicker.getValue();
+        assertEqual(retrieved?.toDateString(), date.toDateString());
+      });
     });
   },
 };
