@@ -1,4 +1,8 @@
-import { DesktopDatePickerDriver, MobileDatePickerDriver } from '@atomic-testing/component-driver-mui-v5';
+import {
+  DesktopDatePickerDriver,
+  MobileDatePickerDriver,
+  TimePickerDriver,
+} from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Stack from '@mui/material/Stack';
@@ -70,6 +74,10 @@ export const basicDatePickerExampleScenePart = {
     locator: byDataTestId('mobile-date-picker'),
     driver: MobileDatePickerDriver,
   },
+  timePicker: {
+    locator: byDataTestId('time-picker'),
+    driver: TimePickerDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -118,6 +126,15 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
         await testEngine.parts.mobilePicker.setValue(date);
         const retrieved = await testEngine.parts.mobilePicker.getValue();
         assertEqual(retrieved?.toDateString(), date.toDateString());
+      });
+    });
+
+    describe('TimePickerDriver', () => {
+      test('Driver should set time correctly', async () => {
+        const date = new Date('2019/09/21 00:18');
+        await testEngine.parts.timePicker.setValue(date);
+        const retrieved = await testEngine.parts.timePicker.getValue();
+        assertEqual(retrieved?.toTimeString(), date.toTimeString());
       });
     });
   },

@@ -43,5 +43,7 @@
     "ts-node": "^10.9.0",
     "typescript": "^5.0.2"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "dayjs": ">=1.10.0"
+  }
 }
