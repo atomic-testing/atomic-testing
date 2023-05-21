@@ -41,6 +41,18 @@ export function textEntryToTime(text: string, format: string): Date | null {
   return new Date(`${datePart} ${text}`);
 }
 
+export function dateTimeToTextEntry(date: Date, format: string): string {
+  return dayjs(date).format('YYYYMMDDhhmmA');
+}
+
+export function textEntryToDateTime(text: string, format: string): Date | null {
+  // assume YYYY/MM/DD hh:mm for now
+  if (text.length < 12) {
+    return null;
+  }
+  return new Date(text);
+}
+
 /**
  * Return numeric text with padding zero's to guarantee the number of digits
  * @param number
