@@ -21,7 +21,10 @@ export function dateToTextEntry(date: Date, format: string): string {
   return monthPart + datePart + yearPart;
 }
 
-export function textEntryToDate(text: string, format: string): Date {
+export function textEntryToDate(text: string, format: string): Date | null {
+  if (text.length < 6) {
+    return null;
+  }
   return new Date(text);
 }
 
@@ -30,7 +33,10 @@ export function timeToTextEntry(date: Date, format: string): string {
   return dayjs(date).format('hhmmA');
 }
 
-export function textEntryToTime(text: string, format: string): Date {
+export function textEntryToTime(text: string, format: string): Date | null {
+  if (text.length < 3) {
+    return null;
+  }
   const datePart = dayjs().format('YYYY-MM-DD');
   return new Date(`${datePart} ${text}`);
 }
