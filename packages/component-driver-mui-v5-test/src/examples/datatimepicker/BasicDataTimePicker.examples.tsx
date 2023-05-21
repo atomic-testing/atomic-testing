@@ -1,4 +1,5 @@
 import {
+  DateTimePickerDriver,
   DesktopDatePickerDriver,
   MobileDatePickerDriver,
   TimePickerDriver,
@@ -78,6 +79,10 @@ export const basicDatePickerExampleScenePart = {
     locator: byDataTestId('time-picker'),
     driver: TimePickerDriver,
   },
+  dateTimePicker: {
+    locator: byDataTestId('date-time-picker'),
+    driver: DateTimePickerDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -122,7 +127,7 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
 
     describe('MobileDatePickerDriver', () => {
       test('Driver should set date correctly', async () => {
-        const date = new Date('2019/09/21');
+        const date = new Date('2018/09/21');
         await testEngine.parts.mobilePicker.setValue(date);
         const retrieved = await testEngine.parts.mobilePicker.getValue();
         assertEqual(retrieved?.toDateString(), date.toDateString());
@@ -131,7 +136,16 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
 
     describe('TimePickerDriver', () => {
       test('Driver should set time correctly', async () => {
-        const date = new Date('2019/09/21 00:18');
+        const date = new Date('2018/09/21 00:18');
+        await testEngine.parts.timePicker.setValue(date);
+        const retrieved = await testEngine.parts.timePicker.getValue();
+        assertEqual(retrieved?.toTimeString(), date.toTimeString());
+      });
+    });
+
+    describe('DateTimePickerDriver', () => {
+      test('Driver should set date/time correctly', async () => {
+        const date = new Date('2018/09/21 00:18');
         await testEngine.parts.timePicker.setValue(date);
         const retrieved = await testEngine.parts.timePicker.getValue();
         assertEqual(retrieved?.toTimeString(), date.toTimeString());
