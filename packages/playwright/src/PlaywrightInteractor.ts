@@ -145,18 +145,34 @@ export class PlaywrightInteractor implements Interactor {
       return false;
     }
 
-    const opacity = await this.getStyleValue(locator, 'opacity');
-    if (opacity === '0') {
+    async function checkCssVisibility(
+      prop: CssProperty,
+      invisibleValue: string,
+      interactor: PlaywrightInteractor,
+    ): Promise<boolean> {
+      try {
+        const value = await interactor.getStyleValue(locator, prop);
+        return value !== invisibleValue;
+      } catch (e) {
+        // Element may disappear or detached while being checked because of animation
+        // when it happens, an error is thrown.  In this case, if indeed the element
+        // is not visible, we return false.  Otherwise, we re-throw the error.
+        if ((await interactor.exists(locator)) === false) {
+          return false;
+        }
+        throw e;
+      }
+    }
+
+    if ((await checkCssVisibility('opacity', '0', this)) === false) {
       return false;
     }
 
-    const visibility = await this.getStyleValue(locator, 'visibility');
-    if (visibility === 'hidden') {
+    if ((await checkCssVisibility('visibility', 'hidden', this)) === false) {
       return false;
     }
 
-    const display = await this.getStyleValue(locator, 'display');
-    if (display === 'none') {
+    if ((await checkCssVisibility('display', 'none', this)) === false) {
       return false;
     }
 

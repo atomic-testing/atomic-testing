@@ -46,7 +46,7 @@ export class MobileDatePickerDriver extends ComponentDriver<typeof parts> implem
     if (!isDialogVisible) {
       return;
     }
-    await this.parts.entryDialog.waitUntil({ condition: 'hidden' });
+    await this.parts.entryDialog.waitUntil({ condition: 'detached' });
   }
 
   async setValue(value: Date | null): Promise<boolean> {
