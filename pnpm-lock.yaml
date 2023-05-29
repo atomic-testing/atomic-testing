@@ -272,6 +272,9 @@ importers:
       '@mui/x-date-pickers':
         specifier: ^5.0.19
         version: 5.0.19(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.12)(@mui/system@5.11.12)(dayjs@1.11.7)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/x-date-pickers-pro':
+        specifier: ^5.0.19
+        version: 5.0.19(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.12)(@mui/system@5.11.12)(dayjs@1.11.7)(react-dom@18.2.0)(react@18.2.0)
       dayjs:
         specifier: ^1.11.7
         version: 1.11.7
@@ -3426,7 +3429,7 @@ packages:
       webpack: 5.83.1
       webpack-bundle-analyzer: 4.8.0
       webpack-dev-server: 4.11.1(webpack@5.83.1)
-      webpack-merge: 5.8.0
+      webpack-merge: 5.9.0
       webpackbar: 5.0.2(webpack@5.83.1)
     transitivePeerDependencies:
       - '@docusaurus/types'
@@ -4032,7 +4035,7 @@ packages:
       react-helmet-async: 1.3.0(react-dom@17.0.2)(react@17.0.2)
       utility-types: 3.10.0
       webpack: 5.83.1
-      webpack-merge: 5.8.0
+      webpack-merge: 5.9.0
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -4866,7 +4869,7 @@ packages:
       estree-util-is-identifier-name: 2.1.0
       estree-util-to-js: 1.2.0
       estree-walker: 3.0.3
-      hast-util-to-estree: 2.3.2
+      hast-util-to-estree: 2.3.3
       markdown-extensions: 1.1.1
       periscopic: 3.1.0
       remark-mdx: 2.3.0
@@ -5152,6 +5155,50 @@ packages:
       reselect: 4.1.8
     dev: false
 
+  /@mui/x-date-pickers-pro@5.0.19(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.12)(@mui/system@5.11.12)(dayjs@1.11.7)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-zevRzYnQlx8K7Yl1mgz2ujTjRpjvallJxCO0T8LwPC1L11qBQ/aNjfxbyIxEVifpEF7Wd24NWAvGtTm+In6G2Q==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@mui/material': ^5.4.1
+      '@mui/system': ^5.4.1
+      date-fns: ^2.25.0
+      dayjs: ^1.10.7
+      luxon: ^1.28.0 || ^2.0.0 || ^3.0.0
+      moment: ^2.29.1
+      react: ^17.0.2 || ^18.0.0
+      react-dom: ^17.0.2 || ^18.0.0
+    peerDependenciesMeta:
+      date-fns:
+        optional: true
+      dayjs:
+        optional: true
+      luxon:
+        optional: true
+      moment:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@date-io/date-fns': 2.16.0
+      '@date-io/dayjs': 2.16.0(dayjs@1.11.7)
+      '@date-io/luxon': 2.16.1
+      '@date-io/moment': 2.16.1
+      '@mui/material': 5.11.12(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/system': 5.11.12(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.28)(react@18.2.0)
+      '@mui/utils': 5.11.12(react@18.2.0)
+      '@mui/x-date-pickers': 5.0.19(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.12)(@mui/system@5.11.12)(dayjs@1.11.7)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/x-license-pro': 5.17.12(react@18.2.0)
+      clsx: 1.2.1
+      dayjs: 1.11.7
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-transition-group: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+      rifm: 0.12.1(react@18.2.0)
+    transitivePeerDependencies:
+      - '@emotion/react'
+      - '@emotion/styled'
+    dev: false
+
   /@mui/x-date-pickers@5.0.19(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.12)(@mui/system@5.11.12)(dayjs@1.11.7)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-D8zFyFgwA6faPCTM//3SG17RqCegczKQS9wF/toemhjsP7Ps4ape/llHqowL/BZLbi14OXV0Ud10tfUyVP7Q/Q==}
     engines: {node: '>=12.0.0'}
@@ -5212,6 +5259,17 @@ packages:
       esm: 3.2.25
       react: 18.2.0
       yargs: 17.7.1
+    dev: false
+
+  /@mui/x-license-pro@5.17.12(react@18.2.0):
+    resolution: {integrity: sha512-UzFaE+9A30kfguCuME0D5zqsItqbHZ3xZwmyrJr8MvZOEoqiJWF4NT4Pvlg2nqaPYt/h81j7sjVFa3KiwT0vbg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      react: ^17.0.2 || ^18.0.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@mui/utils': 5.11.12(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1:
@@ -5933,8 +5991,8 @@ packages:
     dependencies:
       '@types/node': 18.15.11
 
-  /@types/debug@4.1.7:
-    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
+  /@types/debug@4.1.8:
+    resolution: {integrity: sha512-/vPO1EPOs306Cvhwv7KfVfYvOJqA/S/AXjaHQiJboCZzcNDb+TIJFN9/2C9DZ//ijSKWioNyUxD792QmDJ+HKQ==}
     dependencies:
       '@types/ms': 0.7.31
     dev: false
@@ -10434,8 +10492,8 @@ packages:
       '@types/hast': 2.3.4
     dev: false
 
-  /hast-util-to-estree@2.3.2:
-    resolution: {integrity: sha512-YYDwATNdnvZi3Qi84iatPIl1lWpXba1MeNrNbDfJfVzEBZL8uUmtR7mt7bxKBC8kuAuvb0bkojXYZzsNHyHCLg==}
+  /hast-util-to-estree@2.3.3:
+    resolution: {integrity: sha512-ihhPIUPxN0v0w6M5+IiAZZrn0LH2uZomeWwhn7uP7avZC6TE7lIiEh2yBMPr5+zi1aUCXq6VoYRgs2Bw9xmycQ==}
     dependencies:
       '@types/estree': 1.0.0
       '@types/estree-jsx': 1.0.0
@@ -13176,7 +13234,7 @@ packages:
   /micromark@3.1.0:
     resolution: {integrity: sha512-6Mj0yHLdUZjHnOPgr5xfWIMqMWS12zDN6iws9SLuSz76W8jTtAv24MN4/CL7gJrl5vtxGInkkqDv/JIoRsQOvA==}
     dependencies:
-      '@types/debug': 4.1.7
+      '@types/debug': 4.1.8
       debug: 4.3.4
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.0.6
@@ -17327,8 +17385,8 @@ packages:
       webpack-sources: 2.3.1
     dev: true
 
-  /webpack-merge@5.8.0:
-    resolution: {integrity: sha512-/SaI7xY0831XwP6kzuwhKWVKDP9t1QY1h65lAFLbZqMPIuYcD9QAW4u9STIbU9kaJbPBB/geU/gLr1wDjOhQ+Q==}
+  /webpack-merge@5.9.0:
+    resolution: {integrity: sha512-6NbRQw4+Sy50vYNTw7EyOn41OZItPiXB8GNv3INSoe3PSFaHJEz3SHTrYVaRm2LilNGnFUzh0FAwqPEmU/CwDg==}
     engines: {node: '>=10.0.0'}
     dependencies:
       clone-deep: 4.0.1

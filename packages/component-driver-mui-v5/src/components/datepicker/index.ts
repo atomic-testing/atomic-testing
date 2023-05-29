@@ -1,3 +1,4 @@
+export * from './DateRangePickerDriver';
 export * from './DateTimePickerDriver';
 export * from './DesktopDatePickerDriver';
 export * from './MobileDatePickerDialogDriver';
