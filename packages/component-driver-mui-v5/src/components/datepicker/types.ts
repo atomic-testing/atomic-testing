@@ -6,3 +6,14 @@ export interface DatePickerCharacteristic {
    */
   defaultFormat: string;
 }
+
+export type DateType = 'date' | 'time' | 'datetime';
+
+export interface DateRangeInput {
+  start: Date | null;
+  end: Date | null;
+  /**
+   * Type of the date input, default to 'date'
+   */
+  type?: DateType;
+}

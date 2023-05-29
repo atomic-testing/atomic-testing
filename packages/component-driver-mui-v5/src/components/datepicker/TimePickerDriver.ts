@@ -1,5 +1,5 @@
 import { IComponentDriverOption, Interactor, PartLocator } from '@atomic-testing/core';
-import { DesktopDatePickerDriverBase } from './DatePickerDriverBase';
+import { DesktopDatePickerDriverBase } from './DesktopDatePickerDriverBase';
 import { textEntryToTime, timeToTextEntry } from './dateUtil';
 import { DatePickerCharacteristic } from './types';
 
