@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
-    "@atomic-testing/component-driver-html": "workspace:*"
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "dayjs": "^1.11.10"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.2.0",
@@ -42,8 +43,5 @@
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.0",
     "typescript": "^5.0.2"
-  },
-  "peerDependencies": {
-    "dayjs": ">=1.10.0"
   }
 }
