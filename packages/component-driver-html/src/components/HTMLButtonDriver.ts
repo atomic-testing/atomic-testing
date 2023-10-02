@@ -9,10 +9,6 @@ export class HTMLButtonDriver extends ComponentDriver<{}> implements IClickableD
     return this.interactor.isDisabled(this.locator);
   }
 
-  isReadonly(): Promise<boolean> {
-    return this.interactor.isReadonly(this.locator);
-  }
-
   get driverName(): string {
     return 'HTMLButtonDriver';
   }
