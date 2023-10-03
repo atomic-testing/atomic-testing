@@ -15,19 +15,19 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@docusaurus/core": "0.0.0-5562",
-    "@docusaurus/preset-classic": "0.0.0-5562",
-    "@mdx-js/react": "^2.3.0",
-    "clsx": "^1.2.1",
+    "@docusaurus/core": "^2.4.3",
+    "@docusaurus/preset-classic": "^2.4.3",
+    "@mdx-js/react": "^1.6.22",
+    "clsx": "^2.0.0",
     "docs": "link:",
     "prism-react-renderer": "^2.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "0.0.0-5562",
-    "@docusaurus/types": "0.0.0-5562",
-    "@tsconfig/docusaurus": "^1.0.5",
+    "@docusaurus/module-type-aliases": "^2.4.3",
+    "@docusaurus/types": "^2.4.3",
+    "@tsconfig/docusaurus": "^2.0.1",
     "typescript": "^5.0.2"
   },
   "browserslist": {
