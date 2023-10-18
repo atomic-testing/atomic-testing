@@ -16,10 +16,16 @@
       "isBackground": true
     },
     {
-      "label": "MUI",
+      "label": "MUIv5",
       "type": "shell",
       "command": "cd packages/component-driver-mui-v5-test && pnpm start",
       "isBackground": true
     },
+    {
+      "label": "MUIv6",
+      "type": "shell",
+      "command": "cd packages/component-driver-mui-v6-test && pnpm start",
+      "isBackground": true
+    }
   ]
 }
