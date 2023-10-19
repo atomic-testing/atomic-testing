@@ -1,6 +1,10 @@
 import { ClickOption, ComponentDriver, IClickableDriver } from '@atomic-testing/core';
 
 export class HTMLButtonDriver extends ComponentDriver<{}> implements IClickableDriver {
+  async hover(): Promise<void> {
+    this.interactor.hover(this.locator);
+  }
+
   async click(option?: ClickOption): Promise<void> {
     await this.interactor.click(this.locator, option);
   }
