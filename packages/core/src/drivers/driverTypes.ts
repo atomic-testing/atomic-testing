@@ -1,4 +1,5 @@
 import { ClickOption } from '../interactor/ClickOption';
+import { HoverOption } from '../interactor/HoverOption';
 
 export interface IFormFieldDriver<T> {
   getValue(): Promise<T>;
@@ -15,4 +16,11 @@ export interface IToggleDriver {
 
 export interface IClickableDriver {
   click(option?: ClickOption): Promise<void>;
+}
+
+/**
+ * Provide hover functionality to a driver.
+ */
+export interface IMouseInteractableDriver {
+  hover(option?: HoverOption): Promise<void>;
 }

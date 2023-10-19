@@ -2,6 +2,7 @@ import {
   ClickOption,
   CssProperty,
   EnterTextOption,
+  HoverOption,
   Interactor,
   locatorUtil,
   Optional,
@@ -47,10 +48,10 @@ export class DOMInteractor implements Interactor {
     }
   }
 
-  async hover(locator: PartLocator): Promise<void> {
+  async hover(locator: PartLocator, option?: HoverOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {
-      await userEvent.hover(el);
+      await userEvent.hover(el, option);
     }
   }
 
