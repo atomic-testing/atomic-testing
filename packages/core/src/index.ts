@@ -1,8 +1,9 @@
+export { TestEngine } from './TestEngine';
 export type { Nullable, Optional } from './dataTypes';
 export * from './drivers';
 export * from './errors';
 export * from './example/types';
-export type { ClickOption, CssProperty, EnterTextOption, Interactor } from './interactor';
+export * from './interactor';
 export * from './locators/';
 export type {
   IComponentDriverOption,
@@ -11,7 +12,6 @@ export type {
   ScenePartDefinition,
   ScenePartDriver,
 } from './partTypes';
-export { TestEngine } from './TestEngine';
 export * as collectionUtil from './utils/collectionUtil';
 export * as domUtil from './utils/domUtil';
 export * as escapeUtil from './utils/escapeUtil';
