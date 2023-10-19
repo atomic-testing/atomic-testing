@@ -1,0 +1,89 @@
+{
+  "name": "@atomic-testing/component-driver-mui-v5-test",
+  "version": "0.0.0",
+  "description": "Examples and tests for @atomic-testing/component-driver-mui-v6",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "start": "PORT=5116 TSC_COMPILE_ON_ERROR=true react-scripts start",
+    "build:ui": "react-scripts build",
+    "postbuild": "node ../../scripts/postBuild.js",
+    "test:dom": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "keywords": [
+    "testing",
+    "react",
+    "unit",
+    "integration",
+    "mui",
+    "material-ui",
+    "v5",
+    "integration-driver"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.0.0",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/x-data-grid-pro": "^6.16.2",
+    "@mui/x-data-grid-generator": "^6.16.2",
+    "@mui/x-date-pickers": "^6.16.2",
+    "@mui/x-date-pickers-pro": "^6.16.2",
+    "dayjs": "^1.11.7",
+    "exceljs": "^4.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.0.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.38.1",
+    "@testing-library/dom": "^9.2.0",
+    "@testing-library/user-event": "^14.0.0",
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/component-driver-mui-v6": "workspace:*",
+    "@atomic-testing/jest": "workspace:*",
+    "@atomic-testing/react": "workspace:*",
+    "@atomic-testing/playwright": "workspace:*",
+    "@atomic-testing/test-runner": "workspace:*",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^16.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react-scripts": "5.0.1",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.0",
+    "typescript": "^4.9.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

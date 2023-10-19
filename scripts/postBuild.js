@@ -2,7 +2,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const skipPostBuildPackages = ['component-driver-html-test', 'component-driver-mui-v5-test'];
+const skipPostBuildPackages = [
+  'component-driver-html-test',
+  'component-driver-mui-v5-test',
+  'component-driver-mui-v6-test',
+];
 
 /**
  * Reduce sources path by one ../ given distribution folder is one level shallower than build/src folder
