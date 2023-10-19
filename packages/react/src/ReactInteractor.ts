@@ -10,7 +10,6 @@ export class ReactInteractor extends DOMInteractor {
   }
 
   override async click(locator: PartLocator, option?: ClickOption): Promise<void> {
-    // TODO: Use perforrm function
     await act(async () => {
       await super.click(locator, option);
     });
