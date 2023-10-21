@@ -46,6 +46,12 @@ export const selectPart = {
 
 export type SelectScenePart = typeof selectPart;
 export type SelectScenePartDriver = ScenePartDriver<SelectScenePart>;
+export interface MenuItemGetOption {
+  /**
+   * When true, the driver will not check if the dropdown is open, which helps speed the process up.
+   */
+  skipDropdownCheck?: boolean;
+}
 const optionLocator = byRole('option');
 
 export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
@@ -80,9 +86,7 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
       return success;
     }
 
-    await this.enforcePartExistence('trigger');
-    await this.parts.trigger.click();
-
+    await this.openDropdown();
     await this.enforcePartExistence('dropdown');
     const optionSelector = byAttribute('data-value', value!);
     const optionLocator = locatorUtil.append(this.parts.dropdown.locator, optionSelector);
@@ -96,7 +100,19 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     return success;
   }
 
-  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
+  /**
+   * Select menu item by its label, if it exists
+   * Limitation, this method will not work if the dropdown is a native select.
+   * @param label
+   * @returns
+   */
+  async getMenuItemByLabel(label: string, option?: MenuItemGetOption): Promise<MenuItemDriver | null> {
+    if (!option?.skipDropdownCheck) {
+      await this.openDropdown();
+    }
+
+    // TODO: Add native select support
+
     for await (const item of listHelper.getListItemIterator(this, optionLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
@@ -122,7 +138,7 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
     await this.parts.trigger.click();
 
     await this.enforcePartExistence('dropdown');
-    const item = await this.getMenuItemByLabel(label);
+    const item = await this.getMenuItemByLabel(label, { skipDropdownCheck: true });
 
     if (item) {
       await item.click();
@@ -150,6 +166,35 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
 
     const nativeExists = await this.interactor.exists(this.parts.nativeSelect.locator);
     return nativeExists;
+  }
+
+  /**
+   * Check if the dropdown is open, or if it is a native select, it is always open because there is no known way check its open state
+   * @returns For native dropdown it is always true. For custom dropdown, it is true if the dropdown is open.
+   */
+  async isDropdownOpen(): Promise<boolean> {
+    const isNative = await this.isNative();
+    if (isNative) {
+      return true;
+    } else {
+      return this.parts.dropdown.exists();
+    }
+  }
+
+  async openDropdown(): Promise<void> {
+    const isOpen = await this.isDropdownOpen();
+    if (isOpen) {
+      return;
+    }
+    await this.parts.trigger.click();
+  }
+
+  async closeDropdown(): Promise<void> {
+    const isOpen = await this.isDropdownOpen();
+    if (!isOpen) {
+      return;
+    }
+    await this.parts.trigger.click();
   }
 
   async isDisabled(): Promise<boolean> {

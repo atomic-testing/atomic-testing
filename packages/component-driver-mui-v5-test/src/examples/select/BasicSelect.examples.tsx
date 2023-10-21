@@ -73,6 +73,28 @@ export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExample.scene
         await testEngine.cleanUp();
       });
 
+      test('item Thirty exists', async () => {
+        const itemDriver = await testEngine.parts.select.getMenuItemByLabel('Thirty');
+        let exists = true;
+        if (itemDriver == null) {
+          exists = false;
+        } else {
+          exists = await itemDriver.exists();
+        }
+        assertEqual(exists, true);
+      });
+
+      test('item Ten does not exists', async () => {
+        const itemDriver = await testEngine.parts.select.getMenuItemByLabel('Ten');
+        let exists = true;
+        if (itemDriver == null) {
+          exists = false;
+        } else {
+          exists = await itemDriver.exists();
+        }
+        assertEqual(exists, false);
+      });
+
       test(`setValue of rich select`, async () => {
         const targetValue = '30';
         await testEngine.parts.select.setValue(targetValue);
