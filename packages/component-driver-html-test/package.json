@@ -36,9 +36,9 @@
     "react-router-dom": "^6.0.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.38.1",
+    "@playwright/test": "^1.39.0",
     "@testing-library/dom": "^9.2.0",
-    "@testing-library/user-event": "^14.0.0",
+    "@testing-library/user-event": "^14.5.0",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/jest": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
