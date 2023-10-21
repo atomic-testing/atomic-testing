@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 
-const skipPostBuildPackages = ['component-driver-html-test', 'component-driver-mui-v5-test'];
+const skipPostBuildPackages = [
+  'component-driver-html-test',
+  'component-driver-mui-v5-test',
+  'component-driver-mui-v6-test',
+];
 
 function isFolder(p: string): boolean {
   return fs.statSync(p).isDirectory();

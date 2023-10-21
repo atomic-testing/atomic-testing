@@ -14,7 +14,10 @@
       "@atomic-testing/component-driver-html-test": ["./packages/component-driver-html-test/src"],
 
       "@atomic-testing/component-driver-mui-v5": ["./packages/component-driver-mui-v5/src"],
-      "@atomic-testing/component-driver-mui-v5-test": ["./packages/component-driver-mui-v5-test/src"]
+      "@atomic-testing/component-driver-mui-v5-test": ["./packages/component-driver-mui-v5-test/src"],
+
+      "@atomic-testing/component-driver-mui-v6": ["./packages/component-driver-mui-v6/src"],
+      "@atomic-testing/component-driver-mui-v6-test": ["./packages/component-driver-mui-v6-test/src"]
     }
   },
   "references": [
@@ -25,6 +28,8 @@
     { "path": "./packages/react" },
     { "path": "./packages/playwright" },
     { "path": "./packages/component-driver-mui-v5" },
-    { "path": "./packages/component-driver-mui-v5-test" }
+    { "path": "./packages/component-driver-mui-v5-test" },
+    { "path": "./packages/component-driver-mui-v6" },
+    { "path": "./packages/component-driver-mui-v6-test" }
   ]
 }
