@@ -2,6 +2,6 @@
 
 # <img src="./docs/static/img/logo.svg" width="22" height="22" hspace="10" /> atomic-testing
 
-Portable UI testing library: Simplify and unify across frameworks and libraries
+Middleware for UI testing and automation.
 
 Learn more at https://atomic-testing.dev/

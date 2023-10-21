@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -64,8 +64,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -131,14 +131,14 @@ importers:
         specifier: workspace:*
         version: link:../test-runner
       '@playwright/test':
-        specifier: ^1.38.1
-        version: 1.38.1
+        specifier: ^1.39.0
+        version: 1.39.0
       '@testing-library/dom':
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -186,8 +186,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -274,14 +274,14 @@ importers:
         specifier: workspace:*
         version: link:../test-runner
       '@playwright/test':
-        specifier: ^1.38.1
-        version: 1.38.1
+        specifier: ^1.39.0
+        version: 1.39.0
       '@testing-library/dom':
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -329,8 +329,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -417,14 +417,14 @@ importers:
         specifier: workspace:*
         version: link:../test-runner
       '@playwright/test':
-        specifier: ^1.38.1
-        version: 1.38.1
+        specifier: ^1.39.0
+        version: 1.39.0
       '@testing-library/dom':
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -484,8 +484,8 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
       '@testing-library/user-event':
-        specifier: ^14.0.0
-        version: 14.4.3(@testing-library/dom@9.2.0)
+        specifier: ^14.5.0
+        version: 14.5.0(@testing-library/dom@9.2.0)
       '@types/node':
         specifier: ^16.0.0
         version: 16.18.14
@@ -534,8 +534,8 @@ importers:
         version: link:../test-runner
     devDependencies:
       '@playwright/test':
-        specifier: ^1.38.1
-        version: 1.38.1
+        specifier: ^1.39.0
+        version: 1.39.0
       '@types/node':
         specifier: ^16.0.0
         version: 16.18.14
@@ -4763,12 +4763,12 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@playwright/test@1.38.1:
-    resolution: {integrity: sha512-NqRp8XMwj3AK+zKLbZShl0r/9wKgzqI/527bkptKXomtuo+dOjU9NdMASQ8DNC9z9zLOMbG53T4eihYr3XR+BQ==}
+  /@playwright/test@1.39.0:
+    resolution: {integrity: sha512-3u1iFqgzl7zr004bGPYiN/5EZpRUSFddQBra8Rqll5N0/vfpqlP9I9EXqAoGacuAbX6c9Ulg/Cjqglp5VkK6UQ==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      playwright: 1.38.1
+      playwright: 1.39.0
     dev: true
 
   /@pmmmwh/react-refresh-webpack-plugin@0.5.10(react-refresh@0.11.0)(webpack-dev-server@4.11.1)(webpack@5.75.0):
@@ -5179,6 +5179,16 @@ packages:
       '@testing-library/dom': '>=7.21.4'
     dependencies:
       '@testing-library/dom': 9.2.0
+    dev: false
+
+  /@testing-library/user-event@14.5.0(@testing-library/dom@9.2.0):
+    resolution: {integrity: sha512-nQRCteEZvULJJrlcGQuNhwGekz25TOUILA+sTWI9PB/vNKKivS+7K7XRTwoikw/2fmJPaM4pPKy+hLWEGg9+JA==}
+    engines: {node: '>=12', npm: '>=6'}
+    peerDependencies:
+      '@testing-library/dom': '>=7.21.4'
+    dependencies:
+      '@testing-library/dom': 9.2.0
+    dev: true
 
   /@tootallnate/once@1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -11667,18 +11677,18 @@ packages:
       find-up: 3.0.0
     dev: true
 
-  /playwright-core@1.38.1:
-    resolution: {integrity: sha512-tQqNFUKa3OfMf4b2jQ7aGLB8o9bS3bOY0yMEtldtC2+spf8QXG9zvXLTXUeRsoNuxEYMgLYR+NXfAa1rjKRcrg==}
+  /playwright-core@1.39.0:
+    resolution: {integrity: sha512-+k4pdZgs1qiM+OUkSjx96YiKsXsmb59evFoqv8SKO067qBA+Z2s/dCzJij/ZhdQcs2zlTAgRKfeiiLm8PQ2qvw==}
     engines: {node: '>=16'}
     hasBin: true
     dev: true
 
-  /playwright@1.38.1:
-    resolution: {integrity: sha512-oRMSJmZrOu1FP5iu3UrCx8JEFRIMxLDM0c/3o4bpzU5Tz97BypefWf7TuTNPWeCe279TPal5RtPPZ+9lW/Qkow==}
+  /playwright@1.39.0:
+    resolution: {integrity: sha512-naE5QT11uC/Oiq0BwZ50gDmy8c8WLPRTEWuSSFVG2egBka/1qMoSqYQcROMT9zLwJ86oPofcTH2jBY/5wWOgIw==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      playwright-core: 1.38.1
+      playwright-core: 1.39.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
