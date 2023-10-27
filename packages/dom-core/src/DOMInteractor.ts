@@ -7,9 +7,12 @@ import {
   locatorUtil,
   Optional,
   PartLocator,
+  Point,
   timingUtil,
 } from '@atomic-testing/core';
+import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { FakeMouseEvent } from './fakeEvents';
 
 export class DOMInteractor implements Interactor {
   constructor(protected readonly rootEl: HTMLElement = document.documentElement) {}
@@ -43,8 +46,27 @@ export class DOMInteractor implements Interactor {
 
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
     const el = await this.getElement(locator);
-    if (el != null) {
-      await userEvent.click(el, option);
+    if (el == null) {
+      return;
+    }
+
+    const isSimpleEvent = option?.position == null;
+    if (isSimpleEvent) {
+      // Some MUI component does not work with fireEvent('click', ...)
+      await userEvent.click(el);
+    } else {
+      const rect = el.getBoundingClientRect();
+      const clickLocation: Point = {
+        x: option?.position?.x != null ? rect.left + option.position.x : rect.left + rect.width / 2,
+        y: option?.position?.y != null ? rect.top + option.position.y : rect.top + rect.height / 2,
+      };
+      const evt = new FakeMouseEvent('click', {
+        bubbles: true,
+        clientX: clickLocation.x,
+        clientY: clickLocation.y,
+      });
+
+      await fireEvent(el, evt);
     }
   }
 

@@ -3,6 +3,7 @@ export type { Nullable, Optional } from './dataTypes';
 export * from './drivers';
 export * from './errors';
 export * from './example/types';
+export * from './geometry';
 export * from './interactor';
 export * from './locators/';
 export type {

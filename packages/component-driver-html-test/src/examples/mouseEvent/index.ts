@@ -1,6 +1,15 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { clickLocationMouseEventExample, clickLocationMouseEventExampleTestSuite } from './ClickLocation.examples';
 import { hoverMouseEventExample, hoverMouseEventExampleTestSuite } from './Hover.examples';
 
-export { hoverMouseEventExample, hoverMouseEventExampleTestSuite };
+export {
+  clickLocationMouseEventExample,
+  clickLocationMouseEventExampleTestSuite,
+  hoverMouseEventExample,
+  hoverMouseEventExampleTestSuite,
+};
 
-export const mouseEventExamples = [hoverMouseEventExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export const mouseEventExamples = [hoverMouseEventExample, clickLocationMouseEventExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];

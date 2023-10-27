@@ -1,9 +1,9 @@
-import { ClickOption, Interactor, PartLocator } from '@atomic-testing/core';
+import { ClickOption, EnterTextOption, Interactor, PartLocator } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from 'react-dom/test-utils';
 
 export class ReactInteractor extends DOMInteractor {
-  override async enterText(locator: PartLocator, text: string, option?: Partial<ClickOption>): Promise<void> {
+  override async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void> {
     await act(async () => {
       await super.enterText(locator, text, option);
     });
