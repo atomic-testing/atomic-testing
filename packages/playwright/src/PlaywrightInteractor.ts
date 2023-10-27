@@ -73,7 +73,7 @@ export class PlaywrightInteractor implements Interactor {
 
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.page.locator(cssLocator).click();
+    await this.page.locator(cssLocator).click({ position: option?.position });
   }
 
   async hover(locator: PartLocator): Promise<void> {
