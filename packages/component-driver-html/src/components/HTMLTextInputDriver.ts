@@ -18,10 +18,6 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
     return true;
   }
 
-  async click(): Promise<void> {
-    const value = await this.interactor.click(this.locator);
-  }
-
   isDisabled(): Promise<boolean> {
     return this.interactor.isDisabled(this.locator);
   }

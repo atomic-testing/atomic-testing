@@ -1,8 +1,5 @@
 export { ComponentDriver } from './ComponentDriver';
 export { ContainerDriver } from './ContainerDriver';
-export { ListComponentDriver } from './ListComponentDriver';
-export type { ListComponentDriverOption, ListComponentDriverSpecificOption } from './ListComponentDriver';
-export * from './WaitForOption';
 export type {
   IClickableDriver,
   IFormFieldDriver,
@@ -10,4 +7,7 @@ export type {
   IMouseInteractableDriver,
   IToggleDriver,
 } from './driverTypes';
+export type { ListComponentDriverOption, ListComponentDriverSpecificOption } from './ListComponentDriver';
+export { ListComponentDriver } from './ListComponentDriver';
 export * as listHelper from './listHelper';
+export * from './WaitForOption';

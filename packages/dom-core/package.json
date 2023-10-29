@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/dom-core",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "Core engine for HTML DOM testing",
   "main": "dist/index.js",
   "files": [
@@ -29,7 +29,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "@testing-library/dom": ">=9.2.0",

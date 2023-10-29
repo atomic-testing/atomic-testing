@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/test-runner",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "Experimental test runner library aimed to normalize adapting same test code across different platform for atomic-testing, not for production use",
   "main": "dist/index.js",
   "files": [
@@ -24,7 +24,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*"

@@ -38,7 +38,7 @@ export async function getListItemByIndex<T extends ComponentDriver>(
  */
 export async function* getListItemIterator<T extends ComponentDriver>(
   host: ComponentDriver<any>,
-  itemLocatorBase: PartLocator | PartLocator,
+  itemLocatorBase: PartLocator,
   driverClass: ComponentDriverClass<T>,
 ): AsyncGenerator<T, void, unknown> {
   let index = 0;

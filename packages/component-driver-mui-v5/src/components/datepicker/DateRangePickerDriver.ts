@@ -1,4 +1,5 @@
-import { ComponentDriver, PartLocator, byCssSelector, locatorUtil } from '@atomic-testing/core';
+import { byCssSelector, ComponentDriver, locatorUtil, PartLocator } from '@atomic-testing/core';
+
 import { DateTimePickerDriver } from './DateTimePickerDriver';
 import { DesktopDatePickerDriver } from './DesktopDatePickerDriver';
 import { DesktopDatePickerDriverBase } from './DesktopDatePickerDriverBase';

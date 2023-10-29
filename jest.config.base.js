@@ -6,12 +6,12 @@ const packages = readdirSync(basePath).filter((name) => {
   return lstatSync(path.join(basePath, name)).isDirectory();
 });
 
-const tsJestConfig = [
-  'ts-jest',
-  {
-    tsconfig: '<rootDir>/tsconfig.test.json',
-  },
-];
+// const tsJestConfig = [
+//   'ts-jest',
+//   {
+//     tsconfig: '<rootDir>/tsconfig.test.json',
+//   },
+// ];
 
 module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/__tests__'],

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/playwright",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "Atomic Testing Playwright Adapter",
   "main": "dist/index.js",
   "files": [
@@ -28,7 +28,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "@playwright/test": ">=1.30.2"

@@ -1,13 +1,14 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
+  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
   PartLocator,
   ScenePart,
-  byTagName,
 } from '@atomic-testing/core';
+
 import { DatePickerCharacteristic } from './types';
 
 const parts = {

@@ -1,5 +1,7 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
+  byRole,
+  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -7,9 +9,8 @@ import {
   LocatorRelativePosition,
   PartLocator,
   ScenePart,
-  byRole,
-  byTagName,
 } from '@atomic-testing/core';
+
 import { MobileDatePickerDialogDriver } from './MobileDatePickerDialogDriver';
 
 const parts = {

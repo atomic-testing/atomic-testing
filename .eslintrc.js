@@ -72,7 +72,7 @@ module.exports = {
         additionalTestBlockFunctions: ['testIf', 'describeIf'],
       },
     ],
-    'simple-import-sort/imports': 'warning',
+    'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'error',
     'import/first': 'error',
     'import/newline-after-import': 'error',
