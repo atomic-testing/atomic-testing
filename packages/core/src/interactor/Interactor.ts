@@ -1,8 +1,8 @@
 import { Optional } from '../dataTypes';
 import { PartLocator } from '../locators';
-import { ClickOption } from './ClickOption';
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
+import { ClickOption, HoverOption, MouseDownOption, MouseMoveOption, MouseUpOption } from './MouseOption';
 
 export interface Interactor {
   //#region Potentially DOM mutative interactions
@@ -12,6 +12,17 @@ export interface Interactor {
    * @param option
    */
   click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
+
+  /**
+   * Mouse move on the desired
+   * @param locator
+   * @param option
+   */
+  mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void>;
+
+  mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void>;
+
+  mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void>;
 
   /**
    * Type text into the desired element
@@ -31,7 +42,7 @@ export interface Interactor {
    * Perform a mouse hover on the desired element
    * @param locator
    */
-  hover(locator: PartLocator): Promise<void>;
+  hover(locator: PartLocator, option?: HoverOption): Promise<void>;
 
   /**
    * Wait for a given amount of time in milliseconds

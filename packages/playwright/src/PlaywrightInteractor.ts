@@ -1,14 +1,19 @@
 import {
-  byCssSelector,
   ClickOption,
   CssProperty,
   EnterTextOption,
+  HoverOption,
   Interactor,
-  locatorUtil,
+  MouseDownOption,
+  MouseMoveOption,
+  MouseUpOption,
   Optional,
   PartLocator,
+  byCssSelector,
+  locatorUtil,
   timingUtil,
 } from '@atomic-testing/core';
+import {} from '@atomic-testing/core/src/interactor/MouseOption';
 import { Page } from '@playwright/test';
 
 export class PlaywrightInteractor implements Interactor {
@@ -71,14 +76,35 @@ export class PlaywrightInteractor implements Interactor {
     await this.page.locator(cssLocator).type(text);
   }
 
-  async click(locator: PartLocator, option?: ClickOption): Promise<void> {
+  async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).click({ position: option?.position });
   }
 
-  async hover(locator: PartLocator): Promise<void> {
+  async hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.page.locator(cssLocator).hover();
+    await this.page.locator(cssLocator).hover({ position: option?.position });
+  }
+
+  async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
+    await this.hover(locator, {
+      position: option?.position,
+    });
+    await this.page.mouse.move(0, 0);
+  }
+
+  async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
+    await this.hover(locator, {
+      position: option?.position,
+    });
+    await this.page.mouse.down();
+  }
+
+  async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
+    await this.hover(locator, {
+      position: option?.position,
+    });
+    await this.page.mouse.up();
   }
 
   wait(ms: number): Promise<void> {

@@ -1,4 +1,13 @@
-import { ClickOption, EnterTextOption, Interactor, PartLocator } from '@atomic-testing/core';
+import {
+  ClickOption,
+  EnterTextOption,
+  HoverOption,
+  Interactor,
+  MouseDownOption,
+  MouseMoveOption,
+  MouseUpOption,
+  PartLocator,
+} from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from 'react-dom/test-utils';
 
@@ -9,15 +18,32 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
-  override async click(locator: PartLocator, option?: ClickOption): Promise<void> {
+  override async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     await act(async () => {
       await super.click(locator, option);
     });
   }
 
-  override async hover(locator: PartLocator): Promise<void> {
+  override async hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     await act(async () => {
-      await super.hover(locator);
+      await super.hover(locator, option);
+    });
+  }
+
+  async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseMove(locator, option);
+    });
+  }
+
+  async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseDown(locator, option);
+    });
+  }
+  async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseUp(locator, option);
     });
   }
 

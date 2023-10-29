@@ -1,0 +1,14 @@
+.mouse-event {
+  display: grid;
+  grid-template-columns: 10rem auto;
+  column-gap: 0.5rem;
+  row-gap: 0.25rem;
+}
+
+.mouse-event .label {
+  font-weight: 700;
+}
+
+.mouse-event .value {
+  font-weight: normal;
+}

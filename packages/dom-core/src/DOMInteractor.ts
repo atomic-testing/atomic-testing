@@ -5,6 +5,9 @@ import {
   HoverOption,
   Interactor,
   locatorUtil,
+  MouseDownOption,
+  MouseMoveOption,
+  MouseUpOption,
   Optional,
   PartLocator,
   Point,
@@ -44,6 +47,15 @@ export class DOMInteractor implements Interactor {
     }
   }
 
+  protected calculateMousePosition(el: Element, preferredPoint?: Point) {
+    const rect = el.getBoundingClientRect();
+    const mouseLocation: Point = {
+      x: preferredPoint?.x != null ? rect.left + preferredPoint?.x : rect.left + rect.width / 2,
+      y: preferredPoint?.y != null ? rect.top + preferredPoint?.y : rect.top + rect.height / 2,
+    };
+    return mouseLocation;
+  }
+
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -55,11 +67,7 @@ export class DOMInteractor implements Interactor {
       // Some MUI component does not work with fireEvent('click', ...)
       await userEvent.click(el);
     } else {
-      const rect = el.getBoundingClientRect();
-      const clickLocation: Point = {
-        x: option?.position?.x != null ? rect.left + option.position.x : rect.left + rect.width / 2,
-        y: option?.position?.y != null ? rect.top + option.position.y : rect.top + rect.height / 2,
-      };
+      const clickLocation = this.calculateMousePosition(el, option?.position);
       const evt = new FakeMouseEvent('click', {
         bubbles: true,
         clientX: clickLocation.x,
@@ -73,8 +81,55 @@ export class DOMInteractor implements Interactor {
   async hover(locator: PartLocator, option?: HoverOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {
-      await userEvent.hover(el, option);
+      await userEvent.hover(el);
     }
+  }
+
+  async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    const moveLocation = this.calculateMousePosition(el, option?.position);
+    const evt = new FakeMouseEvent('mousemove', {
+      bubbles: true,
+      clientX: moveLocation.x,
+      clientY: moveLocation.y,
+    });
+
+    await fireEvent(el, evt);
+  }
+
+  async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    const mouseLocation = this.calculateMousePosition(el, option?.position);
+    const evt = new FakeMouseEvent('mousedown', {
+      bubbles: true,
+      clientX: mouseLocation.x,
+      clientY: mouseLocation.y,
+    });
+
+    await fireEvent(el, evt);
+  }
+  async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    const mouseLocation = this.calculateMousePosition(el, option?.position);
+    const evt = new FakeMouseEvent('mouseup', {
+      bubbles: true,
+      clientX: mouseLocation.x,
+      clientY: mouseLocation.y,
+    });
+
+    await fireEvent(el, evt);
   }
 
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {

@@ -1,8 +1,9 @@
-import React from 'react';
-import { Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
-import { tocs } from './directory';
-import { Home } from './Home';
 import styled from '@emotion/styled';
+import React from 'react';
+import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import './App.css';
+import { Home } from './Home';
+import { tocs } from './directory';
 
 const Container = styled.div`
   display: flex;
@@ -28,9 +29,9 @@ export const Layout: React.FunctionComponent = () => {
   return (
     <Container>
       <Nav>
-        <ul>
+        <ul className="toc-list">
           {tocs.map((example) => (
-            <li key={example.path}>
+            <li key={example.path} className="toc">
               <Link to={example.path}>{example.label}</Link>
             </li>
           ))}

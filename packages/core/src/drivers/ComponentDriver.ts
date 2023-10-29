@@ -1,7 +1,7 @@
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
 import { WaitForFailureError } from '../errors/WaitForFailureError';
-import { Interactor } from '../interactor';
+import { ClickOption, Interactor, MouseDownOption, MouseMoveOption, MouseUpOption } from '../interactor';
 import { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
 import * as timingUtil from '../utils/timingUtil';
@@ -136,6 +136,22 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    */
   exists(): Promise<boolean> {
     return this.interactor.exists(this.locator);
+  }
+
+  async click(option?: Partial<ClickOption>): Promise<void> {
+    return this.interactor.click(this.locator, option);
+  }
+
+  async mouseMove(option?: Partial<MouseMoveOption>): Promise<void> {
+    return this.interactor.mouseMove(this.locator, option);
+  }
+
+  async mouseDown(option?: Partial<MouseDownOption>): Promise<void> {
+    return this.interactor.mouseDown(this.locator, option);
+  }
+
+  async mouseUp(option?: Partial<MouseUpOption>): Promise<void> {
+    return this.interactor.mouseUp(this.locator, option);
   }
 
   /**
