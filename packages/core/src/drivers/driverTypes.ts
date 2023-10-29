@@ -1,5 +1,4 @@
-import { ClickOption } from '../interactor/ClickOption';
-import { HoverOption } from '../interactor/HoverOption';
+import { ClickOption, HoverOption } from '../interactor/MouseOption';
 
 export interface IFormFieldDriver<T> {
   getValue(): Promise<T>;

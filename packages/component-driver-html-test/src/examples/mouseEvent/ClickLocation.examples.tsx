@@ -1,19 +1,43 @@
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+// import './ClickLocation.css';
 
 export const ClickLocationMouseEventExample = () => {
-  const [clickX, setClickX] = React.useState<number | null>(null);
-  const [clickY, setClickY] = React.useState<number | null>(null);
+  const [mouseX, setMouseX] = useState<number | null>(null);
+  const [mouseY, setMouseY] = useState<number | null>(null);
+  const [eventName, setEventName] = useState<string | null>(null);
 
-  const onClick = useCallback((evt: React.MouseEvent<HTMLDivElement>) => {
+  const displayEvent = useCallback((evt: React.MouseEvent<HTMLDivElement>, evtName: string) => {
     const rect = evt.currentTarget.getBoundingClientRect();
     var x = evt.clientX - rect.left; //x position within the element.
     var y = evt.clientY - rect.top; //y position within the element.
-    setClickX(x);
-    setClickY(y);
+    setMouseX(x);
+    setMouseY(y);
+    setEventName(evtName);
   }, []);
+
+  const onClick = useCallback(
+    (evt: React.MouseEvent<HTMLDivElement>) => {
+      displayEvent(evt, 'click');
+    },
+    [displayEvent],
+  );
+
+  const onMouseDown = useCallback(
+    (evt: React.MouseEvent<HTMLDivElement>) => {
+      displayEvent(evt, 'mouseDown');
+    },
+    [displayEvent],
+  );
+
+  const onMouseUp = useCallback(
+    (evt: React.MouseEvent<HTMLDivElement>) => {
+      displayEvent(evt, 'mouseUp');
+    },
+    [displayEvent],
+  );
 
   return (
     <React.Fragment>
@@ -21,10 +45,25 @@ export const ClickLocationMouseEventExample = () => {
         style={{ cursor: 'crosshair', backgroundColor: '#0099ff', width: '20rem', height: '12rem' }}
         data-testid="click-target"
         onClick={onClick}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
       ></div>
-      <p>
-        Click on <span data-testid="position-x">{clickX}</span>, <span data-testid="position-y">{clickY}</span>
-      </p>
+      <div className="mouse-event">
+        <span className="label">Event</span>
+        <span className="value" data-testid="event-name">
+          {eventName}
+        </span>
+
+        <span className="label">X</span>
+        <span className="value" data-testid="position-x">
+          {mouseX}
+        </span>
+
+        <span className="label">Y</span>
+        <span className="value" data-testid="position-y">
+          {mouseY}
+        </span>
+      </div>
     </React.Fragment>
   );
 };
