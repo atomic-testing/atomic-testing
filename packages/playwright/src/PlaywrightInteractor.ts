@@ -1,16 +1,16 @@
 import {
+  byCssSelector,
   ClickOption,
   CssProperty,
   EnterTextOption,
   HoverOption,
   Interactor,
+  locatorUtil,
   MouseDownOption,
   MouseMoveOption,
   MouseUpOption,
   Optional,
   PartLocator,
-  byCssSelector,
-  locatorUtil,
   timingUtil,
 } from '@atomic-testing/core';
 import {} from '@atomic-testing/core/src/interactor/MouseOption';

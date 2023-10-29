@@ -15,6 +15,7 @@ import {
 } from '@atomic-testing/core';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+
 import { FakeMouseEvent } from './fakeEvents';
 
 export class DOMInteractor implements Interactor {
@@ -74,11 +75,11 @@ export class DOMInteractor implements Interactor {
         clientY: clickLocation.y,
       });
 
-      await fireEvent(el, evt);
+      fireEvent(el, evt);
     }
   }
 
-  async hover(locator: PartLocator, option?: HoverOption): Promise<void> {
+  async hover(locator: PartLocator, _option?: HoverOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {
       await userEvent.hover(el);
@@ -98,7 +99,7 @@ export class DOMInteractor implements Interactor {
       clientY: moveLocation.y,
     });
 
-    await fireEvent(el, evt);
+    fireEvent(el, evt);
   }
 
   async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
@@ -114,7 +115,7 @@ export class DOMInteractor implements Interactor {
       clientY: mouseLocation.y,
     });
 
-    await fireEvent(el, evt);
+    fireEvent(el, evt);
   }
   async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     const el = await this.getElement(locator);
@@ -129,7 +130,7 @@ export class DOMInteractor implements Interactor {
       clientY: mouseLocation.y,
     });
 
-    await fireEvent(el, evt);
+    fireEvent(el, evt);
   }
 
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {

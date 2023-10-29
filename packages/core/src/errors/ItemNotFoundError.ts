@@ -9,7 +9,10 @@ function getErrorMessage(locator: PartLocator): string {
 }
 
 export class ItemNotFoundError extends ErrorBase {
-  constructor(public readonly locator: PartLocator, public readonly driver: ComponentDriver<any>) {
+  constructor(
+    public readonly locator: PartLocator,
+    public readonly driver: ComponentDriver<any>,
+  ) {
     super(getErrorMessage(locator), driver);
     this.name = ItemNotFoundErrorId;
   }

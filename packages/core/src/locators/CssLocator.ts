@@ -15,7 +15,10 @@ export class CssLocator {
   private _type: LocatorType = 'css';
   private _source?: CssLocatorSource;
 
-  constructor(public readonly selector: string, initializeValue?: Partial<CssLocatorInitializer>) {
+  constructor(
+    public readonly selector: string,
+    initializeValue?: Partial<CssLocatorInitializer>,
+  ) {
     if (initializeValue) {
       this._relativePosition = initializeValue.relative || this.relative;
       this._source = initializeValue.source || this.source;

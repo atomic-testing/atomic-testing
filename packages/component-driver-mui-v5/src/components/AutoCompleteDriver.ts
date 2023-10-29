@@ -1,18 +1,18 @@
 import { HTMLButtonDriver, HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
-  ComponentDriver,
-  IComponentDriverOption,
-  IInputDriver,
-  Interactor,
-  LocatorRelativePosition,
-  PartLocator,
-  ScenePart,
   byCssSelector,
   byLinkedElement,
   byRole,
   byTagName,
+  ComponentDriver,
+  IComponentDriverOption,
+  IInputDriver,
+  Interactor,
   listHelper,
+  LocatorRelativePosition,
   locatorUtil,
+  PartLocator,
+  ScenePart,
 } from '@atomic-testing/core';
 
 export const parts = {
@@ -102,8 +102,8 @@ export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements
     for await (const optionDriver of listHelper.getListItemIterator(this, option, HTMLButtonDriver)) {
       const optionValue = await optionDriver.getText();
       const isMatched =
-        (matchType === 'exact' && optionValue === value) || (matchType === 'first-available' && index === 0);
-      if (optionValue?.trim() === value) {
+        (matchType === 'exact' && optionValue?.trim() === value) || (matchType === 'first-available' && index === 0);
+      if (isMatched) {
         await optionDriver.click();
         return true;
       }

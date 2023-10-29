@@ -1,12 +1,13 @@
 import {
+  byRole,
   IComponentDriverOption,
   Interactor,
   ListComponentDriver,
   ListComponentDriverSpecificOption,
-  PartLocator,
-  byRole,
   listHelper,
+  PartLocator,
 } from '@atomic-testing/core';
+
 import { ListItemDriver } from './ListItemDriver';
 
 export const defaultListDriverOption: ListComponentDriverSpecificOption<ListItemDriver> = {
