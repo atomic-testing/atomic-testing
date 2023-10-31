@@ -62,7 +62,7 @@ export class MobileDatePickerDialogDriver extends ComponentDriver<typeof parts> 
       const format = await this.getFormat();
       result = textEntryToDate(value, format);
     }
-    this.parts.cancelButton.click();
+    await this.parts.cancelButton.click();
     return result;
   }
 

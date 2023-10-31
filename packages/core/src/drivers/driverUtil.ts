@@ -22,7 +22,8 @@ export function getPartFromDefinition<T extends ScenePart>(
     const locatorContext: PartLocator = driver.prototype.overriddenParentLocator() ?? parentLocator;
     const actualLocator: PartLocator =
       driver.prototype.overrideLocatorRelativePosition() != null
-        ? locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
+        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
         : locator;
 
     const componentLocator = locatorUtil.append(locatorContext, actualLocator);
