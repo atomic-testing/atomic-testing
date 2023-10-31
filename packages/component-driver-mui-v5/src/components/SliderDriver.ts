@@ -78,7 +78,7 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
    * @param values
    * @see https://github.com/atomic-testing/atomic-testing/issues/73
    */
-  async setRangeValues(values: readonly number[]): Promise<boolean> {
+  async setRangeValues(_values: readonly number[]): Promise<boolean> {
     await this.enforcePartExistence('input');
     throw new Error('setRangeValue is not supported.');
     // for (let index = 0; index < values.length; index++) {
