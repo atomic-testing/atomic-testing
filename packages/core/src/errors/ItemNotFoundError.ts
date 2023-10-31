@@ -1,11 +1,13 @@
 import { ComponentDriver } from '../drivers/ComponentDriver';
 import { PartLocator } from '../locators';
+import { getLocatorInfoForErrorLog } from '../utils/locatorUtil';
 import { ErrorBase } from './ErrorBase';
 
 export const ItemNotFoundErrorId = 'ItemNotFoundError';
 
 function getErrorMessage(locator: PartLocator): string {
-  return `Item not found.  Locator: ${locator}`;
+  const selector = getLocatorInfoForErrorLog(locator);
+  return `Item not found.  Locator: ${selector}`;
 }
 
 export class ItemNotFoundError extends ErrorBase {

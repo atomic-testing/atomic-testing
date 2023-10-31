@@ -65,7 +65,7 @@ export type DomTestInterface<T extends ScenePart> = {
   getTestEngine: GetTestEngine<T>;
 };
 
-type GotoReturn = Promise<void> | any;
+type GotoReturn = any;
 
 /**
  * Interface for E2e tests which involve navigating to a URL

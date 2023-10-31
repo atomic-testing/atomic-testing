@@ -12,7 +12,7 @@ export const dateOnly: Readonly<DateTimePart> = Object.freeze({
   withTime: false,
 });
 
-export function dateToTextEntry(date: Date, format: string): string {
+export function dateToTextEntry(date: Date, _format: string): string {
   // assume mmddyyyy for now
   const monthPart = padLeftZeroes(`${date.getMonth() + 1}`, 2);
   const datePart = padLeftZeroes(`${date.getDate()}`, 2);
@@ -21,19 +21,19 @@ export function dateToTextEntry(date: Date, format: string): string {
   return monthPart + datePart + yearPart;
 }
 
-export function textEntryToDate(text: string, format: string): Date | null {
+export function textEntryToDate(text: string, _format: string): Date | null {
   if (text.length < 6) {
     return null;
   }
   return new Date(text);
 }
 
-export function timeToTextEntry(date: Date, format: string): string {
+export function timeToTextEntry(date: Date, _format: string): string {
   // assume hh:mm a|pm for now
   return dayjs(date).format('hhmmA');
 }
 
-export function textEntryToTime(text: string, format: string): Date | null {
+export function textEntryToTime(text: string, _format: string): Date | null {
   if (text.length < 3) {
     return null;
   }
@@ -41,11 +41,11 @@ export function textEntryToTime(text: string, format: string): Date | null {
   return new Date(`${datePart} ${text}`);
 }
 
-export function dateTimeToTextEntry(date: Date, format: string): string {
+export function dateTimeToTextEntry(date: Date, _format: string): string {
   return dayjs(date).format('YYYYMMDDhhmmA');
 }
 
-export function textEntryToDateTime(text: string, format: string): Date | null {
+export function textEntryToDateTime(text: string, _format: string): Date | null {
   // assume YYYY/MM/DD hh:mm for now
   if (text.length < 12) {
     return null;
