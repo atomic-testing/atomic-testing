@@ -1,14 +1,13 @@
+export { AccordionDriver } from './components/AccordionDriver';
 export { AlertDriver } from './components/AlertDriver';
+export { AutoCompleteDriver, defaultAutoCompleteDriverOption } from './components/AutoCompleteDriver';
 export type {
   AutoCompleteDriverOption,
   AutoCompleteDriverSpecificOption,
   AutoCompleteMatchType,
 } from './components/AutoCompleteDriver';
-export { AutoCompleteDriver, defaultAutoCompleteDriverOption } from './components/AutoCompleteDriver';
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
-export * from './components/datagrid';
-export * from './components/datepicker';
 export { DialogDriver } from './components/DialogDriver';
 export { FabDriver } from './components/FabDriver';
 export { InputDriver } from './components/InputDriver';
@@ -23,5 +22,7 @@ export { SwitchDriver } from './components/SwitchDriver';
 export { TextFieldDriver } from './components/TextFieldDriver';
 export { ToggleButtonDriver } from './components/ToggleButtonDriver';
 export { ExclusiveToggleButtonGroupDriver, ToggleButtonGroupDriver } from './components/ToggleButtonGroupDriver';
+export * from './components/datagrid';
+export * from './components/datepicker';
 export { MenuItemDisabledError, MenuItemDisabledErrorId } from './errors/MenuItemDisabledError';
 export { MenuItemNotFoundError, MenuItemNotFoundErrorId } from './errors/MenuItemNotFoundError';

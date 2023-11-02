@@ -1,5 +1,6 @@
 import { ExampleList } from './components/ExampleList';
 import {
+  accordionExamples,
   alertExamples,
   autoCompleteExamples,
   buttonExamples,
@@ -25,6 +26,11 @@ interface IToc {
 }
 
 export const tocs: IToc[] = [
+  {
+    label: 'Accordion',
+    path: '/accordion',
+    ui: <ExampleList examples={accordionExamples} />,
+  },
   {
     label: 'Alert',
     path: '/alert',
