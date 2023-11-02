@@ -6,6 +6,7 @@ export type {
   AutoCompleteDriverSpecificOption,
   AutoCompleteMatchType,
 } from './components/AutoCompleteDriver';
+export { BadgeDriver } from './components/BadgeDriver';
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
 export { DialogDriver } from './components/DialogDriver';

@@ -1,6 +1,7 @@
 export * from './accordion';
 export * from './alert';
 export * from './autocomplete';
+export * from './badge';
 export * from './button';
 export * from './checkbox';
 export * from './datagridpro';

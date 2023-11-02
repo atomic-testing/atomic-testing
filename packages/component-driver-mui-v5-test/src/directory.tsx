@@ -3,6 +3,7 @@ import {
   accordionExamples,
   alertExamples,
   autoCompleteExamples,
+  badgeExamples,
   buttonExamples,
   checkboxExamples,
   dataGridProExamples,
@@ -40,6 +41,11 @@ export const tocs: IToc[] = [
     label: 'AutoComplete',
     path: '/autocomplete',
     ui: <ExampleList examples={autoCompleteExamples} />,
+  },
+  {
+    label: 'Badge',
+    path: '/badge',
+    ui: <ExampleList examples={badgeExamples} />,
   },
   {
     label: 'Button',
