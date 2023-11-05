@@ -6,6 +6,7 @@ import {
   badgeExamples,
   buttonExamples,
   checkboxExamples,
+  chipExamples,
   dataGridProExamples,
   datePickerExamples,
   dialogExamples,
@@ -56,6 +57,11 @@ export const tocs: IToc[] = [
     label: 'Checkbox',
     path: '/checkbox',
     ui: <ExampleList examples={checkboxExamples} />,
+  },
+  {
+    label: 'Chip',
+    path: '/chip',
+    ui: <ExampleList examples={chipExamples} />,
   },
   {
     label: 'DataGrid Pro',
