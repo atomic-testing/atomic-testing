@@ -4,6 +4,7 @@ export * from './autocomplete';
 export * from './badge';
 export * from './button';
 export * from './checkbox';
+export * from './chip';
 export * from './datagridpro';
 export * from './datetimepicker';
 export * from './dialog';

@@ -9,6 +9,7 @@ export type {
 export { BadgeDriver } from './components/BadgeDriver';
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
+export { ChipDriver } from './components/ChipDriver';
 export { DialogDriver } from './components/DialogDriver';
 export { FabDriver } from './components/FabDriver';
 export { InputDriver } from './components/InputDriver';
