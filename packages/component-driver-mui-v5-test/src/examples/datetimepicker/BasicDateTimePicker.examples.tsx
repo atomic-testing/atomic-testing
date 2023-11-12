@@ -139,7 +139,7 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
         const date = new Date('2018/09/21 00:18');
         await testEngine.parts.timePicker.setValue(date);
         const retrieved = await testEngine.parts.timePicker.getValue();
-        assertEqual(retrieved?.toTimeString(), date.toTimeString());
+        assertEqual(retrieved?.toLocaleTimeString(), date.toLocaleTimeString());
       });
     });
 
@@ -148,7 +148,7 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
         const date = new Date('2018/09/21 00:18');
         await testEngine.parts.timePicker.setValue(date);
         const retrieved = await testEngine.parts.timePicker.getValue();
-        assertEqual(retrieved?.toTimeString(), date.toTimeString());
+        assertEqual(retrieved?.toLocaleTimeString(), date.toLocaleTimeString());
       });
     });
   },
