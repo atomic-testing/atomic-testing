@@ -13,7 +13,7 @@ import {
   PartLocator,
   timingUtil,
 } from '@atomic-testing/core';
-import {} from '@atomic-testing/core/src/interactor/MouseOption';
+import { MouseEnterOption, MouseLeaveOption, MouseOutOption } from '@atomic-testing/core/src/interactor/MouseOption';
 import { Page } from '@playwright/test';
 
 export class PlaywrightInteractor implements Interactor {
@@ -105,6 +105,28 @@ export class PlaywrightInteractor implements Interactor {
       position: option?.position,
     });
     await this.page.mouse.up();
+  }
+
+  async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
+    return this.hover(locator, option);
+  }
+
+  async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
+    await this.hover(locator, {
+      position: {
+        x: 0,
+        y: 0,
+      },
+    });
+    await this.page.mouse.move(-10, -10);
+  }
+
+  async mouseEnter(locator: PartLocator, _option?: Partial<MouseEnterOption>): Promise<void> {
+    return this.hover(locator);
+  }
+
+  async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
+    return this.mouseOut(locator);
   }
 
   wait(ms: number): Promise<void> {
