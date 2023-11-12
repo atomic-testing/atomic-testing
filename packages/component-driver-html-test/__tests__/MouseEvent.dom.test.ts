@@ -8,6 +8,8 @@ import {
   hoverMouseEventExampleTestSuite,
   mouseLocationMouseEventExample,
   mouseLocationMouseEventExampleTestSuite,
+  mouseOverMouseEventExample,
+  mouseOverMouseEventExampleTestSuite,
 } from '../src/examples';
 
 testRunner(hoverMouseEventExampleTestSuite, jestTestAdapter, {
@@ -25,5 +27,11 @@ testRunner(clickLocationMouseEventExampleTestSuite, jestTestAdapter, {
 testRunner(mouseLocationMouseEventExampleTestSuite, jestTestAdapter, {
   getTestEngine: (scenePart: typeof mouseLocationMouseEventExample.scene) => {
     return createTestEngine(mouseLocationMouseEventExample.ui, scenePart);
+  },
+});
+
+testRunner(mouseOverMouseEventExampleTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof mouseOverMouseEventExample.scene) => {
+    return createTestEngine(mouseOverMouseEventExample.ui, scenePart);
   },
 });

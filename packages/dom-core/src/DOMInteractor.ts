@@ -6,7 +6,10 @@ import {
   Interactor,
   locatorUtil,
   MouseDownOption,
+  MouseEnterOption,
+  MouseLeaveOption,
   MouseMoveOption,
+  MouseOutOption,
   MouseUpOption,
   Optional,
   PartLocator,
@@ -117,6 +120,7 @@ export class DOMInteractor implements Interactor {
 
     fireEvent(el, evt);
   }
+
   async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -131,6 +135,51 @@ export class DOMInteractor implements Interactor {
     });
 
     fireEvent(el, evt);
+  }
+
+  async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    const moveLocation = this.calculateMousePosition(el, option?.position);
+    const evt = new FakeMouseEvent('mouseover', {
+      bubbles: true,
+      clientX: moveLocation.x,
+      clientY: moveLocation.y,
+    });
+
+    fireEvent(el, evt);
+  }
+
+  async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    fireEvent.mouseOut(el);
+  }
+
+  async mouseEnter(locator: PartLocator, _option?: Partial<MouseEnterOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    // mouseOver would trigger mouseEnter event
+    // hover fireEvent.mouseEnter does not
+    fireEvent.mouseOver(el);
+  }
+
+  async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return;
+    }
+
+    fireEvent.mouseOut(el);
   }
 
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {

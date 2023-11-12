@@ -18,3 +18,9 @@ export interface MouseDownOption extends MouseOption {}
 export interface MouseUpOption extends MouseOption {}
 
 export interface HoverOption extends MouseOption {}
+
+export interface MouseOutOption {}
+
+export interface MouseEnterOption {}
+
+export interface MouseLeaveOption {}
