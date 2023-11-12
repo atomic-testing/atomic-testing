@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
   byRole,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   PartLocator,
   ScenePart,
@@ -32,12 +32,11 @@ export const parts = {
  * Driver for Material UI v5 Accordion component.
  * @see https://mui.com/material-ui/react-accordion/
  */
-export class AccordionDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class AccordionDriver extends ComponentDriver<typeof parts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 
