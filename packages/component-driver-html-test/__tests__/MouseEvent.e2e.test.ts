@@ -4,8 +4,10 @@ import {
   clickLocationMouseEventExampleTestSuite,
   hoverMouseEventExampleTestSuite,
   mouseLocationMouseEventExampleTestSuite,
+  mouseOverMouseEventExampleTestSuite,
 } from '../src/examples';
 
 testRunner(hoverMouseEventExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 testRunner(clickLocationMouseEventExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 testRunner(mouseLocationMouseEventExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
+testRunner(mouseOverMouseEventExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());

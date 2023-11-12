@@ -2,7 +2,16 @@ import { Optional } from '../dataTypes';
 import { PartLocator } from '../locators';
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
-import { ClickOption, HoverOption, MouseDownOption, MouseMoveOption, MouseUpOption } from './MouseOption';
+import {
+  ClickOption,
+  HoverOption,
+  MouseDownOption,
+  MouseEnterOption,
+  MouseLeaveOption,
+  MouseMoveOption,
+  MouseOutOption,
+  MouseUpOption,
+} from './MouseOption';
 
 export interface Interactor {
   //#region Potentially DOM mutative interactions
@@ -14,7 +23,7 @@ export interface Interactor {
   click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
 
   /**
-   * Mouse move on the desired
+   * Mouse move on the desired element
    * @param locator
    * @param option
    */
@@ -23,6 +32,14 @@ export interface Interactor {
   mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void>;
 
   mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void>;
+
+  mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void>;
+
+  mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void>;
+
+  mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void>;
+
+  mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void>;
 
   /**
    * Type text into the desired element

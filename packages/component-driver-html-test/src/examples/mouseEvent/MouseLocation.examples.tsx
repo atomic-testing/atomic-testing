@@ -2,7 +2,7 @@ import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-d
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import React, { useCallback, useState } from 'react';
-// import './ClickLocation.css';
+import './ClickLocation.css';
 
 export const MouseLocationMouseEventExample = () => {
   const [mouseX, setMouseX] = useState<number | null>(null);

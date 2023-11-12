@@ -4,7 +4,10 @@ import {
   HoverOption,
   Interactor,
   MouseDownOption,
+  MouseEnterOption,
+  MouseLeaveOption,
   MouseMoveOption,
+  MouseOutOption,
   MouseUpOption,
   PartLocator,
 } from '@atomic-testing/core';
@@ -41,9 +44,34 @@ export class ReactInteractor extends DOMInteractor {
       await super.mouseDown(locator, option);
     });
   }
+
   async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     await act(async () => {
       await super.mouseUp(locator, option);
+    });
+  }
+
+  async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseOver(locator, option);
+    });
+  }
+
+  async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseOut(locator, option);
+    });
+  }
+
+  async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseEnter(locator, option);
+    });
+  }
+
+  async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
+    await act(async () => {
+      await super.mouseLeave(locator, option);
     });
   }
 
