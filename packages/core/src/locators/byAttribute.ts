@@ -1,4 +1,4 @@
-import { escapeId, escapeName, escapeValue } from '../utils/escapeUtil';
+import { escapeName, escapeValue } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
 
@@ -14,7 +14,7 @@ export function byAttribute(
   value: string,
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
 ): CssLocator {
-  const selector = name === 'id' ? `#${escapeId(value)}` : `[${escapeName(name)}="${escapeValue(value)}"]`;
+  const selector = name === 'id' ? `#${escapeValue(value)}` : `[${escapeName(name)}="${escapeValue(value)}"]`;
   return new CssLocator(selector, {
     relative: relativeTo,
     source: {
