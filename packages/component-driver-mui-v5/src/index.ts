@@ -20,6 +20,7 @@ export { MenuItemDriver } from './components/MenuItemDriver';
 export { RatingDriver } from './components/RatingDriver';
 export { SelectDriver } from './components/SelectDriver';
 export { SliderDriver } from './components/SliderDriver';
+export { SnackbarDriver } from './components/SnackbarDriver';
 export { SwitchDriver } from './components/SwitchDriver';
 export { TextFieldDriver } from './components/TextFieldDriver';
 export { ToggleButtonDriver } from './components/ToggleButtonDriver';
