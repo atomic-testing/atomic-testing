@@ -14,6 +14,7 @@ export * from './menu';
 export * from './rating';
 export * from './select';
 export * from './slider';
+export * from './snackbar';
 export * from './switch';
 export * from './textField';
 export * from './toggleButton';
