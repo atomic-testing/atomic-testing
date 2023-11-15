@@ -16,6 +16,7 @@ import {
   ratingExamples,
   selectExamples,
   sliderExamples,
+  snackbarExamples,
   switchExamples,
   textFieldExamples,
   toggleButtonExamples,
@@ -107,6 +108,11 @@ export const tocs: IToc[] = [
     label: 'Slider',
     path: '/slider',
     ui: <ExampleList examples={sliderExamples} />,
+  },
+  {
+    label: 'Snackbar',
+    path: '/snackbar',
+    ui: <ExampleList examples={snackbarExamples} />,
   },
   {
     label: 'Switch',
