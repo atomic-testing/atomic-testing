@@ -119,3 +119,6 @@ test-results
 
 # Personal shell script
 my*.sh
+
+# Generated documentations
+typedocs/
