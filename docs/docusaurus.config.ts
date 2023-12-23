@@ -40,6 +40,31 @@ const config: Config = {
     locales: ['en'],
   },
 
+  plugins: [
+    [
+      // https://github.com/tgreyuk/typedoc-plugin-markdown/tree/master/packages/docusaurus-plugin-typedoc
+      'docusaurus-plugin-typedoc',
+
+      // Plugin / TypeDoc options
+      {
+        entryPoints: [
+          '../packages/core',
+          '../packages/dom-core',
+          '../packages/playwright',
+          '../packages/react',
+          '../packages/component-driver-html',
+          '../packages/component-driver-v5',
+          '../packages/component-driver-v6',
+        ],
+        entryPointStrategy: 'packages',
+        tsconfig: '../tsconfig.json',
+        sidebar: {
+          position: 10,
+        },
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',

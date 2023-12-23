@@ -40,11 +40,11 @@ const escapeCache = new Map();
 
 /**
  * Escaping based on the CSS spec: https://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
- * Backslashes, spaces, and non-identifier characters (e.g., ! " # $ % & ' ( ) * + , . / : ; < = > ? @ [ ] ^ ` { | } ~) are escaped.
  * @param value
  * @returns
  */
 export function escapeValue(value: string): string {
+  // Backslashes, spaces, and non-identifier characters (e.g., ! " # $ % & ' ( ) * + , . / : ; < = > ? @ [ ] ^ ` { | } ~) are escaped.
   if (escapeCache.has(value)) {
     return escapeCache.get(value);
   }
