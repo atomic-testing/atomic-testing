@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/core",
-  "version": "0.39.0",
+  "version": "0.40.0",
   "description": "Core library for atomic-testing",
   "main": "dist/index.js",
   "files": [
@@ -17,7 +17,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atomic-testing/atomic-testing.git"
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/core"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",

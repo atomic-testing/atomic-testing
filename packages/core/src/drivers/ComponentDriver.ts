@@ -18,6 +18,9 @@ import * as timingUtil from '../utils/timingUtil';
 import { getPartFromDefinition } from './driverUtil';
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
 
+/**
+ * Base class for all component drivers.  It provides the basic functionality to interact with the component
+ */
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
   private _locator: PartLocator;
   private readonly _parts: ScenePartDriver<T>;
