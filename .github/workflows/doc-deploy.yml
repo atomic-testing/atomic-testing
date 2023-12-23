@@ -24,6 +24,9 @@ jobs:
           version: 8
           run_install: true
 
+      - name: Build packages
+        run: pnpm -r build
+
       - name: Install documentation dependencies
         run: pnpm install .
         working-directory: ./docs
