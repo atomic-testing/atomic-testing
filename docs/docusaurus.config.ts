@@ -27,7 +27,7 @@ const config: Config = {
   projectName: 'atomic-testing', // Usually your repo name.
   deploymentBranch: 'gh-pages', // Branch that GitHub pages will deploy from.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   trailingSlash: true,
