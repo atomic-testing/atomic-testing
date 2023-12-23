@@ -53,8 +53,8 @@ const config: Config = {
           '../packages/playwright',
           '../packages/react',
           '../packages/component-driver-html',
-          '../packages/component-driver-v5',
-          '../packages/component-driver-v6',
+          '../packages/component-driver-mui-v5',
+          '../packages/component-driver-mui-v6',
         ],
         entryPointStrategy: 'packages',
         tsconfig: '../tsconfig.json',
@@ -74,7 +74,7 @@ const config: Config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/atomic-testing/atomic-testing/tree/main/docs/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
