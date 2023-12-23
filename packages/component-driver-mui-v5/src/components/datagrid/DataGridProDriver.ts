@@ -115,7 +115,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   /**
    * Get the cell driver for the cell, if the cell does not exist, return null
    * The cell driver is default to HTMLElementDriver, you can specify a different driver class
-   * @param query The query to locate the cell, query is an object that is either {rowIndex: number, columnIndex: number} or {rowIndex: number, columnField: string}
+   * @param query The query to locate the cell
    * @param driverClass Optional, the driver class to use for the cell, default to HTMLElementDriver
    * @returns
    */
@@ -140,7 +140,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
 
   /**
    * Get the text content of the cell, if the cell does not exist, throw an error
-   * @param query The query to locate the cell, query is an object that is either {rowIndex: number, columnIndex: number} or {rowIndex: number, columnField: string}
+   * @param query The query to locate the cell
    * @returns
    */
   async getCellText(query: DataGridCellQuery): Promise<string> {
