@@ -5,8 +5,8 @@
     "packages/playwright",
     "packages/react",
     "packages/component-driver-html",
-    "packages/component-driver-v5",
-    "packages/component-driver-v6"
+    "packages/component-driver-mui-v5",
+    "packages/component-driver-mui-v6"
   ],
   "name": "Atomic Testing",
   "entryPointStrategy": "packages",
