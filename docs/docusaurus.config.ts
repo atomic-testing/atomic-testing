@@ -1,13 +1,16 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+// require('prism-react-renderer/themes/github');
+import type * as Preset from '@docusaurus/preset-classic';
+import type { Config } from '@docusaurus/types';
+
 const { themes } = require('prism-react-renderer');
 
 const darkCodeTheme = themes.dracula; // require('prism-react-renderer/themes/dracula');
-const lightCodeTheme = themes.github; // require('prism-react-renderer/themes/github');
+const lightCodeTheme = themes.github;
 
-/** @type {import('@docusaurus/types').Config} */
-const config = {
+const config: Config = {
   title: 'Atomic Testing',
   tagline: 'Portable UI testing library: Simplify and unify across frameworks and libraries',
   favicon: 'img/favicon.ico',
@@ -41,7 +44,7 @@ const config = {
     [
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
+      {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
@@ -51,13 +54,13 @@ const config = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
-      }),
+      } satisfies Preset.Options,
     ],
   ],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
+    {
       // Replace with your project's social card
       image: 'img/social-card.png',
       navbar: {
@@ -130,7 +133,7 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
-    }),
+    } satisfies Preset.ThemeConfig,
 };
 
-module.exports = config;
+export default config;
