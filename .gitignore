@@ -122,3 +122,4 @@ my*.sh
 
 # Generated documentations
 typedocs/
+docs/docs/api

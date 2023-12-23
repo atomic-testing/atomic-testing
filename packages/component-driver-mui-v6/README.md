@@ -1,3 +1,3 @@
-# @atomic-testing/component-driver-mui-v5
+# @atomic-testing/component-driver-mui-v6
 
-Component drivers for [MUI](https://mui.com) V5 components
+Component drivers for [MUI](https://mui.com) V6 components
