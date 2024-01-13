@@ -83,82 +83,87 @@ const config: Config = {
     ],
   ],
 
-  themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    {
-      // Replace with your project's social card
-      image: 'img/social-card.png',
-      navbar: {
-        title: 'Atomic Testing',
-        logo: {
-          alt: 'Atomic Testing Logo',
-          src: 'img/logo.svg',
+  themeConfig: {
+    // Replace with your project's social card
+    image: 'img/social-card.png',
+    navbar: {
+      title: 'Atomic Testing',
+      logo: {
+        alt: 'Atomic Testing Logo',
+        src: 'img/logo.svg',
+      },
+      items: [
+        {
+          type: 'doc',
+          docId: 'intro',
+          position: 'left',
+          label: 'Get Started',
         },
-        items: [
-          {
-            type: 'doc',
-            docId: 'intro',
-            position: 'left',
-            label: 'Get Started',
-          },
-          {
-            href: 'https://github.com/atomic-testing/atomic-testing',
-            label: 'GitHub',
-            position: 'right',
-          },
-        ],
-      },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Getting started',
-                to: '/docs/intro',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/atomic-testing',
-              },
-              // {
-              //   label: 'Discord',
-              //   href: 'https://discordapp.com/invite/atomic-testing',
-              // },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/TestingAtomic',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/atomic-testing/atomic-testing',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © 2022-${new Date().getFullYear()} Tangent Lin`,
-      },
-      prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
-      },
-      colorMode: {
-        defaultMode: 'light',
-        disableSwitch: false,
-        respectPrefersColorScheme: true,
-      },
-    } satisfies Preset.ThemeConfig,
+        {
+          href: 'https://github.com/atomic-testing/atomic-testing',
+          label: 'GitHub',
+          position: 'right',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Docs',
+          items: [
+            {
+              label: 'Getting started',
+              to: '/docs/intro',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'Stack Overflow',
+              href: 'https://stackoverflow.com/questions/tagged/atomic-testing',
+            },
+            // {
+            //   label: 'Discord',
+            //   href: 'https://discordapp.com/invite/atomic-testing',
+            // },
+            {
+              label: 'Twitter',
+              href: 'https://twitter.com/TestingAtomic',
+            },
+          ],
+        },
+        {
+          title: 'More',
+          items: [
+            {
+              label: 'GitHub',
+              href: 'https://github.com/atomic-testing/atomic-testing',
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright © 2022-${new Date().getFullYear()} Tangent Lin`,
+    },
+    prism: {
+      theme: lightCodeTheme,
+      darkTheme: darkCodeTheme,
+    },
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: true,
+    },
+    // @see https://docusaurus.io/docs/search
+    algolia: {
+      appId: 'HKBV6KED15',
+      apiKey: '31786977c036097aab45afff518ca641',
+      indexName: 'atomic-testing',
+      contextualSearch: true,
+    },
+  } satisfies Preset.ThemeConfig,
 };
 
 export default config;
