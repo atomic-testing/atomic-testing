@@ -3,6 +3,9 @@ id: concepts
 sidebar_position: 2
 ---
 
+import CodeBlock from '@theme/CodeBlock';
+import SampleScenePart from '!!raw-loader!./snippets/sample-scene-part.ts';
+
 # Core Concepts
 
 Before using Atomic Testing, familiarize yourself with the following key concepts:
@@ -32,36 +35,7 @@ A ScenePart is a map describing all components of interest (part) within a scene
 
 <details>
   <summary>A sample ScenePart of a typical login screen</summary>
-
-```ts
-import { ScenePart } from '@atomic-testing/core';
-import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
-
-const loginScenePart: ScenePart = {
-  username: {
-    locator: byDataTestId('username'),
-    driver: TextFieldDriver,
-  },
-  password: {
-    locator: byDataTestId('password'),
-    driver: TextFieldDriver,
-  },
-  error: {
-    locator: byDataTestId('error-display'),
-    driver: HTMLElementDriver,
-  },
-  submit: {
-    locator: byDataTestId('submit'),
-    driver: ButtonDriver,
-  },
-  forgetPassword: {
-    locator: byDataTestId('forget-password'),
-    driver: HTMLAnchorDriver,
-  },
-} satisfies ScenePart;
-```
-
+  <CodeBlock language="ts">{SampleScenePart}</CodeBlock>
 </details>
 
 ## Test Engine

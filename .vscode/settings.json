@@ -20,7 +20,7 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "cSpell.words": [
     "datetime",
