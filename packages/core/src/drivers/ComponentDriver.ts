@@ -3,6 +3,7 @@ import { MissingPartError } from '../errors/MissingPartError';
 import { WaitForFailureError } from '../errors/WaitForFailureError';
 import {
   ClickOption,
+  FocusOption,
   HoverOption,
   Interactor,
   MouseDownOption,
@@ -185,6 +186,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   async mouseLeave(option?: Partial<MouseLeaveOption>): Promise<void> {
     return this.interactor.mouseLeave(this.locator, option);
+  }
+
+  async focus(option?: Partial<FocusOption>): Promise<void> {
+    return this.interactor.focus(this.locator, option);
   }
 
   /**

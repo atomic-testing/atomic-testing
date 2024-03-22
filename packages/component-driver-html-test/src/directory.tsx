@@ -1,6 +1,7 @@
 import { ExampleList } from './components/ExampleList';
 import {
   checkboxExamples,
+  focusEventExamples,
   formExamples,
   mouseEventExamples,
   radioButtonGroupExamples,
@@ -39,6 +40,11 @@ export const tocs: IToc[] = [
     label: 'Select',
     path: '/select',
     ui: <ExampleList examples={selectExamples} />,
+  },
+  {
+    label: 'Focus Event',
+    path: '/focus-event',
+    ui: <ExampleList examples={focusEventExamples} />,
   },
   {
     label: 'Mouse Event',
