@@ -2,6 +2,7 @@ import { Optional } from '../dataTypes';
 import { PartLocator } from '../locators';
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
+import { FocusOption } from './FocusOption';
 import {
   ClickOption,
   HoverOption,
@@ -40,6 +41,8 @@ export interface Interactor {
   mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void>;
 
   mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void>;
+
+  focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void>;
 
   /**
    * Type text into the desired element

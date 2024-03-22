@@ -1,6 +1,7 @@
 import {
   ClickOption,
   EnterTextOption,
+  FocusOption,
   HoverOption,
   Interactor,
   MouseDownOption,
@@ -72,6 +73,12 @@ export class ReactInteractor extends DOMInteractor {
   async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
     await act(async () => {
       await super.mouseLeave(locator, option);
+    });
+  }
+
+  async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
+    await act(async () => {
+      await super.focus(locator, option);
     });
   }
 

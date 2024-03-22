@@ -1,4 +1,5 @@
 export * from './checkbox';
+export * from './focusEvent';
 export * from './form';
 export * from './input';
 export * from './mouseEvent';

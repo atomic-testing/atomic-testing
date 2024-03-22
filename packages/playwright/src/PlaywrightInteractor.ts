@@ -3,6 +3,7 @@ import {
   ClickOption,
   CssProperty,
   EnterTextOption,
+  FocusOption,
   HoverOption,
   Interactor,
   locatorUtil,
@@ -127,6 +128,11 @@ export class PlaywrightInteractor implements Interactor {
 
   async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
     return this.mouseOut(locator);
+  }
+
+  async focus(locator: PartLocator, _option: Partial<FocusOption>): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    return this.page.focus(cssLocator);
   }
 
   wait(ms: number): Promise<void> {

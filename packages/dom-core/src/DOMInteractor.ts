@@ -2,6 +2,7 @@ import {
   ClickOption,
   CssProperty,
   EnterTextOption,
+  FocusOption,
   HoverOption,
   Interactor,
   locatorUtil,
@@ -180,6 +181,15 @@ export class DOMInteractor implements Interactor {
     }
 
     fireEvent.mouseOut(el);
+  }
+
+  async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null || 'focus' in el === false) {
+      return;
+    }
+    console.log('***************************');
+    (el as HTMLInputElement).focus();
   }
 
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {
