@@ -2,12 +2,15 @@ import { getTestRunnerInterface, playWrightTestFrameworkMapper } from '@atomic-t
 import { testRunner } from '@atomic-testing/test-runner';
 import {
   basicTextFieldTestSuite,
+  dateTextFieldTestSuite,
   multilineTextFieldTestSuite,
   readonlyAndDisabledTextFieldTestSuite,
   selectTextFieldTestSuite,
 } from '../src/examples';
 
 testRunner(basicTextFieldTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
+
+testRunner(dateTextFieldTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 
 testRunner(multilineTextFieldTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 

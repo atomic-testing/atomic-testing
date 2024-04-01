@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/jest",
-  "version": "0.43.0",
+  "version": "0.45.0",
   "description": "Jest adapter for atomic-testing",
   "main": "dist/index.js",
   "files": [
@@ -22,9 +22,7 @@
   "devDependencies": {
     "@types/node": "^20.10.5",
     "jest": "^29.7.0",
-    "ts-jest": "^29.0.5",
-    "ts-node": "^10.9.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "dependencies": {
     "@atomic-testing/test-runner": "workspace:*"

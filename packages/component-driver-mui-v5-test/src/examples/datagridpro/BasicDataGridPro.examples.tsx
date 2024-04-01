@@ -1,7 +1,7 @@
 import { DataGridProDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import React from 'react';
 import { basicGridColumnConfig, initialState } from './gridConfig';

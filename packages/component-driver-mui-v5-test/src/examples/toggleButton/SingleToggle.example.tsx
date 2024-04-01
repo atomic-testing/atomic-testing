@@ -1,7 +1,7 @@
 import { ToggleButtonDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { ToggleButton } from '@mui/material';
+import ToggleButton from '@mui/material/ToggleButton';
 import React from 'react';
 
 //#region Single toggle

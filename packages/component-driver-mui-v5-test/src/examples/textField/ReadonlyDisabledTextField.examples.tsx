@@ -1,12 +1,13 @@
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import styled from '@emotion/styled';
-import { MenuItem, TextField } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
 import { selectTextFieldExampleData } from './SelectTextField.examples';
 
 //#region Readonly and disabled TextField
-const ExampleLayout = styled.div`
+const ExampleLayout = styled('div')`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 2rem;

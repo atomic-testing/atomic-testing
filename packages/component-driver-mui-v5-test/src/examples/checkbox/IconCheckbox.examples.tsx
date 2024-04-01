@@ -5,7 +5,8 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import { Checkbox, Stack } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import Stack from '@mui/material/Stack';
 
 //#region Example
 export const IconCheckbox = () => {

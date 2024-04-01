@@ -2,8 +2,8 @@
 
 # @atomic-testing/core
 
-# <img src="./docs/static/img/logo.svg" width="22" height="22" hspace="10" /> atomic-testing
+# <img src="../../docs/static/img/logo.svg" width="22" height="22" hspace="10" /> atomic-testing
 
 Middleware for UI testing and automation.
 
-Learn more at https://atomic-testing.dev/
+Learn more at <https://atomic-testing.dev/>

@@ -4,8 +4,9 @@ import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testi
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import SendIcon from '@mui/icons-material/Send';
-import { Button, Stack } from '@mui/material';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import React from 'react';
 
 //#region Icon and label

@@ -1,6 +1,5 @@
 import { HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
-  byCssSelector,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -8,6 +7,9 @@ import {
   Optional,
   PartLocator,
   ScenePart,
+  byCssSelector,
+  byRole,
+  byTagName,
 } from '@atomic-testing/core';
 
 import { SelectDriver } from './SelectDriver';
@@ -33,6 +35,15 @@ export const parts = {
     locator: byCssSelector('>div'),
     driver: SelectDriver,
   },
+  // Used to detect the presence of select input
+  richSelectInputDetect: {
+    locator: byRole('combobox'),
+    driver: HTMLElementDriver,
+  },
+  nativeSelectInputDetect: {
+    locator: byTagName('SELECT'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 enum TextFieldInputType {
@@ -53,22 +64,26 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   }
 
   private async getInputType(): Promise<TextFieldInputType> {
-    // TODO: Detection of both input types can be done in parallel.
-    const textInputExists = await this.interactor.exists(this.parts.singlelineInput.locator);
-    if (textInputExists) {
-      return TextFieldInputType.Singleline;
-    }
+    const result = await Promise.all([
+      this.parts.singlelineInput.exists(),
+      this.parts.richSelectInputDetect.exists(),
+      this.parts.nativeSelectInputDetect.exists(),
+      this.parts.multilineInput.exists(),
+    ]).then(([singlelineExists, richSelectExists, nativeSelectExists, multilineExists]) => {
+      if (singlelineExists) {
+        return TextFieldInputType.Singleline;
+      }
+      if (richSelectExists || nativeSelectExists) {
+        return TextFieldInputType.Select;
+      }
+      if (multilineExists) {
+        return TextFieldInputType.Multiline;
+      }
 
-    const selectInputExists = await this.parts.selectInput.exists();
-    if (selectInputExists) {
-      return TextFieldInputType.Select;
-    }
+      throw new Error('Unable to determine input type in TextFieldInput');
+    });
 
-    const multilineExists = await this.interactor.exists(this.parts.multilineInput.locator);
-    if (multilineExists) {
-      return TextFieldInputType.Multiline;
-    }
-    throw new Error('Unable to determine input type in TextFieldInput');
+    return result;
   }
 
   async getValue(): Promise<string | null> {

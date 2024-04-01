@@ -1,7 +1,9 @@
 import { InputDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Box, FilledInput, OutlinedInput } from '@mui/material';
+import Box from '@mui/material/Box';
+import FilledInput from '@mui/material/FilledInput';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import React from 'react';
 
 //#region Example
