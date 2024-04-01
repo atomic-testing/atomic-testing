@@ -4,6 +4,8 @@ import { testRunner } from '@atomic-testing/test-runner';
 import {
   basicTextFieldExample,
   basicTextFieldTestSuite,
+  dateTextFieldExample,
+  dateTextFieldTestSuite,
   multilineTextFieldExample,
   multilineTextFieldTestSuite,
   readonlyAndDisabledTextFieldExample,
@@ -15,6 +17,12 @@ import {
 testRunner(basicTextFieldTestSuite, jestTestAdapter, {
   getTestEngine: (scenePart: typeof basicTextFieldExample.scene) => {
     return createTestEngine(basicTextFieldExample.ui, scenePart);
+  },
+});
+
+testRunner(dateTextFieldTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof dateTextFieldExample.scene) => {
+    return createTestEngine(dateTextFieldExample.ui, scenePart);
   },
 });
 

@@ -1,7 +1,8 @@
 import { SliderDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Slider, Stack } from '@mui/material';
+import Slider from '@mui/material/Slider';
+import Stack from '@mui/material/Stack';
 import React from 'react';
 
 //#region Example

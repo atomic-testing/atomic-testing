@@ -2,7 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Chip, Stack } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import React from 'react';
 
 const names: string[] = ['Jack', 'Lucy', 'Maria'];

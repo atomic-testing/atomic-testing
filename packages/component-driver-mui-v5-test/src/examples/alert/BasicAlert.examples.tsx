@@ -2,7 +2,9 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { AlertDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Alert, AlertTitle, Stack } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
 import React from 'react';
 
 //#region Label alert

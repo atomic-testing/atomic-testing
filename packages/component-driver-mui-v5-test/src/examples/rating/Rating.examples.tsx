@@ -1,7 +1,10 @@
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Divider, Rating, Stack, Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import React, { useCallback, useState } from 'react';
 
 //#region Label rating

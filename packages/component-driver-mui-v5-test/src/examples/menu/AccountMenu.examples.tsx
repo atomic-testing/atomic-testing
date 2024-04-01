@@ -3,7 +3,14 @@ import { ButtonDriver, MenuDriver } from '@atomic-testing/component-driver-mui-v
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Logout, PersonAdd, Settings } from '@mui/icons-material';
-import { Avatar, Divider, IconButton, ListItemIcon, Menu, MenuItem, Stack, Tooltip } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
 
 //#region Account menu

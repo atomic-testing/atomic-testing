@@ -5,21 +5,21 @@ import {
   HTMLTextInputDriver,
 } from '@atomic-testing/component-driver-html';
 import {
-  byAttribute,
-  byCssSelector,
-  byRole,
-  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  listHelper,
   LocatorRelativePosition,
-  locatorUtil,
   Nullable,
   PartLocator,
   ScenePart,
   ScenePartDriver,
+  byAttribute,
+  byCssSelector,
+  byRole,
+  byTagName,
+  listHelper,
+  locatorUtil,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -27,7 +27,7 @@ import { MenuItemDriver } from './MenuItemDriver';
 
 export const selectPart = {
   trigger: {
-    locator: byRole('button'),
+    locator: byRole('combobox'), // Starting in 5.12 and beyond, the role has changed from 'button' to 'combobox'
     driver: HTMLButtonDriver,
   },
   dropdown: {

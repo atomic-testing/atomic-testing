@@ -2,7 +2,9 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Autocomplete, Stack, TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import React, { useCallback } from 'react';
 import { top100Films } from './data';
 

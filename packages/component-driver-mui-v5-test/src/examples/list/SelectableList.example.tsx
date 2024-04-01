@@ -1,11 +1,11 @@
 import { ListDriver, ListItemDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byRole } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Box } from '@mui/material';
 import React from 'react';
 
 import DraftsIcon from '@mui/icons-material/Drafts';
 import InboxIcon from '@mui/icons-material/Inbox';
+import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';

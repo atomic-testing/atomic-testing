@@ -1,7 +1,11 @@
 import { SelectDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import React, { useCallback } from 'react';
 
 //#region Basic select
