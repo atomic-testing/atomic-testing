@@ -2,6 +2,7 @@ import {
   byCssSelector,
   ClickOption,
   CssProperty,
+  dateUtil,
   EnterTextOption,
   FocusOption,
   HoverOption,
@@ -74,7 +75,18 @@ export class PlaywrightInteractor implements Interactor {
     if (!option?.append) {
       await this.page.locator(cssLocator).clear();
     }
-    await this.page.locator(cssLocator).type(text);
+
+    // If it is a date, time or datetime-local input, validate the date format
+    const type = (await this.getAttribute(locator, 'type')) ?? '';
+    if (dateUtil.isHtmlDateInputType(type)) {
+      const result = dateUtil.validateHtmlDateInput(type, text);
+      if (!result.valid) {
+        throw new Error(
+          `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`,
+        );
+      }
+    }
+    await this.page.locator(cssLocator).fill(text);
   }
 
   async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {

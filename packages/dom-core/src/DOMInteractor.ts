@@ -1,6 +1,7 @@
 import {
   ClickOption,
   CssProperty,
+  dateUtil,
   EnterTextOption,
   FocusOption,
   HoverOption,
@@ -24,7 +25,6 @@ import { FakeMouseEvent } from './fakeEvents';
 
 export class DOMInteractor implements Interactor {
   constructor(protected readonly rootEl: HTMLElement = document.documentElement) {}
-
   async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
@@ -197,6 +197,20 @@ export class DOMInteractor implements Interactor {
       if (!option?.append) {
         await userEvent.clear(el);
       }
+
+      // If it is a date, time or datetime-local input, validate the date format
+      if (el.tagName === 'INPUT') {
+        const type = el.getAttribute('type') ?? '';
+        if (dateUtil.isHtmlDateInputType(type)) {
+          const result = dateUtil.validateHtmlDateInput(type, text);
+          if (!result.valid) {
+            throw new Error(
+              `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`,
+            );
+          }
+        }
+      }
+
       await userEvent.type(el, text);
     }
   }

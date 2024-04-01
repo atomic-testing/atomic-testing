@@ -6,14 +6,44 @@ import React from 'react';
 export const UncontrolledTextInputExample = () => {
   return (
     <React.Fragment>
-      <input type="text" data-testid="uncontrolled-text-input" />
+      <div>
+        Text input: <input type="text" data-testid="uncontrolled-text-input" />
+      </div>
+      <div>
+        Number: <input type="number" data-testid="uncontrolled-number-input" />
+      </div>
+      <div>
+        Date: <input type="date" data-testid="uncontrolled-date-input" />
+      </div>
+      <div>
+        Datetime-local: <input type="datetime-local" data-testid="uncontrolled-datetime-local-input" />
+      </div>
+      <div>
+        Time: <input type="time" data-testid="uncontrolled-time-input" />
+      </div>
     </React.Fragment>
   );
 };
 
 export const uncontrolledTextInputExampleScenePart = {
-  input: {
+  text: {
     locator: byDataTestId('uncontrolled-text-input'),
+    driver: HTMLTextInputDriver,
+  },
+  number: {
+    locator: byDataTestId('uncontrolled-number-input'),
+    driver: HTMLTextInputDriver,
+  },
+  date: {
+    locator: byDataTestId('uncontrolled-date-input'),
+    driver: HTMLTextInputDriver,
+  },
+  dateTime: {
+    locator: byDataTestId('uncontrolled-datetime-local-input'),
+    driver: HTMLTextInputDriver,
+  },
+  time: {
+    locator: byDataTestId('uncontrolled-time-input'),
     driver: HTMLTextInputDriver,
   },
 } satisfies ScenePart;
@@ -47,8 +77,36 @@ export const uncontrolledTextInputExampleTestSuite: TestSuiteInfo<typeof uncontr
 
       test(`set text value`, async () => {
         const targetValue = 'abc';
-        await testEngine.parts.input.setValue(targetValue);
-        const val = await testEngine.parts.input.getValue();
+        await testEngine.parts.text.setValue(targetValue);
+        const val = await testEngine.parts.text.getValue();
+        assertEqual(val, targetValue);
+      });
+
+      test(`set number value`, async () => {
+        const targetValue = '125';
+        await testEngine.parts.number.setValue(targetValue);
+        const val = await testEngine.parts.number.getValue();
+        assertEqual(val, targetValue);
+      });
+
+      test(`set date value`, async () => {
+        const targetValue = '2002-02-02';
+        await testEngine.parts.date.setValue(targetValue);
+        const val = await testEngine.parts.date.getValue();
+        assertEqual(val, targetValue);
+      });
+
+      test(`set time value`, async () => {
+        const targetValue = '13:58';
+        await testEngine.parts.time.setValue(targetValue);
+        const val = await testEngine.parts.time.getValue();
+        assertEqual(val, targetValue);
+      });
+
+      test(`set date time value`, async () => {
+        const targetValue = '2002-02-02T13:58';
+        await testEngine.parts.dateTime.setValue(targetValue);
+        const val = await testEngine.parts.dateTime.getValue();
         assertEqual(val, targetValue);
       });
     });

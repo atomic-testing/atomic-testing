@@ -13,6 +13,13 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
     return value ?? null;
   }
 
+  /**
+   * Set the value of the input, if the input is date, the value should be in the format of 'yyyy-MM-dd'.
+   * If the input is time, the value should be in the format of 'HH:mm:'.
+   * If the input is datetime-local, the value should be in the format of 'yyyy-MM-ddTHH:mm'.
+   * @param value Value to be set.
+   * @returns
+   */
   async setValue(value: string | null): Promise<boolean> {
     await this.interactor.enterText(this.locator, value ?? '');
     return true;
