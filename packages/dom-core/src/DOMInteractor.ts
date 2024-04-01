@@ -188,7 +188,6 @@ export class DOMInteractor implements Interactor {
     if (el == null || 'focus' in el === false) {
       return;
     }
-    console.log('***************************');
     (el as HTMLInputElement).focus();
   }
 
