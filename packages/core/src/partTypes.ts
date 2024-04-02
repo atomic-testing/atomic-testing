@@ -8,10 +8,10 @@ import { PartLocator } from './locators/PartLocator';
 
 export type PartName<T extends ScenePart> = keyof T;
 
-export type ComponentDriverClass<T extends ComponentDriver<P>, P extends ScenePart = {}> = new (
+export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
   locator: PartLocator,
   interactor: Interactor,
-  option?: Partial<IComponentDriverOption<P>>,
+  option?: Partial<IComponentDriverOption<any>>,
 ) => T;
 
 export interface ComponentPartDefinition<T extends ScenePart> {
@@ -23,11 +23,10 @@ export interface ComponentPartDefinition<T extends ScenePart> {
   /**
    * The class of driver which is used to interact with the element
    */
-  driver: typeof ComponentDriver<T> | ComponentDriverClass<ComponentDriver<T>, T>;
+  driver: {
+    new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<T>>): ComponentDriver<T>;
+  };
 
-  /**
-   * Option for the driver
-   */
   option?: Partial<IComponentDriverOption<T>>;
 }
 
