@@ -56,9 +56,9 @@ export const singleCheckboxTestSuite: TestSuiteInfo<typeof singleCheckboxExample
           const val = await testEngine.parts.toggle.isSelected();
           assertEqual(val, false);
         });
-        test('value should be null because it is not checked', async () => {
+        test('value should be 1 regardless of its checked state', async () => {
           const val = await testEngine.parts.toggle.getValue();
-          assertEqual(val, null);
+          assertEqual(val, '1');
         });
       });
 
