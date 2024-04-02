@@ -6,7 +6,7 @@ import { ComponentDriver } from './ComponentDriver';
 import * as listHelper from './listHelper';
 
 export interface ListComponentDriverSpecificOption<ItemT extends ComponentDriver> {
-  itemClass: new (locator: PartLocator, interactor: Interactor, option?: IComponentDriverOption) => ItemT;
+  itemClass: new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) => ItemT;
   itemLocator: PartLocator;
 }
 
