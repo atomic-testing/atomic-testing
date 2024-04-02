@@ -34,7 +34,7 @@ export async function getListItemByIndex<T extends ComponentDriver>(
  * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
  * @param driverClass The driver class of the list item
  */
-export async function* getListItemIterator<T extends ComponentDriver>(
+export async function* getListItemIterator<T extends ComponentDriver<any>>(
   host: ComponentDriver<any>,
   itemLocatorBase: PartLocator,
   driverClass: ComponentDriverClass<T>,
