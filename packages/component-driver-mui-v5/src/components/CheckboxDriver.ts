@@ -25,7 +25,7 @@ export class CheckboxDriver
   extends ComponentDriver<CheckboxScenePart>
   implements IFormFieldDriver<string | null>, IToggleDriver
 {
-  constructor(locator: PartLocator, interactor: Interactor, option?: IComponentDriverOption) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: checkboxPart,
