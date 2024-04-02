@@ -2,11 +2,6 @@ import { ComponentDriver, IFormFieldDriver, IToggleDriver } from '@atomic-testin
 
 export class HTMLCheckboxDriver extends ComponentDriver<{}> implements IFormFieldDriver<string | null>, IToggleDriver {
   async getValue(): Promise<string | null> {
-    const isChecked = await this.interactor.isChecked(this.locator);
-    if (!isChecked) {
-      return null;
-    }
-
     const value = await this.interactor.getAttribute(this.locator, 'value');
     return value ?? null;
   }
