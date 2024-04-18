@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-html",
-  "version": "0.46.1",
+  "version": "0.46.2",
   "description": "HTML component driver for atomic-testing",
   "main": "dist/index.js",
   "files": [
