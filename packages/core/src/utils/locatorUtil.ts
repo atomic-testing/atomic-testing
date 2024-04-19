@@ -1,6 +1,6 @@
 import { Optional } from '../dataTypes';
-import { Interactor } from '../interactor';
-import { byAttribute } from '../locators';
+import { Interactor } from '../interactor/Interactor';
+import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
@@ -18,7 +18,7 @@ export function append(locatorBase: PartLocator, ...locatorsToAppend: PartLocato
   const baseLocator: CssLocatorChain = toChain(locatorBase);
   const toAppend: CssLocatorChain = locatorsToAppend.reduce((acc: CssLocatorChain, locator) => {
     return acc.concat(locator);
-  }, []);
+  }, [] as CssLocatorChain);
 
   return baseLocator.concat(toAppend);
 }

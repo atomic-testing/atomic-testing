@@ -41,7 +41,7 @@ export class CssLocator {
     const baseLocator: CssLocator[] = [this];
     const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator) => {
       return acc.concat(locator);
-    }, []);
+    }, [] as CssLocator[]);
 
     return baseLocator.concat(toAppend);
   }
