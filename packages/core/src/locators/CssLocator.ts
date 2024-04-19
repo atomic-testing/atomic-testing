@@ -3,7 +3,7 @@ import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
 import { LocatorType } from './LocatorType';
-import { PartLocator } from './PartLocator';
+import { CssLocatorChain, PartLocator } from './PartLocator';
 
 export interface CssLocatorInitializer {
   relative: LocatorRelativePosition;
@@ -39,8 +39,11 @@ export class CssLocator {
 
   chain(...locatorsToAppend: PartLocator[]): PartLocator {
     const baseLocator: CssLocator[] = [this];
-    const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator) => {
-      return acc.concat(locator);
+    const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator: PartLocator) => {
+      if (locator instanceof CssLocator) {
+        return acc.concat(locator);
+      }
+      return acc.concat(...(locator as CssLocatorChain));
     }, [] as CssLocator[]);
 
     return baseLocator.concat(toAppend);

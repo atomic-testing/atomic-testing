@@ -16,9 +16,12 @@ export function toChain(locator: PartLocator): CssLocatorChain {
 
 export function append(locatorBase: PartLocator, ...locatorsToAppend: PartLocator[]): PartLocator {
   const baseLocator: CssLocatorChain = toChain(locatorBase);
-  const toAppend: CssLocatorChain = locatorsToAppend.reduce((acc: CssLocatorChain, locator) => {
-    return acc.concat(locator);
-  }, [] as CssLocatorChain);
+  const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator: PartLocator) => {
+    if (locator instanceof CssLocator) {
+      return acc.concat(locator);
+    }
+    return acc.concat(...(locator as CssLocatorChain));
+  }, [] as CssLocator[]);
 
   return baseLocator.concat(toAppend);
 }
