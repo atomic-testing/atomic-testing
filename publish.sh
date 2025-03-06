@@ -2,7 +2,7 @@
 # Bulk publish all packages
 # Use inconjunction with pnpm bumpVersion #.#.# to update all package versions
 
-declare -a packages=("core" "dom-core" "test-runner" "jest" "playwright" "react" "component-driver-html" "component-driver-mui-v5" "component-driver-mui-v6")
+declare -a packages=("core" "dom-core" "test-runner" "jest" "vitest" "playwright" "react" "component-driver-html" "component-driver-mui-v5" "component-driver-mui-v6")
 
 cd packages
 
