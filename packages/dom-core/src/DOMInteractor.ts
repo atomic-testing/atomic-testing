@@ -345,6 +345,13 @@ export class DOMInteractor implements Interactor {
     return Promise.resolve(false);
   }
 
+  //#region
+  async innerHTML(locator: PartLocator): Promise<string> {
+    const el = await this.getElement(locator);
+    return el?.innerHTML ?? '';
+  }
+  //#endregion
+
   clone(): Interactor {
     return new DOMInteractor();
   }

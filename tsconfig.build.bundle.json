@@ -6,6 +6,7 @@
       "@atomic-testing/core": ["./packages/core/src"],
       "@atomic-testing/dom-core": ["./packages/dom-core/src"],
       "@atomic-testing/jest": ["./packages/jest/src"],
+      "@atomic-testing/vitest": ["./packages/vitest/src"],
       "@atomic-testing/test-runner": ["./packages/test-runner/src"],
       "@atomic-testing/react": ["./packages/react/src"],
       "@atomic-testing/playwright": ["./packages/playwright/src"],
@@ -17,19 +18,25 @@
       "@atomic-testing/component-driver-mui-v5-test": ["./packages/component-driver-mui-v5-test/src"],
 
       "@atomic-testing/component-driver-mui-v6": ["./packages/component-driver-mui-v6/src"],
-      "@atomic-testing/component-driver-mui-v6-test": ["./packages/component-driver-mui-v6-test/src"]
+      "@atomic-testing/component-driver-mui-v6-test": ["./packages/component-driver-mui-v6-test/src"],
+
+      "@atomic-testing/component-driver-mui-x-v7": ["./packages/component-driver-mui-x-v7/src"],
+      "@atomic-testing/component-driver-mui-x-v7-test": ["./packages/component-driver-mui-x-v7-test/src"]
     }
   },
   "references": [
     { "path": "./packages/core" },
     { "path": "./packages/dom-core" },
     { "path": "./packages/jest" },
+    { "path": "./packages/vitest" },
     { "path": "./packages/test-runner" },
     { "path": "./packages/react" },
     { "path": "./packages/playwright" },
     { "path": "./packages/component-driver-mui-v5" },
     { "path": "./packages/component-driver-mui-v5-test" },
     { "path": "./packages/component-driver-mui-v6" },
-    { "path": "./packages/component-driver-mui-v6-test" }
+    { "path": "./packages/component-driver-mui-v6-test" },
+    { "path": "./packages/component-driver-mui-x-v7" },
+    { "path": "./packages/component-driver-mui-x-v7-test" }
   ]
 }
