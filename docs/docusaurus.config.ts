@@ -4,8 +4,7 @@
 // require('prism-react-renderer/themes/github');
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
-
-const { themes } = require('prism-react-renderer');
+import { themes } from 'prism-react-renderer';
 
 const darkCodeTheme = themes.dracula; // require('prism-react-renderer/themes/dracula');
 const lightCodeTheme = themes.github;
@@ -121,16 +120,16 @@ const config: Config = {
         {
           title: 'Community',
           items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/atomic-testing',
-            },
+            // {
+            //   label: 'Stack Overflow',
+            //   href: 'https://stackoverflow.com/questions/tagged/atomic-testing',
+            // },
             // {
             //   label: 'Discord',
             //   href: 'https://discordapp.com/invite/atomic-testing',
             // },
             {
-              label: 'Twitter',
+              label: 'Twitter/X',
               href: 'https://twitter.com/TestingAtomic',
             },
           ],
@@ -160,8 +159,12 @@ const config: Config = {
     algolia: {
       appId: 'HKBV6KED15',
       apiKey: '31786977c036097aab45afff518ca641',
-      indexName: 'atomic-testing',
-      contextualSearch: true,
+      // indexName: 'atomic-testing',
+      contextualSearch: false,
+      replaceSearchResultPathname: {
+        from: '/docs/', // or as RegExp: /\/docs\//
+        to: '/',
+      },
     },
   } satisfies Preset.ThemeConfig,
 };
