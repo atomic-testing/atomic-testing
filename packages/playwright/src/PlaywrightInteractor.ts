@@ -260,6 +260,13 @@ export class PlaywrightInteractor implements Interactor {
     return attrValue != null;
   }
 
+  //#region
+  async innerHTML(locator: PartLocator): Promise<string> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    return this.page.locator(cssLocator).innerHTML();
+  }
+  //#endregion
+
   clone(): Interactor {
     return new PlaywrightInteractor(this.page);
   }
