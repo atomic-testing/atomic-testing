@@ -23,8 +23,8 @@ function adjustFolderPackageJson(dir: string, version: string) {
 }
 
 function bumpVersion(dir: string, version: string) {
-  const santizedVersion = version.trim();
-  if (santizedVersion.length < 1) {
+  const sanitizedVersion = version.trim();
+  if (sanitizedVersion.length < 1) {
     return;
   }
 
@@ -36,7 +36,7 @@ function bumpVersion(dir: string, version: string) {
     }
     const childPath = path.join(packagePath, child);
     if (isFolder(childPath)) {
-      adjustFolderPackageJson(childPath, santizedVersion);
+      adjustFolderPackageJson(childPath, sanitizedVersion);
     }
   }
 }
