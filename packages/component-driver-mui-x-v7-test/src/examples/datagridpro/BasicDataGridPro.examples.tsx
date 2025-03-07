@@ -1,11 +1,12 @@
-import { DataGridProDriver } from '@atomic-testing/component-driver-mui-v6';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
+import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v7';
+import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byRole, locatorUtil, listHelper } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Box } from '@mui/material';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import React from 'react';
 import { basicGridColumnConfig, initialState } from './gridConfig';
 import { gridData } from './gridData';
+import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 
 export const BasicDataGridPro: React.FunctionComponent = () => {
   // Giving minWidth so in DOM test the grid will not be too small
@@ -13,8 +14,8 @@ export const BasicDataGridPro: React.FunctionComponent = () => {
     <Box sx={{ height: 520, minWidth: 800, width: '100%' }}>
       <DataGridPro
         data-testid="basic-grid-pro"
-        columns={basicGridColumnConfig}
-        rows={gridData}
+        columns={basicGridColumnConfig.slice(0, 5)}
+        rows={gridData.slice(0, 10)}
         initialState={initialState}
         loading={gridData.length === 0}
         rowHeight={38}
@@ -77,7 +78,7 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
       assertEqual((text ?? '').length > 1, true);
     });
 
-    test('Header Row should contain columns desk, commodity, trader name ...', async () => {
+    test('Header Row should contain columns desk, commodity ...', async () => {
       const columnText = await testEngine.parts.basicGrid.getHeaderText();
       const expectedColumns = ['Desk', 'Commodity'];
       const columnTextSet = new Set(columnText);
