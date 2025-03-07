@@ -106,5 +106,12 @@ export interface Interactor {
   hasAttribute(locator: PartLocator, name: string): Promise<boolean>;
   //#endregion
 
+  //#region debug
+  /**
+   * Get the HTML of an element
+   * @param locator
+   */
+  innerHTML(locator: PartLocator): Promise<string>;
+
   clone(): Interactor;
 }

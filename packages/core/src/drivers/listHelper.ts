@@ -33,13 +33,15 @@ export async function getListItemByIndex<T extends ComponentDriver>(
  * @param host The component the list item is under
  * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
  * @param driverClass The driver class of the list item
+ * @param startIndex The starting index of the list item iterator, default is 0
  */
 export async function* getListItemIterator<T extends ComponentDriver<any>>(
   host: ComponentDriver<any>,
   itemLocatorBase: PartLocator,
   driverClass: ComponentDriverClass<T>,
+  startIndex: number = 0,
 ): AsyncGenerator<T, void, unknown> {
-  let index = 0;
+  let index = startIndex;
   let item: T | null = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
   while (item != null) {
     yield item;

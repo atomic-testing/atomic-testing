@@ -10,7 +10,7 @@ import { gridData } from './gridData';
 export const BasicDataGridPro: React.FunctionComponent = () => {
   // Giving minWidth so in DOM test the grid will not be too small
   return (
-    <Box sx={{ height: 520, minWidth: 1200, width: '100%' }}>
+    <Box sx={{ height: 520, minWidth: 800, width: '100%' }}>
       <DataGridPro
         data-testid="basic-grid-pro"
         columns={basicGridColumnConfig}
