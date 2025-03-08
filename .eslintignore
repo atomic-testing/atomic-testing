@@ -28,3 +28,5 @@ packages/cli/**/tmp-*
 **/coverage/**/*
 **/playwright-report/**/*
 **/dist/**/*
+
+docs/docs/

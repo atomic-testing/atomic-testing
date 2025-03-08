@@ -1,6 +1,6 @@
 import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
-import { ScenePart, byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
 
 const loginScenePart: ScenePart = {
   username: {
