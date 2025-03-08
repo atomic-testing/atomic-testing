@@ -26,10 +26,9 @@ export async function waitUntil<T>(
   const maxProbeCount = 10;
   const intervalMs = timeoutMs / maxProbeCount;
 
-  // @ts-ignore
   const eqCheck: (currentValue: T) => boolean =
     typeof terminateCondition === 'function'
-      ? terminateCondition
+      ? (terminateCondition as (currentValue: T) => boolean)
       : (currentValue) => terminateCondition === currentValue;
 
   const startMs = Date.now();
