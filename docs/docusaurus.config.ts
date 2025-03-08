@@ -159,7 +159,7 @@ const config: Config = {
     algolia: {
       appId: 'HKBV6KED15',
       apiKey: '31786977c036097aab45afff518ca641',
-      // indexName: 'atomic-testing',
+      indexName: 'atomic-testing',
       contextualSearch: false,
       replaceSearchResultPathname: {
         from: '/docs/', // or as RegExp: /\/docs\//
