@@ -13,7 +13,7 @@
     { "path": "../react" },
     { "path": "../test-runner" },
     { "path": "../jest" },
-    { "path": "../component-driver-mui-v5" },
+    { "path": "../component-driver-mui-v6" },
     { "path": "../playwright" }
   ]
 }
