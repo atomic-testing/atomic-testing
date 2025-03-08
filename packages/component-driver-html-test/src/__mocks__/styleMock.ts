@@ -1,1 +1,2 @@
-export default {};
+const emptyStyle = {};
+export default emptyStyle;

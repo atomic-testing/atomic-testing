@@ -1,4 +1,4 @@
-import { ScenePart, TestEngine, byAttribute } from '@atomic-testing/core';
+import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 

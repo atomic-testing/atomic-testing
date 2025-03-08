@@ -1,5 +1,8 @@
 import { HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssSelector,
+  byRole,
+  byTagName,
   ComponentDriver,
   IComponentDriverOption,
   IInputDriver,
@@ -7,9 +10,6 @@ import {
   Optional,
   PartLocator,
   ScenePart,
-  byCssSelector,
-  byRole,
-  byTagName,
 } from '@atomic-testing/core';
 
 import { SelectDriver } from './SelectDriver';
