@@ -59,7 +59,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/builderui-setup
 
-      - name: Run MUI V5 test
+      - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-v5-test
 
@@ -76,7 +76,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/builderui-setup
 
-      - name: Run MUI V5 test
+      - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-v6-test
 
@@ -93,7 +93,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/builderui-setup
 
-      - name: Run MUI V5 test
+      - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v7-test
     
