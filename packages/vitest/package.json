@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "^22.13.9",
     "vitest": "^3.0.7",
-    "typescript": "^5.5.4"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@atomic-testing/test-runner": "workspace:*"

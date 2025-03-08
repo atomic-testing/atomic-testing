@@ -1,12 +1,11 @@
 import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v7';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byRole, locatorUtil, listHelper } from '@atomic-testing/core';
+import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Box } from '@mui/material';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import React from 'react';
 import { basicGridColumnConfig, initialState } from './gridConfig';
 import { gridData } from './gridData';
-import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 
 export const BasicDataGridPro: React.FunctionComponent = () => {
   // Giving minWidth so in DOM test the grid will not be too small

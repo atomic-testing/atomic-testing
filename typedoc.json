@@ -6,7 +6,8 @@
     "packages/react",
     "packages/component-driver-html",
     "packages/component-driver-mui-v5",
-    "packages/component-driver-mui-v6"
+    "packages/component-driver-mui-v6",
+    "packages/component-driver-mui-x-v7",
   ],
   "name": "Atomic Testing",
   "entryPointStrategy": "packages",
