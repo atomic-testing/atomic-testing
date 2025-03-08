@@ -1,6 +1,6 @@
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
+import { act } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
-import { act } from 'react-dom/test-utils';
 
 import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';

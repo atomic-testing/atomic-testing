@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
-    "@atomic-testing/dom-core": "workspace:*"
+    "@atomic-testing/dom-core": "workspace:*",
+    "@testing-library/react": "^16.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.13.9",
@@ -41,6 +42,7 @@
   },
   "peerDependencies": {
     "@testing-library/dom": ">=9.2.0",
+    "@testing-library/react": ">=16.2.0",
     "@testing-library/user-event": ">=14.0.0",
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0"
