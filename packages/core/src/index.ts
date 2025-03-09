@@ -26,3 +26,4 @@ export * as domUtil from './utils/domUtil';
 export * as escapeUtil from './utils/escapeUtil';
 export * as locatorUtil from './utils/locatorUtil';
 export * as timingUtil from './utils/timingUtil';
+export * as interactorUtil from './utils/interactorUtil';
