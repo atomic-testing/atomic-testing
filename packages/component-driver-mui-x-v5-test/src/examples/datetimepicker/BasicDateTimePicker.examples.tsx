@@ -3,7 +3,7 @@ import {
   DesktopDatePickerDriver,
   MobileDatePickerDriver,
   TimePickerDriver,
-} from '@atomic-testing/component-driver-mui-v5';
+} from '@atomic-testing/component-driver-mui-x-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Stack from '@mui/material/Stack';

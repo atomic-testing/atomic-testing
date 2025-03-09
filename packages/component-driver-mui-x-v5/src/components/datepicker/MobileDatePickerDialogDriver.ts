@@ -1,4 +1,5 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
+import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
 import {
   byAttribute,
   byCssClass,
@@ -12,7 +13,6 @@ import {
   ScenePart,
 } from '@atomic-testing/core';
 
-import { ButtonDriver } from '../ButtonDriver';
 import { dateToTextEntry, textEntryToDate } from './dateUtil';
 
 const parts = {
