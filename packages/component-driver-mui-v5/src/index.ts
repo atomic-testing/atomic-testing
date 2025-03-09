@@ -25,7 +25,5 @@ export { SwitchDriver } from './components/SwitchDriver';
 export { TextFieldDriver } from './components/TextFieldDriver';
 export { ToggleButtonDriver } from './components/ToggleButtonDriver';
 export { ExclusiveToggleButtonGroupDriver, ToggleButtonGroupDriver } from './components/ToggleButtonGroupDriver';
-export * from './components/datagrid';
-export * from './components/datepicker';
 export { MenuItemDisabledError, MenuItemDisabledErrorId } from './errors/MenuItemDisabledError';
 export { MenuItemNotFoundError, MenuItemNotFoundErrorId } from './errors/MenuItemNotFoundError';
