@@ -3,10 +3,12 @@ import {
   ClickOption,
   CssProperty,
   dateUtil,
+  defaultWaitForOption,
   EnterTextOption,
   FocusOption,
   HoverOption,
   Interactor,
+  interactorUtil,
   locatorUtil,
   MouseDownOption,
   MouseMoveOption,
@@ -14,6 +16,7 @@ import {
   Optional,
   PartLocator,
   timingUtil,
+  WaitForOption,
 } from '@atomic-testing/core';
 import { MouseEnterOption, MouseLeaveOption, MouseOutOption } from '@atomic-testing/core/src/interactor/MouseOption';
 import { Page } from '@playwright/test';
@@ -147,9 +150,26 @@ export class PlaywrightInteractor implements Interactor {
     return this.page.focus(cssLocator);
   }
 
+  //#region wait conditions
   wait(ms: number): Promise<void> {
     return timingUtil.wait(ms);
   }
+
+  async waitUntilComponentState(
+    locator: PartLocator,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+  ): Promise<void> {
+    return interactorUtil.interactorWaitUtil(locator, this, option);
+  }
+
+  waitUntil<T>(
+    probeFn: () => Promise<T> | T,
+    terminateCondition: T | ((currentValue: T) => boolean),
+    timeoutMs: number,
+  ): Promise<T> {
+    return timingUtil.waitUntil(probeFn, terminateCondition, timeoutMs);
+  }
+  //#endregion
 
   async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;

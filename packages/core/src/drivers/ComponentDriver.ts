@@ -1,6 +1,5 @@
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
-import { WaitForFailureError } from '../errors/WaitForFailureError';
 import {
   ClickOption,
   FocusOption,
@@ -15,7 +14,6 @@ import {
 } from '../interactor';
 import { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
-import * as timingUtil from '../utils/timingUtil';
 import { getPartFromDefinition } from './driverUtil';
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
 
@@ -216,32 +214,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * @param option The option to configure the wait behavior
    */
   async waitUntil(option: Partial<Readonly<WaitForOption>> = defaultWaitForOption): Promise<void> {
-    const actualOption = { ...defaultWaitForOption, ...option };
-    let probeFn: () => Promise<boolean>;
-    let expected: boolean;
-    switch (actualOption.condition) {
-      case 'hidden':
-        probeFn = () => this.interactor.isVisible(this.locator);
-        expected = false;
-        break;
-      case 'detached':
-        probeFn = () => this.interactor.exists(this.locator);
-        expected = false;
-        break;
-      case 'visible':
-        probeFn = () => this.interactor.isVisible(this.locator);
-        expected = true;
-        break;
-      default: // 'attached'
-        probeFn = () => this.interactor.exists(this.locator);
-        expected = true;
-        break;
-    }
-
-    const actual = await timingUtil.waitUntil(probeFn, expected, actualOption.timeoutMs);
-    if (actual !== expected) {
-      throw new WaitForFailureError(this.locator, actualOption, this);
-    }
+    return this.interactor.waitUntilComponentState(this.locator, option);
   }
 
   abstract get driverName(): string;

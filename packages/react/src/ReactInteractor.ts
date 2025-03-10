@@ -1,5 +1,6 @@
 import {
   ClickOption,
+  defaultWaitForOption,
   EnterTextOption,
   FocusOption,
   HoverOption,
@@ -11,9 +12,10 @@ import {
   MouseOutOption,
   MouseUpOption,
   PartLocator,
+  WaitForOption,
 } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
-import { act } from 'react-dom/test-utils';
+import { act } from '@testing-library/react';
 
 export class ReactInteractor extends DOMInteractor {
   override async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void> {
@@ -88,11 +90,32 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
+  //#region wait condition
   override async wait(ms: number): Promise<void> {
     await act(async () => {
       await super.wait(ms);
     });
   }
+
+  override async waitUntilComponentState(
+    locator: PartLocator,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+  ): Promise<void> {
+    await act(async () => {
+      await super.waitUntilComponentState(locator, option);
+    });
+  }
+
+  override async waitUntil<T>(
+    probeFn: () => Promise<T> | T,
+    terminateCondition: T | ((currentValue: T) => boolean),
+    timeoutMs: number,
+  ): Promise<T> {
+    return await act(async () => {
+      return await super.waitUntil(probeFn, terminateCondition, timeoutMs);
+    });
+  }
+  //#endregion
 
   override clone(): Interactor {
     return new ReactInteractor();
