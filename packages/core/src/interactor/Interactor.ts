@@ -1,4 +1,5 @@
 import { Optional } from '../dataTypes';
+import { WaitForOption } from '../drivers/WaitForOption';
 import { PartLocator } from '../locators';
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
@@ -69,6 +70,34 @@ export interface Interactor {
    * @param ms
    */
   wait(ms: number): Promise<void>;
+
+  /**
+   * Wait until the component is in the expected state such as
+   * the component's visibility or existence. If the component has
+   * not reached the expected state within the timeout, it will throw
+   * an error.
+   *
+   * By default it waits until the component is attached to the DOM
+   * within 30 seconds.
+   *
+   * @param locator The locator of the component to wait for
+   * @param option The option to configure the wait behavior
+   */
+  waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
+
+  /**
+   * Keep running a probe function until it returns a value that matches the terminate condition or timeout
+   * @param probeFn A function that returns a value or promised value to be checked against the terminate condition
+   * @param terminateCondition A value to check for equality or a function used for custom equality check
+   * @param timeoutMs A number of milliseconds to wait before returning the last value
+   * @returns The last value returned by the probe function
+   */
+  waitUntil<T>(
+    probeFn: () => Promise<T> | T,
+    terminateCondition: T | ((currentValue: T) => boolean),
+    timeoutMs: number,
+    debug?: boolean,
+  ): Promise<T>;
   //#endregion
 
   //#region Read only interactions

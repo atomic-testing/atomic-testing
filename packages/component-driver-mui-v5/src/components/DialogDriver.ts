@@ -9,7 +9,6 @@ import {
   Optional,
   PartLocator,
   ScenePart,
-  timingUtil,
 } from '@atomic-testing/core';
 
 export const parts = {
@@ -56,7 +55,7 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
    * @returns true open has performed successfully
    */
   async waitForOpen(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
-    const isOpened = await timingUtil.waitUntil(this.isOpen.bind(this), true, timeoutMs);
+    const isOpened = await this.interactor.waitUntil(this.isOpen.bind(this), true, timeoutMs);
     return isOpened === true;
   }
 
@@ -66,7 +65,7 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
    * @returns true open has performed successfully
    */
   async waitForClose(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
-    const isOpened = await timingUtil.waitUntil(this.isOpen.bind(this), false, timeoutMs);
+    const isOpened = await this.interactor.waitUntil(this.isOpen.bind(this), false, timeoutMs);
     return isOpened === false;
   }
 

@@ -16,9 +16,12 @@ export interface WaitForOption {
    * @default 30000
    */
   timeoutMs: number;
+
+  debug: boolean;
 }
 
 export const defaultWaitForOption: Readonly<WaitForOption> = Object.freeze({
   condition: 'attached',
   timeoutMs: 30000,
+  debug: false,
 });

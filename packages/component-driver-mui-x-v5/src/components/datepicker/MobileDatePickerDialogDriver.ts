@@ -51,7 +51,7 @@ export class MobileDatePickerDialogDriver extends ComponentDriver<typeof parts> 
     }
     await this.enforcePartExistence('editButton');
     await this.parts.editButton.click();
-    await this.parts.dateInput.waitUntil({ timeoutMs: 250 });
+    await this.parts.dateInput.waitUntilComponentState({ timeoutMs: 250 });
   }
 
   async getValue(): Promise<Date | null> {
