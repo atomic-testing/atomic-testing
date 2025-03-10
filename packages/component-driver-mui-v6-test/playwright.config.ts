@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseUrl = 'http://localhost:5116';
+const baseUrl = 'http://localhost:5116/';
 
 /**
  * Read environment variables from file.
@@ -86,10 +86,10 @@ export default defineConfig({
   // outputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm start',
-    timeout: 120 * 1000,
-    url: baseUrl,
-    reuseExistingServer: true,
-  },
+  // webServer: {
+  //   command: 'pnpm start',
+  //   timeout: 120 * 1000,
+  //   url: baseUrl,
+  //   reuseExistingServer: true,
+  // },
 });

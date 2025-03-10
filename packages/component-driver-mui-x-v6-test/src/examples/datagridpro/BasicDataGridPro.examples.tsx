@@ -1,4 +1,4 @@
-import { DataGridProDriver } from '@atomic-testing/component-driver-mui-v6';
+import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Box } from '@mui/material';

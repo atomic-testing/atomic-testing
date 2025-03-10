@@ -1,5 +1,5 @@
 {
-  "name": "@atomic-testing/component-driver-mui-v5-test",
+  "name": "@atomic-testing/component-driver-mui-v6-test",
   "version": "0.0.0",
   "description": "Examples and tests for @atomic-testing/component-driver-mui-v6",
   "main": "dist/index.js",
