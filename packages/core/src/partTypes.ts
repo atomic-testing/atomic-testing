@@ -143,7 +143,7 @@ export interface IComponentDriver<T extends ScenePart = {}> {
    *
    * @param option The option to configure the wait behavior
    */
-  waitUntil(option?: Partial<Readonly<WaitForOption>>): Promise<void>;
+  waitUntilComponentState(option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
 export interface ITestEngine<T extends ScenePart = {}> extends IComponentDriver<T> {

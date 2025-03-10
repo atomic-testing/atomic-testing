@@ -39,7 +39,7 @@ export class MobileDatePickerDriver extends ComponentDriver<typeof parts> implem
       return;
     }
     await this.parts.inputTrigger.click();
-    await this.parts.entryDialog.waitUntil({ condition: 'visible' });
+    await this.parts.entryDialog.waitUntilComponentState({ condition: 'visible' });
   }
 
   protected async waitForEntryDialogClose(): Promise<void> {
@@ -47,20 +47,21 @@ export class MobileDatePickerDriver extends ComponentDriver<typeof parts> implem
     if (!isDialogVisible) {
       return;
     }
-    await this.parts.entryDialog.waitUntil({ condition: 'detached' });
+
+    await this.parts.entryDialog.waitUntilComponentState({ condition: 'hidden' });
   }
 
   async setValue(value: Date | null): Promise<boolean> {
     await this.openEntryDialog();
     const result = await this.parts.entryDialog.setValue(value);
-    await this.waitForEntryDialogClose();
+    // await this.waitForEntryDialogClose();
     return result;
   }
 
   async getValue(): Promise<Date | null> {
     await this.openEntryDialog();
     const result = await this.parts.entryDialog.getValue();
-    await this.waitForEntryDialogClose();
+    // await this.waitForEntryDialogClose();
     return result;
   }
 

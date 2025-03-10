@@ -43,8 +43,8 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   }
 
   async waitForLoading(): Promise<void> {
-    await this.parts.headerRow.waitUntil();
-    await this.parts.loading.waitUntil({
+    await this.parts.headerRow.waitUntilComponentState();
+    await this.parts.loading.waitUntilComponentState({
       condition: 'detached',
     });
   }

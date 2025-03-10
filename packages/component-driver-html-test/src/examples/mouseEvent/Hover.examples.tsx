@@ -69,7 +69,7 @@ export const hoverMouseEventExampleTestSuite: TestSuiteInfo<typeof hoverMouseEve
       test(`Detail is shown when hover`, async () => {
         await testEngine.parts.button.hover();
         // Wait until the tip is visible, this is because tooltip shows in the next rendering cycle
-        await testEngine.parts.tip.waitUntil({
+        await testEngine.parts.tip.waitUntilComponentState({
           condition: 'visible',
           timeoutMs: 500,
         });

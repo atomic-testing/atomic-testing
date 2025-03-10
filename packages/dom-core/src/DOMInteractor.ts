@@ -2,10 +2,12 @@ import {
   ClickOption,
   CssProperty,
   dateUtil,
+  defaultWaitForOption,
   EnterTextOption,
   FocusOption,
   HoverOption,
   Interactor,
+  interactorUtil,
   locatorUtil,
   MouseDownOption,
   MouseEnterOption,
@@ -17,6 +19,7 @@ import {
   PartLocator,
   Point,
   timingUtil,
+  WaitForOption,
 } from '@atomic-testing/core';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -222,9 +225,27 @@ export class DOMInteractor implements Interactor {
     }
   }
 
+  //#region wait conditions
   wait(ms: number): Promise<void> {
     return timingUtil.wait(ms);
   }
+
+  async waitUntilComponentState(
+    locator: PartLocator,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+  ): Promise<void> {
+    return interactorUtil.interactorWaitUtil(locator, this, option);
+  }
+
+  waitUntil<T>(
+    probeFn: () => Promise<T> | T,
+    terminateCondition: T | ((currentValue: T) => boolean),
+    timeoutMs: number,
+    debug: boolean = false,
+  ): Promise<T> {
+    return timingUtil.waitUntil(probeFn, terminateCondition, timeoutMs, debug);
+  }
+  //#endregion
 
   async exists(locator: PartLocator): Promise<boolean> {
     const el = await this.getElement(locator);

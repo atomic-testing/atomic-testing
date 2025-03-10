@@ -22,6 +22,7 @@ export async function waitUntil<T>(
   probeFn: () => Promise<T> | T,
   terminateCondition: T | ((currentValue: T) => boolean),
   timeoutMs: number,
+  debug: boolean = false,
 ): Promise<T> {
   const maxProbeCount = 10;
   const intervalMs = timeoutMs / maxProbeCount;
@@ -37,7 +38,12 @@ export async function waitUntil<T>(
 
   while (shouldContinue) {
     val = await probeFn();
-    if (eqCheck(val)) {
+    const hasMetEqCheck = eqCheck(val);
+    if (debug) {
+      console.log({ val, hasMetEqCheck });
+    }
+
+    if (hasMetEqCheck) {
       return val;
     }
 
