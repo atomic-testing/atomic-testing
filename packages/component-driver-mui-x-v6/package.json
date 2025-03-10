@@ -1,0 +1,47 @@
+{
+  "name": "@atomic-testing/component-driver-mui-x-v6",
+  "version": "0.50.0",
+  "description": "Atomic Testing Component driver to help drive Material UI V6 components",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "node ../../scripts/postBuild.js",
+    "test": "jest --maxConcurrency=1"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "keywords": [
+    "testing",
+    "react",
+    "unit",
+    "integration",
+    "mui",
+    "material-ui",
+    "v6",
+    "integration-driver"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/component-driver-mui-v6"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "dayjs": "^1.11.10"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^9.2.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^22.13.9",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "typescript": "^5.8.2"
+  }
+}

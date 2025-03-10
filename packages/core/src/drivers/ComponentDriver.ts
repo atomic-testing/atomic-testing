@@ -1,3 +1,4 @@
+import { locatorUtil } from '..';
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
 import {
@@ -219,6 +220,15 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   innerHTML(): Promise<string> {
     return this.interactor.innerHTML(this.locator);
+  }
+
+  /**
+   * Get the runtime CSS selector of the component. This is useful for debugging and testing purposes.
+   *
+   * @returns The runtime CSS selector of the component
+   */
+  runtimeCssSelector(): Promise<string> {
+    return locatorUtil.toCssSelector(this.locator, this.interactor);
   }
 
   abstract get driverName(): string;

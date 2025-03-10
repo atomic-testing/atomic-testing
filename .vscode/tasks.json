@@ -34,6 +34,12 @@
       "isBackground": true
     },
     {
+      "label": "MUIXv6",
+      "type": "shell",
+      "command": "cd packages/component-driver-mui-x-v6-test && pnpm start",
+      "isBackground": true
+    },
+    {
       "label": "MUIXv7",
       "type": "shell",
       "command": "cd packages/component-driver-mui-x-v7-test && pnpm start",

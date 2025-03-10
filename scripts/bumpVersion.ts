@@ -5,6 +5,8 @@ const skipPostBuildPackages = [
   'component-driver-html-test',
   'component-driver-mui-v5-test',
   'component-driver-mui-v6-test',
+  'component-driver-mui-x-v5-test',
+  'component-driver-mui-x-v6-test',
   'component-driver-mui-x-v7-test',
 ];
 
