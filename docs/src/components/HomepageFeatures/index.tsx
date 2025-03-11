@@ -1,5 +1,6 @@
-import clsx from 'clsx';
 import React from 'react';
+
+import clsx from 'clsx';
 
 import styles from './styles.module.css';
 
@@ -51,11 +52,11 @@ function Feature({ title, Svg, description, index }: FeatureItem & { index: numb
   const isOdd = index % 2 === 1;
   const padder = <div className={clsx('col col--6')}></div>;
   return (
-    <div className="row">
+    <div className='row'>
       {isOdd ? padder : null}
       <div className={clsx('col col--6')}>
-        <div>{Svg ? <Svg className={styles.featureSvg} role="img" /> : null}</div>
-        <div className="padding-horiz--md">
+        <div>{Svg ? <Svg className={styles.featureSvg} role='img' /> : null}</div>
+        <div className='padding-horiz--md'>
           <h3>{title}</h3>
           <p>{description}</p>
         </div>
@@ -68,7 +69,7 @@ function Feature({ title, Svg, description, index }: FeatureItem & { index: numb
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
-      <div className="container">
+      <div className='container'>
         {FeatureList.map((props, idx) => (
           <Feature key={idx} index={idx} {...props} />
         ))}

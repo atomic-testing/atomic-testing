@@ -1,6 +1,7 @@
+import { createRoot } from 'react-dom/client';
+
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import { act } from '@testing-library/react';
-import { createRoot } from 'react-dom/client';
 
 import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';
@@ -24,7 +25,7 @@ const rootElementAttributeName = 'data-atomic-testing-react';
 export function createTestEngine<T extends ScenePart>(
   node: JSX.Element,
   partDefinitions: T,
-  option?: Readonly<Partial<IReactTestEngineOption>>,
+  option?: Readonly<Partial<IReactTestEngineOption>>
 ): TestEngine<T> {
   const rootEl = option?.rootElement ?? document.body;
   const container = rootEl.appendChild(document.createElement('div'));
@@ -46,7 +47,7 @@ export function createTestEngine<T extends ScenePart>(
     {
       parts: partDefinitions,
     },
-    cleanup,
+    cleanup
   );
 
   return engine;
@@ -64,7 +65,7 @@ export function createTestEngine<T extends ScenePart>(
 export function createRenderedTestEngine<T extends ScenePart>(
   rootElement: HTMLElement,
   partDefinitions: T,
-  _option?: Readonly<Partial<IReactTestEngineOption>>,
+  _option?: Readonly<Partial<IReactTestEngineOption>>
 ): TestEngine<T> {
   const rootId = getNextRootElementId();
   rootElement.setAttribute(rootElementAttributeName, rootId);
@@ -80,7 +81,7 @@ export function createRenderedTestEngine<T extends ScenePart>(
     {
       parts: partDefinitions,
     },
-    cleanup,
+    cleanup
   );
 
   return engine;

@@ -4,7 +4,7 @@
  * @returns
  */
 export function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve();
     }, ms);
@@ -22,7 +22,7 @@ export async function waitUntil<T>(
   probeFn: () => Promise<T> | T,
   terminateCondition: T | ((currentValue: T) => boolean),
   timeoutMs: number,
-  debug: boolean = false,
+  debug: boolean = false
 ): Promise<T> {
   const maxProbeCount = 10;
   const intervalMs = timeoutMs / maxProbeCount;
@@ -30,7 +30,7 @@ export async function waitUntil<T>(
   const eqCheck: (currentValue: T) => boolean =
     typeof terminateCondition === 'function'
       ? (terminateCondition as (currentValue: T) => boolean)
-      : (currentValue) => terminateCondition === currentValue;
+      : currentValue => terminateCondition === currentValue;
 
   const startMs = Date.now();
   const shouldContinue = true;

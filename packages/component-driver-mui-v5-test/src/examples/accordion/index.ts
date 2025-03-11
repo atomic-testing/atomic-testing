@@ -1,4 +1,5 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+
 import { basicAccordionExample, basicAccordionTestSuite } from './BasicAccordion.examples';
 
 export { basicAccordionExample, basicAccordionTestSuite };

@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -9,15 +11,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import * as React from 'react';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction='up' ref={ref} {...props} />;
 });
 
 /**
@@ -37,30 +38,29 @@ export const SlideInExample = () => {
 
   return (
     <div>
-      <Button data-testid="slidein-open-trigger" variant="outlined" onClick={handleClickOpen}>
+      <Button data-testid='slidein-open-trigger' variant='outlined' onClick={handleClickOpen}>
         Open slide in dialog
       </Button>
       <Dialog
-        data-testid="slidein-dialog"
+        data-testid='slidein-dialog'
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
-        aria-labelledby="slidein-dialog-title"
-        aria-describedby="slidein-dialog-description"
-      >
-        <DialogTitle id="slidein-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        aria-labelledby='slidein-dialog-title'
+        aria-describedby='slidein-dialog-description'>
+        <DialogTitle id='slidein-dialog-title'>{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="slidein-dialog-description">
+          <DialogContentText id='slidein-dialog-description'>
             Let Google help apps determine location. This means sending anonymous location data to Google, even when no
             apps are running.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button data-testid="disagree-button" onClick={handleClose}>
+          <Button data-testid='disagree-button' onClick={handleClose}>
             Disagree
           </Button>
-          <Button data-testid="agree-button" onClick={handleClose} autoFocus>
+          <Button data-testid='agree-button' onClick={handleClose} autoFocus>
             Agree
           </Button>
         </DialogActions>

@@ -1,4 +1,5 @@
 import { escapeValue } from '../utils/escapeUtil';
+
 import { CssLocator } from './CssLocator';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
 
@@ -10,7 +11,7 @@ export type ByValueSource = {
 
 export function byValue(
   value: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
+  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
 ): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[value="${sanitized}"]`, {

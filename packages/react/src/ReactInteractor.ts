@@ -99,7 +99,7 @@ export class ReactInteractor extends DOMInteractor {
 
   override async waitUntilComponentState(
     locator: PartLocator,
-    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
   ): Promise<void> {
     await act(async () => {
       await super.waitUntilComponentState(locator, option);
@@ -110,7 +110,7 @@ export class ReactInteractor extends DOMInteractor {
     probeFn: () => Promise<T> | T,
     terminateCondition: T | ((currentValue: T) => boolean),
     timeoutMs: number,
-    debug: boolean = false,
+    debug: boolean = false
   ): Promise<T> {
     return await act(async () => {
       return await super.waitUntil(probeFn, terminateCondition, timeoutMs, debug);

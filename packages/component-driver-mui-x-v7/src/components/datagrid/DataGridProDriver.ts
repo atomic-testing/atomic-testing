@@ -126,7 +126,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   async getCell<DriverT extends ComponentDriver>(
     query: DataGridCellQuery,
     // @ts-ignore
-    driverClass: typeof ComponentDriver = HTMLElementDriver,
+    driverClass: typeof ComponentDriver = HTMLElementDriver
   ): Promise<DriverT | null> {
     await this.waitForLoading();
     const rowDriver = await this.getRow(query.rowIndex);

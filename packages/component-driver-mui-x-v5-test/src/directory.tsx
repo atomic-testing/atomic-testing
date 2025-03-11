@@ -1,8 +1,5 @@
 import { ExampleList } from './components/ExampleList';
-import {
-  dataGridProExamples,
-  datePickerExamples,
-} from './examples';
+import { dataGridProExamples, datePickerExamples } from './examples';
 
 interface IToc {
   label: string;

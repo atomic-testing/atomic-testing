@@ -12,8 +12,8 @@ export const initialState: GridInitialStatePro = {
     paginationModel: {
       page: 0,
       pageSize: 10,
-    }
-  }
+    },
+  },
 };
 
 export const basicGridColumnConfig: GridColDef[] = [

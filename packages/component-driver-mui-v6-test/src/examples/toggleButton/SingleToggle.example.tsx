@@ -1,8 +1,9 @@
+import React from 'react';
+
 import { ToggleButtonDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import ToggleButton from '@mui/material/ToggleButton';
-import React from 'react';
 
 //#region Single toggle
 export const SingleToggleExample = () => {
@@ -12,7 +13,7 @@ export const SingleToggleExample = () => {
     setSelected(!selected);
   };
   return (
-    <ToggleButton data-testid="single-toggle" value="single" selected={selected} onChange={handleChange}>
+    <ToggleButton data-testid='single-toggle' value='single' selected={selected} onChange={handleChange}>
       Toggle me
     </ToggleButton>
   );

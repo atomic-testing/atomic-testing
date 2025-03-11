@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React from 'react';
 
 //#region Single checkbox
 export const SingleCheckbox = () => {
@@ -9,7 +10,7 @@ export const SingleCheckbox = () => {
     <React.Fragment>
       <form>
         <label>
-          <input type="checkbox" name="single-checkbox" value="1" /> One
+          <input type='checkbox' name='single-checkbox' value='1' /> One
         </label>
       </form>
     </React.Fragment>

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { ExclusiveToggleButtonGroupDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -7,7 +9,6 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import React from 'react';
 
 //#region Exclusive Selection
 export const ExclusiveSelectionExample = () => {
@@ -22,19 +23,18 @@ export const ExclusiveSelectionExample = () => {
       value={alignment}
       exclusive
       onChange={handleAlignment}
-      data-testid="alignment"
-      aria-label="text alignment"
-    >
-      <ToggleButton value="left" aria-label="left aligned">
+      data-testid='alignment'
+      aria-label='text alignment'>
+      <ToggleButton value='left' aria-label='left aligned'>
         <FormatAlignLeftIcon />
       </ToggleButton>
-      <ToggleButton value="center" aria-label="centered">
+      <ToggleButton value='center' aria-label='centered'>
         <FormatAlignCenterIcon />
       </ToggleButton>
-      <ToggleButton value="right" aria-label="right aligned">
+      <ToggleButton value='right' aria-label='right aligned'>
         <FormatAlignRightIcon />
       </ToggleButton>
-      <ToggleButton value="justify" aria-label="justified" disabled>
+      <ToggleButton value='justify' aria-label='justified' disabled>
         <FormatAlignJustifyIcon />
       </ToggleButton>
     </ToggleButtonGroup>

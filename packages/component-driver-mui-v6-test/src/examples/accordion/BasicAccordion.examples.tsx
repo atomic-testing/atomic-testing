@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { AccordionDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -6,14 +8,13 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
-import React from 'react';
 
 //#region Accordion
 export const BasicAccordion: React.FunctionComponent = () => {
   return (
     <div>
-      <Accordion data-testid="accordion-normal">
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+      <Accordion data-testid='accordion-normal'>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content'>
           <Typography>Accordion 1</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -23,8 +24,8 @@ export const BasicAccordion: React.FunctionComponent = () => {
           </Typography>
         </AccordionDetails>
       </Accordion>
-      <Accordion disabled data-testid="accordion-disabled">
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
+      <Accordion disabled data-testid='accordion-disabled'>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel3a-content' id='panel3a-header'>
           <Typography>Disabled Accordion</Typography>
         </AccordionSummary>
       </Accordion>
