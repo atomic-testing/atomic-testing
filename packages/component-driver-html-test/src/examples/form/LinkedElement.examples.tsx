@@ -5,10 +5,10 @@ import { TestSuiteInfo } from '@atomic-testing/test-runner';
 export const LinkedElementExample = () => {
   return (
     <form>
-      <label htmlFor="value-input" data-testid="input-label">
+      <label htmlFor='value-input' data-testid='input-label'>
         Input
       </label>
-      <input type="text" defaultValue="Something" id="value-input" />
+      <input type='text' defaultValue='Something' id='value-input' />
     </form>
   );
 };

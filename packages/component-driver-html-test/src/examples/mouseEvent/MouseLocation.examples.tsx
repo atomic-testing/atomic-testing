@@ -1,7 +1,9 @@
+import React, { useCallback, useState } from 'react';
+
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React, { useCallback, useState } from 'react';
+
 import './ClickLocation.css';
 
 export const MouseLocationMouseEventExample = () => {
@@ -22,45 +24,44 @@ export const MouseLocationMouseEventExample = () => {
     (evt: React.MouseEvent<HTMLDivElement>) => {
       displayEvent(evt, 'mouseMove');
     },
-    [displayEvent],
+    [displayEvent]
   );
 
   const onMouseDown = useCallback(
     (evt: React.MouseEvent<HTMLDivElement>) => {
       displayEvent(evt, 'mouseDown');
     },
-    [displayEvent],
+    [displayEvent]
   );
 
   const onMouseUp = useCallback(
     (evt: React.MouseEvent<HTMLDivElement>) => {
       displayEvent(evt, 'mouseUp');
     },
-    [displayEvent],
+    [displayEvent]
   );
 
   return (
     <React.Fragment>
       <div
         style={{ cursor: 'crosshair', backgroundColor: '#22cc99', width: '20rem', height: '12rem' }}
-        data-testid="mouse-target"
+        data-testid='mouse-target'
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-      ></div>
-      <div className="mouse-event">
-        <span className="label">Event</span>
-        <span className="value" data-testid="mouse-event-name">
+        onMouseUp={onMouseUp}></div>
+      <div className='mouse-event'>
+        <span className='label'>Event</span>
+        <span className='value' data-testid='mouse-event-name'>
           {eventName}
         </span>
 
-        <span className="label">X</span>
-        <span className="value" data-testid="mouse-x">
+        <span className='label'>X</span>
+        <span className='value' data-testid='mouse-x'>
           {mouseX}
         </span>
 
-        <span className="label">Y</span>
-        <span className="value" data-testid="mouse-y">
+        <span className='label'>Y</span>
+        <span className='value' data-testid='mouse-y'>
           {mouseY}
         </span>
       </div>

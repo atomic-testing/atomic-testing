@@ -1,6 +1,8 @@
-import styled from '@emotion/styled';
 import React from 'react';
 import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+
+import styled from '@emotion/styled';
+
 import './App.css';
 import { Home } from './Home';
 import { tocs } from './directory';
@@ -24,14 +26,14 @@ const Content = styled.div`
 export const Layout: React.FunctionComponent = () => {
   const location = useLocation();
 
-  const title = tocs.find((example) => example.path === location.pathname)?.label || 'Home';
+  const title = tocs.find(example => example.path === location.pathname)?.label || 'Home';
 
   return (
     <Container>
       <Nav>
-        <ul className="toc-list">
-          {tocs.map((example) => (
-            <li key={example.path} className="toc">
+        <ul className='toc-list'>
+          {tocs.map(example => (
+            <li key={example.path} className='toc'>
               <Link to={example.path}>{example.label}</Link>
             </li>
           ))}
@@ -49,9 +51,9 @@ export function App() {
   return (
     <React.Fragment>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />
-          {tocs.map((example) => (
+          {tocs.map(example => (
             <Route key={example.path} path={example.path} element={example.ui} />
           ))}
         </Route>

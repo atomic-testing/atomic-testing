@@ -14,7 +14,7 @@ export abstract class DataGridRowDriverBase extends ComponentDriver {
       this,
       this.getCellLocator(),
       HTMLElementDriver,
-      columnStartingIndex,
+      columnStartingIndex
     )) {
       count++;
     }
@@ -32,7 +32,7 @@ export abstract class DataGridRowDriverBase extends ComponentDriver {
       this,
       this.getCellLocator(),
       HTMLElementDriver,
-      columnStartingIndex,
+      columnStartingIndex
     )) {
       const text = await cell.getText();
       textList.push(text!.trim());
@@ -50,7 +50,7 @@ export abstract class DataGridRowDriverBase extends ComponentDriver {
   async getCell<DriverT extends ComponentDriver>(
     cellIndexOrField: number | string, // number: column index, string: column field
     // @ts-ignore
-    driverClass: typeof ComponentDriver = HTMLElementDriver,
+    driverClass: typeof ComponentDriver = HTMLElementDriver
   ): Promise<DriverT | null> {
     let cellLocator: PartLocator;
     if (typeof cellIndexOrField === 'number') {

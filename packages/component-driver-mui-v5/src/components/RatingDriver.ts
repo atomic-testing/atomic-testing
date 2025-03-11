@@ -49,7 +49,7 @@ export class RatingDriver extends ComponentDriver<typeof parts> implements IInpu
     const valueToClick = (value == null ? currentValue : value) as number;
     const targetLocator = locatorUtil.append(
       this.parts.choices.locator,
-      byValue(valueToClick.toString(), LocatorRelativePosition.Same),
+      byValue(valueToClick.toString(), LocatorRelativePosition.Same)
     );
 
     const targetExists = await this.interactor.exists(targetLocator);

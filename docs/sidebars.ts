@@ -8,7 +8,6 @@
 
  Create as many sidebars as you want.
  */
-
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars = {

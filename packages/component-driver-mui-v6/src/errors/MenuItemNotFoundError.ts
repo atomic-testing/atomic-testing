@@ -9,7 +9,7 @@ function getErrorMessage(label: string): string {
 export class MenuItemNotFoundError extends ErrorBase {
   constructor(
     public readonly label: string,
-    public readonly driver: ComponentDriver<any>,
+    public readonly driver: ComponentDriver<any>
   ) {
     super(getErrorMessage(label), driver);
     this.name = MenuItemNotFoundErrorId;

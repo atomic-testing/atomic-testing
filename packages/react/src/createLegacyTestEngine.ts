@@ -1,6 +1,7 @@
-import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
+
+import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 
 import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';
@@ -24,7 +25,7 @@ const rootElementAttributeName = 'data-atomic-testing-react-legacy';
 export function createLegacyTestEngine<T extends ScenePart>(
   node: JSX.Element,
   partDefinitions: T,
-  option?: Readonly<Partial<IReactTestEngineOption>>,
+  option?: Readonly<Partial<IReactTestEngineOption>>
 ): TestEngine<T> {
   const rootEl = option?.rootElement ?? document.body;
   const container = rootEl.appendChild(document.createElement('div'));
@@ -46,7 +47,7 @@ export function createLegacyTestEngine<T extends ScenePart>(
     {
       parts: partDefinitions,
     },
-    cleanup,
+    cleanup
   );
 
   return engine;
@@ -64,7 +65,7 @@ export function createLegacyTestEngine<T extends ScenePart>(
 export function createRenderedLegacyTestEngine<T extends ScenePart>(
   rootElement: HTMLElement,
   partDefinitions: T,
-  _option?: Readonly<Partial<IReactTestEngineOption>>,
+  _option?: Readonly<Partial<IReactTestEngineOption>>
 ): TestEngine<T> {
   const rootId = getNextRootElementId();
   rootElement.setAttribute(rootElementAttributeName, rootId);
@@ -80,7 +81,7 @@ export function createRenderedLegacyTestEngine<T extends ScenePart>(
     {
       parts: partDefinitions,
     },
-    cleanup,
+    cleanup
   );
 
   return engine;

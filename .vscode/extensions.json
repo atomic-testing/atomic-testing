@@ -1,9 +1,11 @@
 {
   "recommendations": [
+    "actboy168.tasks",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "johnpapa.vscode-peacock",
     "nicoespeon.abracadabra",
     "streetsidesoftware.code-spell-checker",
-    "unifiedjs.vscode-mdx",
-    "actboy168.tasks",
-    "johnpapa.vscode-peacock"
+    "unifiedjs.vscode-mdx"
   ]
 }

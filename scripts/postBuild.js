@@ -18,7 +18,7 @@ function adjustFileSourceMap(filePath) {
   const fileContent = fs.readFileSync(filePath);
   const sourceMapData = JSON.parse(fileContent);
   if (sourceMapData.sources != null && sourceMapData.sources.length > 0) {
-    sourceMapData.sources = sourceMapData.sources.map((src) => {
+    sourceMapData.sources = sourceMapData.sources.map(src => {
       if (src.startsWith('../')) {
         return src.slice(3);
       }
@@ -46,7 +46,7 @@ function adjustFolderSourceMap(dir) {
 
 function postBuild(dir) {
   // Rename package/build/src to package/dist
-  if (skipPostBuildPackages.some((pkg) => dir.includes(pkg))) {
+  if (skipPostBuildPackages.some(pkg => dir.includes(pkg))) {
     return;
   }
 

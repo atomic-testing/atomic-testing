@@ -1,9 +1,10 @@
+import React, { useCallback } from 'react';
+
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import React, { useCallback } from 'react';
 
 const names: string[] = ['Jack', 'Lucy', 'Maria'];
 
@@ -17,13 +18,13 @@ export const DeletableChip: React.FunctionComponent = () => {
       newChoices.delete(name);
       setChoices(newChoices);
     },
-    [choices],
+    [choices]
   );
 
   return (
     <Stack direction={'column'} gap={1}>
       <Stack direction={'row'} gap={0.5}>
-        {Array.from(choices).map((name) => (
+        {Array.from(choices).map(name => (
           <Chip key={name} label={name} onDelete={() => onDelete(name)} data-testid={`deletable-${name}`} />
         ))}
       </Stack>

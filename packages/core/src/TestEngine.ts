@@ -10,7 +10,7 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
     locator: PartLocator,
     public readonly interactor: Interactor,
     option?: IComponentDriverOption<T>,
-    cleanUp?: () => Promise<void>,
+    cleanUp?: () => Promise<void>
   ) {
     super(locator, interactor, option);
     this._cleanUp = cleanUp ?? (() => Promise.resolve());

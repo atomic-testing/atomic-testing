@@ -1,10 +1,11 @@
+import React from 'react';
+
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import React from 'react';
 
 const names: string[] = ['Jack', 'Lucy', 'Maria'];
 
@@ -14,7 +15,7 @@ export const ClickableChip: React.FunctionComponent = () => {
   return (
     <Stack direction={'column'} gap={1}>
       <Stack direction={'row'} gap={0.5}>
-        {names.map((name) => (
+        {names.map(name => (
           <Chip key={name} label={name} onClick={() => setSelected(name)} data-testid={`clickable-${name}`} />
         ))}
       </Stack>

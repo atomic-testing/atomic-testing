@@ -1,4 +1,5 @@
 import { locatorUtil } from '..';
+
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
 import {
@@ -15,8 +16,9 @@ import {
 } from '../interactor';
 import { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
-import { getPartFromDefinition } from './driverUtil';
+
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
+import { getPartFromDefinition } from './driverUtil';
 
 /**
  * Base class for all component drivers.  It provides the basic functionality to interact with the component
@@ -36,7 +38,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   constructor(
     locator: PartLocator,
     public readonly interactor: Interactor,
-    option?: Partial<IComponentDriverOption<T>>,
+    option?: Partial<IComponentDriverOption<T>>
   ) {
     this._locator = locator;
     this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});
@@ -107,7 +109,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * @returns
    */
   protected async getMissingPartNames(
-    partName: PartName<T> | ReadonlyArray<PartName<T>>,
+    partName: PartName<T> | ReadonlyArray<PartName<T>>
   ): Promise<readonly PartName<T>[]> {
     let partNames: ReadonlyArray<keyof T>;
     if (partName == null) {
@@ -117,7 +119,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     }
 
     const missingParts: PartName<T>[] = [];
-    const promises = partNames.map((x) => {
+    const promises = partNames.map(x => {
       const fn = async () => {
         const partExists = await this.interactor.exists(this._parts[x]!.locator);
         if (!partExists) {
