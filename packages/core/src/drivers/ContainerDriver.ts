@@ -1,6 +1,7 @@
 import { Interactor } from '../interactor';
 import { PartLocator } from '../locators';
 import { IComponentDriver, IContainerDriverOption, ScenePart, ScenePartDriver } from '../partTypes';
+
 import { ComponentDriver } from './ComponentDriver';
 import { getPartFromDefinition } from './driverUtil';
 
@@ -21,7 +22,7 @@ export abstract class ContainerDriver<ContentT extends ScenePart, T extends Scen
       this.locator,
       interactor,
       // @ts-ignore
-      contentOption,
+      contentOption
     );
   }
 

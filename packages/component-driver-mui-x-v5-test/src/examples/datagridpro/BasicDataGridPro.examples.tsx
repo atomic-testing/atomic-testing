@@ -1,16 +1,18 @@
+import React from 'react';
+
 import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import React from 'react';
+
 import { basicGridColumnConfig, initialState } from './gridConfig';
 import { gridData } from './gridData';
 
 export const BasicDataGridPro: React.FunctionComponent = () => {
   // Giving minWidth so in DOM test the grid will not be too small
   return (
-    <Box data-testid="basic-grid-pro" sx={{ height: 520, minWidth: 1200, width: '100%' }}>
+    <Box data-testid='basic-grid-pro' sx={{ height: 520, minWidth: 1200, width: '100%' }}>
       <DataGridPro
         columns={basicGridColumnConfig}
         rows={gridData}
@@ -82,7 +84,7 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
       const columnText = await testEngine.parts.basicGrid.getHeaderText();
       const expectedColumns = ['Desk', 'Commodity'];
       const columnTextSet = new Set(columnText);
-      const columnExists = expectedColumns.every((column) => columnTextSet.has(column));
+      const columnExists = expectedColumns.every(column => columnTextSet.has(column));
       assertEqual(columnExists, true);
     });
 

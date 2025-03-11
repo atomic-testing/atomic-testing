@@ -1,4 +1,5 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+
 import { basicBadgeExample, basicBadgeTestSuite } from './BasicBadge.examples';
 
 export { basicBadgeExample, basicBadgeTestSuite };

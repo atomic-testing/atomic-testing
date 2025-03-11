@@ -1,7 +1,8 @@
+import React, { useCallback } from 'react';
+
 import { HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React, { useCallback } from 'react';
 
 export const FocusEventExample = () => {
   const [showDetail, setShowDetail] = React.useState<string>('');
@@ -17,13 +18,13 @@ export const FocusEventExample = () => {
   return (
     <React.Fragment>
       <div>
-        <input data-testid="focus-target" onFocus={onFocus} onBlur={onBlur} />
+        <input data-testid='focus-target' onFocus={onFocus} onBlur={onBlur} />
       </div>
       <div>
         {/* Blur aid is used to incur blur event on focus target by focusing on the aid element */}
-        <input data-testid="blur-aid" />
+        <input data-testid='blur-aid' />
       </div>
-      <div data-testid="focus-detail">{showDetail}</div>
+      <div data-testid='focus-detail'>{showDetail}</div>
     </React.Fragment>
   );
 };

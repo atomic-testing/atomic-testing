@@ -1,19 +1,20 @@
+import React from 'react';
+
 import { InputDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Box from '@mui/material/Box';
 import FilledInput from '@mui/material/FilledInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import React from 'react';
 
 //#region Example
 export const BasicInput: React.FunctionComponent = () => {
   return (
-    <Box component="form" noValidate autoComplete="off" gap="2rem" display="flex" alignItems="flex-start">
-      <FilledInput data-testid="basic" />
-      <FilledInput data-testid="readonly" readOnly />
-      <FilledInput data-testid="disabled" disabled />
-      <OutlinedInput data-testid="multiline" multiline rows={5} />
+    <Box component='form' noValidate autoComplete='off' gap='2rem' display='flex' alignItems='flex-start'>
+      <FilledInput data-testid='basic' />
+      <FilledInput data-testid='readonly' readOnly />
+      <FilledInput data-testid='disabled' disabled />
+      <OutlinedInput data-testid='multiline' multiline rows={5} />
     </Box>
   );
 };

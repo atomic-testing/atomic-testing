@@ -1,4 +1,5 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+
 import { focusEventExample, focusEventExampleTestSuite } from './Focus.examples';
 
 export { focusEventExample, focusEventExampleTestSuite };

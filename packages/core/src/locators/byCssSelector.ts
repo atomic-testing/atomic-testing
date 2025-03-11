@@ -9,7 +9,7 @@ export type ByCssSelectorSource = {
 
 export function byCssSelector(
   selector: string,
-  relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent,
+  relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent
 ): CssLocator {
   return new CssLocator(selector, {
     relative: relativeTo,

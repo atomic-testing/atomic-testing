@@ -20,7 +20,7 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
     locator: PartLocator,
     interactor: Interactor,
     // @ts-ignore
-    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>> = defaultListDriverOption,
+    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>> = defaultListDriverOption
   ) {
     super(locator, interactor, option);
   }

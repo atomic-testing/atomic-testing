@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { ButtonDriver, SnackbarDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -5,7 +7,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
-import * as React from 'react';
 
 //#region Snackbar
 export const BasicSnackbar: React.FunctionComponent = () => {
@@ -25,23 +26,23 @@ export const BasicSnackbar: React.FunctionComponent = () => {
 
   const action = (
     <React.Fragment>
-      <IconButton data-testid="close-button" size="small" aria-label="close" color="inherit" onClick={handleClose}>
-        <CloseIcon fontSize="small" />
+      <IconButton data-testid='close-button' size='small' aria-label='close' color='inherit' onClick={handleClose}>
+        <CloseIcon fontSize='small' />
       </IconButton>
     </React.Fragment>
   );
 
   return (
     <div>
-      <Button data-testid="snack-opener" onClick={handleClick}>
+      <Button data-testid='snack-opener' onClick={handleClick}>
         Open simple snackbar
       </Button>
       <Snackbar
-        data-testid="basic-snackbar"
+        data-testid='basic-snackbar'
         open={open}
         autoHideDuration={6000000}
         onClose={handleClose}
-        message="Note archived"
+        message='Note archived'
         action={action}
       />
     </div>
@@ -113,7 +114,7 @@ export const basicSnackbarTestSuite: TestSuiteInfo<typeof basicSnackbarExampleSc
       test.skip('Closing the snackbar should dismisses the snackbar', async () => {
         const closeButton = await testEngine.parts.basicSnackbar.getActionComponent(
           byDataTestId('close-button'),
-          ButtonDriver,
+          ButtonDriver
         );
 
         await closeButton?.click();

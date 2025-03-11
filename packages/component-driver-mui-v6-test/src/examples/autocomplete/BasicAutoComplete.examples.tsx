@@ -1,3 +1,5 @@
+import React, { useCallback } from 'react';
+
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
@@ -5,7 +7,7 @@ import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import React, { useCallback } from 'react';
+
 import { top100Films } from './data';
 
 //#region Label AutoComplete
@@ -24,61 +26,61 @@ export const BasicAutoComplete: React.FunctionComponent = () => {
     setPortalEnabledSelectedValue(value);
   }, []);
   return (
-    <Stack direction="column" gap={'20px'}>
-      <Stack direction="column">
-        <Stack direction="row">
+    <Stack direction='column' gap={'20px'}>
+      <Stack direction='column'>
+        <Stack direction='row'>
           <span>Portal disabled: </span>
-          <span data-testid="selected-label">{selectedValue?.label}</span>
+          <span data-testid='selected-label'>{selectedValue?.label}</span>
         </Stack>
         <Autocomplete
-          data-testid="basic-auto-complete"
+          data-testid='basic-auto-complete'
           disablePortal
           options={top100Films}
           onChange={onChange}
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Movie" />}
+          renderInput={params => <TextField {...params} label='Movie' />}
         />
       </Stack>
 
-      <Stack direction="column">
-        <Stack direction="row">
+      <Stack direction='column'>
+        <Stack direction='row'>
           <span>Portal enabled: </span>
-          <span data-testid="portal-selected-label">{portalEnabledSelectedValue?.label}</span>
+          <span data-testid='portal-selected-label'>{portalEnabledSelectedValue?.label}</span>
         </Stack>
         <Autocomplete
-          data-testid="portal-auto-complete"
+          data-testid='portal-auto-complete'
           options={top100Films}
           onChange={portalEnabledOnChange}
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Movie" />}
+          renderInput={params => <TextField {...params} label='Movie' />}
         />
       </Stack>
 
-      <Stack direction="column">
-        <Stack direction="row">
+      <Stack direction='column'>
+        <Stack direction='row'>
           <span>Readonly: </span>
         </Stack>
         <Autocomplete
-          data-testid="readonly-auto-complete"
+          data-testid='readonly-auto-complete'
           readOnly
           options={top100Films}
           onChange={onChange}
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Movie" />}
+          renderInput={params => <TextField {...params} label='Movie' />}
         />
       </Stack>
 
-      <Stack direction="column">
-        <Stack direction="row">
+      <Stack direction='column'>
+        <Stack direction='row'>
           <span>Disabled: </span>
         </Stack>
         <Autocomplete
-          data-testid="disabled-auto-complete"
+          data-testid='disabled-auto-complete'
           disabled
           options={top100Films}
           onChange={onChange}
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Movie" />}
+          renderInput={params => <TextField {...params} label='Movie' />}
         />
       </Stack>
     </Stack>

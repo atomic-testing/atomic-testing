@@ -1,4 +1,5 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+
 import { basicSliderExample as basicSlider } from './BasicSlider.examples';
 
 export { basicSliderTestSuite } from './BasicSlider.examples';

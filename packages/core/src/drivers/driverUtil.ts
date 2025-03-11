@@ -7,7 +7,7 @@ export function getPartFromDefinition<T extends ScenePart>(
   partDefinition: T,
   parentLocator: PartLocator,
   interactor: Interactor,
-  option: Partial<IComponentDriverOption<T>>,
+  option: Partial<IComponentDriverOption<T>>
 ): ScenePartDriver<T> {
   const result: Partial<ScenePartDriver<T>> = {};
 
@@ -23,8 +23,7 @@ export function getPartFromDefinition<T extends ScenePart>(
     const locatorContext: PartLocator = driver.prototype.overriddenParentLocator() ?? parentLocator;
     const actualLocator: PartLocator =
       driver.prototype.overrideLocatorRelativePosition() != null
-        ?  
-          locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
+        ? locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
         : locator;
 
     const componentLocator = locatorUtil.append(locatorContext, actualLocator);

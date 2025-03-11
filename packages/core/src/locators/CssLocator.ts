@@ -1,4 +1,5 @@
 import { Optional } from '../dataTypes';
+
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
 import { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -17,7 +18,7 @@ export class CssLocator {
 
   constructor(
     public readonly selector: string,
-    initializeValue?: Partial<CssLocatorInitializer>,
+    initializeValue?: Partial<CssLocatorInitializer>
   ) {
     if (initializeValue) {
       this._relativePosition = initializeValue.relative || this.relative;
