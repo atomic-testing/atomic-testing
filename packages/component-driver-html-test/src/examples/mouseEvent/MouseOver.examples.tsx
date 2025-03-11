@@ -1,7 +1,9 @@
+import React, { useCallback, useState } from 'react';
+
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React, { useCallback, useState } from 'react';
+
 import './ClickLocation.css';
 
 export const MouseOverMouseEventExample = () => {
@@ -30,30 +32,29 @@ export const MouseOverMouseEventExample = () => {
     <React.Fragment>
       <div
         style={{ cursor: 'crosshair', backgroundColor: '#9922cc', width: '20rem', height: '12rem' }}
-        data-testid="mouse-over-target"
+        data-testid='mouse-over-target'
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
         onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      ></div>
-      <div className="mouse-event">
-        <span className="label">MouseOver</span>
-        <span className="value" data-testid="mouse-over">
+        onMouseLeave={onMouseLeave}></div>
+      <div className='mouse-event'>
+        <span className='label'>MouseOver</span>
+        <span className='value' data-testid='mouse-over'>
           {mouseOver ? 'true' : 'false'}
         </span>
 
-        <span className="label">MouseOut</span>
-        <span className="value" data-testid="mouse-out">
+        <span className='label'>MouseOut</span>
+        <span className='value' data-testid='mouse-out'>
           {mouseOut ? 'true' : 'false'}
         </span>
 
-        <span className="label">MouseEnter</span>
-        <span className="value" data-testid="mouse-enter">
+        <span className='label'>MouseEnter</span>
+        <span className='value' data-testid='mouse-enter'>
           {mouseEnter ? 'true' : 'false'}
         </span>
 
-        <span className="label">MouseLeave</span>
-        <span className="value" data-testid="mouse-leave">
+        <span className='label'>MouseLeave</span>
+        <span className='value' data-testid='mouse-leave'>
           {mouseLeave ? 'true' : 'false'}
         </span>
       </div>

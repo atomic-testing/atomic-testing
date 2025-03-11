@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React from 'react';
 
 export const ControlledTextInputExample = () => {
   const [value, setValue] = React.useState('');
@@ -10,7 +11,7 @@ export const ControlledTextInputExample = () => {
   }, []);
   return (
     <React.Fragment>
-      <input type="text" data-testid="controlled-text-input" value={value} onChange={input_onChange} />
+      <input type='text' data-testid='controlled-text-input' value={value} onChange={input_onChange} />
     </React.Fragment>
   );
 };

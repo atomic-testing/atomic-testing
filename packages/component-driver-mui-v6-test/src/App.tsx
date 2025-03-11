@@ -1,9 +1,11 @@
-import styled from '@emotion/styled';
-import { Link as MuiLink } from '@mui/material';
 import React from 'react';
 import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
-import { tocs } from './directory';
+
+import styled from '@emotion/styled';
+import { Link as MuiLink } from '@mui/material';
+
 import { Home } from './Home';
+import { tocs } from './directory';
 
 const Container = styled.div`
   display: flex;
@@ -25,13 +27,13 @@ const Content = styled.div`
 export const Layout: React.FunctionComponent = () => {
   const location = useLocation();
 
-  const title = tocs.find((example) => example.path === location.pathname)?.label || 'Home';
+  const title = tocs.find(example => example.path === location.pathname)?.label || 'Home';
 
   return (
     <Container>
       <Nav>
         <ul>
-          {tocs.map((example) => (
+          {tocs.map(example => (
             <li key={example.path}>
               <MuiLink component={Link} to={example.path}>
                 {example.label}
@@ -51,9 +53,9 @@ export const Layout: React.FunctionComponent = () => {
 export function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path='/' element={<Layout />}>
         <Route index element={<Home />} />
-        {tocs.map((example) => (
+        {tocs.map(example => (
           <Route key={example.path} path={example.path} element={example.ui} />
         ))}
       </Route>

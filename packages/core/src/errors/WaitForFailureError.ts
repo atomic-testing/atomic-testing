@@ -12,7 +12,7 @@ function getErrorMessage(locator: PartLocator, option: WaitForOption): string {
 export class WaitForFailureError extends Error {
   constructor(
     public readonly locator: PartLocator,
-    option: WaitForOption,
+    option: WaitForOption
   ) {
     super(getErrorMessage(locator, option));
     this.name = WaitForFailureErrorId;

@@ -9,8 +9,8 @@ import FormGroup from '@mui/material/FormGroup';
 export const LabelCheckbox = () => {
   return (
     <FormGroup>
-      <FormControlLabel control={<Checkbox defaultChecked data-testid="apple" value="apple" />} label="Apple" />
-      <FormControlLabel control={<Checkbox data-testid="banana" value="banana" />} label="Banana" />
+      <FormControlLabel control={<Checkbox defaultChecked data-testid='apple' value='apple' />} label='Apple' />
+      <FormControlLabel control={<Checkbox data-testid='banana' value='banana' />} label='Banana' />
     </FormGroup>
   );
 };

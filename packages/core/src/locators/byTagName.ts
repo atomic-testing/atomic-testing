@@ -9,7 +9,7 @@ export type ByTagNameSource = {
 
 export function byTagName(
   tagName: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent,
+  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
 ): CssLocator {
   return new CssLocator(tagName, {
     relative,

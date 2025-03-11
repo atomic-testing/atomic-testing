@@ -2,8 +2,9 @@ import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import MenuItem from '@mui/material/MenuItem';
-import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+
 import { selectTextFieldExampleData } from './SelectTextField.examples';
 
 //#region Readonly and disabled TextField
@@ -16,11 +17,11 @@ const ExampleLayout = styled('div')`
 export const ReadonlyAndDisabledTextField = () => {
   return (
     <ExampleLayout>
-      <TextField disabled data-testid="text-disabled" label="Disabled" defaultValue="Hello World" />
+      <TextField disabled data-testid='text-disabled' label='Disabled' defaultValue='Hello World' />
       <TextField
-        data-testid="text-readonly"
-        label="Read Only"
-        defaultValue="Hello World"
+        data-testid='text-readonly'
+        label='Read Only'
+        defaultValue='Hello World'
         InputProps={{
           readOnly: true,
         }}
@@ -28,40 +29,39 @@ export const ReadonlyAndDisabledTextField = () => {
 
       <TextField
         disabled
-        data-testid="multiline-disabled"
-        label="Disabled"
+        data-testid='multiline-disabled'
+        label='Disabled'
         multiline
         rows={3}
-        defaultValue="Hello World"
+        defaultValue='Hello World'
       />
       <TextField
-        data-testid="multiline-readonly"
-        label="Read Only"
+        data-testid='multiline-readonly'
+        label='Read Only'
         multiline
         rows={3}
-        defaultValue="Hello World"
+        defaultValue='Hello World'
         InputProps={{
           readOnly: true,
         }}
       />
 
-      <TextField disabled data-testid="select-disabled" label="Disabled" select defaultValue="60">
-        {selectTextFieldExampleData.options.map((option) => (
+      <TextField disabled data-testid='select-disabled' label='Disabled' select defaultValue='60'>
+        {selectTextFieldExampleData.options.map(option => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
         ))}
       </TextField>
       <TextField
-        data-testid="select-readonly"
-        label="Read Only"
+        data-testid='select-readonly'
+        label='Read Only'
         select
-        defaultValue="20"
+        defaultValue='20'
         InputProps={{
           readOnly: true,
-        }}
-      >
-        {selectTextFieldExampleData.options.map((option) => (
+        }}>
+        {selectTextFieldExampleData.options.map(option => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
@@ -70,26 +70,24 @@ export const ReadonlyAndDisabledTextField = () => {
 
       <TextField
         disabled
-        data-testid="native-select-disabled"
-        label="Native Disabled"
+        data-testid='native-select-disabled'
+        label='Native Disabled'
         select
-        defaultValue="60"
-        SelectProps={{ native: true }}
-      >
-        {selectTextFieldExampleData.options.map((option) => (
+        defaultValue='60'
+        SelectProps={{ native: true }}>
+        {selectTextFieldExampleData.options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </TextField>
       <TextField
-        data-testid="native-select-readonly"
-        label="Native Read Only"
+        data-testid='native-select-readonly'
+        label='Native Read Only'
         select
-        defaultValue="20"
-        SelectProps={{ native: true, readOnly: true }}
-      >
-        {selectTextFieldExampleData.options.map((option) => (
+        defaultValue='20'
+        SelectProps={{ native: true, readOnly: true }}>
+        {selectTextFieldExampleData.options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

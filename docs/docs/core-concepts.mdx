@@ -3,8 +3,8 @@ id: concepts
 sidebar_position: 2
 ---
 
-import CodeBlock from '@theme/CodeBlock';
 import loginScreenScenePart from '!!raw-loader!./snippets/login-screen-scene-part';
+import CodeBlock from '@theme/CodeBlock';
 
 # Core Concepts
 
@@ -35,7 +35,7 @@ A ScenePart is a map describing all components of interest (part) within a scene
 
 <details>
   <summary>A sample ScenePart of a typical login screen</summary>
-  <CodeBlock language="ts">{loginScreenScenePart}</CodeBlock>
+  <CodeBlock language='ts'>{loginScreenScenePart}</CodeBlock>
 </details>
 
 ## Test Engine
@@ -46,8 +46,8 @@ Use `createTestEngine` to create a Test Engine instance. The `createTestEngine` 
 
 The examples below demonstrate how to create a Test Engine for the loginScenePart described earlier.
 
-import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
 
 <Tabs>
 
@@ -55,8 +55,9 @@ import TabItem from '@theme/TabItem';
 
 ```tsx
 import { createTestEngine } from '@atomic-testing/react';
-import { loginScenePart } from './loginScenePart';
+
 import { Login } from './components/Login';
+import { loginScenePart } from './loginScenePart';
 
 const testEngine = createTestEngine(<Login />, loginScenePart);
 ```
@@ -67,8 +68,9 @@ const testEngine = createTestEngine(<Login />, loginScenePart);
 
 ```tsx
 import { createLegacyTestEngine } from '@atomic-testing/react/dist/createLegacyTestEngine';
-import { loginScenePart } from './loginScenePart';
+
 import { Login } from './components/Login';
+import { loginScenePart } from './loginScenePart';
 
 const testEngine = createLegacyTestEngine(<Login />, loginScenePart);
 ```
@@ -79,6 +81,7 @@ const testEngine = createLegacyTestEngine(<Login />, loginScenePart);
 
 ```tsx
 import { createTestEngine } from '@atomic-testing/playwright';
+
 import { loginScenePart } from './loginScenePart';
 
 await page.goto('/login');
@@ -91,6 +94,7 @@ const testEngine = createTestEngine(page, loginScenePart);
 
 ```tsx
 import { createTestEngine } from '@atomic-testing/cypress';
+
 import { loginScenePart } from './loginScenePart';
 
 cy.visit('/login');

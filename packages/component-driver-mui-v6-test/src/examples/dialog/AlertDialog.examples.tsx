@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -7,7 +9,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import * as React from 'react';
 
 /**
  * Based on Alert dialog example from MUI
@@ -26,28 +27,27 @@ export const AlertExample = () => {
 
   return (
     <div>
-      <Button data-testid="alert-open-trigger" variant="outlined" onClick={handleClickOpen}>
+      <Button data-testid='alert-open-trigger' variant='outlined' onClick={handleClickOpen}>
         Open alert dialog
       </Button>
       <Dialog
-        data-testid="alert-dialog"
+        data-testid='alert-dialog'
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id='alert-dialog-description'>
             Let Google help apps determine location. This means sending anonymous location data to Google, even when no
             apps are running.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button data-testid="disagree-button" onClick={handleClose}>
+          <Button data-testid='disagree-button' onClick={handleClose}>
             Disagree
           </Button>
-          <Button data-testid="agree-button" onClick={handleClose} autoFocus>
+          <Button data-testid='agree-button' onClick={handleClose} autoFocus>
             Agree
           </Button>
         </DialogActions>

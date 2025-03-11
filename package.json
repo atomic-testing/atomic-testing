@@ -7,8 +7,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --fix --ext .ts,.tsx,.js .",
-    "format": "prettier --write .",
+    "check:lint": "eslint --fix --ext .ts,.tsx,.js .",
+    "check:style": "prettier --write .",
     "types": "tsc --noEmit",
     "typedoc": "typedoc --out typedocs",
     "bumpVersion": "ts-node scripts/bumpVersion.ts"

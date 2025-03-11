@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
 import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React from 'react';
 
 //#region Uncontrolled radio button group example
 export const UncontrolledRadioButtonGroupExample = () => {
@@ -9,15 +10,15 @@ export const UncontrolledRadioButtonGroupExample = () => {
     <React.Fragment>
       <form>
         <label>
-          <input type="radio" name="uncontrolled-group" value="1" /> One
+          <input type='radio' name='uncontrolled-group' value='1' /> One
         </label>
         <br />
         <label>
-          <input type="radio" name="uncontrolled-group" value="2" /> Two
+          <input type='radio' name='uncontrolled-group' value='2' /> Two
         </label>
         <br />
         <label>
-          <input type="radio" name="uncontrolled-group" value="3" /> Three
+          <input type='radio' name='uncontrolled-group' value='3' /> Three
         </label>
       </form>
     </React.Fragment>

@@ -1,9 +1,10 @@
+import React from 'react';
+
 import { SliderDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
-import React from 'react';
 
 //#region Example
 export const BasicSlider: React.FunctionComponent = () => {
@@ -14,10 +15,10 @@ export const BasicSlider: React.FunctionComponent = () => {
   };
 
   return (
-    <Stack direction="column">
-      <Slider data-testid="basic" defaultValue={75} />
-      <Slider data-testid="disabled" disabled value={75} />
-      <Slider data-testid="range" value={rangeValues} onChange={handleRangeChange} />
+    <Stack direction='column'>
+      <Slider data-testid='basic' defaultValue={75} />
+      <Slider data-testid='disabled' disabled value={75} />
+      <Slider data-testid='range' value={rangeValues} onChange={handleRangeChange} />
     </Stack>
   );
 };

@@ -1,15 +1,14 @@
 # https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
-name: "Setup Form Builder UI environment"
-description: "Setup Form Builder UI environment with PNPM and Node.js 20"
+name: 'Setup Form Builder UI environment'
+description: 'Setup Form Builder UI environment with PNPM and Node.js 20'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Use Node.js 22
       uses: actions/setup-node@v4
       with:
         node-version: 22
-
 
     - name: PNPM Setup
       uses: pnpm/action-setup@v4

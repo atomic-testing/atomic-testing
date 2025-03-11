@@ -13,7 +13,7 @@ import { IDomTestEngineOption } from './types';
 export function createDomTestEngine<T extends ScenePart>(
   element: HTMLElement,
   partDefinitions: T,
-  _option?: IDomTestEngineOption,
+  _option?: IDomTestEngineOption
 ): TestEngine<T> {
   const cleanup = () => Promise.resolve();
   return new TestEngine(
@@ -22,6 +22,6 @@ export function createDomTestEngine<T extends ScenePart>(
     {
       parts: partDefinitions,
     },
-    cleanup,
+    cleanup
   );
 }

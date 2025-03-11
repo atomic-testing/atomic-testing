@@ -1,15 +1,16 @@
+import React from 'react';
+
 import { BadgeDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import MailIcon from '@mui/icons-material/Mail';
 import Badge from '@mui/material/Badge';
-import React from 'react';
 
 //#region Badge
 export const BasicBadge: React.FunctionComponent = () => {
   return (
-    <Badge badgeContent={12} color="primary" data-testid="basic-badge">
-      <MailIcon color="action" />
+    <Badge badgeContent={12} color='primary' data-testid='basic-badge'>
+      <MailIcon color='action' />
     </Badge>
   );
 };
