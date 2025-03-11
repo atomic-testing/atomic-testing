@@ -1,7 +1,8 @@
+import React, { useCallback } from 'react';
+
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React, { useCallback } from 'react';
 
 export const HoverMouseEventExample = () => {
   const [showDetail, setShowDetail] = React.useState(false);
@@ -16,10 +17,10 @@ export const HoverMouseEventExample = () => {
 
   return (
     <React.Fragment>
-      <button data-testid="hover-target" onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+      <button data-testid='hover-target' onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
         Hover me to show
       </button>
-      {showDetail ? <div data-testid="hover-detail">Details shown</div> : null}
+      {showDetail ? <div data-testid='hover-detail'>Details shown</div> : null}
     </React.Fragment>
   );
 };

@@ -51,7 +51,7 @@ export class SnackbarDriver extends ComponentDriver<typeof parts> {
    */
   async getActionComponent<ItemClass extends ComponentDriver>(
     locator: PartLocator,
-    driverClass: ComponentDriverClass<ItemClass>,
+    driverClass: ComponentDriverClass<ItemClass>
   ): Promise<ItemClass | null> {
     await this.enforcePartExistence('actionArea');
     const componentLocator = locatorUtil.append(this.parts.actionArea.locator, locator);

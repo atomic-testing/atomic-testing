@@ -1,3 +1,5 @@
+import React, { useCallback, useState } from 'react';
+
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -5,7 +7,6 @@ import Divider from '@mui/material/Divider';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import React, { useCallback, useState } from 'react';
 
 //#region Label rating
 export const BasicRating: React.FunctionComponent = () => {
@@ -21,24 +22,24 @@ export const BasicRating: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <Stack direction="column">
+    <Stack direction='column'>
       <Typography>Basic</Typography>
-      <Rating data-testid="basic" precision={0.5} value={basicValue} onChange={basicValueChange} />
+      <Rating data-testid='basic' precision={0.5} value={basicValue} onChange={basicValueChange} />
 
       <Divider />
 
       <Typography>Readonly</Typography>
-      <Rating data-testid="readonly" aria-label="SSS" precision={0.5} value={2.5} readOnly />
+      <Rating data-testid='readonly' aria-label='SSS' precision={0.5} value={2.5} readOnly />
 
       <Divider />
 
       <Typography>Disabled</Typography>
-      <Rating data-testid="disabled" value={basicValue} disabled />
+      <Rating data-testid='disabled' value={basicValue} disabled />
 
       <Divider />
 
       <Typography>Initially Empty</Typography>
-      <Rating data-testid="empty" value={initiallyEmptyValue} onChange={initiallyEmptyValueChange} />
+      <Rating data-testid='empty' value={initiallyEmptyValue} onChange={initiallyEmptyValueChange} />
     </Stack>
   );
 };

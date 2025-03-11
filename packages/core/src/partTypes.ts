@@ -11,7 +11,7 @@ export type PartName<T extends ScenePart> = keyof T;
 export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
   locator: PartLocator,
   interactor: Interactor,
-  option?: Partial<IComponentDriverOption<any>>,
+  option?: Partial<IComponentDriverOption<any>>
 ) => T;
 
 export interface ComponentPartDefinition<T extends ScenePart> {
@@ -44,7 +44,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
     | (new (
         locator: PartLocator,
         interactor: Interactor,
-        option?: Partial<IContainerDriverOption<ContentT, T>>,
+        option?: Partial<IContainerDriverOption<ContentT, T>>
       ) => ContainerDriver<ContentT, T>);
 
   /**
@@ -67,7 +67,7 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
     | (new (
         locator: PartLocator,
         interactor: Interactor,
-        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>,
+        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>
       ) => ListComponentDriver<ItemT>);
 
   /**

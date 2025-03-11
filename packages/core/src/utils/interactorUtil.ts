@@ -6,7 +6,7 @@ import { PartLocator } from '../locators/PartLocator';
 export async function interactorWaitUtil(
   locator: PartLocator,
   interactor: Interactor,
-  option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+  option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
 ): Promise<void> {
   const actualOption = { ...defaultWaitForOption, ...option };
   let probeFn: () => Promise<boolean>;

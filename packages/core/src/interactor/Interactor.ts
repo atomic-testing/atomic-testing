@@ -1,6 +1,7 @@
 import { Optional } from '../dataTypes';
 import { WaitForOption } from '../drivers/WaitForOption';
 import { PartLocator } from '../locators';
+
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
 import { FocusOption } from './FocusOption';
@@ -96,7 +97,7 @@ export interface Interactor {
     probeFn: () => Promise<T> | T,
     terminateCondition: T | ((currentValue: T) => boolean),
     timeoutMs: number,
-    debug?: boolean,
+    debug?: boolean
   ): Promise<T>;
   //#endregion
 

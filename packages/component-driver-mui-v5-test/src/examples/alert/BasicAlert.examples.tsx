@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { AlertDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
@@ -5,25 +7,24 @@ import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import React from 'react';
 
 //#region Label alert
 export const BasicAlert: React.FunctionComponent = () => {
   return (
-    <Stack direction="column" gap={1}>
-      <Alert severity="error" data-testid="error-alert">
+    <Stack direction='column' gap={1}>
+      <Alert severity='error' data-testid='error-alert'>
         <AlertTitle>Error</AlertTitle>
-        This is an error alert — <strong data-testid="code">code: red</strong>
+        This is an error alert — <strong data-testid='code'>code: red</strong>
       </Alert>
-      <Alert severity="warning" data-testid="warning-alert">
+      <Alert severity='warning' data-testid='warning-alert'>
         <AlertTitle>Warning</AlertTitle>
-        This is a warning alert — <strong data-testid="code">code: yellow</strong>
+        This is a warning alert — <strong data-testid='code'>code: yellow</strong>
       </Alert>
-      <Alert severity="info" data-testid="info-alert">
+      <Alert severity='info' data-testid='info-alert'>
         <AlertTitle>Info</AlertTitle>
         This is an info alert — <strong>check it out!</strong>
       </Alert>
-      <Alert severity="success" data-testid="success-alert">
+      <Alert severity='success' data-testid='success-alert'>
         <AlertTitle>Success</AlertTitle>
         This is a success alert — <strong>check it out!</strong>
       </Alert>

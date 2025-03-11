@@ -1,10 +1,11 @@
+import React from 'react';
+
 import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import React from 'react';
 
 //#region Example
 export const IndeterminateCheckbox = () => {
@@ -25,13 +26,13 @@ export const IndeterminateCheckbox = () => {
   const children = (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
       <FormControlLabel
-        data-testid="child1"
-        label="Child 1"
-        control={<Checkbox data-testid="child1" checked={checked[0]} onChange={handleChange2} />}
+        data-testid='child1'
+        label='Child 1'
+        control={<Checkbox data-testid='child1' checked={checked[0]} onChange={handleChange2} />}
       />
       <FormControlLabel
-        label="Child 2"
-        control={<Checkbox data-testid="child2" checked={checked[1]} onChange={handleChange3} />}
+        label='Child 2'
+        control={<Checkbox data-testid='child2' checked={checked[1]} onChange={handleChange3} />}
       />
     </Box>
   );
@@ -39,10 +40,10 @@ export const IndeterminateCheckbox = () => {
   return (
     <div>
       <FormControlLabel
-        label="Parent"
+        label='Parent'
         control={
           <Checkbox
-            data-testid="parent"
+            data-testid='parent'
             checked={checked[0] && checked[1]}
             indeterminate={checked[0] !== checked[1]}
             onChange={handleChange1}

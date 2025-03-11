@@ -34,7 +34,7 @@ export abstract class DataGridRowDriver extends ComponentDriver {
   async getCell<DriverT extends ComponentDriver>(
     cellIndexOrField: number | string, // number: column index, string: column field
     // @ts-ignore
-    driverClass: typeof ComponentDriver = HTMLElementDriver,
+    driverClass: typeof ComponentDriver = HTMLElementDriver
   ): Promise<DriverT | null> {
     let cellLocator: PartLocator;
     if (typeof cellIndexOrField === 'number') {

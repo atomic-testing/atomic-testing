@@ -1,3 +1,5 @@
+import React, { useCallback } from 'react';
+
 import { SelectDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -6,7 +8,6 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import React, { useCallback } from 'react';
 
 //#region Basic select
 export const basicSelectExampleData = {
@@ -25,9 +26,9 @@ export const BasicSelectExample = () => {
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
-        <InputLabel id="simple-select-label">Age</InputLabel>
-        <Select data-testid="simple-select" label="Age" labelId="simple-select-label" value={value} onChange={onChange}>
-          {basicSelectExampleData.options.map((option) => (
+        <InputLabel id='simple-select-label'>Age</InputLabel>
+        <Select data-testid='simple-select' label='Age' labelId='simple-select-label' value={value} onChange={onChange}>
+          {basicSelectExampleData.options.map(option => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>

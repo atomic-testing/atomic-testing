@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { DateRangeInput, DateRangePickerDriver } from '@atomic-testing/component-driver-mui-x-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -7,17 +9,16 @@ import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePic
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Dayjs } from 'dayjs';
-import React from 'react';
 
 export const BasicDateRangePicker: React.FunctionComponent = () => {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
 
   return (
-    <div data-testid="date-range-picker">
+    <div data-testid='date-range-picker'>
       <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: 'Check-in', end: 'Check-out' }}>
         <DateRangePicker
           value={value}
-          onChange={(newValue) => {
+          onChange={newValue => {
             setValue(newValue);
           }}
           renderInput={(startProps, endProps) => (

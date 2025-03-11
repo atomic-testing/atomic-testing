@@ -2,6 +2,7 @@ import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
 import { IComponentDriverOption } from '../partTypes';
 import * as locatorUtil from '../utils/locatorUtil';
+
 import { ComponentDriver } from './ComponentDriver';
 import * as listHelper from './listHelper';
 
@@ -44,7 +45,7 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    */
   async getItemByIndex<ItemClass extends ComponentDriver = ItemT>(
     index: number,
-    itemDriverClass?: ItemClass,
+    itemDriverClass?: ItemClass
   ): Promise<ItemClass | null> {
     const driverClass = this.getItemClass<ItemClass>(itemDriverClass);
     // @ts-ignore
@@ -59,7 +60,7 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    */
   async getItemByLabel<ItemClass extends ComponentDriver = ItemT>(
     text: string,
-    itemDriverClass?: ItemClass,
+    itemDriverClass?: ItemClass
   ): Promise<ItemClass | null> {
     const driverClass = this.getItemClass(itemDriverClass);
 

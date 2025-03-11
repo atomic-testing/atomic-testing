@@ -26,7 +26,7 @@ export abstract class DesktopDatePickerDriverBase
     locator: PartLocator,
     interactor: Interactor,
     protected characteristic: DatePickerCharacteristic,
-    option?: Partial<IComponentDriverOption>,
+    option?: Partial<IComponentDriverOption>
   ) {
     super(locator, interactor, {
       ...option,

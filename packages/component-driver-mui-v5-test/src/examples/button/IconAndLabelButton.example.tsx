@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
@@ -7,30 +9,27 @@ import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import React from 'react';
 
 //#region Icon and label
 export const IconAndLabelExample = () => {
   const [target, setTarget] = React.useState('');
   return (
-    <Stack direction="row" spacing={10}>
+    <Stack direction='row' spacing={10}>
       <IconButton
-        color="secondary"
-        aria-label="add an alarm"
-        data-testid="icon-button"
-        onClick={() => setTarget('icon-button')}
-      >
+        color='secondary'
+        aria-label='add an alarm'
+        data-testid='icon-button'
+        onClick={() => setTarget('icon-button')}>
         <AlarmIcon />
       </IconButton>
       <Button
-        variant="contained"
+        variant='contained'
         endIcon={<SendIcon />}
-        data-testid="icon-label-button"
-        onClick={() => setTarget('icon-label-button')}
-      >
+        data-testid='icon-label-button'
+        onClick={() => setTarget('icon-label-button')}>
         Send
       </Button>
-      <div data-testid="target">{target}</div>
+      <div data-testid='target'>{target}</div>
     </Stack>
   );
 };

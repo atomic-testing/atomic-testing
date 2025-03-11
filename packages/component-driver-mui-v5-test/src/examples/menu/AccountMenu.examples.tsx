@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, MenuDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
@@ -11,7 +13,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import React from 'react';
 
 //#region Account menu
 export const AccountMenu: React.FunctionComponent = () => {
@@ -28,28 +29,27 @@ export const AccountMenu: React.FunctionComponent = () => {
   return (
     <React.Fragment>
       <Stack direction={'row'} gap={6} alignItems={'center'}>
-        <Tooltip title="Account settings">
+        <Tooltip title='Account settings'>
           <IconButton
-            data-testid="account-menu-trigger"
+            data-testid='account-menu-trigger'
             onClick={handleClick}
-            size="small"
+            size='small'
             sx={{ ml: 2 }}
             aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
+            aria-haspopup='true'
+            aria-expanded={open ? 'true' : undefined}>
             <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
           </IconButton>
         </Tooltip>
         <div>
           Selection:
-          <span data-testid="account-menu-selection">{selection}</span>
+          <span data-testid='account-menu-selection'>{selection}</span>
         </div>
       </Stack>
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
-        data-testid="account-menu"
+        id='account-menu'
+        data-testid='account-menu'
         open={open}
         onClose={() => handleClose()}
         PaperProps={{
@@ -79,9 +79,8 @@ export const AccountMenu: React.FunctionComponent = () => {
           },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem data-testid="menu-profile" onClick={() => handleClose('Profile')}>
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+        <MenuItem data-testid='menu-profile' onClick={() => handleClose('Profile')}>
           <Avatar /> Profile
         </MenuItem>
         <MenuItem onClick={() => handleClose('My account')}>
@@ -90,19 +89,19 @@ export const AccountMenu: React.FunctionComponent = () => {
         <Divider />
         <MenuItem onClick={() => handleClose('Add another account')}>
           <ListItemIcon>
-            <PersonAdd fontSize="small" />
+            <PersonAdd fontSize='small' />
           </ListItemIcon>
           Add another account
         </MenuItem>
         <MenuItem selected onClick={() => handleClose('Settings')}>
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <Settings fontSize='small' />
           </ListItemIcon>
           Settings
         </MenuItem>
         <MenuItem disabled onClick={() => handleClose('Logout')}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Logout fontSize='small' />
           </ListItemIcon>
           Logout
         </MenuItem>

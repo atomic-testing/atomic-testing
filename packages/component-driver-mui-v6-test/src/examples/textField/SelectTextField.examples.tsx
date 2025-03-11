@@ -17,8 +17,8 @@ export const selectTextFieldExampleData = {
 export const SelectTextField = () => {
   return (
     <Box>
-      <TextField data-testid="select" select label="Number" defaultValue="30" helperText="Please select your number">
-        {selectTextFieldExampleData.options.map((option) => (
+      <TextField data-testid='select' select label='Number' defaultValue='30' helperText='Please select your number'>
+        {selectTextFieldExampleData.options.map(option => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>

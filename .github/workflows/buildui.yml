@@ -24,8 +24,11 @@ jobs:
       - name: Setup
         uses: ./.github/actions/builderui-setup
 
+      - name: Run code formatter
+        run: pnpm check:style
+
       - name: Run linter
-        run: pnpm lint
+        run: pnpm check:lint
 
       # TODO: Add build step, build is more complicated because it involves building the Kotlin core and the UI
 
@@ -96,7 +99,7 @@ jobs:
       - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v5-test
-  
+
   component-driver-mui-x-v6-test:
     runs-on: ubuntu-latest
     permissions:
@@ -113,7 +116,7 @@ jobs:
       - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v6-test
-  
+
   component-driver-mui-x-v7-test:
     runs-on: ubuntu-latest
     permissions:
@@ -130,4 +133,3 @@ jobs:
       - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v7-test
-    

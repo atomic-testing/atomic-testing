@@ -1,17 +1,18 @@
+import React from 'react';
+
 import { SwitchDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import React from 'react';
 
 //#region Example
 export const BasicSwitch: React.FunctionComponent = () => {
   return (
-    <Stack direction="column">
-      <Switch data-testid="default-checked" defaultChecked />
-      <Switch data-testid="default-unchecked" />
-      <Switch data-testid="disabled" disabled />
+    <Stack direction='column'>
+      <Switch data-testid='default-checked' defaultChecked />
+      <Switch data-testid='default-unchecked' />
+      <Switch data-testid='disabled' disabled />
     </Stack>
   );
 };

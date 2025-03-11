@@ -1,12 +1,13 @@
+import React from 'react';
+
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import ButtonBase from '@mui/material/ButtonBase';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import { styled } from '@mui/material/styles';
 
 //#region Complex example
 
@@ -77,35 +78,33 @@ const ImageMarked = styled('span')(({ theme }) => ({
 export const ComplexExample = () => {
   const [target, setTarget] = React.useState('');
   return (
-    <Stack direction="row" spacing={10}>
+    <Stack direction='row' spacing={10}>
       <ImageButton
-        data-testid="image-button"
+        data-testid='image-button'
         focusRipple
         style={{
           width: '50%',
         }}
-        onClick={() => setTarget('image-button')}
-      >
+        onClick={() => setTarget('image-button')}>
         <ImageSrc style={{ backgroundImage: `url(https://mui.com/static/images/buttons/camera.jpg)` }} />
-        <ImageBackdrop className="MuiImageBackdrop-root" />
+        <ImageBackdrop className='MuiImageBackdrop-root' />
         <Image>
           <Typography
-            component="span"
-            variant="subtitle1"
-            color="inherit"
+            component='span'
+            variant='subtitle1'
+            color='inherit'
             sx={{
               position: 'relative',
               p: 4,
               pt: 2,
-              pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-            }}
-          >
+              pb: theme => `calc(${theme.spacing(1)} + 6px)`,
+            }}>
             Camera
-            <ImageMarked className="MuiImageMarked-root" />
+            <ImageMarked className='MuiImageMarked-root' />
           </Typography>
         </Image>
       </ImageButton>
-      <div data-testid="image-button-target">{target}</div>
+      <div data-testid='image-button-target'>{target}</div>
     </Stack>
   );
 };
