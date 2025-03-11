@@ -8,11 +8,13 @@ import {
   Interactor,
   listHelper,
   locatorUtil,
+  Optional,
   PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
 
 import { DataGridCellQuery } from './DataGridCellQuery';
+import { DataGridFooterDriver } from './DataGridFooterDriver';
 import { DataGridHeaderRowDriver } from './DataGridHeaderRowDriver';
 
 const parts = {
@@ -23,6 +25,10 @@ const parts = {
   loading: {
     locator: byRole('progressbar'),
     driver: HTMLElementDriver,
+  },
+  footer: {
+    locator: byCssClass('MuiDataGrid-footerContainer'),
+    driver: DataGridFooterDriver,
   },
 } satisfies ScenePart;
 
@@ -152,7 +158,34 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
     throw new Error(`Cell at row:${query.rowIndex} column:${query.columnIndex ?? query.columnField} does not exist`);
   }
 
+  //#region Footer
+  async isPreviousPageEnabled(): Promise<boolean> {
+    await this.enforcePartExistence('footer');
+    return this.parts.footer.isPreviousPageEnabled();
+  }
+
+  async gotoPreviousPage(): Promise<void> {
+    await this.enforcePartExistence('footer');
+    await this.parts.footer.gotoPreviousPage();
+  }
+
+  async isNextPageEnabled(): Promise<boolean> {
+    await this.enforcePartExistence('footer');
+    return this.parts.footer.isNextPageEnabled();
+  }
+
+  async gotoNextPage(): Promise<void> {
+    await this.enforcePartExistence('footer');
+    await this.parts.footer.gotoNextPage();
+  }
+
+  async getPaginationDescription(): Promise<Optional<string>> {
+    await this.enforcePartExistence('footer');
+    return this.parts.footer.getText();
+  }
+  //#endregion Footer
+
   override get driverName(): string {
-    return 'MuiV7DataGridDriver';
+    return 'MuiV7DataGridProDriver';
   }
 }

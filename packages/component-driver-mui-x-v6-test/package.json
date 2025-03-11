@@ -53,6 +53,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/component-driver-mui-v6": "workspace:*",
+    "@atomic-testing/component-driver-mui-x-v6": "workspace:*",
     "@atomic-testing/jest": "workspace:*",
     "@atomic-testing/react": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
