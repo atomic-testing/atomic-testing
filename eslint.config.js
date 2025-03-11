@@ -14,6 +14,7 @@ export default [
       '**/docs/**',
       '**/jest.config.js',
       '**/jest.config.base.js',
+      '**/jest.setup.js',
       '**/node_modules/**',
     ],
   },

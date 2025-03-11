@@ -624,6 +624,9 @@ importers:
       '@atomic-testing/component-driver-mui-v6':
         specifier: workspace:*
         version: link:../component-driver-mui-v6
+      '@atomic-testing/component-driver-mui-x-v6':
+        specifier: workspace:*
+        version: link:../component-driver-mui-x-v6
       '@atomic-testing/jest':
         specifier: workspace:*
         version: link:../jest
@@ -675,6 +678,9 @@ importers:
       '@atomic-testing/component-driver-html':
         specifier: workspace:*
         version: link:../component-driver-html
+      '@atomic-testing/component-driver-mui-v6':
+        specifier: workspace:*
+        version: link:../component-driver-mui-v6
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../core

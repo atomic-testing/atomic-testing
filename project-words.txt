@@ -1,5 +1,7 @@
 builderui
 clickaway
+colindex
+datagridpro
 datetime
 endregion
 exceljs
