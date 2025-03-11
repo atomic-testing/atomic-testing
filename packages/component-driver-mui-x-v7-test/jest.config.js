@@ -5,4 +5,5 @@ module.exports = {
   testRegex: '(/__tests__/.*.dom.(test|spec)).(jsx?|tsx?)$',
   displayName: 'component-driver-mui-x-v7-test',
   testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
