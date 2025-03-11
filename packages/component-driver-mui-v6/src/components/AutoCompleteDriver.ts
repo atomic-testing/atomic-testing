@@ -99,7 +99,6 @@ export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements
     const matchType: AutoCompleteMatchType = this._option?.matchType ?? defaultAutoCompleteDriverOption.matchType;
     for await (const optionDriver of listHelper.getListItemIterator(this, option, HTMLButtonDriver)) {
       const optionValue = await optionDriver.getText();
-      console.log(optionValue);
       const isMatched =
         (matchType === 'exact' && optionValue?.trim() === value) || (matchType === 'first-available' && index === 0);
       if (isMatched) {

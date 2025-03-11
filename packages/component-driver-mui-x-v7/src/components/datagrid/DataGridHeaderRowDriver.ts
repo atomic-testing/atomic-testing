@@ -14,8 +14,6 @@ export class DataGridHeaderRowDriver extends DataGridRowDriverBase {
   }
 
   async getColumnCount(): Promise<number> {
-    const locator = await locatorUtil.toCssSelector(this.getCellLocator(), this.interactor);
-    console.log('locator', locator);
     return this.getCellCount();
   }
 

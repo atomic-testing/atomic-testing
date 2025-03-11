@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.build.bundle.json",
-  "include": ["**/*", ".eslintrc.js"],
+  "include": ["**/*", "eslint.config.js"],
   "exclude": ["**/dist", "**/build", "**/node_modules"]
 }

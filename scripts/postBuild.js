@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-unsafe-argument: 0 */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const skipPostBuildPackages = [
   'component-driver-html-test',

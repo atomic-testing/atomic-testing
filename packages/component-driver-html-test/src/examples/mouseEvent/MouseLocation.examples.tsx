@@ -11,8 +11,8 @@ export const MouseLocationMouseEventExample = () => {
 
   const displayEvent = useCallback((evt: React.MouseEvent<HTMLDivElement>, evtName: string) => {
     const rect = evt.currentTarget.getBoundingClientRect();
-    var x = evt.clientX - rect.left; //x position within the element.
-    var y = evt.clientY - rect.top; //y position within the element.
+    const x = evt.clientX - rect.left; //x position within the element.
+    const y = evt.clientY - rect.top; //y position within the element.
     setMouseX(x);
     setMouseY(y);
     setEventName(evtName);

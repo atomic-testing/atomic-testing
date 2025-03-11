@@ -1,6 +1,10 @@
 builderui
 clickaway
+datetime
+endregion
 exceljs
+interactor
 peaceiris
 rowindex
 tianzhen
+trivago

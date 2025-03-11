@@ -40,6 +40,7 @@ export async function waitUntil<T>(
     val = await probeFn();
     const hasMetEqCheck = eqCheck(val);
     if (debug) {
+      // eslint-disable-next-line no-console
       console.log({ val, hasMetEqCheck });
     }
 

@@ -1,4 +1,19 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "always",
+    "source.fixAll.stylelint": "always",
+    "source.removeUnusedImports": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "off",
+  "editor.wordWrapColumn": 120,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+  ],
   "peacock.color": "163620",
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#255a35",
@@ -19,13 +34,5 @@
     "titleBar.inactiveBackground": "#16362099",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
-  "cSpell.words": [
-    "datetime",
-    "endregion",
-    "Interactor"
-  ],
-  "eslint.enable": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
 }
