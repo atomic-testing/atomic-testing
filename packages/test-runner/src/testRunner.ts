@@ -2,8 +2,7 @@ import { ScenePart } from '@atomic-testing/core';
 
 import { E2eTestRunEnvironmentFixture, InteractionInterface, TestFrameworkMapper, TestSuiteInfo } from './types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const emptyGoto = (url: string) => {};
+export const emptyGoto = (_url: string) => {};
 
 export function testRunner<T extends ScenePart>(
   testSuiteInfo: TestSuiteInfo<T> | TestSuiteInfo<T>[],
@@ -16,10 +15,11 @@ export function testRunner<T extends ScenePart>(
     const { title, tests, url } = suite;
     testMethod.describe(title ?? '', () => {
       // @ts-ignore
-      testMethod.beforeEach(function ({ page }) {
+      testMethod.beforeEach(function ({ page: _page }) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
         let done: Function | undefined = undefined;
         let parameters: E2eTestRunEnvironmentFixture | undefined = undefined;
-        // eslint-disable-next-line prefer-rest-params
+
         const passIn = arguments[0];
         if (typeof passIn === 'function') {
           done = passIn;

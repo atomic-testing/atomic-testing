@@ -1,3 +1,3 @@
 import { IComponentDriverOption } from '@atomic-testing/core';
 
-export interface IDomTestEngineOption extends IComponentDriverOption {}
+export type IDomTestEngineOption = IComponentDriverOption;

@@ -21,20 +21,18 @@ export function playwrightGetTestEngine<T extends ScenePart>(
 
 export const playWrightTestFrameworkMapper: TestFrameworkMapper = {
   assertEqual: (a, b) => expect(a).toEqual(b),
-  // @ts-ignore
+  // @ts-expect-error - expect type is not compatible with the type of the test framework
   describe: test.describe,
 
-  /* eslint-disable @typescript-eslint/unbound-method */
   beforeEach: test.beforeEach,
   afterEach: test.afterEach,
   beforeAll: test.beforeAll,
   afterAll: test.afterAll,
-  /* eslint-enable @typescript-eslint/unbound-method */
 
-  // @ts-ignore
+  // @ts-expect-error - expect type is not compatible with the type of the test framework
   test: test,
 
-  // @ts-ignore
+  // @ts-expect-error - expect type is not compatible with the type of the test framework
   it: test,
 };
 
