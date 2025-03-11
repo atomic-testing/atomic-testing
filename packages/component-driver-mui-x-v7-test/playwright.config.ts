@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseUrl = 'http://localhost:5117';
+const baseUrl = 'http://localhost:5127';
 
 /**
  * Read environment variables from file.

@@ -1,6 +1,7 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byAttribute, ComponentDriver, listHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
 
+// In MUI7, there is an extra div preceding the actual data cells. We need to skip it.
 const columnStartingIndex = 1;
 
 /**
@@ -9,8 +10,6 @@ const columnStartingIndex = 1;
 export abstract class DataGridRowDriverBase extends ComponentDriver {
   protected async getCellCount(): Promise<number> {
     let count = 0;
-    // In MUI7, there is an extra div preceding the actual data cells. We need to skip it.
-    const columnStartingIndex = 1;
     for await (const _ of listHelper.getListItemIterator(
       this,
       this.getCellLocator(),

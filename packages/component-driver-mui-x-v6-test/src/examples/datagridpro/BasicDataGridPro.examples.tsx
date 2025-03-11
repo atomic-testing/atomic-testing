@@ -2,24 +2,26 @@ import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
 import { Box } from '@mui/material';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import React from 'react';
 import { basicGridColumnConfig, initialState } from './gridConfig';
 import { gridData } from './gridData';
 
+const gridCommonProps: DataGridProProps = {
+  columns: basicGridColumnConfig.slice(0, 5),
+  rows: gridData.slice(0, 100),
+  initialState,
+  checkboxSelection: true,
+  pagination: true,
+  pageSizeOptions: [10, 25, 50],
+};
+
 export const BasicDataGridPro: React.FunctionComponent = () => {
   // Giving minWidth so in DOM test the grid will not be too small
+
   return (
-    <Box sx={{ height: 520, minWidth: 800, width: '100%' }}>
-      <DataGridPro
-        data-testid="basic-grid-pro"
-        columns={basicGridColumnConfig}
-        rows={gridData}
-        initialState={initialState}
-        loading={gridData.length === 0}
-        rowHeight={38}
-        checkboxSelection
-      />
+    <Box sx={{ height: 480, minWidth: 800, width: '100%' }}>
+      <DataGridPro {...gridCommonProps} data-testid="basic-grid-pro" />
     </Box>
   );
 };
