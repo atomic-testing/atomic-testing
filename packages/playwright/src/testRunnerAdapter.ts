@@ -13,7 +13,7 @@ export async function goto(url: string, fixture?: E2eTestRunEnvironmentFixture):
 
 export function playwrightGetTestEngine<T extends ScenePart>(
   scenePart: T,
-  fixture: E2eTestRunEnvironmentFixture,
+  fixture: E2eTestRunEnvironmentFixture
 ): TestEngine<T> {
   const page = fixture.page as Page;
   return createTestEngine(page, scenePart);

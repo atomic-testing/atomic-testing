@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { ToggleButtonGroupDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -8,7 +10,6 @@ import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import React from 'react';
 
 //#region Regular Selection
 export const RegularSelectionExample = () => {
@@ -19,17 +20,17 @@ export const RegularSelectionExample = () => {
   };
 
   return (
-    <ToggleButtonGroup data-testid="formatting" value={formats} onChange={handleFormat} aria-label="text formatting">
-      <ToggleButton value="bold" aria-label="bold">
+    <ToggleButtonGroup data-testid='formatting' value={formats} onChange={handleFormat} aria-label='text formatting'>
+      <ToggleButton value='bold' aria-label='bold'>
         <FormatBoldIcon />
       </ToggleButton>
-      <ToggleButton value="italic" aria-label="italic">
+      <ToggleButton value='italic' aria-label='italic'>
         <FormatItalicIcon />
       </ToggleButton>
-      <ToggleButton value="underlined" aria-label="underlined">
+      <ToggleButton value='underlined' aria-label='underlined'>
         <FormatUnderlinedIcon />
       </ToggleButton>
-      <ToggleButton value="color" aria-label="color" disabled>
+      <ToggleButton value='color' aria-label='color' disabled>
         <FormatColorFillIcon />
         <ArrowDropDownIcon />
       </ToggleButton>

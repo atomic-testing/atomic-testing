@@ -1,4 +1,5 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+
 import { basicChipExample, basicChipTestSuite } from './BasicChip.examples';
 import { clickableChipExample, clickableChipTestSuite } from './ClickableChip.examples';
 import { deletableChipExample, deletableChipTestSuite } from './DeletableChip.examples';

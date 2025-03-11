@@ -85,7 +85,7 @@ export class PlaywrightInteractor implements Interactor {
       const result = dateUtil.validateHtmlDateInput(type, text);
       if (!result.valid) {
         throw new Error(
-          `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`,
+          `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
         );
       }
     }
@@ -157,7 +157,7 @@ export class PlaywrightInteractor implements Interactor {
 
   async waitUntilComponentState(
     locator: PartLocator,
-    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
   ): Promise<void> {
     return interactorUtil.interactorWaitUtil(locator, this, option);
   }
@@ -166,7 +166,7 @@ export class PlaywrightInteractor implements Interactor {
     probeFn: () => Promise<T> | T,
     terminateCondition: T | ((currentValue: T) => boolean),
     timeoutMs: number,
-    debug: boolean = false,
+    debug: boolean = false
   ): Promise<T> {
     return timingUtil.waitUntil(probeFn, terminateCondition, timeoutMs, debug);
   }
@@ -178,7 +178,7 @@ export class PlaywrightInteractor implements Interactor {
   async getAttribute(
     locator: PartLocator,
     name: string,
-    isMultiple?: boolean,
+    isMultiple?: boolean
   ): Promise<Optional<string> | readonly string[]> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const elLocator = this.page.locator(cssLocator);
@@ -235,7 +235,7 @@ export class PlaywrightInteractor implements Interactor {
     async function checkCssVisibility(
       prop: CssProperty,
       invisibleValue: string,
-      interactor: PlaywrightInteractor,
+      interactor: PlaywrightInteractor
     ): Promise<boolean> {
       try {
         const value = await interactor.getStyleValue(locator, prop);

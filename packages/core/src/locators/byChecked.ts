@@ -9,7 +9,7 @@ export type ByCheckedSource = {
 
 export function byChecked(
   checked = true,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Same,
+  relative: LocatorRelativePosition = LocatorRelativePosition.Same
 ): CssLocator {
   let selector = ':checked';
   if (!checked) {

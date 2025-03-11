@@ -1,10 +1,10 @@
 import { Optional } from '../dataTypes';
 import { Interactor } from '../interactor/Interactor';
-import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
 import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
+import { byAttribute } from '../locators/byAttribute';
 
 export function isChain(locator: PartLocator): locator is CssLocatorChain {
   return Array.isArray(locator);
@@ -82,7 +82,7 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
 export async function getLinkedCssLocator(
   locator: LinkedCssLocator,
   context: PartLocator,
-  interactor: Interactor,
+  interactor: Interactor
 ): Promise<PartLocator> {
   const matchTargetValue = await getLinkedCssLocatorMatchingTargetValue(locator, context, interactor);
 
@@ -103,7 +103,7 @@ export async function getLinkedCssLocator(
 export async function getLinkedCssLocatorMatchingTargetValue(
   locator: LinkedCssLocator,
   context: PartLocator,
-  interactor: Interactor,
+  interactor: Interactor
 ): Promise<Optional<string>> {
   if (locator.matchingTargetValueExtract.type === 'attribute') {
     const entireLocator = append(context, locator.matchingTargetLocator);
@@ -137,7 +137,7 @@ export const defaultOverrideLocatorRelativePositionOption: Readonly<OverrideLoca
 export function overrideLocatorRelativePosition(
   locator: PartLocator,
   relative: LocatorRelativePosition,
-  option: Partial<Readonly<OverrideLocatorRelativePositionOption>> = defaultOverrideLocatorRelativePositionOption,
+  option: Partial<Readonly<OverrideLocatorRelativePositionOption>> = defaultOverrideLocatorRelativePositionOption
 ): PartLocator {
   if (Array.isArray(locator)) {
     const actualOption: Readonly<OverrideLocatorRelativePositionOption> = {

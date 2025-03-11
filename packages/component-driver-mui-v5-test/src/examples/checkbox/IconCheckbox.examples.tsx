@@ -11,9 +11,9 @@ import Stack from '@mui/material/Stack';
 //#region Example
 export const IconCheckbox = () => {
   return (
-    <Stack direction="row" spacing={10}>
-      <Checkbox data-testid="favorite" icon={<FavoriteBorder />} checkedIcon={<Favorite />} value="favorite" />
-      <Checkbox data-testid="bookmark" icon={<BookmarkBorderIcon />} checkedIcon={<BookmarkIcon />} value="bookmark" />
+    <Stack direction='row' spacing={10}>
+      <Checkbox data-testid='favorite' icon={<FavoriteBorder />} checkedIcon={<Favorite />} value='favorite' />
+      <Checkbox data-testid='bookmark' icon={<BookmarkBorderIcon />} checkedIcon={<BookmarkIcon />} value='bookmark' />
     </Stack>
   );
 };

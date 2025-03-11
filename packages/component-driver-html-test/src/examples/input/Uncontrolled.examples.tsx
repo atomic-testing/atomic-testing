@@ -1,25 +1,26 @@
+import React from 'react';
+
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
-import React from 'react';
 
 export const UncontrolledTextInputExample = () => {
   return (
     <React.Fragment>
       <div>
-        Text input: <input type="text" data-testid="uncontrolled-text-input" />
+        Text input: <input type='text' data-testid='uncontrolled-text-input' />
       </div>
       <div>
-        Number: <input type="number" data-testid="uncontrolled-number-input" />
+        Number: <input type='number' data-testid='uncontrolled-number-input' />
       </div>
       <div>
-        Date: <input type="date" data-testid="uncontrolled-date-input" />
+        Date: <input type='date' data-testid='uncontrolled-date-input' />
       </div>
       <div>
-        Datetime-local: <input type="datetime-local" data-testid="uncontrolled-datetime-local-input" />
+        Datetime-local: <input type='datetime-local' data-testid='uncontrolled-datetime-local-input' />
       </div>
       <div>
-        Time: <input type="time" data-testid="uncontrolled-time-input" />
+        Time: <input type='time' data-testid='uncontrolled-time-input' />
       </div>
     </React.Fragment>
   );

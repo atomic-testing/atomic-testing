@@ -34,11 +34,11 @@ export class DOMInteractor implements Interactor {
   async getAttribute(
     locator: PartLocator,
     name: string,
-    isMultiple?: boolean,
+    isMultiple?: boolean
   ): Promise<Optional<string> | readonly string[]> {
     if (isMultiple) {
       const elements = await this.getElement(locator, true);
-      return Promise.resolve(elements.map((el) => el.getAttribute(name)!));
+      return Promise.resolve(elements.map(el => el.getAttribute(name)!));
     } else {
       const el = await this.getElement(locator);
       if (el != null) {
@@ -208,7 +208,7 @@ export class DOMInteractor implements Interactor {
           const result = dateUtil.validateHtmlDateInput(type, text);
           if (!result.valid) {
             throw new Error(
-              `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`,
+              `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
             );
           }
         }
@@ -232,7 +232,7 @@ export class DOMInteractor implements Interactor {
 
   async waitUntilComponentState(
     locator: PartLocator,
-    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
   ): Promise<void> {
     return interactorUtil.interactorWaitUtil(locator, this, option);
   }
@@ -241,7 +241,7 @@ export class DOMInteractor implements Interactor {
     probeFn: () => Promise<T> | T,
     terminateCondition: T | ((currentValue: T) => boolean),
     timeoutMs: number,
-    debug: boolean = false,
+    debug: boolean = false
   ): Promise<T> {
     return timingUtil.waitUntil(probeFn, terminateCondition, timeoutMs, debug);
   }
@@ -260,7 +260,7 @@ export class DOMInteractor implements Interactor {
     if (isMultiple) {
       const elList = this.rootEl.querySelectorAll<T>(cssLocator);
       const result: T[] = [];
-      elList.forEach((el) => result.push(el));
+      elList.forEach(el => result.push(el));
       return result;
     }
     return this.rootEl.querySelector<T>(cssLocator) ?? undefined;
@@ -281,7 +281,7 @@ export class DOMInteractor implements Interactor {
     const el = await this.getElement(locator);
     if (el != null && el.nodeName === 'SELECT') {
       const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
-      const values = Array.from(options).map((o) => o.value);
+      const values = Array.from(options).map(o => o.value);
       return Promise.resolve(values);
     }
     return Promise.resolve(undefined);
@@ -291,7 +291,7 @@ export class DOMInteractor implements Interactor {
     const el = await this.getElement(locator);
     if (el != null && el.nodeName === 'SELECT') {
       const options = el.querySelectorAll<HTMLOptionElement>('option:checked');
-      const values = Array.from(options).map((o) => o.text);
+      const values = Array.from(options).map(o => o.text);
       return Promise.resolve(values);
     }
     return Promise.resolve(undefined);

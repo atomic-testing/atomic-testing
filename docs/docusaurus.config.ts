@@ -1,6 +1,5 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
-
 // require('prism-react-renderer/themes/github');
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
