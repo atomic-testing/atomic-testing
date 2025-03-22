@@ -4,4 +4,4 @@
 
 Middleware for UI testing and automation.
 
-Learn more at https://atomic-testing.dev/
+Learn more at [https://atomic-testing.dev/](https://atomic-testing.dev/)

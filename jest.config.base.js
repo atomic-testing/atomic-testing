@@ -34,7 +34,7 @@ module.exports = {
     ...packages.reduce(
       (acc, name) => ({
         ...acc,
-        [`@atomic-testing/${name}(.*)$`]: `<rootDir>/packages/../../${name}/src/$1`,
+        [`@atomic-testing/${name}/(.*)$`]: `<rootDir>/packages/../../${name}/src/$1`,
       }),
       {}
     ),
