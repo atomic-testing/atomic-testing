@@ -10,6 +10,7 @@ declare -a packages=(
     "vitest"
     "playwright"
     "react"
+    "react-19"
     "component-driver-html"
     "component-driver-mui-v5"
     "component-driver-mui-v6"
