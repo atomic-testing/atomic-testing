@@ -27,7 +27,7 @@ do
     rm -rf build
     rm -rf dist
     pnpm build
-    pnpm publish --access=public
+    pnpm publish --access=public --no-git-checks
     cd ..
 done
 
