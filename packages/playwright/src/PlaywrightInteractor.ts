@@ -168,7 +168,7 @@ export class PlaywrightInteractor implements Interactor {
     timeoutMs: number,
     debug: boolean = false
   ): Promise<T> {
-    return timingUtil.waitUntil(probeFn, terminateCondition, timeoutMs, debug);
+    return timingUtil.waitUntil({ probeFn, terminateCondition, timeoutMs, debug });
   }
   //#endregion
 

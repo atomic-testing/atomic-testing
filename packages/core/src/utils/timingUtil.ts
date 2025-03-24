@@ -18,12 +18,13 @@ export function wait(ms: number): Promise<void> {
  * @param timeoutMs A number of milliseconds to wait before returning the last value
  * @returns The last value returned by the probe function
  */
-export async function waitUntil<T>(
-  probeFn: () => Promise<T> | T,
-  terminateCondition: T | ((currentValue: T) => boolean),
-  timeoutMs: number,
-  debug: boolean = false
-): Promise<T> {
+export async function waitUntil<T>(option: {
+  probeFn: () => Promise<T> | T;
+  terminateCondition: T | ((currentValue: T) => boolean);
+  timeoutMs: number;
+  debug?: boolean;
+}): Promise<T> {
+  const { probeFn, terminateCondition, timeoutMs, debug } = option;
   const maxProbeCount = 10;
   const intervalMs = timeoutMs / maxProbeCount;
 
