@@ -76,7 +76,11 @@ export class AccordionDriver extends ComponentDriver<typeof parts> {
     const expanded = await this.isExpanded();
     if (!expanded) {
       await this.parts.disclosure.click();
-      await timingUtil.waitUntil(this.isExpanded.bind(this), true, 1000);
+      await timingUtil.waitUntil({
+        probeFn: () => this.isExpanded(),
+        terminateCondition: true,
+        timeoutMs: 1000,
+      });
     }
   }
 
@@ -87,7 +91,11 @@ export class AccordionDriver extends ComponentDriver<typeof parts> {
     const expanded = await this.isExpanded();
     if (expanded) {
       await this.parts.disclosure.click();
-      await timingUtil.waitUntil(this.isExpanded.bind(this), false, 1000);
+      await timingUtil.waitUntil({
+        probeFn: () => this.isExpanded(),
+        terminateCondition: false,
+        timeoutMs: 1000,
+      });
     }
   }
 
