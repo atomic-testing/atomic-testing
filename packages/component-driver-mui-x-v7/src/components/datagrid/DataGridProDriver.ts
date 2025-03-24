@@ -11,6 +11,7 @@ import {
   Optional,
   PartLocator,
   ScenePart,
+  timingUtil,
 } from '@atomic-testing/core';
 
 import { DataGridCellQuery } from './DataGridCellQuery';
@@ -24,6 +25,10 @@ const parts = {
   },
   loading: {
     locator: byRole('progressbar'),
+    driver: HTMLElementDriver,
+  },
+  skeletonOverlay: {
+    locator: byCssClass('MuiDataGrid-main--hasSkeletonLoadingOverlay'),
     driver: HTMLElementDriver,
   },
   footer: {
@@ -46,11 +51,14 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
     });
   }
 
-  async waitForLoading(): Promise<void> {
+  async isLoading(): Promise<boolean> {
+    const result = await Promise.all([this.parts.skeletonOverlay.isVisible(), this.parts.loading.isVisible()]);
+    return result.some(v => v);
+  }
+
+  async waitForLoading(timeout: number = 10000): Promise<void> {
     await this.parts.headerRow.waitUntilComponentState();
-    await this.parts.loading.waitUntilComponentState({
-      condition: 'detached',
-    });
+    await timingUtil.waitUntil({ probeFn: () => this.isLoading(), terminateCondition: false, timeoutMs: timeout });
   }
 
   /**
@@ -159,6 +167,10 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   }
 
   //#region Footer
+  isFooterVisible(): Promise<boolean> {
+    return this.parts.footer.isVisible();
+  }
+
   async isPreviousPageEnabled(): Promise<boolean> {
     await this.enforcePartExistence('footer');
     return this.parts.footer.isPreviousPageEnabled();
