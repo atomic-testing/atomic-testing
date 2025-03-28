@@ -11,6 +11,7 @@ import {
   inputExamples,
   listExamples,
   menuExamples,
+  progressExamples,
   ratingExamples,
   selectExamples,
   sliderExamples,
@@ -81,6 +82,11 @@ export const tocs: IToc[] = [
     label: 'Menu',
     path: '/menu',
     ui: <ExampleList examples={menuExamples} />,
+  },
+  {
+    label: 'Progress',
+    path: '/progress',
+    ui: <ExampleList examples={progressExamples} />,
   },
   {
     label: 'Rating',

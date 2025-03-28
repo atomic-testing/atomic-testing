@@ -8,7 +8,7 @@
     "src"
   ],
   "scripts": {
-    "start": "PORT=5116 TSC_COMPILE_ON_ERROR=true react-scripts start",
+    "start": "DISABLE_ESLINT_PLUGIN=true PORT=5116 TSC_COMPILE_ON_ERROR=true react-scripts start",
     "build:ui": "react-scripts build",
     "postbuild": "node ../../scripts/postBuild.js",
     "test:dom": "jest",

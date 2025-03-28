@@ -92,6 +92,6 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
   }
 
   get driverName(): string {
-    return 'MU5InputDriver';
+    return 'MuiV5InputDriver';
   }
 }

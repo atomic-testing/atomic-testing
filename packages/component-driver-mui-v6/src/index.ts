@@ -17,6 +17,7 @@ export { ListDriver } from './components/ListDriver';
 export { ListItemDriver } from './components/ListItemDriver';
 export { MenuDriver } from './components/MenuDriver';
 export { MenuItemDriver } from './components/MenuItemDriver';
+export { ProgressDriver } from './components/ProgressDriver';
 export { RatingDriver } from './components/RatingDriver';
 export { SelectDriver } from './components/SelectDriver';
 export { SliderDriver } from './components/SliderDriver';

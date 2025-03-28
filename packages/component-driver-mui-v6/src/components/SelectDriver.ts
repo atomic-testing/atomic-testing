@@ -220,6 +220,6 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
   }
 
   get driverName(): string {
-    return 'MuiV5SelectDriver';
+    return 'MuiV6SelectDriver';
   }
 }

@@ -104,6 +104,6 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
   }
 
   get driverName(): string {
-    return 'MuiV5SliderDriver';
+    return 'MuiV6SliderDriver';
   }
 }
