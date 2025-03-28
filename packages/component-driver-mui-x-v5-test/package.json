@@ -36,7 +36,7 @@
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.15.12",
-    "@mui/material": "^5.15.12",
+    "@mui/material": "^7.0.0",
     "@mui/x-data-grid-generator": "^5.11.0",
     "@mui/x-data-grid-pro": "^5.11.0",
     "@mui/x-date-pickers": "^5.0.19",
