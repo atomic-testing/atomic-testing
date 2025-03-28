@@ -11,6 +11,6 @@ export class ButtonDriver extends HTMLButtonDriver {
   }
 
   override get driverName(): string {
-    return 'MuiV5ButtonDriver';
+    return 'MuiV6ButtonDriver';
   }
 }

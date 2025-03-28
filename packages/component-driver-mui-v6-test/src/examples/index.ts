@@ -9,6 +9,7 @@ export * from './dialog';
 export * from './input';
 export * from './list';
 export * from './menu';
+export * from './progress';
 export * from './rating';
 export * from './select';
 export * from './slider';

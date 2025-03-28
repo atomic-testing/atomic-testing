@@ -100,6 +100,6 @@ export class AccordionDriver extends ComponentDriver<typeof parts> {
   }
 
   override get driverName(): string {
-    return 'MuiV5AccordionDriver';
+    return 'MuiV6AccordionDriver';
   }
 }

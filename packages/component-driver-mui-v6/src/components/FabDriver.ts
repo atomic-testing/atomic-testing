@@ -6,6 +6,6 @@ import { ButtonDriver } from './ButtonDriver';
  */
 export class FabDriver extends ButtonDriver {
   override get driverName(): string {
-    return 'MuiV5FabDriver';
+    return 'MuiV6FabDriver';
   }
 }

@@ -1,5 +1,6 @@
 {
   "version": "2.0.0",
+  "description": "For documentations, https://marketplace.visualstudio.com/items?itemName=actboy168.tasks; for icons @see https://code.visualstudio.com/api/references/icons-in-labels",
   "tasks": [
     {
       "label": "Build All",
@@ -13,37 +14,55 @@
       "label": "Doc",
       "type": "shell",
       "command": "cd docs && pnpm start",
-      "isBackground": true
+      "isBackground": true,
+      "icon": {
+        "id": "book"
+      }
     },
     {
       "label": "MUIv5",
       "type": "shell",
       "command": "cd packages/component-driver-mui-v5-test && pnpm start",
-      "isBackground": true
+      "isBackground": true,
+      "icon": {
+        "id": "compass"
+      }
     },
     {
       "label": "MUIv6",
       "type": "shell",
       "command": "cd packages/component-driver-mui-v6-test && pnpm start",
-      "isBackground": true
+      "isBackground": true,
+      "icon": {
+        "id": "compass"
+      }
     },
     {
       "label": "MUIXv5",
       "type": "shell",
       "command": "cd packages/component-driver-mui-x-v5-test && pnpm start",
-      "isBackground": true
+      "isBackground": true,
+      "icon": {
+        "id": "compass"
+      }
     },
     {
       "label": "MUIXv6",
       "type": "shell",
       "command": "cd packages/component-driver-mui-x-v6-test && pnpm start",
-      "isBackground": true
+      "isBackground": true,
+      "icon": {
+        "id": "compass"
+      }
     },
     {
       "label": "MUIXv7",
       "type": "shell",
       "command": "cd packages/component-driver-mui-x-v7-test && pnpm start",
-      "isBackground": true
+      "isBackground": true,
+      "icon": {
+        "id": "compass"
+      }
     }
   ]
 }

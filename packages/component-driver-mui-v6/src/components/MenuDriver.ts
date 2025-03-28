@@ -61,6 +61,6 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
   }
 
   get driverName(): string {
-    return 'MuiV5MenuDriver';
+    return 'MuiV6MenuDriver';
   }
 }

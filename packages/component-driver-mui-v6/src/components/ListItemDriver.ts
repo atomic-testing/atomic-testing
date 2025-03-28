@@ -29,6 +29,6 @@ export class ListItemDriver extends ComponentDriver {
   }
 
   get driverName(): string {
-    return 'MuiV5ListItemDriver';
+    return 'MuiV6ListItemDriver';
   }
 }

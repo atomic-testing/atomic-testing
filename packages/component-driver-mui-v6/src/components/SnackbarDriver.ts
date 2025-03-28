@@ -63,6 +63,6 @@ export class SnackbarDriver extends ComponentDriver<typeof parts> {
   }
 
   override get driverName(): string {
-    return 'MuiV5SnackbarDriver';
+    return 'MuiV6SnackbarDriver';
   }
 }

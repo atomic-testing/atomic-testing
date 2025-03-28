@@ -69,6 +69,6 @@ export class AlertDriver<ContentT extends ScenePart = {}> extends ContainerDrive
   }
 
   override get driverName(): string {
-    return 'MuiV5AlertDriver';
+    return 'MuiV6AlertDriver';
   }
 }

@@ -121,6 +121,6 @@ export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements
   }
 
   get driverName(): string {
-    return 'MuiV5AutoCompleteDriver';
+    return 'MuiV6AutoCompleteDriver';
   }
 }
