@@ -38,6 +38,6 @@ export class BadgeDriver extends ComponentDriver<typeof parts> {
   }
 
   override get driverName(): string {
-    return 'MuiV5BadgeDriver';
+    return 'MuiV6BadgeDriver';
   }
 }

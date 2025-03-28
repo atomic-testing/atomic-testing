@@ -35,6 +35,6 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
   }
 
   override get driverName(): string {
-    return 'MuiV5ListDriver';
+    return 'MuiV6ListDriver';
   }
 }

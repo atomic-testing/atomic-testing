@@ -39,7 +39,7 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
   }
 
   get driverName(): string {
-    return 'ToggleButtonGroupDriver';
+    return 'MuiV6ToggleButtonGroupDriver';
   }
 }
 
@@ -60,6 +60,6 @@ export class ExclusiveToggleButtonGroupDriver extends ToggleButtonGroupDriver im
   }
 
   get driverName(): string {
-    return 'ToggleButtonGroupDriver';
+    return 'MuiV6ExclusiveToggleButtonGroupDriver';
   }
 }

@@ -48,6 +48,6 @@ export class ChipDriver extends ComponentDriver<typeof parts> {
   }
 
   override get driverName(): string {
-    return 'MuiV5ChipDriver';
+    return 'MuiV6ChipDriver';
   }
 }

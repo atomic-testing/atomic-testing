@@ -146,6 +146,6 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   }
 
   get driverName(): string {
-    return 'MU5TextFieldDriver';
+    return 'MuiV6TextFieldDriver';
   }
 }

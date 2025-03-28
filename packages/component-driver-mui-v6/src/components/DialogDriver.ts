@@ -84,6 +84,6 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   get driverName(): string {
-    return 'MuiV5DialogDriver';
+    return 'MuiV6DialogDriver';
   }
 }

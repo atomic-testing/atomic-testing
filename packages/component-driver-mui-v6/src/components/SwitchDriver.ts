@@ -57,6 +57,6 @@ export class SwitchDriver
   }
 
   get driverName(): string {
-    return 'MuiV5SwitchDriver';
+    return 'MuiV6SwitchDriver';
   }
 }

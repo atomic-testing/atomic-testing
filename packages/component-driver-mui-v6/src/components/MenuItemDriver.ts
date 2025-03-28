@@ -10,6 +10,6 @@ export class MenuItemDriver extends ListItemDriver {
   }
 
   override get driverName(): string {
-    return 'MuiV5MenuItemDriver';
+    return 'MuiV6MenuItemDriver';
   }
 }

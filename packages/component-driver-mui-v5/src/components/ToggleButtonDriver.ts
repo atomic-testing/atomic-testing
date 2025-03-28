@@ -16,6 +16,6 @@ export class ToggleButtonDriver extends ButtonDriver implements IToggleDriver {
   }
 
   override get driverName() {
-    return 'ToggleButtonDriver';
+    return 'MuiV5ToggleButtonDriver';
   }
 }
