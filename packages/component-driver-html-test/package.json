@@ -45,7 +45,7 @@
     "@atomic-testing/react-19": "workspace:*",
     "@atomic-testing/test-runner": "workspace:*",
     "@types/jest": "^29.5.5",
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.13.14",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "jest": "^29.7.0",
