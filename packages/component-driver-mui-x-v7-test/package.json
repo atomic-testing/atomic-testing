@@ -41,7 +41,7 @@
     "exceljs": "^4.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^6.0.2"
+    "react-router-dom": "^7.4.1"
   },
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
