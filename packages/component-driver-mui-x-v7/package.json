@@ -34,7 +34,7 @@
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/component-driver-mui-v6": "workspace:*",
-    "dayjs": "^1.11.10"
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.2.0",

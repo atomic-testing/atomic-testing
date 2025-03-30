@@ -9,6 +9,9 @@ updates:
     directory: '/' # Location of package manifests
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'react-router*'
+        versions: ['>=7.0.0']
 
   # Restrict MUI to v5 in component-driver-mui-v5-test
   - package-ecosystem: 'npm'
@@ -19,7 +22,6 @@ updates:
       - dependency-name: '@mui/*'
         versions: ['>=6.0.0']
 
-  # Restrict MUI to v5 in component-driver-mui-v6-test
   - package-ecosystem: 'npm'
     directory: '/packages/component-driver-mui-v6-test'
     schedule:
@@ -33,7 +35,7 @@ updates:
     schedule:
       interval: 'weekly'
     ignore:
-      - dependency-name: '@mui/*'
+      - dependency-name: '@mui/x-*'
         versions: ['>=6.0.0']
 
   - package-ecosystem: 'npm'
@@ -41,7 +43,7 @@ updates:
     schedule:
       interval: 'weekly'
     ignore:
-      - dependency-name: '@mui/*'
+      - dependency-name: '@mui/x-*'
         versions: ['>=7.0.0']
 
   - package-ecosystem: 'npm'
@@ -49,5 +51,5 @@ updates:
     schedule:
       interval: 'weekly'
     ignore:
-      - dependency-name: '@mui/*'
+      - dependency-name: '@mui/x-*'
         versions: ['>=8.0.0']
