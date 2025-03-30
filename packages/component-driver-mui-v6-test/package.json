@@ -34,7 +34,7 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.6.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.7",
     "@mui/icons-material": "^6.4.7",
     "@mui/x-data-grid-pro": "^6.20.4",
