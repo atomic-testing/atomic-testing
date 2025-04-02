@@ -22,6 +22,7 @@ export type {
   HtmlInputDateType,
   htmlInputDateTypes,
 } from './utils/dateUtil';
+export { type WaitUntilOption } from './utils/timingUtil';
 export * as domUtil from './utils/domUtil';
 export * as escapeUtil from './utils/escapeUtil';
 export * as locatorUtil from './utils/locatorUtil';

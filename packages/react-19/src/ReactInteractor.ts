@@ -13,6 +13,7 @@ import {
   MouseUpOption,
   PartLocator,
   WaitForOption,
+  WaitUntilOption,
 } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from '@testing-library/react';
@@ -106,14 +107,9 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
-  override async waitUntil<T>(
-    probeFn: () => Promise<T> | T,
-    terminateCondition: T | ((currentValue: T) => boolean),
-    timeoutMs: number,
-    debug: boolean = false
-  ): Promise<T> {
+  override async waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
     return await act(async () => {
-      return await super.waitUntil(probeFn, terminateCondition, timeoutMs, debug);
+      return await super.waitUntil(option);
     });
   }
   //#endregion

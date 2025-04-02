@@ -55,7 +55,11 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
    * @returns true open has performed successfully
    */
   async waitForOpen(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
-    const isOpened = await this.interactor.waitUntil(this.isOpen.bind(this), true, timeoutMs);
+    const isOpened = await this.interactor.waitUntil({
+      probeFn: () => this.isOpen(),
+      terminateCondition: true,
+      timeoutMs,
+    });
     return isOpened === true;
   }
 
@@ -65,7 +69,11 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
    * @returns true open has performed successfully
    */
   async waitForClose(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
-    const isOpened = await this.interactor.waitUntil(this.isOpen.bind(this), false, timeoutMs);
+    const isOpened = await this.interactor.waitUntil({
+      probeFn: () => this.isOpen(),
+      terminateCondition: false,
+      timeoutMs,
+    });
     return isOpened === false;
   }
 

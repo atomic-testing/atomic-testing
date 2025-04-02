@@ -16,6 +16,7 @@ import {
 } from '../interactor';
 import { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
+import { WaitUntilOption } from '../utils/timingUtil';
 
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
 import { getPartFromDefinition } from './driverUtil';
@@ -218,6 +219,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    */
   async waitUntilComponentState(option: Partial<Readonly<WaitForOption>> = defaultWaitForOption): Promise<void> {
     return this.interactor.waitUntilComponentState(this.locator, option);
+  }
+
+  waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
+    return this.interactor.waitUntil(option);
   }
 
   innerHTML(): Promise<string> {

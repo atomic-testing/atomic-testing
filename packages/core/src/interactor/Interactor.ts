@@ -1,6 +1,7 @@
 import { Optional } from '../dataTypes';
 import { WaitForOption } from '../drivers/WaitForOption';
 import { PartLocator } from '../locators';
+import { WaitUntilOption } from '../utils/timingUtil';
 
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
@@ -88,17 +89,9 @@ export interface Interactor {
 
   /**
    * Keep running a probe function until it returns a value that matches the terminate condition or timeout
-   * @param probeFn A function that returns a value or promised value to be checked against the terminate condition
-   * @param terminateCondition A value to check for equality or a function used for custom equality check
-   * @param timeoutMs A number of milliseconds to wait before returning the last value
    * @returns The last value returned by the probe function
    */
-  waitUntil<T>(
-    probeFn: () => Promise<T> | T,
-    terminateCondition: T | ((currentValue: T) => boolean),
-    timeoutMs: number,
-    debug?: boolean
-  ): Promise<T>;
+  waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
   //#endregion
 
   //#region Read only interactions

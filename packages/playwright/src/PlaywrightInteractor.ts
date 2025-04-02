@@ -17,6 +17,7 @@ import {
   PartLocator,
   timingUtil,
   WaitForOption,
+  WaitUntilOption,
 } from '@atomic-testing/core';
 import { MouseEnterOption, MouseLeaveOption, MouseOutOption } from '@atomic-testing/core/src/interactor/MouseOption';
 import { Page } from '@playwright/test';
@@ -162,13 +163,8 @@ export class PlaywrightInteractor implements Interactor {
     return interactorUtil.interactorWaitUtil(locator, this, option);
   }
 
-  waitUntil<T>(
-    probeFn: () => Promise<T> | T,
-    terminateCondition: T | ((currentValue: T) => boolean),
-    timeoutMs: number,
-    debug: boolean = false
-  ): Promise<T> {
-    return timingUtil.waitUntil({ probeFn, terminateCondition, timeoutMs, debug });
+  waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
+    return timingUtil.waitUntil(option);
   }
   //#endregion
 

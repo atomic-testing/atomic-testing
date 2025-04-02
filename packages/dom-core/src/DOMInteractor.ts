@@ -20,6 +20,7 @@ import {
   Point,
   timingUtil,
   WaitForOption,
+  WaitUntilOption,
 } from '@atomic-testing/core';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -237,13 +238,8 @@ export class DOMInteractor implements Interactor {
     return interactorUtil.interactorWaitUtil(locator, this, option);
   }
 
-  waitUntil<T>(
-    probeFn: () => Promise<T> | T,
-    terminateCondition: T | ((currentValue: T) => boolean),
-    timeoutMs: number,
-    debug: boolean = false
-  ): Promise<T> {
-    return timingUtil.waitUntil({ probeFn, terminateCondition, timeoutMs, debug });
+  waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
+    return timingUtil.waitUntil(option);
   }
   //#endregion
 

@@ -30,7 +30,12 @@ export async function interactorWaitUtil(
       break;
   }
 
-  const actual = await interactor.waitUntil(probeFn, expected, actualOption.timeoutMs, actualOption.debug);
+  const actual = await interactor.waitUntil({
+    probeFn,
+    terminateCondition: expected,
+    timeoutMs: actualOption.timeoutMs,
+    debug: actualOption.debug,
+  });
   if (actual !== expected) {
     throw new WaitForFailureError(locator, actualOption);
   }

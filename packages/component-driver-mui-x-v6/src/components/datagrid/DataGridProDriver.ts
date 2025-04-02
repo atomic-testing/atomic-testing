@@ -40,11 +40,22 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
     });
   }
 
-  async waitForLoading(): Promise<void> {
+  /**
+   * Checks if the data grid is currently loading.
+   * @returns A promise that resolves to a boolean indicating if the data grid is loading.
+   */
+  async isLoading(): Promise<boolean> {
+    const result = await Promise.all([this.parts.loading.isVisible()]);
+    return result.some(v => v);
+  }
+
+  /**
+   * Waits for the data grid to exit the loading state.
+   * @param timeoutMs The maximum time to wait for the load to complete, in milliseconds.
+   */
+  async waitForLoad(timeoutMs: number = 10000): Promise<void> {
     await this.parts.headerRow.waitUntilComponentState();
-    await this.parts.loading.waitUntilComponentState({
-      condition: 'detached',
-    });
+    await this.waitUntil({ probeFn: () => this.isLoading(), terminateCondition: false, timeoutMs });
   }
 
   /**
@@ -53,7 +64,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The number of columns currently displayed in the data grid
    */
   async getColumnCount(): Promise<number> {
-    await this.waitForLoading();
+    await this.waitForLoad();
     return this.parts.headerRow.getColumnCount();
   }
 
@@ -62,7 +73,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The array of text of the header row
    */
   async getHeaderText(): Promise<string[]> {
-    await this.waitForLoading();
+    await this.waitForLoad();
     return this.parts.headerRow.getRowText();
   }
 
@@ -72,7 +83,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The number of columns currently displayed in the data grid
    */
   async getRowCount(): Promise<number> {
-    await this.waitForLoading();
+    await this.waitForLoad();
     const gridRowLocator = locatorUtil.append(this.locator, dataRowLocator);
     let count = 0;
     for await (const _ of listHelper.getListItemIterator(this, gridRowLocator, HTMLElementDriver)) {
@@ -102,7 +113,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The array of text of the specified row
    */
   async getRowText(rowIndex: number): Promise<string[]> {
-    await this.waitForLoading();
+    await this.waitForLoad();
     const row = await this.getRow(rowIndex);
     if (row != null) {
       return row.getRowText();
@@ -122,7 +133,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
     // @ts-ignore
     driverClass: typeof ComponentDriver = HTMLElementDriver
   ): Promise<DriverT | null> {
-    await this.waitForLoading();
+    await this.waitForLoad();
     const rowDriver = await this.getRow(query.rowIndex);
 
     if (rowDriver === null) {
