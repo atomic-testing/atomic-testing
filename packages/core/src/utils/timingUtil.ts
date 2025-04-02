@@ -11,19 +11,29 @@ export function wait(ms: number): Promise<void> {
   });
 }
 
+export interface WaitUntilOption<T> {
+  /**
+   * A function that returns a value or promised value to be checked against the terminate condition
+   */
+  probeFn: () => Promise<T> | T;
+  /**
+   * A value to check for equality or a function used for custom equality check
+   */
+  terminateCondition: T | ((currentValue: T) => boolean);
+  /**
+   * A number of milliseconds to wait before returning the last value
+   */
+  timeoutMs: number;
+  /**
+   * Whether it should log the conditional checks while waiting
+   */
+  debug?: boolean;
+}
+
 /**
  * Keep running a probe function until it returns a value that matches the terminate condition or timeout
- * @param probeFn A function that returns a value or promised value to be checked against the terminate condition
- * @param terminateCondition A value to check for equality or a function used for custom equality check
- * @param timeoutMs A number of milliseconds to wait before returning the last value
- * @returns The last value returned by the probe function
  */
-export async function waitUntil<T>(option: {
-  probeFn: () => Promise<T> | T;
-  terminateCondition: T | ((currentValue: T) => boolean);
-  timeoutMs: number;
-  debug?: boolean;
-}): Promise<T> {
+export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
   const { probeFn, terminateCondition, timeoutMs, debug } = option;
   const maxProbeCount = 10;
   const intervalMs = timeoutMs / maxProbeCount;
