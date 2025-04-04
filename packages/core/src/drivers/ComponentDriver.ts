@@ -207,6 +207,17 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
+   * Wait until the component is attached and becomes visible to the DOM.
+   * @param timeoutMs The number of milliseconds to wait before timing out
+   */
+  async waitUntilVisible(timeoutMs: number = 10000): Promise<void> {
+    return this.waitUntilComponentState({
+      condition: 'visible',
+      timeoutMs,
+    });
+  }
+
+  /**
    * Wait until the component is in the expected state such as
    * the component's visibility or existence. If the component has
    * not reached the expected state within the timeout, it will throw
@@ -225,6 +236,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return this.interactor.waitUntil(option);
   }
 
+  /**
+   * Get the inner HTML of the component
+   * @returns The inner HTML of the component
+   */
   innerHTML(): Promise<string> {
     return this.interactor.innerHTML(this.locator);
   }

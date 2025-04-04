@@ -66,7 +66,6 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The number of columns currently displayed in the data grid
    */
   async getColumnCount(): Promise<number> {
-    await this.waitForLoad();
     return this.parts.headerRow.getColumnCount();
   }
 
@@ -75,7 +74,6 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The array of text of the header row
    */
   async getHeaderText(): Promise<string[]> {
-    await this.waitForLoad();
     return this.parts.headerRow.getRowText();
   }
 
@@ -85,7 +83,6 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The number of columns currently displayed in the data grid
    */
   async getRowCount(): Promise<number> {
-    await this.waitForLoad();
     const gridRowLocator = locatorUtil.append(this.locator, dataRowLocator);
     let count = 0;
     for await (const _ of listHelper.getListItemIterator(this, gridRowLocator, HTMLElementDriver)) {
@@ -115,7 +112,6 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @returns The array of text of the specified row
    */
   async getRowText(rowIndex: number): Promise<string[]> {
-    await this.waitForLoad();
     const row = await this.getRow(rowIndex);
     if (row != null) {
       return row.getRowText();

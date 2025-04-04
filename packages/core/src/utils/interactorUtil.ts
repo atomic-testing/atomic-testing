@@ -3,6 +3,12 @@ import { WaitForFailureError } from '../errors/WaitForFailureError';
 import { Interactor } from '../interactor/Interactor';
 import { PartLocator } from '../locators/PartLocator';
 
+/**
+ * Wait until the element reaches the desired condition.  By default, it waits until the element is attached to the DOM.
+ * @param locator The locator of the element to wait for
+ * @param interactor The interactor to use to wait for the element
+ * @param option Optional parameters to customize the wait behavior
+ */
 export async function interactorWaitUtil(
   locator: PartLocator,
   interactor: Interactor,

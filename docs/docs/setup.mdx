@@ -5,4 +5,109 @@ sidebar_position: 3
 
 # Setup
 
-Coming soon
+## Steps to create a test
+
+### 1. Annotate Key Elements with `data-testid`
+
+Mark the key components with a `data-testid` attribute. These elements are the ones you will probe for values, states, or perform interactions like clicks or selections.
+
+#### Example
+
+```tsx
+// Use data-testid on the span for easily retrieving the displayed name.
+<Typography variant="h1">
+  Hello <span data-testid="person-name">{name}</span>
+</Typography>
+
+// Annotate the AutoComplete component to set its selection.
+<AutoComplete data-testid="favorite-color-value" choices={choices} />
+
+// A MUI button can be probed for its state (e.g., "disabled") or clicked.
+<MuiButton data-testid="submit" disabled={disabled}>
+  Submit
+</MuiButton>
+```
+
+---
+
+### 2. Define Scene Parts
+
+A **ScenePart** describes how to locate a key component and which driver to use for interacting with it. For instance, the example above can be mapped as follows:
+
+```ts
+import { HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { ButtonDriver, AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v6';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+
+const parts = {
+  personDisplay: {
+    locator: byDataTestId('person-name'),
+    driver: HTMLComponentDriver,
+  },
+  favoriteColorInput: {
+    locator: byDataTestId('favorite-color-value'),
+    driver: AutoCompleteDriver,
+  },
+  submitButton: {
+    locator: byDataTestId('submit'),
+    driver: ButtonDriver,
+  },
+} satisfies ScenePart; // Using "satisfies ScenePart" improves TypeScript type-checking.
+```
+
+---
+
+### 3. Render the Component with TestEngine
+
+The **TestEngine** is your entry point for interacting with a component. Use the `createTestEngineForComponent()` method to instantiate the engine. Assign it in `beforeEach` and clean it up in `afterEach` to prevent cross-test contamination.
+
+```ts
+import { TestEngine } from '@atomic-testing/core';
+import { createTestEngineForComponent } from '@/shared/utils/ui-test-util';
+
+let testEngine: TestEngine<typeof parts>; // Type declaration ensures precise type checking.
+
+beforeEach(() => {
+  testEngine = createTestEngineForComponent(<MyComponent prop1={value1} />, parts);
+});
+
+afterEach(async () => {
+  await testEngine.cleanUp();
+});
+```
+
+After instantiation, you can access your declared parts through the engine’s `parts` property:
+
+```ts
+await testEngine.parts.personDisplay.text(); // Retrieves plain text from the personDisplay part.
+
+await testEngine.parts.favoriteColorInput.setValue('Black');
+// Sets the auto-complete component to "Black" using the AutoCompleteDriver's method.
+
+await testEngine.parts.submitButton.isDisabled(); // Checks if the submit button is disabled.
+
+await testEngine.parts.submitButton.click(); // Simulates a click on the submit button.
+```
+
+---
+
+### 4. Writing Your Tests
+
+Write tests as you normally would, keeping in mind that most UI interactions are asynchronous. Here’s an example of how a test flow might look:
+
+```ts
+it(`should display the person's name as "John Doe"`, async () => {
+  expect(await testEngine.parts.personDisplay.text()).toEqual('John Doe');
+});
+
+it(`should enable the submit button once a color is chosen`, async () => {
+  await testEngine.parts.favoriteColorInput.setValue('Black');
+  expect(await testEngine.parts.submitButton.isDisabled()).toEqual(false);
+});
+```
+
+## Demo
+
+The following demo illustrates the complete setup of a login form using Atomic Testing. It includes the test setup, component rendering, and interaction with the UI elements.
+
+[Sample Login Form](https://codesandbox.io/p/sandbox/atomic-testing-login-demo-i390dc)
