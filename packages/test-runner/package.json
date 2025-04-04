@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/test-runner",
-  "version": "0.54.0",
+  "version": "0.55.0",
   "description": "Experimental test runner library aimed to normalize adapting same test code across different platform for atomic-testing, not for production use",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

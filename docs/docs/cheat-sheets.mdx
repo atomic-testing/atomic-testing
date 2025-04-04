@@ -1,0 +1,35 @@
+---
+id: cheat-sheets
+sidebar_position: 6
+---
+
+# Cheat Sheets & Troubleshooting
+
+Most of the time, unit tests may fail because of an inco
+
+### 1. Inspect component HTML
+
+You may use `innerHTML()` to inspect the HTML of a component. This can be useful for debugging or troubleshooting.
+
+Getting the HTML of a component can be useful to get a snapshot of the component's HTML structure and verify if it matches your expectations.
+However it can be overwhelming to read the HTML, so use it wisely.
+
+```ts
+const html = await testEngine.parts.myComponent.innerHTML();
+console.log(html);
+```
+
+### 2. Get component runtime CSS selector
+
+You may use `runtimeCssSelector()` to get the runtime CSS selector of a component, and use it to query the DOM for the component in the browser,
+this is especially useful when you have a Storybook story that renders the component, which allows you to inspect the component visually in the browser.
+
+Use of `runtimeCssSelector()` is helpful to troubleshoot if the locator setting is correct.
+
+```ts
+const selector = await testEngine.parts.myComponent.runtimeCssSelector();
+console.log(selector);
+
+// You can use the selector to query the DOM for the component in the browser.
+document.querySelector(selector);
+```

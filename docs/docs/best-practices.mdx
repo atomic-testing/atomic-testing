@@ -5,10 +5,18 @@ sidebar_position: 6
 
 # Best Practices
 
-<details>
-  <summary>Prefer data-testid over other selectors</summary>
-</details>
+### 1. Start with a Storybook Scenario
 
-<details>
-  <summary>Prefer byDataTestId() or byXyz() locator function over straight selector</summary>
-</details>
+Create a Storybook story that mirrors your test scenario. This helps visualize the component state and behavior, and can serve as a basis for further testing integrations as Storybook’s testing capabilities evolve.
+
+### 2. Test Values, Not HTML Markup
+
+Focus on testing the plain values or states rather than the underlying HTML or formatting details.
+
+### 3. Avoid Direct React Testing Library Calls
+
+Although Atomic Testing Library leverages React Testing Library (RTL), direct RTL calls should be avoided. This maintains the abstraction and predictability of your tests, similar to avoiding direct DOM manipulation in React components.
+
+### 4. Use `data-testid` for Key Elements
+
+Use `data-testid` attributes to mark key components. This allows you to easily locate and interact with these elements in your tests.
