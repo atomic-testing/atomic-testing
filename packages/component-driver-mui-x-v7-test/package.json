@@ -39,7 +39,7 @@
     "@mui/x-date-pickers-pro": "^7.27.1",
     "dayjs": "^1.11.13",
     "exceljs": "^4.3.0",
-    "react": "^19.0.0",
+    "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^6.30.0"
   },
@@ -55,7 +55,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.5",
     "@types/node": "^22.13.14",
-    "@types/react": "^19.0.12",
+    "@types/react": "^19.1.0",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "jest": "^29.7.0",
