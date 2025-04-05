@@ -16,6 +16,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+          token: ${{ secrets.CODEMOD_TOKEN }}
 
       - name: Setup
         uses: ./.github/actions/builderui-setup
