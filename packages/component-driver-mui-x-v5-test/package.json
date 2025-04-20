@@ -38,7 +38,7 @@
     "@mui/icons-material": "^5.15.12",
     "@mui/material": "^5.15.12",
     "@mui/x-data-grid-generator": "^5.11.0",
-    "@mui/x-data-grid-pro": "^5.11.0",
+    "@mui/x-data-grid-pro": "^7.28.3",
     "@mui/x-date-pickers": "^5.0.19",
     "@mui/x-date-pickers-pro": "^5.0.20",
     "dayjs": "^1.11.13",
