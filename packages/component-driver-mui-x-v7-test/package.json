@@ -36,7 +36,7 @@
     "@mui/x-data-grid-generator": "^7.27.2",
     "@mui/x-data-grid-pro": "^7.27.2",
     "@mui/x-date-pickers": "^7.27.1",
-    "@mui/x-date-pickers-pro": "^7.27.1",
+    "@mui/x-date-pickers-pro": "^7.29.0",
     "dayjs": "^1.11.13",
     "exceljs": "^4.3.0",
     "react": "^19.0.0",
