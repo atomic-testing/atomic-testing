@@ -22,7 +22,7 @@ jobs:
         id: pnpm-install
         with:
           version: 10
-          run_install: true
+          run_install: false
 
       - name: Build packages
         run: pnpm -r build
