@@ -25,7 +25,7 @@ jobs:
           run_install: true
 
       - name: Build packages
-        run: pnpm -r build
+        run: ./publish.sh --build-only
 
       - name: Install documentation dependencies
         run: pnpm install .

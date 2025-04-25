@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "postbuild": "node ../../scripts/postBuild.js"
+    "postbuild": "node ../../scripts/postBuild.mjs"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [],

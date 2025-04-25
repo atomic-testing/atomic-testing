@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite --force",
     "build:ui": "vite build",
-    "postbuild": "node ../../scripts/postBuild.js",
+    "postbuild": "node ../../scripts/postBuild.mjs",
     "test:dom": "jest",
     "test:e2e": "playwright test",
     "test:e2e:chrome": "playwright test --project=chromium"
