@@ -50,6 +50,7 @@ const config: Config = {
           '../packages/dom-core',
           '../packages/playwright',
           '../packages/react',
+          '../packages/react-19',
           '../packages/component-driver-html',
           '../packages/component-driver-mui-v5',
           '../packages/component-driver-mui-v6',
@@ -165,7 +166,7 @@ const config: Config = {
       contextualSearch: false,
       replaceSearchResultPathname: {
         from: '/docs/', // or as RegExp: /\/docs\//
-        to: '/',
+        to: '/docs/',
       },
     },
   } satisfies Preset.ThemeConfig,

@@ -10,7 +10,7 @@
   "scripts": {
     "start": "PORT=3010 react-scripts start",
     "build:ui": "react-scripts build",
-    "postbuild": "node ../../scripts/postBuild.js",
+    "postbuild": "node ../../scripts/postBuild.mjs",
     "test:dom": "jest",
     "test:e2e": "playwright test",
     "test:e2e:chrome": "playwright test --project=chromium"
