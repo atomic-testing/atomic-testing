@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/vitest",
-  "version": "0.55.5",
+  "version": "0.55.6",
   "description": "Vitest adapter for atomic-testing",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
