@@ -67,10 +67,10 @@ export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
     }
 
     const nextStart = Math.round(elapsed / intervalMs) * intervalMs;
-    if (nextStart - startMs >= timeoutMs) {
+    if (nextStart >= timeoutMs) {
       return val;
     }
-    await wait(nextStart);
+    await wait(nextStart - elapsed);
   }
 
   return val!;
