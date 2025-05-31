@@ -57,4 +57,10 @@ describe('validateHtmlDateInput', () => {
   ])('type: %s with value %s should validated as %p', (type, input, expected) => {
     expect(validateHtmlDateInput(type, input).valid).toBe(expected);
   });
+
+  test('should throw an error for unsupported type', () => {
+    expect(() => validateHtmlDateInput('month', '2021-01')).toThrowError(
+      'Unsupported date type: month',
+    );
+  });
 });
