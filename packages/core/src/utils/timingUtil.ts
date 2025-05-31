@@ -44,10 +44,9 @@ export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
       : currentValue => terminateCondition === currentValue;
 
   const startMs = Date.now();
-  const shouldContinue = true;
   let val: T;
 
-  while (shouldContinue) {
+  while (Date.now() - startMs < timeoutMs) {
     val = await probeFn();
     const hasMetEqCheck = eqCheck(val);
     if (debug) {
@@ -59,18 +58,7 @@ export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
       return val;
     }
 
-    const currentTime = Date.now();
-    const elapsed = currentTime - startMs;
-
-    if (elapsed >= timeoutMs) {
-      return val;
-    }
-
-    const nextStart = Math.round(elapsed / intervalMs) * intervalMs;
-    if (nextStart - startMs >= timeoutMs) {
-      return val;
-    }
-    await wait(nextStart);
+    await wait(intervalMs);
   }
 
   return val!;
