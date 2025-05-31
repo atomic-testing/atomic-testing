@@ -92,7 +92,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
-   * Check the specified parts' existences, and throw MissPartError if any of the part is found not existence.
+   * Check the specified parts' existences, and throw MissingPartError if any of the part is found not existence.
    * Existence is defined by the part's existence in the DOM regardless of its visibility on the screen
    * @param partName Single or array of the names of the parts to be enforced
    */
