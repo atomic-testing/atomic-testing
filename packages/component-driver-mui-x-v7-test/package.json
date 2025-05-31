@@ -62,7 +62,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "react-scripts": "5.0.1",
     "typescript": "^5.8.3",
-    "vite": "^6.2.7"
+    "vite": "^6.3.5"
   },
   "eslintConfig": {
     "extends": [
