@@ -197,8 +197,8 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   /**
    * Whether the component is visible.  Visibility is defined
    * that the component does not have the CSS property `display: none`,
-   * `visibility: hidden`, or `opacity: 0`.  However this does not
-   * check wether the component is within the viewport.
+  * `visibility: hidden`, or `opacity: 0`.  However this does not
+  * check whether the component is within the viewport.
    *
    * @returns true if the component is visible, false otherwise
    */
