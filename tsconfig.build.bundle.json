@@ -45,6 +45,12 @@
       "@atomic-testing/component-driver-mui-v6-test": [
         "./packages/component-driver-mui-v6-test/src"
       ],
+      "@atomic-testing/component-driver-mui-v7": [
+        "./packages/component-driver-mui-v7/src"
+      ],
+      "@atomic-testing/component-driver-mui-v7-test": [
+        "./packages/component-driver-mui-v7-test/src"
+      ],
       "@atomic-testing/component-driver-mui-x-v5": [
         "./packages/component-driver-mui-x-v5/src"
       ],
@@ -101,6 +107,12 @@
     },
     {
       "path": "./packages/component-driver-mui-v6-test"
+    },
+    {
+      "path": "./packages/component-driver-mui-v7"
+    },
+    {
+      "path": "./packages/component-driver-mui-v7-test"
     },
     {
       "path": "./packages/component-driver-mui-x-v5"
