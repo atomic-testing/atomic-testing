@@ -1,9 +1,21 @@
 # @atomic-testing/core
 
-[![NPM version](https://img.shields.io/npm/v/@atomic-testing/core.svg?style=flat)](https://www.npmjs.com/package/@atomic-testing/core) ![NPM license](https://img.shields.io/npm/l/@atomic-testing/core.svg?style=flat)
+[![NPM version](https://img.shields.io/npm/v/@atomic-testing/core.svg?style=flat)](https://www.npmjs.com/package/@atomic-testing/core)
+![NPM license](https://img.shields.io/npm/l/@atomic-testing/core.svg?style=flat)
 
-# <img src="../../docs/static/img/logo.svg" width="22" height="22" hspace="10" /> atomic-testing
+Core utilities for building scene parts, drivers and interactors in Atomic Testing.
+This package is the foundation for all other `atomic-testing` modules.
 
-Middleware for UI testing and automation.
+## Installation
 
-Learn more at [https://atomic-testing.dev/](https://atomic-testing.dev/)
+```bash
+pnpm add @atomic-testing/core
+```
+
+## Usage
+
+```ts
+import { defineScenePart } from '@atomic-testing/core';
+```
+
+Refer to the [documentation](https://atomic-testing.dev/) for detailed guides and examples.
