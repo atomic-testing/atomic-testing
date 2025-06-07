@@ -21,7 +21,7 @@
     "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
   "devDependencies": {
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.15.30",
     "vitest": "^3.0.7",
     "typescript": "^5.8.3"
   },
