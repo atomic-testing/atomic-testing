@@ -1,11 +1,25 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { complexExample as complex } from './ComplexButton.example';
-import { iconAndLabelExample as iconAndLabel } from './IconAndLabelButton.example';
+import { complexButtonUIExample } from './ComplexButton.example';
+import { complexButtonExample, complexButtonTestSuite } from './ComplexButton.suite';
+import { iconAndLabelButtonUIExample } from './IconAndLabelButton.example';
+import { iconAndLabelExample, iconAndLabelButtonTestSuite } from './IconAndLabelButton.suite';
 
-export { complexButtonTestSuite } from './ComplexButton.example';
-export { iconAndLabelButtonTestSuite } from './IconAndLabelButton.example';
+export {
+  complexButtonUIExample,
+  complexButtonExample,
+  complexButtonTestSuite,
+  iconAndLabelButtonUIExample,
+  iconAndLabelExample,
+  iconAndLabelButtonTestSuite,
+};
 
-export const iconAndLabelExample = iconAndLabel;
-export const complexExample = complex;
-export const buttonExamples = [iconAndLabelExample, complexExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+// For backward compatibility, export with old names
+export { complexButtonExample as complexExample };
+
+export const buttonExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
+  iconAndLabelExample,
+  complexButtonExample,
+] satisfies IExampleUnit<ScenePart, JSX.Element>[];

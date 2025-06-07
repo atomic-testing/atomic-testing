@@ -1,6 +1,8 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { accountMenuExample, accountMenuTestSuite } from './AccountMenu.examples';
+import { accountMenuTestSuite, accountMenuExample } from './AccountMenu.suite';
 
 export { accountMenuExample, accountMenuTestSuite };
 

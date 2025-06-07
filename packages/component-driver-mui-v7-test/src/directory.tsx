@@ -1,25 +1,36 @@
 import { ExampleList } from './components/ExampleList';
-import {
-  accordionExamples,
-  alertExamples,
-  autoCompleteExamples,
-  badgeExamples,
-  buttonExamples,
-  checkboxExamples,
-  chipExamples,
-  dialogExamples,
-  inputExamples,
-  listExamples,
-  menuExamples,
-  progressExamples,
-  ratingExamples,
-  selectExamples,
-  sliderExamples,
-  snackbarExamples,
-  switchExamples,
-  textFieldExamples,
-  toggleButtonExamples,
-} from './examples';
+import { basicAccordionUIExample } from './examples/accordion/BasicAccordion.examples';
+import { basicAlertUIExample } from './examples/alert/BasicAlert.examples';
+import { basicAutoCompleteUIExample } from './examples/autocomplete/BasicAutoComplete.examples';
+import { basicBadgeUIExample } from './examples/badge/BasicBadge.examples';
+import { complexButtonUIExample } from './examples/button/ComplexButton.example';
+import { iconAndLabelButtonUIExample } from './examples/button/IconAndLabelButton.example';
+import { iconCheckboxUIExample } from './examples/checkbox/IconCheckbox.examples';
+import { indeterminateCheckboxUIExample } from './examples/checkbox/IndeterminateCheckbox.examples';
+import { labelCheckboxUIExample } from './examples/checkbox/LabelCheckbox.examples';
+import { basicChipUIExample } from './examples/chip/BasicChip.examples';
+import { clickableChipUIExample } from './examples/chip/ClickableChip.examples';
+import { deletableChipUIExample } from './examples/chip/DeletableChip.examples';
+import { alertDialogUIExample } from './examples/dialog/AlertDialog.examples';
+import { slideInDialogUIExample } from './examples/dialog/SlideInDialog.examples';
+import { basicInputUIExample } from './examples/input/BasicInput.examples';
+import { selectableListUIExample } from './examples/list/SelectableList.example';
+import { accountMenuUIExample } from './examples/menu/AccountMenu.examples';
+import { basicProgressUIExample } from './examples/progress/Progress.examples';
+import { basicRatingUIExample } from './examples/rating/Rating.examples';
+import { basicSelectUIExample } from './examples/select/BasicSelect.examples';
+import { nativeSelectUIExample } from './examples/select/NativeSelect.examples';
+import { basicSliderUIExample } from './examples/slider/BasicSlider.examples';
+import { basicSnackbarUIExample } from './examples/snackbar/BasicSnackbar.examples';
+import { basicSwitchUIExample } from './examples/switch/BasicSwitch.examples';
+import { basicTextFieldUIExample } from './examples/textField/BasicTextField.examples';
+import { dateTextFieldUIExample } from './examples/textField/DateTextField.examples';
+import { multilineTextFieldUIExample } from './examples/textField/MultilineTextField.examples';
+import { readonlyAndDisabledTextFieldUIExample } from './examples/textField/ReadonlyDisabledTextField.examples';
+import { selectTextFieldUIExample } from './examples/textField/SelectTextField.examples';
+import { exclusiveSelectionUIExample } from './examples/toggleButton/ExclusiveSelection.example';
+import { regularSelectionUIExample } from './examples/toggleButton/MultipleSelection.example';
+import { singleToggleUIExample } from './examples/toggleButton/SingleToggle.example';
 
 interface IToc {
   label: string;
@@ -31,96 +42,106 @@ export const tocs: IToc[] = [
   {
     label: 'Accordion',
     path: '/accordion',
-    ui: <ExampleList examples={accordionExamples} />,
+    ui: <ExampleList examples={[basicAccordionUIExample]} />,
   },
   {
     label: 'Alert',
     path: '/alert',
-    ui: <ExampleList examples={alertExamples} />,
+    ui: <ExampleList examples={[basicAlertUIExample]} />,
   },
   {
     label: 'AutoComplete',
     path: '/autocomplete',
-    ui: <ExampleList examples={autoCompleteExamples} />,
+    ui: <ExampleList examples={[basicAutoCompleteUIExample]} />,
   },
   {
     label: 'Badge',
     path: '/badge',
-    ui: <ExampleList examples={badgeExamples} />,
+    ui: <ExampleList examples={[basicBadgeUIExample]} />,
   },
   {
     label: 'Button',
     path: '/button',
-    ui: <ExampleList examples={buttonExamples} />,
+    ui: <ExampleList examples={[complexButtonUIExample, iconAndLabelButtonUIExample]} />,
   },
   {
     label: 'Checkbox',
     path: '/checkbox',
-    ui: <ExampleList examples={checkboxExamples} />,
+    ui: <ExampleList examples={[iconCheckboxUIExample, indeterminateCheckboxUIExample, labelCheckboxUIExample]} />,
   },
   {
     label: 'Chip',
     path: '/chip',
-    ui: <ExampleList examples={chipExamples} />,
+    ui: <ExampleList examples={[basicChipUIExample, clickableChipUIExample, deletableChipUIExample]} />,
   },
   {
     label: 'Dialog',
     path: '/dialog',
-    ui: <ExampleList examples={dialogExamples} />,
+    ui: <ExampleList examples={[alertDialogUIExample, slideInDialogUIExample]} />,
   },
   {
     label: 'Input',
     path: '/input',
-    ui: <ExampleList examples={inputExamples} />,
+    ui: <ExampleList examples={[basicInputUIExample]} />,
   },
   {
     label: 'List',
     path: '/list',
-    ui: <ExampleList examples={listExamples} />,
+    ui: <ExampleList examples={[selectableListUIExample]} />,
   },
   {
     label: 'Menu',
     path: '/menu',
-    ui: <ExampleList examples={menuExamples} />,
+    ui: <ExampleList examples={[accountMenuUIExample]} />,
   },
   {
     label: 'Progress',
     path: '/progress',
-    ui: <ExampleList examples={progressExamples} />,
+    ui: <ExampleList examples={[basicProgressUIExample]} />,
   },
   {
     label: 'Rating',
     path: '/rating',
-    ui: <ExampleList examples={ratingExamples} />,
+    ui: <ExampleList examples={[basicRatingUIExample]} />,
   },
   {
     label: 'Select',
     path: '/select',
-    ui: <ExampleList examples={selectExamples} />,
+    ui: <ExampleList examples={[basicSelectUIExample, nativeSelectUIExample]} />,
   },
   {
     label: 'Slider',
     path: '/slider',
-    ui: <ExampleList examples={sliderExamples} />,
+    ui: <ExampleList examples={[basicSliderUIExample]} />,
   },
   {
     label: 'Snackbar',
     path: '/snackbar',
-    ui: <ExampleList examples={snackbarExamples} />,
+    ui: <ExampleList examples={[basicSnackbarUIExample]} />,
   },
   {
     label: 'Switch',
     path: '/switch',
-    ui: <ExampleList examples={switchExamples} />,
+    ui: <ExampleList examples={[basicSwitchUIExample]} />,
   },
   {
     label: 'TextField',
     path: '/textfield',
-    ui: <ExampleList examples={textFieldExamples} />,
+    ui: (
+      <ExampleList
+        examples={[
+          basicTextFieldUIExample,
+          dateTextFieldUIExample,
+          multilineTextFieldUIExample,
+          readonlyAndDisabledTextFieldUIExample,
+          selectTextFieldUIExample,
+        ]}
+      />
+    ),
   },
   {
     label: 'ToggleButton',
     path: '/toggle-button',
-    ui: <ExampleList examples={toggleButtonExamples} />,
+    ui: <ExampleList examples={[singleToggleUIExample, regularSelectionUIExample, exclusiveSelectionUIExample]} />,
   },
 ];

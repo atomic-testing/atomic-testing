@@ -1,8 +1,17 @@
-import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
-import { basicSliderExample as basicSlider } from './BasicSlider.examples';
+import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
 
-export { basicSliderTestSuite } from './BasicSlider.examples';
+import { basicSliderUIExample } from './BasicSlider.examples';
+import { basicSliderExample, basicSliderTestSuite } from './BasicSlider.suite';
 
-export const basicSliderExample = basicSlider;
-export const sliderExamples = [basicSliderExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+export { basicSliderUIExample, basicSliderExample, basicSliderTestSuite };
+
+export const sliderUIExamples: IExampleUIUnit<JSX.Element>[] = [
+  basicSliderUIExample,
+] satisfies IExampleUIUnit<JSX.Element>[];
+
+export const sliderExamples: IExampleUnit<ScenePart, JSX.Element>[] = [basicSliderExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];

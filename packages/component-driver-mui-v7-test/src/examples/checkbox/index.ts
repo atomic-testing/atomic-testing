@@ -1,19 +1,28 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { iconCheckboxExample as iconCheckbox } from './IconCheckbox.examples';
-import { indeterminateCheckboxExample as indeterminateCheckbox } from './IndeterminateCheckbox.examples';
-import { labelCheckboxExample as LabelCheckbox } from './LabelCheckbox.examples';
+import { iconCheckboxUIExample } from './IconCheckbox.examples';
+import { iconCheckboxExample, iconCheckboxTestSuite } from './IconCheckbox.suite';
+import { indeterminateCheckboxUIExample } from './IndeterminateCheckbox.examples';
+import { indeterminateCheckboxExample, indeterminateCheckboxTestSuite } from './IndeterminateCheckbox.suite';
+import { labelCheckboxUIExample } from './LabelCheckbox.examples';
+import { labelCheckboxExample, labelCheckboxTestSuite } from './LabelCheckbox.suite';
 
-export { iconCheckboxTestSuite } from './IconCheckbox.examples';
-export { indeterminateCheckboxTestSuite } from './IndeterminateCheckbox.examples';
-export { labelCheckboxTestSuite } from './LabelCheckbox.examples';
-
-export const iconCheckboxExample = iconCheckbox;
-export const indeterminateCheckboxExample = indeterminateCheckbox;
-export const labelCheckboxExample = LabelCheckbox;
-
-export const checkboxExamples = [
+export {
+  iconCheckboxUIExample,
+  iconCheckboxExample,
+  iconCheckboxTestSuite,
+  indeterminateCheckboxUIExample,
+  indeterminateCheckboxExample,
+  indeterminateCheckboxTestSuite,
+  labelCheckboxUIExample,
   labelCheckboxExample,
+  labelCheckboxTestSuite,
+};
+
+export const checkboxExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
   iconCheckboxExample,
   indeterminateCheckboxExample,
+  labelCheckboxExample,
 ] satisfies IExampleUnit<ScenePart, JSX.Element>[];

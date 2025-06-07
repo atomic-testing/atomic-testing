@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { JSX } from 'react';
 
-import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/core';
 
 export interface ExampleListProps {
-  examples: IExampleUnit<ScenePart, JSX.Element>[];
+  examples: readonly IExampleUIUnit<JSX.Element>[];
 }
 
 export const ExampleList: React.FunctionComponent<ExampleListProps> = props => (

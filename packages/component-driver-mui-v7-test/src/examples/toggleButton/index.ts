@@ -1,15 +1,27 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { exclusiveSelectionExample } from './ExclusiveSelection.example';
-import { regularSelectionExample } from './MultipleSelection.example';
-import { singleToggleExample } from './SingleToggle.example';
+import { exclusiveSelectionUIExample } from './ExclusiveSelection.example';
+import { exclusiveSelectionExample, exclusiveSelectionTestSuite } from './ExclusiveSelection.suite';
+import { regularSelectionUIExample } from './MultipleSelection.example';
+import { regularSelectionExample, regularSelectionButtonTestSuite } from './MultipleSelection.suite';
+import { singleToggleUIExample } from './SingleToggle.example';
+import { singleToggleExample, singleToggleButtonTestSuite } from './SingleToggle.suite';
 
-export { exclusiveSelectionTestSuite } from './ExclusiveSelection.example';
-export { regularSelectionButtonTestSuite } from './MultipleSelection.example';
-export { singleToggleButtonTestSuite } from './SingleToggle.example';
-export { regularSelectionExample, singleToggleExample };
+export {
+  singleToggleUIExample,
+  singleToggleExample,
+  singleToggleButtonTestSuite,
+  exclusiveSelectionUIExample,
+  exclusiveSelectionExample,
+  exclusiveSelectionTestSuite,
+  regularSelectionUIExample,
+  regularSelectionExample,
+  regularSelectionButtonTestSuite,
+};
 
-export const toggleButtonExamples = [
+export const toggleButtonExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
   singleToggleExample,
   exclusiveSelectionExample,
   regularSelectionExample,

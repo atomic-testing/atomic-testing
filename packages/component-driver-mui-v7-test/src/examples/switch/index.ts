@@ -1,7 +1,17 @@
-import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
-import { basicSwitchExample as basicSwitch } from './BasicSwitch.examples';
+import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
 
-export { basicSwitchTestSuite } from './BasicSwitch.examples';
-export const basicSwitchExample = basicSwitch;
-export const switchExamples = [basicSwitchExample] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+import { basicSwitchUIExample } from './BasicSwitch.examples';
+import { basicSwitchExample, basicSwitchTestSuite } from './BasicSwitch.suite';
+
+export { basicSwitchUIExample, basicSwitchExample, basicSwitchTestSuite };
+
+export const switchUIExamples: IExampleUIUnit<JSX.Element>[] = [
+  basicSwitchUIExample,
+] satisfies IExampleUIUnit<JSX.Element>[];
+
+export const switchExamples: IExampleUnit<ScenePart, JSX.Element>[] = [basicSwitchExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];

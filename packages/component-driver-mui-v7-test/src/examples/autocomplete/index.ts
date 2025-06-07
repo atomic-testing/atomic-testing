@@ -1,8 +1,11 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { basicAutoCompleteExample, basicAutoCompleteTestSuite } from './BasicAutoComplete.examples';
+import { basicAutoCompleteUIExample } from './BasicAutoComplete.examples';
+import { basicAutoCompleteExample, basicAutoCompleteTestSuite } from './BasicAutoComplete.suite';
 
-export { basicAutoCompleteExample, basicAutoCompleteTestSuite };
+export { basicAutoCompleteUIExample, basicAutoCompleteExample, basicAutoCompleteTestSuite };
 
 export const autoCompleteExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
   basicAutoCompleteExample,
