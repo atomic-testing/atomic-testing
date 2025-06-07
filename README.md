@@ -8,7 +8,7 @@ libraries. The project provides a collection of packages for describing UI scene
 and interacting with components consistently whether you test with React, Playwright or
 other tooling.
 
-Documentation is available at <https://atomic-testing.dev/>.
+Documentation is available at [https://atomic-testing.dev/](https://atomic-testing.dev/).
 
 ## Packages
 
@@ -66,4 +66,3 @@ pnpm run check:lint
 pnpm run check:style
 pnpm run types
 ```
-
