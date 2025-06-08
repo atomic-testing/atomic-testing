@@ -1,8 +1,16 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { basicRatingExample as basic } from './Rating.examples';
+import { basicRatingUIExample } from './Rating.examples';
+import { basicRatingExample, basicRatingTestSuite } from './Rating.suite';
 
-export { ratingTestSuite } from './Rating.examples';
+export { basicRatingUIExample, basicRatingExample, basicRatingTestSuite };
 
-export const basicRatingExample = basic;
-export const ratingExamples = [basic] satisfies IExampleUnit<ScenePart, JSX.Element>[];
+// For backward compatibility
+export { basicRatingTestSuite as ratingTestSuite };
+
+export const ratingExamples: IExampleUnit<ScenePart, JSX.Element>[] = [basicRatingExample] satisfies IExampleUnit<
+  ScenePart,
+  JSX.Element
+>[];
