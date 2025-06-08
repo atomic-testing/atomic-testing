@@ -12,10 +12,4 @@ This package is the foundation for all other `atomic-testing` modules.
 pnpm add @atomic-testing/core
 ```
 
-## Usage
-
-```ts
-import { defineScenePart } from '@atomic-testing/core';
-```
-
 Refer to the [documentation](https://atomic-testing.dev/) for detailed guides and examples.
