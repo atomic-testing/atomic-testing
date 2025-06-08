@@ -3,13 +3,13 @@ import { createTestEngine } from '@atomic-testing/react';
 import { testRunner } from '@atomic-testing/test-runner';
 
 import {
+  exclusiveSelectionExample,
   exclusiveSelectionTestSuite,
   regularSelectionButtonTestSuite,
   regularSelectionExample,
   singleToggleButtonTestSuite,
   singleToggleExample,
 } from '../src/examples';
-import { exclusiveSelectionExample } from '../src/examples/toggleButton/ExclusiveSelection.example';
 
 testRunner(singleToggleButtonTestSuite, jestTestAdapter, {
   getTestEngine: (scenePart: typeof singleToggleExample.scene) => {
