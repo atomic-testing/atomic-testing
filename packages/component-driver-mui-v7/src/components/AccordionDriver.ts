@@ -69,6 +69,10 @@ export class AccordionDriver extends ComponentDriver<typeof parts> {
     return disabled != null;
   }
 
+  override async click(): Promise<void> {
+    await this.parts.disclosure.click();
+  }
+
   /**
    * Expand the accordion.
    */

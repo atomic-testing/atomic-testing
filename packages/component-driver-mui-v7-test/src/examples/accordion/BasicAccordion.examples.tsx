@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { AccordionDriver } from '@atomic-testing/component-driver-mui-v6';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { IExampleUIUnit } from '@atomic-testing/core';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -33,74 +31,12 @@ export const BasicAccordion: React.FunctionComponent = () => {
   );
 };
 
-export const basicAccordionExampleScenePart = {
-  normalAccordion: {
-    locator: byDataTestId('accordion-normal'),
-    driver: AccordionDriver,
-  },
-  disabledAccordion: {
-    locator: byDataTestId('accordion-disabled'),
-    driver: AccordionDriver,
-  },
-} satisfies ScenePart;
-
 /**
  * Basic Alert example from MUI's website
  * @see https://mui.com/material-ui/react-accordion#description
  */
-export const basicAccordionExample: IExampleUnit<typeof basicAccordionExampleScenePart, JSX.Element> = {
+export const basicAccordionUIExample: IExampleUIUnit<JSX.Element> = {
   title: 'Basic Accordion',
-  scene: basicAccordionExampleScenePart,
   ui: <BasicAccordion />,
 };
 //#endregion
-
-export const basicAccordionTestSuite: TestSuiteInfo<typeof basicAccordionExampleScenePart> = {
-  title: 'Basic Accordion',
-  url: '/accordion',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
-    let testEngine: TestEngine<typeof basicAccordionExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
-      testEngine = getTestEngine(basicAccordionExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        arguments[0]();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
-
-    test('Normal Accordion is not disabled by default', async () => {
-      const isDisabled = await testEngine.parts.normalAccordion.isDisabled();
-      assertEqual(isDisabled, false);
-    });
-
-    test('Normal Accordion is not expanded by default', async () => {
-      const isExpanded = await testEngine.parts.normalAccordion.isExpanded();
-      assertEqual(isExpanded, false);
-    });
-
-    test('Normal Accordion can be expanded', async () => {
-      await testEngine.parts.normalAccordion.expand();
-      const isExpanded = await testEngine.parts.normalAccordion.isExpanded();
-      assertEqual(isExpanded, true);
-    });
-
-    test('Normal Accordion can be collapsed', async () => {
-      await testEngine.parts.normalAccordion.expand();
-      await testEngine.parts.normalAccordion.collapse();
-      const isExpanded = await testEngine.parts.normalAccordion.isExpanded();
-      assertEqual(isExpanded, false);
-    });
-
-    test('Disabled Accordion is disabled', async () => {
-      const isDisabled = await testEngine.parts.disabledAccordion.isDisabled();
-      assertEqual(isDisabled, true);
-    });
-  },
-};
