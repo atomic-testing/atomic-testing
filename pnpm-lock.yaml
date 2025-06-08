@@ -463,6 +463,9 @@ importers:
       '@mui/material':
         specifier: ^7.1.0
         version: 7.1.0(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      indexed-collection:
+        specifier: ^2.0.0
+        version: 2.0.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -512,18 +515,21 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.0
         version: 18.3.7(@types/react@18.3.23)
+      '@vitejs/plugin-react':
+        specifier: ^4.5.0
+        version: 4.5.0(vite@6.3.5(@types/node@22.15.24)(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1))
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.3.53)(@types/node@22.15.24)(typescript@5.8.3))
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
-      react-scripts:
-        specifier: 5.0.1
-        version: 5.0.1(@babel/plugin-syntax-flow@7.21.4(@babel/core@7.27.3))(@babel/plugin-transform-react-jsx@7.27.1(@babel/core@7.27.3))(@swc/core@1.3.53)(@types/babel__core@7.20.5)(eslint@9.27.0(jiti@1.21.7))(react@18.3.1)(ts-node@10.9.2(@swc/core@1.3.53)(@types/node@22.15.24)(typescript@5.8.3))(type-fest@2.19.0)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@22.15.24)(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1)
 
   packages/component-driver-mui-x-v5:
     dependencies:
@@ -6130,6 +6136,10 @@ packages:
   index-to-position@1.0.0:
     resolution: {integrity: sha512-sCO7uaLVhRJ25vz1o8s9IFM3nVS4DkuQnyjMwiQPKvQuBYBDmb8H7zx8ki7nVh4HJQOdVWebyvLE0qt+clruxA==}
     engines: {node: '>=18'}
+
+  indexed-collection@2.0.0:
+    resolution: {integrity: sha512-RPQvAeTWUUaTnotOmJyEUWNz8PSpFjBX1lEguiMY7Y40jB3FRXnhFga3yYT8cvPIFkXQUV0uc58qufAg3kQ5kg==}
+    engines: {node: '>=20'}
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
@@ -15215,6 +15225,8 @@ snapshots:
   indent-string@5.0.0: {}
 
   index-to-position@1.0.0: {}
+
+  indexed-collection@2.0.0: {}
 
   inflight@1.0.6:
     dependencies:
