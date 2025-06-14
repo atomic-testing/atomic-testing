@@ -1,0 +1,154 @@
+---
+id: tutorial
+title: 'Step-by-Step Tutorial'
+sidebar_position: 5
+---
+
+import loginFormDriver from '!!raw-loader!./snippets/login-form-driver';
+import signupE2e from '!!raw-loader!./snippets/signup-form-e2e.spec';
+import CodeBlock from '@theme/CodeBlock';
+
+This tutorial walks you through the `example-mui-signup-form` found in the `examples` folder. It demonstrates how to run the example application and introduces the basic **Atomic Testing** APIs for writing tests. Component drivers work the same in isolated unit tests or full browser tests so the code you see here applies to both environments.
+
+## 1. Install dependencies
+
+From the repository root run:
+
+```bash
+pnpm install
+```
+
+The example project has its own dependencies so install them as well:
+
+```bash
+cd examples/example-mui-signup-form
+pnpm install
+```
+
+## 2. Start the example application
+
+Run the app locally to see the signup form in action:
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:5371](http://localhost:5371) in your browser to interact with the multi‑step form.
+
+## 3. Run the component tests
+
+Unit tests for each form step live under their respective `__tests__` directories. Execute them with:
+
+```bash
+pnpm test:dom
+```
+
+## 4. Run the end‑to‑end test
+
+The example also includes an end‑to‑end scenario located in `e2e/success.spec.ts`. Launch it in Chrome with:
+
+```bash
+pnpm test:e2e:chrome
+```
+
+Add the `--ui` flag to open Playwright in UI mode if you want to watch the interactions.
+
+## 5. Explore Storybook (optional)
+
+Some components contain Storybook stories with interaction tests. To view them, run:
+
+```bash
+pnpm storybook
+```
+
+## 6. Write your first Atomic test
+
+The signup form example includes unit tests written with **Atomic Testing**. The steps below outline the main pieces required to create a test.
+
+### Declare `data-testid`
+
+Assign the `data-testid` attribute on components that you need to interact with. This example shows the markup for the credential form:
+
+```tsx title="CredentialForm.tsx"
+<form data-testid={DataTestId.form}>
+  <TextField data-testid={DataTestId.emailInput} label='Email' />
+  <TextField data-testid={DataTestId.passwordInput} label='Password' />
+  <WizardButton data-testid={DataTestId.navigation} onNextStep={onNextStep} />
+</form>
+```
+
+### Define a ScenePart
+
+Create a ScenePart describing how to locate each component and which driver to use:
+
+```ts title="credentialScenePart.ts"
+const parts = {
+  form: {
+    locator: byDataTestId(DataTestId.form),
+    driver: CredentialFormDriver,
+  },
+} satisfies ScenePart;
+```
+
+### Instantiate the Test Engine and write a test
+
+```ts title="CredentialForm.test.tsx"
+let testEngine: TestEngine<typeof parts>;
+let onNext: jest.Mock;
+
+beforeEach(() => {
+  onNext = jest.fn();
+  testEngine = createTestEngineForComponent(
+    <CredentialForm data-testid={DataTestId.form} onNextStep={onNext} />,
+    parts
+  );
+});
+
+afterEach(async () => {
+  await testEngine.cleanUp();
+});
+
+test('submits valid data', async () => {
+  await testEngine.parts.form.setValue({
+    email: 'john@example.com',
+    password: 'secret123',
+    confirmPassword: 'secret123',
+    birthday: '1990-01-01',
+  });
+  await testEngine.parts.form.next();
+  expect(onNext).toHaveBeenCalled();
+});
+```
+
+The test engine renders the component, exposes the parts defined in the `ScenePart`, and provides helper methods from the driver to interact with the component. Always call `cleanUp()` after each test to unmount the component and release resources.
+
+## 7. Build a form driver
+
+For larger forms it is convenient to create a driver that wraps the individual inputs. Below is a simplified driver for a login form.
+
+<CodeBlock language='ts'>{loginFormDriver}</CodeBlock>
+
+Use it in a test:
+
+```ts title="LoginForm.test.tsx"
+const parts = {
+  form: { locator: byDataTestId('login-form'), driver: LoginFormDriver },
+} satisfies ScenePart;
+
+const engine = createTestEngineForComponent(<LoginForm />, parts);
+await engine.parts.form.login({ username: 'admin', password: 'secret' });
+```
+
+With the `login()` helper tests stay declarative and don't depend on the form's markup. If the implementation changes, update only `LoginFormDriver`.
+
+## 8. Write an end-to-end test
+
+Drivers work the same way in browser-based tests. The snippet below shows a Playwright test that reuses the drivers from the unit tests.
+
+<CodeBlock language='ts'>{signupE2e}</CodeBlock>
+
+Because the driver encapsulates how to fill in the form, the test logic is short and can run in any browser supported by Playwright.
+
+## Next steps
+
+Browse the example source code to see how scene parts, drivers and the test engine are set up. Then refer back to the [Setup](./setup.mdx) and [Core Concepts](./core-concepts.mdx) pages for more details on creating your own tests.
