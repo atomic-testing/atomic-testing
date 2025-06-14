@@ -5,4 +5,63 @@ sidebar_position: 1
 
 # Build Component Driver
 
-Coming soon
+Component drivers encapsulate the logic for interacting with a UI component. While many drivers are provided out of the box, you can build your own for custom widgets.
+
+## Basic structure
+
+A driver extends `ComponentDriver` and implements any interfaces that describe its capabilities. The `constructor` receives a locator, an interactor and optional configuration.
+
+```ts title="SimpleButtonDriver.ts"
+import { ComponentDriver, IClickableDriver } from '@atomic-testing/core';
+
+export class SimpleButtonDriver extends ComponentDriver implements IClickableDriver {
+  click(): Promise<void> {
+    return this.interactor.click(this.locator);
+  }
+
+  get driverName(): string {
+    return 'SimpleButtonDriver';
+  }
+}
+```
+
+## Why use drivers?
+
+Drivers abstract away the DOM details of complex components. Instead of manipulating HTML in tests, you interact with high level methods (`next()`, `setValue()`, etc.). Drivers can expose child parts so you can compose them into larger units and reuse them across tests.
+
+For example, the signup form in the example project is implemented with a `CredentialFormDriver` that wraps four MUI text fields and a navigation component. Tests only call `setValue()` and `next()` on this driver, keeping the assertions focused on behavior rather than DOM markup.
+
+By composing multiple drivers you can model entire workflows with minimal test code.
+
+### Composing drivers
+
+The `LoginFormDriver` below demonstrates composing text field and button drivers to abstract the entire login form.
+
+```ts title="LoginFormDriver.ts"
+import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
+import { ComponentDriver, Locator, Interactor, byDataTestId, ScenePart } from '@atomic-testing/core';
+
+export const loginFormParts = {
+  username: { locator: byDataTestId('username'), driver: TextFieldDriver },
+  password: { locator: byDataTestId('password'), driver: TextFieldDriver },
+  submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
+} satisfies ScenePart;
+
+export class LoginFormDriver extends ComponentDriver<typeof loginFormParts> {
+  constructor(locator: Locator, interactor: Interactor) {
+    super(locator, interactor, { parts: loginFormParts });
+  }
+
+  async login(credentials: { username: string; password: string }): Promise<void> {
+    await this.parts.username.setValue(credentials.username);
+    await this.parts.password.setValue(credentials.password);
+    await this.parts.submit.click();
+  }
+
+  get driverName(): string {
+    return 'LoginFormDriver';
+  }
+}
+```
+
+This driver can itself be used as a part inside a larger `AuthenticatedAppDriver`, keeping individual tests concise.
