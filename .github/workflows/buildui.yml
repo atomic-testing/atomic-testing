@@ -150,3 +150,32 @@ jobs:
       - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v7-test
+
+  example-mui-signup-form-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: PNPM Setup
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install .
+        working-directory: ./examples/example-mui-signup-form
+
+      - name: Run dom test
+        run: pnpm test:dom
+        working-directory: ./examples/example-mui-signup-form
