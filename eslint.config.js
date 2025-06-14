@@ -16,6 +16,8 @@ export default [
       '**/jest.config.base.js',
       '**/jest.setup.js',
       '**/node_modules/**',
+      '**/*/jest.config.cjs',
+      'typedocs/',
     ],
   },
   {
