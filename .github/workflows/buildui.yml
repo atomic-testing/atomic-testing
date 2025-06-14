@@ -150,3 +150,24 @@ jobs:
       - name: Run test
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v7-test
+
+  example-mui-signup-form-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/builderui-setup
+
+      - name: Install dependencies
+        run: pnpm install .
+        working-directory: ./examples/example-mui-signup-form
+
+      - name: Run dom test
+        run: pnpm test:dom
+        working-directory: ./examples/example-mui-signup-form
