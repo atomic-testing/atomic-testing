@@ -5,4 +5,40 @@ sidebar_position: 7
 
 # FAQ
 
-Coming soon
+Below are some commonly asked questions about using **Atomic Testing**.
+
+### How do I start using Atomic Testing?
+
+Install the packages for your preferred test environment and UI library. Then define *SceneParts* for the components you want to interact with and create a **Test Engine** instance. The [Getting Started Tutorial](./getting-started-tutorial.mdx) walks through these steps.
+
+### Which UI frameworks are supported?
+
+Drivers are provided for popular React frameworks, including Material UI and MUI&nbsp;X. You can also create drivers for your own component library if one is not available.
+
+### Can I use it with unit tests and end‑to‑end tests?
+
+Yes. Drivers work the same way in Jest/Vitest component tests and in Playwright or Cypress end‑to‑end tests, so the same driver code can be reused across test types.
+
+### How does Atomic Testing handle asynchronous UI behavior?
+
+Driver methods return promises and rely on the underlying test framework’s wait utilities. You can `await` each call so tests stay stable even when the UI updates asynchronously.
+
+### Do I need to rewrite all my existing tests?
+
+No. You can adopt Atomic Testing gradually and keep legacy tests in place. New tests can be written using drivers while older tests continue to run as before.
+
+### What benefits does Atomic Testing provide to my team?
+
+Component drivers encapsulate how to interact with the UI so tests remain focused on intent rather than implementation details. This leads to easier maintenance and helps reduce flaky tests across projects.
+
+### Does adopting Atomic Testing require a specific test runner?
+
+No. The library works with popular tools such as Jest, Vitest and Playwright. Choose the runner that best fits your workflow.
+
+### How can I create drivers for my own component library?
+
+Implement a driver that exposes the actions and assertions relevant to your components. Drivers can live in a separate package so consumers can install them alongside your UI library.
+
+### Can I contribute drivers back to Atomic Testing?
+
+Yes. Contributions are welcome. Feel free to open an issue or pull request to discuss adding official support for your component set.
