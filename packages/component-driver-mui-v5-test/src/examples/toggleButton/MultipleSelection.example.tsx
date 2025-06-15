@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { ToggleButtonGroupDriver } from '@atomic-testing/component-driver-mui-v5';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { IExampleUIUnit } from '@atomic-testing/core';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
@@ -38,55 +36,12 @@ export const RegularSelectionExample = () => {
   );
 };
 
-export const regularSelectionExampleScenePart = {
-  formatting: {
-    locator: byDataTestId('formatting'),
-    driver: ToggleButtonGroupDriver,
-  },
-} satisfies ScenePart;
-
 /**
  * Multiple selection example from MUI Website
  * @see https://mui.com/material-ui/react-toggle-button/#customization
  */
-export const regularSelectionExample: IExampleUnit<typeof regularSelectionExampleScenePart, JSX.Element> = {
+export const regularSelectionUIExample: IExampleUIUnit<JSX.Element> = {
   title: 'Multiple Selection',
-  scene: regularSelectionExampleScenePart,
   ui: <RegularSelectionExample />,
 };
 //#endregion
-
-export const regularSelectionButtonTestSuite: TestSuiteInfo<typeof regularSelectionExampleScenePart> = {
-  title: 'Multiple Selection',
-  url: '/toggle-button',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
-    describe(`${regularSelectionExample.title}`, () => {
-      let testEngine: TestEngine<typeof regularSelectionExample.scene>;
-
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
-        testEngine = getTestEngine(regularSelectionExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          arguments[0]();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
-
-      test('Initially there should be no selected value', async () => {
-        const value = await testEngine.parts.formatting.getValue();
-        assertEqual(value, []);
-      });
-
-      test('Selecting a value should update the value', async () => {
-        await testEngine.parts.formatting.setValue(['bold', 'italic']);
-        const value = await testEngine.parts.formatting.getValue();
-        assertEqual(value, ['bold', 'italic']);
-      });
-    });
-  },
-};
