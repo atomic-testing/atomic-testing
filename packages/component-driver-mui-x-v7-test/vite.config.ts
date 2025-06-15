@@ -18,7 +18,7 @@ export default defineConfig({
     // would make sure hot-module-reload works properly
     strictPort: true,
     hmr: {
-      port: 5127,
+      port,
     },
   },
 });

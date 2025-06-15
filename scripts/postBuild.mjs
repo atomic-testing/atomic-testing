@@ -10,6 +10,7 @@ const skipPostBuildPackages = [
   'component-driver-mui-x-v5-test',
   'component-driver-mui-x-v6-test',
   'component-driver-mui-x-v7-test',
+  'component-driver-mui-x-v8-test',
 ];
 
 /**
