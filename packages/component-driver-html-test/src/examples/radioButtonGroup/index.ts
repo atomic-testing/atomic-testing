@@ -1,10 +1,10 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { uncontrolledRadioButtonGroupExample as uncontrolledRadioButtonGroup } from './Uncontrolled.examples';
+import { uncontrolledRadioButtonGroupExample, uncontrolledRadioButtonGroupTestSuite } from './Uncontrolled.suite';
 
-export { uncontrolledRadioButtonGroupTestSuite } from './Uncontrolled.examples';
-
-export const uncontrolledRadioButtonGroupExample = uncontrolledRadioButtonGroup;
+export { uncontrolledRadioButtonGroupExample, uncontrolledRadioButtonGroupTestSuite };
 
 export const radioButtonGroupExamples = [uncontrolledRadioButtonGroupExample] satisfies IExampleUnit<
   ScenePart,

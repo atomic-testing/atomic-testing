@@ -1,13 +1,15 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { checkboxGroupExample as checkboxGroup } from './CheckboxGroup.examples';
-import { singleCheckboxExample as singleCheckbox } from './SingleCheckbox.examples';
+import { checkboxGroupExample as checkboxGroupWithScene } from './CheckboxGroup.suite';
+import { singleCheckboxExample as singleCheckboxWithScene } from './SingleCheckbox.suite';
 
-export { checkboxGroupTestSuite } from './CheckboxGroup.examples';
-export { singleCheckboxTestSuite } from './SingleCheckbox.examples';
+export { checkboxGroupTestSuite } from './CheckboxGroup.suite';
+export { singleCheckboxTestSuite } from './SingleCheckbox.suite';
 
-export const singleCheckboxExample = singleCheckbox;
-export const checkboxGroupExample = checkboxGroup;
+export const singleCheckboxExample = singleCheckboxWithScene;
+export const checkboxGroupExample = checkboxGroupWithScene;
 
 export const checkboxExamples = [singleCheckboxExample, checkboxGroupExample] satisfies IExampleUnit<
   ScenePart,

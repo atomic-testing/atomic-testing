@@ -1,6 +1,8 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { linkedElementExample, linkedElementTestSuite } from './LinkedElement.examples';
+import { linkedElementExample, linkedElementTestSuite } from './LinkedElement.suite';
 
 export { linkedElementExample, linkedElementTestSuite };
 

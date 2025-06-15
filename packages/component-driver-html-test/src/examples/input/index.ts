@@ -1,13 +1,12 @@
+import { JSX } from 'react';
+
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { controlledTextInputExample as controlledTextInput } from './Controlled.examples';
-import { uncontrolledTextInputExample as uncontrolledTextInput } from './Uncontrolled.examples';
+import { controlledTextInputExample, controlledTextInputExampleTestSuite } from './Controlled.suite';
+import { uncontrolledTextInputExample, uncontrolledTextInputExampleTestSuite } from './Uncontrolled.suite';
 
-export { controlledTextInputExampleTestSuite } from './Controlled.examples';
-export { uncontrolledTextInputExampleTestSuite } from './Uncontrolled.examples';
-
-export const uncontrolledTextInputExample = uncontrolledTextInput;
-export const controlledTextInputExample = controlledTextInput;
+export { controlledTextInputExampleTestSuite, uncontrolledTextInputExampleTestSuite };
+export { controlledTextInputExample, uncontrolledTextInputExample };
 
 export const textInputExamples = [uncontrolledTextInputExample, controlledTextInputExample] satisfies IExampleUnit<
   ScenePart,
