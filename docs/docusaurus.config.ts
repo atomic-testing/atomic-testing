@@ -38,6 +38,12 @@ const config: Config = {
     locales: ['en'],
   },
 
+  markdown: {
+    mermaid: true,
+  },
+
+  themes: ['@docusaurus/theme-mermaid'],
+
   plugins: [
     [
       // https://github.com/tgreyuk/typedoc-plugin-markdown/tree/master/packages/docusaurus-plugin-typedoc
