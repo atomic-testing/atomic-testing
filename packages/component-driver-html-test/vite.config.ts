@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
-const port = 5117;
+const port = 3010;
 
 // https://vite.dev/config/
 export default defineConfig({

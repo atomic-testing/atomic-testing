@@ -1,15 +1,27 @@
-import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
-import { basicSelectExample as basicSelect } from './BasicSelect.examples';
-import { nativeSelectExample as nativeSelect } from './NativeSelect.examples';
+import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
 
-export { basicSelectTestSuite } from './BasicSelect.examples';
-export { nativeSelectTestSuite } from './NativeSelect.examples';
+import { basicSelectUIExample } from './BasicSelect.examples';
+import { basicSelectExample, basicSelectTestSuite } from './BasicSelect.suite';
+import { nativeSelectUIExample } from './NativeSelect.examples';
+import { nativeSelectExample, nativeSelectTestSuite } from './NativeSelect.suite';
 
-export const basicSelectExample = basicSelect;
-export const nativeSelectExample = nativeSelect;
+export {
+  basicSelectUIExample,
+  basicSelectExample,
+  basicSelectTestSuite,
+  nativeSelectUIExample,
+  nativeSelectExample,
+  nativeSelectTestSuite,
+};
 
-export const selectExamples = [basicSelectExample, nativeSelectExample] satisfies IExampleUnit<
-  ScenePart,
-  JSX.Element
->[];
+export const selectUIExamples: IExampleUIUnit<JSX.Element>[] = [
+  basicSelectUIExample,
+  nativeSelectUIExample,
+] satisfies IExampleUIUnit<JSX.Element>[];
+
+export const selectExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
+  basicSelectExample,
+  nativeSelectExample,
+] satisfies IExampleUnit<ScenePart, JSX.Element>[];

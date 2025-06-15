@@ -1,29 +1,51 @@
-import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
-import { basicTextFieldExample } from './BasicTextField.examples';
-import { dateTextFieldExample } from './DateTextField.examples';
-import { multilineTextFieldExample } from './MultilineTextField.examples';
-import { readonlyAndDisabledTextFieldExample } from './ReadonlyDisabledTextField.examples';
-import { selectTextFieldExample } from './SelectTextField.examples';
+import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
 
-export { basicTextFieldTestSuite } from './BasicTextField.examples';
-export { dateTextFieldTestSuite } from './DateTextField.examples';
-export { multilineTextFieldTestSuite } from './MultilineTextField.examples';
-export { readonlyAndDisabledTextFieldTestSuite } from './ReadonlyDisabledTextField.examples';
-export { selectTextFieldTestSuite } from './SelectTextField.examples';
+import { basicTextFieldUIExample } from './BasicTextField.examples';
+import { basicTextFieldExample, basicTextFieldTestSuite } from './BasicTextField.suite';
+import { dateTextFieldUIExample } from './DateTextField.examples';
+import { dateTextFieldExample, dateTextFieldTestSuite } from './DateTextField.suite';
+import { multilineTextFieldUIExample } from './MultilineTextField.examples';
+import { multilineTextFieldExample, multilineTextFieldTestSuite } from './MultilineTextField.suite';
+import { readonlyAndDisabledTextFieldUIExample } from './ReadonlyDisabledTextField.examples';
+import {
+  readonlyAndDisabledTextFieldExample,
+  readonlyAndDisabledTextFieldTestSuite,
+} from './ReadonlyDisabledTextField.suite';
+import { selectTextFieldUIExample } from './SelectTextField.examples';
+import { selectTextFieldExample, selectTextFieldTestSuite } from './SelectTextField.suite';
 
 export {
+  basicTextFieldUIExample,
   basicTextFieldExample,
+  basicTextFieldTestSuite,
+  dateTextFieldUIExample,
   dateTextFieldExample,
+  dateTextFieldTestSuite,
+  multilineTextFieldUIExample,
   multilineTextFieldExample,
+  multilineTextFieldTestSuite,
+  readonlyAndDisabledTextFieldUIExample,
   readonlyAndDisabledTextFieldExample,
+  readonlyAndDisabledTextFieldTestSuite,
+  selectTextFieldUIExample,
   selectTextFieldExample,
+  selectTextFieldTestSuite,
 };
 
-export const textFieldExamples = [
+export const textFieldUIExamples: IExampleUIUnit<JSX.Element>[] = [
+  basicTextFieldUIExample,
+  dateTextFieldUIExample,
+  multilineTextFieldUIExample,
+  readonlyAndDisabledTextFieldUIExample,
+  selectTextFieldUIExample,
+] satisfies IExampleUIUnit<JSX.Element>[];
+
+export const textFieldExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
   basicTextFieldExample,
   dateTextFieldExample,
   multilineTextFieldExample,
-  selectTextFieldExample,
   readonlyAndDisabledTextFieldExample,
+  selectTextFieldExample,
 ] satisfies IExampleUnit<ScenePart, JSX.Element>[];
