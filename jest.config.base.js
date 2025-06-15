@@ -31,6 +31,7 @@ module.exports = {
   testTimeout: 30000,
 
   moduleNameMapper: {
+    '^.+\\.(css|less)$': '<rootDir>/../../jest.css.js',
     ...packages.reduce(
       (acc, name) => ({
         ...acc,
