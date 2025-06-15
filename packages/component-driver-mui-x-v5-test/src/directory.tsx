@@ -1,5 +1,7 @@
 import { ExampleList } from './components/ExampleList';
-import { dataGridProExamples, datePickerExamples } from './examples';
+import { basicDataGridProUIExample } from './examples/datagridpro/BasicDataGridPro.examples';
+import { basicDatePickerUIExample } from './examples/datetimepicker/BasicDateTimePicker.examples';
+import { basicDateRangePickerUIExample } from './examples/datetimepicker/DateRangePicker.examples';
 
 interface IToc {
   label: string;
@@ -11,11 +13,11 @@ export const tocs: IToc[] = [
   {
     label: 'DataGrid Pro',
     path: '/datagridpro',
-    ui: <ExampleList examples={dataGridProExamples} />,
+    ui: <ExampleList examples={[basicDataGridProUIExample]} />,
   },
   {
     label: 'DatePicker',
     path: '/datepicker',
-    ui: <ExampleList examples={datePickerExamples} />,
+    ui: <ExampleList examples={[basicDatePickerUIExample, basicDateRangePickerUIExample]} />,
   },
 ];
