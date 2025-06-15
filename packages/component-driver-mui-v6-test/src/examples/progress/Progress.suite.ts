@@ -1,3 +1,5 @@
+import { JSX } from 'react';
+
 import { ProgressDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
 import { TestSuiteInfo } from '@atomic-testing/test-runner';
@@ -35,12 +37,11 @@ export const basicProgressExample: IExampleUnit<typeof basicProgressExampleScene
   ...basicProgressUIExample,
   scene: basicProgressExampleScenePart,
 };
-//#endregion
 
 export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePart> = {
   title: 'Basic Progress',
   url: '/progress',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof basicProgressExample.scene>;
 
     // Use the following beforeEach to work around the issue of Playwright's page being undefined
@@ -57,91 +58,79 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
       await testEngine.cleanUp();
     });
 
-    describe('Circular', () => {
-      test(`Type is circular`, async () => {
-        const type = await testEngine.parts.circular.getType();
-        assertEqual(type, 'circular');
-      });
-
-      test(`Value is 25`, async () => {
-        const value = await testEngine.parts.circular.getValue();
-        assertEqual(value, 25);
-      });
-
-      test(`Determinate is true`, async () => {
-        const determinate = await testEngine.parts.circular.isDeterminate();
-        assertEqual(determinate, true);
-      });
+    test('circular progress should have correct type', async () => {
+      const type = await testEngine.parts.circular.getType();
+      assertEqual(type, 'circular');
     });
 
-    describe('Circular Indeterminate', () => {
-      test(`Type is circular`, async () => {
-        const type = await testEngine.parts.circularIndeterminate.getType();
-        assertEqual(type, 'circular');
-      });
-
-      test(`Value is null`, async () => {
-        const value = await testEngine.parts.circularIndeterminate.getValue();
-        assertEqual(value, null);
-      });
-
-      test(`Determinate is false`, async () => {
-        const determinate = await testEngine.parts.circularIndeterminate.isDeterminate();
-        assertEqual(determinate, false);
-      });
+    test('circular progress should have value 25', async () => {
+      const value = await testEngine.parts.circular.getValue();
+      assertEqual(value, 25);
     });
 
-    describe('Linear', () => {
-      test(`Type is linear`, async () => {
-        const type = await testEngine.parts.linear.getType();
-        assertEqual(type, 'linear');
-      });
-
-      test(`Value is 50`, async () => {
-        const value = await testEngine.parts.linear.getValue();
-        assertEqual(value, 50);
-      });
-
-      test(`Determinate is true`, async () => {
-        const determinate = await testEngine.parts.linear.isDeterminate();
-        assertEqual(determinate, true);
-      });
+    test('circular progress should be determinate', async () => {
+      const determinate = await testEngine.parts.circular.isDeterminate();
+      assertEqual(determinate, true);
     });
 
-    describe('Linear Indeterminate', () => {
-      test(`Type is linear`, async () => {
-        const type = await testEngine.parts.linearIndeterminate.getType();
-        assertEqual(type, 'linear');
-      });
-
-      test(`Value is null`, async () => {
-        const value = await testEngine.parts.linearIndeterminate.getValue();
-        assertEqual(value, null);
-      });
-
-      test(`Determinate is false`, async () => {
-        const determinate = await testEngine.parts.linearIndeterminate.isDeterminate();
-        assertEqual(determinate, false);
-      });
+    test('circular indeterminate should have correct type', async () => {
+      const type = await testEngine.parts.circularIndeterminate.getType();
+      assertEqual(type, 'circular');
     });
 
-    describe('Linear buffer', () => {
-      test(`Type is linear`, async () => {
-        const type = await testEngine.parts.linearBuffer.getType();
-        assertEqual(type, 'linear');
-      });
+    test('circular indeterminate should have null value', async () => {
+      const value = await testEngine.parts.circularIndeterminate.getValue();
+      assertEqual(value, null);
+    });
 
-      test(`Value is null`, async () => {
-        const value = await testEngine.parts.linearBuffer.getValue();
-        assertEqual(value, 70);
-      });
+    test('circular indeterminate should not be determinate', async () => {
+      const determinate = await testEngine.parts.circularIndeterminate.isDeterminate();
+      assertEqual(determinate, false);
+    });
 
-      test(`Determinate is true`, async () => {
-        const determinate = await testEngine.parts.linearBuffer.isDeterminate();
-        assertEqual(determinate, true);
-      });
+    test('linear progress should have correct type', async () => {
+      const type = await testEngine.parts.linear.getType();
+      assertEqual(type, 'linear');
+    });
 
-      // There is no buffer value extraction
+    test('linear progress should have value 50', async () => {
+      const value = await testEngine.parts.linear.getValue();
+      assertEqual(value, 50);
+    });
+
+    test('linear progress should be determinate', async () => {
+      const determinate = await testEngine.parts.linear.isDeterminate();
+      assertEqual(determinate, true);
+    });
+
+    test('linear indeterminate should have correct type', async () => {
+      const type = await testEngine.parts.linearIndeterminate.getType();
+      assertEqual(type, 'linear');
+    });
+
+    test('linear indeterminate should have null value', async () => {
+      const value = await testEngine.parts.linearIndeterminate.getValue();
+      assertEqual(value, null);
+    });
+
+    test('linear indeterminate should not be determinate', async () => {
+      const determinate = await testEngine.parts.linearIndeterminate.isDeterminate();
+      assertEqual(determinate, false);
+    });
+
+    test('linear buffer should have correct type', async () => {
+      const type = await testEngine.parts.linearBuffer.getType();
+      assertEqual(type, 'linear');
+    });
+
+    test('linear buffer should have value 70', async () => {
+      const value = await testEngine.parts.linearBuffer.getValue();
+      assertEqual(value, 70);
+    });
+
+    test('linear buffer should be determinate', async () => {
+      const determinate = await testEngine.parts.linearBuffer.isDeterminate();
+      assertEqual(determinate, true);
     });
   },
 };
