@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { ListDriver, ListItemDriver } from '@atomic-testing/component-driver-mui-v5';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byRole } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { IExampleUIUnit } from '@atomic-testing/core';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import InboxIcon from '@mui/icons-material/Inbox';
 import Box from '@mui/material/Box';
@@ -49,64 +47,8 @@ export const SelectableList: React.FunctionComponent = () => {
   );
 };
 
-export const selectableListExampleScenePart = {
-  selectableList: {
-    locator: byDataTestId('selectable-list'),
-    driver: ListDriver,
-    option: {
-      itemLocator: byRole('button'),
-      itemClass: ListItemDriver,
-    },
-  },
-} satisfies ScenePart;
-
-export const selectableListExample: IExampleUnit<typeof selectableListExampleScenePart, JSX.Element> = {
+export const selectableListUIExample: IExampleUIUnit<JSX.Element> = {
   title: 'Selectable List',
-  scene: selectableListExampleScenePart,
   ui: <SelectableList />,
 };
 //#endregion
-
-export const selectableListTestSuite: TestSuiteInfo<typeof selectableListExample.scene> = {
-  title: 'Selectable List',
-  url: '/list',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
-    describe(`${selectableListExample.title}`, () => {
-      let testEngine: TestEngine<typeof selectableListExample.scene>;
-
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
-        testEngine = getTestEngine(selectableListExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          arguments[0]();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
-
-      // This does not work because <div role="button"> cannot be clicked
-      test.skip('should select the first item', async () => {
-        const firstItem = await testEngine.parts.selectableList.getItemByIndex(0);
-        firstItem!.click();
-        const selected = await testEngine.parts.selectableList.getSelected();
-        const selectedText = await selected?.getText();
-        assertEqual(selectedText, 'Inbox');
-      });
-
-      test('Drafts (use getItemByLabel) should be selected', async () => {
-        const draft = await testEngine.parts.selectableList.getItemByLabel('Drafts');
-        const selected = await draft?.isSelected();
-        assertEqual(selected, true);
-      });
-
-      test('There should be 4 items in the list', async () => {
-        const items = await testEngine.parts.selectableList.getItems();
-        assertEqual(items.length, 4);
-      });
-    });
-  },
-};
