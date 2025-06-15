@@ -1,10 +1,12 @@
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
-import { basicDatePickerExample, basicDatePickerTestSuite } from './BasicDateTimePicker.examples';
-import { basicDateRangePickerExample, basicDateRangePickerTestSuite } from './DateRangePicker.examples';
+import { basicDatePickerUIExample } from './BasicDateTimePicker.examples';
+import { basicDatePickerExample, basicDatePickerTestSuite } from './BasicDateTimePicker.suite';
+import { basicDateRangePickerUIExample } from './DateRangePicker.examples';
+import { basicDateRangePickerExample, basicDateRangePickerTestSuite } from './DateRangePicker.suite';
 
-export { basicDatePickerExample, basicDatePickerTestSuite };
-export { basicDateRangePickerExample, basicDateRangePickerTestSuite };
+export { basicDatePickerUIExample, basicDatePickerExample, basicDatePickerTestSuite };
+export { basicDateRangePickerUIExample, basicDateRangePickerExample, basicDateRangePickerTestSuite };
 export const datePickerExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
   basicDatePickerExample,
   basicDateRangePickerExample,
