@@ -1,10 +1,17 @@
 import { GridAlignment, GridColDef } from '@mui/x-data-grid-pro';
+import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
 
-export const initialState = {
+export const initialState: GridInitialStatePro = {
   columns: {
     columnVisibilityModel: {
       id: false,
       brokerId: false,
+    },
+  },
+  pagination: {
+    paginationModel: {
+      page: 0,
+      pageSize: 10,
     },
   },
 };

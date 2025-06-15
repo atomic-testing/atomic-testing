@@ -1,5 +1,7 @@
+import { JSX } from 'react';
+
 import { ExampleList } from './components/ExampleList';
-import { dataGridProExamples } from './examples';
+import { basicDataGridProUIExample } from './examples/datagridpro/BasicDataGridPro.examples';
 
 interface IToc {
   label: string;
@@ -11,6 +13,6 @@ export const tocs: IToc[] = [
   {
     label: 'DataGrid Pro',
     path: '/datagridpro',
-    ui: <ExampleList examples={dataGridProExamples} />,
+    ui: <ExampleList examples={[basicDataGridProUIExample]} />,
   },
 ];
