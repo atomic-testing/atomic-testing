@@ -34,6 +34,7 @@ declare -a packages=(
   "component-driver-mui-x-v5"
   "component-driver-mui-x-v6"
   "component-driver-mui-x-v7"
+  "component-driver-mui-x-v8"
 )
 
 cd packages
