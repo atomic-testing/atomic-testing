@@ -64,6 +64,7 @@ const config: Config = {
           '../packages/component-driver-mui-x-v5',
           '../packages/component-driver-mui-x-v6',
           '../packages/component-driver-mui-x-v7',
+          '../packages/component-driver-mui-x-v8',
         ],
         entryPointStrategy: 'packages',
         tsconfig: '../tsconfig.json',

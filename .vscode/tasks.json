@@ -63,6 +63,15 @@
       "icon": {
         "id": "compass"
       }
+    },
+    {
+      "label": "MUIXv8",
+      "type": "shell",
+      "command": "cd packages/component-driver-mui-x-v8-test && pnpm start",
+      "isBackground": true,
+      "icon": {
+        "id": "compass"
+      }
     }
   ]
 }

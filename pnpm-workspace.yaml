@@ -1,5 +1,10 @@
 packages:
   - packages/*
+
+ignoredBuiltDependencies:
+  - '@mui/x-telemetry'
+  - unrs-resolver
+
 onlyBuiltDependencies:
   - '@swc/core'
   - core-js
