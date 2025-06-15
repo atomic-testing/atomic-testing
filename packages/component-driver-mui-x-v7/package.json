@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-x-v7",
-  "version": "0.57.0",
+  "version": "0.58.0",
   "description": "Atomic Testing Component driver to help drive Material UI X V7 components",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
