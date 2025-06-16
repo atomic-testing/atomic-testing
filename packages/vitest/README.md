@@ -1,3 +1,3 @@
-# @atomic-testing/jest
+# @atomic-testing/vitest
 
-Jest adapter for Atomic Testing test runner
+Vitest adapter for Atomic Testing test runner
