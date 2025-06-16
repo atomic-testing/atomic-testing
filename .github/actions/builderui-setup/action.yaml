@@ -35,4 +35,4 @@ runs:
 
     - name: Build UI
       shell: bash
-      run: pnpm -r build
+      run: ./publish.sh --build-only

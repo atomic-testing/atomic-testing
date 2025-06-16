@@ -3,17 +3,14 @@
   "version": "0.58.0",
   "description": "Component driver for Material-UI v7",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "tsc",
-    "postbuild": "node ../../scripts/postBuild.mjs",
-    "test": "jest --maxConcurrency=1",
-    "lint": "eslint . --ext .ts",
-    "clean": "rimraf dist"
+    "build": "tsdown"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",

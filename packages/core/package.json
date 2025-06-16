@@ -3,14 +3,15 @@
   "version": "0.58.0",
   "description": "Core library for atomic-testing",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "tsc",
-    "postbuild": "node ../../scripts/postBuild.mjs",
+    "build": "tsdown",
+    "check:type": "tsc --noEmit",
     "test": "jest"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
@@ -23,9 +24,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.30",
-    "jest": "^29.7.0",
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {},
-  "peerDependencies": {}
+    "jest": "^29.7.0"
+  }
 }

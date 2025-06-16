@@ -43,7 +43,7 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
       await testEngine.cleanUp();
     });
 
-    test.only('it should display at least 2 columns', async () => {
+    test('it should display at least 2 columns', async () => {
       const count = await testEngine.parts.basicGrid.getColumnCount();
       assertEqual(count >= 2, true);
     });
