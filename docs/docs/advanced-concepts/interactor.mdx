@@ -3,6 +3,38 @@ id: interactor
 sidebar_position: 2
 ---
 
+import loggingInteractor from '!!raw-loader!../snippets/logging-interactor';
+import CodeBlock from '@theme/CodeBlock';
+
 # Interactor
 
-Coming soon
+An **Interactor** provides the low level operations used by component drivers to
+manipulate and query the UI. Drivers delegate every action such as clicking,
+entering text or reading an attribute to an interactor. By swapping the
+interactor implementation, the same driver code works in different environments
+like unit tests running in JSDOM or end‑to‑end tests with Playwright.
+
+## Available interactors
+
+The project ships with several interactors:
+
+- **DOMInteractor** – runs against a DOM environment using
+  `@testing-library` utilities. This is used for unit/integration tests.
+- **ReactInteractor** and **@atomic-testing/react-19** – extensions of
+  `DOMInteractor` that wrap interactions in `React`'s `act()` helper so state
+  updates are flushed correctly when testing React 18 or 19 applications.
+- **PlaywrightInteractor** – drives a Playwright `Page` object to execute tests
+  in a real browser.
+
+## Building an interactor
+
+To build your own interactor, implement the `Interactor` interface from the core
+package. Most custom interactors extend an existing one and override only the
+behaviour that differs. The snippet below logs every click before delegating to
+`DOMInteractor`:
+
+<CodeBlock language='ts'>{loggingInteractor}</CodeBlock>
+
+When creating a test engine, pass an instance of your custom interactor. Refer to
+the implementation of `DOMInteractor` in
+`packages/dom-core/src/DOMInteractor.ts` for a complete example.
