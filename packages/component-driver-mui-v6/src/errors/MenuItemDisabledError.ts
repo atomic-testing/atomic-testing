@@ -9,7 +9,7 @@ function getErrorMessage(label: string): string {
 export class MenuItemDisabledError extends ErrorBase {
   constructor(
     public readonly label: string,
-    public readonly driver: ComponentDriver<any>
+    public readonly driver: ComponentDriver
   ) {
     super(getErrorMessage(label), driver);
     this.name = MenuItemDisabledErrorId;

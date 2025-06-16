@@ -8,7 +8,7 @@ import {
   PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
-import { ComponentDriverClass } from '@atomic-testing/core/src/partTypes';
+import { ComponentDriverClass } from '@atomic-testing/core';
 
 export const parts = {
   contentDisplay: {

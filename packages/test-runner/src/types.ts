@@ -30,7 +30,7 @@ interface Describe {
 }
 
 interface LifeCycleHook {
-  (fn: ProvidesCallback): any;
+  (fn: ProvidesCallback): void;
 }
 
 interface Test {
@@ -56,7 +56,10 @@ export interface TestFrameworkMapper {
   it: Test;
 }
 
-export type GetTestEngine<T extends ScenePart> = (scenePart: T, context?: any) => TestEngine<T>;
+export type GetTestEngine<T extends ScenePart> = (
+  scenePart: T,
+  context?: unknown
+) => TestEngine<T>;
 
 /**
  * Interface for Dom tests which don't involve navigating to a URL
@@ -65,7 +68,7 @@ export type DomTestInterface<T extends ScenePart> = {
   getTestEngine: GetTestEngine<T>;
 };
 
-type GotoReturn = any;
+type GotoReturn = unknown;
 
 /**
  * Interface for E2e tests which involve navigating to a URL

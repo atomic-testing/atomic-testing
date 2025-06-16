@@ -8,10 +8,10 @@ import { PartLocator } from './locators/PartLocator';
 
 export type PartName<T extends ScenePart> = keyof T;
 
-export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
+export type ComponentDriverClass<T extends ComponentDriver = ComponentDriver> = new (
   locator: PartLocator,
   interactor: Interactor,
-  option?: Partial<IComponentDriverOption<any>>
+  option?: Partial<IComponentDriverOption>
 ) => T;
 
 export interface ComponentPartDefinition<T extends ScenePart> {
@@ -53,7 +53,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
   option: Partial<IContainerDriverOption<ContentT, T>>;
 }
 
-export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>> {
+export interface ListComponentPartDefinition<ItemT extends ComponentDriver> {
   /**
    * The locator of the part
    */
@@ -67,19 +67,19 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
     | (new (
         locator: PartLocator,
         interactor: Interactor,
-        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>
+        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption>
       ) => ListComponentDriver<ItemT>);
 
   /**
    * Option for the driver
    */
-  option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>;
+  option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption>;
 }
 
 export type ScenePartDefinition =
-  | ComponentPartDefinition<any>
-  | ContainerPartDefinition<any, any>
-  | ListComponentPartDefinition<any>;
+  | ComponentPartDefinition<ScenePart>
+  | ContainerPartDefinition<ScenePart, ScenePart>
+  | ListComponentPartDefinition<ComponentDriver>;
 
 /**
  * Part name to driver definition map

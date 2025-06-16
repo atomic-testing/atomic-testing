@@ -14,7 +14,7 @@ import { ComponentDriver } from './ComponentDriver';
  * @returns
  */
 export async function getListItemByIndex<T extends ComponentDriver>(
-  host: ComponentDriver<any>,
+  host: ComponentDriver,
   itemLocatorBase: PartLocator,
   index: number,
   driverClass: ComponentDriverClass<T>
@@ -36,8 +36,8 @@ export async function getListItemByIndex<T extends ComponentDriver>(
  * @param driverClass The driver class of the list item
  * @param startIndex The starting index of the list item iterator, default is 0
  */
-export async function* getListItemIterator<T extends ComponentDriver<any>>(
-  host: ComponentDriver<any>,
+export async function* getListItemIterator<T extends ComponentDriver>(
+  host: ComponentDriver,
   itemLocatorBase: PartLocator,
   driverClass: ComponentDriverClass<T>,
   startIndex: number = 0
