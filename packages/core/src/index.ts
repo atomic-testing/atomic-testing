@@ -12,6 +12,7 @@ export type {
   ScenePart,
   ScenePartDefinition,
   ScenePartDriver,
+  ComponentDriverCtor,
 } from './partTypes';
 export * as collectionUtil from './utils/collectionUtil';
 export * as dateUtil from './utils/dateUtil';

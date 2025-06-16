@@ -10,7 +10,8 @@
     "src"
   ],
   "scripts": {
-    "build": "tsdown"
+    "build": "tsdown",
+    "check:type": "tsc --noEmit"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [
