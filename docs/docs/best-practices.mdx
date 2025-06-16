@@ -5,18 +5,64 @@ sidebar_position: 6
 
 # Best Practices
 
+Atomic Testing aims to keep your tests portable and maintainable. The
+recommendations below are distilled from the
+[example signup form project](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form)
+and from the documentation throughout this repo.
+
 ### 1. Start with a Storybook Scenario
 
-Create a Storybook story that mirrors your test scenario. This helps visualize the component state and behavior, and can serve as a basis for further testing integrations as Storybook’s testing capabilities evolve.
+Whenever possible create a Storybook story that mirrors your test
+scenario. Being able to render the component in isolation makes it much
+easier to visualise the state you expect in your tests and allows you to
+reuse the same setup for interactive debugging. As Storybook’s testing
+capabilities improve you can reuse your Atomic drivers there as well.
 
 ### 2. Test Values, Not HTML Markup
 
-Focus on testing the plain values or states rather than the underlying HTML or formatting details.
+Focus on observable behaviour rather than the DOM structure. Use the
+driver APIs to read values and states—such as a field’s value or whether
+a button is disabled—instead of asserting on generated HTML. This keeps
+tests resilient to implementation changes and lets drivers work across
+different environments.
 
 ### 3. Avoid Direct React Testing Library Calls
 
-Although Atomic Testing Library leverages React Testing Library (RTL), direct RTL calls should be avoided. This maintains the abstraction and predictability of your tests, similar to avoiding direct DOM manipulation in React components.
+Atomic Testing Library builds on top of React Testing Library (RTL) for
+DOM interactions, but calling RTL utilities directly couples your tests
+to a specific environment. Prefer the methods exposed by component
+drivers and the `TestEngine` so your tests remain predictable and can be
+run in other environments such as Playwright or Cypress.
 
 ### 4. Use `data-testid` for Key Elements
 
-Use `data-testid` attributes to mark key components. This allows you to easily locate and interact with these elements in your tests.
+Assign stable `data-testid` values to the elements you need to interact
+with. Locators built with `byDataTestId()` are both reliable and easy to
+read. Avoid relying solely on CSS selectors—they tend to change as the
+markup evolves.
+
+### 5. Clean Up the Test Engine
+
+Call `testEngine.cleanUp()` in `afterEach` hooks. Unmounting the rendered
+component prevents cross‑test contamination and matches the pattern used
+throughout the example tests.
+
+### 6. Compose and Reuse Drivers
+
+Complex widgets become easier to test when you encapsulate their
+behaviour in a driver. The signup example composes form drivers that can
+be reused in unit and end‑to‑end scenarios. Implement your own drivers
+when needed and use `satisfies ScenePart` to get strong TypeScript
+support.
+
+### 7. Provide the Necessary Context
+
+Wrap tested components with any required providers—such as a MUI
+`ThemeProvider`—when creating the test engine. The example project uses a
+`createTestEngineForComponent` helper to inject the theme so tests run in
+a realistic environment.
+
+### 8. Await Driver Actions
+
+Most driver methods return promises. Remember to `await` interactions and
+queries so tests wait for state updates before asserting results.
