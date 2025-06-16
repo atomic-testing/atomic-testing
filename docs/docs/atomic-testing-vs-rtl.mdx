@@ -1,0 +1,19 @@
+---
+id: atomic-testing-vs-rtl
+title: Atomic Testing vs React Testing Library
+sidebar_position: 8
+---
+
+Atomic Testing is not a replacement for [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/). It builds on top of RTL to provide reusable **component drivers** and a `TestEngine`. This extra layer keeps your tests focused on behavior while remaining portable across environments.
+
+## Complementary tools
+
+When running DOM-based tests, Atomic Testing delegates rendering and querying to RTL. The same drivers can also interact with Playwright or other end-to-end frameworks. Because interactions flow through drivers, you can reuse test code whether it runs in Jest or in a full browser.
+
+## Why not just use RTL directly?
+
+Using RTL alone works, but larger codebases often repeat low-level queries in many tests. Drivers encapsulate those details and allow you to compose them to build more complex scenarios. This approach keeps tests maintainable and lets you share driver code between unit tests and end-to-end tests.
+
+## Join the community
+
+Atomic Testing welcomes contributions and feedback. Visit the [GitHub repository](https://github.com/atomic-testing/atomic-testing) to report issues or open a pull request.

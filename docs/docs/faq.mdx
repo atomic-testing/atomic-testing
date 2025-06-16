@@ -9,11 +9,15 @@ Below are some commonly asked questions about using **Atomic Testing**.
 
 ### How do I start using Atomic Testing?
 
-Install the packages for your preferred test environment and UI library. Then define *SceneParts* for the components you want to interact with and create a **Test Engine** instance. The [Getting Started Tutorial](./getting-started-tutorial.mdx) walks through these steps.
+Install the packages for your preferred test environment and UI library. Then define _SceneParts_ for the components you want to interact with and create a **Test Engine** instance. The [Getting Started Tutorial](./getting-started-tutorial.mdx) walks through these steps.
 
 ### Which UI frameworks are supported?
 
 Drivers are provided for popular React frameworks, including Material UI and MUI&nbsp;X. You can also create drivers for your own component library if one is not available.
+
+### Does Atomic Testing replace React Testing Library?
+
+No. Atomic Testing uses React Testing Library under the hood for DOM interactions. It layers reusable component drivers and the `TestEngine` on top of RTL. See [Atomic Testing vs React Testing Library](./atomic-testing-vs-rtl.mdx) for details.
 
 ### Can I use it with unit tests and end‑to‑end tests?
 
