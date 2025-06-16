@@ -14,27 +14,4 @@
     "outDir": "./build",
     "composite": true
   },
-  "references": [
-    {
-      "path": "../core"
-    },
-    {
-      "path": "../dom-core"
-    },
-    {
-      "path": "../react-19"
-    },
-    {
-      "path": "../test-runner"
-    },
-    {
-      "path": "../jest"
-    },
-    {
-      "path": "../component-driver-html"
-    },
-    {
-      "path": "../playwright"
-    }
-  ]
 }

@@ -5,9 +5,18 @@
     {
       "label": "Build All",
       "type": "shell",
-      "command": "pnpm -r build",
+      "command": "./publish.sh --build-only",
       "group": {
         "kind": "none",
+      },
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "/bin/zsh",
+          "args": [
+            "-c"
+          ]
+        }
       }
     },
     {

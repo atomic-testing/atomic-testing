@@ -31,6 +31,7 @@ declare -a packages=(
   "component-driver-html"
   "component-driver-mui-v5"
   "component-driver-mui-v6"
+  "component-driver-mui-v7"
   "component-driver-mui-x-v5"
   "component-driver-mui-x-v6"
   "component-driver-mui-x-v7"

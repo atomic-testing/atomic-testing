@@ -30,6 +30,9 @@ jobs:
       - name: Run linter
         run: pnpm check:lint
 
+      - name: Run type checker
+        run: pnpm check:type
+
       # TODO: Add build step, build is more complicated because it involves building the Kotlin core and the UI
 
   component-driver-html-test:

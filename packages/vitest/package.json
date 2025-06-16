@@ -3,15 +3,15 @@
   "version": "0.58.0",
   "description": "Vitest adapter for atomic-testing",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "tsc",
-    "postbuild": "node ../../scripts/postBuild.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsdown",
+    "check:type": "tsc --noEmit"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [],

@@ -10,6 +10,9 @@ import {
   Interactor,
   interactorUtil,
   locatorUtil,
+  MouseEnterOption,
+  MouseLeaveOption,
+  MouseOutOption,
   MouseDownOption,
   MouseMoveOption,
   MouseUpOption,
@@ -19,7 +22,6 @@ import {
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
-import { MouseEnterOption, MouseLeaveOption, MouseOutOption } from '@atomic-testing/core/src/interactor/MouseOption';
 import { Page } from '@playwright/test';
 
 export class PlaywrightInteractor implements Interactor {
