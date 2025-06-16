@@ -21,12 +21,10 @@ including but not limited to:
   React applications.
 - **`@atomic-testing/playwright`** – integration with Playwright for end-to-end
   tests.
-- **`@atomic-testing/jest`** and **`@atomic-testing/vitest`** – adapters for the
-  respective test runners.
 - **Component driver packages** such as
   `@atomic-testing/component-driver-html` and Material UI variants, used to
   drive specific UI components.
-- **`@atomic-testing/test-runner`** – an experimental cross-platform test
+
   runner.
 
 ## Getting Started
@@ -64,5 +62,5 @@ Pull requests are welcome. Before submitting, run the checks defined in the root
 ```bash
 pnpm run check:lint
 pnpm run check:style
-pnpm run types
+pnpm run check:types
 ```
