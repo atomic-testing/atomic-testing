@@ -24,19 +24,43 @@ import {
 } from '@atomic-testing/core';
 import { Page } from '@playwright/test';
 
+/**
+ * Implementation of the {@link Interactor} interface using Playwright.
+ */
 export class PlaywrightInteractor implements Interactor {
+  /**
+   * @param page - Playwright page instance used to drive the browser.
+   */
   constructor(public readonly page: Page) {}
 
+  /**
+   * Select the given option values on a `<select>` element.
+   *
+   * @param locator - Locator to the `<select>` element.
+   * @param values - Values to select.
+   */
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).selectOption(values);
   }
 
+  /**
+   * Get the value of an `<input>` element.
+   *
+   * @param locator - Locator pointing to the input element.
+   * @returns The current value of the input or `undefined` if not present.
+   */
   async getInputValue(locator: PartLocator): Promise<Optional<string>> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     return this.page.locator(cssLocator).inputValue();
   }
 
+  /**
+   * Retrieve the values of selected options within a `<select>` element.
+   *
+   * @param locator - Locator to the `<select>` element.
+   * @returns Array of selected option values or `undefined` when no option is selected.
+   */
   async getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>> {
     const optionLocator: PartLocator = byCssSelector('option:checked');
     const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
