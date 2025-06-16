@@ -17,6 +17,13 @@ import {
   MouseUpOption,
 } from './MouseOption';
 
+/**
+ * Environment specific implementation that performs low level actions on the UI.
+ *
+ * Component drivers delegate every interaction to an instance of this interface
+ * so tests can run in different environments by simply providing a different
+ * interactor implementation.
+ */
 export interface Interactor {
   //#region Potentially DOM mutative interactions
   /**
