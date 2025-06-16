@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint
+    name: linting and formatting
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,7 +30,21 @@ jobs:
       - name: Run linter
         run: pnpm check:lint
 
-      # TODO: Add build step, build is more complicated because it involves building the Kotlin core and the UI
+  type-check:
+    name: type checking
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/builderui-setup
+
+      - name: Run type checker
+        run: pnpm check:type
 
   component-driver-html-test:
     runs-on: ubuntu-latest
