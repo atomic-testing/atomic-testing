@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+
+jobs:
+  deploy:
+    name: Verify documentation build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+          run_install: true
+
+      - name: Build packages
+        run: ./publish.sh --build-only
+
+      - name: Install documentation dependencies
+        run: pnpm install .
+        working-directory: ./docs
+
+      - name: Verify documentation build
+        run: pnpm build
+        working-directory: ./docs
