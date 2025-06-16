@@ -1,7 +1,7 @@
 import { TestFrameworkMapper } from '@atomic-testing/test-runner';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, test } from 'vitest';
 
-export const jestTestAdapter: TestFrameworkMapper = {
+export const vitestAdapter: TestFrameworkMapper = {
   assertEqual: (actual, expected) => expect(actual).toEqual(expected),
   describe: describe,
   beforeEach: beforeEach,
