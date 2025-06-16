@@ -30,9 +30,11 @@ different environments.
 
 Atomic Testing Library builds on top of React Testing Library (RTL) for
 DOM interactions, but calling RTL utilities directly couples your tests
-to a specific environment. Prefer the methods exposed by component
-drivers and the `TestEngine` so your tests remain predictable and can be
-run in other environments such as Playwright or Cypress.
+to a specific environment. For a deeper discussion of how Atomic Testing
+relates to RTL, see [Atomic Testing vs React Testing Library](./atomic-testing-vs-rtl.mdx).
+Prefer the methods exposed by component drivers and the `TestEngine` so
+your tests remain predictable and can be run in other environments such
+as Playwright or Cypress.
 
 ### 4. Use `data-testid` for Key Elements
 
