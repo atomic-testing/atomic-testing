@@ -7,8 +7,8 @@ import {
   locatorUtil,
   PartLocator,
   ScenePart,
+  ComponentDriverCtor,
 } from '@atomic-testing/core';
-import { ComponentDriverClass } from '@atomic-testing/core/src/partTypes';
 
 export const parts = {
   contentDisplay: {
@@ -51,7 +51,7 @@ export class SnackbarDriver extends ComponentDriver<typeof parts> {
    */
   async getActionComponent<ItemClass extends ComponentDriver>(
     locator: PartLocator,
-    driverClass: ComponentDriverClass<ItemClass>
+    driverClass: ComponentDriverCtor<ItemClass>
   ): Promise<ItemClass | null> {
     await this.enforcePartExistence('actionArea');
     const componentLocator = locatorUtil.append(this.parts.actionArea.locator, locator);

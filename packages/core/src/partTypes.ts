@@ -14,6 +14,17 @@ export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
   option?: Partial<IComponentDriverOption<any>>
 ) => T;
 
+/**
+ * Constructor signature for a {@link ComponentDriver}. This mirrors
+ * {@link ComponentDriverClass} but is exported publicly so packages can
+ * reference the type without importing from internal paths.
+ */
+export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (
+  locator: PartLocator,
+  interactor: Interactor,
+  option?: Partial<IComponentDriverOption<any>>
+) => T;
+
 export interface ComponentPartDefinition<T extends ScenePart> {
   /**
    * The locator of the part
