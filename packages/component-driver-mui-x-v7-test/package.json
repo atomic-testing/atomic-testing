@@ -33,7 +33,7 @@
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
     "@mui/x-data-grid-generator": "^7.27.2",
-    "@mui/x-data-grid-pro": "^7.27.2",
+    "@mui/x-data-grid-pro": "^7.29.6",
     "@mui/x-date-pickers": "^7.27.1",
     "@mui/x-date-pickers-pro": "^7.27.1",
     "dayjs": "^1.11.13",
