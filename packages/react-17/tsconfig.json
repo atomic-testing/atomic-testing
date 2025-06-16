@@ -12,5 +12,5 @@
   "compilerOptions": {
     "outDir": "./build",
     "composite": true
-  },
+  }
 }
