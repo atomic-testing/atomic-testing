@@ -108,6 +108,18 @@ const config: Config = {
           label: 'Get Started',
         },
         {
+          type: 'doc',
+          docId: 'concepts',
+          position: 'left',
+          label: 'Concepts',
+        },
+        {
+          type: 'doc',
+          docId: 'api-overview',
+          position: 'left',
+          label: 'API',
+        },
+        {
           href: 'https://github.com/atomic-testing/atomic-testing',
           label: 'GitHub',
           position: 'right',
@@ -123,6 +135,14 @@ const config: Config = {
             {
               label: 'Getting started',
               to: '/docs/intro',
+            },
+            {
+              label: 'Concepts',
+              to: '/docs/concepts',
+            },
+            {
+              label: 'API overview',
+              to: '/docs/api-overview',
             },
           ],
         },
@@ -146,6 +166,10 @@ const config: Config = {
         {
           title: 'More',
           items: [
+            {
+              label: 'Best practices',
+              to: '/docs/best-practices',
+            },
             {
               label: 'GitHub',
               href: 'https://github.com/atomic-testing/atomic-testing',
