@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-v7",
-  "version": "0.60.0",
+  "version": "0.70.0",
   "description": "Component driver for Material-UI v7",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
