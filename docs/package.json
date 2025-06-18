@@ -29,7 +29,7 @@
   "devDependencies": {
     "@atomic-testing/core": "latest",
     "@atomic-testing/dom-core": "latest",
-    "@atomic-testing/react": "latest",
+    "@atomic-testing/react-19": "latest",
     "@docusaurus/module-type-aliases": "^3.8.1",
     "@docusaurus/types": "^3.8.1",
     "@tsconfig/docusaurus": "^2.0.3",

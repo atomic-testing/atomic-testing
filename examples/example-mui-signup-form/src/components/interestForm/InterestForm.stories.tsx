@@ -2,13 +2,15 @@ import { ScenePart, byDataTestId } from '@atomic-testing/core';
 import { createRenderedTestEngine } from '@atomic-testing/react';
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, fn } from '@storybook/test';
+
 import { userInterests } from '../../data/userInterests';
 import { getGoodInterestMock } from '../../models/__mocks__/signupModelMock';
+
 import { InterestForm } from './InterestForm';
 import { InterestFormDriver } from './InterestFormDriver';
 
 const meta: Meta<typeof InterestForm> = {
-  component: InterestForm
+  component: InterestForm,
 };
 
 export default meta;
@@ -18,20 +20,20 @@ const dataTestId = 'interest-form';
 const parts = {
   form: {
     locator: byDataTestId(dataTestId),
-    driver: InterestFormDriver
-  }
+    driver: InterestFormDriver,
+  },
 } satisfies ScenePart;
 const goodInterestEntry = getGoodInterestMock();
 
 export const Default: Story = {
-  args: {}
+  args: {},
 };
 
 export const DefaultTest: Story = {
   args: {
     'data-testid': dataTestId,
     onNextStep: fn(),
-    onPreviousStep: fn()
+    onPreviousStep: fn(),
   },
   play: async ({ args, canvasElement, step }) => {
     const testEngine = createRenderedTestEngine(canvasElement, parts);
@@ -53,15 +55,15 @@ export const DefaultTest: Story = {
       expect(hasError, 'form hasError should be false').toBe(false);
       expect(args.onNextStep, 'onNextStep should have been called once').toHaveBeenCalledTimes(1);
     });
-  }
+  },
 };
 
 export const PrefilledData: Story = {
   args: {
     data: {
       interest: {
-        interestIds: [userInterests[0].id, userInterests[2].id]
-      }
-    }
-  }
+        interestIds: [userInterests[0].id, userInterests[2].id],
+      },
+    },
+  },
 };

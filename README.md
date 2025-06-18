@@ -17,8 +17,8 @@ including but not limited to:
 
 - **`@atomic-testing/core`** – core APIs for defining scene parts and running
   tests.
-- **`@atomic-testing/react`** and **`@atomic-testing/react-19`** – adapters for
-  React applications.
+- **`@atomic-testing/react-legacy`**, **`@atomic-testing/react-18`**, and
+  **`@atomic-testing/react-19`** – adapters for React applications.
 - **`@atomic-testing/playwright`** – integration with Playwright for end-to-end
   tests.
 - **Component driver packages** such as
@@ -40,7 +40,7 @@ including but not limited to:
    core and React packages:
 
    ```bash
-   pnpm add @atomic-testing/core @atomic-testing/react
+   pnpm add @atomic-testing/core @atomic-testing/react-18
    ```
 
    Additional component drivers can be installed in the same way, for example:
