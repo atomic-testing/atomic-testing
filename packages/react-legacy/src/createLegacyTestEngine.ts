@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 
-import { ReactInteractor } from './ReactInteractor';
+import { ReactInteractor } from '@atomic-testing/react-core';
 import { IReactTestEngineOption } from './types';
 
 let _rootId = 0;

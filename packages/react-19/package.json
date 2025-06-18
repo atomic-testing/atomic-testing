@@ -1,5 +1,5 @@
 {
-  "name": "@atomic-testing/react-19",
+  "name": "@atomic-testing/react-18-19",
   "version": "0.59.0",
   "description": "",
   "main": "dist/index.js",
@@ -29,6 +29,7 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/dom-core": "workspace:*",
+    "@atomic-testing/react-core": "workspace:*",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0"
   },

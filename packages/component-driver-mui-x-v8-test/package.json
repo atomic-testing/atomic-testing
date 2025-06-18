@@ -47,7 +47,7 @@
     "@atomic-testing/component-driver-mui-x-v8": "workspace:*",
     "@atomic-testing/jest": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
-    "@atomic-testing/react-19": "workspace:*",
+    "@atomic-testing/react-18-19": "workspace:*",
     "@atomic-testing/test-runner": "workspace:*",
     "@playwright/test": "^1.51.1",
     "@testing-library/dom": "^10.4.0",
