@@ -54,7 +54,7 @@ import Tabs from '@theme/Tabs';
 <TabItem value="react" label="React 18+">
 
 ```tsx
-import { createTestEngine } from '@atomic-testing/react';
+import { createTestEngine } from '@atomic-testing/react-18';
 
 import { Login } from './components/Login';
 import { loginScenePart } from './loginScenePart';
@@ -67,7 +67,7 @@ const testEngine = createTestEngine(<Login />, loginScenePart);
 <TabItem value="react-legacy" label="React 17">
 
 ```tsx
-import { createLegacyTestEngine } from '@atomic-testing/react/dist/createLegacyTestEngine';
+import { createLegacyTestEngine } from '@atomic-testing/react-legacy';
 
 import { Login } from './components/Login';
 import { loginScenePart } from './loginScenePart';

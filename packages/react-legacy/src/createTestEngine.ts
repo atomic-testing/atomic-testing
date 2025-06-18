@@ -2,8 +2,8 @@ import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
+import { ReactInteractor } from '@atomic-testing/react-core';
 
-import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';
 
 let _rootId = 0;
@@ -14,7 +14,7 @@ function getNextRootElementId() {
 const rootElementAttributeName = 'data-atomic-testing-react-legacy';
 
 /**
- * Create test engine for React 17 or before, for React 18 or later, use createTestEngine
+ * Create test engine for React 17 or before, for React 18 or later, use @atomic-testing/react-18 or @atomic-testing/react-19
  * This function takes a react node and render it into a container element.  For rendered
  * components, use createRenderedLegacyTestEngine
  * @param node The React node to render
@@ -22,7 +22,7 @@ const rootElementAttributeName = 'data-atomic-testing-react-legacy';
  * @param option
  * @returns The test engine
  */
-export function createLegacyTestEngine<T extends ScenePart>(
+export function createTestEngine<T extends ScenePart>(
   node: JSX.Element,
   partDefinitions: T,
   option?: Readonly<Partial<IReactTestEngineOption>>
@@ -54,7 +54,7 @@ export function createLegacyTestEngine<T extends ScenePart>(
 }
 
 /**
- * Create test engine for React 17 or before, for React 18 or later, use createRenderedTestEngine
+ * Create test engine for React 17 or before, for React 18 or later, use @atomic-testing/react-18 or @atomic-testing/react-19
  * This function takes an html element purportedly rendered by React and create a test engine for it, it
  * can be useful in environment such as Storybook where Storybook renders the component and the test
  * @param rootElement The React node to render
@@ -62,7 +62,7 @@ export function createLegacyTestEngine<T extends ScenePart>(
  * @param option
  * @returns The test engine
  */
-export function createRenderedLegacyTestEngine<T extends ScenePart>(
+export function createRenderedTestEngine<T extends ScenePart>(
   rootElement: HTMLElement,
   partDefinitions: T,
   _option?: Readonly<Partial<IReactTestEngineOption>>
