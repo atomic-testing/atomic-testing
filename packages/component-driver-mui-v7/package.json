@@ -15,7 +15,7 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/dom-core": "workspace:*",
-    "@atomic-testing/react": "workspace:*",
+    "@atomic-testing/react-18": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@mui/material": "^7.0.0",
     "@emotion/react": "^11.11.0",
