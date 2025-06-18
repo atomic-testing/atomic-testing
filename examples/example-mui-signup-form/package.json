@@ -33,7 +33,7 @@
     "@atomic-testing/core": "^0.59.0",
     "@atomic-testing/dom-core": "^0.59.0",
     "@atomic-testing/playwright": "^0.59.0",
-    "@atomic-testing/react": "^0.59.0",
+    "@atomic-testing/react-18": "^0.59.0",
     "@playwright/test": "^1.42.1",
     "@storybook/addon-essentials": "^8.0.5",
     "@storybook/addon-themes": "^8.0.5",
