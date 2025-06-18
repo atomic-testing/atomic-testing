@@ -56,7 +56,7 @@ const config: Config = {
           '../packages/dom-core',
           '../packages/playwright',
           '../packages/react',
-          '../packages/react-19',
+          '../packages/react-17',
           '../packages/component-driver-html',
           '../packages/component-driver-mui-v5',
           '../packages/component-driver-mui-v6',
