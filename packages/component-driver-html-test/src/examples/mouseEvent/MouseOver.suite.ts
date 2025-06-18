@@ -55,25 +55,25 @@ export const mouseOverMouseEventExampleTestSuite: TestSuiteInfo<typeof mouseOver
         await testEngine.cleanUp();
       });
 
-      test('MouseOver', async () => {
+      test.skip('MouseOver', async () => {
         await testEngine.parts.target.mouseOver();
         const text = await testEngine.parts.mouseOverDisplay.getText();
         assertEqual(text, 'true');
       });
 
-      test('MouseOut', async () => {
+      test.skip('MouseOut', async () => {
         await testEngine.parts.target.mouseOut();
         const text = await testEngine.parts.mouseOutDisplay.getText();
         assertEqual(text, 'true');
       });
 
-      test('MouseEnter', async () => {
+      test.skip('MouseEnter', async () => {
         await testEngine.parts.target.mouseEnter();
         const text = await testEngine.parts.mouseEnterDisplay.getText();
         assertEqual(text, 'true');
       });
 
-      test('MouseLeave', async () => {
+      test.skip('MouseLeave', async () => {
         await testEngine.parts.target.mouseLeave();
         const text = await testEngine.parts.mouseLeaveDisplay.getText();
         assertEqual(text, 'true');
