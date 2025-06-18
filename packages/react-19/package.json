@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react-19",
-  "version": "0.59.0",
+  "version": "0.60.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

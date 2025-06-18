@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react",
-  "version": "0.59.0",
+  "version": "0.60.0",
   "description": "",
   "deprecated": "This package is deprecated. Please use @atomic-testing/react-18 instead.",
   "main": "dist/index.js",
