@@ -17,8 +17,8 @@ including but not limited to:
 
 - **`@atomic-testing/core`** – core APIs for defining scene parts and running
   tests.
-- **`@atomic-testing/react`** and **`@atomic-testing/react-19`** – adapters for
-  React applications.
+- **`@atomic-testing/react`** – adapter for React 18 and later.
+- **`@atomic-testing/react-17`** – legacy adapter for React 17 and earlier.
 - **`@atomic-testing/playwright`** – integration with Playwright for end-to-end
   tests.
 - **Component driver packages** such as
