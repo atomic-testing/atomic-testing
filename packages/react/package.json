@@ -2,6 +2,7 @@
   "name": "@atomic-testing/react",
   "version": "0.59.0",
   "description": "",
+  "deprecated": "This package is deprecated. Please use @atomic-testing/react-18 instead.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
