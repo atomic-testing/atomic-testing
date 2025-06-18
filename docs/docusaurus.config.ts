@@ -146,19 +146,19 @@ const config: Config = {
               label: 'API overview',
               to: '/docs/api-overview',
             },
+            {
+              label: 'Best practices',
+              to: '/docs/best-practices',
+            },
           ],
         },
         {
           title: 'Community',
           items: [
-            // {
-            //   label: 'Stack Overflow',
-            //   href: 'https://stackoverflow.com/questions/tagged/atomic-testing',
-            // },
-            // {
-            //   label: 'Discord',
-            //   href: 'https://discordapp.com/invite/atomic-testing',
-            // },
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/qbeqWTYzEH',
+            },
             {
               label: 'Twitter/X',
               href: 'https://twitter.com/TestingAtomic',
@@ -169,8 +169,8 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Best practices',
-              to: '/docs/best-practices',
+              label: 'FAQ',
+              to: '/docs/faq',
             },
             {
               label: 'GitHub',
