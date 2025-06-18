@@ -2,12 +2,14 @@ import { ScenePart, byDataTestId } from '@atomic-testing/core';
 import { createRenderedTestEngine } from '@atomic-testing/react';
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, fn } from '@storybook/test';
+
 import { getGoodCredentialMock } from '../../models/__mocks__/signupModelMock';
+
 import { CredentialForm } from './CredentialForm';
 import { CredentialFormDriver, CredentialFormValue } from './CredentialFormDriver';
 
 const meta: Meta<typeof CredentialForm> = {
-  component: CredentialForm
+  component: CredentialForm,
 };
 
 export default meta;
@@ -17,22 +19,22 @@ const dataTestId = 'credential-form';
 const parts = {
   form: {
     locator: byDataTestId(dataTestId),
-    driver: CredentialFormDriver
-  }
+    driver: CredentialFormDriver,
+  },
 } satisfies ScenePart;
 
 const goodCredentialEntry: CredentialFormValue = getGoodCredentialMock();
 
 export const Default: Story = {
   args: {
-    onNextStep: fn()
-  }
+    onNextStep: fn(),
+  },
 };
 
 export const DefaultTest: Story = {
   args: {
     onNextStep: fn(),
-    'data-testid': dataTestId
+    'data-testid': dataTestId,
   },
   play: async ({ args, canvasElement, step }) => {
     const testEngine = createRenderedTestEngine(canvasElement, parts);
@@ -59,7 +61,7 @@ export const DefaultTest: Story = {
       expect(hasError, 'form hasError should be false').toBe(false);
       expect(args.onNextStep, 'onNextStep should have been called once').toHaveBeenCalledTimes(1);
     });
-  }
+  },
 };
 
 export const PrefilledData: Story = {
@@ -68,8 +70,8 @@ export const PrefilledData: Story = {
       credential: {
         email: 'tangent@usa.net',
         password: 'password',
-        birthday: '1990-01-01'
-      }
-    }
-  }
+        birthday: '1990-01-01',
+      },
+    },
+  },
 };

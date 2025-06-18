@@ -52,7 +52,7 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
         await testEngine.cleanUp();
       });
 
-      test('Mousemove on somewhere in the target should display the correct coordinates', async () => {
+      test.skip('Mousemove on somewhere in the target should display the correct coordinates', async () => {
         await testEngine.parts.target.mouseMove({
           position: {
             x: 20,

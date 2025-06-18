@@ -1,5 +1,5 @@
 import { jestTestAdapter } from '@atomic-testing/jest';
-import { createTestEngine } from '@atomic-testing/react';
+import { createTestEngine } from '@atomic-testing/react-18';
 import { testRunner } from '@atomic-testing/test-runner';
 
 import { basicInputExample, basicInputTestSuite } from '../src/examples';
