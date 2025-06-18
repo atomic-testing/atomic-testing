@@ -1,0 +1,28 @@
+{
+  "name": "@atomic-testing/vue3-test",
+  "version": "0.0.0",
+  "description": "Example and tests for @atomic-testing/vue-3",
+  "main": "dist/index.js",
+  "files": ["dist", "src"],
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "license": "MIT",
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@atomic-testing/jest": "workspace:*",
+    "@atomic-testing/vue-3": "workspace:*",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/vue": "^9.4.0",
+    "@types/jest": "^29.5.6",
+    "@types/node": "^22.15.30",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "typescript": "^5.8.3",
+    "vue": "^3.4.0"
+  }
+}
