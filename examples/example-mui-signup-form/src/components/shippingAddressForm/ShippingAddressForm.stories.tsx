@@ -2,13 +2,15 @@ import { ScenePart, byDataTestId } from '@atomic-testing/core';
 import { createRenderedTestEngine } from '@atomic-testing/react';
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, fn } from '@storybook/test';
+
 import { ShippingModel } from '../../models/SignupModel';
 import { getGoodShippingMock } from '../../models/__mocks__/signupModelMock';
+
 import { ShippingAddressForm } from './ShippingAddressForm';
 import { ShippingAddressFormDriver } from './ShippingAddressFormDriver';
 
 const meta: Meta<typeof ShippingAddressForm> = {
-  component: ShippingAddressForm
+  component: ShippingAddressForm,
 };
 
 export default meta;
@@ -18,21 +20,21 @@ const dataTestId = 'shipping-form';
 const parts = {
   form: {
     locator: byDataTestId(dataTestId),
-    driver: ShippingAddressFormDriver
-  }
+    driver: ShippingAddressFormDriver,
+  },
 } satisfies ScenePart;
 
 const goodShippingEntry: ShippingModel = getGoodShippingMock();
 
 export const Default: Story = {
-  args: {}
+  args: {},
 };
 
 export const DefaultTest: Story = {
   args: {
     'data-testid': dataTestId,
     onNextStep: fn(),
-    onPreviousStep: fn()
+    onPreviousStep: fn(),
   },
   play: async ({ args, canvasElement, step }) => {
     const testEngine = createRenderedTestEngine(canvasElement, parts);
@@ -54,13 +56,13 @@ export const DefaultTest: Story = {
       expect(hasError, 'form hasError should be false').toBe(false);
       expect(args.onNextStep, 'onNextStep should have been called once').toHaveBeenCalledTimes(1);
     });
-  }
+  },
 };
 
 export const PrefilledData: Story = {
   args: {
     data: {
-      shipping: goodShippingEntry
-    }
-  }
+      shipping: goodShippingEntry,
+    },
+  },
 };
