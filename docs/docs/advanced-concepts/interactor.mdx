@@ -20,9 +20,10 @@ The project ships with several interactors:
 
 - **DOMInteractor** – runs against a DOM environment using
   `@testing-library` utilities. This is used for unit/integration tests.
-- **ReactInteractor** and **@atomic-testing/react-19** – extensions of
-  `DOMInteractor` that wrap interactions in `React`'s `act()` helper so state
-  updates are flushed correctly when testing React 18 or 19 applications.
+- **ReactInteractor** – extension of `DOMInteractor` that wraps interactions in
+  React's `act()` helper so state updates are flushed correctly when testing
+  React 18 or newer via `@atomic-testing/react`. For React 17 or earlier use
+  `@atomic-testing/react-17`.
 - **PlaywrightInteractor** – drives a Playwright `Page` object to execute tests
   in a real browser.
 
