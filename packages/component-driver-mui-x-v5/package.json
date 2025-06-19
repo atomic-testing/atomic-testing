@@ -33,16 +33,6 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
-    "@atomic-testing/component-driver-mui-v5": "workspace:*",
-    "dayjs": "^1.11.13"
-  },
-  "devDependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^29.5.5",
-    "@types/node": "^22.15.30",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "typescript": "^5.8.3"
+    "@atomic-testing/component-driver-mui-v5": "workspace:*"
   }
 }
