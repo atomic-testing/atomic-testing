@@ -1,7 +1,13 @@
 import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
-import { IComponentDriverOption, ScenePart, ScenePartDriver } from '../partTypes';
+import {
+  IComponentDriverOption,
+  ScenePart,
+  ScenePartDriver,
+  ScenePartDefinition,
+} from '../partTypes';
 import * as locatorUtil from '../utils/locatorUtil';
+import { ComponentDriver } from './ComponentDriver';
 
 export function getPartFromDefinition<T extends ScenePart>(
   partDefinition: T,
@@ -11,12 +17,14 @@ export function getPartFromDefinition<T extends ScenePart>(
 ): ScenePartDriver<T> {
   const result: Partial<ScenePartDriver<T>> = {};
 
-  for (const [nestedComponentName, scenePart2] of Object.entries(partDefinition)) {
+  const entries = Object.entries(partDefinition) as [keyof T, ScenePartDefinition][];
+
+  for (const [nestedComponentName, scenePart2] of entries) {
     const { locator, driver, option: optionOverride } = scenePart2;
 
-    const componentOption: Partial<IComponentDriverOption> = {
+    const componentOption: Partial<IComponentDriverOption<ScenePart>> = {
       ...option,
-      ...optionOverride,
+      ...(optionOverride as Partial<IComponentDriverOption<ScenePart>>),
       parts: undefined,
     };
 
@@ -28,8 +36,14 @@ export function getPartFromDefinition<T extends ScenePart>(
 
     const componentLocator = locatorUtil.append(locatorContext, actualLocator);
 
-    // @ts-ignore
-    result[nestedComponentName] = new driver(componentLocator, interactor, componentOption);
+    const DriverCtor = driver as new (
+      locator: PartLocator,
+      interactor: Interactor,
+      option?: Partial<IComponentDriverOption<ScenePart>>
+    ) => ComponentDriver<ScenePart>;
+
+    result[nestedComponentName] =
+      (new DriverCtor(componentLocator, interactor, componentOption) as unknown as ScenePartDriver<T>[typeof nestedComponentName]);
   }
 
   return result as ScenePartDriver<T>;

@@ -1,6 +1,6 @@
 import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
-import { IComponentDriverOption } from '../partTypes';
+import { IComponentDriverOption, ComponentDriverCtor } from '../partTypes';
 import * as locatorUtil from '../utils/locatorUtil';
 
 import { ComponentDriver } from './ComponentDriver';
@@ -33,8 +33,13 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
     return this._itemLocator;
   }
 
-  protected getItemClass<ItemClass extends ComponentDriver = ItemT>(itemDriverClass?: ItemClass): ItemClass {
-    return itemDriverClass ?? (this._option.itemClass as unknown as ItemClass);
+  protected getItemClass<ItemClass extends ComponentDriver = ItemT>(
+    itemDriverClass?: ComponentDriverCtor<ItemClass>
+  ): ComponentDriverCtor<ItemClass> {
+    return (
+      itemDriverClass ??
+      (this._option.itemClass as unknown as ComponentDriverCtor<ItemClass>)
+    );
   }
 
   /**
@@ -45,10 +50,9 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    */
   async getItemByIndex<ItemClass extends ComponentDriver = ItemT>(
     index: number,
-    itemDriverClass?: ItemClass
+    itemDriverClass?: ComponentDriverCtor<ItemClass>
   ): Promise<ItemClass | null> {
     const driverClass = this.getItemClass<ItemClass>(itemDriverClass);
-    // @ts-ignore
     return listHelper.getListItemByIndex(this, this._itemLocator, index, driverClass);
   }
 
@@ -60,12 +64,11 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    */
   async getItemByLabel<ItemClass extends ComponentDriver = ItemT>(
     text: string,
-    itemDriverClass?: ItemClass
+    itemDriverClass?: ComponentDriverCtor<ItemClass>
   ): Promise<ItemClass | null> {
     const driverClass = this.getItemClass(itemDriverClass);
 
-    // @ts-ignore
-    for await (const item of listHelper.getListItemIterator<ItemClass>(this, this._itemLocator, driverClass)) {
+    for await (const item of listHelper.getListItemIterator(this, this._itemLocator, driverClass)) {
       const itemText = await item.getText();
       if (itemText?.trim() === text) {
         return item;
@@ -79,11 +82,12 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    * @param itemDriverClass
    * @returns
    */
-  async getItems<ItemClass extends ComponentDriver = ItemT>(itemDriverClass?: ItemClass): Promise<ItemClass[]> {
+  async getItems<ItemClass extends ComponentDriver = ItemT>(
+    itemDriverClass?: ComponentDriverCtor<ItemClass>
+  ): Promise<ItemClass[]> {
     const driverClass = this.getItemClass(itemDriverClass);
     const result: ItemClass[] = [];
-    // @ts-ignore
-    for await (const item of listHelper.getListItemIterator<ItemClass>(this, this._itemLocator, driverClass)) {
+    for await (const item of listHelper.getListItemIterator(this, this._itemLocator, driverClass)) {
       result.push(item);
     }
     return result;
