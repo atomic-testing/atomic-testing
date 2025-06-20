@@ -77,6 +77,19 @@ const testEngine = createLegacyTestEngine(<Login />, loginScenePart);
 
 </TabItem>
 
+<TabItem value="vue" label="Vue 3">
+
+```ts
+import { createTestEngine } from '@atomic-testing/vue-3';
+
+import Login from './components/Login.vue';
+import { loginScenePart } from './loginScenePart';
+
+const testEngine = createTestEngine(Login, loginScenePart);
+```
+
+</TabItem>
+
 <TabItem value="playwright" label="Playwright">
 
 ```tsx

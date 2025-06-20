@@ -16,8 +16,8 @@ const FeatureList: FeatureItem[] = [
     // Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Seamlessly integrate with top UI frameworks (React, Angular, Vue) and testing tools (Playwright, Cypress, DOM
-        testing) for a streamlined and efficient testing experience
+        Seamlessly integrate with top UI frameworks (React, Vue&nbsp;3, vanilla&nbsp;JS, Angular) and testing tools (Playwright,
+        Cypress, DOM testing) for a streamlined and efficient testing experience
       </>
     ),
   },
