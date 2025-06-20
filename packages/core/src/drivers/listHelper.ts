@@ -1,5 +1,5 @@
 import { byCssSelector, CssLocator, LocatorRelativePosition, PartLocator } from '../locators';
-import { ComponentDriverCtor } from '../partTypes';
+import { ComponentDriverCtor, ScenePart } from '../partTypes';
 import { append } from '../utils/locatorUtil';
 
 import { ComponentDriver } from './ComponentDriver';
@@ -13,12 +13,15 @@ import { ComponentDriver } from './ComponentDriver';
  * @param driverClass The driver class of the list item
  * @returns
  */
-export async function getListItemByIndex<T extends ComponentDriver>(
-  host: ComponentDriver<any>,
+export async function getListItemByIndex<
+  HostPartT extends ScenePart,
+  ItemT extends ComponentDriver
+>(
+  host: ComponentDriver<HostPartT>,
   itemLocatorBase: PartLocator,
   index: number,
-  driverClass: ComponentDriverCtor<T>
-): Promise<T | null> {
+  driverClass: ComponentDriverCtor<ItemT>
+): Promise<ItemT | null> {
   const nthLocator: CssLocator = byCssSelector(`:nth-of-type(${index + 1})`, LocatorRelativePosition.Same);
   const itemLocator = append(itemLocatorBase, nthLocator);
   const exists = await host.interactor.exists(itemLocator);
@@ -36,14 +39,22 @@ export async function getListItemByIndex<T extends ComponentDriver>(
  * @param driverClass The driver class of the list item
  * @param startIndex The starting index of the list item iterator, default is 0
  */
-export async function* getListItemIterator<T extends ComponentDriver<any>>(
-  host: ComponentDriver<any>,
+export async function* getListItemIterator<
+  HostPartT extends ScenePart,
+  ItemT extends ComponentDriver
+>(
+  host: ComponentDriver<HostPartT>,
   itemLocatorBase: PartLocator,
-  driverClass: ComponentDriverCtor<T>,
+  driverClass: ComponentDriverCtor<ItemT>,
   startIndex: number = 0
-): AsyncGenerator<T, void, unknown> {
+): AsyncGenerator<ItemT, void, unknown> {
   let index = startIndex;
-  let item: T | null = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
+  let item: ItemT | null = await getListItemByIndex(
+    host,
+    itemLocatorBase,
+    index,
+    driverClass
+  );
   while (item != null) {
     yield item;
     index++;

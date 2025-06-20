@@ -99,8 +99,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   protected async enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void> {
     const missingPartNames = await this.getMissingPartNames(partName);
     if (missingPartNames.length > 0) {
-      // @ts-ignore
-      throw new MissingPartError(missingPartNames, this);
+      throw new MissingPartError<T>(missingPartNames, this);
     }
   }
 
