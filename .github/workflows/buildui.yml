@@ -182,6 +182,23 @@ jobs:
         run: pnpm test:dom
         working-directory: ./packages/component-driver-mui-x-v8-test
 
+  vue-3-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/builderui-setup
+
+      - name: Run test
+        run: pnpm test:dom
+        working-directory: ./packages/vue-3-test
+
   example-mui-signup-form-test:
     runs-on: ubuntu-latest
     permissions:
