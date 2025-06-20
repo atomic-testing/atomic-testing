@@ -1,6 +1,6 @@
 # @atomic-testing/react-19
 
-Adapter for integrating Atomic Testing with [React&nbsp;19](https://react.dev).
+Adapter for integrating [Atomic Testing](https://atomic-testing.dev) with [React&nbsp;19](https://react.dev).
 It maps React components to the core scene part APIs.
 
 ## The problem
@@ -13,7 +13,7 @@ tests to scale without constantly reworking them.
 
 ## The solution
 
-Atomic Testing provides a consistent way to interact with both third–party and
+[Atomic Testing](https://atomic-testing.dev) provides a consistent way to interact with both third–party and
 first–party components across different test environments. It focuses on
 **reusability**, **composability** and **adaptability**, letting you build
 higher–level test strategies that work for DOM or end–to–end testing alike.
@@ -29,7 +29,7 @@ Refer to the [React integration guide](https://atomic-testing.dev/) for examples
 ## Example
 
 If you use MUI/Material&nbsp;UI components, have a look at the
-[component-driver-mui-x-v8](https://www.npmjs.com/package/@atomic-testing/component-driver-mui-x-v8)
+[@atomic-testing/component-driver-mui-v7](https://www.npmjs.com/package/@atomic-testing/component-driver-mui-v7)
 package for a dedicated example.
 
 1. Install the core library and basic HTML drivers along with this React adapter:
