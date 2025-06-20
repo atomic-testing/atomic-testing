@@ -11,3 +11,4 @@ rowindex
 tianzhen
 trivago
 tsdown
+vitest
