@@ -30,6 +30,7 @@ declare -a packages=(
   "react-legacy"
   "react-18"
   "react-19"
+  "vue-3"
   "component-driver-html"
   "component-driver-mui-v5"
   "component-driver-mui-v6"
