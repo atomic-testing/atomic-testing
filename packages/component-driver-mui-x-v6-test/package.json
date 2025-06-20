@@ -41,7 +41,6 @@
     "@mui/x-data-grid-pro": "^6.20.4",
     "@mui/x-date-pickers": "^6.20.2",
     "@mui/x-date-pickers-pro": "^6.20.2",
-    "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -55,18 +54,8 @@
     "@atomic-testing/playwright": "workspace:*",
     "@atomic-testing/react-18": "workspace:*",
     "@atomic-testing/test-runner": "workspace:*",
-    "@playwright/test": "^1.53.0",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.3",
     "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.5.0",
-    "jest": "^30.0.0",
-    "jest-environment-jsdom": "^30.0.0",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "@types/react-dom": "^18.2.0"
   },
   "eslintConfig": {
     "extends": [
