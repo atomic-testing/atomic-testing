@@ -311,9 +311,10 @@ export class DOMInteractor implements Interactor {
   async isDisabled(locator: PartLocator): Promise<boolean> {
     const el = await this.getElement(locator);
     if (el != null) {
-      // @ts-ignore
-      const isDisabled = Boolean(el.disabled);
-      return Promise.resolve(isDisabled);
+      if ('disabled' in el) {
+        const isDisabled = Boolean(el.disabled);
+        return Promise.resolve(isDisabled);
+      }
     }
     return Promise.resolve(false);
   }
