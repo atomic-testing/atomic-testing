@@ -1,6 +1,6 @@
 # @atomic-testing/react-legacy
 
-Adapter for integrating [Atomic Testing](https://atomic-testing.dev) with [React&nbsp;16/17](https://react.dev).
+Adapter for integrating [Atomic Testing](https://atomic-testing.dev) with [React 16/17](https://react.dev).
 It maps React components to the core scene part APIs.
 
 ## The problem
@@ -71,25 +71,21 @@ package for a dedicated example.
 4. Write a test using `createTestEngine` to render the component and interact with it:
 
    ```ts title="Counter.test.tsx"
-   import { createTestEngine } from '@atomic-testing/react-19';
+    import { createTestEngine } from '@atomic-testing/react-19';
 
-   import { Counter } from './Counter';
-   import { counterScenePart } from './counterScenePart';
+    import { Counter } from './Counter';
+    import { counterScenePart } from './counterScenePart';
+
+    test('increments when the button is clicked', async () => {
+      const engine = createTestEngine(<Counter />, counterScenePart);
+
+      expect(await engine.parts.count.getText()).toBe('0');
+      await engine.parts.increment.click();
+      expect(await engine.parts.count.getText()).toBe('1');
+
+      await engine.cleanUp();
+    });
    ```
-
-test('increments when the button is clicked', async () => {
-const engine = createTestEngine(<Counter />, counterScenePart);
-
-    expect(await engine.parts.count.getText()).toBe('0');
-    await engine.parts.increment.click();
-    expect(await engine.parts.count.getText()).toBe('1');
-
-    await engine.cleanUp();
-
-});
-
-```
 
 For more in‑depth information, visit
 [https://atomic-testing.dev](https://atomic-testing.dev).
-```
