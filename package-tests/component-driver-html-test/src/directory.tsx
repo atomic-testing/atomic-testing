@@ -1,6 +1,5 @@
-import { JSX } from 'react';
+import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
 
-import { ExampleList } from './components/ExampleList';
 import { checkboxGroupUIExample } from './examples/checkbox/CheckboxGroup.examples';
 import { singleCheckboxUIExample } from './examples/checkbox/SingleCheckbox.examples';
 import { focusEventUIExample } from './examples/focusEvent/Focus.examples';
@@ -15,13 +14,7 @@ import { uncontrolledRadioButtonGroupUIExample } from './examples/radioButtonGro
 import { multipleSelectUIExample } from './examples/select/MultipleSelect.examples';
 import { singleSelectUIExample } from './examples/select/SingleSelect.examples';
 
-interface IToc {
-  label: string;
-  path: string;
-  ui: JSX.Element;
-}
-
-export const tocs: IToc[] = [
+export const tocs: ExampleToc[] = [
   {
     label: 'Form',
     path: '/form',
