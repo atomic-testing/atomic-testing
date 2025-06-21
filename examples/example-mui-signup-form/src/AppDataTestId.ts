@@ -5,5 +5,5 @@ export const AppDataTestId = {
   interest: 'interest',
   review: 'review',
   confirmation: 'confirmation',
-  stepper: 'stepper'
+  stepper: 'stepper',
 } as const;

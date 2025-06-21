@@ -13,10 +13,7 @@ import { ComponentDriver } from './ComponentDriver';
  * @param driverClass The driver class of the list item
  * @returns
  */
-export async function getListItemByIndex<
-  HostPartT extends ScenePart,
-  ItemT extends ComponentDriver
->(
+export async function getListItemByIndex<HostPartT extends ScenePart, ItemT extends ComponentDriver>(
   host: ComponentDriver<HostPartT>,
   itemLocatorBase: PartLocator,
   index: number,
@@ -39,22 +36,14 @@ export async function getListItemByIndex<
  * @param driverClass The driver class of the list item
  * @param startIndex The starting index of the list item iterator, default is 0
  */
-export async function* getListItemIterator<
-  HostPartT extends ScenePart,
-  ItemT extends ComponentDriver
->(
+export async function* getListItemIterator<HostPartT extends ScenePart, ItemT extends ComponentDriver>(
   host: ComponentDriver<HostPartT>,
   itemLocatorBase: PartLocator,
   driverClass: ComponentDriverCtor<ItemT>,
   startIndex: number = 0
 ): AsyncGenerator<ItemT, void, unknown> {
   let index = startIndex;
-  let item: ItemT | null = await getListItemByIndex(
-    host,
-    itemLocatorBase,
-    index,
-    driverClass
-  );
+  let item: ItemT | null = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
   while (item != null) {
     yield item;
     index++;

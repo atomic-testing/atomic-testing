@@ -1,15 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "exclude": [
-    "node_modules",
-    "declaration",
-    "generator-build",
-    "runtime"
-  ],
-  "include": [
-    "./src",
-    "__tests__"
-  ],
+  "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
+  "include": ["./src", "__tests__"],
   "compilerOptions": {
     "outDir": "./build",
     "composite": true

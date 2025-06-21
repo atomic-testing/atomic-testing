@@ -1,5 +1,6 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { DeepPartial } from 'utility-types';
+
 import { ShippingModel, SignupModel } from '../../../models/SignupModel';
 import { getGoodCredentialMock, getGoodShippingMock } from '../../../models/__mocks__/signupModelMock';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
@@ -7,18 +8,18 @@ import { ShippingAddressForm } from '../ShippingAddressForm';
 import { ShippingAddressFormDriver } from '../ShippingAddressFormDriver';
 
 const DataTestId = {
-  form: 'shipping-form'
+  form: 'shipping-form',
 } as const;
 
 const parts = {
   form: {
     locator: byDataTestId(DataTestId.form),
-    driver: ShippingAddressFormDriver
-  }
+    driver: ShippingAddressFormDriver,
+  },
 } satisfies ScenePart;
 
 const emptyData: DeepPartial<SignupModel> = {
-  credential: getGoodCredentialMock()
+  credential: getGoodCredentialMock(),
 };
 
 const goodShippingEntry: ShippingModel = getGoodShippingMock();
@@ -54,7 +55,7 @@ describe('ShippingForm', () => {
 
     describe.each([
       ['Previous', 'onPreviousStep'],
-      ['Next', 'onNextStep']
+      ['Next', 'onNextStep'],
     ])('When clicking on %s button while the form is empty', (button, callbackName) => {
       let handleToCheck: jest.Mock;
       beforeEach(async () => {
@@ -97,7 +98,7 @@ describe('ShippingForm', () => {
         test(`${callbackName} should be called with submission data`, () => {
           expect(handleToCheck).toHaveBeenLastCalledWith({
             ...emptyData,
-            shipping: goodShippingEntry
+            shipping: goodShippingEntry,
           });
         });
       });

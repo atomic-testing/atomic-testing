@@ -5,39 +5,41 @@ import {
   Interactor,
   PartLocator,
   ScenePart,
-  byDataTestId
+  byDataTestId,
 } from '@atomic-testing/core';
 import { IInputDriver } from '@atomic-testing/core/src';
 import { DeepPartial } from 'utility-types';
+
 import { ShippingModel } from '../../models/SignupModel';
 import { AddressEntryDriver } from '../addressEntry/AddressEntryDriver';
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
+
 import { ShippingAddressFormDataTestId } from './ShippingAddressFormDataTestId';
 
 const parts = {
   lastNameInput: {
     locator: byDataTestId(ShippingAddressFormDataTestId.lastNameInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   firstNameInput: {
     locator: byDataTestId(ShippingAddressFormDataTestId.firstNameInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   addressInput: {
     locator: byDataTestId(ShippingAddressFormDataTestId.addressInput),
-    driver: AddressEntryDriver
+    driver: AddressEntryDriver,
   },
   navigation: {
     locator: byDataTestId(ShippingAddressFormDataTestId.navigation),
-    driver: WizardButtonDriver
-  }
+    driver: WizardButtonDriver,
+  },
 } satisfies ScenePart;
 
 export class ShippingAddressFormDriver extends ComponentDriver<typeof parts> implements IInputDriver<ShippingModel> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
-      parts
+      parts,
     });
   }
 
@@ -55,12 +57,12 @@ export class ShippingAddressFormDriver extends ComponentDriver<typeof parts> imp
     return Promise.all([
       this.parts.lastNameInput.getValue(),
       this.parts.firstNameInput.getValue(),
-      this.parts.addressInput.getValue()
+      this.parts.addressInput.getValue(),
     ]).then(([lastName, firstName, address]) => {
       return {
         lastName: lastName ?? '',
         firstName: firstName ?? '',
-        address
+        address,
       };
     });
   }
@@ -91,7 +93,7 @@ export class ShippingAddressFormDriver extends ComponentDriver<typeof parts> imp
       ([lastName, firstName, address]) => ({
         lastName,
         firstName,
-        address
+        address,
       })
     );
   }

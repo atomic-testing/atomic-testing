@@ -16,21 +16,13 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "webworker"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "composite": true
   },
-  "include": [
-    "**/*",
-    "eslint.config.js"
-  ],
+  "include": ["**/*", "eslint.config.js"],
   "exclude": [
     "**/dist",
     "**/build",

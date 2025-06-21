@@ -1,18 +1,19 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
+
 import { getGoodCredentialMock } from '../../../models/__mocks__/signupModelMock';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
 import { CredentialForm } from '../CredentialForm';
 import { CredentialFormDriver, CredentialFormValue } from '../CredentialFormDriver';
 
 const DataTestId = {
-  form: 'credential-form'
+  form: 'credential-form',
 } as const;
 
 const parts = {
   form: {
     locator: byDataTestId(DataTestId.form),
-    driver: CredentialFormDriver
-  }
+    driver: CredentialFormDriver,
+  },
 } satisfies ScenePart;
 
 const goodCredentialEntry: CredentialFormValue = getGoodCredentialMock();
@@ -71,7 +72,7 @@ describe('CredentialForm', () => {
 
       test('onNextStep should be called with submission data', () => {
         expect(onNext).toHaveBeenLastCalledWith({
-          credential: goodCredentialEntry
+          credential: goodCredentialEntry,
         });
       });
     });

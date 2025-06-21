@@ -6,32 +6,34 @@ import {
   Interactor,
   PartLocator,
   ScenePart,
-  byDataTestId
+  byDataTestId,
 } from '@atomic-testing/core';
+
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
+
 import { CredentialFormDataTestId } from './CredentialFormDataTestId';
 
 const parts = {
   emailInput: {
     locator: byDataTestId(CredentialFormDataTestId.emailInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   passwordInput: {
     locator: byDataTestId(CredentialFormDataTestId.passwordInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   confirmPasswordInput: {
     locator: byDataTestId(CredentialFormDataTestId.confirmPasswordInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   birthdayInput: {
     locator: byDataTestId(CredentialFormDataTestId.birthdayInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   navigation: {
     locator: byDataTestId(CredentialFormDataTestId.navigation),
-    driver: WizardButtonDriver
-  }
+    driver: WizardButtonDriver,
+  },
 } satisfies ScenePart;
 
 export interface CredentialFormValue {
@@ -45,7 +47,7 @@ export class CredentialFormDriver extends ComponentDriver<typeof parts> implemen
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
-      parts
+      parts,
     });
   }
 
@@ -64,12 +66,12 @@ export class CredentialFormDriver extends ComponentDriver<typeof parts> implemen
       this.parts.emailInput.getValue(),
       this.parts.passwordInput.getValue(),
       this.parts.confirmPasswordInput.getValue(),
-      this.parts.birthdayInput.getValue()
+      this.parts.birthdayInput.getValue(),
     ]).then(([email, password, confirmPassword, birthday]) => ({
       email: email ?? '',
       password: password ?? '',
       confirmPassword: confirmPassword ?? '',
-      birthday: birthday ?? ''
+      birthday: birthday ?? '',
     }));
   }
 
@@ -104,12 +106,12 @@ export class CredentialFormDriver extends ComponentDriver<typeof parts> implemen
       this.getEmailError(),
       this.getPasswordError(),
       this.getConfirmPasswordError(),
-      this.getBirthdayError()
+      this.getBirthdayError(),
     ]).then(([emailError, passwordError, confirmPasswordError, birthdayError]) => ({
       email: emailError,
       password: passwordError,
       confirmPassword: confirmPasswordError,
-      birthday: birthdayError
+      birthday: birthdayError,
     }));
   }
 

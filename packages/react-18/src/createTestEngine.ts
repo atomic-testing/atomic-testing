@@ -1,9 +1,9 @@
 import { createRoot } from 'react-dom/client';
 
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
+import { ReactInteractor } from '@atomic-testing/react-core';
 import { act } from '@testing-library/react';
 
-import { ReactInteractor } from '@atomic-testing/react-core';
 import { IReactTestEngineOption } from './types';
 
 let _rootId = 0;

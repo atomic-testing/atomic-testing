@@ -1,12 +1,8 @@
 import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
-import {
-  IComponentDriverOption,
-  ScenePart,
-  ScenePartDriver,
-  ScenePartDefinition,
-} from '../partTypes';
+import { IComponentDriverOption, ScenePart, ScenePartDriver, ScenePartDefinition } from '../partTypes';
 import * as locatorUtil from '../utils/locatorUtil';
+
 import { ComponentDriver } from './ComponentDriver';
 
 export function getPartFromDefinition<T extends ScenePart>(
@@ -42,8 +38,11 @@ export function getPartFromDefinition<T extends ScenePart>(
       option?: Partial<IComponentDriverOption<ScenePart>>
     ) => ComponentDriver<ScenePart>;
 
-    result[nestedComponentName] =
-      (new DriverCtor(componentLocator, interactor, componentOption) as unknown as ScenePartDriver<T>[typeof nestedComponentName]);
+    result[nestedComponentName] = new DriverCtor(
+      componentLocator,
+      interactor,
+      componentOption
+    ) as unknown as ScenePartDriver<T>[typeof nestedComponentName];
   }
 
   return result as ScenePartDriver<T>;

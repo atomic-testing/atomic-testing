@@ -53,5 +53,5 @@ export const usStates: readonly Readonly<UsState>[] = [
   { code: 'WA', name: 'Washington' },
   { code: 'WV', name: 'West Virginia' },
   { code: 'WI', name: 'Wisconsin' },
-  { code: 'WY', name: 'Wyoming' }
+  { code: 'WY', name: 'Wyoming' },
 ] as const;

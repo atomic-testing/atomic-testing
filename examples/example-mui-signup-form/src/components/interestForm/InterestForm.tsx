@@ -1,3 +1,6 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -5,12 +8,12 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
 import { produce } from 'immer';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+
 import { userInterests } from '../../data/userInterests';
 import { InterestModel, emptySignupModel } from '../../models/SignupModel';
 import { WizardProps } from '../../models/WizardProps';
 import { WizardButton } from '../wizardButton/WizardButton';
+
 import { InterestFormDataTestId } from './InterestFormDataTestId';
 
 const minimumInterestCount = 2;
@@ -20,7 +23,7 @@ export function InterestForm(props: WizardProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set((data?.interest?.interestIds ?? []) as string[]));
   const inputData = useMemo<InterestModel>(() => {
     return {
-      interestIds: (data?.interest?.interestIds ?? []) as string[]
+      interestIds: (data?.interest?.interestIds ?? []) as string[],
     };
   }, [data]);
 
@@ -35,9 +38,9 @@ export function InterestForm(props: WizardProps) {
     formState: { errors },
     setError,
     clearErrors,
-    setValue
+    setValue,
   } = useForm<InterestModel>({
-    values: inputData
+    values: inputData,
   });
 
   function checkbox_onSelect(interestId: string) {
@@ -56,13 +59,13 @@ export function InterestForm(props: WizardProps) {
         if (submission.interestIds.length < minimumInterestCount) {
           setError('interestIds', {
             type: 'manual',
-            message: `Please select at least ${minimumInterestCount} interests.`
+            message: `Please select at least ${minimumInterestCount} interests.`,
           });
           return;
         }
 
         clearErrors();
-        const updated = produce(data, (draft) => {
+        const updated = produce(data, draft => {
           draft.interest = submission;
         });
         callback?.(updated);
@@ -77,19 +80,19 @@ export function InterestForm(props: WizardProps) {
 
   return (
     <form data-testid={props['data-testid']} onSubmit={handleSubmit(onNavigate(onNextStep))}>
-      <Stack flexDirection="column" gap={2}>
-        <FormControl variant="outlined">
-          <FormLabel component="legend">Please select at least {minimumInterestCount} interests</FormLabel>
-          <Stack flexDirection="column" gap={0}>
-            {userInterests.map((option) => (
+      <Stack flexDirection='column' gap={2}>
+        <FormControl variant='outlined'>
+          <FormLabel component='legend'>Please select at least {minimumInterestCount} interests</FormLabel>
+          <Stack flexDirection='column' gap={0}>
+            {userInterests.map(option => (
               <FormControlLabel
                 key={option.id}
                 data-testid={InterestFormDataTestId.interestToggle}
                 control={
                   <Controller
-                    name="interestIds"
+                    name='interestIds'
                     control={control}
-                    render={(props) => {
+                    render={props => {
                       return (
                         <Checkbox
                           {...props.field}

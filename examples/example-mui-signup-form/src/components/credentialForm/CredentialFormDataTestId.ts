@@ -3,5 +3,5 @@ export const CredentialFormDataTestId = {
   passwordInput: 'password-input',
   confirmPasswordInput: 'confirm-password-input',
   birthdayInput: 'birthday-input',
-  navigation: 'credential-navigation'
+  navigation: 'credential-navigation',
 } as const;

@@ -6,35 +6,37 @@ import {
   Interactor,
   PartLocator,
   ScenePart,
-  byDataTestId
+  byDataTestId,
 } from '@atomic-testing/core';
+
 import { AddressModel } from '../../models/Address';
+
 import { AddressEntryDataTestId } from './AddressEntryDataTestId';
 
 const parts = {
   addressInput: {
     locator: byDataTestId(AddressEntryDataTestId.addressInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   cityInput: {
     locator: byDataTestId(AddressEntryDataTestId.cityInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   stateInput: {
     locator: byDataTestId(AddressEntryDataTestId.stateInput),
-    driver: TextFieldDriver
+    driver: TextFieldDriver,
   },
   zipInput: {
     locator: byDataTestId(AddressEntryDataTestId.zipInput),
-    driver: TextFieldDriver
-  }
+    driver: TextFieldDriver,
+  },
 } satisfies ScenePart;
 
 export class AddressEntryDriver extends ComponentDriver<typeof parts> implements IInputDriver<AddressModel> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
-      parts
+      parts,
     });
   }
 
@@ -63,12 +65,12 @@ export class AddressEntryDriver extends ComponentDriver<typeof parts> implements
       this.parts.addressInput.getValue(),
       this.parts.cityInput.getValue(),
       this.parts.stateInput.getValue(),
-      this.parts.zipInput.getValue()
+      this.parts.zipInput.getValue(),
     ]).then(([address, city, state, zip]) => ({
       address: address ?? '',
       city: city ?? '',
       state: state ?? '',
-      zip: zip ?? ''
+      zip: zip ?? '',
     }));
   }
 
@@ -104,7 +106,7 @@ export class AddressEntryDriver extends ComponentDriver<typeof parts> implements
         address: addressError,
         city: cityError,
         state: stateError,
-        zip: zipError
+        zip: zipError,
       })
     );
   }
