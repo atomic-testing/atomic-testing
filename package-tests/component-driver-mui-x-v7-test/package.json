@@ -31,7 +31,7 @@
     "@atomic-testing/internal-react-example": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.7",
+    "@mui/icons-material": "^6.4.12",
     "@mui/material": "^6.4.7",
     "@mui/x-data-grid-generator": "^7.27.2",
     "@mui/x-data-grid-pro": "^7.27.2",
