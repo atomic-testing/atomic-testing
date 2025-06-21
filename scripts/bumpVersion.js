@@ -32,13 +32,18 @@ function bumpVersion(dir, version) {
     return;
   }
 
-  const packagePath = path.join(dir, 'packages');
-  const children = fs.readdirSync(packagePath);
+  const packageDirs = ['packages', 'package-tests'];
+  const children = packageDirs
+    .flatMap((p) => {
+      const full = path.join(dir, p);
+      return fs.existsSync(full) ? fs.readdirSync(full).map((c) => path.join(p, c)) : [];
+    });
   for (const child of children) {
-    if (skipPostBuildPackages.includes(child)) {
+    const pkgName = path.basename(child);
+    if (skipPostBuildPackages.includes(pkgName)) {
       continue;
     }
-    const childPath = path.join(packagePath, child);
+    const childPath = path.join(dir, child);
     if (isFolder(childPath)) {
       adjustFolderPackageJson(childPath, sanitizedVersion);
     }
