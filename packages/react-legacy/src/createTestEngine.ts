@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 
@@ -23,7 +24,7 @@ const rootElementAttributeName = 'data-atomic-testing-react-legacy';
  * @returns The test engine
  */
 export function createTestEngine<T extends ScenePart>(
-  node: JSX.Element,
+  node: ReactElement,
   partDefinitions: T,
   option?: Readonly<Partial<IReactTestEngineOption>>
 ): TestEngine<T> {
