@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.json",
+  "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
+  "include": ["./src"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./build",
+    "composite": true
+  },
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/dom-core" },
+    { "path": "../../packages/react-18" },
+    { "path": "../../packages/test-runner" },
+    { "path": "../../packages/jest" },
+    { "path": "../../packages/component-driver-mui-v5" },
+    { "path": "../../packages/component-driver-mui-x-v5" },
+    { "path": "../../packages/playwright" }
+  ]
+}
