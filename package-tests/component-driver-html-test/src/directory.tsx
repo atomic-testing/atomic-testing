@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 
-import { ExampleList } from './components/ExampleList';
+import { ExampleList } from '@atomic-testing/internal-react-example';
 import { checkboxGroupUIExample } from './examples/checkbox/CheckboxGroup.examples';
 import { singleCheckboxUIExample } from './examples/checkbox/SingleCheckbox.examples';
 import { focusEventUIExample } from './examples/focusEvent/Focus.examples';

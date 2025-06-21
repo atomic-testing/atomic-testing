@@ -1,4 +1,4 @@
-import { ExampleList } from './components/ExampleList';
+import { ExampleList } from '@atomic-testing/internal-react-example';
 import { basicDataGridProUIExample } from './examples/datagridpro/BasicDataGridPro.examples';
 import { basicDatePickerUIExample } from './examples/datetimepicker/BasicDateTimePicker.examples';
 import { basicDateRangePickerUIExample } from './examples/datetimepicker/DateRangePicker.examples';

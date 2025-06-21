@@ -1,4 +1,4 @@
-import { ExampleList } from './components/ExampleList';
+import { ExampleList } from '@atomic-testing/internal-react-example';
 import { basicAccordionUIExample } from './examples/accordion/BasicAccordion.examples';
 import { basicAlertUIExample } from './examples/alert/BasicAlert.examples';
 import { basicAutoCompleteUIExample } from './examples/autocomplete/BasicAutoComplete.examples';
