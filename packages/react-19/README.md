@@ -21,7 +21,7 @@ higher–level test strategies that work for DOM or end–to–end testing alike
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/react-19
+npm install @atomic-testing/core @atomic-testing/react-19 --save-dev
 ```
 
 Refer to the [React integration guide](https://atomic-testing.dev/) for examples.
@@ -35,7 +35,7 @@ package for a dedicated example.
 1. Install the core library and basic HTML drivers along with this React adapter:
 
    ```bash
-   pnpm add @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html
+   npm install @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html --save-dev
    ```
 
 2. Create a small component and assign `data-testid` values to the elements you want to interact with:
@@ -75,17 +75,21 @@ package for a dedicated example.
 
    import { Counter } from './Counter';
    import { counterScenePart } from './counterScenePart';
+   ```
 
-  test('increments when the button is clicked', async () => {
-    const engine = createTestEngine(<Counter />, counterScenePart);
+test('increments when the button is clicked', async () => {
+const engine = createTestEngine(<Counter />, counterScenePart);
 
     expect(await engine.parts.count.getText()).toBe('0');
     await engine.parts.increment.click();
     expect(await engine.parts.count.getText()).toBe('1');
 
     await engine.cleanUp();
-  });
-  ```
+
+});
+
+```
 
 For more in‑depth information, visit
 [https://atomic-testing.dev](https://atomic-testing.dev).
+```
