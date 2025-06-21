@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/core",
-  "version": "0.72.0",
+  "version": "0.73.0",
   "description": "Core library for atomic-testing",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
