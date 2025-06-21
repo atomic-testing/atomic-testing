@@ -1,15 +1,8 @@
-import { JSX } from 'react';
+import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
 
-import { ExampleList } from './components/ExampleList';
 import { basicDataGridProUIExample } from './examples/datagridpro/BasicDataGridPro.examples';
 
-interface IToc {
-  label: string;
-  path: string;
-  ui: JSX.Element;
-}
-
-export const tocs: IToc[] = [
+export const tocs: ExampleToc[] = [
   {
     label: 'DataGrid Pro',
     path: '/datagridpro',

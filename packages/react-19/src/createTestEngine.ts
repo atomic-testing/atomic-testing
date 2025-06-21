@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
@@ -24,7 +24,7 @@ const rootElementAttributeName = 'data-atomic-testing-react';
  * @returns The test engine
  */
 export function createTestEngine<T extends ScenePart>(
-  node: JSX.Element,
+  node: ReactNode,
   partDefinitions: T,
   option?: Readonly<Partial<IReactTestEngineOption>>
 ): TestEngine<T> {
