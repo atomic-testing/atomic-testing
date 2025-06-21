@@ -4,5 +4,5 @@ export const SignupReviewDataTestId = {
   password: 'password',
   firstName: 'first-name',
   sameAsShipping: 'same-as-shipping',
-  interest: 'interest'
+  interest: 'interest',
 } as const;

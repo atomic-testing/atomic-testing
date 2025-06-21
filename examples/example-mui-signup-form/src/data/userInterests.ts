@@ -8,5 +8,5 @@ export const userInterests: readonly Readonly<UserInterest>[] = [
   { id: 'music', label: 'Music' },
   { id: 'reading', label: 'Reading' },
   { id: 'traveling', label: 'Traveling' },
-  { id: 'cooking', label: 'Cooking' }
+  { id: 'cooking', label: 'Cooking' },
 ].sort((a, b) => a.label.localeCompare(b.label));

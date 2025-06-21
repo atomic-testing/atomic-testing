@@ -1,30 +1,31 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { DeepPartial } from 'utility-types';
+
 import { BillingModel, SignupModel } from '../../../models/SignupModel';
 import { getGoodAlternateAddressMock } from '../../../models/__mocks__/addressMock';
 import {
   getGoodBillingMock,
   getGoodCredentialMock,
-  getGoodShippingMock
+  getGoodShippingMock,
 } from '../../../models/__mocks__/signupModelMock';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
 import { BillingAddressForm } from '../BillingAddressForm';
 import { BillingAddressFormDriver } from '../BillingAddressFormDriver';
 
 const DataTestId = {
-  form: 'shipping-form'
+  form: 'shipping-form',
 } as const;
 
 const parts = {
   form: {
     locator: byDataTestId(DataTestId.form),
-    driver: BillingAddressFormDriver
-  }
+    driver: BillingAddressFormDriver,
+  },
 } satisfies ScenePart;
 
 const emptyData: DeepPartial<SignupModel> = {
   credential: getGoodCredentialMock(),
-  shipping: getGoodShippingMock()
+  shipping: getGoodShippingMock(),
 };
 
 const goodBillingEntry: BillingModel = getGoodBillingMock();
@@ -60,7 +61,7 @@ describe('BillingForm', () => {
 
     describe.each([
       ['Previous', 'onPreviousStep'],
-      ['Next', 'onNextStep']
+      ['Next', 'onNextStep'],
     ])('When clicking on %s button while the form is empty', (button, callbackName) => {
       let handleToCheck: jest.Mock;
       beforeEach(async () => {
@@ -103,7 +104,7 @@ describe('BillingForm', () => {
         test(`${callbackName} should be called with submission data`, () => {
           expect(handleToCheck).toHaveBeenLastCalledWith({
             ...emptyData,
-            billing: goodBillingEntry
+            billing: goodBillingEntry,
           });
         });
       });

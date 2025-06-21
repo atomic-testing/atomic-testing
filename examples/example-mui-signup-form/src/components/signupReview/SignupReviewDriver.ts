@@ -4,23 +4,25 @@ import {
   Interactor,
   PartLocator,
   ScenePart,
-  byDataTestId
+  byDataTestId,
 } from '@atomic-testing/core';
+
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
+
 import { SignupReviewDataTestId } from './SignupReviewDataTestId';
 
 const parts = {
   navigation: {
     locator: byDataTestId(SignupReviewDataTestId.navigation),
-    driver: WizardButtonDriver
-  }
+    driver: WizardButtonDriver,
+  },
 } satisfies ScenePart;
 
 export class SignupReviewDriver extends ComponentDriver<typeof parts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
-      parts
+      parts,
     });
   }
 

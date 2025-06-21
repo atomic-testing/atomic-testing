@@ -9,32 +9,34 @@ import {
   ScenePart,
   byDataTestId,
   listHelper,
-  locatorUtil
+  locatorUtil,
 } from '@atomic-testing/core';
+
 import { InterestModel } from '../../models/SignupModel';
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
+
 import { InterestFormDataTestId } from './InterestFormDataTestId';
 
 const parts = {
   errorDisplay: {
     locator: byDataTestId(InterestFormDataTestId.selectedInterestError),
-    driver: HTMLElementDriver
+    driver: HTMLElementDriver,
   },
   interestToggle: {
     locator: byDataTestId(InterestFormDataTestId.interestToggle),
-    driver: HTMLElementDriver
+    driver: HTMLElementDriver,
   },
   navigation: {
     locator: byDataTestId(InterestFormDataTestId.navigation),
-    driver: WizardButtonDriver
-  }
+    driver: WizardButtonDriver,
+  },
 } satisfies ScenePart;
 
 export class InterestFormDriver extends ComponentDriver<typeof parts> implements IInputDriver<InterestModel> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
-      parts
+      parts,
     });
   }
 
@@ -76,7 +78,7 @@ export class InterestFormDriver extends ComponentDriver<typeof parts> implements
       }
     }
     return {
-      interestIds
+      interestIds,
     };
   }
 
@@ -90,7 +92,7 @@ export class InterestFormDriver extends ComponentDriver<typeof parts> implements
     if (await this.parts.errorDisplay.exists()) {
       const selectionError = await this.parts.errorDisplay.getText();
       return {
-        interestIds: selectionError
+        interestIds: selectionError,
       };
     }
 

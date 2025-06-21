@@ -8,12 +8,12 @@ module.exports = {
         jsc: {
           transform: {
             react: {
-              runtime: 'automatic'
-            }
-          }
-        }
-      }
-    ]
+              runtime: 'automatic',
+            },
+          },
+        },
+      },
+    ],
   },
   testRegex: '(/__tests__/.*.(test)).(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
@@ -22,6 +22,6 @@ module.exports = {
   testTimeout: 30000,
   testEnvironment: 'jsdom',
   globals: {
-    IS_REACT_ACT_ENVIRONMENT: true
-  }
+    IS_REACT_ACT_ENVIRONMENT: true,
+  },
 };

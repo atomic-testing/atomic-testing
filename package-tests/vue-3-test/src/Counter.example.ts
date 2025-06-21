@@ -1,6 +1,6 @@
-import { defineComponent, h, ref } from 'vue';
 import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { defineComponent, h, ref } from 'vue';
 
 export const CounterComponent = defineComponent({
   name: 'CounterComponent',
@@ -16,7 +16,7 @@ export const CounterComponent = defineComponent({
           'data-testid': 'counter',
           onClick: inc,
         },
-        `Count: ${count.value}`,
+        `Count: ${count.value}`
       );
   },
 });

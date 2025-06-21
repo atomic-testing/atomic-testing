@@ -6,36 +6,37 @@ import {
   Interactor,
   PartLocator,
   ScenePart,
-  byDataTestId
+  byDataTestId,
 } from '@atomic-testing/core';
-
 import { DeepPartial } from 'utility-types';
+
 import { AddressModel } from '../../models/Address';
 import { BillingModel } from '../../models/SignupModel';
 import { AddressEntryDriver } from '../addressEntry/AddressEntryDriver';
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
+
 import { BillingAddressFormDataTestId } from './BillingAddressFormDataTestId';
 
 const parts = {
   sameAsShipping: {
     locator: byDataTestId(BillingAddressFormDataTestId.sameAsShippingInput),
-    driver: SwitchDriver
+    driver: SwitchDriver,
   },
   billingAddress: {
     locator: byDataTestId(BillingAddressFormDataTestId.billingAddressInput),
-    driver: AddressEntryDriver
+    driver: AddressEntryDriver,
   },
   navigation: {
     locator: byDataTestId(BillingAddressFormDataTestId.navigation),
-    driver: WizardButtonDriver
-  }
+    driver: WizardButtonDriver,
+  },
 } satisfies ScenePart;
 
 export class BillingAddressFormDriver extends ComponentDriver<typeof parts> implements IInputDriver<BillingModel> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
-      parts
+      parts,
     });
   }
 
@@ -62,7 +63,7 @@ export class BillingAddressFormDriver extends ComponentDriver<typeof parts> impl
       ([sameAsShipping, address]) => {
         return {
           sameAsShipping,
-          address
+          address,
         };
       }
     );
@@ -105,7 +106,7 @@ export class BillingAddressFormDriver extends ComponentDriver<typeof parts> impl
    */
   async getError(): Promise<DeepPartial<BillingModel>> {
     return Promise.all([this.getAddressError()]).then(([address]) => ({
-      address
+      address,
     }));
   }
 

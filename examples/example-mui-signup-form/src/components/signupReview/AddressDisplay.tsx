@@ -1,6 +1,8 @@
 import { type DeepReadonly } from 'utility-types';
+
 import { AddressModel } from '../../models/Address';
 import { HasDataTestId } from '../../models/types';
+
 import { LineItem } from './LineItem';
 
 export interface AddressDisplayProps extends HasDataTestId {
@@ -10,7 +12,7 @@ export interface AddressDisplayProps extends HasDataTestId {
 
 export const AddressDisplayDataTestId = {
   address: 'address',
-  cityStateZip: 'city-state-zip'
+  cityStateZip: 'city-state-zip',
 } as const;
 
 export function AddressDisplay(props: AddressDisplayProps) {
@@ -18,10 +20,10 @@ export function AddressDisplay(props: AddressDisplayProps) {
 
   return (
     <>
-      <LineItem data-testid={AddressDisplayDataTestId.address} label="Address" value={data.address} onClick={onClick} />
+      <LineItem data-testid={AddressDisplayDataTestId.address} label='Address' value={data.address} onClick={onClick} />
       <LineItem
         data-testid={AddressDisplayDataTestId.cityStateZip}
-        label="City, State, Zip"
+        label='City, State, Zip'
         noDivider
         value={`${data.city}, ${data.state} ${data.zip}`}
         onClick={onClick}

@@ -36,10 +36,7 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
   protected getItemClass<ItemClass extends ComponentDriver = ItemT>(
     itemDriverClass?: ComponentDriverCtor<ItemClass>
   ): ComponentDriverCtor<ItemClass> {
-    return (
-      itemDriverClass ??
-      (this._option.itemClass as unknown as ComponentDriverCtor<ItemClass>)
-    );
+    return itemDriverClass ?? (this._option.itemClass as unknown as ComponentDriverCtor<ItemClass>);
   }
 
   /**

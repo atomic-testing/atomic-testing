@@ -2,6 +2,7 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ScenePart, byDataTestId } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, test } from '@playwright/test';
+
 import { AppDataTestId } from '../src/AppDataTestId';
 import { BillingAddressFormDriver } from '../src/components/billingAddressForm/BillingAddressFormDriver';
 import { CredentialFormDriver } from '../src/components/credentialForm/CredentialFormDriver';
@@ -12,7 +13,7 @@ import {
   getGoodBillingMock,
   getGoodCredentialMock,
   getGoodInterestMock,
-  getGoodShippingMock
+  getGoodShippingMock,
 } from '../src/models/__mocks__/SignupModelMock';
 
 const parts = {
@@ -20,32 +21,32 @@ const parts = {
     locator: byDataTestId(AppDataTestId.stepper),
     // There is no driver for stepper yet, but once it is implemented
     // we can add it and test each step of the way
-    driver: HTMLElementDriver
+    driver: HTMLElementDriver,
   },
   credentialStep: {
     locator: byDataTestId(AppDataTestId.credential),
-    driver: CredentialFormDriver
+    driver: CredentialFormDriver,
   },
   shippingStep: {
     locator: byDataTestId(AppDataTestId.shipping),
-    driver: ShippingAddressFormDriver
+    driver: ShippingAddressFormDriver,
   },
   billingStep: {
     locator: byDataTestId(AppDataTestId.billing),
-    driver: BillingAddressFormDriver
+    driver: BillingAddressFormDriver,
   },
   interestStep: {
     locator: byDataTestId(AppDataTestId.interest),
-    driver: InterestFormDriver
+    driver: InterestFormDriver,
   },
   reviewStep: {
     locator: byDataTestId(AppDataTestId.review),
-    driver: SignupReviewDriver
+    driver: SignupReviewDriver,
   },
   confirmationStep: {
     locator: byDataTestId(AppDataTestId.confirmation),
-    driver: HTMLElementDriver
-  }
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 test('Success submission', async ({ page }) => {

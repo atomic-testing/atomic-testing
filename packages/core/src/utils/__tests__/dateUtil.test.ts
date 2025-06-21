@@ -59,8 +59,6 @@ describe('validateHtmlDateInput', () => {
   });
 
   test('should throw an error for unsupported type', () => {
-    expect(() => validateHtmlDateInput('month', '2021-01')).toThrowError(
-      'Unsupported date type: month',
-    );
+    expect(() => validateHtmlDateInput('month', '2021-01')).toThrowError('Unsupported date type: month');
   });
 });

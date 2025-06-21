@@ -4,8 +4,8 @@ This package contains a simple Vue 3 example and unit tests demonstrating usage 
 
 ## Key commands
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Run the application locally |
+| Command          | Description                         |
+| ---------------- | ----------------------------------- |
+| `pnpm dev`       | Run the application locally         |
 | `pnpm storybook` | Launch Storybook for the components |
-| `pnpm test` | Run unit tests |
+| `pnpm test`      | Run unit tests                      |

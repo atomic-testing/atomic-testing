@@ -11,10 +11,7 @@ import { PlaywrightInteractor } from './PlaywrightInteractor';
  *   structure for the engine.
  * @returns A configured {@link TestEngine} ready for use.
  */
-export function createTestEngine<T extends ScenePart>(
-  page: Page,
-  partDefinitions: T,
-): TestEngine<T> {
+export function createTestEngine<T extends ScenePart>(page: Page, partDefinitions: T): TestEngine<T> {
   const engine = new TestEngine([], new PlaywrightInteractor(page), {
     parts: partDefinitions,
   });

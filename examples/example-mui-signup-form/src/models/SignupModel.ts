@@ -1,4 +1,5 @@
 import { DeepPartial } from 'react-hook-form';
+
 import { AddressModel } from './Address';
 
 export interface CredentialModel {

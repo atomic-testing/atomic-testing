@@ -1,15 +1,16 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { BillingAddressForm } from './BillingAddressForm';
 
 const meta: Meta<typeof BillingAddressForm> = {
-  component: BillingAddressForm
+  component: BillingAddressForm,
 };
 
 export default meta;
 type Story = StoryObj<typeof BillingAddressForm>;
 
 export const Default: Story = {
-  args: {}
+  args: {},
 };
 
 export const PrefilledData: Story = {
@@ -22,9 +23,9 @@ export const PrefilledData: Story = {
           address: '1234 Elm St',
           city: 'Springfield',
           state: 'IL',
-          zip: '62701'
-        }
-      }
-    }
-  }
+          zip: '62701',
+        },
+      },
+    },
+  },
 };

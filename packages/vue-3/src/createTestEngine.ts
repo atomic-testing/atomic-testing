@@ -21,10 +21,10 @@ export function createTestEngine<T extends ScenePart>(
   const container = rootEl.appendChild(document.createElement('div'));
   const rootId = getNextRootElementId();
   container.setAttribute(rootElementAttributeName, rootId);
-  
+
   let unmount: () => void;
   let app: App;
-  
+
   try {
     const renderResult = render(component, { container });
     unmount = renderResult.unmount;

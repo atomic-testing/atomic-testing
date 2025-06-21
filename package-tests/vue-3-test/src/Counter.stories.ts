@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
+
 import { CounterComponent } from './Counter.example';
 
 const meta: Meta<typeof CounterComponent> = {

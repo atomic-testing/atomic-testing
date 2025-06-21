@@ -1,11 +1,14 @@
+import { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+
 import { usStates } from '../../data/usStates';
 import { AddressModel } from '../../models/Address';
 import { HasDataTestId } from '../../models/types';
+
 import { AddressEntryDataTestId } from './AddressEntryDataTestId';
 
 export interface AddressEntryProps extends HasDataTestId {
@@ -35,7 +38,7 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
       address: data.address ?? '',
       city: data.city ?? '',
       state: data.state ?? '',
-      zip: data.zip ?? ''
+      zip: data.zip ?? '',
     };
   }, [data]);
   const {
@@ -44,7 +47,7 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
     formState: { errors },
     getValues,
     trigger,
-    clearErrors
+    clearErrors,
   } = useForm({ values: inputData });
 
   const getAddress = useCallback(async (): Promise<GetAddressReturn> => {
@@ -60,7 +63,7 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
   useImperativeHandle(
     ref,
     () => ({
-      getAddress
+      getAddress,
     }),
     [getAddress]
   );
@@ -71,8 +74,8 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
         <TextField
           data-testid={AddressEntryDataTestId.addressInput}
           {...register('address', { required: 'Address is required' })}
-          label="Address"
-          variant="outlined"
+          label='Address'
+          variant='outlined'
           error={!!errors.address}
           helperText={errors.address?.message?.toString()}
           fullWidth
@@ -83,8 +86,8 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
         <TextField
           data-testid={AddressEntryDataTestId.cityInput}
           {...register('city', { required: 'City is required' })}
-          label="City"
-          variant="outlined"
+          label='City'
+          variant='outlined'
           error={!!errors.city}
           helperText={errors.city?.message?.toString()}
           fullWidth
@@ -94,24 +97,23 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
       <Grid item xs={3}>
         <Controller
           control={control}
-          name="state"
+          name='state'
           rules={{ required: 'State is required' }}
-          render={(props) => {
+          render={props => {
             return (
               <TextField
                 data-testid={AddressEntryDataTestId.stateInput}
                 select
-                label="State"
-                variant="outlined"
+                label='State'
+                variant='outlined'
                 error={!!errors.state}
                 helperText={errors.state?.message?.toString()}
                 fullWidth
                 disabled={disabled}
                 inputProps={{
-                  ...props.field
-                }}
-              >
-                {usStates.map((option) => (
+                  ...props.field,
+                }}>
+                {usStates.map(option => (
                   <MenuItem key={option.code} value={option.code}>
                     {option.name}
                   </MenuItem>
@@ -128,11 +130,11 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
             required: 'ZIP Code is required',
             pattern: {
               value: /^\d{5}(-\d{4})?$/,
-              message: 'Invalid ZIP Code'
-            }
+              message: 'Invalid ZIP Code',
+            },
           })}
-          label="ZIP Code"
-          variant="outlined"
+          label='ZIP Code'
+          variant='outlined'
           error={!!errors.zip}
           helperText={errors.zip?.message?.toString()}
           fullWidth

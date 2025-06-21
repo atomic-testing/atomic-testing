@@ -1,31 +1,33 @@
-import { byDataTestId, ScenePart, TestEngine } from '@atomic-testing/core';
 import { DeepPartial } from 'react-hook-form';
+
+import { byDataTestId, ScenePart, TestEngine } from '@atomic-testing/core';
+
+import { InterestModel, SignupModel } from '../../../models/SignupModel';
 import {
   getGoodBillingMock,
   getGoodCredentialMock,
   getGoodInterestMock,
-  getGoodShippingMock
+  getGoodShippingMock,
 } from '../../../models/__mocks__/signupModelMock';
-import { InterestModel, SignupModel } from '../../../models/SignupModel';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
 import { InterestForm } from '../InterestForm';
 import { InterestFormDriver } from '../InterestFormDriver';
 
 const DataTestId = {
-  form: 'interest-form'
+  form: 'interest-form',
 } as const;
 
 const parts = {
   form: {
     locator: byDataTestId(DataTestId.form),
-    driver: InterestFormDriver
-  }
+    driver: InterestFormDriver,
+  },
 } satisfies ScenePart;
 
 const emptyData: DeepPartial<SignupModel> = {
   credential: getGoodCredentialMock(),
   shipping: getGoodShippingMock(),
-  billing: getGoodBillingMock()
+  billing: getGoodBillingMock(),
 };
 
 const goodInterestEntry: InterestModel = getGoodInterestMock();
@@ -56,7 +58,7 @@ describe('InterestForm', () => {
 
     describe.each([
       ['Previous', 'onPreviousStep'],
-      ['Next', 'onNextStep']
+      ['Next', 'onNextStep'],
     ])('When clicking on %s button while the form is empty', (button, callbackName) => {
       let handleToCheck: jest.Mock;
       beforeEach(async () => {
@@ -99,7 +101,7 @@ describe('InterestForm', () => {
         test(`${callbackName} should be called with submission data`, () => {
           expect(handleToCheck).toHaveBeenLastCalledWith({
             ...emptyData,
-            interest: goodInterestEntry
+            interest: goodInterestEntry,
           });
         });
       });

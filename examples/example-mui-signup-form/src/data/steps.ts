@@ -8,7 +8,7 @@ export const steps: readonly Readonly<Step>[] = [
   { sequence: 2, name: 'Shipping Address' },
   { sequence: 3, name: 'Billing Address' },
   { sequence: 4, name: 'Interests' },
-  { sequence: 5, name: 'Review' }
+  { sequence: 5, name: 'Review' },
 ] as const;
 
-export const stepsBySequence: Map<number, Readonly<Step>> = new Map(steps.map((step) => [step.sequence, step]));
+export const stepsBySequence: Map<number, Readonly<Step>> = new Map(steps.map(step => [step.sequence, step]));

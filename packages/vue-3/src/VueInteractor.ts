@@ -23,83 +23,52 @@ export class VueInteractor extends DOMInteractor {
     await nextTick();
   }
 
-  override async enterText(
-    locator: PartLocator,
-    text: string,
-    option?: Partial<EnterTextOption>,
-  ): Promise<void> {
+  override async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void> {
     await super.enterText(locator, text, option);
     await this.flush();
   }
 
-  override async click(
-    locator: PartLocator,
-    option?: Partial<ClickOption>,
-  ): Promise<void> {
+  override async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     await super.click(locator, option);
     await this.flush();
   }
 
-  override async hover(
-    locator: PartLocator,
-    option?: Partial<HoverOption>,
-  ): Promise<void> {
+  override async hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     await super.hover(locator, option);
     await this.flush();
   }
 
-  async mouseMove(
-    locator: PartLocator,
-    option?: Partial<MouseMoveOption>,
-  ): Promise<void> {
+  async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
     await super.mouseMove(locator, option);
     await this.flush();
   }
 
-  async mouseDown(
-    locator: PartLocator,
-    option?: Partial<MouseDownOption>,
-  ): Promise<void> {
+  async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
     await super.mouseDown(locator, option);
     await this.flush();
   }
 
-  async mouseUp(
-    locator: PartLocator,
-    option?: Partial<MouseUpOption>,
-  ): Promise<void> {
+  async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     await super.mouseUp(locator, option);
     await this.flush();
   }
 
-  async mouseOver(
-    locator: PartLocator,
-    option?: Partial<HoverOption>,
-  ): Promise<void> {
+  async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     await super.mouseOver(locator, option);
     await this.flush();
   }
 
-  async mouseOut(
-    locator: PartLocator,
-    option?: Partial<MouseOutOption>,
-  ): Promise<void> {
+  async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
     await super.mouseOut(locator, option);
     await this.flush();
   }
 
-  async mouseEnter(
-    locator: PartLocator,
-    option?: Partial<MouseEnterOption>,
-  ): Promise<void> {
+  async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
     await super.mouseEnter(locator, option);
     await this.flush();
   }
 
-  async mouseLeave(
-    locator: PartLocator,
-    option?: Partial<MouseLeaveOption>,
-  ): Promise<void> {
+  async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
     await super.mouseLeave(locator, option);
     await this.flush();
   }
@@ -109,10 +78,7 @@ export class VueInteractor extends DOMInteractor {
     await this.flush();
   }
 
-  override async selectOptionValue(
-    locator: PartLocator,
-    values: string[],
-  ): Promise<void> {
+  override async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     await super.selectOptionValue(locator, values);
     await this.flush();
   }
@@ -124,7 +90,7 @@ export class VueInteractor extends DOMInteractor {
 
   override async waitUntilComponentState(
     locator: PartLocator,
-    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption,
+    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
   ): Promise<void> {
     await super.waitUntilComponentState(locator, option);
     await this.flush();

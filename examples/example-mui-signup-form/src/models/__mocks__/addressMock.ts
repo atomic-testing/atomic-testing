@@ -5,7 +5,7 @@ export function getGoodAddressMock(): AddressModel {
     address: '123 Main St.',
     city: 'Springfield',
     state: 'IL',
-    zip: '53002'
+    zip: '53002',
   };
 }
 
@@ -14,6 +14,6 @@ export function getGoodAlternateAddressMock(): AddressModel {
     address: '456 Elm St.',
     city: 'Springfield',
     state: 'IL',
-    zip: '53002'
+    zip: '53002',
   };
 }
