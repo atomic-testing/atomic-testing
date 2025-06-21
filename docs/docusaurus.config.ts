@@ -24,14 +24,12 @@ const config: Config = {
   tagline: 'Portable UI testing library: Simplify and unify across frameworks and libraries',
   favicon: 'img/favicon.ico',
 
-  // Set the production url of your site here
   url: 'https://www.atomic-testing.dev',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
   organizationName: 'atomic-testing', // Usually your GitHub org/user name.
   projectName: 'atomic-testing', // Usually your repo name.
   deploymentBranch: 'gh-pages', // Branch that GitHub pages will deploy from.
@@ -41,9 +39,13 @@ const config: Config = {
 
   trailingSlash: true,
 
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
+  future: {
+    experimental_faster: true, // Enable faster builds in Docusaurus 3, requires v4 tag
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+    },
+  },
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
