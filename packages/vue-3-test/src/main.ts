@@ -1,6 +1,4 @@
-import { createApp, h } from 'vue';
-import { CounterComponent } from './Counter.example';
+import { createApp } from 'vue';
+import CounterComponent from './Counter.vue';
 
-createApp({
-  render: () => h(CounterComponent),
-}).mount('#app');
+createApp(CounterComponent).mount('#app');
