@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Bulk publish all packages (or just build if --build-only)
@@ -19,31 +20,28 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-declare -a packages=(
-  "core"
-  "dom-core"
-  "test-runner"
-  "jest"
-  "vitest"
-  "playwright"
-  "react-core"
-  "react-legacy"
-  "react-18"
-  "react-19"
-  "vue-3"
-  "component-driver-html"
-  "component-driver-mui-v5"
-  "component-driver-mui-v6"
-  "component-driver-mui-v7"
-  "component-driver-mui-x-v5"
-  "component-driver-mui-x-v6"
-  "component-driver-mui-x-v7"
-  "component-driver-mui-x-v8"
+# list of folders to skip
+declare -a exclude=(
+  # add any others here...
+  "temp"
 )
+
 
 cd packages
 
-for pkg in "${packages[@]}"; do
+for dir in */; do
+  pkg="${dir%/}"  # strip trailing slash
+
+  # check if $pkg is in the exclude list
+  skip=false
+  for ex in "${exclude[@]}"; do
+    if [[ "$pkg" == "$ex" ]]; then
+      skip=true
+      break
+    fi
+  done
+  $skip && continue
+
   echo "→ Processing $pkg"
   pushd "$pkg" > /dev/null
 
