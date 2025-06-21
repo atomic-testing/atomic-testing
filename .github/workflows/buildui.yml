@@ -61,7 +61,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-html-test
+        working-directory: ./package-tests/component-driver-html-test
 
   component-driver-mui-v5-test:
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-v5-test
+        working-directory: ./package-tests/component-driver-mui-v5-test
 
   component-driver-mui-v6-test:
     runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-v6-test
+        working-directory: ./package-tests/component-driver-mui-v6-test
 
   component-driver-mui-v7-test:
     runs-on: ubuntu-latest
@@ -112,7 +112,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-v7-test
+        working-directory: ./package-tests/component-driver-mui-v7-test
 
   component-driver-mui-x-v5-test:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-x-v5-test
+        working-directory: ./package-tests/component-driver-mui-x-v5-test
 
   component-driver-mui-x-v6-test:
     runs-on: ubuntu-latest
@@ -146,7 +146,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-x-v6-test
+        working-directory: ./package-tests/component-driver-mui-x-v6-test
 
   component-driver-mui-x-v7-test:
     runs-on: ubuntu-latest
@@ -163,7 +163,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-x-v7-test
+        working-directory: ./package-tests/component-driver-mui-x-v7-test
 
   component-driver-mui-x-v8-test:
     runs-on: ubuntu-latest
@@ -180,7 +180,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/component-driver-mui-x-v8-test
+        working-directory: ./package-tests/component-driver-mui-x-v8-test
 
   vue-3-test:
     runs-on: ubuntu-latest
@@ -197,7 +197,7 @@ jobs:
 
       - name: Run test
         run: pnpm test:dom
-        working-directory: ./packages/vue-3-test
+        working-directory: ./package-tests/vue-3-test
 
   example-mui-signup-form-test:
     runs-on: ubuntu-latest
