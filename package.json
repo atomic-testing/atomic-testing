@@ -21,7 +21,7 @@
     "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
   "devDependencies": {
-    "@eslint/js": "^9.25.0",
+    "@eslint/js": "^9.29.0",
     "@swc/jest": ">=0.2.37",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/jest": "^30.0.0",
