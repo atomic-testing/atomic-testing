@@ -3,7 +3,6 @@ id: api-overview
 sidebar_position: 4
 ---
 
-
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -16,19 +15,19 @@ In a nutshell, locators represent a way to find element on a page or within a te
 <details>
   <summary>Available locators</summary>
 
-| Locator                  | Description |
-| ------------------------ | --------------------------------------------------------------------------- |
-| byAttribute(name, value) | Locate element by attribute |
-| byChecked(checked)       | Locate checkbox which is checked, usually it can be chained with checkbox locator |
+| Locator                  | Description                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| byAttribute(name, value) | Locate element by attribute                                                                                            |
+| byChecked(checked)       | Locate checkbox which is checked, usually it can be chained with checkbox locator                                      |
 | byCssClass(className)    | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily. |
-| byCssSelector(selector)  | Locate by CSS selector. |
-| byDataTestId(dataTestId) | Locate by data-testid attribute. |
-| byInputType(type)        | Locate by input element by its type, such as text, radio, checkbox etc. |
-| byLinkedElement()        | (Experimental) Locate an element by matching attributes from another element |
-| byName(name)             | Locate by the value of name attribute. |
-| byRole(role)             | Locate by the value of role attribute. |
-| byTagName(tagName)       | Locate by HTML tag name (not recommended). |
-| byValue(value)           | Locate by the value of value attribute |
+| byCssSelector(selector)  | Locate by CSS selector.                                                                                                |
+| byDataTestId(dataTestId) | Locate by data-testid attribute.                                                                                       |
+| byInputType(type)        | Locate by input element by its type, such as text, radio, checkbox etc.                                                |
+| byLinkedElement()        | (Experimental) Locate an element by matching attributes from another element                                           |
+| byName(name)             | Locate by the value of name attribute.                                                                                 |
+| byRole(role)             | Locate by the value of role attribute.                                                                                 |
+| byTagName(tagName)       | Locate by HTML tag name (not recommended).                                                                             |
+| byValue(value)           | Locate by the value of value attribute                                                                                 |
 
 </details>
 
@@ -41,19 +40,19 @@ In a nutshell, locators represent a way to find element on a page or within a te
 
 Package: [@atomic-testing/component-driver-html](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-html/src/components)
 
-| Driver | Description |
-| -------------------------- | ----------------------------- |
-| HTMLAnchorDriver | Driver for `<a>` elements |
-| HTMLButtonDriver | Driver for `<button>` or any clickable elements |
-| HTMLCheckboxDriver | Driver for `<input type="checkbox">` elements |
-| HTMLCheckboxGroupDriver | Driver for a group of HTML checkboxes, ideal for multiselection |
-| HTMLElementDriver | Driver for any HTML element |
-| HTMLHiddenInputDriver | Driver for `<input type="hidden">` elements |
-| HTMLOptionDriver | Driver for `<option>` elements |
-| HTMLRadioButtonGroupDriver | Driver for a group of HTML radio buttons |
-| HTMLSelectDriver | Driver for `<select>` element, support both single and multiple selection |
-| HTMLTextInputDriver | Driver for `<input type="text">` elements |
-| HTMLTextAreaDriver | Driver for `<textarea>` elements |
+| Driver                     | Description                                                               |
+| -------------------------- | ------------------------------------------------------------------------- |
+| HTMLAnchorDriver           | Driver for `<a>` elements                                                 |
+| HTMLButtonDriver           | Driver for `<button>` or any clickable elements                           |
+| HTMLCheckboxDriver         | Driver for `<input type="checkbox">` elements                             |
+| HTMLCheckboxGroupDriver    | Driver for a group of HTML checkboxes, ideal for multiselection           |
+| HTMLElementDriver          | Driver for any HTML element                                               |
+| HTMLHiddenInputDriver      | Driver for `<input type="hidden">` elements                               |
+| HTMLOptionDriver           | Driver for `<option>` elements                                            |
+| HTMLRadioButtonGroupDriver | Driver for a group of HTML radio buttons                                  |
+| HTMLSelectDriver           | Driver for `<select>` element, support both single and multiple selection |
+| HTMLTextInputDriver        | Driver for `<input type="text">` elements                                 |
+| HTMLTextAreaDriver         | Driver for `<textarea>` elements                                          |
 
 </details>
 
@@ -88,31 +87,31 @@ pnpm add @atomic-testing/component-driver-mui-v5
 </TabItem>
 </Tabs>
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| AccordionDriver | Driver for Accordion component |
-| AlertDriver | Driver for Alert component |
-| AutoCompleteDriver | Driver for Autocomplete component |
-| BadgeDriver | Driver for Badge component |
-| ButtonDriver | Driver for Button or any clickable component |
-| CheckboxDriver | Driver for Checkbox component |
-| ChipDriver | Driver for Chip component |
-| DialogDriver | Driver for Dialog component |
-| FabDriver | Driver for Floating Action Button component |
-| InputDriver | Driver for Input component and its variants |
-| ListDriver | Driver for List component |
-| ListItemDriver | Driver for ListItem component |
-| MenuDriver | Driver for Menu component |
-| MenuItemDriver | Driver for MenuItem component |
-| ProgressDriver | Driver for Progress component |
-| RatingDriver | Driver for Rating component |
-| SelectDriver | Driver for Select component |
-| SliderDriver | Driver for Slider component |
-| SnackbarDriver | Driver for Snackbar component |
-| SwitchDriver | Driver for Switch component |
-| TextFieldDriver | Driver for TextField component |
-| ToggleButtonDriver | Driver for ToggleButton component |
-| ToggleButtonGroupDriver | Driver for ToggleButtonGroup component |
+| Driver                           | Description                                           |
+| -------------------------------- | ----------------------------------------------------- |
+| AccordionDriver                  | Driver for Accordion component                        |
+| AlertDriver                      | Driver for Alert component                            |
+| AutoCompleteDriver               | Driver for Autocomplete component                     |
+| BadgeDriver                      | Driver for Badge component                            |
+| ButtonDriver                     | Driver for Button or any clickable component          |
+| CheckboxDriver                   | Driver for Checkbox component                         |
+| ChipDriver                       | Driver for Chip component                             |
+| DialogDriver                     | Driver for Dialog component                           |
+| FabDriver                        | Driver for Floating Action Button component           |
+| InputDriver                      | Driver for Input component and its variants           |
+| ListDriver                       | Driver for List component                             |
+| ListItemDriver                   | Driver for ListItem component                         |
+| MenuDriver                       | Driver for Menu component                             |
+| MenuItemDriver                   | Driver for MenuItem component                         |
+| ProgressDriver                   | Driver for Progress component                         |
+| RatingDriver                     | Driver for Rating component                           |
+| SelectDriver                     | Driver for Select component                           |
+| SliderDriver                     | Driver for Slider component                           |
+| SnackbarDriver                   | Driver for Snackbar component                         |
+| SwitchDriver                     | Driver for Switch component                           |
+| TextFieldDriver                  | Driver for TextField component                        |
+| ToggleButtonDriver               | Driver for ToggleButton component                     |
+| ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                |
 | ExclusiveToggleButtonGroupDriver | Driver for ToggleButtonGroup with exclusive selection |
 
 </details>
@@ -125,41 +124,35 @@ Package: [@atomic-testing/component-driver-mui-v6](https://github.com/atomic-tes
 
 Test examples can be found in [the example folder under component-driver-mui-v6-test package](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v6-test/src/examples)
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| AccordionDriver | Driver for Accordion component |
-| AlertDriver | Driver for Alert component |
-| AutoCompleteDriver | Driver for Autocomplete component (single selection only, multiple selection planned) |
-| BadgeDriver | Driver for Badge component |
-| ButtonDriver | Driver for Button or any clickable component |
-| CheckboxDriver | Driver for Checkbox component |
-| ChipDriver | Driver for Chip component |
-| DialogDriver | Driver for Dialog component |
-| FabDriver | Driver for Floating Action Button component |
-| InputDriver | Driver for Input component and its variants |
-| ListDriver | Driver for List component |
-| ListItemDriver | Driver for ListItem component |
-| MenuDriver | Driver for Menu component |
-| MenuItemDriver | Driver for MenuItem component |
-| ProgressDriver | Driver for Progress component |
-| RatingDriver | Driver for Rating component |
-| SelectDriver | Driver for Select component |
-| SliderDriver | Driver for Slider component |
-| SnackbarDriver | Driver for Snackbar component |
-| SwitchDriver | Driver for Switch component |
-| TextFieldDriver | Driver for TextField component, supports single-line, multiline and selection TextField variants |
-| ToggleButtonDriver | Driver for ToggleButton component |
-| ToggleButtonGroupDriver | Driver for ToggleButtonGroup component |
-| ExclusiveToggleButtonGroupDriver | Driver for ToggleButtonGroup with exclusive selection |
-| DataGridProDriver | Driver for DataGrid/DataGridPro component |
-| DataGridHeaderRowDriver | Driver for header rows in DataGrid |
-| DataGridDataRowDriver | Driver for data rows in DataGrid |
-| DateRangePickerDriver | Driver for DateRangePicker component |
-| DateTimePickerDriver | Driver for DateTimePicker component |
-| DesktopDatePickerDriver | Driver for DesktopDatePicker component |
-| MobileDatePickerDialogDriver | Driver for MobileDatePicker's dialog component |
-| MobileDatePickerDriver | Driver for MobileDatePicker component |
-| TimePickerDriver | Driver for TimePicker component |
+| Driver                           | Description                                                                                      |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| AccordionDriver                  | Driver for Accordion component                                                                   |
+| AlertDriver                      | Driver for Alert component                                                                       |
+| AutoCompleteDriver               | Driver for Autocomplete component (single selection only, multiple selection planned)            |
+| BadgeDriver                      | Driver for Badge component                                                                       |
+| ButtonDriver                     | Driver for Button or any clickable component                                                     |
+| CheckboxDriver                   | Driver for Checkbox component                                                                    |
+| ChipDriver                       | Driver for Chip component                                                                        |
+| DialogDriver                     | Driver for Dialog component                                                                      |
+| FabDriver                        | Driver for Floating Action Button component                                                      |
+| InputDriver                      | Driver for Input component and its variants                                                      |
+| ListDriver                       | Driver for List component                                                                        |
+| ListItemDriver                   | Driver for ListItem component                                                                    |
+| MenuDriver                       | Driver for Menu component                                                                        |
+| MenuItemDriver                   | Driver for MenuItem component                                                                    |
+| ProgressDriver                   | Driver for Progress component                                                                    |
+| RatingDriver                     | Driver for Rating component                                                                      |
+| SelectDriver                     | Driver for Select component                                                                      |
+| SliderDriver                     | Driver for Slider component                                                                      |
+| SnackbarDriver                   | Driver for Snackbar component                                                                    |
+| SwitchDriver                     | Driver for Switch component                                                                      |
+| TextFieldDriver                  | Driver for TextField component, supports single-line, multiline and selection TextField variants |
+| ToggleButtonDriver               | Driver for ToggleButton component                                                                |
+| ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                                                           |
+| ExclusiveToggleButtonGroupDriver | Driver for ToggleButtonGroup with exclusive selection                                            |
+| DataGridProDriver                | Driver for DataGrid/DataGridPro component                                                        |
+| DataGridHeaderRowDriver          | Driver for header rows in DataGrid                                                               |
+| DataGridDataRowDriver            | Driver for data rows in DataGrid                                                                 |
 
 </details>
 ### [MUI V7](https://mui.com/material-ui/getting-started/overview/) components
@@ -193,31 +186,31 @@ pnpm add @atomic-testing/component-driver-mui-v7
 </TabItem>
 </Tabs>
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| AccordionDriver | Driver for Accordion component |
-| AlertDriver | Driver for Alert component |
-| AutoCompleteDriver | Driver for Autocomplete component |
-| BadgeDriver | Driver for Badge component |
-| ButtonDriver | Driver for Button or any clickable component |
-| CheckboxDriver | Driver for Checkbox component |
-| ChipDriver | Driver for Chip component |
-| DialogDriver | Driver for Dialog component |
-| FabDriver | Driver for Floating Action Button component |
-| InputDriver | Driver for Input component and its variants |
-| ListDriver | Driver for List component |
-| ListItemDriver | Driver for ListItem component |
-| MenuDriver | Driver for Menu component |
-| MenuItemDriver | Driver for MenuItem component |
-| ProgressDriver | Driver for Progress component |
-| RatingDriver | Driver for Rating component |
-| SelectDriver | Driver for Select component |
-| SliderDriver | Driver for Slider component |
-| SnackbarDriver | Driver for Snackbar component |
-| SwitchDriver | Driver for Switch component |
-| TextFieldDriver | Driver for TextField component |
-| ToggleButtonDriver | Driver for ToggleButton component |
-| ToggleButtonGroupDriver | Driver for ToggleButtonGroup component |
+| Driver                           | Description                                           |
+| -------------------------------- | ----------------------------------------------------- |
+| AccordionDriver                  | Driver for Accordion component                        |
+| AlertDriver                      | Driver for Alert component                            |
+| AutoCompleteDriver               | Driver for Autocomplete component                     |
+| BadgeDriver                      | Driver for Badge component                            |
+| ButtonDriver                     | Driver for Button or any clickable component          |
+| CheckboxDriver                   | Driver for Checkbox component                         |
+| ChipDriver                       | Driver for Chip component                             |
+| DialogDriver                     | Driver for Dialog component                           |
+| FabDriver                        | Driver for Floating Action Button component           |
+| InputDriver                      | Driver for Input component and its variants           |
+| ListDriver                       | Driver for List component                             |
+| ListItemDriver                   | Driver for ListItem component                         |
+| MenuDriver                       | Driver for Menu component                             |
+| MenuItemDriver                   | Driver for MenuItem component                         |
+| ProgressDriver                   | Driver for Progress component                         |
+| RatingDriver                     | Driver for Rating component                           |
+| SelectDriver                     | Driver for Select component                           |
+| SliderDriver                     | Driver for Slider component                           |
+| SnackbarDriver                   | Driver for Snackbar component                         |
+| SwitchDriver                     | Driver for Switch component                           |
+| TextFieldDriver                  | Driver for TextField component                        |
+| ToggleButtonDriver               | Driver for ToggleButton component                     |
+| ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                |
 | ExclusiveToggleButtonGroupDriver | Driver for ToggleButtonGroup with exclusive selection |
 
 </details>
@@ -252,17 +245,17 @@ pnpm add @atomic-testing/component-driver-mui-x-v5
 </TabItem>
 </Tabs>
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| DataGridProDriver | Driver for DataGrid/DataGridPro component |
-| DataGridHeaderRowDriver | Driver for header rows in DataGrid |
-| DataGridDataRowDriver | Driver for data rows in DataGrid |
-| DateRangePickerDriver | Driver for DateRangePicker component |
-| DateTimePickerDriver | Driver for DateTimePicker component |
-| DesktopDatePickerDriver | Driver for DesktopDatePicker component |
+| Driver                       | Description                                    |
+| ---------------------------- | ---------------------------------------------- |
+| DataGridProDriver            | Driver for DataGrid/DataGridPro component      |
+| DataGridHeaderRowDriver      | Driver for header rows in DataGrid             |
+| DataGridDataRowDriver        | Driver for data rows in DataGrid               |
+| DateRangePickerDriver        | Driver for DateRangePicker component           |
+| DateTimePickerDriver         | Driver for DateTimePicker component            |
+| DesktopDatePickerDriver      | Driver for DesktopDatePicker component         |
 | MobileDatePickerDialogDriver | Driver for MobileDatePicker's dialog component |
-| MobileDatePickerDriver | Driver for MobileDatePicker component |
-| TimePickerDriver | Driver for TimePicker component |
+| MobileDatePickerDriver       | Driver for MobileDatePicker component          |
+| TimePickerDriver             | Driver for TimePicker component                |
 
 </details>
 
@@ -297,17 +290,11 @@ pnpm add @atomic-testing/component-driver-mui-x-v6
 </TabItem>
 </Tabs>
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| DataGridProDriver | Driver for DataGrid/DataGridPro component |
-| DataGridHeaderRowDriver | Driver for header rows in DataGrid |
-| DataGridDataRowDriver | Driver for data rows in DataGrid |
-| DateRangePickerDriver | Driver for DateRangePicker component |
-| DateTimePickerDriver | Driver for DateTimePicker component |
-| DesktopDatePickerDriver | Driver for DesktopDatePicker component |
-| MobileDatePickerDialogDriver | Driver for MobileDatePicker's dialog component |
-| MobileDatePickerDriver | Driver for MobileDatePicker component |
-| TimePickerDriver | Driver for TimePicker component |
+| Driver                  | Description                               |
+| ----------------------- | ----------------------------------------- |
+| DataGridProDriver       | Driver for DataGrid/DataGridPro component |
+| DataGridHeaderRowDriver | Driver for header rows in DataGrid        |
+| DataGridDataRowDriver   | Driver for data rows in DataGrid          |
 
 </details>
 
@@ -342,17 +329,11 @@ pnpm add @atomic-testing/component-driver-mui-x-v7
 </TabItem>
 </Tabs>
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| DataGridProDriver | Driver for DataGrid/DataGridPro component |
-| DataGridHeaderRowDriver | Driver for header rows in DataGrid |
-| DataGridDataRowDriver | Driver for data rows in DataGrid |
-| DateRangePickerDriver | Driver for DateRangePicker component |
-| DateTimePickerDriver | Driver for DateTimePicker component |
-| DesktopDatePickerDriver | Driver for DesktopDatePicker component |
-| MobileDatePickerDialogDriver | Driver for MobileDatePicker's dialog component |
-| MobileDatePickerDriver | Driver for MobileDatePicker component |
-| TimePickerDriver | Driver for TimePicker component |
+| Driver                  | Description                               |
+| ----------------------- | ----------------------------------------- |
+| DataGridProDriver       | Driver for DataGrid/DataGridPro component |
+| DataGridHeaderRowDriver | Driver for header rows in DataGrid        |
+| DataGridDataRowDriver   | Driver for data rows in DataGrid          |
 
 </details>
 
@@ -387,17 +368,10 @@ pnpm add @atomic-testing/component-driver-mui-x-v8
 </TabItem>
 </Tabs>
 
-| Driver | Description |
-| ----------------------- | ------------------------------------------------------------ |
-| DataGridProDriver | Driver for DataGrid/DataGridPro component |
-| DataGridHeaderRowDriver | Driver for header rows in DataGrid |
-| DataGridDataRowDriver | Driver for data rows in DataGrid |
-| DateRangePickerDriver | Driver for DateRangePicker component |
-| DateTimePickerDriver | Driver for DateTimePicker component |
-| DesktopDatePickerDriver | Driver for DesktopDatePicker component |
-| MobileDatePickerDialogDriver | Driver for MobileDatePicker's dialog component |
-| MobileDatePickerDriver | Driver for MobileDatePicker component |
-| TimePickerDriver | Driver for TimePicker component |
+| Driver                  | Description                               |
+| ----------------------- | ----------------------------------------- |
+| DataGridProDriver       | Driver for DataGrid/DataGridPro component |
+| DataGridHeaderRowDriver | Driver for header rows in DataGrid        |
+| DataGridDataRowDriver   | Driver for data rows in DataGrid          |
 
 </details>
-
