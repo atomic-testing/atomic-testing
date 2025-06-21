@@ -36,7 +36,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.12",
     "@mui/icons-material": "^6.4.12",
-    "react": "^18.2.0",
+    "react": "^19.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.6.2"
   },
@@ -47,7 +47,7 @@
     "@atomic-testing/react-18": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
     "@atomic-testing/test-runner": "workspace:*",
-    "@types/react": "^18.2.0",
+    "@types/react": "^19.1.8",
     "@types/react-dom": "^18.2.0"
   },
   "eslintConfig": {
