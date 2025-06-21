@@ -585,8 +585,8 @@ importers:
         specifier: ^8.0.5
         version: 8.6.14(storybook@8.6.14(prettier@3.5.3))(vue@3.5.17(typescript@5.8.3))
       '@storybook/vue3-vite':
-        specifier: ^8.0.5
-        version: 8.6.14(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))(vue@3.5.17(typescript@5.8.3))
+        specifier: ^9.0.12
+        version: 9.0.12(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))(vue@3.5.17(typescript@5.8.3))
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -3015,11 +3015,11 @@ packages:
       react-dom:
         optional: true
 
-  '@storybook/builder-vite@8.6.14':
-    resolution: {integrity: sha512-ajWYhy32ksBWxwWHrjwZzyC0Ii5ZTeu5lsqA95Q/EQBB0P5qWlHWGM3AVyv82Mz/ND03ebGy123uVwgf6olnYQ==}
+  '@storybook/builder-vite@9.0.12':
+    resolution: {integrity: sha512-Jh6CJKHJQ+N1BiPr6fY91EMV5X0xBuIAhLpaNSKrshkdnXd/fBbRgE8iPJdnr+SCqaFErBjAjBzKkotwKU138A==}
     peerDependencies:
-      storybook: ^8.6.14
-      vite: ^4.0.0 || ^5.0.0 || ^6.0.0
+      storybook: ^9.0.12
+      vite: ^5.0.0 || ^6.0.0
 
   '@storybook/components@8.6.14':
     resolution: {integrity: sha512-HNR2mC5I4Z5ek8kTrVZlIY/B8gJGs5b3XdZPBPBopTIN6U/YHXiDyOjY3JlaS4fSG1fVhp/Qp1TpMn1w/9m1pw==}
@@ -3038,6 +3038,11 @@ packages:
     resolution: {integrity: sha512-dErtc9teAuN+eelN8FojzFE635xlq9cNGGGEu0WEmMUQ4iJ8pingvBO1N8X3scz4Ry7KnxX++NNf3J3gpxS8qQ==}
     peerDependencies:
       storybook: ^8.6.14
+
+  '@storybook/csf-plugin@9.0.12':
+    resolution: {integrity: sha512-5EueJQJAu77Lh+EedG4Q/kEOZNlTY/g+fWsT7B5DTtLVy0ypnghsHY8X3KYT/0+NNgTtoO0if4F+ejVYaLnMzA==}
+    peerDependencies:
+      storybook: ^9.0.12
 
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
@@ -3081,18 +3086,25 @@ packages:
     peerDependencies:
       storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
-  '@storybook/vue3-vite@8.6.14':
-    resolution: {integrity: sha512-3BclEv7SzHuw8eC9mFsAuH3EjEf4eCb0FxY3SoyTagNX14WjCE5cV2AK9RpWh6e5kQZiTzF8NiYq6AJqi5ebbw==}
-    engines: {node: '>=18.0.0'}
+  '@storybook/vue3-vite@9.0.12':
+    resolution: {integrity: sha512-WrIqByXA/9FNs3UEKM5W7enEeTYghAwxdQg9h6EWLg8essXmEFQM2IETE4YHrZqbz0eUKRZL9uU1Chzc+0mZvQ==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
-      storybook: ^8.6.14
-      vite: ^4.0.0 || ^5.0.0 || ^6.0.0
+      storybook: ^9.0.12
+      vite: ^5.0.0 || ^6.0.0
 
   '@storybook/vue3@8.6.14':
     resolution: {integrity: sha512-T9ORF734iBqYf2Sw/L/6qQL3FvBH9q6dHh8AFGkqTL/cluy0VxW55B6QLBvLAMS2OeMFB5dXRli5MFfw5njjQw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       storybook: ^8.6.14
+      vue: ^3.0.0
+
+  '@storybook/vue3@9.0.12':
+    resolution: {integrity: sha512-pnNqBsVSaIZ7E9iA7vdIg4fiJfxd3EB57vp4FwtmNBpHjHeP9S2yZKaov7LEC2+pWraqSL/tVqsYC8oUzhh1Rg==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      storybook: ^9.0.12
       vue: ^3.0.0
 
   '@swc/core-darwin-arm64@1.3.53':
@@ -4121,8 +4133,8 @@ packages:
     resolution: {integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==}
     engines: {node: '>=8'}
 
-  cssstyle@4.4.0:
-    resolution: {integrity: sha512-W0Y2HOXlPkb2yaKrCVRjinYKciu/qSLEmK0K9mcfDei3zwlnHFEHAs/Du3cIRwPqY+J4JsiBzUjoHyc8RsJ03A==}
+  cssstyle@4.5.0:
+    resolution: {integrity: sha512-/7gw8TGrvH/0g564EnhgFZogTMVe+lifpB7LWU+PEsiq5o83TUXR3fDbzTRXOJhoJwck5IS9ez3Em5LNMMO2aw==}
     engines: {node: '>=18'}
 
   csstype@3.1.3:
@@ -5952,6 +5964,11 @@ packages:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
     hasBin: true
 
+  resolve@1.22.10:
+    resolution: {integrity: sha512-NPRy+/ncIMeDlTAsuqwKIiferiawhefFJtkNSW0qZJEqMEb+qBt/77B/jGeeek+F0uOeN05CDa6HXbbIgtVX4w==}
+    engines: {node: '>= 0.4'}
+    hasBin: true
+
   reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
@@ -7013,8 +7030,8 @@ snapshots:
   '@babel/template@7.26.9':
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/parser': 7.26.9
-      '@babel/types': 7.26.9
+      '@babel/parser': 7.27.5
+      '@babel/types': 7.27.6
 
   '@babel/template@7.27.2':
     dependencies:
@@ -9253,10 +9270,9 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@storybook/builder-vite@8.6.14(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))':
+  '@storybook/builder-vite@9.0.12(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))':
     dependencies:
-      '@storybook/csf-plugin': 8.6.14(storybook@8.6.14(prettier@3.5.3))
-      browser-assert: 1.2.1
+      '@storybook/csf-plugin': 9.0.12(storybook@8.6.14(prettier@3.5.3))
       storybook: 8.6.14(prettier@3.5.3)
       ts-dedent: 2.2.0
       vite: 6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1)
@@ -9287,6 +9303,11 @@ snapshots:
       - utf-8-validate
 
   '@storybook/csf-plugin@8.6.14(storybook@8.6.14(prettier@3.5.3))':
+    dependencies:
+      storybook: 8.6.14(prettier@3.5.3)
+      unplugin: 1.16.1
+
+  '@storybook/csf-plugin@9.0.12(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
       storybook: 8.6.14(prettier@3.5.3)
       unplugin: 1.16.1
@@ -9333,10 +9354,10 @@ snapshots:
     dependencies:
       storybook: 8.6.14(prettier@3.5.3)
 
-  '@storybook/vue3-vite@8.6.14(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))(vue@3.5.17(typescript@5.8.3))':
+  '@storybook/vue3-vite@9.0.12(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))(vue@3.5.17(typescript@5.8.3))':
     dependencies:
-      '@storybook/builder-vite': 8.6.14(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))
-      '@storybook/vue3': 8.6.14(storybook@8.6.14(prettier@3.5.3))(vue@3.5.17(typescript@5.8.3))
+      '@storybook/builder-vite': 9.0.12(storybook@8.6.14(prettier@3.5.3))(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))
+      '@storybook/vue3': 9.0.12(storybook@8.6.14(prettier@3.5.3))(vue@3.5.17(typescript@5.8.3))
       find-package-json: 1.2.0
       magic-string: 0.30.17
       storybook: 8.6.14(prettier@3.5.3)
@@ -9357,6 +9378,14 @@ snapshots:
       '@vue/compiler-core': 3.5.17
       storybook: 8.6.14(prettier@3.5.3)
       ts-dedent: 2.2.0
+      type-fest: 2.19.0
+      vue: 3.5.17(typescript@5.8.3)
+      vue-component-type-helpers: 2.2.10
+
+  '@storybook/vue3@9.0.12(storybook@8.6.14(prettier@3.5.3))(vue@3.5.17(typescript@5.8.3))':
+    dependencies:
+      '@storybook/global': 5.0.0
+      storybook: 8.6.14(prettier@3.5.3)
       type-fest: 2.19.0
       vue: 3.5.17(typescript@5.8.3)
       vue-component-type-helpers: 2.2.10
@@ -10521,7 +10550,7 @@ snapshots:
     dependencies:
       cssom: 0.3.8
 
-  cssstyle@4.4.0:
+  cssstyle@4.5.0:
     dependencies:
       '@asamuzakjp/css-color': 3.2.0
       rrweb-cssom: 0.8.0
@@ -12085,7 +12114,7 @@ snapshots:
 
   jsdom@26.1.0:
     dependencies:
-      cssstyle: 4.4.0
+      cssstyle: 4.5.0
       data-urls: 5.0.0
       decimal.js: 10.5.0
       html-encoding-sniffer: 4.0.0
@@ -12572,7 +12601,7 @@ snapshots:
       jstransformer: 1.0.0
       pug-error: 2.1.0
       pug-walk: 2.0.0
-      resolve: 1.22.1
+      resolve: 1.22.10
 
   pug-lexer@5.0.1:
     dependencies:
@@ -12804,6 +12833,12 @@ snapshots:
   resolve.exports@2.0.3: {}
 
   resolve@1.22.1:
+    dependencies:
+      is-core-module: 2.16.1
+      path-parse: 1.0.7
+      supports-preserve-symlinks-flag: 1.0.0
+
+  resolve@1.22.10:
     dependencies:
       is-core-module: 2.16.1
       path-parse: 1.0.7
