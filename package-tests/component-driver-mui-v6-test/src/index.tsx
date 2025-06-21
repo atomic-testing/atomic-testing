@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
+import { ExampleApp } from '@atomic-testing/internal-react-example';
 import CssBaseline from '@mui/material/CssBaseline';
 import { StyledEngineProvider } from '@mui/material/styles';
 
-import { App } from './App';
+import { Home } from './Home';
+import { tocs } from './directory';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
@@ -14,7 +16,7 @@ root.render(
     <StyledEngineProvider injectFirst>
       <CssBaseline />
       <BrowserRouter>
-        <App />
+        <ExampleApp home={Home} tocs={tocs} />
       </BrowserRouter>
     </StyledEngineProvider>
   </React.StrictMode>

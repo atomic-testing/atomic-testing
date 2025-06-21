@@ -84,6 +84,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.6.0
         version: 11.14.0(@types/react@19.1.8)(react@19.1.0)
@@ -127,6 +130,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -179,6 +185,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -231,6 +240,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -286,6 +298,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -362,6 +377,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.6.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -435,6 +453,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.1.8)(react@19.1.0)
@@ -502,6 +523,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.1.8)(react@19.1.0)
@@ -740,6 +764,31 @@ importers:
       '@testing-library/user-event':
         specifier: '>=14.0.0'
         version: 14.6.1(@testing-library/dom@10.4.0)
+
+  packages/internal-react-example:
+    dependencies:
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../core
+      '@emotion/styled':
+        specifier: ^11.6.0
+        version: 11.14.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: '>=18'
+        version: 19.1.0(react@19.1.0)
+      react-router-dom:
+        specifier: ^7.6.2
+        version: 7.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.8
+        version: 19.1.8
+      '@types/react-dom':
+        specifier: ^19.1.6
+        version: 19.1.6(@types/react@19.1.8)
 
   packages/jest:
     dependencies:

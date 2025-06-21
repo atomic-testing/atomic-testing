@@ -1,4 +1,5 @@
-import { ExampleList } from './components/ExampleList';
+import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
+
 import { basicAccordionUIExample } from './examples/accordion/BasicAccordion.examples';
 import { basicAlertUIExample } from './examples/alert/BasicAlert.examples';
 import { basicAutoCompleteUIExample } from './examples/autocomplete/BasicAutoComplete.examples';
@@ -32,13 +33,7 @@ import { exclusiveSelectionUIExample } from './examples/toggleButton/ExclusiveSe
 import { regularSelectionUIExample } from './examples/toggleButton/MultipleSelection.example';
 import { singleToggleUIExample } from './examples/toggleButton/SingleToggle.example';
 
-interface IToc {
-  label: string;
-  path: string;
-  ui: JSX.Element;
-}
-
-export const tocs: IToc[] = [
+export const tocs: ExampleToc[] = [
   {
     label: 'Accordion',
     path: '/accordion',
