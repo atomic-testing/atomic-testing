@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/vue-3",
-  "version": "0.71.0",
+  "version": "0.72.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

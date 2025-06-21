@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/vue-3-test",
-  "version": "0.71.0",
+  "version": "0.72.0",
   "description": "Example and tests for @atomic-testing/vue-3",
   "main": "dist/index.js",
   "private": true,
