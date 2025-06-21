@@ -41,6 +41,13 @@ const config: Config = {
 
   trailingSlash: true,
 
+  future: {
+    experimental_faster: true, // Enable faster builds in Docusaurus 3, requires v4 tag
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+    },
+  },
+
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
