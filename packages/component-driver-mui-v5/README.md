@@ -1,7 +1,8 @@
 # @atomic-testing/component-driver-mui-v5
 
-Component drivers for [Material UI](https://mui.com) v5 components.
-They map MUI widgets to the Atomic Testing scene part APIs so your tests can interact with them consistently.
+Component drivers for [Material UI](https://mui.com) v5 components.  Component drivers expose simple API's unit tests or end-to-end tests
+to interact with MUI components, such as reading states, setting values etc., so test engineers can focus on test flows without having to
+track how inner MUI components work.
 
 ## The problem
 
@@ -14,7 +15,7 @@ The drivers in this package expose high‑level interactions for MUI widgets. Co
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/core @atomic-testing/react-19 \
+npm install @atomic-testing/core @atomic-testing/react-19 \
   @atomic-testing/component-driver-html @atomic-testing/component-driver-mui-v5 --save-dev
 ```
 
