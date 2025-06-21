@@ -60,7 +60,7 @@ const parts = {
 - **`packages/react-*/`** - React test adapters for different versions
 - **`packages/playwright/`** - Playwright integration
 - **`packages/component-driver-*/`** - Specific component drivers (HTML, Material-UI variants)
-- **`packages/*-test/`** - Test suites for validating component drivers
+- **`package-tests/*`** - Test suites for validating component drivers
 - **`examples/`** - Example implementations
 
 ## Locator System

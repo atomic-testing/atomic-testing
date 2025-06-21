@@ -15,7 +15,7 @@ updates:
 
   # Restrict MUI to v5 in component-driver-mui-v5-test
   - package-ecosystem: 'npm'
-    directory: '/packages/component-driver-mui-v5-test'
+    directory: '/package-tests/component-driver-mui-v5-test'
     schedule:
       interval: 'weekly'
     ignore:
@@ -23,7 +23,7 @@ updates:
         versions: ['>=6.0.0']
 
   - package-ecosystem: 'npm'
-    directory: '/packages/component-driver-mui-v6-test'
+    directory: '/package-tests/component-driver-mui-v6-test'
     schedule:
       interval: 'weekly'
     ignore:
@@ -31,7 +31,7 @@ updates:
         versions: ['>=7.0.0']
 
   - package-ecosystem: 'npm'
-    directory: '/packages/component-driver-mui-x-v5-test'
+    directory: '/package-tests/component-driver-mui-x-v5-test'
     schedule:
       interval: 'weekly'
     ignore:
@@ -39,7 +39,7 @@ updates:
         versions: ['>=6.0.0']
 
   - package-ecosystem: 'npm'
-    directory: '/packages/component-driver-mui-x-v6-test'
+    directory: '/package-tests/component-driver-mui-x-v6-test'
     schedule:
       interval: 'weekly'
     ignore:
@@ -47,7 +47,7 @@ updates:
         versions: ['>=7.0.0']
 
   - package-ecosystem: 'npm'
-    directory: '/packages/component-driver-mui-x-v7-test'
+    directory: '/package-tests/component-driver-mui-x-v7-test'
     schedule:
       interval: 'weekly'
     ignore:

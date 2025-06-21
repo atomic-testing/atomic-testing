@@ -3,10 +3,21 @@
 // require('prism-react-renderer/themes/github');
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
+import fs from 'fs';
+import path from 'path';
 import { themes } from 'prism-react-renderer';
 
 const darkCodeTheme = themes.dracula; // require('prism-react-renderer/themes/dracula');
 const lightCodeTheme = themes.github;
+
+function getPackageNames() {
+  const baseDir = path.join(__dirname, '../packages');
+  const packageNames = fs.readdirSync(baseDir).filter(name => {
+    const fullPath = path.join(baseDir, name);
+    return fs.statSync(fullPath).isDirectory();
+  });
+  return packageNames.map(name => `../packages/${name}`);
+}
 
 const config: Config = {
   title: 'Atomic Testing',
@@ -51,23 +62,7 @@ const config: Config = {
 
       // Plugin / TypeDoc options
       {
-        entryPoints: [
-          '../packages/core',
-          '../packages/dom-core',
-          '../packages/playwright',
-          '../packages/react-core',
-          '../packages/react-legacy',
-          '../packages/react-18',
-          '../packages/react-19',
-          '../packages/component-driver-html',
-          '../packages/component-driver-mui-v5',
-          '../packages/component-driver-mui-v6',
-          '../packages/component-driver-mui-v7',
-          '../packages/component-driver-mui-x-v5',
-          '../packages/component-driver-mui-x-v6',
-          '../packages/component-driver-mui-x-v7',
-          '../packages/component-driver-mui-x-v8',
-        ],
+        entryPoints: [...getPackageNames()],
         entryPointStrategy: 'packages',
         tsconfig: '../tsconfig.json',
         sidebar: {},
