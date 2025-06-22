@@ -1,6 +1,6 @@
 import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { indeterminateCheckboxUIExample } from './IndeterminateCheckbox.examples';
 

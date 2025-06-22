@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byLinkedElement } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { linkedElementUIExample } from './LinkedElement.examples';
 

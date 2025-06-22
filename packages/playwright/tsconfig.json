@@ -1,10 +1,27 @@
 {
   "extends": "../../tsconfig.json",
-  "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
-  "include": ["./src"],
+  "exclude": [
+    "node_modules",
+    "declaration",
+    "generator-build",
+    "runtime"
+  ],
+  "include": [
+    "./src"
+  ],
   "compilerOptions": {
     "outDir": "./build",
     "composite": true
   },
-  "references": [{ "path": "../core" }, { "path": "../dom-core" }, { "path": "../test-runner" }]
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../dom-core"
+    },
+    {
+      "path": "../internal-test-runner"
+    }
+  ]
 }

@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { ButtonDriver, SnackbarDriver } from '@atomic-testing/component-driver-mui-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicSnackbarUIExample } from './BasicSnackbar.examples';
 
