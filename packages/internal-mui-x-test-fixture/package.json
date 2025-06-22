@@ -1,7 +1,7 @@
 {
-  "name": "@atomic-testing/jest",
+  "name": "@atomic-testing/internal-mui-x-test-fixture",
   "version": "0.74.0",
-  "description": "Jest adapter for atomic-testing",
+  "private": true,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -14,16 +14,8 @@
     "check:type": "tsc --noEmit"
   },
   "author": "Tianzhen Lin <tangent@usa.net>",
-  "keywords": [],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atomic-testing/atomic-testing.git"
-  },
   "dependencies": {
-    "@atomic-testing/test-runner": "workspace:*"
-  },
-  "peerDependencies": {
-    "jest": ">= 26.0.0"
+    "@mui/x-data-grid-pro": "5.17.26"
   }
 }

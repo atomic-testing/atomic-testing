@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/internal-mui-x-test-fixture": "workspace:*",
     "@atomic-testing/internal-react-example": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
