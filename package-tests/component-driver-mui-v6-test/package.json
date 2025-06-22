@@ -44,10 +44,10 @@
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/component-driver-mui-v6": "workspace:*",
-    "@atomic-testing/jest": "workspace:*",
+    "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
     "@atomic-testing/react-18": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
-    "@atomic-testing/test-runner": "workspace:*",
+    "@atomic-testing/internal-test-runner": "workspace:*",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0"
   },

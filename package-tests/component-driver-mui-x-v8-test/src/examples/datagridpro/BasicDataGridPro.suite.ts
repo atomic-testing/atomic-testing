@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v8';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicDataGridProUIExample } from './BasicDataGridPro.examples';
 

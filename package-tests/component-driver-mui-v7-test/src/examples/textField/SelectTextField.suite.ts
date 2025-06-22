@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v7';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { selectTextFieldUIExample } from './SelectTextField.examples';
 

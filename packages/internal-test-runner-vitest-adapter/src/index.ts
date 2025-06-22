@@ -1,4 +1,4 @@
-import { TestFrameworkMapper } from '@atomic-testing/test-runner';
+import { TestFrameworkMapper } from '@atomic-testing/internal-test-runner';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, test } from 'vitest';
 
 export const vitestAdapter: TestFrameworkMapper = {
