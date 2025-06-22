@@ -206,7 +206,7 @@ packages:
       '@playwright/test': '>=1.30.2'
     dependencies:
       '@atomic-testing/core': 0.46.1
-      '@atomic-testing/test-runner': 0.46.1
+      '@atomic-testing/internal-test-runner': 0.46.1
       '@playwright/test': 1.42.1
     dev: true
 
@@ -226,7 +226,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@atomic-testing/test-runner@0.46.1:
+  /@atomic-testing/internal-test-runner@0.46.1:
     resolution: {integrity: sha512-EqRLQ97cIVFjJ7PoGG66ZDSRQYI7bc/CXeG2Lqpe09sQ7wu7we0jbjgJQuWomaUmv7QWGXDuVK2xLN5h3QykvA==}
     dependencies:
       '@atomic-testing/core': 0.46.1

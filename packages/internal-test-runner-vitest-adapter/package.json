@@ -1,5 +1,5 @@
 {
-  "name": "@atomic-testing/vitest",
+  "name": "@atomic-testing/internal-test-runner-vitest-adapter",
   "version": "0.74.0",
   "description": "Vitest adapter for atomic-testing",
   "main": "dist/index.js",
@@ -24,7 +24,7 @@
     "vitest": "^3.0.7"
   },
   "dependencies": {
-    "@atomic-testing/test-runner": "workspace:*"
+    "@atomic-testing/internal-test-runner": "workspace:*"
   },
   "peerDependencies": {
     "vitest": ">= 3.0.0"

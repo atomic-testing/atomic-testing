@@ -106,7 +106,7 @@ importers:
       '@atomic-testing/component-driver-html':
         specifier: workspace:*
         version: link:../../packages/component-driver-html
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -115,7 +115,7 @@ importers:
       '@atomic-testing/react-19':
         specifier: workspace:*
         version: link:../../packages/react-19
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -161,7 +161,7 @@ importers:
       '@atomic-testing/component-driver-mui-v5':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-v5
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -170,7 +170,7 @@ importers:
       '@atomic-testing/react-18':
         specifier: workspace:*
         version: link:../../packages/react-18
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -216,7 +216,7 @@ importers:
       '@atomic-testing/component-driver-mui-v6':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-v6
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -225,7 +225,7 @@ importers:
       '@atomic-testing/react-18':
         specifier: workspace:*
         version: link:../../packages/react-18
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -274,7 +274,7 @@ importers:
       '@atomic-testing/component-driver-mui-v7':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-v7
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -283,7 +283,7 @@ importers:
       '@atomic-testing/react-18':
         specifier: workspace:*
         version: link:../../packages/react-18
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -353,7 +353,7 @@ importers:
       '@atomic-testing/component-driver-mui-x-v5':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-x-v5
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -362,7 +362,7 @@ importers:
       '@atomic-testing/react-18':
         specifier: workspace:*
         version: link:../../packages/react-18
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -429,7 +429,7 @@ importers:
       '@atomic-testing/component-driver-mui-x-v6':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-x-v6
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -438,7 +438,7 @@ importers:
       '@atomic-testing/react-18':
         specifier: workspace:*
         version: link:../../packages/react-18
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -499,7 +499,7 @@ importers:
       '@atomic-testing/component-driver-mui-x-v7':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-x-v7
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -508,7 +508,7 @@ importers:
       '@atomic-testing/react-19':
         specifier: workspace:*
         version: link:../../packages/react-19
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -569,7 +569,7 @@ importers:
       '@atomic-testing/component-driver-mui-x-v8':
         specifier: workspace:*
         version: link:../../packages/component-driver-mui-x-v8
-      '@atomic-testing/jest':
+      '@atomic-testing/internal-test-runner-jest-adapter':
         specifier: workspace:*
         version: link:../../packages/jest
       '@atomic-testing/playwright':
@@ -578,7 +578,7 @@ importers:
       '@atomic-testing/react-19':
         specifier: workspace:*
         version: link:../../packages/react-19
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../../packages/test-runner
       '@types/react':
@@ -789,7 +789,7 @@ importers:
 
   packages/jest:
     dependencies:
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../test-runner
       jest:
@@ -801,7 +801,7 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../core
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../test-runner
       '@playwright/test':
@@ -943,7 +943,7 @@ importers:
 
   packages/vitest:
     dependencies:
-      '@atomic-testing/test-runner':
+      '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../test-runner
     devDependencies:

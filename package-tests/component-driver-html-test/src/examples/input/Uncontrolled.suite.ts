@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { uncontrolledTextInputUIExample } from './Uncontrolled.examples';
 

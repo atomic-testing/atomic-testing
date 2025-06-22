@@ -1,5 +1,5 @@
 {
-  "name": "@atomic-testing/jest",
+  "name": "@atomic-testing/internal-test-runner-jest-adapter",
   "version": "0.74.0",
   "description": "Jest adapter for atomic-testing",
   "main": "dist/index.js",
@@ -21,7 +21,7 @@
     "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
   "dependencies": {
-    "@atomic-testing/test-runner": "workspace:*"
+    "@atomic-testing/internal-test-runner": "workspace:*"
   },
   "peerDependencies": {
     "jest": ">= 26.0.0"

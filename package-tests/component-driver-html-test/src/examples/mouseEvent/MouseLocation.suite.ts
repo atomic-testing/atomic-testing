@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { mouseLocationMouseEventUIExample } from './MouseLocation.examples';
 
