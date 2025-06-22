@@ -5,7 +5,10 @@ sidebar_position: 6
 
 # Cheat Sheets & Troubleshooting
 
-Most of the time, unit tests may fail because of an inco
+Most of the time, unit tests fail because the component
+is not found or is rendered asynchronously. Incorrect
+locators or hidden elements are common culprits. The
+tips below help diagnose these issues.
 
 ### 1. Inspect component HTML
 
@@ -32,4 +35,43 @@ console.log(selector);
 
 // You can use the selector to query the DOM for the component in the browser.
 document.querySelector(selector);
+```
+
+### 3. Wait for the component to be visible
+
+If your assertions run before the component finishes rendering,
+use `waitUntilVisible()` to pause until the part is attached
+and displayed.
+
+```ts
+await testEngine.parts.myComponent.waitUntilVisible();
+```
+
+### 4. Log DOM interactions
+
+When troubleshooting complex behaviour, a custom interactor can
+print every action for inspection.
+
+```ts title="LoggingInteractor.ts"
+import { ClickOption, PartLocator } from '@atomic-testing/core';
+import { DOMInteractor } from '@atomic-testing/dom-core';
+
+export class LoggingInteractor extends DOMInteractor {
+  async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
+    console.log('clicking', await this.innerHTML(locator));
+    await super.click(locator, option);
+  }
+}
+```
+
+Pass this interactor when creating the test engine so clicks are logged.
+
+### 5. Clean up after each test
+
+Always unmount the component to avoid cross‑test contamination.
+
+```ts
+afterEach(async () => {
+  await testEngine.cleanUp();
+});
 ```
