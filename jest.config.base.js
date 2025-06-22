@@ -1,9 +1,10 @@
 const path = require('path');
-const { lstatSync, readdirSync } = require('fs');
+const { lstatSync, readdirSync, readFileSync } = require('fs');
 // get listing of packages in the mono repo
 const basePath = path.resolve(__dirname, 'packages');
 const packages = readdirSync(basePath).filter(name => {
-  return lstatSync(path.join(basePath, name)).isDirectory();
+  const pkgPath = path.join(basePath, name);
+  return lstatSync(pkgPath).isDirectory();
 });
 
 module.exports = {
@@ -31,13 +32,17 @@ module.exports = {
   testTimeout: 30000,
 
   moduleNameMapper: {
-    ...packages.reduce(
-      (acc, name) => ({
-        ...acc,
-        [`@atomic-testing/${name}`]: path.resolve(__dirname, `packages/${name}/src`),
-      }),
-      {}
-    ),
+    ...packages.reduce((acc, name) => {
+      const pkgJsonPath = path.join(basePath, name, 'package.json');
+      try {
+        const pkgJson = readFileSync(pkgJsonPath, 'utf-8');
+        const pkgName = JSON.parse(pkgJson).name;
+        acc[`^${pkgName}$`] = path.join(basePath, name, 'dist');
+      } catch (e) {
+        // Not a package directory
+      }
+      return acc;
+    }, {}),
     '^.+\\.(css|less)$': path.resolve(__dirname, 'jest.css.js'),
   },
   globals: {

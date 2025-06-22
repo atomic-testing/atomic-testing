@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLSelectDriver } from '@atomic-testing/component-driver-html';
 import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { singleSelectUIExample } from './SingleSelect.examples';
 

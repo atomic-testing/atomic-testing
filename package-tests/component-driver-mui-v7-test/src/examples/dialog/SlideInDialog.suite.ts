@@ -1,6 +1,6 @@
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { slideInDialogUIExample } from './SlideInDialog.examples';
 

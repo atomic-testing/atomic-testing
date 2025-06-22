@@ -37,10 +37,10 @@
   },
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
-    "@atomic-testing/jest": "workspace:*",
+    "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
     "@atomic-testing/playwright": "workspace:*",
     "@atomic-testing/react-19": "workspace:*",
-    "@atomic-testing/test-runner": "workspace:*",
+    "@atomic-testing/internal-test-runner": "workspace:*",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6"
   },

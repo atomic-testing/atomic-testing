@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { SwitchDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicSwitchUIExample } from './BasicSwitch.examples';
 

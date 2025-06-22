@@ -1,7 +1,7 @@
 {
-  "name": "@atomic-testing/test-runner",
+  "name": "@atomic-testing/internal-test-runner-vitest-adapter",
   "version": "0.74.0",
-  "description": "Experimental test runner library aimed to normalize adapting same test code across different platform for atomic-testing, not for production use",
+  "description": "Vitest adapter for atomic-testing",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
@@ -20,8 +20,13 @@
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
-  "dependencies": {
-    "@atomic-testing/core": "workspace:*"
+  "devDependencies": {
+    "vitest": "^3.0.7"
   },
-  "peerDependencies": {}
+  "dependencies": {
+    "@atomic-testing/internal-test-runner": "workspace:*"
+  },
+  "peerDependencies": {
+    "vitest": ">= 3.0.0"
+  }
 }
