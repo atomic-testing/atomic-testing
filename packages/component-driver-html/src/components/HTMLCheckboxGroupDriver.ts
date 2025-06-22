@@ -10,10 +10,13 @@ import {
 import { HTMLCheckboxDriver } from './HTMLCheckboxDriver';
 
 export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInputDriver<readonly string[]> {
+  /**
+   * Retrieve the list of values currently selected within the group.
+   *
+   * Iterates over every checkbox rather than relying on a CSS selector so that
+   * an empty selection does not cause a driver error.
+   */
   async getValue(): Promise<readonly string[]> {
-    // Go through all the checkboes and return the values of those which are checked
-    // We cannot just select checked checkboxes because Playwright/Cypress would error
-    // out when no checkboxes are selected
     const availableValues = await this.interactor.getAttribute(this.locator, 'value', true);
     const value: string[] = [];
     for (const val of availableValues) {
@@ -27,6 +30,13 @@ export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInp
     return value;
   }
 
+  /**
+   * Select or deselect checkboxes so that their combined values equal the
+   * provided list.
+   *
+   * @param values Values that should be selected after the operation.
+   * @returns Always resolves to `true` once the selection has been adjusted.
+   */
   async setValue(values: readonly string[]): Promise<boolean> {
     const currentValues = await this.getValue();
     const { toAdd, toRemove } = collectionUtil.getDifference<string>(currentValues, values);
@@ -40,6 +50,10 @@ export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInp
     return true;
   }
 
+  /**
+   * Helper used by {@link setValue} to change the checked state of a checkbox
+   * with a specific value.
+   */
   protected async setSelectedByValue(value: string, selected: boolean): Promise<void> {
     const itemLocator = byValue(value, LocatorRelativePosition.Same);
     const locator = locatorUtil.append(this.locator, itemLocator);
@@ -47,6 +61,9 @@ export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInp
     await checkBoxDriver.setSelected(selected);
   }
 
+  /**
+   * Identifier for this driver.
+   */
   get driverName(): string {
     return 'HTMLCheckboxGroupDriver';
   }

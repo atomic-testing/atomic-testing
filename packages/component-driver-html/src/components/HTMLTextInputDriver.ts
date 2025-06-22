@@ -1,6 +1,9 @@
 import { ComponentDriver, IComponentDriverOption, IInputDriver, Interactor, PartLocator } from '@atomic-testing/core';
 
 export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
+  /**
+   * Create a text input driver.
+   */
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
@@ -8,6 +11,9 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
     });
   }
 
+  /**
+   * Read the value of the input element.
+   */
   async getValue(): Promise<string | null> {
     const value = await this.interactor.getInputValue(this.locator);
     return value ?? null;
@@ -25,14 +31,23 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
     return true;
   }
 
+  /**
+   * Check whether the text input is disabled.
+   */
   isDisabled(): Promise<boolean> {
     return this.interactor.isDisabled(this.locator);
   }
 
+  /**
+   * Check whether the text input is read only.
+   */
   isReadonly(): Promise<boolean> {
     return this.interactor.isReadonly(this.locator);
   }
 
+  /**
+   * Identifier for this driver.
+   */
   get driverName(): string {
     return 'HTMLTextInput';
   }
