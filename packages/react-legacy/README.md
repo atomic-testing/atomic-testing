@@ -71,7 +71,7 @@ package for a dedicated example.
 4. Write a test using `createTestEngine` to render the component and interact with it:
 
    ```ts title="Counter.test.tsx"
-    import { createTestEngine } from '@atomic-testing/react-19';
+    import { createTestEngine } from '@atomic-testing/react-legacy';
 
     import { Counter } from './Counter';
     import { counterScenePart } from './counterScenePart';
