@@ -111,6 +111,6 @@ export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDrive
    * Identifier for this driver.
    */
   get driverName(): string {
-    throw 'HTMLSelectDriver';
+    return 'HTMLSelectDriver';
   }
 }
