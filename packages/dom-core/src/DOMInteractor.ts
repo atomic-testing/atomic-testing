@@ -65,6 +65,13 @@ export class DOMInteractor implements Interactor {
     return mouseLocation;
   }
 
+  /**
+   * Dispatch a click event on the element that matches the locator.
+   *
+   * @param locator - Locator used to find the target element
+   * @param option - Optional click configuration such as the click position
+   * @returns A promise that resolves after the event is triggered
+   */
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -87,6 +94,13 @@ export class DOMInteractor implements Interactor {
     }
   }
 
+  /**
+   * Move the mouse over the element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param _option - Reserved for future use
+   * @returns A promise that resolves after the hover event
+   */
   async hover(locator: PartLocator, _option?: HoverOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {
@@ -94,6 +108,13 @@ export class DOMInteractor implements Interactor {
     }
   }
 
+  /**
+   * Dispatch a `mousemove` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param option - Allows specifying the mouse position relative to the element
+   * @returns A promise that resolves once the event has been dispatched
+   */
   async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -110,6 +131,13 @@ export class DOMInteractor implements Interactor {
     fireEvent(el, evt);
   }
 
+  /**
+   * Dispatch a `mousedown` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param option - Allows specifying the mouse position relative to the element
+   * @returns Promise resolved when the event is dispatched
+   */
   async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -126,6 +154,13 @@ export class DOMInteractor implements Interactor {
     fireEvent(el, evt);
   }
 
+  /**
+   * Dispatch a `mouseup` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param option - Allows specifying the mouse position relative to the element
+   * @returns Promise resolved when the event is dispatched
+   */
   async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -142,6 +177,13 @@ export class DOMInteractor implements Interactor {
     fireEvent(el, evt);
   }
 
+  /**
+   * Dispatch a `mouseover` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param option - Optional mouse position relative to the element
+   * @returns Promise resolved once the event is dispatched
+   */
   async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -158,6 +200,13 @@ export class DOMInteractor implements Interactor {
     fireEvent(el, evt);
   }
 
+  /**
+   * Dispatch a `mouseout` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param _option - Reserved for future use
+   * @returns Promise resolved once the event is dispatched
+   */
   async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -167,6 +216,13 @@ export class DOMInteractor implements Interactor {
     fireEvent.mouseOut(el);
   }
 
+  /**
+   * Dispatch a `mouseenter` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param _option - Reserved for future use
+   * @returns Promise resolved after the event dispatches
+   */
   async mouseEnter(locator: PartLocator, _option?: Partial<MouseEnterOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -178,6 +234,13 @@ export class DOMInteractor implements Interactor {
     fireEvent.mouseOver(el);
   }
 
+  /**
+   * Dispatch a `mouseleave` event on the target element.
+   *
+   * @param locator - Locator used to find the target element
+   * @param _option - Reserved for future use
+   * @returns Promise resolved once the event is dispatched
+   */
   async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
@@ -187,6 +250,13 @@ export class DOMInteractor implements Interactor {
     fireEvent.mouseOut(el);
   }
 
+  /**
+   * Move focus to the element found by the locator.
+   *
+   * @param locator - Locator used to find the target element
+   * @param _option - Reserved for future use
+   * @returns Promise resolved when focus has been applied
+   */
   async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null || 'focus' in el === false) {
@@ -195,6 +265,14 @@ export class DOMInteractor implements Interactor {
     (el as HTMLInputElement).focus();
   }
 
+  /**
+   * Type text into the element matched by the locator.
+   *
+   * @param locator - Locator used to find the target element
+   * @param text - The string to type
+   * @param option - Options such as appending or replacing existing value
+   * @returns Promise resolved when typing has completed
+   */
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {
@@ -219,6 +297,13 @@ export class DOMInteractor implements Interactor {
     }
   }
 
+  /**
+   * Select one or more option values in a `<select>` element.
+   *
+   * @param locator - Locator used to find the select element
+   * @param values - Values of the options to select
+   * @returns Promise resolved when the options have been selected
+   */
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     const el = await this.getElement(locator);
     if (el != null) {

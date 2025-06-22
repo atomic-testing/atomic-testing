@@ -5,3 +5,4 @@ export * from './input';
 export * from './mouseEvent';
 export * from './radioButtonGroup';
 export * from './select';
+export * from './anchor';

@@ -8,6 +8,9 @@ import {
 } from '@atomic-testing/core';
 
 export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
+  /**
+   * Get the value of the currently selected radio button in the group.
+   */
   async getValue(): Promise<string | null> {
     const checkedLocator = byChecked(true);
     const locator = locatorUtil.append(this.locator, checkedLocator);
@@ -15,6 +18,11 @@ export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements I
     return value ?? null;
   }
 
+  /**
+   * Select the radio button with the specified value.
+   *
+   * @param value Value attribute of the radio button to select.
+   */
   async setValue(value: string | null): Promise<boolean> {
     if (value == null) {
       throw new Error('Cannot be done');
@@ -25,7 +33,10 @@ export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements I
     return true;
   }
 
+  /**
+   * Identifier for this driver.
+   */
   get driverName(): string {
-    throw 'HTMLRadioButtonGroupDriver';
+    return 'HTMLRadioButtonGroupDriver';
   }
 }

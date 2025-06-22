@@ -63,6 +63,6 @@ export class CheckboxDriver
   }
 
   get driverName(): string {
-    return 'MuiV7SelectDriver';
+    return 'MuiV7CheckboxDriver';
   }
 }
