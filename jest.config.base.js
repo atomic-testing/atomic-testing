@@ -31,14 +31,14 @@ module.exports = {
   testTimeout: 30000,
 
   moduleNameMapper: {
-    '^.+\\.(css|less)$': '<rootDir>/../../jest.css.js',
     ...packages.reduce(
       (acc, name) => ({
         ...acc,
-        [`@atomic-testing/${name}/(.*)$`]: `<rootDir>/packages/../../${name}/src/$1`,
+        [`@atomic-testing/${name}`]: path.resolve(__dirname, `packages/${name}/src`),
       }),
       {}
     ),
+    '^.+\\.(css|less)$': path.resolve(__dirname, 'jest.css.js'),
   },
   globals: {
     IS_REACT_ACT_ENVIRONMENT: true,

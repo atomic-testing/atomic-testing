@@ -1,13 +1,11 @@
 import React, { JSX } from 'react';
 
 import { IExampleUIUnit } from '@atomic-testing/core';
-import { Box } from '@mui/material';
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { basicGridColumnConfig, gridData, initialState } from '@atomic-testing/internal-mui-x-test-fixture';
+import Box from '@mui/material/Box';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
-import { basicGridColumnConfig, initialState } from './gridConfig';
-import { gridData } from './gridData';
-
-const gridCommonProps: DataGridProProps = {
+const gridCommonProps = {
   columns: basicGridColumnConfig.slice(0, 5),
   rows: gridData.slice(0, 100),
   initialState,
