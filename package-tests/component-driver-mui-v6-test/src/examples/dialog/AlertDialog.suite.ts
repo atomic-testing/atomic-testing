@@ -1,6 +1,6 @@
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { alertDialogUIExample } from './AlertDialog.examples';
 

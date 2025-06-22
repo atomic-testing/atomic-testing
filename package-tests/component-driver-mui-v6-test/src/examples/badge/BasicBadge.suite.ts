@@ -1,6 +1,6 @@
 import { BadgeDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicBadgeUIExample } from './BasicBadge.examples';
 

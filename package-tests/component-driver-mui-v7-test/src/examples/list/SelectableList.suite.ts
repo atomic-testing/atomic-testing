@@ -1,6 +1,6 @@
 import { ListDriver, ListItemDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, byRole, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { selectableListUIExample } from './SelectableList.example';
 

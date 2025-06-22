@@ -1,5 +1,5 @@
 import { ScenePart, TestEngine } from '@atomic-testing/core';
-import { E2eTestInterface, E2eTestRunEnvironmentFixture, TestFrameworkMapper } from '@atomic-testing/test-runner';
+import { E2eTestInterface, E2eTestRunEnvironmentFixture, TestFrameworkMapper } from '@atomic-testing/internal-test-runner';
 import { expect, Page, test } from '@playwright/test';
 
 import { createTestEngine } from './createTestEngine';
