@@ -37,6 +37,6 @@ export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements I
    * Identifier for this driver.
    */
   get driverName(): string {
-    throw 'HTMLRadioButtonGroupDriver';
+    return 'HTMLRadioButtonGroupDriver';
   }
 }
