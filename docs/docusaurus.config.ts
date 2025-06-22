@@ -13,6 +13,9 @@ const lightCodeTheme = themes.github;
 function getPackageNames() {
   const baseDir = path.join(__dirname, '../packages');
   const packageNames = fs.readdirSync(baseDir).filter(name => {
+    if (name.startsWith('internal-')) {
+      return false;
+    }
     const fullPath = path.join(baseDir, name);
     return fs.statSync(fullPath).isDirectory();
   });
