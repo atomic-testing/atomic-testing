@@ -13,7 +13,7 @@ export class HTMLAnchorDriver extends ComponentDriver<{}> implements IClickableD
   }
 
   async hover(option?: HoverOption): Promise<void> {
-    await this.interactor.click(this.locator, option);
+    await this.interactor.hover(this.locator, option);
   }
 
   async getHref(): Promise<Optional<string>> {
@@ -25,6 +25,6 @@ export class HTMLAnchorDriver extends ComponentDriver<{}> implements IClickableD
   }
 
   get driverName(): string {
-    return 'HTMLButtonDriver';
+    return 'HTMLAnchorDriver';
   }
 }
