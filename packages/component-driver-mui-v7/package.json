@@ -17,7 +17,7 @@
     "@atomic-testing/dom-core": "workspace:*",
     "@atomic-testing/react-18": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
-    "@mui/material": "^7.0.0",
+    "@mui/material": "^7.1.2",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0"
   },
