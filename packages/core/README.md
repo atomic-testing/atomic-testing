@@ -12,11 +12,6 @@ third-party or first-party components across DOM and end-to-end tests. The core
 focuses on **reusability**, **composability**, and **adaptability** so the same
 tests can run in React, Vue, Playwright, Cypress and more.
 
-## Installation
-
-```bash
-pnpm add @atomic-testing/core
-```
 
 ## Key Features
 
