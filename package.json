@@ -1,14 +1,15 @@
 {
   "private": true,
-  "name": "development-environment",
+  "name": "atomic-testing-monorepo",
   "engines": {
     "node": ">=22.12",
     "pnpm": ">=10"
   },
+  "type": "module",
   "scripts": {
     "build:packages": "./publish.sh --build-only",
     "check:type": "pnpm -r check:type",
-    "check:lint": "eslint --fix --ext .ts,.tsx,.js .",
+    "check:lint": "eslint --fix --ext .ts,.tsx,.js,.mjs,.cjs,.mdx .",
     "check:style": "prettier --write .",
     "typedoc": "typedoc --out typedocs",
     "bumpVersion": "node scripts/bumpVersion.js"
