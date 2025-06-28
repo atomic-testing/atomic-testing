@@ -1,7 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByRoleSource = {
   _id: 'byRole';
@@ -14,7 +14,7 @@ export type ByRoleSource = {
  *
  * @param value - The role value to match.
  * @param relative - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendent'`.
  * @example
  * ```ts
  * const dialog = byRole('dialog');
@@ -22,7 +22,7 @@ export type ByRoleSource = {
  */
 export function byRole(
   value: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relative: LocatorRelativePosition = 'Descendent'
 ): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[role="${sanitized}"]`, {

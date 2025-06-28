@@ -1,5 +1,5 @@
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByTagNameSource = {
   _id: 'byTagName';
@@ -15,7 +15,7 @@ export type ByTagNameSource = {
  *
  * @param tagName - The tag name to match.
  * @param relative - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendent'`.
  * @example
  * ```ts
  * const headings = byTagName('h1');
@@ -23,7 +23,7 @@ export type ByTagNameSource = {
  */
 export function byTagName(
   tagName: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relative: LocatorRelativePosition = 'Descendent'
 ): CssLocator {
   return new CssLocator(tagName, {
     relative,

@@ -1,7 +1,7 @@
 import { escapeCssClassName } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByCssClassSource = {
   _id: 'byCssClass';
@@ -17,7 +17,7 @@ export type ByCssClassSource = {
  *
  * @param className - One or more class names to match.
  * @param relativeTo - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendent'`.
  * @example
  * ```ts
  * const icon = byCssClass('MuiIcon-root');
@@ -26,7 +26,7 @@ export type ByCssClassSource = {
  */
 export function byCssClass(
   className: string | string[],
-  relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relativeTo: LocatorRelativePosition = 'Descendent'
 ): CssLocator {
   const classNames = Array.isArray(className) ? className : [className];
   const selector = classNames.map(cls => `.${escapeCssClassName(cls)}`).join('');

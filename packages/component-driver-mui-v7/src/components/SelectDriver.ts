@@ -14,7 +14,7 @@ import {
   IInputDriver,
   Interactor,
   listHelper,
-  LocatorRelativePosition,
+  type LocatorRelativePosition,
   locatorUtil,
   Nullable,
   PartLocator,
@@ -32,7 +32,7 @@ export const selectPart = {
     driver: HTMLButtonDriver,
   },
   dropdown: {
-    locator: byCssSelector('[role=presentation] [role=listbox]', LocatorRelativePosition.Root),
+    locator: byCssSelector('[role=presentation] [role=listbox]', 'Root'),
     driver: HTMLElementDriver,
   },
   input: {
