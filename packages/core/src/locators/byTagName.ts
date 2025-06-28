@@ -21,10 +21,7 @@ export type ByTagNameSource = {
  * const headings = byTagName('h1');
  * ```
  */
-export function byTagName(
-  tagName: string,
-  relative: LocatorRelativePosition = 'Descendent'
-): CssLocator {
+export function byTagName(tagName: string, relative: LocatorRelativePosition = 'Descendent'): CssLocator {
   return new CssLocator(tagName, {
     relative,
     source: {

@@ -20,10 +20,7 @@ export type ByRoleSource = {
  * const dialog = byRole('dialog');
  * ```
  */
-export function byRole(
-  value: string,
-  relative: LocatorRelativePosition = 'Descendent'
-): CssLocator {
+export function byRole(value: string, relative: LocatorRelativePosition = 'Descendent'): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[role="${sanitized}"]`, {
     relative,

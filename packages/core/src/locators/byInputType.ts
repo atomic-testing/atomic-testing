@@ -23,10 +23,7 @@ export type ByInputTypeSource = {
  * const passwordField = byInputType('password');
  * ```
  */
-export function byInputType(
-  type: string,
-  relative: LocatorRelativePosition = 'Descendent'
-): CssLocator {
+export function byInputType(type: string, relative: LocatorRelativePosition = 'Descendent'): CssLocator {
   const selector = `input[type=${escapeValue(type)}]`;
   return new CssLocator(selector, {
     relative,

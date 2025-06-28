@@ -21,10 +21,7 @@ export type ByCssSelectorSource = {
  * const activeItem = byCssSelector('.menu .item.active');
  * ```
  */
-export function byCssSelector(
-  selector: string,
-  relativeTo: LocatorRelativePosition = 'Descendent'
-): CssLocator {
+export function byCssSelector(selector: string, relativeTo: LocatorRelativePosition = 'Descendent'): CssLocator {
   return new CssLocator(selector, {
     relative: relativeTo,
     source: {

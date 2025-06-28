@@ -61,10 +61,7 @@ export class ProgressDriver extends ComponentDriver<typeof parts> implements IIn
     }
 
     const valueToClick = (value == null ? currentValue : value) as number;
-    const targetLocator = locatorUtil.append(
-      this.parts.choices.locator,
-      byValue(valueToClick.toString(), 'Same')
-    );
+    const targetLocator = locatorUtil.append(this.parts.choices.locator, byValue(valueToClick.toString(), 'Same'));
 
     const targetExists = await this.interactor.exists(targetLocator);
     if (targetExists) {

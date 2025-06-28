@@ -20,10 +20,7 @@ export type ByNameSource = {
  * const searchBox = byName('search');
  * ```
  */
-export function byName(
-  value: string,
-  relative: LocatorRelativePosition = 'Descendent'
-): CssLocator {
+export function byName(value: string, relative: LocatorRelativePosition = 'Descendent'): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[name="${sanitized}"]`, {
     relative,
