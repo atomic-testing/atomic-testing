@@ -38,8 +38,8 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "docusaurus-plugin-typedoc": "^1.4.0",
-    "typedoc": "^0.28.5",
-    "typedoc-plugin-markdown": "^4.6.4",
+    "typedoc": "^0.28.6",
+    "typedoc-plugin-markdown": "^4.7.0",
     "typescript": "^5.8.3"
   },
   "browserslist": {
