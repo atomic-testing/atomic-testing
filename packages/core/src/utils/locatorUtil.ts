@@ -2,7 +2,7 @@ import { Optional } from '../dataTypes';
 import { Interactor } from '../interactor/Interactor';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
-import { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
+import type { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
 import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
 import { byAttribute } from '../locators/byAttribute';
 
@@ -31,7 +31,7 @@ export function findRootLocatorIndex(locator: PartLocator): number {
   const length = list.length;
   for (let i = length - 1; i >= 0; i--) {
     const loc = list[i];
-    if (loc.relative === LocatorRelativePosition.Root) {
+    if (loc.relative === 'Root') {
       return i;
     }
   }
@@ -72,7 +72,7 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
     let statement = '';
     const loc = effectiveLocator[i];
     statement = getLocatorStatement(loc);
-    const separator = loc.relative === LocatorRelativePosition.Same ? '' : ' ';
+    const separator = loc.relative === 'Same' ? '' : ' ';
     statements.push(separator + statement);
   }
 

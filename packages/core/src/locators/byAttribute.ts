@@ -1,7 +1,7 @@
 import { escapeName, escapeValue } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByAttributeSource = {
   _id: 'byAttribute';
@@ -16,7 +16,7 @@ export type ByAttributeSource = {
  * @param name - The attribute name.
  * @param value - The attribute value to match.
  * @param relativeTo - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendant'`.
  * @example
  * ```ts
  * const dialog = byAttribute('role', 'dialog');
@@ -25,7 +25,7 @@ export type ByAttributeSource = {
 export function byAttribute(
   name: string,
   value: string,
-  relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relativeTo: LocatorRelativePosition = 'Descendant'
 ): CssLocator {
   const selector = name === 'id' ? `#${escapeValue(value)}` : `[${escapeName(name)}="${escapeValue(value)}"]`;
   return new CssLocator(selector, {
