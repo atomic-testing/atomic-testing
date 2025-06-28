@@ -104,24 +104,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "HTML components"
-            directory: "component-driver-html-test"
-          - name: "MUI v5 components"
-            directory: "component-driver-mui-v5-test"
-          - name: "MUI v6 components"
-            directory: "component-driver-mui-v6-test"
-          - name: "MUI v7 components"
-            directory: "component-driver-mui-v7-test"
-          - name: "MUI X v5 components"
-            directory: "component-driver-mui-x-v5-test"
-          - name: "MUI X v6 components"
-            directory: "component-driver-mui-x-v6-test"
-          - name: "MUI X v7 components"
-            directory: "component-driver-mui-x-v7-test"
-          - name: "MUI X v8 components"
-            directory: "component-driver-mui-x-v8-test"
-          - name: "Vue 3 components"
-            directory: "vue-3-test"
+          - name: 'HTML components'
+            directory: 'component-driver-html-test'
+          - name: 'MUI v5 components'
+            directory: 'component-driver-mui-v5-test'
+          - name: 'MUI v6 components'
+            directory: 'component-driver-mui-v6-test'
+          - name: 'MUI v7 components'
+            directory: 'component-driver-mui-v7-test'
+          - name: 'MUI X v5 components'
+            directory: 'component-driver-mui-x-v5-test'
+          - name: 'MUI X v6 components'
+            directory: 'component-driver-mui-x-v6-test'
+          - name: 'MUI X v7 components'
+            directory: 'component-driver-mui-x-v7-test'
+          - name: 'MUI X v8 components'
+            directory: 'component-driver-mui-x-v8-test'
+          - name: 'Vue 3 components'
+            directory: 'vue-3-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

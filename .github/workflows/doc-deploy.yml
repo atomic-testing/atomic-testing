@@ -13,7 +13,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup dependencies only
         uses: ./.github/actions/deps-setup
 
