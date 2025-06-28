@@ -11,10 +11,55 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Auto-format code and commit if needed
+  auto-format:
+    name: Auto-format code
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    outputs:
+      changes_made: ${{ steps.check_changes.outputs.changes_made }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Run code formatter
+        run: pnpm check:style
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes_made=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_made=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit formatting changes
+        if: steps.check_changes.outputs.changes_made == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "style: auto-format code with prettier
+
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>"
+          git push
+
   # Build once - this job builds all packages and caches the results
   build:
     name: Build packages
     runs-on: ubuntu-latest
+    needs: auto-format
+    if: needs.auto-format.outputs.changes_made == 'false'
     permissions:
       contents: read
       id-token: write
@@ -46,7 +91,8 @@ jobs:
   lint:
     name: Linting and formatting
     runs-on: ubuntu-latest
-    needs: build
+    needs: [auto-format, build]
+    if: needs.auto-format.outputs.changes_made == 'false'
     permissions:
       contents: read
       id-token: write
@@ -72,7 +118,8 @@ jobs:
   type-check:
     name: Type checking
     runs-on: ubuntu-latest
-    needs: build
+    needs: [auto-format, build]
+    if: needs.auto-format.outputs.changes_made == 'false'
     permissions:
       contents: read
       id-token: write
@@ -96,7 +143,8 @@ jobs:
   component-driver-tests:
     name: Test ${{ matrix.name }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [auto-format, build]
+    if: needs.auto-format.outputs.changes_made == 'false'
     permissions:
       contents: read
       id-token: write
@@ -104,24 +152,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "HTML components"
-            directory: "component-driver-html-test"
-          - name: "MUI v5 components"
-            directory: "component-driver-mui-v5-test"
-          - name: "MUI v6 components"
-            directory: "component-driver-mui-v6-test"
-          - name: "MUI v7 components"
-            directory: "component-driver-mui-v7-test"
-          - name: "MUI X v5 components"
-            directory: "component-driver-mui-x-v5-test"
-          - name: "MUI X v6 components"
-            directory: "component-driver-mui-x-v6-test"
-          - name: "MUI X v7 components"
-            directory: "component-driver-mui-x-v7-test"
-          - name: "MUI X v8 components"
-            directory: "component-driver-mui-x-v8-test"
-          - name: "Vue 3 components"
-            directory: "vue-3-test"
+          - name: 'HTML components'
+            directory: 'component-driver-html-test'
+          - name: 'MUI v5 components'
+            directory: 'component-driver-mui-v5-test'
+          - name: 'MUI v6 components'
+            directory: 'component-driver-mui-v6-test'
+          - name: 'MUI v7 components'
+            directory: 'component-driver-mui-v7-test'
+          - name: 'MUI X v5 components'
+            directory: 'component-driver-mui-x-v5-test'
+          - name: 'MUI X v6 components'
+            directory: 'component-driver-mui-x-v6-test'
+          - name: 'MUI X v7 components'
+            directory: 'component-driver-mui-x-v7-test'
+          - name: 'MUI X v8 components'
+            directory: 'component-driver-mui-x-v8-test'
+          - name: 'Vue 3 components'
+            directory: 'vue-3-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -143,6 +191,8 @@ jobs:
   example-mui-signup-form-test:
     name: Test example MUI signup form
     runs-on: ubuntu-latest
+    needs: auto-format
+    if: needs.auto-format.outputs.changes_made == 'false'
     permissions:
       contents: read
       id-token: write

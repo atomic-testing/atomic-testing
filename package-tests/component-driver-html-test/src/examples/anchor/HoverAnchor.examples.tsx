@@ -1,4 +1,5 @@
 import React, { useCallback, JSX } from 'react';
+
 import { IExampleUIUnit } from '@atomic-testing/core';
 
 export const HoverAnchorExample = () => {
@@ -14,7 +15,9 @@ export const HoverAnchorExample = () => {
 
   return (
     <React.Fragment>
-      <a data-testid='hover-target' onMouseOver={onMouseOver} onMouseOut={onMouseOut}>Hover me to show</a>
+      <a data-testid='hover-target' onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+        Hover me to show
+      </a>
       {showDetail ? <div data-testid='hover-detail'>Details shown</div> : null}
     </React.Fragment>
   );
