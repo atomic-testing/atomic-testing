@@ -2,6 +2,20 @@ import { LinkedCssLocator, LinkedCssLocatorValueExtract } from './LinkedCssLocat
 import { LocatorRelativePosition } from './LocatorRelativePosition';
 import { PartLocator } from './PartLocator';
 
+/**
+ * Experimental locator that matches an element by relating it to another
+ * element on the page. It is useful when two elements share related
+ * attributes.
+ *
+ * @param relative - Relative position for the resulting locator. Defaults to
+ * {@link LocatorRelativePosition.Descendent}.
+ * @example
+ * ```ts
+ * const label = byLinkedElement().onLinkedElement(byDataTestId('input'))
+ *   .extractAttribute('for')
+ *   .toMatchMyAttribute('id');
+ * ```
+ */
 export function byLinkedElement(relative: LocatorRelativePosition = LocatorRelativePosition.Descendent) {
   return {
     onLinkedElement: (locator: PartLocator) => {

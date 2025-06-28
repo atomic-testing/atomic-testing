@@ -9,6 +9,22 @@ export type ByDataTestIdSource = {
   relative: LocatorRelativePosition;
 };
 
+/**
+ * Locate an element by its `data-testid` attribute.
+ *
+ * When an array of ids is provided, they will be chained as descendant
+ * selectors in the resulting locator.
+ *
+ * @param id - Single id or an array of ids to match against the
+ * `data-testid` attribute.
+ * @param relativeTo - How the locator is related to the current locator in a
+ * locator chain. Defaults to {@link LocatorRelativePosition.Descendent}.
+ * @example
+ * ```ts
+ * const submitButton = byDataTestId('submit');
+ * const itemLabel = byDataTestId(['list', 'item-label']);
+ * ```
+ */
 export function byDataTestId(
   id: string | string[],
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent

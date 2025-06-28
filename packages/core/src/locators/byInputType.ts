@@ -11,6 +11,18 @@ export type ByInputTypeSource = {
 };
 
 // to implementation other than CSS selector
+/**
+ * Locate an `<input>` element by its `type` attribute.
+ *
+ * @param type - The value of the `type` attribute such as `text`, `checkbox`
+ * or `radio`.
+ * @param relative - Relative position of the locator. Defaults to
+ * {@link LocatorRelativePosition.Descendent}.
+ * @example
+ * ```ts
+ * const passwordField = byInputType('password');
+ * ```
+ */
 export function byInputType(
   type: string,
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
