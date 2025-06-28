@@ -5,7 +5,7 @@ import {
   ContainerDriver,
   IContainerDriverOption,
   Interactor,
-  LocatorRelativePosition,
+  type LocatorRelativePosition,
   Optional,
   PartLocator,
   ScenePart,
@@ -22,7 +22,7 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-const dialogRootLocator: PartLocator = byRole('presentation', LocatorRelativePosition.Root);
+const dialogRootLocator: PartLocator = byRole('presentation', 'Root');
 
 const defaultTransitionDuration = 250;
 
@@ -40,7 +40,7 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
-    return LocatorRelativePosition.Same;
+    return 'Same';
   }
 
   async getTitle(): Promise<string | null> {

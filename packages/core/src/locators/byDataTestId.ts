@@ -1,7 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByDataTestIdSource = {
   _id: 'byDataTestId';
@@ -18,7 +18,7 @@ export type ByDataTestIdSource = {
  * @param id - Single id or an array of ids to match against the
  * `data-testid` attribute.
  * @param relativeTo - How the locator is related to the current locator in a
- * locator chain. Defaults to {@link LocatorRelativePosition.Descendent}.
+ * locator chain. Defaults to `'Descendant'`.
  * @example
  * ```ts
  * const submitButton = byDataTestId('submit');
@@ -27,7 +27,7 @@ export type ByDataTestIdSource = {
  */
 export function byDataTestId(
   id: string | string[],
-  relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relativeTo: LocatorRelativePosition = 'Descendant'
 ): CssLocator {
   const ids = Array.isArray(id) ? id : [id];
   const selector = ids.map(idVal => `[data-testid="${escapeValue(idVal)}"]`).join(' ');

@@ -9,7 +9,6 @@ import {
   IInputDriver,
   Interactor,
   listHelper,
-  LocatorRelativePosition,
   locatorUtil,
   PartLocator,
   ScenePart,
@@ -21,8 +20,8 @@ export const parts = {
     driver: HTMLTextInputDriver,
   },
   dropdown: {
-    locator: byLinkedElement(LocatorRelativePosition.Root)
-      .onLinkedElement(byCssSelector('', LocatorRelativePosition.Same))
+    locator: byLinkedElement('Root')
+      .onLinkedElement(byCssSelector('', 'Same'))
       .extractAttribute('aria-owns')
       .toMatchMyAttribute('id'),
     driver: HTMLElementDriver,

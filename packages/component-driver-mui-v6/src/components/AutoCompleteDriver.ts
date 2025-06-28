@@ -7,7 +7,6 @@ import {
   IInputDriver,
   Interactor,
   listHelper,
-  LocatorRelativePosition,
   locatorUtil,
   PartLocator,
   ScenePart,
@@ -19,7 +18,7 @@ export const parts = {
     driver: HTMLTextInputDriver,
   },
   dropdown: {
-    locator: byLinkedElement(LocatorRelativePosition.Root)
+    locator: byLinkedElement('Root')
       .onLinkedElement(byRole('combobox'))
       .extractAttribute('aria-controls')
       .toMatchMyAttribute('id'),

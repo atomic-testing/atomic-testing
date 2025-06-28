@@ -2,7 +2,7 @@ import { Optional } from '../dataTypes';
 
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 import { LocatorType } from './LocatorType';
 import { CssLocatorChain, PartLocator } from './PartLocator';
 
@@ -12,7 +12,7 @@ export interface CssLocatorInitializer {
 }
 
 export class CssLocator {
-  private _relativePosition: LocatorRelativePosition = LocatorRelativePosition.Descendent;
+  private _relativePosition: LocatorRelativePosition = 'Descendant';
   private _type: LocatorType = 'css';
   private _source?: CssLocatorSource;
 
