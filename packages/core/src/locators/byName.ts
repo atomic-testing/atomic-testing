@@ -1,7 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByNameSource = {
   _id: 'byName';
@@ -14,7 +14,7 @@ export type ByNameSource = {
  *
  * @param value - Value of the `name` attribute to match.
  * @param relative - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendent'`.
  * @example
  * ```ts
  * const searchBox = byName('search');
@@ -22,7 +22,7 @@ export type ByNameSource = {
  */
 export function byName(
   value: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relative: LocatorRelativePosition = 'Descendent'
 ): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[name="${sanitized}"]`, {

@@ -2,7 +2,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByInputTypeSource = {
   _id: 'byInputType';
@@ -17,7 +17,7 @@ export type ByInputTypeSource = {
  * @param type - The value of the `type` attribute such as `text`, `checkbox`
  * or `radio`.
  * @param relative - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendent'`.
  * @example
  * ```ts
  * const passwordField = byInputType('password');
@@ -25,7 +25,7 @@ export type ByInputTypeSource = {
  */
 export function byInputType(
   type: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relative: LocatorRelativePosition = 'Descendent'
 ): CssLocator {
   const selector = `input[type=${escapeValue(type)}]`;
   return new CssLocator(selector, {

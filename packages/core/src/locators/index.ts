@@ -11,7 +11,7 @@ export { byTagName } from './byTagName';
 export { byValue } from './byValue';
 export { CssLocator } from './CssLocator';
 export * from './LinkedCssLocator';
-export { LocatorRelativePosition } from './LocatorRelativePosition';
+export type { LocatorRelativePosition } from './LocatorRelativePosition';
 export type { LocatorType } from './LocatorType';
 export { LocatorTypeLookup } from './LocatorType';
 export type { CssLocatorChain, LocatorChain, PartLocator } from './PartLocator';

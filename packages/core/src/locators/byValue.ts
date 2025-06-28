@@ -1,7 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByValueSource = {
   _id: 'byValue';
@@ -14,7 +14,7 @@ export type ByValueSource = {
  *
  * @param value - The value to match.
  * @param relative - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendent'`.
  * @example
  * ```ts
  * const option = byValue('option1');
@@ -22,7 +22,7 @@ export type ByValueSource = {
  */
 export function byValue(
   value: string,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relative: LocatorRelativePosition = 'Descendent'
 ): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[value="${sanitized}"]`, {

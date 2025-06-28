@@ -3,7 +3,6 @@ import {
   byValue,
   ComponentDriver,
   IInputDriver,
-  LocatorRelativePosition,
   locatorUtil,
 } from '@atomic-testing/core';
 
@@ -27,7 +26,7 @@ export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements I
     if (value == null) {
       throw new Error('Cannot be done');
     }
-    const valueLocator = byValue(value, LocatorRelativePosition.Same);
+    const valueLocator = byValue(value, 'Same');
     const locator = locatorUtil.append(this.locator, valueLocator);
     await this.interactor.click(locator);
     return true;
