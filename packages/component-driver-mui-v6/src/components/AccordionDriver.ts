@@ -29,7 +29,7 @@ export const parts = {
 } satisfies ScenePart;
 
 /**
- * Driver for Material UI v5 Accordion component.
+ * Driver for Material UI v6 Accordion component.
  * @see https://mui.com/material-ui/react-accordion/
  */
 export class AccordionDriver extends ComponentDriver<typeof parts> {

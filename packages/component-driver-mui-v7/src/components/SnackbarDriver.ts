@@ -22,7 +22,7 @@ export const parts = {
 } satisfies ScenePart;
 
 /**
- * Driver for Material UI v5 Snackbar component.
+ * Driver for Material UI v7 Snackbar component.
  * @see https://mui.com/material-ui/react-snackbar/
  */
 export class SnackbarDriver extends ComponentDriver<typeof parts> {

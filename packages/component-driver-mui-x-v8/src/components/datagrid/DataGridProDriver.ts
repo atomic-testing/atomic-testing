@@ -171,30 +171,48 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   }
 
   //#region Footer
+  /**
+   * Determine if the pagination footer is currently visible.
+   */
   isFooterVisible(): Promise<boolean> {
     return this.parts.footer.isVisible();
   }
 
+  /**
+   * Check whether the "previous page" control is enabled.
+   */
   async isPreviousPageEnabled(): Promise<boolean> {
     await this.enforcePartExistence('footer');
     return this.parts.footer.isPreviousPageEnabled();
   }
 
+  /**
+   * Navigate to the previous page using the grid footer control.
+   */
   async gotoPreviousPage(): Promise<void> {
     await this.enforcePartExistence('footer');
     await this.parts.footer.gotoPreviousPage();
   }
 
+  /**
+   * Check whether the "next page" control is enabled.
+   */
   async isNextPageEnabled(): Promise<boolean> {
     await this.enforcePartExistence('footer');
     return this.parts.footer.isNextPageEnabled();
   }
 
+  /**
+   * Navigate to the next page using the grid footer control.
+   */
   async gotoNextPage(): Promise<void> {
     await this.enforcePartExistence('footer');
     await this.parts.footer.gotoNextPage();
   }
 
+  /**
+   * Read the textual description of the current pagination state.
+   */
   async getPaginationDescription(): Promise<Optional<string>> {
     await this.enforcePartExistence('footer');
     return this.parts.footer.getText();

@@ -31,7 +31,7 @@ const alertSeverityEvaluators: AlertSeverityEvaluator[] = [
 ];
 
 /**
- * Driver for Material UI v5 Alert component.
+ * Driver for Material UI v7 Alert component.
  * @see https://mui.com/material-ui/react-alert/
  */
 export class AlertDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
