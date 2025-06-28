@@ -18,10 +18,7 @@ export type ByCheckedSource = {
  * const unchecked = byChecked(false);
  * ```
  */
-export function byChecked(
-  checked = true,
-  relative: LocatorRelativePosition = 'Same'
-): CssLocator {
+export function byChecked(checked = true, relative: LocatorRelativePosition = 'Same'): CssLocator {
   let selector = ':checked';
   if (!checked) {
     selector = `:not(${selector})`;
