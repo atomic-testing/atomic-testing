@@ -9,6 +9,17 @@ export type ByRoleSource = {
   relative: LocatorRelativePosition;
 };
 
+/**
+ * Locate elements by their ARIA `role` attribute.
+ *
+ * @param value - The role value to match.
+ * @param relative - Relative position of the locator. Defaults to
+ * {@link LocatorRelativePosition.Descendent}.
+ * @example
+ * ```ts
+ * const dialog = byRole('dialog');
+ * ```
+ */
 export function byRole(
   value: string,
   relative: LocatorRelativePosition = LocatorRelativePosition.Descendent

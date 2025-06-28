@@ -10,6 +10,18 @@ export type ByAttributeSource = {
   relativeTo: LocatorRelativePosition;
 };
 
+/**
+ * Locate an element by a specific attribute and value.
+ *
+ * @param name - The attribute name.
+ * @param value - The attribute value to match.
+ * @param relativeTo - Relative position of the locator. Defaults to
+ * {@link LocatorRelativePosition.Descendent}.
+ * @example
+ * ```ts
+ * const dialog = byAttribute('role', 'dialog');
+ * ```
+ */
 export function byAttribute(
   name: string,
   value: string,

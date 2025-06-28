@@ -7,6 +7,20 @@ export type ByCssSelectorSource = {
   relative: LocatorRelativePosition;
 };
 
+/**
+ * Locate elements using a raw CSS selector string.
+ *
+ * This is a low level API and should be used when the other helper
+ * locators cannot express the desired selector.
+ *
+ * @param selector - A CSS selector string.
+ * @param relativeTo - Relative position of the locator. Defaults to
+ * {@link LocatorRelativePosition.Descendent}.
+ * @example
+ * ```ts
+ * const activeItem = byCssSelector('.menu .item.active');
+ * ```
+ */
 export function byCssSelector(
   selector: string,
   relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent
