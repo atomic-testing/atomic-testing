@@ -1,5 +1,5 @@
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByCheckedSource = {
   _id: 'byChecked';
@@ -12,8 +12,7 @@ export type ByCheckedSource = {
  *
  * @param checked - Whether the element should be checked. Defaults to `true`.
  * @param relative - Relative position for the locator. Defaults to
- * {@link LocatorRelativePosition.Same} so it can be chained with the checkbox
- * locator itself.
+ * `'Same'` so it can be chained with the checkbox locator itself.
  * @example
  * ```ts
  * const unchecked = byChecked(false);
@@ -21,7 +20,7 @@ export type ByCheckedSource = {
  */
 export function byChecked(
   checked = true,
-  relative: LocatorRelativePosition = LocatorRelativePosition.Same
+  relative: LocatorRelativePosition = 'Same'
 ): CssLocator {
   let selector = ':checked';
   if (!checked) {

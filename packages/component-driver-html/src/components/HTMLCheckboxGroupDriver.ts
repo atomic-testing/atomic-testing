@@ -3,7 +3,6 @@ import {
   collectionUtil,
   ComponentDriver,
   IInputDriver,
-  LocatorRelativePosition,
   locatorUtil,
 } from '@atomic-testing/core';
 
@@ -20,7 +19,7 @@ export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInp
     const availableValues = await this.interactor.getAttribute(this.locator, 'value', true);
     const value: string[] = [];
     for (const val of availableValues) {
-      const itemLocator = byValue(val, LocatorRelativePosition.Same);
+      const itemLocator = byValue(val, 'Same');
       const locator = locatorUtil.append(this.locator, itemLocator);
       const isChecked = await this.interactor.isChecked(locator);
       if (isChecked) {
@@ -55,7 +54,7 @@ export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInp
    * with a specific value.
    */
   protected async setSelectedByValue(value: string, selected: boolean): Promise<void> {
-    const itemLocator = byValue(value, LocatorRelativePosition.Same);
+    const itemLocator = byValue(value, 'Same');
     const locator = locatorUtil.append(this.locator, itemLocator);
     const checkBoxDriver = new HTMLCheckboxDriver(locator, this.interactor);
     await checkBoxDriver.setSelected(selected);

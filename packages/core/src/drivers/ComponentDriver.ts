@@ -14,7 +14,7 @@ import {
   MouseOutOption,
   MouseUpOption,
 } from '../interactor';
-import { LocatorRelativePosition, PartLocator } from '../locators';
+import type { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
 import { WaitUntilOption } from '../utils/timingUtil';
 

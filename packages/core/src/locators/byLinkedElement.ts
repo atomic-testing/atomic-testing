@@ -1,5 +1,5 @@
 import { LinkedCssLocator, LinkedCssLocatorValueExtract } from './LinkedCssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 import { PartLocator } from './PartLocator';
 
 /**
@@ -8,7 +8,7 @@ import { PartLocator } from './PartLocator';
  * attributes.
  *
  * @param relative - Relative position for the resulting locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendant'`.
  * @example
  * ```ts
  * const label = byLinkedElement().onLinkedElement(byDataTestId('input'))
@@ -16,7 +16,7 @@ import { PartLocator } from './PartLocator';
  *   .toMatchMyAttribute('id');
  * ```
  */
-export function byLinkedElement(relative: LocatorRelativePosition = LocatorRelativePosition.Descendent) {
+export function byLinkedElement(relative: LocatorRelativePosition = 'Descendant') {
   return {
     onLinkedElement: (locator: PartLocator) => {
       return {

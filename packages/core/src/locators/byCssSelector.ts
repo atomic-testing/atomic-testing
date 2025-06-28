@@ -1,5 +1,5 @@
 import { CssLocator } from './CssLocator';
-import { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type ByCssSelectorSource = {
   _id: 'byCssSelector';
@@ -15,7 +15,7 @@ export type ByCssSelectorSource = {
  *
  * @param selector - A CSS selector string.
  * @param relativeTo - Relative position of the locator. Defaults to
- * {@link LocatorRelativePosition.Descendent}.
+ * `'Descendant'`.
  * @example
  * ```ts
  * const activeItem = byCssSelector('.menu .item.active');
@@ -23,7 +23,7 @@ export type ByCssSelectorSource = {
  */
 export function byCssSelector(
   selector: string,
-  relativeTo: LocatorRelativePosition = LocatorRelativePosition.Descendent
+  relativeTo: LocatorRelativePosition = 'Descendant'
 ): CssLocator {
   return new CssLocator(selector, {
     relative: relativeTo,

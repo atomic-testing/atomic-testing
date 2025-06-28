@@ -5,7 +5,7 @@ import {
   IComponentDriverOption,
   Interactor,
   listHelper,
-  LocatorRelativePosition,
+  type LocatorRelativePosition,
   Optional,
   PartLocator,
   ScenePart,
@@ -22,7 +22,7 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-const menuRootLocator: PartLocator = byRole('presentation', LocatorRelativePosition.Root);
+const menuRootLocator: PartLocator = byRole('presentation', 'Root');
 const menuItemLocator = byRole('menuitem');
 
 export class MenuDriver extends ComponentDriver<typeof parts> {
@@ -38,7 +38,7 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
   }
 
   override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
-    return LocatorRelativePosition.Same;
+    return 'Same';
   }
 
   /**

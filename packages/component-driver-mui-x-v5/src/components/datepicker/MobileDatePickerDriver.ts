@@ -6,7 +6,7 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  LocatorRelativePosition,
+  type LocatorRelativePosition,
   PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
@@ -19,7 +19,7 @@ const parts = {
     driver: HTMLTextInputDriver,
   },
   entryDialog: {
-    locator: byRole('presentation', LocatorRelativePosition.Root).chain(byRole('dialog')),
+    locator: byRole('presentation', 'Root').chain(byRole('dialog')),
     driver: MobileDatePickerDialogDriver,
   },
 } satisfies ScenePart;
