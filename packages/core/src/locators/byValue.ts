@@ -20,10 +20,7 @@ export type ByValueSource = {
  * const option = byValue('option1');
  * ```
  */
-export function byValue(
-  value: string,
-  relative: LocatorRelativePosition = 'Descendant'
-): CssLocator {
+export function byValue(value: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
   const sanitized = escapeValue(value);
   return new CssLocator(`[value="${sanitized}"]`, {
     relative,

@@ -1,10 +1,4 @@
-import {
-  byChecked,
-  byValue,
-  ComponentDriver,
-  IInputDriver,
-  locatorUtil,
-} from '@atomic-testing/core';
+import { byChecked, byValue, ComponentDriver, IInputDriver, locatorUtil } from '@atomic-testing/core';
 
 export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
   /**

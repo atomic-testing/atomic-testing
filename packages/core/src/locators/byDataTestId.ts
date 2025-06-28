@@ -25,10 +25,7 @@ export type ByDataTestIdSource = {
  * const itemLabel = byDataTestId(['list', 'item-label']);
  * ```
  */
-export function byDataTestId(
-  id: string | string[],
-  relativeTo: LocatorRelativePosition = 'Descendant'
-): CssLocator {
+export function byDataTestId(id: string | string[], relativeTo: LocatorRelativePosition = 'Descendant'): CssLocator {
   const ids = Array.isArray(id) ? id : [id];
   const selector = ids.map(idVal => `[data-testid="${escapeValue(idVal)}"]`).join(' ');
   return new CssLocator(selector, {

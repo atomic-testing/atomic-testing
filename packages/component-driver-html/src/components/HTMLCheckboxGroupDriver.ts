@@ -1,10 +1,4 @@
-import {
-  byValue,
-  collectionUtil,
-  ComponentDriver,
-  IInputDriver,
-  locatorUtil,
-} from '@atomic-testing/core';
+import { byValue, collectionUtil, ComponentDriver, IInputDriver, locatorUtil } from '@atomic-testing/core';
 
 import { HTMLCheckboxDriver } from './HTMLCheckboxDriver';
 
