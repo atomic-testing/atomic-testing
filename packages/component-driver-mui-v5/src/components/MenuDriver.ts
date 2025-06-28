@@ -41,6 +41,12 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     return LocatorRelativePosition.Same;
   }
 
+  /**
+   * Locate a menu item by its visible label.
+   *
+   * @param label The text of the desired menu item.
+   * @returns The matching {@link MenuItemDriver} or `null` when not found.
+   */
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
     for await (const item of listHelper.getListItemIterator(this, menuItemLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
@@ -51,6 +57,11 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     return null;
   }
 
+  /**
+   * Select a menu item using its visible label.
+   *
+   * @param label The label of the item to activate.
+   */
   async selectByLabel(label: string): Promise<void> {
     const item = await this.getMenuItemByLabel(label);
     if (item) {

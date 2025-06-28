@@ -51,6 +51,10 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
     throw new Error('Unable to determine input type in TextFieldInput');
   }
 
+  /**
+   * Retrieve the current value of the input element, handling both single line
+   * and multiline configurations.
+   */
   async getValue(): Promise<string | null> {
     const inputType = await this.getInputType();
     switch (inputType) {
@@ -61,6 +65,11 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
     }
   }
 
+  /**
+   * Set the value of the underlying input element.
+   *
+   * @param value The text to assign to the input.
+   */
   async setValue(value: string | null): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
@@ -71,6 +80,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
     }
   }
 
+  /**
+   * Determine whether the input element is disabled.
+   */
   async isDisabled(): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
@@ -81,6 +93,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
     }
   }
 
+  /**
+   * Determine whether the input element is read only.
+   */
   async isReadonly(): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
@@ -91,6 +106,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
     }
   }
 
+  /**
+   * Identifier for this driver.
+   */
   get driverName(): string {
     return 'MuiV5InputDriver';
   }

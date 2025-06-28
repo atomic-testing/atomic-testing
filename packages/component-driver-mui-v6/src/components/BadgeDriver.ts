@@ -16,7 +16,7 @@ export const parts = {
 } satisfies ScenePart;
 
 /**
- * Driver for Material UI v5 Badge component.
+ * Driver for Material UI v6 Badge component.
  * @see https://mui.com/material-ui/react-badge/
  */
 export class BadgeDriver extends ComponentDriver<typeof parts> {

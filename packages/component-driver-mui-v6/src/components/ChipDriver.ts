@@ -21,7 +21,7 @@ export const parts = {
 } satisfies ScenePart;
 
 /**
- * Driver for Material UI v5 Chip component.
+ * Driver for Material UI v6 Chip component.
  * @see https://mui.com/material-ui/react-chip/
  */
 export class ChipDriver extends ComponentDriver<typeof parts> {
