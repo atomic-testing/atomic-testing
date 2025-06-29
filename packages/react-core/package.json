@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react-core",
-  "version": "0.76.0",
+  "version": "0.77.0",
   "description": "Shared utilities for Atomic Testing React adapters",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
