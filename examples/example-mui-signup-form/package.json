@@ -28,12 +28,12 @@
     "react-hook-form": "^7.51.2"
   },
   "devDependencies": {
-    "@atomic-testing/component-driver-html": "^0.70.0",
-    "@atomic-testing/component-driver-mui-v5": "^0.70.0",
-    "@atomic-testing/core": "^0.70.0",
-    "@atomic-testing/dom-core": "^0.70.0",
-    "@atomic-testing/playwright": "^0.70.0",
-    "@atomic-testing/react-18": "^0.70.0",
+    "@atomic-testing/component-driver-html": "^0.77.0",
+    "@atomic-testing/component-driver-mui-v5": "^0.77.0",
+    "@atomic-testing/core": "^0.77.0",
+    "@atomic-testing/dom-core": "^0.77.0",
+    "@atomic-testing/playwright": "^0.77.0",
+    "@atomic-testing/react-18": "^0.77.0",
     "@playwright/test": "^1.42.1",
     "@storybook/addon-essentials": "^8.0.5",
     "@storybook/addon-themes": "^8.0.5",
