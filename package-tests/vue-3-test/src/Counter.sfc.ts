@@ -13,9 +13,9 @@ export const CounterSFCComponent: VueSFCLikeComponent = {
     };
     return {
       count,
-      inc
+      inc,
     };
-  }
+  },
 };
 
 export const counterSFCExampleUI: IExampleUIUnit<VueSFCLikeComponent> = {

@@ -13,31 +13,33 @@ function getNextRootElementId() {
 const rootElementAttributeName = 'data-atomic-testing-vue';
 
 function isSFCLikeObject(component: any): component is VueSFCLikeComponent {
-  return component && typeof component === 'object' && 'template' in component && typeof component.template === 'string';
+  return (
+    component && typeof component === 'object' && 'template' in component && typeof component.template === 'string'
+  );
 }
 
 function createComponentFromSFCLike(sfcObj: VueSFCLikeComponent): Component {
   const componentOptions: any = {
     name: sfcObj.name || 'SFCComponent',
-    template: sfcObj.template
+    template: sfcObj.template,
   };
 
   if (sfcObj.props) {
     componentOptions.props = sfcObj.props;
   }
-  
+
   if (sfcObj.setup) {
     componentOptions.setup = sfcObj.setup;
   }
-  
+
   if (sfcObj.data) {
     componentOptions.data = sfcObj.data;
   }
-  
+
   if (sfcObj.methods) {
     componentOptions.methods = sfcObj.methods;
   }
-  
+
   if (sfcObj.computed) {
     componentOptions.computed = sfcObj.computed;
   }
@@ -59,9 +61,9 @@ export function createTestEngine<T extends ScenePart>(
   let app: App;
 
   // Create component from SFC-like object if needed
-  const compiledComponent = isSFCLikeObject(component) 
-    ? createComponentFromSFCLike(component) 
-    : component as Component;
+  const compiledComponent = isSFCLikeObject(component)
+    ? createComponentFromSFCLike(component)
+    : (component as Component);
 
   try {
     const renderResult = render(compiledComponent, { container });

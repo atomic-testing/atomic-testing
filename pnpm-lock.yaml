@@ -989,6 +989,9 @@ importers:
       '@testing-library/vue':
         specifier: ^8.1.0
         version: 8.1.0(@vue/compiler-sfc@3.5.17)(vue@3.5.17(typescript@5.8.3))
+      '@vue/compiler-sfc':
+        specifier: ^3.5.0
+        version: 3.5.17
     devDependencies:
       vue:
         specifier: ^3.5.0
@@ -6670,7 +6673,7 @@ snapshots:
   '@babel/template@7.26.9':
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/parser': 7.26.9
+      '@babel/parser': 7.27.5
       '@babel/types': 7.26.9
 
   '@babel/template@7.27.2':
