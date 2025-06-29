@@ -14,7 +14,6 @@ import {
   IInputDriver,
   Interactor,
   listHelper,
-  type LocatorRelativePosition,
   locatorUtil,
   Nullable,
   PartLocator,

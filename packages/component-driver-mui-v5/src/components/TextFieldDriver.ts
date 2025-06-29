@@ -46,11 +46,7 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-enum TextFieldInputType {
-  Singleline = 'singleLine',
-  Multiline = 'multiline',
-  Select = 'select',
-}
+type TextFieldInputType = 'singleLine' | 'multiline' | 'select';
 
 /**
  * A driver for the Material UI v5 TextField component with single line or multiline text input.
@@ -71,13 +67,13 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
       this.parts.multilineInput.exists(),
     ]).then(([singlelineExists, richSelectExists, nativeSelectExists, multilineExists]) => {
       if (singlelineExists) {
-        return TextFieldInputType.Singleline;
+        return 'singleLine';
       }
       if (richSelectExists || nativeSelectExists) {
-        return TextFieldInputType.Select;
+        return 'select';
       }
       if (multilineExists) {
-        return TextFieldInputType.Multiline;
+        return 'multiline';
       }
 
       throw new Error('Unable to determine input type in TextFieldInput');
@@ -89,11 +85,11 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   async getValue(): Promise<string | null> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.getValue();
-      case TextFieldInputType.Select:
+      case 'select':
         return this.parts.selectInput.getValue();
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.getValue();
     }
   }
@@ -101,11 +97,11 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   async setValue(value: string | null): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.setValue(value);
-      case TextFieldInputType.Select:
+      case 'select':
         return this.parts.selectInput.setValue(value);
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.setValue(value);
     }
   }
@@ -124,11 +120,11 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   async isDisabled(): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.isDisabled();
-      case TextFieldInputType.Select:
+      case 'select':
         return this.parts.selectInput.isDisabled();
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.isDisabled();
     }
   }
@@ -136,11 +132,11 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   async isReadonly(): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.isReadonly();
-      case TextFieldInputType.Select:
+      case 'select':
         return this.interactor.hasCssClass(this.parts.selectInput.locator, 'MuiInputBase-readOnly');
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.isReadonly();
     }
   }
