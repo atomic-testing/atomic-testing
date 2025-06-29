@@ -1,9 +1,9 @@
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import { render } from '@testing-library/vue';
-import { App, Component, createApp } from 'vue';
+import { App, Component, createApp, defineComponent, h } from 'vue';
 
 import { VueInteractor } from './VueInteractor';
-import { IVueTestEngineOption } from './types';
+import { IVueTestEngineOption, VueSFCLikeComponent } from './types';
 
 let _rootId = 0;
 function getNextRootElementId() {
@@ -12,8 +12,41 @@ function getNextRootElementId() {
 
 const rootElementAttributeName = 'data-atomic-testing-vue';
 
+function isSFCLikeObject(component: any): component is VueSFCLikeComponent {
+  return component && typeof component === 'object' && 'template' in component && typeof component.template === 'string';
+}
+
+function createComponentFromSFCLike(sfcObj: VueSFCLikeComponent): Component {
+  const componentOptions: any = {
+    name: sfcObj.name || 'SFCComponent',
+    template: sfcObj.template
+  };
+
+  if (sfcObj.props) {
+    componentOptions.props = sfcObj.props;
+  }
+  
+  if (sfcObj.setup) {
+    componentOptions.setup = sfcObj.setup;
+  }
+  
+  if (sfcObj.data) {
+    componentOptions.data = sfcObj.data;
+  }
+  
+  if (sfcObj.methods) {
+    componentOptions.methods = sfcObj.methods;
+  }
+  
+  if (sfcObj.computed) {
+    componentOptions.computed = sfcObj.computed;
+  }
+
+  return defineComponent(componentOptions);
+}
+
 export function createTestEngine<T extends ScenePart>(
-  component: Component,
+  component: Component | VueSFCLikeComponent,
   partDefinitions: T,
   option?: Readonly<Partial<IVueTestEngineOption>>
 ): TestEngine<T> {
@@ -25,12 +58,17 @@ export function createTestEngine<T extends ScenePart>(
   let unmount: () => void;
   let app: App;
 
+  // Create component from SFC-like object if needed
+  const compiledComponent = isSFCLikeObject(component) 
+    ? createComponentFromSFCLike(component) 
+    : component as Component;
+
   try {
-    const renderResult = render(component, { container });
+    const renderResult = render(compiledComponent, { container });
     unmount = renderResult.unmount;
   } catch (_error) {
     // Fallback to manual Vue app creation if render fails
-    app = createApp(component);
+    app = createApp(compiledComponent);
     app.mount(container);
     unmount = () => {
       if (app) {
