@@ -20,10 +20,7 @@ export const parts = {
   },
 } satisfies ScenePart;
 
-enum TextFieldInputType {
-  Singleline = 'singleLine',
-  Multiline = 'multiline',
-}
+type TextFieldInputType = 'singleLine' | 'multiline';
 
 /**
  * A driver for the Material UI v6 Input, FilledInput, OutlinedInput, and StandardInput components.
@@ -40,12 +37,12 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
     // TODO: Detection of both input types can be done in parallel.
     const textInputExists = await this.interactor.exists(this.parts.singlelineInput.locator);
     if (textInputExists) {
-      return TextFieldInputType.Singleline;
+      return 'singleLine';
     }
 
     const multilineExists = await this.interactor.exists(this.parts.multilineInput.locator);
     if (multilineExists) {
-      return TextFieldInputType.Multiline;
+      return 'multiline';
     }
 
     throw new Error('Unable to determine input type in TextFieldInput');
@@ -58,9 +55,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
   async getValue(): Promise<string | null> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.getValue();
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.getValue();
     }
   }
@@ -73,9 +70,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
   async setValue(value: string | null): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.setValue(value);
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.setValue(value);
     }
   }
@@ -86,9 +83,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
   async isDisabled(): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.isDisabled();
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.isDisabled();
     }
   }
@@ -99,9 +96,9 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
   async isReadonly(): Promise<boolean> {
     const inputType = await this.getInputType();
     switch (inputType) {
-      case TextFieldInputType.Singleline:
+      case 'singleLine':
         return this.parts.singlelineInput.isReadonly();
-      case TextFieldInputType.Multiline:
+      case 'multiline':
         return this.parts.multilineInput.isReadonly();
     }
   }

@@ -1,4 +1,4 @@
-import { byCssSelector, type CssLocator, type LocatorRelativePosition, type PartLocator } from '../locators';
+import { byCssSelector, type CssLocator, type PartLocator } from '../locators';
 import { ComponentDriverCtor, ScenePart } from '../partTypes';
 import { append } from '../utils/locatorUtil';
 
