@@ -1,6 +1,6 @@
 {
-  "label": "MUI v7",
-  "position": 1,
+  "label": "MUI v7 component drivers",
+  "position": 2,
   "link": {
     "type": "generated-index",
     "description": "Component drivers for MUI version 7"
