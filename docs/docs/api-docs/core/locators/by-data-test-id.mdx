@@ -7,6 +7,24 @@ sidebar_position: 5
 Locate elements by the `data-testid` attribute.
 An array of IDs can be provided to build a descendant chain.
 
+```tsx title="LoginForm.tsx"
+<form>
+  <input data-testid='username' />
+  <input type='password' data-testid='password' />
+  <button data-testid='submit'>Submit</button>
+</form>
+```
+
 ```ts
 const submitBtn = byDataTestId('submit');
+```
+
+A common pattern is to use `byDataTestId` when defining a driver:
+
+```ts
+const parts = {
+  username: { locator: byDataTestId('username'), driver: TextFieldDriver },
+  password: { locator: byDataTestId('password'), driver: TextFieldDriver },
+  submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
+} satisfies ScenePart;
 ```
