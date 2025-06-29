@@ -1,0 +1,14 @@
+---
+id: by-linked-element
+title: byLinkedElement
+sidebar_position: 7
+---
+
+Experimental locator that relates two elements by matching attributes.
+
+```ts
+const label = byLinkedElement()
+  .onLinkedElement(byDataTestId('input'))
+  .extractAttribute('for')
+  .toMatchMyAttribute('id');
+```
