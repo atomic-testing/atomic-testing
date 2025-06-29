@@ -7,7 +7,6 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  type LocatorRelativePosition,
   locatorUtil,
   PartLocator,
   ScenePart,

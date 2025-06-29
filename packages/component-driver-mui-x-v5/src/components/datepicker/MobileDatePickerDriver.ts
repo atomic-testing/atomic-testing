@@ -6,7 +6,6 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
-  type LocatorRelativePosition,
   PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
