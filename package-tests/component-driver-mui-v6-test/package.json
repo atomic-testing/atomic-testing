@@ -34,7 +34,7 @@
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/internal-react-example": "workspace:*",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@mui/material": "^6.4.12",
     "@mui/icons-material": "^6.4.12",
     "react": "^18.2.0",
