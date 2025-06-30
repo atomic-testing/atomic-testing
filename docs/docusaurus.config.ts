@@ -105,15 +105,15 @@ const config: Config = {
       items: [
         {
           type: 'doc',
-          docId: 'intro',
+          docId: 'quick-start',
           position: 'left',
-          label: 'Get Started',
+          label: 'Getting Started',
         },
         {
           type: 'doc',
-          docId: 'concepts',
+          docId: 'intro',
           position: 'left',
-          label: 'Concepts',
+          label: 'Core Concepts',
         },
         {
           type: 'doc',
