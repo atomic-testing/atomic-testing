@@ -9,8 +9,8 @@ export interface VueSFCLikeComponent {
   template: string;
   setup?: () => any;
   data?: () => any;
-  methods?: Record<string, Function>;
-  computed?: Record<string, Function>;
+  methods?: Record<string, (...args: any[]) => any>;
+  computed?: Record<string, () => any>;
   name?: string;
   props?: any;
 }
