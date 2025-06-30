@@ -5,25 +5,27 @@ sidebar_label: Why Atomic Testing?
 sidebar_position: 3
 ---
 
-import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
 
 # Why Atomic Testing?
 
 ## The Learning Investment vs. Long-term Payoff
 
 ### **Initial Setup** (One-time cost)
+
 ```typescript
 // Yes, there's initial setup...
 const loginScene = {
   email: { locator: byDataTestId('email'), driver: TextFieldDriver },
   password: { locator: byDataTestId('password'), driver: TextFieldDriver },
   submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
-  error: { locator: byDataTestId('error'), driver: HTMLComponentDriver }
+  error: { locator: byDataTestId('error'), driver: HTMLComponentDriver },
 } satisfies ScenePart;
 ```
 
 ### **But Then Everything Becomes Simple**
+
 ```typescript
 // Tests become incredibly readable
 await testEngine.parts.email.setValue('user@example.com');
@@ -34,15 +36,16 @@ expect(await testEngine.parts.error.isVisible()).toBe(false);
 
 // And they work everywhere:
 // ✅ React DOM tests
-// ✅ Vue DOM tests  
+// ✅ Vue DOM tests
 // ✅ Playwright E2E tests
 // ✅ Future framework migrations
 ```
 
 ## **Real-world Scenarios Where Atomic Testing Shines**
 
-### **🔄 Framework Migration** 
-*The nightmare scenario that Atomic Testing makes trivial*
+### **🔄 Framework Migration**
+
+_The nightmare scenario that Atomic Testing makes trivial_
 
 <Tabs>
 <TabItem value="before" label="😱 Traditional Approach">
@@ -84,7 +87,7 @@ const loginScene = {
 // React
 const reactEngine = createTestEngine(<LoginForm />, loginScene);
 
-// Vue  
+// Vue
 const vueEngine = createTestEngine(LoginFormVue, loginScene);
 
 // Playwright
@@ -101,7 +104,8 @@ await testEngine.parts.submit.click();
 </Tabs>
 
 ### **📚 Component Library Updates**
-*When Material-UI releases breaking changes*
+
+_When Material-UI releases breaking changes_
 
 <Tabs>
 <TabItem value="traditional" label="😱 Traditional Approach">
@@ -128,7 +132,7 @@ expect(button).toHaveClass('MuiButton-contained MuiButton-colorPrimary');
 // Before
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
 
-// After  
+// After
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 
 // All test logic unchanged! ✨
@@ -142,7 +146,8 @@ expect(await testEngine.parts.submit.isDisabled()).toBe(false);
 </Tabs>
 
 ### **🧪 Multi-Environment Testing**
-*Same logic, different speeds*
+
+_Same logic, different speeds_
 
 ```typescript
 // Define your test logic once
@@ -151,7 +156,7 @@ async function validatePaymentFlow(testEngine) {
   await testEngine.parts.expiryDate.setValue('12/25');
   await testEngine.parts.cvv.setValue('123');
   await testEngine.parts.submit.click();
-  
+
   expect(await testEngine.parts.successMessage.isVisible()).toBe(true);
 }
 
@@ -167,6 +172,7 @@ await validatePaymentFlow(e2eEngine); // Same function! ✨
 ## **Developer Experience Over Time**
 
 ### **Week 1**: "This seems like extra work..."
+
 ```typescript
 // Traditional approach (seems simpler)
 const button = screen.getByRole('button', { name: /submit/i });
@@ -179,13 +185,14 @@ await engine.parts.submit.click();
 ```
 
 ### **Month 3**: "Wait, this is actually easier..."
+
 ```typescript
 // Complex interactions become trivial
 await testEngine.parts.form.fillAndSubmit({
   email: 'user@example.com',
   password: 'secure123',
   confirmPassword: 'secure123',
-  agreeToTerms: true
+  agreeToTerms: true,
 });
 
 // vs traditional approach
@@ -195,14 +202,15 @@ const confirmInput = screen.getByLabelText(/confirm password/i);
 const checkbox = screen.getByRole('checkbox', { name: /agree to terms/i });
 const submitButton = screen.getByRole('button', { name: /submit/i });
 
-fireEvent.change(emailInput, { target: { value: 'user@example.com' }});
-fireEvent.change(passwordInput, { target: { value: 'secure123' }});
-fireEvent.change(confirmInput, { target: { value: 'secure123' }});
+fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
+fireEvent.change(passwordInput, { target: { value: 'secure123' } });
+fireEvent.change(confirmInput, { target: { value: 'secure123' } });
 fireEvent.click(checkbox);
 fireEvent.click(submitButton);
 ```
 
 ### **Year 1**: "I can't imagine testing any other way"
+
 - ✅ **Tests survive major refactors** - Component internals change, tests don't break
 - ✅ **New team members understand tests immediately** - High-level semantic APIs
 - ✅ **E2E and unit tests share patterns** - Same mental model everywhere
@@ -212,13 +220,15 @@ fireEvent.click(submitButton);
 ## **The ROI Calculation**
 
 ### **Traditional Testing**
+
 - ❌ **Framework migration**: 100% test rewrite
-- ❌ **Library upgrades**: Manual updates to hundreds of tests  
+- ❌ **Library upgrades**: Manual updates to hundreds of tests
 - ❌ **New team members**: Learn different patterns for DOM vs E2E
 - ❌ **Refactoring**: Tests break when implementation changes
 - ❌ **Multi-environment**: Duplicate test logic across DOM/E2E
 
 ### **Atomic Testing**
+
 - ✅ **Framework migration**: Change engine creation only
 - ✅ **Library upgrades**: Update driver package version
 - ✅ **New team members**: Learn once, test everywhere
@@ -237,21 +247,24 @@ fireEvent.click(submitButton);
 ## **Getting Started Despite the Learning Curve**
 
 ### **Start Small**
+
 ```typescript
 // Don't try to convert everything at once
 // Start with one complex component that you test frequently
 const checkoutScene = {
-  submit: { locator: byDataTestId('checkout-submit'), driver: ButtonDriver }
+  submit: { locator: byDataTestId('checkout-submit'), driver: ButtonDriver },
 };
 ```
 
 ### **Gradual Adoption**
+
 1. **Week 1**: Use Atomic Testing for new tests only
-2. **Month 1**: Convert your most frequently changed tests  
+2. **Month 1**: Convert your most frequently changed tests
 3. **Month 3**: Migrate tests that break often during refactors
 4. **Month 6**: Full adoption for new features
 
 ### **Measure the Impact**
+
 - **Time saved** during component library upgrades
 - **Reduced friction** when adding E2E coverage
 - **Faster onboarding** for new team members
@@ -259,24 +272,28 @@ const checkoutScene = {
 
 The initial investment pays compound interest over time. The question isn't whether to adopt Atomic Testing—it's whether you can afford not to.
 
-<div className="card-container" style={{display: 'flex', gap: '1rem', marginTop: '2rem'}}>
-  <div className="card">
-    <div className="card__header">
+<div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+  <div className='card'>
+    <div className='card__header'>
       <h3>🚀 Ready to Start?</h3>
     </div>
-    <div className="card__body">
+    <div className='card__body'>
       <p>Convinced? Let's build your first test and see the benefits firsthand.</p>
-      <a href="./first-test" className="button button--primary">Start Tutorial →</a>
+      <a href='./first-test' className='button button--primary'>
+        Start Tutorial →
+      </a>
     </div>
   </div>
-  
-  <div className="card">
-    <div className="card__header">
+
+  <div className='card'>
+    <div className='card__header'>
       <h3>🤔 Still Have Questions?</h3>
     </div>
-    <div className="card__body">
+    <div className='card__body'>
       <p>Check our FAQ for common concerns and detailed comparisons.</p>
-      <a href="./faq" className="button button--secondary">Read FAQ →</a>
+      <a href='./faq' className='button button--secondary'>
+        Read FAQ →
+      </a>
     </div>
   </div>
 </div>

@@ -5,8 +5,8 @@ sidebar_label: Quick Start
 sidebar_position: 1
 ---
 
-import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
 
 # Quick Start
 
@@ -28,22 +28,19 @@ pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-mui-v7
 ## Your First Test
 
 ```tsx
-import { createTestEngine } from '@atomic-testing/react-18';
-import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 import { HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 import { byDataTestId } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/react-18';
 
 // Component to test
 function WelcomeButton({ name }: { name: string }) {
   const [clicked, setClicked] = useState(false);
-  
+
   return (
     <div>
-      <h1 data-testid="greeting">Hello {name}!</h1>
-      <button 
-        data-testid="welcome-btn" 
-        onClick={() => setClicked(true)}
-      >
+      <h1 data-testid='greeting'>Hello {name}!</h1>
+      <button data-testid='welcome-btn' onClick={() => setClicked(true)}>
         {clicked ? 'Welcome!' : 'Click me'}
       </button>
     </div>
@@ -53,21 +50,21 @@ function WelcomeButton({ name }: { name: string }) {
 // Test setup
 const welcomeScene = {
   greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
-  button: { locator: byDataTestId('welcome-btn'), driver: ButtonDriver }
+  button: { locator: byDataTestId('welcome-btn'), driver: ButtonDriver },
 };
 
 // Test
 it('should welcome the user when clicked', async () => {
-  const engine = createTestEngine(<WelcomeButton name="Alice" />, welcomeScene);
-  
+  const engine = createTestEngine(<WelcomeButton name='Alice' />, welcomeScene);
+
   // Check initial state
   expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
   expect(await engine.parts.button.getText()).toBe('Click me');
-  
+
   // Interact and verify
   await engine.parts.button.click();
   expect(await engine.parts.button.getText()).toBe('Welcome!');
-  
+
   await engine.cleanUp();
 });
 ```
@@ -84,9 +81,9 @@ pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
 ## Your First Test
 
 ```typescript
-import { createTestEngine } from '@atomic-testing/vue-3';
 import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/vue-3';
 import { ref } from 'vue';
 
 // Component to test (SFC-like)
@@ -105,26 +102,26 @@ const WelcomeButton = {
   `,
   setup() {
     const clicked = ref(false);
-    const handleClick = () => clicked.value = true;
+    const handleClick = () => (clicked.value = true);
     return { clicked, handleClick };
-  }
+  },
 };
 
 // Test setup (identical to React!)
 const welcomeScene = {
   greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
-  button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver }
+  button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
 // Test (identical to React!)
 it('should welcome the user when clicked', async () => {
   const engine = createTestEngine(WelcomeButton, welcomeScene);
-  
+
   // Same test logic as React version ✨
   expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
   await engine.parts.button.click();
   expect(await engine.parts.button.getText()).toBe('Welcome!');
-  
+
   await engine.cleanUp();
 });
 ```
@@ -141,24 +138,24 @@ pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
 ## Your First Test
 
 ```typescript
-import { test, expect } from '@playwright/test';
-import { createTestEngine } from '@atomic-testing/playwright';
 import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/playwright';
+import { test, expect } from '@playwright/test';
 
 // Same scene definition as React/Vue ✨
 const welcomeScene = {
   greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
-  button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver }
+  button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
 test('should welcome the user when clicked', async ({ page }) => {
   // Navigate to your app
   await page.goto('/welcome');
-  
+
   // Create test engine with same scene
   const engine = createTestEngine(page, welcomeScene);
-  
+
   // Same test logic as React/Vue versions ✨
   expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
   await engine.parts.button.click();
@@ -182,30 +179,34 @@ Notice how the test logic is **identical across frameworks**:
 ## 🎯 What Just Happened?
 
 1. **ScenePart**: Defined which components matter (`greeting`, `button`)
-2. **Locators**: Found components using `byDataTestId()` 
+2. **Locators**: Found components using `byDataTestId()`
 3. **Drivers**: Used semantic APIs (`click()`, `getText()`) instead of DOM manipulation
 4. **TestEngine**: Orchestrated everything together
 
 ## Next Steps
 
-<div className="card-container" style={{display: 'flex', gap: '1rem', marginTop: '2rem'}}>
-  <div className="card">
-    <div className="card__header">
+<div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+  <div className='card'>
+    <div className='card__header'>
       <h3>🏗️ Build Your First Real Test</h3>
     </div>
-    <div className="card__body">
+    <div className='card__body'>
       <p>Follow our step-by-step tutorial with a complete login form example.</p>
-      <a href="./first-test" className="button button--primary">Start Tutorial →</a>
+      <a href='./first-test' className='button button--primary'>
+        Start Tutorial →
+      </a>
     </div>
   </div>
-  
-  <div className="card">
-    <div className="card__header">
+
+  <div className='card'>
+    <div className='card__header'>
       <h3>📦 Choose Your Packages</h3>
     </div>
-    <div className="card__body">
+    <div className='card__body'>
       <p>Not sure which packages you need? We'll help you decide based on your stack.</p>
-      <a href="./framework-guide" className="button button--secondary">Package Guide →</a>
+      <a href='./framework-guide' className='button button--secondary'>
+        Package Guide →
+      </a>
     </div>
   </div>
 </div>
