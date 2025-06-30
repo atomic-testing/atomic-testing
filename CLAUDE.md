@@ -25,6 +25,7 @@ This is **Atomic Testing** - a portable UI testing library that provides consist
 ### Documentation
 
 - `pnpm run typedoc` - Generate API documentation
+- **`cd docs && pnpm build`** - Build Docusaurus documentation (IMPORTANT: Always test this before documentation PRs)
 
 ## Architecture
 
@@ -237,3 +238,32 @@ testEngine.parts.button.click()  // User call
 - Build failures? Check if auto-formatting committed changes and retriggered
 - Test timeouts? Look for missing `await` keywords in async operations
 - Matrix job failures? Verify directory names match in `package-tests/`
+
+### Documentation Issues
+- **Always test docs build**: `cd docs && pnpm build` before submitting documentation PRs
+- **File ID mismatches**: Check frontmatter `id` field matches sidebar references (not filename)
+- **Broken links**: Use relative paths like `./tutorial` for internal docs links
+- **Docusaurus structure**: `docs/docs/` contains content, `docs/sidebars.ts` defines navigation
+- **API docs**: Auto-generated in `docs/docs/api/` - warnings about missing TypeDoc references are usually non-critical
+
+## Documentation Architecture
+
+### Docusaurus Setup
+- **Content**: `docs/docs/*.mdx` files with frontmatter
+- **Navigation**: `docs/sidebars.ts` defines sidebar structure  
+- **Homepage**: `docs/src/pages/index.tsx` and `docs/src/components/HomepageFeatures/`
+- **Config**: `docs/docusaurus.config.ts` for site settings
+
+### Documentation User Journey
+1. **Homepage** → Value proposition, click "Get Started"
+2. **Quick Start** → Framework selection, 5-minute working example
+3. **Framework Guide** → Package selection based on tech stack
+4. **Why Atomic Testing** → Long-term ROI demonstration
+5. **Tutorial/Setup** → Complete implementation guides
+
+### Content Strategy
+- **Progressive disclosure**: Start simple, add complexity gradually
+- **Framework-agnostic examples**: Show cross-framework compatibility upfront
+- **Real-world scenarios**: Migration stories, upgrade scenarios, ROI demonstrations
+- **Practical first**: Working code before concepts
+- **Decision trees**: Help users choose the right packages/approach

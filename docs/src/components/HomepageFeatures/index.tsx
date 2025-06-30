@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 
 import clsx from 'clsx';
 
@@ -12,39 +12,48 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Unified Testing Solution',
+    title: 'Write Once, Test Everywhere',
     // Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Seamlessly integrate with top UI frameworks (React, Vue&nbsp;3, vanilla&nbsp;JS, Angular) and testing tools
-        (Playwright, Cypress, DOM testing) for a streamlined and efficient testing experience
+        Same test code works across React, Vue, Playwright, and DOM testing.
+        <br />
+        <strong>Learn once, test any UI framework.</strong>
       </>
     ),
   },
   {
-    title: 'Broad Compatibility',
+    title: 'High-Level Semantic APIs',
     // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Effortlessly drive applications using popular UI libraries like Material UI and Bootstrap, ensuring a consistent
-        and flawless user experience across platforms.
+        <code>muiSelect.selectByLabel('Option 2')</code> instead of complex DOM queries.
+        <br />
+        <strong>Focus on user behavior, not implementation details.</strong>
       </>
     ),
   },
   {
-    title: 'Simplified Testing',
+    title: 'Framework Agnostic Drivers',
     // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Our portable library reduces the complexity of UI testing, enabling developers to focus on building high-quality
-        applications with ease and confidence.
+        Reuse component drivers across Material-UI, Bootstrap, and custom components.
+        <br />
+        <strong>Component library changes don't break your tests.</strong>
       </>
     ),
   },
   {
-    title: 'Composable and extendable',
+    title: 'Future-Proof Architecture',
     // Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: <>Make your tests simpler and with composable architecture</>,
+    description: (
+      <>
+        Framework migrations, library upgrades, and test environment changes become trivial.
+        <br />
+        <strong>Your testing investment scales with your application.</strong>
+      </>
+    ),
   },
 ];
 

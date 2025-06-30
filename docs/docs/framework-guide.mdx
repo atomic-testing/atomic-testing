@@ -1,0 +1,263 @@
+---
+id: framework-guide
+title: Framework Guide
+sidebar_label: Which Packages?
+sidebar_position: 2
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Which Packages Do I Need?
+
+## 🤔 Choose Your Testing Strategy
+
+### **DOM Testing (Fast, Unit-focused)**
+Perfect for component testing, business logic, and rapid development cycles.
+
+- **React Apps**: `@atomic-testing/react-18` or `@atomic-testing/react-19`
+- **Vue Apps**: `@atomic-testing/vue-3`  
+- **Vanilla JS**: `@atomic-testing/dom-core`
+
+### **E2E Testing (Slow, Integration-focused)**
+Great for user flows, cross-browser testing, and production-like scenarios.
+
+- **Any Framework**: `@atomic-testing/playwright`
+
+## 📦 Common Package Combinations
+
+<Tabs>
+<TabItem value="react-mui" label="React + Material-UI">
+
+```bash
+# Most popular combination
+pnpm add @atomic-testing/react-18 @atomic-testing/component-driver-mui-v7
+
+# If you're using React 19
+pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-mui-v7
+
+# If you're still on React 17
+pnpm add @atomic-testing/react-legacy @atomic-testing/component-driver-mui-v6
+```
+
+**Perfect for**: Modern React apps with Material-UI components
+
+</TabItem>
+
+<TabItem value="vue-html" label="Vue 3 + HTML">
+
+```bash
+# Vue 3 with standard HTML elements
+pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
+
+# Vue 3 with Material-UI (if using Vuetify/similar)
+pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-mui-v7
+```
+
+**Perfect for**: Vue 3 applications with custom components or HTML-based UI libraries
+
+</TabItem>
+
+<TabItem value="e2e-any" label="E2E Testing (Any Framework)">
+
+```bash
+# E2E testing with Material-UI components
+pnpm add @atomic-testing/playwright @atomic-testing/component-driver-mui-v7
+
+# E2E testing with HTML elements
+pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
+
+# E2E testing with multiple component libraries
+pnpm add @atomic-testing/playwright \
+  @atomic-testing/component-driver-mui-v7 \
+  @atomic-testing/component-driver-html
+```
+
+**Perfect for**: Cross-browser testing, user journey validation, production testing
+
+</TabItem>
+
+<TabItem value="fullstack" label="Full-Stack Testing">
+
+```bash
+# Cover all bases: DOM + E2E
+pnpm add @atomic-testing/react-18 \
+  @atomic-testing/playwright \
+  @atomic-testing/component-driver-mui-v7 \
+  @atomic-testing/component-driver-html
+```
+
+**Perfect for**: Comprehensive testing strategy with fast DOM tests + thorough E2E coverage
+
+</TabItem>
+</Tabs>
+
+## 🎯 Framework-Specific Details
+
+### **React Integration**
+
+<Tabs>
+<TabItem value="react-18" label="React 18">
+
+```bash
+pnpm add @atomic-testing/react-18
+```
+
+- ✅ **React 18 concurrent features**
+- ✅ **Automatic batching support**
+- ✅ **Strict mode compatibility**
+- ✅ **Modern React patterns**
+
+</TabItem>
+
+<TabItem value="react-19" label="React 19">
+
+```bash
+pnpm add @atomic-testing/react-19
+```
+
+- ✅ **Latest React features**
+- ✅ **Performance improvements**
+- ✅ **Future-proof for React ecosystem**
+
+</TabItem>
+
+<TabItem value="react-legacy" label="React 17">
+
+```bash
+pnpm add @atomic-testing/react-legacy
+```
+
+- ✅ **Legacy React support**
+- ✅ **Gradual migration path**
+- ⚠️ **Consider upgrading to React 18+**
+
+</TabItem>
+</Tabs>
+
+### **Vue 3 Integration**
+
+```bash
+pnpm add @atomic-testing/vue-3
+```
+
+- ✅ **Automatic reactivity handling** with `nextTick()`
+- ✅ **SFC-like component support** for easy testing
+- ✅ **Vue Testing Library integration**
+- ✅ **Composition API compatibility**
+
+### **Playwright Integration**
+
+```bash
+pnpm add @atomic-testing/playwright
+```
+
+- ✅ **Cross-browser testing** (Chrome, Firefox, Safari)
+- ✅ **Mobile testing** with device emulation
+- ✅ **Screenshot and video recording**
+- ✅ **Network interception** and mocking
+
+## 🧩 Component Driver Libraries
+
+### **Material-UI Drivers**
+
+<Tabs>
+<TabItem value="mui-v7" label="MUI v7 (Latest)">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-v7
+```
+
+**Supports**: TextField, Button, Select, Autocomplete, DataGrid, DatePicker, and more
+
+</TabItem>
+
+<TabItem value="mui-v6" label="MUI v6">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-v6
+```
+
+**Supports**: Core MUI v6 components with stable APIs
+
+</TabItem>
+
+<TabItem value="mui-v5" label="MUI v5">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-v5
+```
+
+**Supports**: Legacy MUI v5 components (consider upgrading)
+
+</TabItem>
+</Tabs>
+
+### **HTML Drivers**
+
+```bash
+pnpm add @atomic-testing/component-driver-html
+```
+
+**Supports**: Standard HTML elements (button, input, select, etc.)
+
+**Perfect for**: Custom components, HTML-based UI libraries, or when you need basic element interaction
+
+## 🤷 Not Sure Which to Choose?
+
+### **Start Simple**
+
+```bash
+# If you're just getting started
+pnpm add @atomic-testing/react-18 @atomic-testing/component-driver-html
+```
+
+You can always add more packages later. HTML drivers work with any components.
+
+### **Decision Tree**
+
+1. **What's your primary framework?**
+   - React → `@atomic-testing/react-18`
+   - Vue → `@atomic-testing/vue-3`
+   - Multiple/E2E → `@atomic-testing/playwright`
+
+2. **What UI library do you use?**
+   - Material-UI → `@atomic-testing/component-driver-mui-v7`
+   - Custom/HTML → `@atomic-testing/component-driver-html`
+   - Bootstrap/Other → Start with HTML drivers, build custom as needed
+
+3. **What's your testing strategy?**
+   - Fast unit tests → DOM testing packages
+   - Integration tests → Add Playwright
+   - Both → Install both!
+
+## 🚀 Ready to Start?
+
+<div className="card-container" style={{display: 'flex', gap: '1rem', marginTop: '2rem'}}>
+  <div className="card">
+    <div className="card__header">
+      <h3>🏗️ Build Your First Test</h3>
+    </div>
+    <div className="card__body">
+      <p>Now that you know which packages to install, let's build a complete test together.</p>
+      <a href="./first-test" className="button button--primary">Start Tutorial →</a>
+    </div>
+  </div>
+  
+  <div className="card">
+    <div className="card__header">
+      <h3>📚 Framework-Specific Guides</h3>
+    </div>
+    <div className="card__body">
+      <p>Deep dive into React, Vue, or Playwright specific patterns and best practices.</p>
+      <a href="./react-guide" className="button button--secondary">Framework Guides →</a>
+    </div>
+  </div>
+</div>
+
+## 💡 Pro Tips
+
+- **Start with DOM testing** - It's faster and easier to debug
+- **Add E2E tests gradually** - Focus on critical user journeys
+- **Mix component drivers** - Use HTML + MUI drivers in the same project
+- **Upgrade incrementally** - You can migrate from v6 to v7 drivers over time
