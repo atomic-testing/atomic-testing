@@ -1,0 +1,282 @@
+---
+id: why-atomic-testing
+title: Why Atomic Testing?
+sidebar_label: Why Atomic Testing?
+sidebar_position: 3
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Why Atomic Testing?
+
+## The Learning Investment vs. Long-term Payoff
+
+### **Initial Setup** (One-time cost)
+```typescript
+// Yes, there's initial setup...
+const loginScene = {
+  email: { locator: byDataTestId('email'), driver: TextFieldDriver },
+  password: { locator: byDataTestId('password'), driver: TextFieldDriver },
+  submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
+  error: { locator: byDataTestId('error'), driver: HTMLComponentDriver }
+} satisfies ScenePart;
+```
+
+### **But Then Everything Becomes Simple**
+```typescript
+// Tests become incredibly readable
+await testEngine.parts.email.setValue('user@example.com');
+await testEngine.parts.password.setValue('secure123');
+await testEngine.parts.submit.click();
+
+expect(await testEngine.parts.error.isVisible()).toBe(false);
+
+// And they work everywhere:
+// ✅ React DOM tests
+// ✅ Vue DOM tests  
+// ✅ Playwright E2E tests
+// ✅ Future framework migrations
+```
+
+## **Real-world Scenarios Where Atomic Testing Shines**
+
+### **🔄 Framework Migration** 
+*The nightmare scenario that Atomic Testing makes trivial*
+
+<Tabs>
+<TabItem value="before" label="😱 Traditional Approach">
+
+```typescript
+// React Testing Library
+const emailInput = screen.getByLabelText(/email/i);
+const submitButton = screen.getByRole('button', { name: /submit/i });
+fireEvent.change(emailInput, { target: { value: 'user@example.com' }});
+fireEvent.click(submitButton);
+
+// Vue Test Utils (completely different!)
+const wrapper = mount(LoginForm);
+const emailInput = wrapper.find('[data-testid="email"]');
+const submitButton = wrapper.find('[data-testid="submit"]');
+await emailInput.setValue('user@example.com');
+await submitButton.trigger('click');
+
+// Playwright (different again!)
+await page.locator('[data-testid="email"]').fill('user@example.com');
+await page.locator('[data-testid="submit"]').click();
+```
+
+**Result**: Complete test rewrite for every framework change 😭
+
+</TabItem>
+
+<TabItem value="after" label="✨ Atomic Testing Approach">
+
+```typescript
+// Define once
+const loginScene = {
+  email: { locator: byDataTestId('email'), driver: TextFieldDriver },
+  submit: { locator: byDataTestId('submit'), driver: ButtonDriver }
+};
+
+// Works everywhere with identical code:
+
+// React
+const reactEngine = createTestEngine(<LoginForm />, loginScene);
+
+// Vue  
+const vueEngine = createTestEngine(LoginFormVue, loginScene);
+
+// Playwright
+const e2eEngine = createTestEngine(page, loginScene);
+
+// Same test logic for all! ✨
+await testEngine.parts.email.setValue('user@example.com');
+await testEngine.parts.submit.click();
+```
+
+**Result**: Zero test rewrite. Just change the engine creation! 🎉
+
+</TabItem>
+</Tabs>
+
+### **📚 Component Library Updates**
+*When Material-UI releases breaking changes*
+
+<Tabs>
+<TabItem value="traditional" label="😱 Traditional Approach">
+
+```typescript
+// Material-UI v5 → v6 upgrade breaks everything
+// Before v6:
+const button = screen.getByRole('button');
+expect(button).toHaveClass('MuiButton-containedPrimary');
+
+// After v6: Classes changed!
+expect(button).toHaveClass('MuiButton-contained MuiButton-colorPrimary');
+
+// Hundreds of tests need manual updates 😭
+```
+
+</TabItem>
+
+<TabItem value="atomic" label="✨ Atomic Testing Approach">
+
+```typescript
+// Material-UI v6 → v7 upgrade? Change one import:
+
+// Before
+import { ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
+
+// After  
+import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
+
+// All test logic unchanged! ✨
+await testEngine.parts.submit.click();
+expect(await testEngine.parts.submit.isDisabled()).toBe(false);
+```
+
+**Result**: One import change vs. hundreds of test updates 🚀
+
+</TabItem>
+</Tabs>
+
+### **🧪 Multi-Environment Testing**
+*Same logic, different speeds*
+
+```typescript
+// Define your test logic once
+async function validatePaymentFlow(testEngine) {
+  await testEngine.parts.creditCard.setValue('4111111111111111');
+  await testEngine.parts.expiryDate.setValue('12/25');
+  await testEngine.parts.cvv.setValue('123');
+  await testEngine.parts.submit.click();
+  
+  expect(await testEngine.parts.successMessage.isVisible()).toBe(true);
+}
+
+// Run fast during development (DOM test - 100ms)
+const domEngine = createTestEngine(<PaymentForm />, paymentScene);
+await validatePaymentFlow(domEngine);
+
+// Run comprehensive before deploy (E2E test - 2 seconds)
+const e2eEngine = createTestEngine(page, paymentScene);
+await validatePaymentFlow(e2eEngine); // Same function! ✨
+```
+
+## **Developer Experience Over Time**
+
+### **Week 1**: "This seems like extra work..."
+```typescript
+// Traditional approach (seems simpler)
+const button = screen.getByRole('button', { name: /submit/i });
+fireEvent.click(button);
+
+// vs Atomic Testing (more setup)
+const scene = { submit: { locator: byDataTestId('submit'), driver: ButtonDriver }};
+const engine = createTestEngine(<Form />, scene);
+await engine.parts.submit.click();
+```
+
+### **Month 3**: "Wait, this is actually easier..."
+```typescript
+// Complex interactions become trivial
+await testEngine.parts.form.fillAndSubmit({
+  email: 'user@example.com',
+  password: 'secure123',
+  confirmPassword: 'secure123',
+  agreeToTerms: true
+});
+
+// vs traditional approach
+const emailInput = screen.getByLabelText(/email/i);
+const passwordInput = screen.getByLabelText(/^password$/i);
+const confirmInput = screen.getByLabelText(/confirm password/i);
+const checkbox = screen.getByRole('checkbox', { name: /agree to terms/i });
+const submitButton = screen.getByRole('button', { name: /submit/i });
+
+fireEvent.change(emailInput, { target: { value: 'user@example.com' }});
+fireEvent.change(passwordInput, { target: { value: 'secure123' }});
+fireEvent.change(confirmInput, { target: { value: 'secure123' }});
+fireEvent.click(checkbox);
+fireEvent.click(submitButton);
+```
+
+### **Year 1**: "I can't imagine testing any other way"
+- ✅ **Tests survive major refactors** - Component internals change, tests don't break
+- ✅ **New team members understand tests immediately** - High-level semantic APIs
+- ✅ **E2E and unit tests share patterns** - Same mental model everywhere
+- ✅ **Component library upgrades don't break tests** - Driver updates handle breaking changes
+- ✅ **Framework migrations become feasible** - Test logic transfers completely
+
+## **The ROI Calculation**
+
+### **Traditional Testing**
+- ❌ **Framework migration**: 100% test rewrite
+- ❌ **Library upgrades**: Manual updates to hundreds of tests  
+- ❌ **New team members**: Learn different patterns for DOM vs E2E
+- ❌ **Refactoring**: Tests break when implementation changes
+- ❌ **Multi-environment**: Duplicate test logic across DOM/E2E
+
+### **Atomic Testing**
+- ✅ **Framework migration**: Change engine creation only
+- ✅ **Library upgrades**: Update driver package version
+- ✅ **New team members**: Learn once, test everywhere
+- ✅ **Refactoring**: Tests focus on behavior, not implementation
+- ✅ **Multi-environment**: Share test logic across environments
+
+## **When NOT to Use Atomic Testing**
+
+**Be honest with yourself:**
+
+- **Prototype/throwaway projects** - If you're never maintaining this code
+- **Single simple component** - If you're testing one button, traditional approaches are fine
+- **Team unwilling to learn** - The initial learning curve requires buy-in
+- **No component library** - If you're not using MUI/Bootstrap/etc, benefit is reduced
+
+## **Getting Started Despite the Learning Curve**
+
+### **Start Small**
+```typescript
+// Don't try to convert everything at once
+// Start with one complex component that you test frequently
+const checkoutScene = {
+  submit: { locator: byDataTestId('checkout-submit'), driver: ButtonDriver }
+};
+```
+
+### **Gradual Adoption**
+1. **Week 1**: Use Atomic Testing for new tests only
+2. **Month 1**: Convert your most frequently changed tests  
+3. **Month 3**: Migrate tests that break often during refactors
+4. **Month 6**: Full adoption for new features
+
+### **Measure the Impact**
+- **Time saved** during component library upgrades
+- **Reduced friction** when adding E2E coverage
+- **Faster onboarding** for new team members
+- **Fewer test failures** during refactoring
+
+The initial investment pays compound interest over time. The question isn't whether to adopt Atomic Testing—it's whether you can afford not to.
+
+<div className="card-container" style={{display: 'flex', gap: '1rem', marginTop: '2rem'}}>
+  <div className="card">
+    <div className="card__header">
+      <h3>🚀 Ready to Start?</h3>
+    </div>
+    <div className="card__body">
+      <p>Convinced? Let's build your first test and see the benefits firsthand.</p>
+      <a href="./first-test" className="button button--primary">Start Tutorial →</a>
+    </div>
+  </div>
+  
+  <div className="card">
+    <div className="card__header">
+      <h3>🤔 Still Have Questions?</h3>
+    </div>
+    <div className="card__body">
+      <p>Check our FAQ for common concerns and detailed comparisons.</p>
+      <a href="./faq" className="button button--secondary">Read FAQ →</a>
+    </div>
+  </div>
+</div>
