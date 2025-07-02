@@ -5,16 +5,57 @@ sidebar_label: First Test
 sidebar_position: 4
 ---
 
-# Your First Complete Test
+This walkthrough shows a minimal Atomic Test using React and the HTML component driver. The same structure works in Vue or Playwright as well.
 
-🚧 **Coming Soon!**
+## 1. Install packages
 
-This page will walk you through building a complete, real-world test step-by-step.
+```bash
+pnpm add @atomic-testing/react-18 @atomic-testing/component-driver-html
+```
 
-For now, check out:
+## 2. Create a small component
 
-- [Getting Started Tutorial](./tutorial) - Detailed tutorial with login form
-- [Setup Guide](./setup) - Step-by-step setup instructions
-- [Quick Start](./quick-start) - 5-minute framework examples
+```tsx title="WelcomeButton.tsx"
+import { useState } from 'react';
 
-We're working on making this the ultimate beginner-friendly guide to Atomic Testing! 🚀
+export function WelcomeButton({ name }: { name: string }) {
+  const [clicked, setClicked] = useState(false);
+  return (
+    <div>
+      <h1 data-testid='greeting'>Hello {name}!</h1>
+      <button data-testid='welcome-btn' onClick={() => setClicked(true)}>
+        {clicked ? 'Welcome!' : 'Click me'}
+      </button>
+    </div>
+  );
+}
+```
+
+## 3. Define the scene
+
+```ts
+import { HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+
+export const welcomeScene = {
+  greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
+  button: { locator: byDataTestId('welcome-btn'), driver: HTMLComponentDriver },
+} satisfies ScenePart;
+```
+
+## 4. Write the test
+
+```ts
+import { createTestEngine } from '@atomic-testing/react-18';
+import { WelcomeButton } from './WelcomeButton';
+
+it('welcomes the user when clicked', async () => {
+  const engine = createTestEngine(<WelcomeButton name="Alice" />, welcomeScene);
+  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+  await engine.parts.button.click();
+  expect(await engine.parts.button.getText()).toBe('Welcome!');
+  await engine.cleanUp();
+});
+```
+
+That's it! You've created a fully functioning Atomic Test. Continue with the [Step-by-Step Tutorial](./tutorial) for a more complete example.

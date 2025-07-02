@@ -9,3 +9,5 @@ Locate an element by any attribute and value.
 ```ts
 const dialog = byAttribute('role', 'dialog');
 ```
+
+This helper is flexible but can be brittle if you rely on attributes that change often. Prefer more specific locators like [byDataTestId](./by-data-test-id) when possible.

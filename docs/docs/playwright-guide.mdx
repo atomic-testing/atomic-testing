@@ -1,0 +1,18 @@
+---
+id: playwright-guide
+title: Playwright Integration
+sidebar_label: Playwright Guide
+sidebar_position: 5
+---
+
+Atomic Testing works with Playwright for full browser tests.
+
+## Install
+
+```bash
+pnpm add @atomic-testing/playwright
+```
+
+Create your scenes the same way as in React or Vue tests, then use `createTestEngine(page, scene)` to drive the browser.
+
+Playwright lets you run the same drivers against real pages for end‑to‑end coverage.
