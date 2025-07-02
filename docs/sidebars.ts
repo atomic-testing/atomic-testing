@@ -21,6 +21,9 @@ const sidebars = {
       items: [
         'quick-start', // NEW: Choose your framework + 5-minute example
         'framework-guide', // NEW: React vs Vue vs Playwright decision guide
+        'react-guide',
+        'vue-guide',
+        'playwright-guide',
         'why-atomic-testing', // NEW: Long-term value demonstration
         'tutorial', // EXISTING: Detailed tutorial
       ],

@@ -1,6 +1,8 @@
 # Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This `docs` folder contains the source for the public documentation site at [https://atomic-testing.dev](https://atomic-testing.dev). It is built with [Docusaurus 2](https://docusaurus.io/).
+
+The rest of the repository holds the Atomic Testing packages. See the root [README](../README.md) for package details.
 
 ### Installation
 
@@ -25,6 +27,7 @@ $ pnpm build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
+After running `pnpm build` the generated files live in `docs/build`. Deploying to GitHub Pages will publish them to `https://atomic-testing.dev`.
 
 ### Deployment
 

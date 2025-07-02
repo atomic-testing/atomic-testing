@@ -1,0 +1,22 @@
+---
+id: react-guide
+title: React Integration
+sidebar_label: React Guide
+sidebar_position: 3
+---
+
+This guide covers integrating **Atomic Testing** into a React project. It focuses on the packages you need and how they differ between React versions.
+
+## Install the package
+
+```bash
+pnpm add @atomic-testing/react-18
+```
+
+Replace `react-18` with `react-19` or `react-legacy` if you use a different React version.
+
+## Why multiple packages?
+
+Each React package wraps the core APIs so they match the React runtime you are using. They expose the same `createTestEngine` function but ensure compatibility with your React version.
+
+See the [Framework Guide](./framework-guide) for an overview of when to pick each package.
