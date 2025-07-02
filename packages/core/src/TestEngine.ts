@@ -18,7 +18,7 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
    * @param locator     Root locator for the scene.
    * @param interactor  Low level interactor used by drivers.
    * @param option      Optional driver configuration.
-   * @param cleanUp     Hook executed when {@link cleanUp} is called.
+   * @param cleanUp     Hook executed when {@link TestEngine.cleanUp | cleanUp} is called.
    */
   constructor(
     locator: PartLocator,
