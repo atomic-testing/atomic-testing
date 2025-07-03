@@ -1,6 +1,6 @@
-import { TestEngine } from '@atomic-testing/core';
-import { createTestEngine } from '@atomic-testing/angular-16';
 import { FormsModule } from '@angular/forms';
+import { createTestEngine } from '@atomic-testing/angular-16';
+import { TestEngine } from '@atomic-testing/core';
 
 import { signupFormExample } from '../src/SignupForm.example';
 

@@ -1,6 +1,6 @@
-import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
-import { ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Type } from '@angular/core';
+import { ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 
 import { AngularInteractor } from './AngularInteractor';
 import { IAngularTestEngineOption } from './types';

@@ -1,3 +1,4 @@
+import { ComponentFixture } from '@angular/core/testing';
 import {
   ClickOption,
   defaultWaitForOption,
@@ -16,7 +17,6 @@ import {
   WaitUntilOption,
 } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
-import { ComponentFixture } from '@angular/core/testing';
 
 export class AngularInteractor extends DOMInteractor {
   constructor(private readonly fixture: ComponentFixture<any>) {
