@@ -1,0 +1,46 @@
+{
+  "name": "@atomic-testing/angular-16",
+  "version": "0.78.0",
+  "description": "Adapter for Angular 16",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsc --noEmit"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "keywords": [
+    "testing",
+    "angular",
+    "unit",
+    "integration"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/angular-16"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*",
+    "@angular/core": "^16.0.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^16.0.0",
+    "@angular/compiler": "^16.0.0",
+    "@angular/compiler-cli": "^16.0.0",
+    "@angular/platform-browser": "^16.0.0",
+    "@angular/platform-browser-dynamic": "^16.0.0",
+    "@angular/forms": "^16.0.0"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=16.0.0",
+    "@angular/common": ">=16.0.0"
+  }
+}
