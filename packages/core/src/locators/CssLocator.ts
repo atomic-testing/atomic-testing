@@ -11,6 +11,10 @@ export interface CssLocatorInitializer {
   source: CssLocatorSource;
 }
 
+function isValidRelativePosition(value: any): value is LocatorRelativePosition {
+  return value === 'Root' || value === 'Descendant' || value === 'Same';
+}
+
 export class CssLocator {
   private _relativePosition: LocatorRelativePosition = 'Descendant';
   private _type: LocatorType = 'css';
@@ -20,7 +24,14 @@ export class CssLocator {
     public readonly selector: string,
     initializeValue?: Partial<CssLocatorInitializer>
   ) {
+    if (!selector || selector.trim() === '') {
+      throw new Error('CSS selector cannot be empty');
+    }
+
     if (initializeValue) {
+      if (initializeValue.relative !== undefined && !isValidRelativePosition(initializeValue.relative)) {
+        throw new Error(`Invalid relative position: ${initializeValue.relative}`);
+      }
       this._relativePosition = initializeValue.relative || this.relative;
       this._source = initializeValue.source || this.source;
     }
