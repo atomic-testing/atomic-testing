@@ -49,10 +49,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git commit -m "style: auto-format code with prettier
-
-          🤖 Generated with [Claude Code](https://claude.ai/code)
-
-          Co-Authored-By: Claude <noreply@anthropic.com>"
           git push origin HEAD:${{ github.head_ref || github.ref_name }}
 
   # Build once - this job builds all packages and caches the results
