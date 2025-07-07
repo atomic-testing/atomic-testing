@@ -40,6 +40,8 @@ as Playwright or Cypress.
 
 Assign stable `data-testid` values to the elements you need to interact with. Locators built with `byDataTestId()` are both reliable and easy to read. For a full list of locator helpers see [the API overview](./api-overview.mdx#locator). Avoid relying solely on CSS selectors—they tend to change as the markup evolves.
 
+If a stable `data-testid` isn't available, prefer semantic queries. `byRole` is ideal for accessibility checks while `byName` matches common form fields. Reserve raw CSS selectors only for cases that cannot be expressed with the higher level helpers.
+
 ### 5. Clean Up the Test Engine
 
 Call `testEngine.cleanUp()` in `afterEach` hooks. Unmounting the rendered
