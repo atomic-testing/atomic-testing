@@ -1,4 +1,5 @@
 import { escapeName, escapeValue } from '../utils/escapeUtil';
+import { assertNonEmpty } from '../utils/validation';
 
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -27,6 +28,8 @@ export function byAttribute(
   value: string,
   relativeTo: LocatorRelativePosition = 'Descendant'
 ): CssLocator {
+  assertNonEmpty(name, 'attribute name');
+  assertNonEmpty(value, 'attribute value');
   const selector = name === 'id' ? `#${escapeValue(value)}` : `[${escapeName(name)}="${escapeValue(value)}"]`;
   return new CssLocator(selector, {
     relative: relativeTo,
