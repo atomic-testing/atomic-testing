@@ -6,3 +6,5 @@ pnpm-lock.yaml
 **/dist/**/*
 **/build/**/*
 CNAME
+
+package-tests/angular-16-test/src/SignupForm.component.ts

@@ -167,6 +167,8 @@ jobs:
             directory: 'component-driver-mui-x-v8-test'
           - name: 'Vue 3 components'
             directory: 'vue-3-test'
+          - name: 'Angular 16 components'
+            directory: 'angular-16-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
