@@ -1,4 +1,5 @@
 import { escapeValue } from '../utils/escapeUtil';
+import { assertNonEmpty } from '../utils/validation';
 
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -27,6 +28,7 @@ export type ByDataTestIdSource = {
  */
 export function byDataTestId(id: string | string[], relativeTo: LocatorRelativePosition = 'Descendant'): CssLocator {
   const ids = Array.isArray(id) ? id : [id];
+  ids.forEach(value => assertNonEmpty(value, 'data-testid'));
   const selector = ids.map(idVal => `[data-testid="${escapeValue(idVal)}"]`).join(' ');
   return new CssLocator(selector, {
     relative: relativeTo,

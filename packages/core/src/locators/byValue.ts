@@ -1,4 +1,5 @@
 import { escapeValue } from '../utils/escapeUtil';
+import { assertNonEmpty } from '../utils/validation';
 
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -21,6 +22,7 @@ export type ByValueSource = {
  * ```
  */
 export function byValue(value: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
+  assertNonEmpty(value, 'value');
   const sanitized = escapeValue(value);
   return new CssLocator(`[value="${sanitized}"]`, {
     relative,

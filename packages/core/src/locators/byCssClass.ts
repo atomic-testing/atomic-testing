@@ -1,4 +1,5 @@
 import { escapeCssClassName } from '../utils/escapeUtil';
+import { assertNonEmpty } from '../utils/validation';
 
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -29,6 +30,7 @@ export function byCssClass(
   relativeTo: LocatorRelativePosition = 'Descendant'
 ): CssLocator {
   const classNames = Array.isArray(className) ? className : [className];
+  classNames.forEach(name => assertNonEmpty(name, 'className'));
   const selector = classNames.map(cls => `.${escapeCssClassName(cls)}`).join('');
   return new CssLocator(selector, {
     relative: relativeTo,

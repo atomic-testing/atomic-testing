@@ -1,3 +1,5 @@
+import { assertNonEmpty } from '../utils/validation';
+
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
@@ -22,6 +24,7 @@ export type ByTagNameSource = {
  * ```
  */
 export function byTagName(tagName: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
+  assertNonEmpty(tagName, 'tagName');
   return new CssLocator(tagName, {
     relative,
     source: {

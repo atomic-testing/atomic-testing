@@ -40,13 +40,17 @@ as Playwright or Cypress.
 
 Assign stable `data-testid` values to the elements you need to interact with. Locators built with `byDataTestId()` are both reliable and easy to read. For a full list of locator helpers see [the API overview](./api-overview.mdx#locator). Avoid relying solely on CSS selectors—they tend to change as the markup evolves.
 
-### 5. Clean Up the Test Engine
+### 5. Choose Semantic Locators When Possible
+
+Use `byRole()` to locate elements with meaningful ARIA roles like `button` or `dialog`. This keeps tests accessible and mirrors how assistive technologies query the DOM. For form fields that will be submitted, `byName()` provides a stable hook that reflects the `name` attribute. Reserve `byCssSelector()` or other low level locators for edge cases where semantic options are unavailable.
+
+### 6. Clean Up the Test Engine
 
 Call `testEngine.cleanUp()` in `afterEach` hooks. Unmounting the rendered
 component prevents cross‑test contamination and matches the pattern used
 throughout the example tests.
 
-### 6. Compose and Reuse Drivers
+### 7. Compose and Reuse Drivers
 
 Complex widgets become easier to test when you encapsulate their
 behaviour in a driver. The signup example composes form drivers that can
@@ -54,14 +58,14 @@ be reused in unit and end‑to‑end scenarios. Implement your own drivers
 when needed and use `satisfies ScenePart` to get strong TypeScript
 support.
 
-### 7. Provide the Necessary Context
+### 8. Provide the Necessary Context
 
 Wrap tested components with any required providers—such as a MUI
 `ThemeProvider`—when creating the test engine. The example project uses a
 `createTestEngineForComponent` helper to inject the theme so tests run in
 a realistic environment.
 
-### 8. Await Driver Actions
+### 9. Await Driver Actions
 
 Most driver methods return promises. Remember to `await` interactions and
 queries so tests wait for state updates before asserting results.

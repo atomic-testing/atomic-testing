@@ -1,5 +1,6 @@
 // TODO: Use descriptive selector instead of css selector so the selector can be reintepreted
 import { escapeValue } from '../utils/escapeUtil';
+import { assertNonEmpty } from '../utils/validation';
 
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -24,6 +25,7 @@ export type ByInputTypeSource = {
  * ```
  */
 export function byInputType(type: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
+  assertNonEmpty(type, 'type');
   const selector = `input[type=${escapeValue(type)}]`;
   return new CssLocator(selector, {
     relative,
