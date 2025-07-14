@@ -256,8 +256,8 @@ importers:
         specifier: ^7.1.0
         version: 7.2.0(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       indexed-collection:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^3.2.0
+        version: 3.2.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -4269,8 +4269,8 @@ packages:
     resolution: {integrity: sha512-m6FAo/spmsW2Ab2fU35JTYwtOKa2yAwXSwgjSv1TJzh4Mh7mC3lzAOVLBprb72XsTrgkEIsl7YrFNAiDiRhIGg==}
     engines: {node: '>=12'}
 
-  indexed-collection@2.0.0:
-    resolution: {integrity: sha512-RPQvAeTWUUaTnotOmJyEUWNz8PSpFjBX1lEguiMY7Y40jB3FRXnhFga3yYT8cvPIFkXQUV0uc58qufAg3kQ5kg==}
+  indexed-collection@3.2.0:
+    resolution: {integrity: sha512-YuK06Ub3EIZbed/D5aeY26+9e09/T/qdbREC7sFs7j+xeSG7GFgNjv0cTWOIqEXrYLgrXHQ6dFF8V+hrL+T67Q==}
     engines: {node: '>=20'}
 
   inflight@1.0.6:
@@ -9880,7 +9880,7 @@ snapshots:
 
   indent-string@5.0.0: {}
 
-  indexed-collection@2.0.0: {}
+  indexed-collection@3.2.0: {}
 
   inflight@1.0.6:
     dependencies:
