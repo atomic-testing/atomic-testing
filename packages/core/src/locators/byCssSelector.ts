@@ -1,3 +1,5 @@
+import { assertNonEmpty } from '../utils/validation';
+
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
@@ -22,6 +24,7 @@ export type ByCssSelectorSource = {
  * ```
  */
 export function byCssSelector(selector: string, relativeTo: LocatorRelativePosition = 'Descendant'): CssLocator {
+  assertNonEmpty(selector, 'selector');
   return new CssLocator(selector, {
     relative: relativeTo,
     source: {
