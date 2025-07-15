@@ -38,7 +38,7 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": ">=5.0.0 <6.0.0",
     "@mui/material": ">=5.0.0 <6.0.0",
-    "@mui/system": "^5.17.1",
+    "@mui/system": "^6.5.0",
     "@mui/x-data-grid-generator": "^6.20.5",
     "@mui/x-data-grid-pro": "^6.20.4",
     "@mui/x-date-pickers": "^6.20.2",
