@@ -40,7 +40,7 @@
     "@mui/x-date-pickers-pro": "^7.27.1",
     "exceljs": "^4.3.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.1.1",
     "react-router-dom": "^7.7.0"
   },
   "devDependencies": {
@@ -51,7 +51,7 @@
     "@atomic-testing/react-19": "workspace:*",
     "@atomic-testing/internal-test-runner": "workspace:*",
     "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4"
+    "@types/react-dom": "^19.1.6"
   },
   "eslintConfig": {
     "extends": [
