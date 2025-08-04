@@ -51,7 +51,7 @@
     "@atomic-testing/react-19": "workspace:*",
     "@atomic-testing/internal-test-runner": "workspace:*",
     "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.1.6"
+    "@types/react-dom": "^19.1.7"
   },
   "eslintConfig": {
     "extends": [
