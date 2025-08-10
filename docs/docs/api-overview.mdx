@@ -32,6 +32,13 @@ In a nutshell, locators represent a way to find element on a page or within a te
 
 </details>
 
+### Choosing the right locator
+
+- **Prefer `byDataTestId`** for elements you control. Stable IDs lead to predictable selectors.
+- **Use `byRole` or attribute based locators** when verifying accessibility or for forms that lack `data-testid`.
+- **Avoid `byCssClass` and `byTagName`** unless absolutely necessary—they tend to change with styling or markup updates.
+- **Reserve `byCssSelector`** as a last resort when the helper APIs cannot express the desired selector.
+
 ## Component Drivers
 
 ### Raw HTML components
