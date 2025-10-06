@@ -31,7 +31,7 @@
     "@atomic-testing/internal-react-example": "workspace:*",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.14.1",
-    "react": "^19.1.0",
+    "react": "^19.2.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.7.1"
   },
@@ -41,7 +41,7 @@
     "@atomic-testing/playwright": "workspace:*",
     "@atomic-testing/react-19": "workspace:*",
     "@atomic-testing/internal-test-runner": "workspace:*",
-    "@types/react": "^19.1.8",
+    "@types/react": "^19.2.0",
     "@types/react-dom": "^19.1.6"
   },
   "eslintConfig": {
