@@ -39,7 +39,7 @@
     "@mui/icons-material": "^6.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.7.1"
+    "react-router-dom": "^7.9.4"
   },
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
