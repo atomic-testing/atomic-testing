@@ -6,3 +6,4 @@ pnpm-lock.yaml
 **/dist/**/*
 **/build/**/*
 CNAME
+plop-templates/*
