@@ -1,0 +1,37 @@
+{
+  "name": "@atomic-testing/angular-20-test",
+  "version": "0.0.0",
+  "description": "Example and tests for @atomic-testing/angular-20",
+  "main": "dist/index.js",
+  "private": true,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "test:dom": "jest"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "@atomic-testing/angular-20": "workspace:*",
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/core": "workspace:*",
+    "@storybook/addon-essentials": "^8.0.5",
+    "@storybook/addon-themes": "^8.0.5",
+    "@storybook/angular": "^8.0.5",
+    "@storybook/test": "^8.0.5",
+    "@testing-library/angular": "^14.1.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/compiler-cli": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/platform-browser-dynamic": "^20.0.0",
+    "zone.js": "^0.14.0",
+    "storybook": "^8.0.5"
+  }
+}
