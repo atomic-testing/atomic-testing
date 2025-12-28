@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm --version:*)",
+      "Bash(pnpm -C projects/core tsc:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm test:*)",
+      "Bash(sl status:*)",
+      "Bash(sl log:*)",
+      "Bash(sl diff:*)",
+      "Bash(pnpm check:lint:*)",
+      "Bash(timeout 90s pnpm test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

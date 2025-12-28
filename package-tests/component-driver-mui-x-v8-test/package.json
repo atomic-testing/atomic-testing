@@ -40,8 +40,8 @@
     "@mui/x-date-pickers-pro": "^8.5.2",
     "exceljs": "^4.3.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.7.1"
   },
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
