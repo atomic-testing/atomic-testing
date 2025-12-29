@@ -2,9 +2,8 @@
   "name": "@atomic-testing/react-18",
   "version": "0.78.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
@@ -44,5 +43,13 @@
     "@testing-library/user-event": ">=14.0.0",
     "react": ">=18.0.0 <19.0.0",
     "react-dom": ">=18.0.0 <19.0.0"
+  },
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }

@@ -2,9 +2,8 @@
   "name": "@atomic-testing/internal-test-runner-vitest-adapter",
   "version": "0.78.0",
   "description": "Vitest adapter for atomic-testing",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
@@ -28,5 +27,13 @@
   },
   "peerDependencies": {
     "vitest": ">= 3.0.0"
+  },
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }

@@ -2,9 +2,8 @@
   "name": "@atomic-testing/react-legacy",
   "version": "0.78.0",
   "description": "Adapter for testing React 17 and earlier",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
@@ -43,5 +42,13 @@
     "@testing-library/user-event": ">=14.0.0",
     "react": "^16 || ^17",
     "react-dom": "^16 || ^17"
+  },
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }
