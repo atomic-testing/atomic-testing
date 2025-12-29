@@ -1,9 +1,9 @@
 {
   "name": "@atomic-testing/internal-mui-x-test-fixture",
   "version": "0.78.0",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.cts",
   "files": [
     "dist",
     "src"
@@ -16,5 +16,12 @@
   "license": "MIT",
   "dependencies": {
     "@mui/x-data-grid-pro": "5.17.26"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }
