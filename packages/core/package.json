@@ -2,9 +2,8 @@
   "name": "@atomic-testing/core",
   "version": "0.78.0",
   "description": "Core library for atomic-testing",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
@@ -21,5 +20,13 @@
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git",
     "directory": "packages/core"
+  },
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }

@@ -2,9 +2,9 @@
   "name": "@atomic-testing/component-driver-html",
   "version": "0.78.0",
   "description": "HTML component driver for atomic-testing",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.cts",
   "files": [
     "dist",
     "src"
@@ -32,5 +32,12 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  }
 }

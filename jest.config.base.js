@@ -37,8 +37,8 @@ module.exports = {
       try {
         const pkgJson = readFileSync(pkgJsonPath, 'utf-8');
         const pkgName = JSON.parse(pkgJson).name;
-        acc[`^${pkgName}$`] = path.join(basePath, name, 'dist');
-      } catch (e) {
+        acc[`^${pkgName}$`] = path.join(basePath, name, 'dist/index.cjs');
+      } catch {
         // Not a package directory
       }
       return acc;

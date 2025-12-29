@@ -2,9 +2,9 @@
   "name": "@atomic-testing/component-driver-mui-x-v7",
   "version": "0.78.0",
   "description": "Atomic Testing Component driver to help drive Material UI X V7 components",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.cts",
   "files": [
     "dist",
     "src"
@@ -34,5 +34,12 @@
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/component-driver-mui-v6": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }
