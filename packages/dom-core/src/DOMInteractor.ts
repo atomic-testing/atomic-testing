@@ -46,6 +46,7 @@ export class DOMInteractor implements Interactor {
       if (el != null) {
         return Promise.resolve(el.getAttribute(name) ?? undefined);
       }
+      return undefined;
     }
   }
 
@@ -56,6 +57,7 @@ export class DOMInteractor implements Interactor {
       const val = computedStyle[propertyName] as string;
       return Promise.resolve(val ?? undefined);
     }
+    return undefined;
   }
 
   protected calculateMousePosition(el: Element, preferredPoint?: Point) {
@@ -377,6 +379,7 @@ export class DOMInteractor implements Interactor {
         return Promise.resolve((el as HTMLTextAreaElement).value ?? undefined);
       }
     }
+    return undefined;
   }
 
   async getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>> {
@@ -404,6 +407,7 @@ export class DOMInteractor implements Interactor {
     if (el != null) {
       return Promise.resolve(el.textContent ?? undefined);
     }
+    return undefined;
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {

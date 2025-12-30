@@ -23,8 +23,7 @@ export class HTMLHiddenInputDriver extends ComponentDriver<{}> implements IInput
    * Setting the value of a hidden input is not supported.
    */
   setValue(_value: string | null): Promise<boolean> {
-    // Setting value of a hidden input should not be part of user interaction
-    throw new Error('Not implemented');
+    throw new Error('Setting value on hidden inputs is not supported as it does not represent user interaction');
   }
 
   /**
