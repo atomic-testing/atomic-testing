@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { SliderDriver } from '@atomic-testing/component-driver-mui-v6';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicSliderUIExample } from './BasicSlider.examples';
 
@@ -34,34 +34,24 @@ export const basicSliderTestSuite: TestSuiteInfo<typeof basicSliderExampleSceneP
   title: 'Basic Slider',
   url: '/slider',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof basicSliderExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicSliderExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicSliderExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have a basic slider', async () => {
-      assertTrue(await testEngine.parts.basic.exists());
+      assertTrue(await engine().parts.basic.exists());
     });
 
     test('it should have a disabled slider', async () => {
-      assertTrue(await testEngine.parts.disabled.exists());
-      assertTrue(await testEngine.parts.disabled.isDisabled());
+      assertTrue(await engine().parts.disabled.exists());
+      assertTrue(await engine().parts.disabled.isDisabled());
     });
 
     test('it should have a range slider', async () => {
-      assertTrue(await testEngine.parts.range.exists());
+      assertTrue(await engine().parts.range.exists());
     });
 
     test.skip('it should be able to set value on basic slider', async () => {
-      await testEngine.parts.basic.setValue(50);
-      const value = await testEngine.parts.basic.getValue();
+      await engine().parts.basic.setValue(50);
+      const value = await engine().parts.basic.getValue();
       assertEqual(value, 50);
     });
   },

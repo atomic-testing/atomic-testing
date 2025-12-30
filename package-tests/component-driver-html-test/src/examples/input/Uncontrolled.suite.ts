@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { uncontrolledTextInputUIExample } from './Uncontrolled.examples';
 
@@ -39,51 +39,40 @@ export const uncontrolledTextInputExampleTestSuite: TestSuiteInfo<typeof uncontr
   url: '/input',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${uncontrolledTextInputExample.title}`, () => {
-      let testEngine: TestEngine<typeof uncontrolledTextInputExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(uncontrolledTextInputExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(uncontrolledTextInputExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test(`set text value`, async () => {
         const targetValue = 'abc';
-        await testEngine.parts.text.setValue(targetValue);
-        const val = await testEngine.parts.text.getValue();
+        await engine().parts.text.setValue(targetValue);
+        const val = await engine().parts.text.getValue();
         assertEqual(val, targetValue);
       });
 
       test(`set number value`, async () => {
         const targetValue = '125';
-        await testEngine.parts.number.setValue(targetValue);
-        const val = await testEngine.parts.number.getValue();
+        await engine().parts.number.setValue(targetValue);
+        const val = await engine().parts.number.getValue();
         assertEqual(val, targetValue);
       });
 
       test(`set date value`, async () => {
         const targetValue = '2002-02-02';
-        await testEngine.parts.date.setValue(targetValue);
-        const val = await testEngine.parts.date.getValue();
+        await engine().parts.date.setValue(targetValue);
+        const val = await engine().parts.date.getValue();
         assertEqual(val, targetValue);
       });
 
       test(`set time value`, async () => {
         const targetValue = '13:58';
-        await testEngine.parts.time.setValue(targetValue);
-        const val = await testEngine.parts.time.getValue();
+        await engine().parts.time.setValue(targetValue);
+        const val = await engine().parts.time.getValue();
         assertEqual(val, targetValue);
       });
 
       test(`set date time value`, async () => {
         const targetValue = '2002-02-02T13:58';
-        await testEngine.parts.dateTime.setValue(targetValue);
-        const val = await testEngine.parts.dateTime.getValue();
+        await engine().parts.dateTime.setValue(targetValue);
+        const val = await engine().parts.dateTime.getValue();
         assertEqual(val, targetValue);
       });
     });

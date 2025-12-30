@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { DateRangeInput, DateRangePickerDriver } from '@atomic-testing/component-driver-mui-x-v5';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { IExampleUnit, ScenePart,  byDataTestId } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicDateRangePickerUIExample } from './DateRangePicker.examples';
 
@@ -26,24 +26,14 @@ export const basicDateRangePickerTestSuite: TestSuiteInfo<typeof basicDateRangeP
   title: 'Date Range Picker',
   url: '/datepicker',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
-    let testEngine: TestEngine<typeof basicDateRangePickerExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicDateRangePickerExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicDateRangePickerExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Driver should set date range correctly', async () => {
       const end = new Date('2018/09/21');
       const start = new Date('2016/03/02');
       const input: DateRangeInput = { start, end, type: 'date' };
-      await testEngine.parts.dateRange.setValue(input);
-      const retrieved = await testEngine.parts.dateRange.getValue();
+      await engine().parts.dateRange.setValue(input);
+      const retrieved = await engine().parts.dateRange.getValue();
       assertEqual(retrieved, input);
     });
   },
