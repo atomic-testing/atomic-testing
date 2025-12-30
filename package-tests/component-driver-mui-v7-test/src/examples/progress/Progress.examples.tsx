@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { IExampleUIUnit } from '@atomic-testing/core';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';

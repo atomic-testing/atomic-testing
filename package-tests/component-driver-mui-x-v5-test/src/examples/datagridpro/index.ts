@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
 
 import { basicDataGridProUIExample } from './BasicDataGridPro.examples';

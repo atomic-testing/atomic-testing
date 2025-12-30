@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ExclusiveToggleButtonGroupDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';

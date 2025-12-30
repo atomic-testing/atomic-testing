@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v7';
 import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
