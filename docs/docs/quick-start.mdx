@@ -31,10 +31,10 @@ pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-test
 ## Your First Test
 
 ```tsx
-import { HTMLComponentDriver } from '@atomic-testing/component-driver-html';
-import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
+import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
-import { createTestEngine } from '@atomic-testing/react-18';
+import { createTestEngine } from '@atomic-testing/react-19';
+import { useState } from 'react';
 
 // Component to test
 function WelcomeButton({ name }: { name: string }) {
@@ -53,7 +53,7 @@ function WelcomeButton({ name }: { name: string }) {
 // Test setup
 const welcomeScene = {
   greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
-  button: { locator: byDataTestId('welcome-btn'), driver: ButtonDriver },
+  button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
 // Test
@@ -91,7 +91,9 @@ import { ref } from 'vue';
 
 // Component to test (SFC-like)
 const WelcomeButton = {
-  props: ['name'],
+  props: {
+    name: { type: String, default: 'Alice' },
+  },
   template: `
     <div>
       <h1 data-testid="greeting">Hello {{ name }}!</h1>
@@ -163,6 +165,8 @@ test('should welcome the user when clicked', async ({ page }) => {
   expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
   await engine.parts.button.click();
   expect(await engine.parts.button.getText()).toBe('Welcome!');
+
+  await engine.cleanUp();
 });
 ```
 
@@ -193,9 +197,9 @@ Notice how the test logic is **identical across frameworks**:
     <div className='card__header'>
       <h3>🏗️ Build Your First Real Test</h3>
     </div>
-    <div className='card__body'>
+      <div className='card__body'>
       <p>Follow our step-by-step tutorial with a complete login form example.</p>
-      <a href='./first-test' className='button button--primary'>
+      <a href='./tutorial' className='button button--primary'>
         Start Tutorial →
       </a>
     </div>

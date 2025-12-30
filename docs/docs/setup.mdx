@@ -59,16 +59,16 @@ const parts = {
 
 ### 3. Render the Component with TestEngine
 
-The **TestEngine** is your entry point for interacting with a component. Use the `createTestEngineForComponent()` method to instantiate the engine. Assign it in `beforeEach` and clean it up in `afterEach` to prevent cross-test contamination.
+The **TestEngine** is your entry point for interacting with a component. Use the `createTestEngine()` function from your framework adapter to instantiate the engine. Assign it in `beforeEach` and clean it up in `afterEach` to prevent cross-test contamination.
 
 ```ts
 import { TestEngine } from '@atomic-testing/core';
-import { createTestEngineForComponent } from '@/shared/utils/ui-test-util';
+import { createTestEngine } from '@atomic-testing/react-19';
 
 let testEngine: TestEngine<typeof parts>; // Type declaration ensures precise type checking.
 
 beforeEach(() => {
-  testEngine = createTestEngineForComponent(<MyComponent prop1={value1} />, parts);
+  testEngine = createTestEngine(<MyComponent prop1={value1} />, parts);
 });
 
 afterEach(async () => {
@@ -79,7 +79,7 @@ afterEach(async () => {
 After instantiation, you can access your declared parts through the engine’s `parts` property:
 
 ```ts
-await testEngine.parts.personDisplay.text(); // Retrieves plain text from the personDisplay part.
+await testEngine.parts.personDisplay.getText(); // Retrieves plain text from the personDisplay part.
 
 await testEngine.parts.favoriteColorInput.setValue('Black');
 // Sets the auto-complete component to "Black" using the AutoCompleteDriver's method.
@@ -97,7 +97,7 @@ Write tests as you normally would, keeping in mind that most UI interactions are
 
 ```ts
 it(`should display the person's name as "John Doe"`, async () => {
-  expect(await testEngine.parts.personDisplay.text()).toEqual('John Doe');
+  expect(await testEngine.parts.personDisplay.getText()).toEqual('John Doe');
 });
 
 it(`should enable the submit button once a color is chosen`, async () => {

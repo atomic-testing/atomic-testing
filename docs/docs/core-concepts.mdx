@@ -42,7 +42,7 @@ A ScenePart is a map describing all components of interest (part) within a scene
 
 The Test Engine is where all the pieces come together. It is responsible for rendering a scene, locating all the components in the scene, and providing a set of methods to interact with the components.
 
-Use `createTestEngine` to create a Test Engine instance. The `createTestEngine` function is specific to each rendering framework, such as React, Cypress, and Playwright.
+Use `createTestEngine` to create a Test Engine instance. The `createTestEngine` function is specific to each rendering framework, such as React, Vue, and Playwright.
 
 The examples below demonstrate how to create a Test Engine for the loginScenePart described earlier.
 
@@ -64,15 +64,15 @@ const testEngine = createTestEngine(<Login />, loginScenePart);
 
 </TabItem>
 
-<TabItem value="react-legacy" label="React 17">
+<TabItem value="react-legacy" label="React 16/17">
 
 ```tsx
-import { createLegacyTestEngine } from '@atomic-testing/react-legacy';
+import { createTestEngine } from '@atomic-testing/react-legacy';
 
 import { Login } from './components/Login';
 import { loginScenePart } from './loginScenePart';
 
-const testEngine = createLegacyTestEngine(<Login />, loginScenePart);
+const testEngine = createTestEngine(<Login />, loginScenePart);
 ```
 
 </TabItem>
@@ -99,19 +99,6 @@ import { loginScenePart } from './loginScenePart';
 
 await page.goto('/login');
 const testEngine = createTestEngine(page, loginScenePart);
-```
-
-</TabItem>
-
-<TabItem value="cypress" label="Cypress">
-
-```tsx
-import { createTestEngine } from '@atomic-testing/cypress';
-
-import { loginScenePart } from './loginScenePart';
-
-cy.visit('/login');
-const testEngine = createTestEngine(loginScenePart);
 ```
 
 </TabItem>
