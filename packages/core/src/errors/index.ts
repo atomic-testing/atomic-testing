@@ -1,3 +1,4 @@
+export { ElementNotFoundError, ElementNotFoundErrorId } from './ElementNotFoundError';
 export { ErrorBase } from './ErrorBase';
 export { ItemNotFoundError, ItemNotFoundErrorId } from './ItemNotFoundError';
 export { MissingPartError, MissingPartErrorId } from './MissingPartError';
