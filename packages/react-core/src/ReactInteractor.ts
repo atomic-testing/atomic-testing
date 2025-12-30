@@ -1,4 +1,5 @@
 import {
+  BlurOption,
   ClickOption,
   defaultWaitForOption,
   EnterTextOption,
@@ -82,6 +83,12 @@ export class ReactInteractor extends DOMInteractor {
   override async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
     await act(async () => {
       await super.focus(locator, option);
+    });
+  }
+
+  override async blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void> {
+    await act(async () => {
+      await super.blur(locator, option);
     });
   }
 

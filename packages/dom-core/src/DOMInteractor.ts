@@ -1,4 +1,5 @@
 import {
+  BlurOption,
   ClickOption,
   CssProperty,
   dateUtil,
@@ -281,6 +282,25 @@ export class DOMInteractor implements Interactor {
       return;
     }
     (el as HTMLInputElement).focus();
+  }
+
+  /**
+   * Remove focus from the element found by the locator.
+   *
+   * @param locator - Locator used to find the target element
+   * @param _option - Reserved for future use
+   * @returns Promise resolved when blur has been applied
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async blur(locator: PartLocator, _option?: Partial<BlurOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'blur');
+    }
+    if ('blur' in el === false) {
+      return;
+    }
+    (el as HTMLInputElement).blur();
   }
 
   /**

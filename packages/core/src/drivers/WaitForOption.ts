@@ -17,6 +17,11 @@ export interface WaitForOption {
    */
   timeoutMs: number;
 
+  /**
+   * Whether to log debug information during the wait operation.
+   * When enabled, logs each probe's value and whether the condition was met.
+   * @default false
+   */
   debug: boolean;
 }
 
