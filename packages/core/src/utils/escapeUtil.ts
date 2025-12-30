@@ -36,7 +36,8 @@ export function escapeName(name: string): string {
   return encodeURIComponent(name);
 }
 
-const escapeCache = new Map();
+const ESCAPE_CACHE_MAX_SIZE = 1000;
+const escapeCache = new Map<string, string>();
 
 /**
  * Escaping based on the CSS spec: https://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
@@ -45,8 +46,12 @@ const escapeCache = new Map();
  */
 export function escapeValue(value: string): string {
   // Backslashes, spaces, and non-identifier characters (e.g., ! " # $ % & ' ( ) * + , . / : ; < = > ? @ [ ] ^ ` { | } ~) are escaped.
-  if (escapeCache.has(value)) {
-    return escapeCache.get(value);
+  const cached = escapeCache.get(value);
+  if (cached !== undefined) {
+    // Move to end to mark as recently used (LRU behavior)
+    escapeCache.delete(value);
+    escapeCache.set(value, cached);
+    return cached;
   }
 
   let escapedValue = '';
@@ -56,6 +61,12 @@ export function escapeValue(value: string): string {
       continue;
     }
     escapedValue += character;
+  }
+
+  // Evict oldest entry if cache is full
+  if (escapeCache.size >= ESCAPE_CACHE_MAX_SIZE) {
+    const oldestKey = escapeCache.keys().next().value;
+    escapeCache.delete(oldestKey!);
   }
 
   escapeCache.set(value, escapedValue);
