@@ -209,6 +209,8 @@ flowchart TB
 
 ```typescript
 // src/examples/MyComponent.suite.ts
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+
 export const scenePart = {
   input: { locator: byDataTestId('input'), driver: HTMLTextInputDriver },
 } satisfies ScenePart;
@@ -218,22 +220,23 @@ export const testSuite: TestSuiteInfo<typeof scenePart> = {
   url: '/my-component', // E2E navigation target
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe('MyComponent', () => {
-      let testEngine: TestEngine<typeof scenePart>;
-
-      beforeEach(({ page }) => {
-        testEngine = getTestEngine(scenePart, { page });
-      });
-
-      afterEach(async () => await testEngine.cleanUp());
+      // useTestEngine handles beforeEach/afterEach setup and cleanup automatically
+      const engine = useTestEngine(scenePart, getTestEngine, { beforeEach, afterEach });
 
       test('sets value', async () => {
-        await testEngine.parts.input.setValue('test');
-        assertEqual(await testEngine.parts.input.getValue(), 'test');
+        await engine().parts.input.setValue('test');
+        assertEqual(await engine().parts.input.getValue(), 'test');
       });
     });
   },
 };
 ```
+
+The `useTestEngine` helper reduces boilerplate by handling:
+
+- Creating the test engine with the correct `page` context (for E2E) or without (for DOM)
+- Calling `cleanUp()` in `afterEach`
+- Managing the Jest/Playwright callback signature differences internally
 
 #### DOM Test Adapter
 
@@ -262,6 +265,18 @@ testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 
 | Package                                             | Purpose                                         |
 | --------------------------------------------------- | ----------------------------------------------- |
-| `@atomic-testing/internal-test-runner`              | `testRunner()` orchestrator                     |
+| `@atomic-testing/internal-test-runner`              | `testRunner()`, `useTestEngine()` orchestrator  |
 | `@atomic-testing/internal-test-runner-jest-adapter` | Jest adapter (`jestTestAdapter`)                |
 | `@atomic-testing/playwright`                        | Playwright adapter + `getTestRunnerInterface()` |
+
+#### Available Assertions
+
+The `TestFrameworkMapper` provides these assertion methods (destructure from the second parameter of `tests`):
+
+| Method              | Usage                                                                 |
+| ------------------- | --------------------------------------------------------------------- |
+| `assertEqual`       | `assertEqual(actual, expected)`                                       |
+| `assertNotEqual`    | `assertNotEqual(actual, expected)`                                    |
+| `assertTrue`        | `assertTrue(value)` - asserts value is true                           |
+| `assertFalse`       | `assertFalse(value)` - asserts value is false                         |
+| `assertApproxEqual` | `assertApproxEqual(actual, expected, tolerance)` - for floating point |

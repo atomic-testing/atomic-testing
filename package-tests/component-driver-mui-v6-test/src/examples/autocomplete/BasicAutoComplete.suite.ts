@@ -1,7 +1,7 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v6';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicAutoCompleteUIExample } from './BasicAutoComplete.examples';
 
@@ -44,43 +44,32 @@ export const basicAutoCompleteTestSuite: TestSuiteInfo<typeof basicAutoCompleteE
   title: 'Basic AutoComplete',
   url: '/autocomplete',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof basicAutoCompleteExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicAutoCompleteExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicAutoCompleteExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Selected label should be empty initially', async () => {
-      const text = await testEngine.parts.selectedLabel.getText();
+      const text = await engine().parts.selectedLabel.getText();
       assertEqual(text, '');
     });
 
     test('Select can choose an option', async () => {
-      await testEngine.parts.select.setValue('The Shawshank Redemption');
-      const text = await testEngine.parts.selectedLabel.getText();
+      await engine().parts.select.setValue('The Shawshank Redemption');
+      const text = await engine().parts.selectedLabel.getText();
       assertEqual(text, 'The Shawshank Redemption');
     });
 
     test('Portal select can choose an option', async () => {
-      await testEngine.parts.portalSelect.setValue('The Godfather');
-      const text = await testEngine.parts.portalSelectedLabel.getText();
+      await engine().parts.portalSelect.setValue('The Godfather');
+      const text = await engine().parts.portalSelectedLabel.getText();
       assertEqual(text, 'The Godfather');
     });
 
     test('Readonly select should not be interactive', async () => {
-      const isReadonly = await testEngine.parts.readonlySelect.isReadonly();
+      const isReadonly = await engine().parts.readonlySelect.isReadonly();
       assertTrue(isReadonly);
     });
 
     test('Disabled select should be disabled', async () => {
-      const isDisabled = await testEngine.parts.disabledSelect.isDisabled();
+      const isDisabled = await engine().parts.disabledSelect.isDisabled();
       assertTrue(isDisabled);
     });
   },

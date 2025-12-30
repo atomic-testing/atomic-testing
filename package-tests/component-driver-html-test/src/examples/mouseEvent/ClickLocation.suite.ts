@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { clickLocationMouseEventUIExample } from './ClickLocation.examples';
 
@@ -32,28 +32,17 @@ export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof click
   url: '/mouse-event',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertApproxEqual }) => {
     describe(`${clickLocationMouseEventExample.title}`, () => {
-      let testEngine: TestEngine<typeof clickLocationMouseEventExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(clickLocationMouseEventExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(clickLocationMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('Click on somewhere in the target should display the correct coordinates', async () => {
-        await testEngine.parts.target.click({
+        await engine().parts.target.click({
           position: {
             x: 20,
             y: 15,
           },
         });
-        const xDisplay = await testEngine.parts.xDisplay.getText();
-        const yDisplay = await testEngine.parts.yDisplay.getText();
+        const xDisplay = await engine().parts.xDisplay.getText();
+        const yDisplay = await engine().parts.yDisplay.getText();
 
         // Use tolerance-based comparison for cross-browser compatibility
         // Playwright's click position may have sub-pixel offset from the requested position

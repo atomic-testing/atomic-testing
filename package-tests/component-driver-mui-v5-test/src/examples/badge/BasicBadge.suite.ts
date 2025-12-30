@@ -1,6 +1,6 @@
 import { BadgeDriver } from '@atomic-testing/component-driver-mui-v5';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicBadgeUIExample } from './BasicBadge.examples';
 
@@ -20,26 +20,15 @@ export const basicBadgeTestSuite: TestSuiteInfo<typeof basicBadgeExample.scene> 
   title: 'Basic Badge',
   url: '/badge',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof basicBadgeExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicBadgeExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicBadgeExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Badge should display correct content', async () => {
-      const content = await testEngine.parts.basicBadge.getContent();
+      const content = await engine().parts.basicBadge.getContent();
       assertEqual(content, '12');
     });
 
     test('Badge should exist', async () => {
-      const exists = await testEngine.parts.basicBadge.exists();
+      const exists = await engine().parts.basicBadge.exists();
       assertTrue(exists);
     });
   },

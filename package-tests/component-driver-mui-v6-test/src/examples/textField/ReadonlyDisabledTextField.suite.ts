@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v6';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { readonlyAndDisabledTextFieldUIExample } from './ReadonlyDisabledTextField.examples';
 
@@ -53,55 +53,45 @@ export const readonlyAndDisabledTextFieldTestSuite: TestSuiteInfo<typeof readonl
   title: 'Readonly & Disabled TextField',
   url: '/textfield',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof readonlyAndDisabledTextFieldExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(readonlyAndDisabledTextFieldExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(readonlyAndDisabledTextFieldExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('readonly text field should be readonly', async () => {
-      const isReadOnly = await testEngine.parts.textReadonly.isReadonly();
+      const isReadOnly = await engine().parts.textReadonly.isReadonly();
       assertTrue(isReadOnly);
     });
 
     test('readonly text field should have correct value', async () => {
-      const value = await testEngine.parts.textReadonly.getValue();
+      const value = await engine().parts.textReadonly.getValue();
       assertEqual(value, 'Hello World');
     });
 
     test('disabled text field should be disabled', async () => {
-      const isDisabled = await testEngine.parts.textDisabled.isDisabled();
+      const isDisabled = await engine().parts.textDisabled.isDisabled();
       assertTrue(isDisabled);
     });
 
     test('disabled text field should have correct value', async () => {
-      const value = await testEngine.parts.textDisabled.getValue();
+      const value = await engine().parts.textDisabled.getValue();
       assertEqual(value, 'Hello World');
     });
 
     test('readonly multiline should be readonly', async () => {
-      const isReadOnly = await testEngine.parts.multilineReadonly.isReadonly();
+      const isReadOnly = await engine().parts.multilineReadonly.isReadonly();
       assertTrue(isReadOnly);
     });
 
     test('disabled multiline should be disabled', async () => {
-      const isDisabled = await testEngine.parts.multilineDisabled.isDisabled();
+      const isDisabled = await engine().parts.multilineDisabled.isDisabled();
       assertTrue(isDisabled);
     });
 
     test('readonly select should be readonly', async () => {
-      const isReadOnly = await testEngine.parts.selectReadonly.isReadonly();
+      const isReadOnly = await engine().parts.selectReadonly.isReadonly();
       assertTrue(isReadOnly);
     });
 
     test('disabled select should be disabled', async () => {
-      const isDisabled = await testEngine.parts.selectDisabled.isDisabled();
+      const isDisabled = await engine().parts.selectDisabled.isDisabled();
       assertTrue(isDisabled);
     });
   },

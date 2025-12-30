@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLSelectDriver } from '@atomic-testing/component-driver-html';
-import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byName, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { singleSelectUIExample } from './SingleSelect.examples';
 
@@ -23,23 +23,12 @@ export const singleSelectTestSuite: TestSuiteInfo<typeof singleSelectExample.sce
   url: '/select',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${singleSelectExample.title}`, () => {
-      let testEngine: TestEngine<typeof singleSelectExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(singleSelectExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(singleSelectExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('Single Select', async () => {
         const targetValue = '3';
-        await testEngine.parts.select.setValue(targetValue);
-        const val = await testEngine.parts.select.getValue();
+        await engine().parts.select.setValue(targetValue);
+        const val = await engine().parts.select.getValue();
         assertEqual(val, targetValue);
       });
     });

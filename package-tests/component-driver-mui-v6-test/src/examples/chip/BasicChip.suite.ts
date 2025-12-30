@@ -1,6 +1,6 @@
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v6';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicChipUIExample } from './BasicChip.examples';
 
@@ -20,20 +20,10 @@ export const basicChipTestSuite: TestSuiteInfo<typeof basicChipExample.scene> = 
   title: 'Basic Chip',
   url: '/chip',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
-    let testEngine: TestEngine<typeof basicChipExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicChipExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicChipExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Basic chip should have correct label', async () => {
-      const label = await testEngine.parts.basicChip.getLabel();
+      const label = await engine().parts.basicChip.getLabel();
       assertEqual(label, 'Chirpy');
     });
   },

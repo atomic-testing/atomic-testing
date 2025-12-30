@@ -1,6 +1,6 @@
 import { AlertDriver } from '@atomic-testing/component-driver-mui-v6';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicAlertUIExample } from './BasicAlert.examples';
 
@@ -32,65 +32,55 @@ export const basicAlertTestSuite: TestSuiteInfo<typeof basicAlertExample.scene> 
   title: 'Basic Alert',
   url: '/alert',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof basicAlertExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicAlertExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicAlertExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Error alert\'s code should be "code: red"', async () => {
-      const message = await testEngine.parts.error.getMessage();
+      const message = await engine().parts.error.getMessage();
       assertTrue((message ?? '').includes('code: red'));
     });
 
     test("Error alert's severity should be error", async () => {
-      const severity = await testEngine.parts.error.getSeverity();
+      const severity = await engine().parts.error.getSeverity();
       assertEqual(severity, 'error');
     });
 
     test("Error alert's title should be Error", async () => {
-      const title = await testEngine.parts.error.getTitle();
+      const title = await engine().parts.error.getTitle();
       assertEqual(title, 'Error');
     });
 
     test("Error alert's message should contain the correct text", async () => {
-      const message = await testEngine.parts.error.getMessage();
+      const message = await engine().parts.error.getMessage();
       assertTrue((message ?? '').includes('This is an error alert'));
     });
 
     test('Warning alert\'s code should be "code: yellow"', async () => {
-      const message = await testEngine.parts.warning.getMessage();
+      const message = await engine().parts.warning.getMessage();
       assertTrue((message ?? '').includes('code: yellow'));
     });
 
     test("Warning alert's severity should be warning", async () => {
-      const severity = await testEngine.parts.warning.getSeverity();
+      const severity = await engine().parts.warning.getSeverity();
       assertEqual(severity, 'warning');
     });
 
     test("Warning alert's title should be Warning", async () => {
-      const title = await testEngine.parts.warning.getTitle();
+      const title = await engine().parts.warning.getTitle();
       assertEqual(title, 'Warning');
     });
 
     test("Warning alert's message should contain the correct text", async () => {
-      const message = await testEngine.parts.warning.getMessage();
+      const message = await engine().parts.warning.getMessage();
       assertTrue((message ?? '').includes('This is a warning alert'));
     });
 
     test("Info alert's severity should be info", async () => {
-      const severity = await testEngine.parts.info.getSeverity();
+      const severity = await engine().parts.info.getSeverity();
       assertEqual(severity, 'info');
     });
 
     test("Success alert's severity should be success", async () => {
-      const severity = await testEngine.parts.success.getSeverity();
+      const severity = await engine().parts.success.getSeverity();
       assertEqual(severity, 'success');
     });
   },

@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { selectTextFieldUIExample } from './SelectTextField.examples';
 
@@ -22,32 +22,21 @@ export const selectTextFieldTestSuite: TestSuiteInfo<typeof selectTextFieldExamp
   title: 'Select TextField',
   url: '/textfield',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
-    let testEngine: TestEngine<typeof selectTextFieldExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(selectTextFieldExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(selectTextFieldExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have the correct label', async () => {
-      const label = await testEngine.parts.select.getLabel();
+      const label = await engine().parts.select.getLabel();
       assertEqual(label, 'Number');
     });
 
     test('it should have default value of 30', async () => {
-      const value = await testEngine.parts.select.getValue();
+      const value = await engine().parts.select.getValue();
       assertEqual(value, '30');
     });
 
     test('it should be able to change value', async () => {
-      await testEngine.parts.select.setValue('60');
-      const value = await testEngine.parts.select.getValue();
+      await engine().parts.select.setValue('60');
+      const value = await engine().parts.select.getValue();
       assertEqual(value, '60');
     });
   },

@@ -1,6 +1,6 @@
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v7';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { deletableChipUIExample } from './DeletableChip.examples';
 
@@ -28,30 +28,20 @@ export const deletableChipTestSuite: TestSuiteInfo<typeof deletableChipExample.s
   title: 'Deletable Chip',
   url: '/chip',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
-    let testEngine: TestEngine<typeof deletableChipExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(deletableChipExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(deletableChipExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('All chips should exist initially', async () => {
-      const jackExists = await testEngine.parts.jackChip.exists();
-      const lucyExists = await testEngine.parts.lucyChip.exists();
-      const mariaExists = await testEngine.parts.mariaChip.exists();
+      const jackExists = await engine().parts.jackChip.exists();
+      const lucyExists = await engine().parts.lucyChip.exists();
+      const mariaExists = await engine().parts.mariaChip.exists();
       assertTrue(jackExists);
       assertTrue(lucyExists);
       assertTrue(mariaExists);
     });
 
     test('Deleting Jack chip should remove it', async () => {
-      await testEngine.parts.jackChip.clickRemove();
-      const jackExists = await testEngine.parts.jackChip.exists();
+      await engine().parts.jackChip.clickRemove();
+      const jackExists = await engine().parts.jackChip.exists();
       assertFalse(jackExists);
     });
   },

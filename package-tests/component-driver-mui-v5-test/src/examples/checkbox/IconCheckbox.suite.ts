@@ -1,6 +1,6 @@
 import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { iconCheckboxUIExample } from './IconCheckbox.examples';
 
@@ -24,32 +24,21 @@ export const iconCheckboxTestSuite: TestSuiteInfo<typeof iconCheckboxExample.sce
   title: 'Icon Checkbox',
   url: '/checkbox',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
-    let testEngine: TestEngine<typeof iconCheckboxExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(iconCheckboxExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(iconCheckboxExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Favorite checkbox should not be selected initially', async () => {
-      const isSelected = await testEngine.parts.favorite.isSelected();
+      const isSelected = await engine().parts.favorite.isSelected();
       assertFalse(isSelected);
     });
 
     test('Bookmark checkbox should not be selected initially', async () => {
-      const isSelected = await testEngine.parts.bookmark.isSelected();
+      const isSelected = await engine().parts.bookmark.isSelected();
       assertFalse(isSelected);
     });
 
     test('Favorite checkbox can be selected', async () => {
-      await testEngine.parts.favorite.setSelected(true);
-      const isSelected = await testEngine.parts.favorite.isSelected();
+      await engine().parts.favorite.setSelected(true);
+      const isSelected = await engine().parts.favorite.isSelected();
       assertTrue(isSelected);
     });
   },

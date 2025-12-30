@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { focusEventUIExample } from './Focus.examples';
 
@@ -31,33 +31,22 @@ export const focusEventExampleTestSuite: TestSuiteInfo<typeof focusEventExample.
   url: '/focus-event',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${focusEventExample.title}`, () => {
-      let testEngine: TestEngine<typeof focusEventExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(focusEventExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(focusEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test(`Initially detail is empty`, async () => {
-        assertEqual(await testEngine.parts.detail.getText(), '');
+        assertEqual(await engine().parts.detail.getText(), '');
       });
 
       test(`Detail is "focus" when element is focused`, async () => {
-        await testEngine.parts.target.focus();
-        assertEqual(await testEngine.parts.detail.getText(), 'focus');
+        await engine().parts.target.focus();
+        assertEqual(await engine().parts.detail.getText(), 'focus');
       });
 
       test(`Detail is "blur" when element is blurred`, async () => {
-        await testEngine.parts.target.focus();
+        await engine().parts.target.focus();
         // Focus on another element to blur the target
-        await testEngine.parts.blurAid.focus();
-        assertEqual(await testEngine.parts.detail.getText(), 'blur');
+        await engine().parts.blurAid.focus();
+        assertEqual(await engine().parts.detail.getText(), 'blur');
       });
     });
   },
