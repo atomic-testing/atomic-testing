@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
-import { ExampleApp } from '@atomic-testing/internal-react-example';
+import { ExampleApp } from '@atomic-testing/internal-react-example-18';
 import CssBaseline from '@mui/material/CssBaseline';
 import { StyledEngineProvider } from '@mui/material/styles';
 

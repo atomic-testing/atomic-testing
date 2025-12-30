@@ -3,10 +3,12 @@ import React, { JSX } from 'react';
 import { IExampleUIUnit } from '@atomic-testing/core';
 import { basicGridColumnConfig, gridData, initialState } from '@atomic-testing/internal-mui-x-test-fixture';
 import Box from '@mui/material/Box';
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps, GridColDef } from '@mui/x-data-grid-pro';
 
 const gridCommonProps: DataGridProProps = {
-  columns: basicGridColumnConfig.slice(0, 5),
+  // Type assertion needed because basicGridColumnConfig has string literals widened to string type
+  // MUI X v7 requires specific literal types for 'type' field
+  columns: basicGridColumnConfig.slice(0, 5) as GridColDef[],
   rows: gridData.slice(0, 100),
   initialState,
   checkboxSelection: true,
