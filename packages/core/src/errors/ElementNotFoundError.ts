@@ -1,6 +1,8 @@
 import { PartLocator } from '../locators';
 import { getLocatorInfoForErrorLog } from '../utils/locatorUtil';
 
+import { InteractorErrorBase } from './InteractorErrorBase';
+
 export const ElementNotFoundErrorId = 'ElementNotFoundError';
 
 function getErrorMessage(locator: PartLocator, action: string): string {
@@ -12,12 +14,12 @@ function getErrorMessage(locator: PartLocator, action: string): string {
  * Error thrown when an interactor method is called on an element that does not exist.
  * This error is thrown at the interactor level and does not require a ComponentDriver reference.
  */
-export class ElementNotFoundError extends Error {
+export class ElementNotFoundError extends InteractorErrorBase {
   constructor(
-    public readonly locator: PartLocator,
+    locator: PartLocator,
     public readonly action: string
   ) {
-    super(getErrorMessage(locator, action));
+    super(getErrorMessage(locator, action), locator);
     this.name = ElementNotFoundErrorId;
   }
 }
