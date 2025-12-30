@@ -1,7 +1,7 @@
 {
-  "name": "@atomic-testing/component-driver-mui-v6-test",
+  "name": "@atomic-testing/component-driver-mui-v7-test",
   "version": "0.0.0",
-  "description": "Examples and tests for @atomic-testing/component-driver-mui-v6",
+  "description": "Examples and tests for @atomic-testing/component-driver-mui-v7",
   "main": "dist/index.js",
   "files": [
     "dist",
@@ -10,6 +10,7 @@
   "scripts": {
     "start": "vite --force",
     "build:ui": "vite build",
+    "check:type": "tsc --noEmit",
     "test:dom": "jest",
     "test:e2e": "playwright test",
     "test:e2e:chrome": "playwright test --project=chromium"
@@ -22,7 +23,7 @@
     "integration",
     "mui",
     "material-ui",
-    "v5",
+    "v7",
     "integration-driver"
   ],
   "license": "MIT",
@@ -32,7 +33,7 @@
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
-    "@atomic-testing/internal-react-example": "workspace:*",
+    "@atomic-testing/internal-react-example-18": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.3.6",
