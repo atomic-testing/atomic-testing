@@ -3,7 +3,7 @@ import { ComponentDriver } from '../drivers';
 export class ErrorBase extends Error {
   constructor(
     message: string,
-    public readonly drive: ComponentDriver<any>
+    public readonly driver: ComponentDriver<any>
   ) {
     super(message);
   }
