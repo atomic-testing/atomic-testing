@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react-legacy",
-  "version": "0.78.0",
+  "version": "0.79.0",
   "description": "Adapter for testing React 17 and earlier",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
