@@ -1,4 +1,5 @@
 import {
+  BlurOption,
   ClickOption,
   defaultWaitForOption,
   EnterTextOption,
@@ -38,43 +39,48 @@ export class VueInteractor extends DOMInteractor {
     await this.flush();
   }
 
-  async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
+  override async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
     await super.mouseMove(locator, option);
     await this.flush();
   }
 
-  async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
+  override async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
     await super.mouseDown(locator, option);
     await this.flush();
   }
 
-  async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
+  override async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     await super.mouseUp(locator, option);
     await this.flush();
   }
 
-  async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
+  override async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     await super.mouseOver(locator, option);
     await this.flush();
   }
 
-  async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
+  override async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
     await super.mouseOut(locator, option);
     await this.flush();
   }
 
-  async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
+  override async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
     await super.mouseEnter(locator, option);
     await this.flush();
   }
 
-  async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
+  override async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
     await super.mouseLeave(locator, option);
     await this.flush();
   }
 
-  async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
+  override async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
     await super.focus(locator, option);
+    await this.flush();
+  }
+
+  override async blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void> {
+    await super.blur(locator, option);
     await this.flush();
   }
 
@@ -103,6 +109,6 @@ export class VueInteractor extends DOMInteractor {
   }
 
   override clone(): Interactor {
-    return new VueInteractor();
+    return new VueInteractor(this.rootEl);
   }
 }

@@ -19,7 +19,6 @@ export abstract class ContainerDriver<ContentT extends ScenePart, T extends Scen
 
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) {
     super(locator, interactor, option);
-    const { content: _content } = option ?? {};
     const contentOption: Partial<IComponentDriverOption<ContentT>> = {};
     this._content = getPartFromDefinition(option?.content ?? ({} as ContentT), this.locator, interactor, contentOption);
   }

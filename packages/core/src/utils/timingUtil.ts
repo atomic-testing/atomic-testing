@@ -25,6 +25,12 @@ export interface WaitUntilOption<T> {
    */
   timeoutMs: number;
   /**
+   * The number of times to probe before timing out. The interval between probes is
+   * calculated as timeoutMs / probeCount. Higher values mean more frequent checks.
+   * @default 10
+   */
+  probeCount?: number;
+  /**
    * Whether it should log the conditional checks while waiting
    */
   debug?: boolean;
@@ -34,9 +40,8 @@ export interface WaitUntilOption<T> {
  * Keep running a probe function until it returns a value that matches the terminate condition or timeout
  */
 export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
-  const { probeFn, terminateCondition, timeoutMs, debug } = option;
-  const maxProbeCount = 10;
-  const intervalMs = timeoutMs / maxProbeCount;
+  const { probeFn, terminateCondition, timeoutMs, probeCount = 10, debug } = option;
+  const intervalMs = timeoutMs / probeCount;
 
   const eqCheck: (currentValue: T) => boolean =
     typeof terminateCondition === 'function'

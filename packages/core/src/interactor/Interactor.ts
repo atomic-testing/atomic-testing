@@ -5,7 +5,7 @@ import { WaitUntilOption } from '../utils/timingUtil';
 
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
-import { FocusOption } from './FocusOption';
+import { BlurOption, FocusOption } from './FocusOption';
 import {
   ClickOption,
   HoverOption,
@@ -53,6 +53,13 @@ export interface Interactor {
   mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void>;
 
   focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void>;
+
+  /**
+   * Remove focus from the desired element
+   * @param locator
+   * @param option
+   */
+  blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
 
   /**
    * Type text into the desired element

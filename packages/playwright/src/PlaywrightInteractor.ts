@@ -1,4 +1,5 @@
 import {
+  BlurOption,
   byCssSelector,
   ClickOption,
   CssProperty,
@@ -172,9 +173,14 @@ export class PlaywrightInteractor implements Interactor {
     return this.mouseOut(locator);
   }
 
-  async focus(locator: PartLocator, _option: Partial<FocusOption>): Promise<void> {
+  async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     return this.page.focus(cssLocator);
+  }
+
+  async blur(locator: PartLocator, _option?: Partial<BlurOption>): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    await this.page.locator(cssLocator).blur();
   }
 
   //#region wait conditions
