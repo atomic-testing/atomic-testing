@@ -52,7 +52,8 @@ export class DOMInteractor implements Interactor {
   async getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>> {
     const el = await this.getElement(locator);
     if (el != null) {
-      const val = (el as HTMLElement).style?.[propertyName] as string;
+      const computedStyle = window.getComputedStyle(el as HTMLElement);
+      const val = computedStyle[propertyName] as string;
       return Promise.resolve(val ?? undefined);
     }
   }
