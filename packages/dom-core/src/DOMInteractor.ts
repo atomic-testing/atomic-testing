@@ -3,6 +3,7 @@ import {
   CssProperty,
   dateUtil,
   defaultWaitForOption,
+  ElementNotFoundError,
   EnterTextOption,
   FocusOption,
   HoverOption,
@@ -71,11 +72,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param option - Optional click configuration such as the click position
    * @returns A promise that resolves after the event is triggered
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'click');
     }
 
     const isSimpleEvent = option?.position == null;
@@ -100,12 +102,14 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param _option - Reserved for future use
    * @returns A promise that resolves after the hover event
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async hover(locator: PartLocator, _option?: HoverOption): Promise<void> {
     const el = await this.getElement(locator);
-    if (el != null) {
-      await userEvent.hover(el);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'hover');
     }
+    await userEvent.hover(el);
   }
 
   /**
@@ -114,11 +118,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param option - Allows specifying the mouse position relative to the element
    * @returns A promise that resolves once the event has been dispatched
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseMove');
     }
 
     const moveLocation = this.calculateMousePosition(el, option?.position);
@@ -137,11 +142,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param option - Allows specifying the mouse position relative to the element
    * @returns Promise resolved when the event is dispatched
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseDown');
     }
 
     const mouseLocation = this.calculateMousePosition(el, option?.position);
@@ -160,11 +166,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param option - Allows specifying the mouse position relative to the element
    * @returns Promise resolved when the event is dispatched
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseUp');
     }
 
     const mouseLocation = this.calculateMousePosition(el, option?.position);
@@ -183,11 +190,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param option - Optional mouse position relative to the element
    * @returns Promise resolved once the event is dispatched
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseOver');
     }
 
     const moveLocation = this.calculateMousePosition(el, option?.position);
@@ -206,11 +214,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param _option - Reserved for future use
    * @returns Promise resolved once the event is dispatched
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseOut');
     }
 
     fireEvent.mouseOut(el);
@@ -222,11 +231,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param _option - Reserved for future use
    * @returns Promise resolved after the event dispatches
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseEnter(locator: PartLocator, _option?: Partial<MouseEnterOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseEnter');
     }
 
     // mouseOver would trigger mouseEnter event
@@ -240,11 +250,12 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param _option - Reserved for future use
    * @returns Promise resolved once the event is dispatched
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
-      return;
+      throw new ElementNotFoundError(locator, 'mouseLeave');
     }
 
     fireEvent.mouseOut(el);
@@ -256,10 +267,14 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the target element
    * @param _option - Reserved for future use
    * @returns Promise resolved when focus has been applied
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {
     const el = await this.getElement(locator);
-    if (el == null || 'focus' in el === false) {
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'focus');
+    }
+    if ('focus' in el === false) {
       return;
     }
     (el as HTMLInputElement).focus();
@@ -272,29 +287,32 @@ export class DOMInteractor implements Interactor {
    * @param text - The string to type
    * @param option - Options such as appending or replacing existing value
    * @returns Promise resolved when typing has completed
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {
     const el = await this.getElement(locator);
-    if (el != null) {
-      if (!option?.append) {
-        await userEvent.clear(el);
-      }
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'enterText');
+    }
 
-      // If it is a date, time or datetime-local input, validate the date format
-      if (el.tagName === 'INPUT') {
-        const type = el.getAttribute('type') ?? '';
-        if (dateUtil.isHtmlDateInputType(type)) {
-          const result = dateUtil.validateHtmlDateInput(type, text);
-          if (!result.valid) {
-            throw new Error(
-              `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
-            );
-          }
+    if (!option?.append) {
+      await userEvent.clear(el);
+    }
+
+    // If it is a date, time or datetime-local input, validate the date format
+    if (el.tagName === 'INPUT') {
+      const type = el.getAttribute('type') ?? '';
+      if (dateUtil.isHtmlDateInputType(type)) {
+        const result = dateUtil.validateHtmlDateInput(type, text);
+        if (!result.valid) {
+          throw new Error(
+            `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
+          );
         }
       }
-
-      await userEvent.type(el, text);
     }
+
+    await userEvent.type(el, text);
   }
 
   /**
@@ -303,12 +321,14 @@ export class DOMInteractor implements Interactor {
    * @param locator - Locator used to find the select element
    * @param values - Values of the options to select
    * @returns Promise resolved when the options have been selected
+   * @throws {ElementNotFoundError} If the element is not found
    */
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     const el = await this.getElement(locator);
-    if (el != null) {
-      await userEvent.selectOptions(el, values);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'selectOptionValue');
     }
+    await userEvent.selectOptions(el, values);
   }
 
   //#region wait conditions
