@@ -1,6 +1,6 @@
 import { ListDriver, ListItemDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, byRole, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { selectableListUIExample } from './SelectableList.example';
 
@@ -23,16 +23,12 @@ export const selectableListExample: IExampleUnit<typeof selectableListExampleSce
 export const selectableListTestSuite: TestSuiteInfo<typeof selectableListExample.scene> = {
   title: 'Selectable List',
   url: '/list',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue }) => {
     let testEngine: TestEngine<typeof selectableListExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(selectableListExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -42,24 +38,24 @@ export const selectableListTestSuite: TestSuiteInfo<typeof selectableListExample
 
     test('List should exist', async () => {
       const exists = await testEngine.parts.selectableList.exists();
-      assertEqual(exists, true);
+      assertTrue(exists);
     });
 
     test('List should have multiple items', async () => {
       const items = await testEngine.parts.selectableList.getItems();
-      assertEqual(items.length >= 4, true);
+      assertTrue(items.length >= 4);
     });
 
     test('Can get list item by label', async () => {
       const draftItem = await testEngine.parts.selectableList.getItemByLabel('Drafts');
       const exists = await draftItem?.exists();
-      assertEqual(exists, true);
+      assertTrue(exists);
     });
 
     test('Drafts item should be selected initially', async () => {
       const draftItem = await testEngine.parts.selectableList.getItemByLabel('Drafts');
       const isSelected = await draftItem?.isSelected();
-      assertEqual(isSelected, true);
+      assertTrue(isSelected);
     });
   },
 };

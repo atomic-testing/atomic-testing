@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { clickLocationMouseEventUIExample } from './ClickLocation.examples';
 
@@ -30,17 +30,14 @@ export const clickLocationMouseEventExample: IExampleUnit<typeof clickLocationMo
 export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof clickLocationMouseEventExample.scene> = {
   title: 'Mouse event: Click',
   url: '/mouse-event',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertApproxEqual }) => {
     describe(`${clickLocationMouseEventExample.title}`, () => {
       let testEngine: TestEngine<typeof clickLocationMouseEventExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(clickLocationMouseEventExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 
@@ -58,14 +55,13 @@ export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof click
         const xDisplay = await testEngine.parts.xDisplay.getText();
         const yDisplay = await testEngine.parts.yDisplay.getText();
 
-        // The coordinates are compared with tolerance because e2e tests are not pixel perfect
+        // Use tolerance-based comparison for cross-browser compatibility
         // Playwright's click position may have sub-pixel offset from the requested position
-        const tolerance = 1;
         const xActual = parseFloat(xDisplay ?? '');
         const yActual = parseFloat(yDisplay ?? '');
 
-        assertEqual(Math.abs(xActual - 20) < tolerance, true);
-        assertEqual(Math.abs(yActual - 15) < tolerance, true);
+        assertApproxEqual(xActual, 20, 1);
+        assertApproxEqual(yActual, 15, 1);
       });
     });
   },

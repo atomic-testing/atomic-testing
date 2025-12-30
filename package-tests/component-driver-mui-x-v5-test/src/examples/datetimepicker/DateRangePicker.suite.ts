@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { DateRangeInput, DateRangePickerDriver } from '@atomic-testing/component-driver-mui-x-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicDateRangePickerUIExample } from './DateRangePicker.examples';
 
@@ -27,14 +27,10 @@ export const basicDateRangePickerTestSuite: TestSuiteInfo<typeof basicDateRangeP
   url: '/datepicker',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof basicDateRangePickerExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicDateRangePickerExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 

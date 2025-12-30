@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { ProgressDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicProgressUIExample } from './Progress.examples';
 
@@ -41,16 +41,13 @@ export const basicProgressExample: IExampleUnit<typeof basicProgressExampleScene
 export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePart> = {
   title: 'Basic Progress',
   url: '/progress',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof basicProgressExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicProgressExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -70,7 +67,7 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
 
     test('circular progress should be determinate', async () => {
       const determinate = await testEngine.parts.circular.isDeterminate();
-      assertEqual(determinate, true);
+      assertTrue(determinate);
     });
 
     test('circular indeterminate should have correct type', async () => {
@@ -85,7 +82,7 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
 
     test('circular indeterminate should not be determinate', async () => {
       const determinate = await testEngine.parts.circularIndeterminate.isDeterminate();
-      assertEqual(determinate, false);
+      assertFalse(determinate);
     });
 
     test('linear progress should have correct type', async () => {
@@ -100,7 +97,7 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
 
     test('linear progress should be determinate', async () => {
       const determinate = await testEngine.parts.linear.isDeterminate();
-      assertEqual(determinate, true);
+      assertTrue(determinate);
     });
 
     test('linear indeterminate should have correct type', async () => {
@@ -115,7 +112,7 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
 
     test('linear indeterminate should not be determinate', async () => {
       const determinate = await testEngine.parts.linearIndeterminate.isDeterminate();
-      assertEqual(determinate, false);
+      assertFalse(determinate);
     });
 
     test('linear buffer should have correct type', async () => {
@@ -130,7 +127,7 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
 
     test('linear buffer should be determinate', async () => {
       const determinate = await testEngine.parts.linearBuffer.isDeterminate();
-      assertEqual(determinate, true);
+      assertTrue(determinate);
     });
   },
 };

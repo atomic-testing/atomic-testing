@@ -5,6 +5,26 @@ import { ScenePart, TestEngine } from '@atomic-testing/core';
  */
 export type AssertEqual = (actual: unknown, expected: unknown) => void;
 
+/**
+ * Assert not equal function
+ */
+export type AssertNotEqual = (actual: unknown, expected: unknown) => void;
+
+/**
+ * Assert true function
+ */
+export type AssertTrue = (value: unknown) => void;
+
+/**
+ * Assert false function
+ */
+export type AssertFalse = (value: unknown) => void;
+
+/**
+ * Assert approximate equality for numbers with tolerance
+ */
+export type AssertApproxEqual = (actual: number, expected: number, tolerance: number) => void;
+
 export type EmptyFunction = () => void;
 
 /**
@@ -16,6 +36,13 @@ export type DoneCallback = () => void;
  * Fixture object passed to test runner, used in test runner such as Playwright
  */
 export type E2eTestRunEnvironmentFixture = { page: unknown; browser: unknown };
+
+/**
+ * Partial fixture type for use in test callbacks that need to access page.
+ * The page property is optional to support both DOM tests (no page) and E2E tests (with page).
+ * Use this type to avoid @ts-ignore when destructuring { page } in beforeEach callbacks.
+ */
+export type TestFixture = { page?: unknown };
 
 type ProviderCallbackParameter = DoneCallback | E2eTestRunEnvironmentFixture;
 
@@ -44,6 +71,10 @@ interface Test {
  */
 export interface TestFrameworkMapper {
   assertEqual: AssertEqual;
+  assertNotEqual: AssertNotEqual;
+  assertTrue: AssertTrue;
+  assertFalse: AssertFalse;
+  assertApproxEqual: AssertApproxEqual;
 
   describe: Describe;
 

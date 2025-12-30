@@ -11,10 +11,27 @@ pnpm install                    # Install dependencies (Node.js >=22.12, pnpm >=
 pnpm run check:type             # Type check all packages
 pnpm run check:lint             # ESLint with auto-fix
 pnpm test:dom                   # Jest tests (in package directory)
-pnpm test:e2e                   # Playwright tests (in package directory)
+pnpm test:e2e                   # Playwright tests (requires dev server running)
 pnpm run build                  # Build package with tsdown
 cd docs && pnpm build           # Build documentation (test before doc PRs)
 ```
+
+### Running E2E Tests
+
+E2E tests require the dev server to be running first:
+
+```bash
+cd package-tests/component-driver-html-test
+pnpm start &                    # Start Vite dev server in background
+pnpm test:e2e                   # Run tests on all browsers (Chrome, Firefox, WebKit)
+pnpm test:e2e:chrome            # Run Chrome only (faster iteration)
+```
+
+**Cross-browser notes**:
+
+- Mouse events (hover, mouseOut) may behave differently across browsers
+- Click coordinates can have sub-pixel offsets (~0.6px) - use tolerance-based comparisons
+- Always test all browsers before merging (`pnpm test:e2e`)
 
 ## Architecture
 
@@ -127,6 +144,8 @@ export class MyDriver extends ComponentDriver<{}> implements IInputDriver<string
 
 ## Testing Pattern
 
+### Simple DOM-Only Test
+
 ```typescript
 // Test file: MyComponent.dom.test.ts
 const parts = { input: { locator: byDataTestId('input'), driver: HTMLTextInputDriver } } satisfies ScenePart;
@@ -146,3 +165,103 @@ describe('MyComponent', () => {
   });
 });
 ```
+
+### Shared Test Pattern (DOM + E2E)
+
+Tests use a three-file pattern enabling the same logic to run in both Jest (DOM) and Playwright (E2E):
+
+| File Pattern    | Purpose                             |
+| --------------- | ----------------------------------- |
+| `*.suite.ts`    | Framework-agnostic test definitions |
+| `*.dom.test.ts` | Jest adapter (renders React in DOM) |
+| `*.e2e.test.ts` | Playwright adapter (browser)        |
+
+#### Shared Test Architecture
+
+```mermaid
+flowchart TB
+    subgraph Suite["Test Suite (.suite.ts)"]
+        ScenePart["ScenePart\n(locators + drivers)"]
+        TestLogic["Test Logic\n(getTestEngine + normalized interface)"]
+    end
+
+    Suite --> DOMTest
+    Suite --> E2ETest
+
+    subgraph DOMTest["DOM Test (.dom.test.ts)"]
+        JestAdapter["jestTestAdapter"]
+        ReactEngine["createTestEngine(React)"]
+    end
+
+    subgraph E2ETest["E2E Test (.e2e.test.ts)"]
+        PWAdapter["playwrightTestFrameworkMapper"]
+        PWEngine["getTestRunnerInterface()"]
+    end
+
+    DOMTest --> ReactInteractor["ReactInteractor\n(wraps with act())"]
+    E2ETest --> PWInteractor["PlaywrightInteractor\n(browser automation)"]
+
+    ReactInteractor --> DOM["DOM"]
+    PWInteractor --> Browser["Browser"]
+```
+
+#### Suite File Structure
+
+```typescript
+// src/examples/MyComponent.suite.ts
+export const scenePart = {
+  input: { locator: byDataTestId('input'), driver: HTMLTextInputDriver },
+} satisfies ScenePart;
+
+export const testSuite: TestSuiteInfo<typeof scenePart> = {
+  title: 'MyComponent',
+  url: '/my-component', // E2E navigation target
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+    describe('MyComponent', () => {
+      let testEngine: TestEngine<typeof scenePart>;
+
+      beforeEach(({ page }) => {
+        testEngine = getTestEngine(scenePart, { page });
+      });
+
+      afterEach(async () => await testEngine.cleanUp());
+
+      test('sets value', async () => {
+        await testEngine.parts.input.setValue('test');
+        assertEqual(await testEngine.parts.input.getValue(), 'test');
+      });
+    });
+  },
+};
+```
+
+#### DOM Test Adapter
+
+```typescript
+// __tests__/MyComponent.dom.test.ts
+import { testRunner } from '@atomic-testing/internal-test-runner';
+import { jestTestAdapter } from '@atomic-testing/internal-test-runner-jest-adapter';
+import { createTestEngine } from '@atomic-testing/react-19';
+
+testRunner(testSuite, jestTestAdapter, {
+  getTestEngine: (scenePart) => createTestEngine(<MyComponent />, scenePart),
+});
+```
+
+#### E2E Test Adapter
+
+```typescript
+// __tests__/MyComponent.e2e.test.ts
+import { testRunner } from '@atomic-testing/internal-test-runner';
+import { getTestRunnerInterface, playWrightTestFrameworkMapper } from '@atomic-testing/playwright';
+
+testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
+```
+
+#### Key Packages
+
+| Package                                             | Purpose                                         |
+| --------------------------------------------------- | ----------------------------------------------- |
+| `@atomic-testing/internal-test-runner`              | `testRunner()` orchestrator                     |
+| `@atomic-testing/internal-test-runner-jest-adapter` | Jest adapter (`jestTestAdapter`)                |
+| `@atomic-testing/playwright`                        | Playwright adapter + `getTestRunnerInterface()` |

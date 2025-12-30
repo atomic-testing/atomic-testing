@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { singleCheckboxUIExample } from './SingleCheckbox.examples';
 
@@ -21,17 +21,14 @@ export const singleCheckboxExample: IExampleUnit<typeof singleCheckboxScenePart,
 export const singleCheckboxTestSuite: TestSuiteInfo<typeof singleCheckboxExample.scene> = {
   title: 'Single checkbox',
   url: '/checkbox',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertFalse, assertTrue }) => {
     describe(`${singleCheckboxExample.title}`, () => {
       let testEngine: TestEngine<typeof singleCheckboxExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(singleCheckboxExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 
@@ -42,7 +39,7 @@ export const singleCheckboxTestSuite: TestSuiteInfo<typeof singleCheckboxExample
       describe('Initial state', () => {
         test('isSelected() should be false', async () => {
           const val = await testEngine.parts.toggle.isSelected();
-          assertEqual(val, false);
+          assertFalse(val);
         });
         test('value should be 1 regardless of its checked state', async () => {
           const val = await testEngine.parts.toggle.getValue();
@@ -57,7 +54,7 @@ export const singleCheckboxTestSuite: TestSuiteInfo<typeof singleCheckboxExample
 
         test('isSelected() should be true', async () => {
           const val = await testEngine.parts.toggle.isSelected();
-          assertEqual(val, true);
+          assertTrue(val);
         });
         test("value should be the checkbox's value", async () => {
           const val = await testEngine.parts.toggle.getValue();

@@ -1,7 +1,7 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, MenuDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { accountMenuUIExample } from './AccountMenu.examples';
 
@@ -32,16 +32,13 @@ export const accountMenuExample: IExampleUnit<typeof accountMenuExampleScenePart
 export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene> = {
   title: 'Account Menu',
   url: '/menu',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof accountMenuExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(accountMenuExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -57,13 +54,13 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene
       test('Settings menu item should be selected', async () => {
         const item = await testEngine.parts.menu.getMenuItemByLabel('Settings');
         const isSelected = await item?.isSelected();
-        assertEqual(isSelected, true);
+        assertTrue(isSelected);
       });
 
       test('Profile menu item should not be selected', async () => {
         const item = await testEngine.parts.menu.getMenuItemByLabel('Profile');
         const isSelected = await item?.isSelected();
-        assertEqual(isSelected, false);
+        assertFalse(isSelected);
       });
 
       test('Clicking on Profile menu item should select it', async () => {
@@ -75,7 +72,7 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene
       test('Logout menu item should be disabled', async () => {
         const item = await testEngine.parts.menu.getMenuItemByLabel('Logout');
         const isDisabled = await item?.isDisabled();
-        assertEqual(isDisabled, true);
+        assertTrue(isDisabled);
       });
     });
   },

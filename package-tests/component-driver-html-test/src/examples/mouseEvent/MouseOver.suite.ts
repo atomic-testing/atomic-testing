@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { mouseOverMouseEventUIExample } from './MouseOver.examples';
 
@@ -41,13 +41,10 @@ export const mouseOverMouseEventExampleTestSuite: TestSuiteInfo<typeof mouseOver
     describe(`${mouseOverMouseEventExample.title}`, () => {
       let testEngine: TestEngine<typeof mouseOverMouseEventExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(mouseOverMouseEventExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 

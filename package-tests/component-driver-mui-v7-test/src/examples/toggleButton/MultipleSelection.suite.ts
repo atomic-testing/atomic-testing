@@ -1,6 +1,6 @@
 import { ToggleButtonGroupDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { regularSelectionUIExample } from './MultipleSelection.example';
 
@@ -21,14 +21,10 @@ export const regularSelectionButtonTestSuite: TestSuiteInfo<typeof regularSelect
   url: '/toggle-button',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof regularSelectionExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(regularSelectionExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 

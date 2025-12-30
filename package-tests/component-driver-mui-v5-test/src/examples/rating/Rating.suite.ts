@@ -1,6 +1,6 @@
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicRatingUIExample } from './Rating.examples';
 
@@ -31,16 +31,13 @@ export const basicRatingExample: IExampleUnit<typeof basicRatingExampleScenePart
 export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene> = {
   title: 'Basic Rating',
   url: '/rating',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicRatingExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicRatingExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -50,7 +47,7 @@ export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene
 
     test('Basic rating should exist', async () => {
       const exists = await testEngine.parts.basic.exists();
-      assertEqual(exists, true);
+      assertTrue(exists);
     });
 
     test('Basic rating should have initial value', async () => {
@@ -66,12 +63,12 @@ export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene
 
     test('Readonly rating should exist', async () => {
       const exists = await testEngine.parts.readonly.exists();
-      assertEqual(exists, true);
+      assertTrue(exists);
     });
 
     test('Disabled rating should exist', async () => {
       const exists = await testEngine.parts.disabled.exists();
-      assertEqual(exists, true);
+      assertTrue(exists);
     });
 
     test('Initially empty rating should start empty', async () => {

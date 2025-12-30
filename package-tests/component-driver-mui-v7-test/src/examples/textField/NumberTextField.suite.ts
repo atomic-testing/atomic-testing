@@ -3,7 +3,7 @@ import { JSX } from 'react';
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v7';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { numberTextFieldUIExample } from './NumberTextField.examples';
 
@@ -30,16 +30,12 @@ export const numberTextFieldExample: IExampleUnit<typeof numberTextFieldExampleS
 export const numberTextFieldTestSuite: TestSuiteInfo<typeof numberTextFieldExampleScenePart> = {
   title: 'Number TextField',
   url: '/textfield',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof numberTextFieldExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(numberTextFieldExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -48,7 +44,7 @@ export const numberTextFieldTestSuite: TestSuiteInfo<typeof numberTextFieldExamp
     });
 
     test('it should have a number text field', async () => {
-      assertEqual(await testEngine.parts.number.exists(), true);
+      assertTrue(await testEngine.parts.number.exists());
     });
 
     test('it should have the correct label', async () => {

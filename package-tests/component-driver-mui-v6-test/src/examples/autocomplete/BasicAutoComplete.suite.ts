@@ -1,7 +1,7 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicAutoCompleteUIExample } from './BasicAutoComplete.examples';
 
@@ -43,16 +43,13 @@ export const basicAutoCompleteExample: IExampleUnit<typeof basicAutoCompleteExam
 export const basicAutoCompleteTestSuite: TestSuiteInfo<typeof basicAutoCompleteExample.scene> = {
   title: 'Basic AutoComplete',
   url: '/autocomplete',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicAutoCompleteExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicAutoCompleteExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -79,12 +76,12 @@ export const basicAutoCompleteTestSuite: TestSuiteInfo<typeof basicAutoCompleteE
 
     test('Readonly select should not be interactive', async () => {
       const isReadonly = await testEngine.parts.readonlySelect.isReadonly();
-      assertEqual(isReadonly, true);
+      assertTrue(isReadonly);
     });
 
     test('Disabled select should be disabled', async () => {
       const isDisabled = await testEngine.parts.disabledSelect.isDisabled();
-      assertEqual(isDisabled, true);
+      assertTrue(isDisabled);
     });
   },
 };

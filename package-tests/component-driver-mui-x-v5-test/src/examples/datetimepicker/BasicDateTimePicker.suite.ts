@@ -7,7 +7,7 @@ import {
   TimePickerDriver,
 } from '@atomic-testing/component-driver-mui-x-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicDatePickerUIExample } from './BasicDateTimePicker.examples';
 
@@ -44,14 +44,10 @@ export const basicDatePickerTestSuite: TestSuiteInfo<typeof basicDatePickerExamp
   url: '/datepicker',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof basicDatePickerExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicDatePickerExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 

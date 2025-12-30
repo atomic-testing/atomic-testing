@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLSelectDriver } from '@atomic-testing/component-driver-html';
 import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { singleSelectUIExample } from './SingleSelect.examples';
 
@@ -25,13 +25,10 @@ export const singleSelectTestSuite: TestSuiteInfo<typeof singleSelectExample.sce
     describe(`${singleSelectExample.title}`, () => {
       let testEngine: TestEngine<typeof singleSelectExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(singleSelectExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 

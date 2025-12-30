@@ -1,6 +1,6 @@
 import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { indeterminateCheckboxUIExample } from './IndeterminateCheckbox.examples';
 
@@ -27,16 +27,13 @@ export const indeterminateCheckboxExample: IExampleUnit<typeof indeterminateChec
 export const indeterminateCheckboxTestSuite: TestSuiteInfo<typeof indeterminateCheckboxExample.scene> = {
   title: 'Indeterminate Checkbox',
   url: '/checkbox',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof indeterminateCheckboxExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(indeterminateCheckboxExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -46,17 +43,17 @@ export const indeterminateCheckboxTestSuite: TestSuiteInfo<typeof indeterminateC
 
     test('Child1 should be checked initially', async () => {
       const isSelected = await testEngine.parts.child1.isSelected();
-      assertEqual(isSelected, true);
+      assertTrue(isSelected);
     });
 
     test('Child2 should not be checked initially', async () => {
       const isSelected = await testEngine.parts.child2.isSelected();
-      assertEqual(isSelected, false);
+      assertFalse(isSelected);
     });
 
     test('Parent should be indeterminate initially', async () => {
       const isIndeterminate = await testEngine.parts.parent.isIndeterminate();
-      assertEqual(isIndeterminate, true);
+      assertTrue(isIndeterminate);
     });
   },
 };

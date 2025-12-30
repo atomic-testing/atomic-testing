@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { hoverAnchorUIExample } from './HoverAnchor.examples';
 
@@ -25,17 +25,14 @@ export const hoverAnchorExample: IExampleUnit<typeof hoverAnchorExampleScenePart
 export const hoverAnchorExampleTestSuite: TestSuiteInfo<typeof hoverAnchorExample.scene> = {
   title: 'Anchor hover',
   url: '/mouse-event',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertFalse, assertTrue }) => {
     describe(`${hoverAnchorExample.title}`, () => {
       let testEngine: TestEngine<typeof hoverAnchorExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(hoverAnchorExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 
@@ -44,7 +41,7 @@ export const hoverAnchorExampleTestSuite: TestSuiteInfo<typeof hoverAnchorExampl
       });
 
       test('Detail is not shown when not hover', async () => {
-        assertEqual(await testEngine.parts.tip.isVisible(), false);
+        assertFalse(await testEngine.parts.tip.isVisible());
       });
 
       test('Detail is shown when hover', async () => {
@@ -53,7 +50,7 @@ export const hoverAnchorExampleTestSuite: TestSuiteInfo<typeof hoverAnchorExampl
           condition: 'visible',
           timeoutMs: 500,
         });
-        assertEqual(await testEngine.parts.tip.isVisible(), true);
+        assertTrue(await testEngine.parts.tip.isVisible());
       });
     });
   },

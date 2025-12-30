@@ -1,6 +1,6 @@
 import { AlertDriver } from '@atomic-testing/component-driver-mui-v5';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicAlertUIExample } from './BasicAlert.examples';
 
@@ -31,16 +31,13 @@ export const basicAlertExample: IExampleUnit<typeof basicAlertExampleScenePart, 
 export const basicAlertTestSuite: TestSuiteInfo<typeof basicAlertExample.scene> = {
   title: 'Basic Alert',
   url: '/alert',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicAlertExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicAlertExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -50,7 +47,7 @@ export const basicAlertTestSuite: TestSuiteInfo<typeof basicAlertExample.scene> 
 
     test('Error alert\'s code should be "code: red"', async () => {
       const message = await testEngine.parts.error.getMessage();
-      assertEqual((message ?? '').includes('code: red'), true);
+      assertTrue((message ?? '').includes('code: red'));
     });
 
     test("Error alert's severity should be error", async () => {
@@ -65,12 +62,12 @@ export const basicAlertTestSuite: TestSuiteInfo<typeof basicAlertExample.scene> 
 
     test("Error alert's message should contain the correct text", async () => {
       const message = await testEngine.parts.error.getMessage();
-      assertEqual((message ?? '').includes('This is an error alert'), true);
+      assertTrue((message ?? '').includes('This is an error alert'));
     });
 
     test('Warning alert\'s code should be "code: yellow"', async () => {
       const message = await testEngine.parts.warning.getMessage();
-      assertEqual((message ?? '').includes('code: yellow'), true);
+      assertTrue((message ?? '').includes('code: yellow'));
     });
 
     test("Warning alert's severity should be warning", async () => {
@@ -85,7 +82,7 @@ export const basicAlertTestSuite: TestSuiteInfo<typeof basicAlertExample.scene> 
 
     test("Warning alert's message should contain the correct text", async () => {
       const message = await testEngine.parts.warning.getMessage();
-      assertEqual((message ?? '').includes('This is a warning alert'), true);
+      assertTrue((message ?? '').includes('This is a warning alert'));
     });
 
     test("Info alert's severity should be info", async () => {

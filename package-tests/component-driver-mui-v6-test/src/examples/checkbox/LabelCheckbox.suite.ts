@@ -1,6 +1,6 @@
 import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { labelCheckboxUIExample } from './LabelCheckbox.examples';
 
@@ -23,16 +23,12 @@ export const labelCheckboxExample: IExampleUnit<typeof labelCheckboxExampleScene
 export const labelCheckboxTestSuite: TestSuiteInfo<typeof labelCheckboxExample.scene> = {
   title: 'Label Checkbox',
   url: '/checkbox',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof labelCheckboxExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(labelCheckboxExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -42,18 +38,18 @@ export const labelCheckboxTestSuite: TestSuiteInfo<typeof labelCheckboxExample.s
 
     test('Apple checkbox should be checked by default', async () => {
       const isSelected = await testEngine.parts.apple.isSelected();
-      assertEqual(isSelected, true);
+      assertTrue(isSelected);
     });
 
     test('Banana checkbox should not be checked by default', async () => {
       const isSelected = await testEngine.parts.banana.isSelected();
-      assertEqual(isSelected, false);
+      assertFalse(isSelected);
     });
 
     test('Banana checkbox can be checked', async () => {
       await testEngine.parts.banana.setSelected(true);
       const isSelected = await testEngine.parts.banana.isSelected();
-      assertEqual(isSelected, true);
+      assertTrue(isSelected);
     });
   },
 };

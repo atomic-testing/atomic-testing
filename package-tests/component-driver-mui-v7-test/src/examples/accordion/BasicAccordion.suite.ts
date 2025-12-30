@@ -1,6 +1,6 @@
 import { AccordionDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicAccordionUIExample } from './BasicAccordion.examples';
 
@@ -23,17 +23,13 @@ export const basicAccordionExample: IExampleUnit<typeof basicAccordionExampleSce
 export const basicAccordionTestSuite: TestSuiteInfo<typeof basicAccordionExample.scene> = {
   title: 'Basic Accordion',
   url: '/accordion',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertTrue }) => {
     describe(`${basicAccordionExample.title}`, () => {
       let testEngine: TestEngine<typeof basicAccordionExample.scene>;
-
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(basicAccordionExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 
@@ -44,12 +40,12 @@ export const basicAccordionTestSuite: TestSuiteInfo<typeof basicAccordionExample
       test(`Normal accordion should be expanded and show content when clicked`, async () => {
         await testEngine.parts.normalAccordion.expand();
         const expanded = await testEngine.parts.normalAccordion.isExpanded();
-        assertEqual(expanded, true);
+        assertTrue(expanded);
       });
 
       test(`Disabled accordion is not interactive`, async () => {
         const disabled = await testEngine.parts.disabledAccordion.isDisabled();
-        assertEqual(disabled, true);
+        assertTrue(disabled);
       });
     });
   },

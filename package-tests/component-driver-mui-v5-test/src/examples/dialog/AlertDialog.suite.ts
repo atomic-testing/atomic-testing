@@ -1,6 +1,6 @@
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v5';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { alertDialogUIExample } from './AlertDialog.examples';
 
@@ -37,16 +37,13 @@ export const alertDialogExample: IExampleUnit<typeof alertExampleScenePart, JSX.
 export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene> = {
   title: 'Alert dialog',
   url: '/dialog',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof alertDialogExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(alertDialogExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -56,27 +53,27 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
 
     test('Dialog should not be open initially', async () => {
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, false);
+      assertFalse(isOpen);
     });
 
     test('Clicking open trigger should open dialog', async () => {
       await testEngine.parts.openTrigger.click();
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, true);
+      assertTrue(isOpen);
     });
 
     test('Clicking agree button should close dialog', async () => {
       await testEngine.parts.openTrigger.click();
       await testEngine.parts.dialog.content.agree.click();
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, false);
+      assertFalse(isOpen);
     });
 
     test('Clicking disagree button should close dialog', async () => {
       await testEngine.parts.openTrigger.click();
       await testEngine.parts.dialog.content.disagree.click();
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, false);
+      assertFalse(isOpen);
     });
   },
 };

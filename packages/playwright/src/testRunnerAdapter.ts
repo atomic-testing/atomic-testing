@@ -37,6 +37,11 @@ export function playwrightGetTestEngine<T extends ScenePart>(
 
 export const playWrightTestFrameworkMapper: TestFrameworkMapper = {
   assertEqual: (a, b) => expect(a).toEqual(b),
+  assertNotEqual: (a, b) => expect(a).not.toEqual(b),
+  assertTrue: (value) => expect(value).toBe(true),
+  assertFalse: (value) => expect(value).toBe(false),
+  assertApproxEqual: (actual, expected, tolerance) =>
+    expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tolerance),
   // @ts-expect-error - expect type is not compatible with the type of the test framework
   describe: test.describe,
 

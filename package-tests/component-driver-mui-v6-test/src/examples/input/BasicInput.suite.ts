@@ -1,6 +1,6 @@
 import { InputDriver } from '@atomic-testing/component-driver-mui-v6';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicInputUIExample } from './BasicInput.examples';
 
@@ -31,16 +31,13 @@ export const basicInputExample: IExampleUnit<typeof basicInputExampleScenePart, 
 export const basicInputTestSuite: TestSuiteInfo<typeof basicInputExample.scene> = {
   title: 'Basic Input',
   url: '/input',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicInputExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicInputExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -50,7 +47,7 @@ export const basicInputTestSuite: TestSuiteInfo<typeof basicInputExample.scene> 
 
     test('Basic input should exist', async () => {
       const exists = await testEngine.parts.basic.exists();
-      assertEqual(exists, true);
+      assertTrue(exists);
     });
 
     test('Basic input can be typed into', async () => {
@@ -61,12 +58,12 @@ export const basicInputTestSuite: TestSuiteInfo<typeof basicInputExample.scene> 
 
     test('Readonly input should be readonly', async () => {
       const isReadonly = await testEngine.parts.readonly.isReadonly();
-      assertEqual(isReadonly, true);
+      assertTrue(isReadonly);
     });
 
     test('Disabled input should be disabled', async () => {
       const isDisabled = await testEngine.parts.disabled.isDisabled();
-      assertEqual(isDisabled, true);
+      assertTrue(isDisabled);
     });
 
     test('Multiline input can handle multiple lines', async () => {
