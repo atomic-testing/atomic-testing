@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { mouseOverMouseEventUIExample } from './MouseOver.examples';
 
@@ -39,40 +39,29 @@ export const mouseOverMouseEventExampleTestSuite: TestSuiteInfo<typeof mouseOver
   url: '/mouse-event',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${mouseOverMouseEventExample.title}`, () => {
-      let testEngine: TestEngine<typeof mouseOverMouseEventExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(mouseOverMouseEventExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(mouseOverMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('MouseOver', async () => {
-        await testEngine.parts.target.mouseOver();
-        const text = await testEngine.parts.mouseOverDisplay.getText();
+        await engine().parts.target.mouseOver();
+        const text = await engine().parts.mouseOverDisplay.getText();
         assertEqual(text, 'true');
       });
 
       test('MouseOut', async () => {
-        await testEngine.parts.target.mouseOut();
-        const text = await testEngine.parts.mouseOutDisplay.getText();
+        await engine().parts.target.mouseOut();
+        const text = await engine().parts.mouseOutDisplay.getText();
         assertEqual(text, 'true');
       });
 
       test('MouseEnter', async () => {
-        await testEngine.parts.target.mouseEnter();
-        const text = await testEngine.parts.mouseEnterDisplay.getText();
+        await engine().parts.target.mouseEnter();
+        const text = await engine().parts.mouseEnterDisplay.getText();
         assertEqual(text, 'true');
       });
 
       test('MouseLeave', async () => {
-        await testEngine.parts.target.mouseLeave();
-        const text = await testEngine.parts.mouseLeaveDisplay.getText();
+        await engine().parts.target.mouseLeave();
+        const text = await engine().parts.mouseLeaveDisplay.getText();
         assertEqual(text, 'true');
       });
     });

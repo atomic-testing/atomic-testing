@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { dateTextFieldUIExample } from './DateTextField.examples';
 
@@ -26,37 +26,26 @@ export const dateTextFieldTestSuite: TestSuiteInfo<typeof dateTextFieldExampleSc
   title: 'Date TextField',
   url: '/textfield',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
-    let testEngine: TestEngine<typeof dateTextFieldExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(dateTextFieldExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(dateTextFieldExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have the correct label', async () => {
-      const label = await testEngine.parts.date.getLabel();
+      const label = await engine().parts.date.getLabel();
       assertEqual(label, 'Date Field');
     });
 
     test('it should have the correct helper text', async () => {
-      const helperText = await testEngine.parts.date.getHelperText();
+      const helperText = await engine().parts.date.getHelperText();
       assertEqual(helperText, 'Enter a date here');
     });
 
     test('it should have empty value initially', async () => {
-      const value = await testEngine.parts.date.getValue();
+      const value = await engine().parts.date.getValue();
       assertEqual(value, '');
     });
 
     test('it should be able to set and get date value', async () => {
-      await testEngine.parts.date.setValue('2015-12-22');
-      const value = await testEngine.parts.date.getValue();
+      await engine().parts.date.setValue('2015-12-22');
+      const value = await engine().parts.date.getValue();
       assertEqual(value, '2015-12-22');
     });
   },

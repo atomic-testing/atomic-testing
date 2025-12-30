@@ -1,6 +1,6 @@
 import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { labelCheckboxUIExample } from './LabelCheckbox.examples';
 
@@ -24,32 +24,21 @@ export const labelCheckboxTestSuite: TestSuiteInfo<typeof labelCheckboxExample.s
   title: 'Label Checkbox',
   url: '/checkbox',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
-    let testEngine: TestEngine<typeof labelCheckboxExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(labelCheckboxExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(labelCheckboxExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Apple checkbox should be checked by default', async () => {
-      const isSelected = await testEngine.parts.apple.isSelected();
+      const isSelected = await engine().parts.apple.isSelected();
       assertTrue(isSelected);
     });
 
     test('Banana checkbox should not be checked by default', async () => {
-      const isSelected = await testEngine.parts.banana.isSelected();
+      const isSelected = await engine().parts.banana.isSelected();
       assertFalse(isSelected);
     });
 
     test('Banana checkbox can be checked', async () => {
-      await testEngine.parts.banana.setSelected(true);
-      const isSelected = await testEngine.parts.banana.isSelected();
+      await engine().parts.banana.setSelected(true);
+      const isSelected = await engine().parts.banana.isSelected();
       assertTrue(isSelected);
     });
   },

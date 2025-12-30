@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { SelectDriver } from '@atomic-testing/component-driver-mui-v6';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { nativeSelectUIExample } from './NativeSelect.examples';
 
@@ -26,30 +26,20 @@ export const nativeSelectTestSuite: TestSuiteInfo<typeof nativeSelectExampleScen
   title: 'Native Select',
   url: '/select',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof nativeSelectExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(nativeSelectExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(nativeSelectExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have default native select element', async () => {
-      assertTrue(await testEngine.parts.select.exists());
+      assertTrue(await engine().parts.select.exists());
     });
 
     test('it should have default value of 30', async () => {
-      const value = await testEngine.parts.select.getValue();
+      const value = await engine().parts.select.getValue();
       assertEqual(value, '30');
     });
 
     test('it should be able to select an option', async () => {
-      await testEngine.parts.select.setValue('20');
-      const value = await testEngine.parts.select.getValue();
+      await engine().parts.select.setValue('20');
+      const value = await engine().parts.select.getValue();
       assertEqual(value, '20');
     });
   },

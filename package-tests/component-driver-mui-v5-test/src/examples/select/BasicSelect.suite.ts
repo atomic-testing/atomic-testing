@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { SelectDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicSelectUIExample } from './BasicSelect.examples';
 
@@ -26,32 +26,21 @@ export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExampleSceneP
   title: 'Basic Select',
   url: '/select',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof basicSelectExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicSelectExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicSelectExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have default select element', async () => {
-      assertTrue(await testEngine.parts.select.exists());
+      assertTrue(await engine().parts.select.exists());
     });
 
     test('it should be able to select an option', async () => {
-      await testEngine.parts.select.setValue('30');
-      const value = await testEngine.parts.select.getValue();
+      await engine().parts.select.setValue('30');
+      const value = await engine().parts.select.getValue();
       assertEqual(value, '30');
     });
 
     test('it should be able to select by label', async () => {
-      await testEngine.parts.select.selectByLabel('Thirty');
-      const value = await testEngine.parts.select.getValue();
+      await engine().parts.select.selectByLabel('Thirty');
+      const value = await engine().parts.select.getValue();
       assertEqual(value, '30');
     });
   },

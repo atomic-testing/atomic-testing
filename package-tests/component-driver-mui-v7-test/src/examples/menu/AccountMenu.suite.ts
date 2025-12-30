@@ -1,7 +1,7 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, MenuDriver } from '@atomic-testing/component-driver-mui-v7';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { accountMenuUIExample } from './AccountMenu.examples';
 
@@ -33,43 +33,33 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene
   title: 'Account Menu',
   url: '/menu',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
-    let testEngine: TestEngine<typeof accountMenuExample.scene>;
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(accountMenuExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(accountMenuExample.scene, getTestEngine, { beforeEach, afterEach });
 
     describe('When menu is open', () => {
       beforeEach(async () => {
-        await testEngine.parts.disclosure.click();
+        await engine().parts.disclosure.click();
       });
 
       test('Settings menu item should be selected', async () => {
-        const item = await testEngine.parts.menu.getMenuItemByLabel('Settings');
+        const item = await engine().parts.menu.getMenuItemByLabel('Settings');
         const isSelected = await item?.isSelected();
         assertTrue(isSelected);
       });
 
       test('Profile menu item should not be selected', async () => {
-        const item = await testEngine.parts.menu.getMenuItemByLabel('Profile');
+        const item = await engine().parts.menu.getMenuItemByLabel('Profile');
         const isSelected = await item?.isSelected();
         assertFalse(isSelected);
       });
 
       test('Clicking on Profile menu item should select it', async () => {
-        await testEngine.parts.menu.selectByLabel('Profile');
-        const selection = await testEngine.parts.selection.getText();
+        await engine().parts.menu.selectByLabel('Profile');
+        const selection = await engine().parts.selection.getText();
         assertEqual(selection, 'Profile');
       });
 
       test('Logout menu item should be disabled', async () => {
-        const item = await testEngine.parts.menu.getMenuItemByLabel('Logout');
+        const item = await engine().parts.menu.getMenuItemByLabel('Logout');
         const isDisabled = await item?.isDisabled();
         assertTrue(isDisabled);
       });

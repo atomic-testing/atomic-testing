@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byLinkedElement } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { IExampleUnit, ScenePart, byDataTestId, byLinkedElement } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { linkedElementUIExample } from './LinkedElement.examples';
 
@@ -26,22 +26,11 @@ export const linkedElementTestSuite: TestSuiteInfo<typeof linkedElementExample.s
   url: '/form',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${linkedElementExample.title}`, () => {
-      let testEngine: TestEngine<typeof linkedElementExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(linkedElementExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(linkedElementExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('Can locate input matched by label for', async () => {
         const targetValue = 'Something';
-        const val = await testEngine.parts.textInput.getValue();
+        const val = await engine().parts.textInput.getValue();
         assertEqual(val, targetValue);
       });
     });

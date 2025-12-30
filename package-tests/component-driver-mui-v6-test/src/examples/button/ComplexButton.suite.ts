@@ -1,6 +1,6 @@
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
-import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { complexButtonUIExample } from './ComplexButton.example';
 
@@ -29,34 +29,24 @@ export const complexButtonTestSuite: TestSuiteInfo<typeof complexButtonExample.s
   url: '/button',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertTrue }) => {
     describe(`${complexButtonExample.title}`, () => {
-      let testEngine: TestEngine<typeof complexButtonExample.scene>;
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(complexButtonExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(complexButtonExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('Contained button should exist and be clickable', async () => {
-        const exists = await testEngine.parts.contained.exists();
+        const exists = await engine().parts.contained.exists();
         assertTrue(exists);
-        await testEngine.parts.contained.click();
+        await engine().parts.contained.click();
       });
 
       test('Outlined button should exist and be clickable', async () => {
-        const exists = await testEngine.parts.outlined.exists();
+        const exists = await engine().parts.outlined.exists();
         assertTrue(exists);
-        await testEngine.parts.outlined.click();
+        await engine().parts.outlined.click();
       });
 
       test('Text button should exist and be clickable', async () => {
-        const exists = await testEngine.parts.text.exists();
+        const exists = await engine().parts.text.exists();
         assertTrue(exists);
-        await testEngine.parts.text.click();
+        await engine().parts.text.click();
       });
     });
   },
