@@ -8,6 +8,8 @@ import { dateTextFieldUIExample } from './DateTextField.examples';
 import { dateTextFieldExample, dateTextFieldTestSuite } from './DateTextField.suite';
 import { multilineTextFieldUIExample } from './MultilineTextField.examples';
 import { multilineTextFieldExample, multilineTextFieldTestSuite } from './MultilineTextField.suite';
+import { numberTextFieldUIExample } from './NumberTextField.examples';
+import { numberTextFieldExample, numberTextFieldTestSuite } from './NumberTextField.suite';
 import { readonlyAndDisabledTextFieldUIExample } from './ReadonlyDisabledTextField.examples';
 import {
   readonlyAndDisabledTextFieldExample,
@@ -26,6 +28,9 @@ export {
   multilineTextFieldUIExample,
   multilineTextFieldExample,
   multilineTextFieldTestSuite,
+  numberTextFieldUIExample,
+  numberTextFieldExample,
+  numberTextFieldTestSuite,
   readonlyAndDisabledTextFieldUIExample,
   readonlyAndDisabledTextFieldExample,
   readonlyAndDisabledTextFieldTestSuite,
@@ -36,6 +41,7 @@ export {
 
 export const textFieldUIExamples: IExampleUIUnit<JSX.Element>[] = [
   basicTextFieldUIExample,
+  numberTextFieldExample,
   dateTextFieldUIExample,
   multilineTextFieldUIExample,
   readonlyAndDisabledTextFieldUIExample,
@@ -44,6 +50,7 @@ export const textFieldUIExamples: IExampleUIUnit<JSX.Element>[] = [
 
 export const textFieldExamples: IExampleUnit<ScenePart, JSX.Element>[] = [
   basicTextFieldExample,
+  numberTextFieldExample,
   dateTextFieldExample,
   multilineTextFieldExample,
   readonlyAndDisabledTextFieldExample,

@@ -9,6 +9,8 @@ import {
   dateTextFieldTestSuite,
   multilineTextFieldExample,
   multilineTextFieldTestSuite,
+  numberTextFieldExample,
+  numberTextFieldTestSuite,
   readonlyAndDisabledTextFieldExample,
   readonlyAndDisabledTextFieldTestSuite,
   selectTextFieldExample,
@@ -18,6 +20,12 @@ import {
 testRunner(basicTextFieldTestSuite, jestTestAdapter, {
   getTestEngine: (scenePart: typeof basicTextFieldExample.scene) => {
     return createTestEngine(basicTextFieldExample.ui, scenePart);
+  },
+});
+
+testRunner(numberTextFieldTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof numberTextFieldExample.scene) => {
+    return createTestEngine(numberTextFieldExample.ui, scenePart);
   },
 });
 
