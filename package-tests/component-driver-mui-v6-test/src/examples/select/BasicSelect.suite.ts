@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { SelectDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicSelectUIExample } from './BasicSelect.examples';
 
@@ -25,16 +25,12 @@ export const basicSelectExample: IExampleUnit<typeof basicSelectExampleScenePart
 export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExampleScenePart> = {
   title: 'Basic Select',
   url: '/select',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicSelectExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicSelectExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -43,7 +39,7 @@ export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExampleSceneP
     });
 
     test('it should have default select element', async () => {
-      assertEqual(await testEngine.parts.select.exists(), true);
+      assertTrue(await testEngine.parts.select.exists());
     });
 
     test('it should be able to select an option', async () => {

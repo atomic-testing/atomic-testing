@@ -1,6 +1,6 @@
 import { ExclusiveToggleButtonGroupDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { exclusiveSelectionUIExample } from './ExclusiveSelection.example';
 
@@ -21,14 +21,10 @@ export const exclusiveSelectionTestSuite: TestSuiteInfo<typeof exclusiveSelectio
   url: '/toggle-button',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof exclusiveSelectionExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(exclusiveSelectionExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 

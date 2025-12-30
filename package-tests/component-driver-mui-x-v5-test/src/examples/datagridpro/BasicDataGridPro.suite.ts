@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { DataGridProDriver } from '@atomic-testing/component-driver-mui-x-v5';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicDataGridProUIExample } from './BasicDataGridPro.examples';
 
@@ -25,16 +25,12 @@ export const basicDataGridProExample: IExampleUnit<typeof basicDataGridProExampl
 export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExampleScenePart> = {
   title: 'Basic DataGridPro',
   url: '/datagridpro',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue }) => {
     let testEngine: TestEngine<typeof basicDataGridProExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicDataGridProExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -44,17 +40,17 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
 
     test('it should display at least 2 columns', async () => {
       const count = await testEngine.parts.basicGrid.getColumnCount();
-      assertEqual(count >= 2, true);
+      assertTrue(count >= 2);
     });
 
     test('it should display at least 2 rows', async () => {
       const count = await testEngine.parts.basicGrid.getRowCount();
-      assertEqual(count >= 2, true);
+      assertTrue(count >= 2);
     });
 
     test('Get cell should return cell with some text', async () => {
       const text = await testEngine.parts.basicGrid.getCellText({ rowIndex: 1, columnIndex: 1 });
-      assertEqual((text ?? '').length > 1, true);
+      assertTrue((text ?? '').length > 1);
     });
 
     test('Header Row should contain columns desk, commodity ...', async () => {
@@ -62,7 +58,7 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
       const expectedColumns = ['Desk', 'Commodity'];
       const columnTextSet = new Set(columnText);
       const columnExists = expectedColumns.every(column => columnTextSet.has(column));
-      assertEqual(columnExists, true);
+      assertTrue(columnExists);
     });
 
     test('Data Row 1 should have content in all cells except the first one because it is a checkbox', async () => {
@@ -73,7 +69,7 @@ export const basicDataGridProTestSuite: TestSuiteInfo<typeof basicDataGridProExa
         }
         return column.length > 1;
       });
-      assertEqual(textCorrect, true);
+      assertTrue(textCorrect);
     });
   },
 };

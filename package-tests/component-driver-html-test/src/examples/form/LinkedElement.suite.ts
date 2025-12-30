@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId, byLinkedElement } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { linkedElementUIExample } from './LinkedElement.examples';
 
@@ -28,13 +28,10 @@ export const linkedElementTestSuite: TestSuiteInfo<typeof linkedElementExample.s
     describe(`${linkedElementExample.title}`, () => {
       let testEngine: TestEngine<typeof linkedElementExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(linkedElementExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 

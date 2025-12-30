@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v7';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicTextFieldUIExample } from './BasicTextField.examples';
 
@@ -25,16 +25,12 @@ export const basicTextFieldExample: IExampleUnit<typeof basicTextFieldExampleSce
 export const basicTextFieldTestSuite: TestSuiteInfo<typeof basicTextFieldExampleScenePart> = {
   title: 'Basic TextField',
   url: '/textfield',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicTextFieldExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicTextFieldExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -43,7 +39,7 @@ export const basicTextFieldTestSuite: TestSuiteInfo<typeof basicTextFieldExample
     });
 
     test('it should have a basic text field', async () => {
-      assertEqual(await testEngine.parts.basic.exists(), true);
+      assertTrue(await testEngine.parts.basic.exists());
     });
 
     test('it should have the correct label', async () => {

@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { uncontrolledTextInputUIExample } from './Uncontrolled.examples';
 
@@ -41,13 +41,10 @@ export const uncontrolledTextInputExampleTestSuite: TestSuiteInfo<typeof uncontr
     describe(`${uncontrolledTextInputExample.title}`, () => {
       let testEngine: TestEngine<typeof uncontrolledTextInputExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(uncontrolledTextInputExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 

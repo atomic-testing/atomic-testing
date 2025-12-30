@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { focusEventUIExample } from './Focus.examples';
 
@@ -33,13 +33,10 @@ export const focusEventExampleTestSuite: TestSuiteInfo<typeof focusEventExample.
     describe(`${focusEventExample.title}`, () => {
       let testEngine: TestEngine<typeof focusEventExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(focusEventExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 

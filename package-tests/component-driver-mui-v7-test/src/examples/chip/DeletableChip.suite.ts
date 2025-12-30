@@ -1,6 +1,6 @@
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { deletableChipUIExample } from './DeletableChip.examples';
 
@@ -27,16 +27,12 @@ export const deletableChipExample: IExampleUnit<typeof deletableChipExampleScene
 export const deletableChipTestSuite: TestSuiteInfo<typeof deletableChipExample.scene> = {
   title: 'Deletable Chip',
   url: '/chip',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof deletableChipExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(deletableChipExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -48,15 +44,15 @@ export const deletableChipTestSuite: TestSuiteInfo<typeof deletableChipExample.s
       const jackExists = await testEngine.parts.jackChip.exists();
       const lucyExists = await testEngine.parts.lucyChip.exists();
       const mariaExists = await testEngine.parts.mariaChip.exists();
-      assertEqual(jackExists, true);
-      assertEqual(lucyExists, true);
-      assertEqual(mariaExists, true);
+      assertTrue(jackExists);
+      assertTrue(lucyExists);
+      assertTrue(mariaExists);
     });
 
     test('Deleting Jack chip should remove it', async () => {
       await testEngine.parts.jackChip.clickRemove();
       const jackExists = await testEngine.parts.jackChip.exists();
-      assertEqual(jackExists, false);
+      assertFalse(jackExists);
     });
   },
 };

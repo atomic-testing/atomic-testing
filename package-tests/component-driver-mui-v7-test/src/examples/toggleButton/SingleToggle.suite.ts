@@ -1,6 +1,6 @@
 import { ToggleButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { singleToggleUIExample } from './SingleToggle.example';
 
@@ -19,16 +19,12 @@ export const singleToggleExample: IExampleUnit<typeof singleToggleExampleScenePa
 export const singleToggleButtonTestSuite: TestSuiteInfo<typeof singleToggleExampleScenePart> = {
   title: 'Single Toggle Button',
   url: '/toggle-button',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof singleToggleExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(singleToggleExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -38,19 +34,19 @@ export const singleToggleButtonTestSuite: TestSuiteInfo<typeof singleToggleExamp
 
     test('Initially selected state should be false', async () => {
       const selected = await testEngine.parts.singleToggle.isSelected();
-      assertEqual(selected, false);
+      assertFalse(selected);
     });
 
     test('Click on the button would set selected state to true', async () => {
       await testEngine.parts.singleToggle.click();
       const selected = await testEngine.parts.singleToggle.isSelected();
-      assertEqual(selected, true);
+      assertTrue(selected);
     });
 
     test('Set the selected state would yield the correct selected state', async () => {
       await testEngine.parts.singleToggle.setSelected(true);
       const selected = await testEngine.parts.singleToggle.isSelected();
-      assertEqual(selected, true);
+      assertTrue(selected);
     });
   },
 };

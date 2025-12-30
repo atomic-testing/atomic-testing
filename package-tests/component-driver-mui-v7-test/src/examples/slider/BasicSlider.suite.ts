@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { SliderDriver } from '@atomic-testing/component-driver-mui-v7';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicSliderUIExample } from './BasicSlider.examples';
 
@@ -33,16 +33,12 @@ export const basicSliderExample: IExampleUnit<typeof basicSliderExampleScenePart
 export const basicSliderTestSuite: TestSuiteInfo<typeof basicSliderExampleScenePart> = {
   title: 'Basic Slider',
   url: '/slider',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
     let testEngine: TestEngine<typeof basicSliderExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicSliderExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -51,16 +47,16 @@ export const basicSliderTestSuite: TestSuiteInfo<typeof basicSliderExampleSceneP
     });
 
     test('it should have a basic slider', async () => {
-      assertEqual(await testEngine.parts.basic.exists(), true);
+      assertTrue(await testEngine.parts.basic.exists());
     });
 
     test('it should have a disabled slider', async () => {
-      assertEqual(await testEngine.parts.disabled.exists(), true);
-      assertEqual(await testEngine.parts.disabled.isDisabled(), true);
+      assertTrue(await testEngine.parts.disabled.exists());
+      assertTrue(await testEngine.parts.disabled.isDisabled());
     });
 
     test('it should have a range slider', async () => {
-      assertEqual(await testEngine.parts.range.exists(), true);
+      assertTrue(await testEngine.parts.range.exists());
     });
 
     test.skip('it should be able to set value on basic slider', async () => {

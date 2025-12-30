@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { selectTextFieldUIExample } from './SelectTextField.examples';
 
@@ -23,14 +23,10 @@ export const selectTextFieldTestSuite: TestSuiteInfo<typeof selectTextFieldExamp
   url: '/textfield',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
     let testEngine: TestEngine<typeof selectTextFieldExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(selectTextFieldExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 

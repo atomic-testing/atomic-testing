@@ -14,17 +14,18 @@ export function testRunner<T extends ScenePart>(
   suites.forEach(suite => {
     const { title, tests, url } = suite;
     testMethod.describe(title ?? '', () => {
-      // @ts-ignore
+      // Note: Playwright requires destructuring syntax ({ page }) for fixtures.
+      // The @ts-ignore is needed because the callback signature differs between Jest and Playwright.
+      // @ts-ignore - Jest uses done callback, Playwright uses fixture destructuring
       testMethod.beforeEach(function ({ page: _page }) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-        let done: Function | undefined = undefined;
+        let done: (() => void) | undefined = undefined;
         let parameters: E2eTestRunEnvironmentFixture | undefined = undefined;
 
         const passIn = arguments[0];
         if (typeof passIn === 'function') {
-          done = passIn;
+          done = passIn as () => void;
         } else {
-          parameters = passIn;
+          parameters = passIn as E2eTestRunEnvironmentFixture;
         }
 
         if ('goto' in interactionInterface) {

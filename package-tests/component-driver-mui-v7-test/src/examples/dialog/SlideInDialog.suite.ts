@@ -1,6 +1,6 @@
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v7';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { slideInDialogUIExample } from './SlideInDialog.examples';
 
@@ -37,16 +37,12 @@ export const slideInDialogExample: IExampleUnit<typeof slideInExampleScenePart, 
 export const slideinDialogTestSuite: TestSuiteInfo<typeof slideInDialogExample.scene> = {
   title: 'SlideIn dialog',
   url: '/dialog',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof slideInDialogExample.scene>;
-
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(slideInDialogExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -56,13 +52,13 @@ export const slideinDialogTestSuite: TestSuiteInfo<typeof slideInDialogExample.s
 
     test('Dialog should not be open initially', async () => {
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, false);
+      assertFalse(isOpen);
     });
 
     test('Clicking open trigger should open dialog', async () => {
       await testEngine.parts.openTrigger.click();
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, true);
+      assertTrue(isOpen);
     });
 
     test('Clicking agree button should close dialog', async () => {
@@ -70,7 +66,7 @@ export const slideinDialogTestSuite: TestSuiteInfo<typeof slideInDialogExample.s
       await testEngine.parts.dialog.content.agree.click();
       await testEngine.parts.dialog.waitForClose();
       const isOpen = await testEngine.parts.dialog.isOpen();
-      assertEqual(isOpen, false);
+      assertFalse(isOpen);
     });
 
     test('Dialog title should be correct', async () => {

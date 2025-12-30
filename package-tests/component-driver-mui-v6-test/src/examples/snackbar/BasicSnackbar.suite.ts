@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { ButtonDriver, SnackbarDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { basicSnackbarUIExample } from './BasicSnackbar.examples';
 
@@ -29,16 +29,13 @@ export const basicSnackbarExample: IExampleUnit<typeof basicSnackbarExampleScene
 export const basicSnackbarTestSuite: TestSuiteInfo<typeof basicSnackbarExampleScenePart> = {
   title: 'Basic Snackbar',
   url: '/snackbar',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     let testEngine: TestEngine<typeof basicSnackbarExample.scene>;
 
-    // Use the following beforeEach to work around the issue of Playwright's page being undefined
-    // @ts-ignore
-    beforeEach(function ({ page }) {
-      // @ts-ignore
+    beforeEach(function ({ page }: TestFixture) {
       testEngine = getTestEngine(basicSnackbarExample.scene, { page });
       if (typeof arguments[0] === 'function') {
-        arguments[0]();
+        (arguments[0] as () => void)();
       }
     });
 
@@ -47,16 +44,16 @@ export const basicSnackbarTestSuite: TestSuiteInfo<typeof basicSnackbarExampleSc
     });
 
     test('it should have a button to open snackbar', async () => {
-      assertEqual(await testEngine.parts.snackOpener.exists(), true);
+      assertTrue(await testEngine.parts.snackOpener.exists());
     });
 
     test('it should initially not show the snackbar', async () => {
-      assertEqual(await testEngine.parts.basicSnackbar.isVisible(), false);
+      assertFalse(await testEngine.parts.basicSnackbar.isVisible());
     });
 
     test('it should show snackbar when button is clicked', async () => {
       await testEngine.parts.snackOpener.click();
-      assertEqual(await testEngine.parts.basicSnackbar.isVisible(), true);
+      assertTrue(await testEngine.parts.basicSnackbar.isVisible());
     });
 
     test('it should display the correct message', async () => {

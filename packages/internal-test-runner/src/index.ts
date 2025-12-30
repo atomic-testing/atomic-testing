@@ -4,6 +4,7 @@ export type {
   E2eTestRunEnvironmentFixture,
   GetTestEngine,
   InteractionInterface,
+  TestFixture,
   TestFrameworkMapper,
   TestSuiteInfo,
 } from './types';

@@ -1,6 +1,6 @@
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
 import { TestEngine, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
 
 import { complexButtonUIExample } from './ComplexButton.example';
 
@@ -27,17 +27,14 @@ export const complexButtonExample: IExampleUnit<typeof complexButtonExampleScene
 export const complexButtonTestSuite: TestSuiteInfo<typeof complexButtonExample.scene> = {
   title: 'Complex Button',
   url: '/button',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertTrue }) => {
     describe(`${complexButtonExample.title}`, () => {
       let testEngine: TestEngine<typeof complexButtonExample.scene>;
 
-      // Use the following beforeEach to work around the issue of Playwright's page being undefined
-      // @ts-ignore
-      beforeEach(function ({ page }) {
-        // @ts-ignore
+      beforeEach(function ({ page }: TestFixture) {
         testEngine = getTestEngine(complexButtonExample.scene, { page });
         if (typeof arguments[0] === 'function') {
-          arguments[0]();
+          (arguments[0] as () => void)();
         }
       });
 
@@ -47,19 +44,19 @@ export const complexButtonTestSuite: TestSuiteInfo<typeof complexButtonExample.s
 
       test('Contained button should exist and be clickable', async () => {
         const exists = await testEngine.parts.contained.exists();
-        assertEqual(exists, true);
+        assertTrue(exists);
         await testEngine.parts.contained.click();
       });
 
       test('Outlined button should exist and be clickable', async () => {
         const exists = await testEngine.parts.outlined.exists();
-        assertEqual(exists, true);
+        assertTrue(exists);
         await testEngine.parts.outlined.click();
       });
 
       test('Text button should exist and be clickable', async () => {
         const exists = await testEngine.parts.text.exists();
-        assertEqual(exists, true);
+        assertTrue(exists);
         await testEngine.parts.text.click();
       });
     });
