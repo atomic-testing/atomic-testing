@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { IExampleUIUnit } from '@atomic-testing/core';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';

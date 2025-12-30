@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, MenuDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
