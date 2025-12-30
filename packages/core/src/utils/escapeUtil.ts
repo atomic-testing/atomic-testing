@@ -62,6 +62,13 @@ export function escapeValue(value: string): string {
   return escapedValue;
 }
 
+/**
+ * Escapes special characters in CSS class names.
+ * This is necessary for class names containing characters like colons (Tailwind's `hover:bg-blue`),
+ * dots, brackets, or other CSS selector metacharacters.
+ * @param name - The CSS class name to escape
+ * @returns The escaped class name safe for use in CSS selectors
+ */
 export function escapeCssClassName(name: string): string {
-  return name;
+  return escapeValue(name);
 }
