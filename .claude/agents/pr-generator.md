@@ -14,10 +14,9 @@ Generate a pull request title and description in markdown format based on the co
 
 ## Workflow
 
-1. **Obtain the Diff**: Run `sl diff -r main`. If uncertain about the base branch, ask the user.
+1. **Obtain the Diff**: If you see `.sl` folder, use Sapling (<https://sapling-scm.com/>) commands by running `sl diff -r main`. Or otherwise use Github `gh` commands if you see `.git` folder. If uncertain about the base branch, ask the user.
 
 2. **Analyze the Changes**: Carefully review the diff to understand:
-
    - What files were modified, added, or deleted
    - The nature of the changes (feature, bugfix, refactor, docs, etc.)
    - The scope and impact of the changes
@@ -70,3 +69,38 @@ Before presenting the final output:
 - Confirm the description provides enough context for reviewers
 
 If the diff is empty or cannot be obtained, inform the user and ask for clarification on how to access the changes.
+
+## Creating PRs with Sapling
+
+When using Sapling (`sl`), you can update the commit message and create a PR using these commands:
+
+1. **Update the commit message** with the PR title and description using `sl metaedit`:
+
+   ```bash
+   sl metaedit -m "$(cat <<'EOF'
+   feat: your PR title here
+
+   ## Summary
+
+   - First summary point
+   - Second summary point
+
+   ## Key Changes
+
+   - Key change 1
+   - Key change 2
+   EOF
+   )"
+   ```
+
+2. **Submit the PR** to GitHub:
+
+   ```bash
+   sl pr submit
+   ```
+
+   This pushes the commit and creates a GitHub PR using the commit message as the title and description.
+
+   Options:
+   - `sl pr submit --stack` - include draft ancestors
+   - `sl pr submit --draft` - mark as draft PR
