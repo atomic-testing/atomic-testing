@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-mui-x-test-fixture",
-  "version": "0.79.0",
+  "version": "0.80.0",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.cts",
