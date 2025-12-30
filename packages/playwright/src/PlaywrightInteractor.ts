@@ -156,13 +156,11 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
-    await this.hover(locator, {
-      position: {
-        x: 0,
-        y: 0,
-      },
-    });
-    await this.page.mouse.move(-10, -10);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    // First hover over the element to trigger mouseenter/mouseover
+    await this.page.locator(cssLocator).hover();
+    // Then dispatch mouseout event directly for cross-browser reliability
+    await this.page.locator(cssLocator).dispatchEvent('mouseout');
   }
 
   async mouseEnter(locator: PartLocator, _option?: Partial<MouseEnterOption>): Promise<void> {
@@ -170,7 +168,11 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
-    return this.mouseOut(locator);
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    // First hover over the element to trigger mouseenter/mouseover
+    await this.page.locator(cssLocator).hover();
+    // Dispatch mouseout which triggers both mouseout and mouseleave handlers in React
+    await this.page.locator(cssLocator).dispatchEvent('mouseout');
   }
 
   async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {

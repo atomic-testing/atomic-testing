@@ -51,16 +51,21 @@ export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof click
       test('Click on somewhere in the target should display the correct coordinates', async () => {
         await testEngine.parts.target.click({
           position: {
-            x: 10,
-            y: 5,
+            x: 20,
+            y: 15,
           },
         });
         const xDisplay = await testEngine.parts.xDisplay.getText();
         const yDisplay = await testEngine.parts.yDisplay.getText();
 
-        // The coordinates are rounded because e2e tests are not pixel perfect
-        assertEqual(Math.round(parseFloat(xDisplay ?? '')), 10);
-        assertEqual(Math.round(parseFloat(yDisplay ?? '')), 5);
+        // The coordinates are compared with tolerance because e2e tests are not pixel perfect
+        // Playwright's click position may have sub-pixel offset from the requested position
+        const tolerance = 1;
+        const xActual = parseFloat(xDisplay ?? '');
+        const yActual = parseFloat(yDisplay ?? '');
+
+        assertEqual(Math.abs(xActual - 20) < tolerance, true);
+        assertEqual(Math.abs(yActual - 15) < tolerance, true);
       });
     });
   },

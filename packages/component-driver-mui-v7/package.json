@@ -18,8 +18,8 @@
     "@atomic-testing/react-18": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@mui/material": "^7.0.0",
-    "@emotion/react": "^11.11.0",
-    "@emotion/styled": "^11.11.0"
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1"
   },
   "devDependencies": {
     "@types/react": ">=18.0.0",
