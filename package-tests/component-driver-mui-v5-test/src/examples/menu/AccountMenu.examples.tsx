@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 
 import { IExampleUIUnit } from '@atomic-testing/core';
 import { Logout, PersonAdd, Settings } from '@mui/icons-material';

@@ -84,9 +84,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-19':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-19
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.7)(react@19.2.3)
@@ -130,9 +130,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-18':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-18
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -185,9 +185,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-18':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-18
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -240,9 +240,9 @@ importers:
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-18':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-18
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -301,9 +301,9 @@ importers:
       '@atomic-testing/internal-mui-x-test-fixture':
         specifier: workspace:*
         version: link:../../packages/internal-mui-x-test-fixture
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-18':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-18
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -383,9 +383,9 @@ importers:
       '@atomic-testing/internal-mui-x-test-fixture':
         specifier: workspace:*
         version: link:../../packages/internal-mui-x-test-fixture
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-18':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-18
       '@emotion/react':
         specifier: ^11.6.0
         version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
@@ -462,9 +462,9 @@ importers:
       '@atomic-testing/internal-mui-x-test-fixture':
         specifier: workspace:*
         version: link:../../packages/internal-mui-x-test-fixture
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-19':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-19
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.7)(react@19.2.3)
@@ -535,9 +535,9 @@ importers:
       '@atomic-testing/internal-mui-x-test-fixture':
         specifier: workspace:*
         version: link:../../packages/internal-mui-x-test-fixture
-      '@atomic-testing/internal-react-example':
+      '@atomic-testing/internal-react-example-19':
         specifier: workspace:*
-        version: link:../../packages/internal-react-example
+        version: link:../../packages/internal-react-example-19
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.7)(react@19.2.3)
@@ -780,7 +780,35 @@ importers:
         specifier: 5.17.26
         version: 5.17.26(@mui/material@7.3.6(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mui/system@7.3.6(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
 
-  packages/internal-react-example:
+  packages/internal-react-example-18:
+    dependencies:
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../core
+      '@emotion/react':
+        specifier: '>=11'
+        version: 11.14.0(@types/react@18.3.23)(react@18.3.1)
+      '@emotion/styled':
+        specifier: '>=11'
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1)
+      react:
+        specifier: ^18
+        version: 18.3.1
+      react-dom:
+        specifier: ^18
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: '>=7'
+        version: 7.11.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.0
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.23)
+
+  packages/internal-react-example-19:
     dependencies:
       '@atomic-testing/core':
         specifier: workspace:*
@@ -792,10 +820,10 @@ importers:
         specifier: '>=11'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
       react:
-        specifier: ^19.2.3
+        specifier: ^19
         version: 19.2.3
       react-dom:
-        specifier: ^19.2.3
+        specifier: ^19
         version: 19.2.3(react@19.2.3)
       react-router-dom:
         specifier: '>=7'

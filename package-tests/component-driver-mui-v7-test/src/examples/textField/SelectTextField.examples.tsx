@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';

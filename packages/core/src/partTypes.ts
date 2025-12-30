@@ -78,11 +78,13 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
 }
 
 /**
- * Definition for a list component part. The `any` in `ItemT extends ComponentDriver<any>`
- * is necessary because ItemT represents the item driver type, and we need to accept
- * any item driver regardless of its ScenePart type parameter.
+ * Definition for a list component part.
+ *
+ * This interface uses permissive `any` types because:
+ * 1. Item drivers (like ListItemDriver) extend ComponentDriver without a ScenePart parameter
+ * 2. Generic driver classes like ListDriver<T> have complex constructor signatures
+ * 3. TypeScript variance rules make it difficult to match generic constructors
  */
- 
 export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>> {
   /**
    * The locator of the part
@@ -90,28 +92,39 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
   locator: PartLocator;
 
   /**
-   * The class of driver which is used to interact with the element
+   * The class of driver which is used to interact with the element.
    */
-  driver:
-    | typeof ListComponentDriver<ItemT>
-    | (new (
-        locator: PartLocator,
-        interactor: Interactor,
-         
-        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>
-      ) => ListComponentDriver<ItemT>);
+   
+  driver: new (locator: PartLocator, interactor: Interactor, option?: any) => ListComponentDriver<ItemT>;
 
   /**
    * Option for the driver
    */
-   
   option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>;
 }
 
+/**
+ * A permissive version of ListComponentPartDefinition that accepts any list-like driver.
+ * Used in the ScenePartDefinition union to allow generic list drivers like ListDriver<T>.
+ */
+interface AnyListComponentPartDefinition {
+  locator: PartLocator;
+   
+  driver: new (locator: PartLocator, interactor: Interactor, option?: any) => ListComponentDriver<any>;
+   
+  option: any;
+}
+
+/**
+ * Union type representing all possible scene part definitions.
+ *
+ * Uses AnyListComponentPartDefinition to allow generic list drivers like ListDriver<T>
+ * which have complex constructor signatures that don't match stricter type constraints.
+ */
 export type ScenePartDefinition =
   | ComponentPartDefinition<ScenePart>
   | ContainerPartDefinition<ScenePart, ScenePart>
-  | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
+  | AnyListComponentPartDefinition;
 
 /**
  * Part name to driver definition map

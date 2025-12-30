@@ -1,4 +1,4 @@
-import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
+import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example-18';
 
 import { basicAccordionUIExample } from './examples/accordion/BasicAccordion.examples';
 import { basicAlertUIExample } from './examples/alert/BasicAlert.examples';
