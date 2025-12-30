@@ -9,7 +9,8 @@
     "src"
   ],
   "scripts": {
-    "dev": "vite",
+    "start": "vite --force",
+    "build:ui": "vite build",
     "storybook": "storybook dev -p 3006",
     "build-storybook": "storybook build",
     "test:dom": "jest"
