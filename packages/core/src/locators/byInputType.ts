@@ -24,7 +24,7 @@ export type ByInputTypeSource = {
  * ```
  */
 export function byInputType(type: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
-  const selector = `input[type=${escapeValue(type)}]`;
+  const selector = `input[type="${escapeValue(type)}"]`;
   return new CssLocator(selector, {
     relative,
     source: {

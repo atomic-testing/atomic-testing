@@ -477,6 +477,6 @@ export class DOMInteractor implements Interactor {
   //#endregion
 
   clone(): Interactor {
-    return new DOMInteractor();
+    return new DOMInteractor(this.rootEl);
   }
 }
