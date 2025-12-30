@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-react-example",
-  "version": "0.78.0",
+  "version": "0.79.0",
   "description": "Shared example components for package tests",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-test-runner",
-  "version": "0.78.0",
+  "version": "0.79.0",
   "description": "Experimental test runner library aimed to normalize adapting same test code across different platform for atomic-testing, not for production use",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
