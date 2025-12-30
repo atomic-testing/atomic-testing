@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { JSX } from 'react';
 
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Autocomplete from '@mui/material/Autocomplete';
