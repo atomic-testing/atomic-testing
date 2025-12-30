@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLCheckboxGroupDriver } from '@atomic-testing/component-driver-html';
-import { byName, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byName, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { checkboxGroupUIExample } from './CheckboxGroup.examples';
 
@@ -23,33 +23,22 @@ export const checkboxGroupTestSuite: TestSuiteInfo<typeof checkboxGroupExample.s
   url: '/checkbox',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${checkboxGroupExample.title}`, () => {
-      let testEngine: TestEngine<typeof checkboxGroupExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(checkboxGroupExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(checkboxGroupExample.scene, getTestEngine, { beforeEach, afterEach });
 
       describe('Initial state', () => {
         test('value should be empty array', async () => {
-          const val = await testEngine.parts.toggles.getValue();
+          const val = await engine().parts.toggles.getValue();
           assertEqual(val, []);
         });
       });
 
       describe('Upon setting selected to true', () => {
         beforeEach(async () => {
-          await testEngine.parts.toggles.setValue(['2', '5']);
+          await engine().parts.toggles.setValue(['2', '5']);
         });
 
         test('value should be the same as what were set', async () => {
-          const val = await testEngine.parts.toggles.getValue();
+          const val = await engine().parts.toggles.getValue();
           assertEqual(val, ['2', '5']);
         });
       });

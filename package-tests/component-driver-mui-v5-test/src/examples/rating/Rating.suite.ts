@@ -1,6 +1,6 @@
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, IExampleUnit, ScenePart, TestEngine } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicRatingUIExample } from './Rating.examples';
 
@@ -32,47 +32,36 @@ export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene
   title: 'Basic Rating',
   url: '/rating',
   tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
-    let testEngine: TestEngine<typeof basicRatingExample.scene>;
-
-    beforeEach(function ({ page }: TestFixture) {
-      testEngine = getTestEngine(basicRatingExample.scene, { page });
-      if (typeof arguments[0] === 'function') {
-        (arguments[0] as () => void)();
-      }
-    });
-
-    afterEach(async () => {
-      await testEngine.cleanUp();
-    });
+    const engine = useTestEngine(basicRatingExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Basic rating should exist', async () => {
-      const exists = await testEngine.parts.basic.exists();
+      const exists = await engine().parts.basic.exists();
       assertTrue(exists);
     });
 
     test('Basic rating should have initial value', async () => {
-      const value = await testEngine.parts.basic.getValue();
+      const value = await engine().parts.basic.getValue();
       assertEqual(value, 2);
     });
 
     test('Can change rating value', async () => {
-      await testEngine.parts.basic.setValue(4);
-      const value = await testEngine.parts.basic.getValue();
+      await engine().parts.basic.setValue(4);
+      const value = await engine().parts.basic.getValue();
       assertEqual(value, 4);
     });
 
     test('Readonly rating should exist', async () => {
-      const exists = await testEngine.parts.readonly.exists();
+      const exists = await engine().parts.readonly.exists();
       assertTrue(exists);
     });
 
     test('Disabled rating should exist', async () => {
-      const exists = await testEngine.parts.disabled.exists();
+      const exists = await engine().parts.disabled.exists();
       assertTrue(exists);
     });
 
     test('Initially empty rating should start empty', async () => {
-      const value = await testEngine.parts.initiallyEmpty.getValue();
+      const value = await engine().parts.initiallyEmpty.getValue();
       assertEqual(value || 0, 0);
     });
   },

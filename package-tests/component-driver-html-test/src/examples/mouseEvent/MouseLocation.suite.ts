@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { IExampleUnit, ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
-import { TestFixture, TestSuiteInfo } from '@atomic-testing/internal-test-runner';
+import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { mouseLocationMouseEventUIExample } from './MouseLocation.examples';
 
@@ -36,29 +36,18 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
   url: '/mouse-event',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe(`${mouseLocationMouseEventExample.title}`, () => {
-      let testEngine: TestEngine<typeof mouseLocationMouseEventExample.scene>;
-
-      beforeEach(function ({ page }: TestFixture) {
-        testEngine = getTestEngine(mouseLocationMouseEventExample.scene, { page });
-        if (typeof arguments[0] === 'function') {
-          (arguments[0] as () => void)();
-        }
-      });
-
-      afterEach(async () => {
-        await testEngine.cleanUp();
-      });
+      const engine = useTestEngine(mouseLocationMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('Mousemove on somewhere in the target should display the correct coordinates', async () => {
-        await testEngine.parts.target.mouseMove({
+        await engine().parts.target.mouseMove({
           position: {
             x: 20,
             y: 15,
           },
         });
-        const eventDisplay = await testEngine.parts.eventDisplay.getText();
-        const xDisplay = await testEngine.parts.xDisplay.getText();
-        const yDisplay = await testEngine.parts.yDisplay.getText();
+        const eventDisplay = await engine().parts.eventDisplay.getText();
+        const xDisplay = await engine().parts.xDisplay.getText();
+        const yDisplay = await engine().parts.yDisplay.getText();
 
         // The coordinates are rounded because e2e tests are not pixel perfect
         assertEqual(eventDisplay, 'mouseMove');
@@ -67,21 +56,21 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
       });
 
       test('Mousedown on somewhere in the target should display the correct coordinates', async () => {
-        await testEngine.parts.target.mouseMove({
+        await engine().parts.target.mouseMove({
           position: {
             x: 20,
             y: 15,
           },
         });
-        await testEngine.parts.target.mouseDown({
+        await engine().parts.target.mouseDown({
           position: {
             x: 12,
             y: 16,
           },
         });
-        const eventDisplay = await testEngine.parts.eventDisplay.getText();
-        const xDisplay = await testEngine.parts.xDisplay.getText();
-        const yDisplay = await testEngine.parts.yDisplay.getText();
+        const eventDisplay = await engine().parts.eventDisplay.getText();
+        const xDisplay = await engine().parts.xDisplay.getText();
+        const yDisplay = await engine().parts.yDisplay.getText();
 
         // The coordinates are rounded because e2e tests are not pixel perfect
         assertEqual(eventDisplay, 'mouseDown');
@@ -90,27 +79,27 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
       });
 
       test('MouseUp on somewhere in the target should display the correct coordinates', async () => {
-        await testEngine.parts.target.mouseMove({
+        await engine().parts.target.mouseMove({
           position: {
             x: 20,
             y: 15,
           },
         });
-        await testEngine.parts.target.mouseDown({
+        await engine().parts.target.mouseDown({
           position: {
             x: 12,
             y: 16,
           },
         });
-        await testEngine.parts.target.mouseUp({
+        await engine().parts.target.mouseUp({
           position: {
             x: 11,
             y: 15,
           },
         });
-        const eventDisplay = await testEngine.parts.eventDisplay.getText();
-        const xDisplay = await testEngine.parts.xDisplay.getText();
-        const yDisplay = await testEngine.parts.yDisplay.getText();
+        const eventDisplay = await engine().parts.eventDisplay.getText();
+        const xDisplay = await engine().parts.xDisplay.getText();
+        const yDisplay = await engine().parts.yDisplay.getText();
 
         // The coordinates are rounded because e2e tests are not pixel perfect
         assertEqual(eventDisplay, 'mouseUp');
