@@ -66,13 +66,53 @@ const parts = {
 
 ## Package Structure
 
+### Core Packages
+
 - **`packages/core/`** - Core abstractions (ComponentDriver, TestEngine, Locators)
-- **`packages/react-*/`** - React test adapters for different versions
-- **`packages/vue-3/`** - Vue 3 test adapter with reactivity handling
-- **`packages/playwright/`** - Playwright integration
 - **`packages/dom-core/`** - Base DOM testing capabilities
-- **`packages/component-driver-*/`** - Specific component drivers (HTML, Material-UI variants)
-- **`package-tests/*`** - Test suites for validating component drivers across environments
+
+### Framework Adapters
+
+- **`packages/react-core/`** - Shared React adapter logic
+- **`packages/react-18/`** - React 18 test adapter
+- **`packages/react-19/`** - React 19 test adapter
+- **`packages/react-legacy/`** - React 16/17 test adapter
+- **`packages/vue-3/`** - Vue 3 test adapter with reactivity handling
+- **`packages/playwright/`** - Playwright browser automation integration
+
+### Component Drivers
+
+- **`packages/component-driver-html/`** - Drivers for native HTML elements
+- **`packages/component-driver-mui-v5/`** - Material-UI v5 component drivers
+- **`packages/component-driver-mui-v6/`** - Material-UI v6 component drivers
+- **`packages/component-driver-mui-v7/`** - Material-UI v7 component drivers
+- **`packages/component-driver-mui-x-v5/`** - MUI X (Data Grid, Date Pickers) v5 drivers
+- **`packages/component-driver-mui-x-v6/`** - MUI X v6 drivers
+- **`packages/component-driver-mui-x-v7/`** - MUI X v7 drivers
+- **`packages/component-driver-mui-x-v8/`** - MUI X v8 drivers
+
+### Internal Packages
+
+- **`packages/internal-react-example/`** - React example components for testing
+- **`packages/internal-test-runner/`** - Shared test runner utilities
+- **`packages/internal-test-runner-jest-adapter/`** - Jest adapter for test runner
+- **`packages/internal-test-runner-vitest-adapter/`** - Vitest adapter for test runner
+- **`packages/internal-mui-x-test-fixture/`** - MUI X test fixtures
+
+### Test Suites
+
+- **`package-tests/component-driver-html-test/`** - HTML driver validation
+- **`package-tests/component-driver-mui-v5-test/`** - MUI v5 driver validation
+- **`package-tests/component-driver-mui-v6-test/`** - MUI v6 driver validation
+- **`package-tests/component-driver-mui-v7-test/`** - MUI v7 driver validation
+- **`package-tests/component-driver-mui-x-v5-test/`** - MUI X v5 driver validation
+- **`package-tests/component-driver-mui-x-v6-test/`** - MUI X v6 driver validation
+- **`package-tests/component-driver-mui-x-v7-test/`** - MUI X v7 driver validation
+- **`package-tests/component-driver-mui-x-v8-test/`** - MUI X v8 driver validation
+- **`package-tests/vue-3-test/`** - Vue 3 adapter validation
+
+### Other
+
 - **`examples/`** - Example implementations and demos
 
 ## Locator System
@@ -168,7 +208,7 @@ Each component driver is validated across multiple environments:
 ### Finding Component Implementations
 
 - **Driver classes**: Look in `packages/component-driver-*/src/`
-- **Framework adapters**: Look in `packages/{react-*,vue-3,playwright}/src/`
+- **Framework adapters**: Look in `packages/{react-core,react-18,react-19,react-legacy,vue-3,playwright}/src/`
 - **Core abstractions**: Look in `packages/core/src/`
 - **Test examples**: Look in `package-tests/*/src/examples/`
 

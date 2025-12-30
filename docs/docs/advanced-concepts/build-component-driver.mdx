@@ -50,7 +50,7 @@ await testEngine.parts.form.login({ username: 'alice', password: 's3cr3t' });
 
 ### Environment agnostic
 
-Drivers rely on the `Interactor` abstraction, so the same driver can run in unit tests with JSDOM or in browser tests using Playwright or Cypress. Tests remain identical across environments.
+Drivers rely on the `Interactor` abstraction, so the same driver can run in unit tests with JSDOM or in browser tests using Playwright (and other environments via a custom interactor). Tests remain identical across environments.
 
 :::tip Pro tip
 Encapsulating interactions in drivers keeps tests declarative. When the login flow changes, update the driver once and reuse it for both unit and end‑to‑end scenarios.
