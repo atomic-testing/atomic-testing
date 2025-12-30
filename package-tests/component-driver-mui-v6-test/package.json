@@ -10,6 +10,7 @@
   "scripts": {
     "start": "vite --force",
     "build:ui": "vite build",
+    "check:type": "tsc --noEmit",
     "test:dom": "jest",
     "test:e2e": "playwright test",
     "test:e2e:chrome": "playwright test --project=chromium"
@@ -32,7 +33,7 @@
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
-    "@atomic-testing/internal-react-example": "workspace:*",
+    "@atomic-testing/internal-react-example-18": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.12",
