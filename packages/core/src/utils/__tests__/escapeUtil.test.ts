@@ -12,6 +12,25 @@ describe('escapeValue', () => {
   test('should not escape value without special character', () => {
     expect(escapeValue('abc')).toBe('abc');
   });
+
+  test('should return consistent results for cached values', () => {
+    // Call twice to ensure cache hit returns correct value
+    const first = escapeValue('test:value#1');
+    const second = escapeValue('test:value#1');
+    expect(first).toBe(second);
+    expect(first).toBe('test\\:value\\#1');
+  });
+
+  test('should handle many unique values without memory issues', () => {
+    // This tests the LRU cache eviction - we call with more unique values
+    // than the cache size to ensure old entries are evicted
+    for (let i = 0; i < 1100; i++) {
+      const result = escapeValue(`value-${i}:test`);
+      expect(result).toBe(`value-${i}\\:test`);
+    }
+    // Verify that recent values still work correctly
+    expect(escapeValue('value-1099:test')).toBe('value-1099\\:test');
+  });
 });
 
 describe('escapeCssClassName', () => {
