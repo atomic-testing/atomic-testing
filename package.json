@@ -5,6 +5,12 @@
     "node": ">=22.12",
     "pnpm": ">=10"
   },
+  "pnpm": {
+    "overrides": {
+      "@atomic-testing/internal-react-example>react": "^19.2.3",
+      "@atomic-testing/internal-react-example>react-dom": "^19.2.3"
+    }
+  },
   "scripts": {
     "build:packages": "./publish.sh --build-only",
     "check:type": "pnpm -r check:type",
