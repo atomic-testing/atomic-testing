@@ -135,6 +135,10 @@ jobs:
           name: built-packages
           path: packages
 
+      - name: Build UI
+        run: pnpm build:ui
+        working-directory: ./package-tests/${{ matrix.directory }}
+
       - name: Run test
         run: pnpm test:dom
         working-directory: ./package-tests/${{ matrix.directory }}
