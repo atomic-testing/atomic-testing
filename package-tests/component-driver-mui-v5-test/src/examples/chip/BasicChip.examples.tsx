@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Chip from '@mui/material/Chip';

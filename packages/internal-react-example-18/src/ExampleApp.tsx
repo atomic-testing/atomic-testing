@@ -65,12 +65,7 @@ export const ExampleApp: React.FC<AppProps> = ({ tocs, home }) => {
       <ReactRouter.Route path='/' element={<Layout tocs={tocs} />}>
         <ReactRouter.Route index element={React.createElement(home)} />
         {tocs.map(example => (
-          <ReactRouter.Route
-            key={example.path}
-            path={example.path}
-            // @ts-ignore
-            element={example.ui}
-          />
+          <ReactRouter.Route key={example.path} path={example.path} element={example.ui} />
         ))}
       </ReactRouter.Route>
     </ReactRouter.Routes>

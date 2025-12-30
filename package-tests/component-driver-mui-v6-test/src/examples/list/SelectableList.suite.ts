@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ListDriver, ListItemDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, byRole, ScenePart, IExampleUnit } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';

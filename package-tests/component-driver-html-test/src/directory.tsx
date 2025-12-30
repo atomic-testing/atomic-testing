@@ -1,4 +1,4 @@
-import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
+import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example-19';
 
 import { checkboxGroupUIExample } from './examples/checkbox/CheckboxGroup.examples';
 import { singleCheckboxUIExample } from './examples/checkbox/SingleCheckbox.examples';
