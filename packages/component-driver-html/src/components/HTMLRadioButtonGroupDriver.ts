@@ -18,7 +18,7 @@ export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements I
    */
   async setValue(value: string | null): Promise<boolean> {
     if (value == null) {
-      throw new Error('Cannot be done');
+      throw new Error('Cannot deselect a radio button group - use setValue with a valid value instead');
     }
     const valueLocator = byValue(value, 'Same');
     const locator = locatorUtil.append(this.locator, valueLocator);
@@ -30,6 +30,6 @@ export class HTMLRadioButtonGroupDriver extends ComponentDriver<{}> implements I
    * Identifier for this driver.
    */
   get driverName(): string {
-    throw 'HTMLRadioButtonGroupDriver';
+    return 'HTMLRadioButtonGroupDriver';
   }
 }

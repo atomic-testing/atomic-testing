@@ -90,6 +90,16 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
     return result;
   }
 
+  /**
+   * Get the number of items in the list.
+   * This is more efficient than calling getItems().length when you only need the count,
+   * as it does not instantiate driver instances for each item.
+   * @returns The number of items in the list
+   */
+  async getItemCount(): Promise<number> {
+    return listHelper.getListItemCount(this, this._itemLocator);
+  }
+
   override get driverName(): string {
     return 'ListComponentDriver';
   }

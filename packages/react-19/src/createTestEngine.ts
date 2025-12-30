@@ -15,7 +15,7 @@ function getNextRootElementId() {
 const rootElementAttributeName = 'data-atomic-testing-react';
 
 /**
- * Create test engine for React 18 or later, for React 17 or before, use createLegacyTestEngine
+ * Create test engine for React 19 or later, for React 17 or before, use createLegacyTestEngine
  * This function takes a react node and render it into a container element.  For rendered
  * components, use createRenderedTestEngine
  * @param node The React node to render
