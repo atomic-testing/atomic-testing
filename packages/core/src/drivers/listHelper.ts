@@ -50,3 +50,31 @@ export async function* getListItemIterator<HostPartT extends ScenePart, ItemT ex
     item = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
   }
 }
+
+/**
+ * Get the count of items in a list without instantiating driver instances.
+ * This is more efficient than calling getItems().length when you only need the count.
+ * @param host The component the list items are under
+ * @param itemLocatorBase The locator of the list items without the index
+ * @returns The number of items in the list
+ */
+export async function getListItemCount<HostPartT extends ScenePart>(
+  host: ComponentDriver<HostPartT>,
+  itemLocatorBase: PartLocator
+): Promise<number> {
+  let count = 0;
+  let index = 0;
+  const nthLocator: CssLocator = byCssSelector(`:nth-of-type(${index + 1})`, 'Same');
+  let itemLocator = append(itemLocatorBase, nthLocator);
+  let exists = await host.interactor.exists(itemLocator);
+
+  while (exists) {
+    count++;
+    index++;
+    const nextNthLocator: CssLocator = byCssSelector(`:nth-of-type(${index + 1})`, 'Same');
+    itemLocator = append(itemLocatorBase, nextNthLocator);
+    exists = await host.interactor.exists(itemLocator);
+  }
+
+  return count;
+}

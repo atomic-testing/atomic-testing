@@ -37,49 +37,49 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
-  async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
+  override async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
     await act(async () => {
       await super.mouseMove(locator, option);
     });
   }
 
-  async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
+  override async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
     await act(async () => {
       await super.mouseDown(locator, option);
     });
   }
 
-  async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
+  override async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
     await act(async () => {
       await super.mouseUp(locator, option);
     });
   }
 
-  async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
+  override async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     await act(async () => {
       await super.mouseOver(locator, option);
     });
   }
 
-  async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
+  override async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
     await act(async () => {
       await super.mouseOut(locator, option);
     });
   }
 
-  async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
+  override async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
     await act(async () => {
       await super.mouseEnter(locator, option);
     });
   }
 
-  async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
+  override async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
     await act(async () => {
       await super.mouseLeave(locator, option);
     });
   }
 
-  async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
+  override async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
     await act(async () => {
       await super.focus(locator, option);
     });
@@ -115,6 +115,6 @@ export class ReactInteractor extends DOMInteractor {
   //#endregion
 
   override clone(): Interactor {
-    return new ReactInteractor();
+    return new ReactInteractor(this.rootEl);
   }
 }
