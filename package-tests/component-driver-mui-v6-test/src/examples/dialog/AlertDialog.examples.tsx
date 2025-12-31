@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { JSX } from 'react';
 
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Button from '@mui/material/Button';

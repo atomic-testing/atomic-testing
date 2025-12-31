@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { IExampleUIUnit } from '@atomic-testing/core';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { JSX } from 'react';
 
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Divider from '@mui/material/Divider';
