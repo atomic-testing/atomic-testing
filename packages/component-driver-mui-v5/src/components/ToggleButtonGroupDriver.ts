@@ -43,14 +43,25 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
   }
 }
 
+/**
+ * A toggle button group driver that only allows a single selection.
+ *
+ * INTENTIONAL @ts-ignore comments below: This class intentionally narrows the return type
+ * from `readonly string[]` to `string | null` for exclusive selection mode. TypeScript
+ * correctly flags this as a Liskov Substitution Principle violation because the subclass
+ * changes the interface contract. However, this design is intentional as exclusive and
+ * multi-select toggle groups have fundamentally different value semantics, and we want
+ * the type system to reflect `string | null` for exclusive mode rather than forcing
+ * consumers to work with arrays.
+ */
 export class ExclusiveToggleButtonGroupDriver extends ToggleButtonGroupDriver implements IInputDriver<string | null> {
-  // @ts-ignore
+  // @ts-ignore - See class comment for explanation of intentional LSP violation
   async getValue(): Promise<string | null> {
     const values = await super.getValue();
     return values?.[0] ?? null;
   }
 
-  // @ts-ignore
+  // @ts-ignore - See class comment for explanation of intentional LSP violation
   async setValue(value: string | null): Promise<boolean> {
     if (value === null) {
       return super.setValue([]);

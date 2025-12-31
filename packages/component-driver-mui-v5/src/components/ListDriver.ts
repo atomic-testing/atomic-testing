@@ -15,12 +15,14 @@ export const defaultListDriverOption: ListComponentDriverSpecificOption<ListItem
   itemLocator: byRole('option'),
 };
 
+type ListDriverOption<ItemT extends ListItemDriver> = ListComponentDriverSpecificOption<ItemT> &
+  Partial<IComponentDriverOption<any>>;
+
 export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends ListComponentDriver<ItemT> {
   constructor(
     locator: PartLocator,
     interactor: Interactor,
-    // @ts-ignore
-    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>> = defaultListDriverOption
+    option: ListDriverOption<ItemT> = { ...defaultListDriverOption } as ListDriverOption<ItemT>
   ) {
     super(locator, interactor, option);
   }
