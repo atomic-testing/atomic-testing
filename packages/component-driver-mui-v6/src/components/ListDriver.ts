@@ -19,8 +19,8 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
   constructor(
     locator: PartLocator,
     interactor: Interactor,
-    // @ts-ignore
-    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>> = defaultListDriverOption
+    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>> = defaultListDriverOption as ListComponentDriverSpecificOption<ItemT> &
+      Partial<IComponentDriverOption<any>>
   ) {
     super(locator, interactor, option);
   }

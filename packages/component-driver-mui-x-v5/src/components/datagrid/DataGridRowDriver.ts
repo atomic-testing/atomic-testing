@@ -1,5 +1,5 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byAttribute, ComponentDriver, listHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
+import { byAttribute, ComponentDriver, ComponentDriverCtor, listHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
 
 export abstract class DataGridRowDriver extends ComponentDriver {
   protected async getCellCount(): Promise<number> {
@@ -33,8 +33,7 @@ export abstract class DataGridRowDriver extends ComponentDriver {
    */
   async getCell<DriverT extends ComponentDriver>(
     cellIndexOrField: number | string, // number: column index, string: column field
-    // @ts-ignore
-    driverClass: typeof ComponentDriver = HTMLElementDriver
+    driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
   ): Promise<DriverT | null> {
     let cellLocator: PartLocator;
     if (typeof cellIndexOrField === 'number') {
@@ -45,7 +44,6 @@ export abstract class DataGridRowDriver extends ComponentDriver {
     const locator = locatorUtil.append(this.locator, cellLocator);
     const cellExists = await this.interactor.exists(locator);
     if (cellExists) {
-      // @ts-ignore
       return new driverClass(locator, this.interactor, this.commutableOption);
     }
 

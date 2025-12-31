@@ -1,6 +1,6 @@
 import { ScenePart, TestEngine } from '@atomic-testing/core';
 
-import { GetTestEngine, TestFrameworkMapper } from './types';
+import { GetTestEngine, TestFixture, TestFrameworkMapper } from './types';
 
 /**
  * A helper that manages TestEngine lifecycle in beforeEach/afterEach.
@@ -25,7 +25,12 @@ export function useTestEngine<T extends ScenePart>(
 ): () => TestEngine<T> {
   let testEngine: TestEngine<T>;
 
-  // @ts-ignore - Jest uses done callback, Playwright uses fixture destructuring
+  // INTENTIONAL @ts-ignore: This function supports both Jest and Playwright callback signatures.
+  // Jest uses a done callback: (done?: DoneCallback) => void
+  // Playwright uses fixture destructuring: ({ page, browser }) => Promise<void>
+  // These signatures are fundamentally incompatible, so we use @ts-ignore and handle
+  // both cases at runtime by inspecting the arguments object.
+  // @ts-ignore
   hooks.beforeEach(function ({ page }: TestFixture) {
     testEngine = getTestEngine(scenePart, { page });
     if (typeof arguments[0] === 'function') {

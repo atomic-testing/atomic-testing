@@ -4,6 +4,7 @@ import {
   byCssSelector,
   byRole,
   ComponentDriver,
+  ComponentDriverCtor,
   IComponentDriverOption,
   Interactor,
   listHelper,
@@ -126,8 +127,7 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    */
   async getCell<DriverT extends ComponentDriver>(
     query: DataGridCellQuery,
-    // @ts-ignore
-    driverClass: typeof ComponentDriver = HTMLElementDriver
+    driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
   ): Promise<DriverT | null> {
     await this.waitForLoad();
     const rowDriver = await this.getRow(query.rowIndex);
@@ -155,8 +155,8 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
       return text!;
     }
 
-    //@ts-ignore
-    throw new Error(`Cell at row:${query.rowIndex} column:${query.columnIndex ?? query.columnField} does not exist`);
+    const columnIdentifier = 'columnIndex' in query ? query.columnIndex : query.columnField;
+    throw new Error(`Cell at row:${query.rowIndex} column:${columnIdentifier} does not exist`);
   }
 
   override get driverName(): string {

@@ -14,9 +14,12 @@ export function testRunner<T extends ScenePart>(
   suites.forEach(suite => {
     const { title, tests, url } = suite;
     testMethod.describe(title ?? '', () => {
-      // Note: Playwright requires destructuring syntax ({ page }) for fixtures.
-      // The @ts-ignore is needed because the callback signature differs between Jest and Playwright.
-      // @ts-ignore - Jest uses done callback, Playwright uses fixture destructuring
+      // INTENTIONAL @ts-ignore: This function supports both Jest and Playwright callback signatures.
+      // Jest uses a done callback: (done?: DoneCallback) => void
+      // Playwright uses fixture destructuring: ({ page, browser }) => Promise<void>
+      // These signatures are fundamentally incompatible, so we use @ts-ignore and handle
+      // both cases at runtime by inspecting the arguments object.
+      // @ts-ignore
       testMethod.beforeEach(function ({ page: _page }) {
         let done: (() => void) | undefined = undefined;
         let parameters: E2eTestRunEnvironmentFixture | undefined = undefined;
