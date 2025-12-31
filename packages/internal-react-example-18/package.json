@@ -1,0 +1,43 @@
+{
+  "name": "@atomic-testing/internal-react-example-18",
+  "version": "0.80.0",
+  "description": "Shared example components for React 18 package tests",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsdown"
+  },
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/internal-react-example-18"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@emotion/react": ">=11",
+    "@emotion/styled": ">=11",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-router-dom": ">=7"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0"
+  },
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
-  "name": "@atomic-testing/internal-react-example",
+  "name": "@atomic-testing/internal-react-example-19",
   "version": "0.80.0",
-  "description": "Shared example components for package tests",
+  "description": "Shared example components for React 19 package tests",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "files": [
@@ -17,7 +17,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git",
-    "directory": "packages/internal-react-example"
+    "directory": "packages/internal-react-example-19"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*"
@@ -25,8 +25,8 @@
   "peerDependencies": {
     "@emotion/react": ">=11",
     "@emotion/styled": ">=11",
-    "react": ">=18",
-    "react-dom": ">=18",
+    "react": "^19",
+    "react-dom": "^19",
     "react-router-dom": ">=7"
   },
   "devDependencies": {

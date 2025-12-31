@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
-    "@atomic-testing/internal-react-example": "workspace:*",
+    "@atomic-testing/internal-react-example-19": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "react": "^19.2.3",
