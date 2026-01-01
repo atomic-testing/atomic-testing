@@ -5,6 +5,7 @@ sidebar_label: Which Packages?
 sidebar_position: 2
 ---
 
+import Link from '@docusaurus/Link';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -240,28 +241,16 @@ You can always add more packages later. HTML drivers work with any components.
 
 ## 🚀 Ready to Start?
 
-<div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+<div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyItems: '' }}>
   <div className='card'>
     <div className='card__header'>
       <h3>🏗️ Build Your First Test</h3>
     </div>
     <div className='card__body'>
       <p>Now that you know which packages to install, let's build a complete test together.</p>
-      <a href='./first-test' className='button button--primary'>
+      <Link to='../getting-started-tutorial' className='button button--primary'>
         Start Tutorial →
-      </a>
-    </div>
-  </div>
-
-  <div className='card'>
-    <div className='card__header'>
-      <h3>📚 Framework-Specific Guides</h3>
-    </div>
-    <div className='card__body'>
-      <p>Deep dive into React, Vue, or Playwright specific patterns and best practices.</p>
-      <a href='./react-guide' className='button button--secondary'>
-        Framework Guides →
-      </a>
+      </Link>
     </div>
   </div>
 </div>

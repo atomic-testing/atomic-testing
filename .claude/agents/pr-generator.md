@@ -58,6 +58,7 @@ Generate a pull request title and description in markdown format based on the co
 - Mention any related issues or PRs using appropriate syntax (e.g., "Fixes #123")
 - Include migration steps if there are breaking changes
 - Omit sections that aren't relevant (e.g., skip "Additional Notes" if there are none)
+- Each line of the description MUST be under 100 characters
 
 ## Quality Checks
 
