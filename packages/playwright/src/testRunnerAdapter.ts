@@ -37,18 +37,20 @@ export function playwrightGetTestEngine<T extends ScenePart>(
 
 /**
  * Playwright adapter for the TestFrameworkMapper interface.
- *
- * INTENTIONAL @ts-expect-error comments: Playwright's test functions have different type
- * signatures than the normalized TestFrameworkMapper interface. Playwright uses fixture-based
- * callbacks with destructuring ({ page, browser }) while our interface uses a union type for
- * Jest compatibility (done callback or fixture object). The functions are compatible at runtime
- * but TypeScript cannot verify this due to these fundamental signature differences.
  */
 export const playWrightTestFrameworkMapper: TestFrameworkMapper = {
+  /*
+   * INTENTIONAL @ts-expect-error comments: Playwright's test functions have different type
+   * signatures than the normalized TestFrameworkMapper interface. Playwright uses fixture-based
+   * callbacks with destructuring ({ page, browser }) while our interface uses a union type for
+   * Jest compatibility (done callback or fixture object). The functions are compatible at runtime
+   * but TypeScript cannot verify this due to these fundamental signature differences.
+   */
+
   assertEqual: (a, b) => expect(a).toEqual(b),
   assertNotEqual: (a, b) => expect(a).not.toEqual(b),
-  assertTrue: (value) => expect(value).toBe(true),
-  assertFalse: (value) => expect(value).toBe(false),
+  assertTrue: value => expect(value).toBe(true),
+  assertFalse: value => expect(value).toBe(false),
   assertApproxEqual: (actual, expected, tolerance) =>
     expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tolerance),
   // @ts-expect-error - Playwright describe signature differs from TestFrameworkMapper.Describe

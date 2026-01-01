@@ -5,6 +5,7 @@ sidebar_label: Quick Start
 sidebar_position: 1
 ---
 
+import Link from '@docusaurus/Link';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -31,10 +32,11 @@ pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-test
 ## Your First Test
 
 ```tsx
+import { useState } from 'react';
+
 import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/react-19';
-import { useState } from 'react';
 
 // Component to test
 function WelcomeButton({ name }: { name: string }) {
@@ -199,9 +201,9 @@ Notice how the test logic is **identical across frameworks**:
     </div>
       <div className='card__body'>
       <p>Follow our step-by-step tutorial with a complete login form example.</p>
-      <a href='./tutorial' className='button button--primary'>
+      <Link to='../tutorial' className='button button--primary'>
         Start Tutorial →
-      </a>
+      </Link>
     </div>
   </div>
 
@@ -211,9 +213,9 @@ Notice how the test logic is **identical across frameworks**:
     </div>
     <div className='card__body'>
       <p>Not sure which packages you need? We'll help you decide based on your stack.</p>
-      <a href='./framework-guide' className='button button--secondary'>
+      <Link to='../framework-guide' className='button button--secondary'>
         Package Guide →
-      </a>
+      </Link>
     </div>
   </div>
 </div>
