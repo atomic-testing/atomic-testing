@@ -40,7 +40,7 @@
     "@mui/material": "^5.18.0",
     "@mui/system": "^5.18.0",
     "@mui/x-data-grid-generator": "^5.11.0",
-    "@mui/x-data-grid-pro": "^5.17.26",
+    "@mui/x-data-grid-pro": "^8.23.0",
     "@mui/x-date-pickers": "^5.0.19",
     "@mui/x-date-pickers-pro": "^5.0.20",
     "dayjs": "^1.11.13",

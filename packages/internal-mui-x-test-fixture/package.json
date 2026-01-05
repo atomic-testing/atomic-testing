@@ -15,7 +15,7 @@
   "author": "Tianzhen Lin <tangent@usa.net>",
   "license": "MIT",
   "dependencies": {
-    "@mui/x-data-grid-pro": "5.17.26"
+    "@mui/x-data-grid-pro": "8.23.0"
   },
   "exports": {
     ".": {
