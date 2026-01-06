@@ -1,0 +1,22 @@
+{{! prettier-ignore-start }}
+import { ComponentDriver{{#if hasParts}}, IComponentDriverOption, Interactor, PartLocator, ScenePart{{/if}} } from '@atomic-testing/core';
+{{#if hasParts}}
+export const parts = {
+  // TODO: define parts
+} satisfies ScenePart;
+{{/if}}
+
+export class {{driverName}} extends ComponentDriver<{{#if hasParts}}typeof parts{{else}}{}{{/if}}> {
+{{#if hasParts}}
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
+    super(locator, interactor, {
+      ...option,
+      parts: parts,
+    });
+  }
+{{/if}}
+  override get driverName(): string {
+    return '{{driverName}}';
+  }
+}
+{{! prettier-ignore-end }}
