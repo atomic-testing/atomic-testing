@@ -1,0 +1,21 @@
+{{! prettier-ignore-start }}
+import { ContainerDriver, IContainerDriverOption, Interactor, PartLocator, ScenePart } from '@atomic-testing/core';
+
+export const parts = {
+  // TODO: define parts
+} satisfies ScenePart;
+
+export class {{driverName}}<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT>>) {
+    super(locator, interactor, {
+      ...option,
+      parts: parts,
+      content: (option?.content ?? {}) as ContentT,
+    });
+  }
+
+  override get driverName(): string {
+    return '{{driverName}}';
+  }
+}
+{{! prettier-ignore-end }}
