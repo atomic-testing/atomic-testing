@@ -1,10 +1,10 @@
 import { Optional } from '../dataTypes';
 import { Interactor } from '../interactor/Interactor';
+import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import type { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
 import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
-import { byAttribute } from '../locators/byAttribute';
 
 export function isChain(locator: PartLocator): locator is CssLocatorChain {
   return Array.isArray(locator);

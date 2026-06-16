@@ -1,5 +1,4 @@
 import { locatorUtil } from '..';
-
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
 import {
@@ -17,9 +16,8 @@ import {
 import type { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
 import { WaitUntilOption } from '../utils/timingUtil';
-
-import { defaultWaitForOption, WaitForOption } from './WaitForOption';
 import { getPartFromDefinition } from './driverUtil';
+import { defaultWaitForOption, WaitForOption } from './WaitForOption';
 
 /**
  * Base class for all component drivers.  It provides the basic functionality to interact with the component

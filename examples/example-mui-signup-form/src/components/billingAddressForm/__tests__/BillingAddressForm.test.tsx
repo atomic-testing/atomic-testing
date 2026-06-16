@@ -1,13 +1,13 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { DeepPartial } from 'utility-types';
 
-import { BillingModel, SignupModel } from '../../../models/SignupModel';
 import { getGoodAlternateAddressMock } from '../../../models/__mocks__/addressMock';
 import {
   getGoodBillingMock,
   getGoodCredentialMock,
   getGoodShippingMock,
 } from '../../../models/__mocks__/signupModelMock';
+import { BillingModel, SignupModel } from '../../../models/SignupModel';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
 import { BillingAddressForm } from '../BillingAddressForm';
 import { BillingAddressFormDriver } from '../BillingAddressFormDriver';

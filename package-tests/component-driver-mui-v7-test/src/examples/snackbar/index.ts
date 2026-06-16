@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicSnackbarUIExample } from './BasicSnackbar.examples';
 import { basicSnackbarExample, basicSnackbarTestSuite } from './BasicSnackbar.suite';

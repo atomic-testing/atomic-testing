@@ -1,14 +1,13 @@
+import { byDataTestId, ScenePart, TestEngine } from '@atomic-testing/core';
 import { DeepPartial } from 'react-hook-form';
 
-import { byDataTestId, ScenePart, TestEngine } from '@atomic-testing/core';
-
-import { InterestModel, SignupModel } from '../../../models/SignupModel';
 import {
   getGoodBillingMock,
   getGoodCredentialMock,
   getGoodInterestMock,
   getGoodShippingMock,
 } from '../../../models/__mocks__/signupModelMock';
+import { InterestModel, SignupModel } from '../../../models/SignupModel';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
 import { InterestForm } from '../InterestForm';
 import { InterestFormDriver } from '../InterestFormDriver';

@@ -1,9 +1,8 @@
+import styled from '@emotion/styled';
 import React from 'react';
 // Using namespace import to work around rolldown JSX transformation bug
 // See: https://github.com/rolldown/rolldown - affects named imports used as JSX element names
 import * as ReactRouter from 'react-router-dom';
-
-import styled from '@emotion/styled';
 
 export interface ExampleToc {
   label: string;

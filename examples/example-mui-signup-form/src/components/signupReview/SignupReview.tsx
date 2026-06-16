@@ -6,7 +6,6 @@ import { userInterests } from '../../data/userInterests';
 import { SignupModel } from '../../models/SignupModel';
 import { WizardProps } from '../../models/WizardProps';
 import { WizardButton } from '../wizardButton/WizardButton';
-
 import { AddressDisplay } from './AddressDisplay';
 import { LineItem } from './LineItem';
 import { SignupReviewDataTestId } from './SignupReviewDataTestId';

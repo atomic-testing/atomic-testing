@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 import { userInterests } from '../../data/userInterests';
-
 import { SignupReview } from './SignupReview';
 
 const meta: Meta<typeof SignupReview> = {

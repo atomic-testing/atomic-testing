@@ -1,8 +1,7 @@
-import { JSX } from 'react';
-
 import { SliderDriver } from '@atomic-testing/component-driver-mui-v5';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { JSX } from 'react';
 
 import { basicSliderUIExample } from './BasicSlider.examples';
 

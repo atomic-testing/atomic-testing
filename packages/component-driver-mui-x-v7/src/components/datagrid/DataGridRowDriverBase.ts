@@ -1,5 +1,12 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byAttribute, ComponentDriver, ComponentDriverCtor, listHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
+import {
+  byAttribute,
+  ComponentDriver,
+  ComponentDriverCtor,
+  listHelper,
+  locatorUtil,
+  PartLocator,
+} from '@atomic-testing/core';
 
 // In MUI7, there is an extra div preceding the actual data cells. We need to skip it.
 const columnStartingIndex = 1;

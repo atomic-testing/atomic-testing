@@ -8,13 +8,16 @@
 
 ```bash
 pnpm install                    # Install dependencies (Node.js >=22.12, pnpm >=10)
-pnpm run check:type             # Type check all packages
-pnpm run check:lint             # ESLint with auto-fix
+pnpm run check:type             # Type check all packages with tsgo (TypeScript 7 native preview)
+pnpm run check:lint             # oxlint with auto-fix (config: .oxlintrc.json)
+pnpm run check:style            # Format with oxfmt (JS/TS/JSX/JSON only; .md/.mdx/.css/.yaml left as-is)
 pnpm test:dom                   # Jest tests (in package directory)
 pnpm test:e2e                   # Playwright tests (requires dev server running)
 pnpm run build                  # Build package with tsdown
 cd docs && pnpm build           # Build documentation (test before doc PRs)
 ```
+
+> **Toolchain note:** Type-_checking_ uses `tsgo` (TypeScript 7 beta / native port, `@typescript/native-preview`). Builds, `.d.ts` emit (tsdown), and TypeDoc still use the classic TypeScript compiler (`typescript@^6.0`) because the native preview has no programmatic API yet. Linting is oxlint (replaced ESLint); formatting is oxfmt (replaced Prettier + `@trivago/prettier-plugin-sort-imports`).
 
 ### Running E2E Tests
 

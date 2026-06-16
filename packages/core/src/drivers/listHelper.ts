@@ -1,7 +1,6 @@
 import { byCssSelector, type CssLocator, type PartLocator } from '../locators';
 import { ComponentDriverCtor, ScenePart } from '../partTypes';
 import { append } from '../utils/locatorUtil';
-
 import { ComponentDriver } from './ComponentDriver';
 
 /**

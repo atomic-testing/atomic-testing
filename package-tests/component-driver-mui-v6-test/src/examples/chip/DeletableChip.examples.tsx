@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import React, { useCallback } from 'react';
 
 const names: string[] = ['Jack', 'Lucy', 'Maria'];
 

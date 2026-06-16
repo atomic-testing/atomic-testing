@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Chip from '@mui/material/Chip';
+import React from 'react';
 
 //#region Chip
 export const BasicChip: React.FunctionComponent = () => {

@@ -1,7 +1,6 @@
+import { IExampleUIUnit } from '@atomic-testing/core';
 import React, { useCallback, useState } from 'react';
 import { JSX } from 'react';
-
-import { IExampleUIUnit } from '@atomic-testing/core';
 
 import './ClickLocation.css';
 

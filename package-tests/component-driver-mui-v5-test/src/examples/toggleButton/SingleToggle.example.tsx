@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import ToggleButton from '@mui/material/ToggleButton';
+import React from 'react';
 
 //#region Single toggle
 export const SingleToggleExample = () => {

@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicTextFieldUIExample } from './BasicTextField.examples';
 import { basicTextFieldExample, basicTextFieldTestSuite } from './BasicTextField.suite';

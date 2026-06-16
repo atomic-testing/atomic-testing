@@ -13,7 +13,6 @@ import { DeepPartial } from 'utility-types';
 import { ShippingModel } from '../../models/SignupModel';
 import { AddressEntryDriver } from '../addressEntry/AddressEntryDriver';
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
-
 import { ShippingAddressFormDataTestId } from './ShippingAddressFormDataTestId';
 
 const parts = {

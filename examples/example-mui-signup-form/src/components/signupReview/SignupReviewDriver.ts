@@ -8,7 +8,6 @@ import {
 } from '@atomic-testing/core';
 
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
-
 import { SignupReviewDataTestId } from './SignupReviewDataTestId';
 
 const parts = {

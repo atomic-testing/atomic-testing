@@ -1,9 +1,8 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Box from '@mui/material/Box';
 import FilledInput from '@mui/material/FilledInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import React from 'react';
 
 //#region Example
 export const BasicInput: React.FunctionComponent = () => {

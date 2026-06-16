@@ -4,7 +4,6 @@ import { Meta, StoryObj } from '@storybook/react';
 import { expect, fn } from '@storybook/test';
 
 import { getGoodCredentialMock } from '../../models/__mocks__/signupModelMock';
-
 import { CredentialForm } from './CredentialForm';
 import { CredentialFormDriver, CredentialFormValue } from './CredentialFormDriver';
 

@@ -1,6 +1,5 @@
 import { ComponentDriver } from '../drivers/ComponentDriver';
 import { ScenePart } from '../partTypes';
-
 import { ErrorBase } from './ErrorBase';
 
 export const MissingPartErrorId = 'MissingPartError';

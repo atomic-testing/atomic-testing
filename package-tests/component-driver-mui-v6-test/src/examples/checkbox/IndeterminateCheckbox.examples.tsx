@@ -1,9 +1,8 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import React from 'react';
 
 //#region Example
 export const IndeterminateCheckbox = () => {

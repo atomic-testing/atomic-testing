@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { complexButtonUIExample } from './ComplexButton.example';
 import { complexButtonExample, complexButtonTestSuite } from './ComplexButton.suite';
