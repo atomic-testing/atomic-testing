@@ -1,9 +1,8 @@
-import React, { JSX } from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import { basicGridColumnConfig, gridData, initialState } from '@atomic-testing/internal-mui-x-test-fixture';
 import Box from '@mui/material/Box';
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import React, { JSX } from 'react';
 
 const gridCommonProps: DataGridProProps = {
   columns: basicGridColumnConfig.slice(0, 5),

@@ -2,7 +2,6 @@ import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
 import { IComponentDriverOption, ScenePart, ScenePartDriver, ScenePartDefinition } from '../partTypes';
 import * as locatorUtil from '../utils/locatorUtil';
-
 import { ComponentDriver } from './ComponentDriver';
 
 export function getPartFromDefinition<T extends ScenePart>(

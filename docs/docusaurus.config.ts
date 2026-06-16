@@ -1,10 +1,11 @@
+import fs from 'fs';
+import path from 'path';
+
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 // require('prism-react-renderer/themes/github');
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
-import fs from 'fs';
-import path from 'path';
 import { themes } from 'prism-react-renderer';
 
 const darkCodeTheme = themes.dracula; // require('prism-react-renderer/themes/dracula');
@@ -42,7 +43,7 @@ const config: Config = {
   trailingSlash: true,
 
   future: {
-    experimental_faster: true, // Enable faster builds in Docusaurus 3, requires v4 tag
+    faster: true, // Enable faster builds (renamed from experimental_faster in Docusaurus 3.10)
     v4: {
       removeLegacyPostBuildHeadAttribute: true,
     },

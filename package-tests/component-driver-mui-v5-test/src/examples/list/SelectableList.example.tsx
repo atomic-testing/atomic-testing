@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import InboxIcon from '@mui/icons-material/Inbox';
@@ -9,6 +7,7 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import React from 'react';
 
 //#region Example
 export const SelectableList: React.FunctionComponent = () => {

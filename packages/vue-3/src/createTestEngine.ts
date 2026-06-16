@@ -2,8 +2,8 @@ import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import { render } from '@testing-library/vue';
 import { App, Component, createApp, defineComponent } from 'vue';
 
-import { VueInteractor } from './VueInteractor';
 import { IVueTestEngineOption, VueSFCLikeComponent } from './types';
+import { VueInteractor } from './VueInteractor';
 
 let _rootId = 0;
 function getNextRootElementId() {

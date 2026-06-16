@@ -3,9 +3,8 @@ import { createRenderedTestEngine } from '@atomic-testing/react-18';
 import { Meta, StoryObj } from '@storybook/react';
 import { expect, fn } from '@storybook/test';
 
-import { ShippingModel } from '../../models/SignupModel';
 import { getGoodShippingMock } from '../../models/__mocks__/signupModelMock';
-
+import { ShippingModel } from '../../models/SignupModel';
 import { ShippingAddressForm } from './ShippingAddressForm';
 import { ShippingAddressFormDriver } from './ShippingAddressFormDriver';
 

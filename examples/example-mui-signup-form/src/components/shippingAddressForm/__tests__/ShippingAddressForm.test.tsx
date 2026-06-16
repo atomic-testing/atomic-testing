@@ -1,8 +1,8 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { DeepPartial } from 'utility-types';
 
-import { ShippingModel, SignupModel } from '../../../models/SignupModel';
 import { getGoodCredentialMock, getGoodShippingMock } from '../../../models/__mocks__/signupModelMock';
+import { ShippingModel, SignupModel } from '../../../models/SignupModel';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
 import { ShippingAddressForm } from '../ShippingAddressForm';
 import { ShippingAddressFormDriver } from '../ShippingAddressFormDriver';

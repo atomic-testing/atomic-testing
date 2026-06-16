@@ -2,7 +2,6 @@ import { type DeepReadonly } from 'utility-types';
 
 import { AddressModel } from '../../models/Address';
 import { HasDataTestId } from '../../models/types';
-
 import { LineItem } from './LineItem';
 
 export interface AddressDisplayProps extends HasDataTestId {

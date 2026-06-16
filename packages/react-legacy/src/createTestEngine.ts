@@ -1,9 +1,8 @@
+import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
+import { ReactInteractor } from '@atomic-testing/react-core';
 import { ReactElement } from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
-
-import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
-import { ReactInteractor } from '@atomic-testing/react-core';
 
 import { IReactTestEngineOption } from './types';
 

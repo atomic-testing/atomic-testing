@@ -1,13 +1,15 @@
 {
   "name": "@atomic-testing/vue-3-test",
   "version": "0.72.0",
-  "description": "Example and tests for @atomic-testing/vue-3",
-  "main": "dist/index.js",
   "private": true,
+  "description": "Example and tests for @atomic-testing/vue-3",
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
   "files": [
     "dist",
     "src"
   ],
+  "main": "dist/index.js",
   "scripts": {
     "start": "vite --force",
     "build:ui": "vite build",
@@ -15,8 +17,6 @@
     "build-storybook": "storybook build",
     "test:dom": "jest"
   },
-  "author": "Tianzhen Lin <tangent@usa.net>",
-  "license": "MIT",
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/core": "workspace:*",
@@ -30,7 +30,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@testing-library/vue": "^8.1.0",
     "@vitejs/plugin-vue": "^5.0.0",
-    "@vue/compiler-dom": "^3.5.17",
+    "@vue/compiler-dom": "^3.5.26",
     "@vue/server-renderer": "^3.5.17",
     "storybook": "^8.6.15",
     "vue": "^3.5.0"

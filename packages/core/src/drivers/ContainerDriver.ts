@@ -7,7 +7,6 @@ import {
   ScenePart,
   ScenePartDriver,
 } from '../partTypes';
-
 import { ComponentDriver } from './ComponentDriver';
 import { getPartFromDefinition } from './driverUtil';
 

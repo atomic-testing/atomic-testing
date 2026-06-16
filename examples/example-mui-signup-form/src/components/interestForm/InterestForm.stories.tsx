@@ -5,7 +5,6 @@ import { expect, fn } from '@storybook/test';
 
 import { userInterests } from '../../data/userInterests';
 import { getGoodInterestMock } from '../../models/__mocks__/signupModelMock';
-
 import { InterestForm } from './InterestForm';
 import { InterestFormDriver } from './InterestFormDriver';
 

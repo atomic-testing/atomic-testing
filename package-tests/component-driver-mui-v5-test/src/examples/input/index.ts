@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicInputUIExample } from './BasicInput.examples';
 import { basicInputExample, basicInputTestSuite } from './BasicInput.suite';

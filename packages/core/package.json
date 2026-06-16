@@ -2,25 +2,20 @@
   "name": "@atomic-testing/core",
   "version": "0.81.0",
   "description": "Core library for atomic-testing",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "scripts": {
-    "build": "tsdown",
-    "check:type": "tsc --noEmit",
-    "test": "jest"
-  },
-  "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [],
   "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
   "repository": {
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git",
     "directory": "packages/core"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.cts",
   "exports": {
     ".": {
@@ -28,5 +23,10 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit",
+    "test": "jest"
   }
 }

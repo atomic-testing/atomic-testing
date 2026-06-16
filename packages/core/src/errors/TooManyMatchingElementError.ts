@@ -1,6 +1,5 @@
 import { ComponentDriver } from '../drivers/ComponentDriver';
 import { PartLocator } from '../locators/PartLocator';
-
 import { ErrorBase } from './ErrorBase';
 
 export const TooManyMatchingElementErrorId = 'TooManyMatchingElementError';

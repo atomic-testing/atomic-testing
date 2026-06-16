@@ -10,7 +10,6 @@ import {
 } from '@atomic-testing/core';
 
 import { AddressModel } from '../../models/Address';
-
 import { AddressEntryDataTestId } from './AddressEntryDataTestId';
 
 const parts = {

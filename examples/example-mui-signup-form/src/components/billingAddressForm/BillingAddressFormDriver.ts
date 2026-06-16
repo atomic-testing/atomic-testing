@@ -14,7 +14,6 @@ import { AddressModel } from '../../models/Address';
 import { BillingModel } from '../../models/SignupModel';
 import { AddressEntryDriver } from '../addressEntry/AddressEntryDriver';
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
-
 import { BillingAddressFormDataTestId } from './BillingAddressFormDataTestId';
 
 const parts = {

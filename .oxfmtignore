@@ -1,8 +1,10 @@
 .sl/**/*
 .vscode
 pnpm-lock.yaml
+**/node_modules/**/*
 **/coverage/**/*
 **/playwright-report/**/*
 **/dist/**/*
 **/build/**/*
+typedocs/**/*
 CNAME

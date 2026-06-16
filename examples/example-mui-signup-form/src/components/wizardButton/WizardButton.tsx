@@ -2,7 +2,6 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 import { HasDataTestId } from '../../models/types';
-
 import { WizardButtonDataTestId } from './WizardButtonDataTestId';
 
 export interface WizardButtonProps extends HasDataTestId {

@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
+import React from 'react';
 
 //#region Example
 export const BasicSwitch: React.FunctionComponent = () => {
