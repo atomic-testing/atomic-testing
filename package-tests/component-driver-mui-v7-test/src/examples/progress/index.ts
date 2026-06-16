@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicProgressUIExample } from './Progress.examples';
 import { basicProgressExample, progressTestSuite } from './Progress.suite';

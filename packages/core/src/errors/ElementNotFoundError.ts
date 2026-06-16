@@ -1,6 +1,5 @@
 import { PartLocator } from '../locators';
 import { getLocatorInfoForErrorLog } from '../utils/locatorUtil';
-
 import { InteractorErrorBase } from './InteractorErrorBase';
 
 export const ElementNotFoundErrorId = 'ElementNotFoundError';

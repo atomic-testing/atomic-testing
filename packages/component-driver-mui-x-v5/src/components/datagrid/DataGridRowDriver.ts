@@ -1,5 +1,12 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byAttribute, ComponentDriver, ComponentDriverCtor, listHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
+import {
+  byAttribute,
+  ComponentDriver,
+  ComponentDriverCtor,
+  listHelper,
+  locatorUtil,
+  PartLocator,
+} from '@atomic-testing/core';
 
 export abstract class DataGridRowDriver extends ComponentDriver {
   protected async getCellCount(): Promise<number> {

@@ -1,6 +1,5 @@
-import React, { JSX } from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
+import React, { JSX } from 'react';
 
 //#region Single checkbox
 export const SingleCheckbox = () => {

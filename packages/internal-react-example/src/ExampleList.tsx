@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
+import React from 'react';
 
 export interface ExampleListProps {
   examples: readonly IExampleUIUnit<React.ReactNode>[];

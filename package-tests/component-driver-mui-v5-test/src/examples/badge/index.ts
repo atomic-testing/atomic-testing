@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicBadgeUIExample } from './BasicBadge.examples';
 import { basicBadgeExample, basicBadgeTestSuite } from './BasicBadge.suite';

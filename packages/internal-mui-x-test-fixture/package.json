@@ -1,27 +1,27 @@
 {
   "name": "@atomic-testing/internal-mui-x-test-fixture",
   "version": "0.81.0",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.cts",
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
   "files": [
     "dist",
     "src"
   ],
-  "scripts": {
-    "build": "tsdown",
-    "check:type": "tsc --noEmit"
-  },
-  "author": "Tianzhen Lin <tangent@usa.net>",
-  "license": "MIT",
-  "dependencies": {
-    "@mui/x-data-grid-pro": "5.17.26"
-  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@mui/x-data-grid-pro": "5.17.26"
   }
 }

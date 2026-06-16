@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { checkboxGroupExample as checkboxGroupWithScene } from './CheckboxGroup.suite';
 import { singleCheckboxExample as singleCheckboxWithScene } from './SingleCheckbox.suite';

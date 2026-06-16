@@ -1,6 +1,5 @@
-import React, { JSX } from 'react';
-
 import clsx from 'clsx';
+import React, { JSX } from 'react';
 
 import styles from './styles.module.css';
 

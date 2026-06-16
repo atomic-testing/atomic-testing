@@ -1,5 +1,5 @@
 import { RatingDriver } from '@atomic-testing/component-driver-mui-v6';
-import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicRatingUIExample } from './Rating.examples';

@@ -2,32 +2,19 @@
   "name": "@atomic-testing/internal-test-runner-vitest-adapter",
   "version": "0.81.0",
   "description": "Vitest adapter for atomic-testing",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "scripts": {
-    "build": "tsdown",
-    "check:type": "tsc --noEmit"
-  },
-  "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [],
   "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
   "repository": {
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git"
   },
-  "devDependencies": {
-    "vitest": "^3.0.7"
-  },
-  "dependencies": {
-    "@atomic-testing/internal-test-runner": "workspace:*"
-  },
-  "peerDependencies": {
-    "vitest": ">= 3.0.0"
-  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.cts",
   "exports": {
     ".": {
@@ -35,5 +22,18 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@atomic-testing/internal-test-runner": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.9"
+  },
+  "peerDependencies": {
+    "vitest": ">= 3.0.0"
   }
 }

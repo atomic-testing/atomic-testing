@@ -1,8 +1,7 @@
-import { JSX } from 'react';
-
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { IExampleUnit, ScenePart, byDataTestId, byLinkedElement } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { JSX } from 'react';
 
 import { linkedElementUIExample } from './LinkedElement.examples';
 

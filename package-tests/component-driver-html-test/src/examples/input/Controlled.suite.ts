@@ -1,8 +1,7 @@
-import { JSX } from 'react';
-
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { JSX } from 'react';
 
 import { controlledTextInputUIExample } from './Controlled.examples';
 

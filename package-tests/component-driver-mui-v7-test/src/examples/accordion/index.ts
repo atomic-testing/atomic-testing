@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicAccordionUIExample } from './BasicAccordion.examples';
 import { basicAccordionExample, basicAccordionTestSuite } from './BasicAccordion.suite';

@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 export const LinkedElementExample = () => {
   return (

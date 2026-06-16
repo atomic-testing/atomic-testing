@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { iconCheckboxUIExample } from './IconCheckbox.examples';
 import { iconCheckboxExample, iconCheckboxTestSuite } from './IconCheckbox.suite';

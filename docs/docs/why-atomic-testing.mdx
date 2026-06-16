@@ -55,7 +55,7 @@ _The nightmare scenario that Atomic Testing makes trivial_
 // React Testing Library
 const emailInput = screen.getByLabelText(/email/i);
 const submitButton = screen.getByRole('button', { name: /submit/i });
-fireEvent.change(emailInput, { target: { value: 'user@example.com' }});
+fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
 fireEvent.click(submitButton);
 
 // Vue Test Utils (completely different!)

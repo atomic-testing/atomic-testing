@@ -2,37 +2,19 @@
   "name": "@atomic-testing/internal-react-example",
   "version": "0.81.0",
   "description": "Shared example components for package tests",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "scripts": {
-    "build": "tsdown",
-    "check:type": "tsc --noEmit"
-  },
-  "author": "Tianzhen Lin <tangent@usa.net>",
   "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
   "repository": {
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git",
     "directory": "packages/internal-react-example"
   },
-  "dependencies": {
-    "@atomic-testing/core": "workspace:*"
-  },
-  "peerDependencies": {
-    "@emotion/react": ">=11",
-    "@emotion/styled": ">=11",
-    "react": ">=18",
-    "react-dom": ">=18",
-    "react-router-dom": ">=7"
-  },
-  "devDependencies": {
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0"
-  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.cts",
   "exports": {
     ".": {
@@ -40,5 +22,23 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
+  },
+  "peerDependencies": {
+    "@emotion/react": ">=11",
+    "@emotion/styled": ">=11",
+    "react": ">=18",
+    "react-dom": ">=18",
+    "react-router-dom": ">=7"
   }
 }

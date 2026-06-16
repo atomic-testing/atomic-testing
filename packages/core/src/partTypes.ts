@@ -15,11 +15,11 @@ export type PartName<T extends ScenePart> = keyof T;
  * type parameter. Using a more restrictive type would break covariance when
  * passing concrete driver classes.
  */
- 
+
 export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
   locator: PartLocator,
   interactor: Interactor,
-   
+
   option?: Partial<IComponentDriverOption<any>>
 ) => T;
 
@@ -30,11 +30,11 @@ export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
  *
  * The `any` types are necessary for the same variance reasons as ComponentDriverClass.
  */
- 
+
 export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (
   locator: PartLocator,
   interactor: Interactor,
-   
+
   option?: Partial<IComponentDriverOption<any>>
 ) => T;
 
@@ -82,7 +82,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
  * is necessary because ItemT represents the item driver type, and we need to accept
  * any item driver regardless of its ScenePart type parameter.
  */
- 
+
 export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>> {
   /**
    * The locator of the part
@@ -97,14 +97,14 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
     | (new (
         locator: PartLocator,
         interactor: Interactor,
-         
+
         option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>
       ) => ListComponentDriver<ItemT>);
 
   /**
    * Option for the driver
    */
-   
+
   option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>;
 }
 
@@ -126,8 +126,10 @@ export interface IComponentDriverOption<T extends ScenePart = {}> {
   parts: T;
 }
 
-export interface IContainerDriverOption<ContentT extends ScenePart = {}, T extends ScenePart = {}>
-  extends IComponentDriverOption<T> {
+export interface IContainerDriverOption<
+  ContentT extends ScenePart = {},
+  T extends ScenePart = {},
+> extends IComponentDriverOption<T> {
   content: ContentT;
 }
 

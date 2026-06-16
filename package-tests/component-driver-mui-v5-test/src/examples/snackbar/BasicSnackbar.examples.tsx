@@ -1,10 +1,9 @@
-import * as React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
+import * as React from 'react';
 
 //#region Snackbar
 export const BasicSnackbar: React.FunctionComponent = () => {

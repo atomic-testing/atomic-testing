@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Divider from '@mui/material/Divider';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import React, { useCallback, useState } from 'react';
 
 //#region Label rating
 export const BasicRating: React.FunctionComponent = () => {

@@ -1,7 +1,6 @@
 import { CredentialFormValue } from '../../components/credentialForm/CredentialFormDriver';
 import { userInterests } from '../../data/userInterests';
 import { BillingModel, InterestModel, ShippingModel } from '../SignupModel';
-
 import { getGoodAddressMock, getGoodAlternateAddressMock } from './addressMock';
 
 export function getGoodCredentialMock(): CredentialFormValue {

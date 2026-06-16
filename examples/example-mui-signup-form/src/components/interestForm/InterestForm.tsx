@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -8,12 +5,13 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
 import { produce } from 'immer';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { userInterests } from '../../data/userInterests';
 import { InterestModel, emptySignupModel } from '../../models/SignupModel';
 import { WizardProps } from '../../models/WizardProps';
 import { WizardButton } from '../wizardButton/WizardButton';
-
 import { InterestFormDataTestId } from './InterestFormDataTestId';
 
 const minimumInterestCount = 2;

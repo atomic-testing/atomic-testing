@@ -10,7 +10,6 @@ import {
 } from '@atomic-testing/core';
 
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
-
 import { CredentialFormDataTestId } from './CredentialFormDataTestId';
 
 const parts = {

@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicSliderUIExample } from './BasicSlider.examples';
 import { basicSliderExample, basicSliderTestSuite } from './BasicSlider.suite';

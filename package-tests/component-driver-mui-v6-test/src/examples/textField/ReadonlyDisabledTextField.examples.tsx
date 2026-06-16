@@ -1,7 +1,7 @@
 import { IExampleUIUnit } from '@atomic-testing/core';
 import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
 
 import { selectTextFieldExampleData } from './SelectTextField.examples';
 

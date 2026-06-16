@@ -14,7 +14,6 @@ import {
 
 import { InterestModel } from '../../models/SignupModel';
 import { WizardButtonDriver } from '../wizardButton/WizardButtonDriver';
-
 import { InterestFormDataTestId } from './InterestFormDataTestId';
 
 const parts = {

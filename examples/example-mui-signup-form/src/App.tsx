@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { DeepPartial } from 'react-hook-form';
-
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
+import { DeepPartial } from 'react-hook-form';
 
 import { AppDataTestId } from './AppDataTestId';
 import { BillingAddressForm } from './components/billingAddressForm/BillingAddressForm';

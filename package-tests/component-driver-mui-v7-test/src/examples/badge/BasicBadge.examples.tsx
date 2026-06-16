@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import MailIcon from '@mui/icons-material/Mail';
 import Badge from '@mui/material/Badge';
+import React from 'react';
 
 //#region Badge
 export const BasicBadge: React.FunctionComponent = () => {

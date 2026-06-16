@@ -1,8 +1,8 @@
+import { byDataTestId } from './byDataTestId';
 import { CssLocator, CssLocatorInitializer } from './CssLocator';
 import { LocatorComplexity } from './LocatorComplexity';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 import { PartLocator } from './PartLocator';
-import { byDataTestId } from './byDataTestId';
 
 export type LinkedCssLocatorValueExtractType = 'text' | 'attribute';
 

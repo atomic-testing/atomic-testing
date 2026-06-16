@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import { Logout, PersonAdd, Settings } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
@@ -10,6 +8,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import React from 'react';
 
 //#region Account menu
 export const AccountMenu: React.FunctionComponent = () => {
