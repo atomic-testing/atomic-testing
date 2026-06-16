@@ -1,14 +1,12 @@
-import { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { usStates } from '../../data/usStates';
 import { AddressModel } from '../../models/Address';
 import { HasDataTestId } from '../../models/types';
-
 import { AddressEntryDataTestId } from './AddressEntryDataTestId';
 
 export interface AddressEntryProps extends HasDataTestId {

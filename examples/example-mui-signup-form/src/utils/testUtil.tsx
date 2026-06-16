@@ -1,8 +1,7 @@
-import { ReactNode } from 'react';
-
 import { createTestEngine } from '@atomic-testing/react-18';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
+import { ReactNode } from 'react';
 
 import { lightTheme } from '../themes/theme';
 

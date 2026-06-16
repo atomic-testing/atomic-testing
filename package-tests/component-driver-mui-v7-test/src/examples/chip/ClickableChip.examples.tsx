@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import React from 'react';
 
 const names: string[] = ['Jack', 'Lucy', 'Maria'];
 

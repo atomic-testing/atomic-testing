@@ -1,13 +1,13 @@
+import { ExampleApp } from '@atomic-testing/internal-react-example';
+import CssBaseline from '@mui/material/CssBaseline';
+import { StyledEngineProvider } from '@mui/material/styles';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
-import { ExampleApp } from '@atomic-testing/internal-react-example';
-import CssBaseline from '@mui/material/CssBaseline';
-import { StyledEngineProvider } from '@mui/material/styles';
-
-import { Home } from './Home';
 import { tocs } from './directory';
+import { Home } from './Home';
+
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

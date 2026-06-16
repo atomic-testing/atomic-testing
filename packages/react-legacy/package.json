@@ -2,27 +2,35 @@
   "name": "@atomic-testing/react-legacy",
   "version": "0.81.0",
   "description": "Adapter for testing React 17 and earlier",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "scripts": {
-    "build": "tsdown",
-    "check:type": "tsc --noEmit"
-  },
-  "author": "Tianzhen Lin <tangent@usa.net>",
   "keywords": [
-    "testing",
+    "legacy",
     "react",
-    "legacy"
+    "testing"
   ],
   "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
   "repository": {
     "type": "git",
     "url": "https://github.com/atomic-testing/atomic-testing.git",
     "directory": "packages/react-legacy"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
@@ -42,13 +50,5 @@
     "@testing-library/user-event": ">=14.0.0",
     "react": "^16 || ^17",
     "react-dom": "^16 || ^17"
-  },
-  "types": "dist/index.d.cts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
   }
 }

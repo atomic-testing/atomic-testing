@@ -1,8 +1,7 @@
-import { JSX } from 'react';
-
 import { DateRangeInput, DateRangePickerDriver } from '@atomic-testing/component-driver-mui-x-v5';
-import { IExampleUnit, ScenePart,  byDataTestId } from '@atomic-testing/core';
+import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { JSX } from 'react';
 
 import { basicDateRangePickerUIExample } from './DateRangePicker.examples';
 

@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { controlledTextInputExample, controlledTextInputExampleTestSuite } from './Controlled.suite';
 import { uncontrolledTextInputExample, uncontrolledTextInputExampleTestSuite } from './Uncontrolled.suite';

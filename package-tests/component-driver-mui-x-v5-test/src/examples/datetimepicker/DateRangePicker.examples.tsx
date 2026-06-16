@@ -1,5 +1,3 @@
-import React, { JSX } from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -7,6 +5,7 @@ import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePic
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Dayjs } from 'dayjs';
+import React, { JSX } from 'react';
 
 export const BasicDateRangePicker: React.FunctionComponent = () => {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);

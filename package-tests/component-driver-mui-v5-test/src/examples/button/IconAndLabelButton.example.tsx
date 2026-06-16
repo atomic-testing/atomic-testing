@@ -1,10 +1,9 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import React from 'react';
 
 //#region Icon & label button
 export const IconAndLabelButton: React.FunctionComponent = () => {

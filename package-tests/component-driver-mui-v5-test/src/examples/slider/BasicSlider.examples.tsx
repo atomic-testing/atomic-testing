@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
+import React from 'react';
 
 //#region Example
 export const BasicSlider: React.FunctionComponent = () => {

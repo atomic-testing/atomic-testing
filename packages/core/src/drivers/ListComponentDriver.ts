@@ -2,7 +2,6 @@ import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
 import { IComponentDriverOption, ComponentDriverCtor } from '../partTypes';
 import * as locatorUtil from '../utils/locatorUtil';
-
 import { ComponentDriver } from './ComponentDriver';
 import * as listHelper from './listHelper';
 
@@ -12,8 +11,7 @@ export interface ListComponentDriverSpecificOption<ItemT extends ComponentDriver
 }
 
 export interface ListComponentDriverOption<ItemT extends ComponentDriver>
-  extends IComponentDriverOption,
-    ListComponentDriverSpecificOption<ItemT> {}
+  extends IComponentDriverOption, ListComponentDriverSpecificOption<ItemT> {}
 
 export class ListComponentDriver<ItemT extends ComponentDriver> extends ComponentDriver {
   private readonly _option: ListComponentDriverSpecificOption<ItemT> & Partial<ListComponentDriverOption<ItemT>>;

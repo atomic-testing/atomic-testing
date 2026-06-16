@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { IExampleUIUnit } from '@atomic-testing/core';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
@@ -7,6 +5,7 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import React from 'react';
 
 //#region Exclusive Selection
 export const ExclusiveSelectionExample = () => {

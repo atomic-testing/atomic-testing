@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicAlertUIExample } from './BasicAlert.examples';
 import { basicAlertExample, basicAlertTestSuite } from './BasicAlert.suite';

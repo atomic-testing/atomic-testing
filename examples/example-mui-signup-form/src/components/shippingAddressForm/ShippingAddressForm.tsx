@@ -1,15 +1,13 @@
-import { useCallback, useMemo, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { produce } from 'immer';
+import { useCallback, useMemo, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { ShippingModel, emptySignupModel } from '../../models/SignupModel';
 import { WizardProps } from '../../models/WizardProps';
 import { AddressEntry, AddressEntryHandle } from '../addressEntry/AddressEntry';
 import { WizardButton } from '../wizardButton/WizardButton';
-
 import { ShippingAddressFormDataTestId } from './ShippingAddressFormDataTestId';
 
 export function ShippingAddressForm(props: WizardProps) {

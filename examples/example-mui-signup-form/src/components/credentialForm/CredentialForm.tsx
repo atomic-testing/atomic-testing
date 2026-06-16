@@ -1,15 +1,13 @@
-import { useCallback, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { differenceInYears, parseISO } from 'date-fns';
 import { produce } from 'immer';
+import { useCallback, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { emptySignupModel } from '../../models/SignupModel';
 import { WizardProps } from '../../models/WizardProps';
 import { WizardButton } from '../wizardButton/WizardButton';
-
 import { CredentialFormDataTestId } from './CredentialFormDataTestId';
 
 export interface CredentialFormData {

@@ -2,7 +2,6 @@ import { Optional } from '../dataTypes';
 import { WaitForOption } from '../drivers/WaitForOption';
 import { PartLocator } from '../locators';
 import { WaitUntilOption } from '../utils/timingUtil';
-
 import type { CssProperty } from './CssProperty';
 import { EnterTextOption } from './EnterTextOption';
 import { BlurOption, FocusOption } from './FocusOption';

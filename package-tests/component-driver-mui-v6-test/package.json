@@ -2,11 +2,27 @@
   "name": "@atomic-testing/component-driver-mui-v6-test",
   "version": "0.0.0",
   "description": "Examples and tests for @atomic-testing/component-driver-mui-v6",
-  "main": "dist/index.js",
+  "keywords": [
+    "integration",
+    "integration-driver",
+    "material-ui",
+    "mui",
+    "react",
+    "testing",
+    "unit",
+    "v5"
+  ],
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git"
+  },
   "files": [
     "dist",
     "src"
   ],
+  "main": "dist/index.js",
   "scripts": {
     "start": "vite --force",
     "build:ui": "vite build",
@@ -14,29 +30,13 @@
     "test:e2e": "playwright test",
     "test:e2e:chrome": "playwright test --project=chromium"
   },
-  "author": "Tianzhen Lin <tangent@usa.net>",
-  "keywords": [
-    "testing",
-    "react",
-    "unit",
-    "integration",
-    "mui",
-    "material-ui",
-    "v5",
-    "integration-driver"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atomic-testing/atomic-testing.git"
-  },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/internal-react-example": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/material": "^6.4.12",
     "@mui/icons-material": "^6.5.0",
+    "@mui/material": "^6.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.7.1"
@@ -44,18 +44,12 @@
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/component-driver-mui-v6": "workspace:*",
-    "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
-    "@atomic-testing/react-18": "workspace:*",
-    "@atomic-testing/playwright": "workspace:*",
     "@atomic-testing/internal-test-runner": "workspace:*",
+    "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
+    "@atomic-testing/playwright": "workspace:*",
+    "@atomic-testing/react-18": "workspace:*",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -67,6 +61,12 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
     ]
   }
 }

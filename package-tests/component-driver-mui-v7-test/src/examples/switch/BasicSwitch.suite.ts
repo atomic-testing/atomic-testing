@@ -1,8 +1,7 @@
-import { JSX } from 'react';
-
 import { SwitchDriver } from '@atomic-testing/component-driver-mui-v7';
-import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { JSX } from 'react';
 
 import { basicSwitchUIExample } from './BasicSwitch.examples';
 

@@ -6,9 +6,14 @@ datetime
 endregion
 exceljs
 interactor
+oxfmt
+oxfmtrc
+oxlint
+oxlintrc
 peaceiris
 rowindex
 tianzhen
 trivago
 tsdown
+tsgo
 vitest

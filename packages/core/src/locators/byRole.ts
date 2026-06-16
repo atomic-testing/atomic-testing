@@ -1,5 +1,4 @@
 import { escapeValue } from '../utils/escapeUtil';
-
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 

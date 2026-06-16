@@ -1,6 +1,5 @@
-import { JSX } from 'react';
-
 import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { JSX } from 'react';
 
 import { basicSwitchUIExample } from './BasicSwitch.examples';
 import { basicSwitchExample, basicSwitchTestSuite } from './BasicSwitch.suite';

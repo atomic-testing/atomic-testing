@@ -1,5 +1,4 @@
 import { Optional } from '../dataTypes';
-
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';

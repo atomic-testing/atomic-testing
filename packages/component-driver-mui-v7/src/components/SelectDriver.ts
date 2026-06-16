@@ -22,7 +22,6 @@ import {
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
-
 import { MenuItemDriver } from './MenuItemDriver';
 
 export const selectPart = {

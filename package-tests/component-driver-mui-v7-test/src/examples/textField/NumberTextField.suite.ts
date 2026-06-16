@@ -1,9 +1,8 @@
-import { JSX } from 'react';
-
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v7';
-import { byDataTestId, IExampleUnit, ScenePart} from '@atomic-testing/core';
+import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { JSX } from 'react';
 
 import { numberTextFieldUIExample } from './NumberTextField.examples';
 

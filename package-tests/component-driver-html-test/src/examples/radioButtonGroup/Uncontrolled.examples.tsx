@@ -1,7 +1,6 @@
+import { IExampleUIUnit } from '@atomic-testing/core';
 import React from 'react';
 import { JSX } from 'react';
-
-import { IExampleUIUnit } from '@atomic-testing/core';
 
 //#region Uncontrolled radio button group example
 export const UncontrolledRadioButtonGroupExample = () => {

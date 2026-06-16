@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import { produce } from 'immer';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { BillingModel, emptySignupModel } from '../../models/SignupModel';
 import { WizardProps } from '../../models/WizardProps';
 import { AddressEntry, AddressEntryHandle } from '../addressEntry/AddressEntry';
 import { WizardButton } from '../wizardButton/WizardButton';
-
 import { BillingAddressFormDataTestId } from './BillingAddressFormDataTestId';
 
 export function BillingAddressForm(props: WizardProps) {
