@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 import { userInterests } from '../../data/userInterests';
 import { SignupReview } from './SignupReview';
