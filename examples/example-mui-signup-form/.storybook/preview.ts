@@ -6,13 +6,12 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { withThemeFromJSXProvider } from '@storybook/addon-themes';
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/react-vite';
 
 import { darkTheme, lightTheme } from '../src/themes/theme';
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,

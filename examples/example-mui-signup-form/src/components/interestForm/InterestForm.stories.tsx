@@ -1,7 +1,7 @@
 import { ScenePart, byDataTestId } from '@atomic-testing/core';
 import { createRenderedTestEngine } from '@atomic-testing/react-18';
-import { Meta, StoryObj } from '@storybook/react';
-import { expect, fn } from '@storybook/test';
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn } from 'storybook/test';
 
 import { userInterests } from '../../data/userInterests';
 import { getGoodInterestMock } from '../../models/__mocks__/signupModelMock';
