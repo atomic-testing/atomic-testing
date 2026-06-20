@@ -1,23 +1,955 @@
 /**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
+ * Homepage marketing styles. Consumes the global --at-* token contract
+ * defined by the theme in src/css/custom.css.
  */
 
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+/* ============================ keyframes ============================ */
+@keyframes at-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
-
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+@keyframes at-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes at-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.82;
+  }
+}
+@keyframes at-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+@keyframes at-floatx {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0, -7px);
+  }
+}
+@keyframes at-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(45, 111, 230, 0.32),
+      0 0 38px 6px rgba(20, 184, 176, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 7px rgba(45, 111, 230, 0.06),
+      0 0 54px 12px rgba(20, 184, 176, 0.3);
+  }
+}
+@keyframes at-chippop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.04);
   }
 }
 
-.buttons {
+/* ============================ section rhythm ============================ */
+.sectionHead {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 44px;
+}
+
+.eyebrow {
+  font-family: var(--at-font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.eyebrowBlue {
+  color: var(--at-blue);
+}
+.eyebrowTeal {
+  color: var(--at-mint);
+}
+
+.sectionTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 38px;
+  letter-spacing: -0.02em;
+  margin: 12px 0 0;
+  color: var(--at-text);
+}
+
+.sectionSubtitle {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--at-text-muted);
+  margin: 14px 0 0;
+}
+
+/* ============================ HERO ============================ */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--at-border);
+  background: var(--at-bg);
+}
+
+.heroTint {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 520px at 78% 8%, var(--at-hero-tint1), transparent 60%),
+    radial-gradient(720px 480px at 12% 92%, var(--at-hero-tint2), transparent 60%);
+  pointer-events: none;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--at-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--at-grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(900px 600px at 70% 20%, #000, transparent 78%);
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 78px 24px 84px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 999px;
+  padding: 5px 13px 5px 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--at-text-muted);
+  box-shadow: 0 1px 2px rgba(18, 32, 46, 0.04);
+}
+
+.badgeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--at-gradient);
+  color: #fff;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+}
+
+.heroTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 6vw, 58px);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 22px 0 0;
+  color: var(--at-text);
+}
+
+.gradientWord {
+  background: var(--at-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroSubtitle {
+  font-size: 18.5px;
+  line-height: 1.62;
+  color: var(--at-text-muted);
+  max-width: 540px;
+  margin: 22px 0 0;
+}
+.heroSubtitle strong {
+  color: var(--at-text-strong);
+  font-weight: 600;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 30px;
+}
+
+.btnPrimary {
+  font-family: var(--at-font-body);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--at-gradient-btn);
+  border: none;
+  padding: 13px 24px;
+  border-radius: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(45, 107, 230, 0.3);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.btnPrimary:hover {
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(45, 107, 230, 0.42);
+  transform: translateY(-1px);
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--at-font-body);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--at-text-strong);
+  text-decoration: none;
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  padding: 13px 20px;
+  border-radius: 11px;
+  transition: border-color 0.2s ease;
+}
+.btnSecondary:hover {
+  color: var(--at-text-strong);
+  text-decoration: none;
+  border-color: var(--at-text-faint);
+}
+
+.installBox {
+  margin-top: 26px;
+  max-width: 540px;
+  background: var(--at-ink);
+  border: 1px solid var(--at-ink-border);
+  border-radius: 12px;
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(14, 23, 38, 0.14);
+}
+.installPrompt {
+  color: var(--at-mint);
+  font-family: var(--at-font-mono);
+  font-size: 13px;
+}
+.installCmd {
+  flex: 1;
+  font-family: var(--at-font-mono);
+  font-size: 13px;
+  color: var(--at-ink-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.installCopy {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--at-font-mono);
+  font-size: 11.5px;
+  color: #9fb3cc;
+  background: #1a2942;
+  border: 1px solid #29405f;
+  padding: 5px 9px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.installCopy:hover {
+  color: var(--at-ink-text);
+  border-color: #3a567c;
+}
+.copied {
+  color: var(--at-mint);
+}
+
+/* ---------------- hero visual ---------------- */
+.heroVisual {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 440px;
+}
+
+.animToggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 3px;
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 10px;
+  padding: 3px;
+  z-index: 4;
+  box-shadow: 0 4px 14px rgba(18, 32, 46, 0.06);
+}
+.animTab {
+  font-family: var(--at-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 11px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--at-text-faint);
+  transition: background 0.2s ease;
+}
+.animTabActive {
+  background: var(--at-gradient-btn);
+  color: #fff;
+}
+
+/* orbit */
+.orbit {
+  position: relative;
+  width: 380px;
+  height: 380px;
+}
+.nucleus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #5b8cf0, #1f58c9 70%);
+  animation: at-glow 3.4s ease-in-out infinite;
+}
+.nucleusGlow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  background: var(--at-teal);
+  opacity: 0.55;
+  filter: blur(2px);
+  animation: at-pulse 3.4s ease-in-out infinite;
+}
+.ringWrap {
+  position: absolute;
+  inset: 0;
+}
+.ringSpin {
+  position: absolute;
+  inset: 0;
+}
+.ringSpin1 {
+  animation: at-spin 7s linear infinite;
+}
+.ringSpin2 {
+  animation: at-spin-rev 9s linear infinite;
+}
+.ringSpin3 {
+  animation: at-spin 8s linear infinite;
+}
+.ring {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 168px;
+  margin-top: -84px;
+  border: 1.5px solid;
+  border-radius: 50%;
+}
+.electron {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+}
+.chip {
+  position: absolute;
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 9px;
+  padding: 6px 11px;
+  font-family: var(--at-font-mono);
+  font-size: 11.5px;
+  box-shadow: 0 8px 22px rgba(18, 32, 46, 0.1);
+}
+.chipBlue {
+  color: var(--at-blue);
+}
+.chipTeal {
+  color: var(--at-teal-ink);
+}
+.chipInk {
+  color: var(--at-text-strong);
+}
+.chipTopLeft {
+  left: -34px;
+  top: 26px;
+  animation: at-float 5s ease-in-out infinite;
+}
+.chipTopRight {
+  right: -42px;
+  top: 92px;
+  animation: at-float 6s ease-in-out infinite 0.8s;
+}
+.chipBottomLeft {
+  left: -16px;
+  bottom: 22px;
+  animation: at-float 5.5s ease-in-out infinite 0.4s;
+}
+
+/* compose */
+.compose {
+  position: relative;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: at-floatx 7s ease-in-out infinite;
+}
+.composeCard {
+  width: 320px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 18px;
+  border-radius: 16px;
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+}
+.composeBadge {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 38px;
+  height: 24px;
+  border-radius: 7px;
+  box-shadow: 0 3px 9px rgba(45, 107, 230, 0.3);
+}
+.composeTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--at-text);
+}
+.composeSub {
+  font-family: var(--at-font-mono);
+  font-size: 10.5px;
+  color: var(--at-text-faint2);
+  margin-top: 1px;
+}
+.composeConnector {
+  position: relative;
+  width: 0;
+  height: 40px;
+  margin: 4px 0;
+  border-left: 2px dashed var(--at-border);
+}
+.composeResult {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--at-tip-bg);
+  border: 1px solid var(--at-tip-border);
+  font-family: var(--at-font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--at-tip-ink);
+  animation: at-chippop 2.6s ease-in-out infinite;
+}
+
+/* ============================ THE MAGIC ============================ */
+.magic {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 86px 24px;
+}
+
+.terminal {
+  max-width: 880px;
+  margin: 0 auto;
+  background: var(--at-ink);
+  border: 1px solid var(--at-ink-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(14, 23, 38, 0.22);
+}
+.terminalBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--at-ink-border);
+  background: var(--at-ink-bar);
+}
+.trafficLights {
+  display: flex;
+  gap: 6px;
+  margin: 0 12px 0 6px;
+}
+.trafficLights span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.dotRed {
+  background: #ff5f56;
+}
+.dotYellow {
+  background: #ffbd2e;
+}
+.dotGreen {
+  background: #27c93f;
+}
+.fwTab {
+  font-family: var(--at-font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #7e91ab;
+  transition: color 0.2s ease;
+}
+.fwTab:hover {
+  color: #e3edf8;
+}
+.fwTabActive {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+.fileName {
+  margin-left: auto;
+  font-family: var(--at-font-mono);
+  font-size: 11.5px;
+  color: var(--at-ink-faint);
+}
+.terminalCopy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--at-font-mono);
+  font-size: 11.5px;
+  color: #9fb3cc;
+  background: #1a2942;
+  border: 1px solid #29405f;
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.terminalCopy:hover {
+  color: var(--at-ink-text);
+  border-color: #3a567c;
+}
+
+/* Strip the default CodeBlock chrome so the terminal frame owns the visuals. */
+.terminalBody :global(.theme-code-block),
+.terminalBody div[class*='codeBlockContainer'] {
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+}
+.terminalBody pre[class*='codeBlock'],
+.terminalBody div[class*='codeBlockContent'] {
+  border-radius: 0;
+  background: var(--at-ink);
+}
+
+.magicCaption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+  font-size: 14.5px;
+  color: var(--at-text-muted);
+  flex-wrap: wrap;
+}
+.tealPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--at-tip-bg);
+  border: 1px solid var(--at-tip-border);
+  color: var(--at-tip-ink);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ============================ COMPOSABLE dark band ============================ */
+.band {
+  background: var(--at-ink);
+  border-top: 1px solid var(--at-ink-border);
+  border-bottom: 1px solid var(--at-ink-border);
+  position: relative;
+  overflow: hidden;
+}
+.bandGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.bandInner {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 88px 24px;
+}
+.bandHead {
+  max-width: 640px;
+  margin: 0 auto 52px;
+  text-align: center;
+}
+.bandTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 38px;
+  letter-spacing: -0.02em;
+  margin: 12px 0 0;
+  color: #fff;
+}
+.bandSubtitle {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #9fb0c6;
+  margin: 14px 0 0;
+}
+.bandRow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.bandCard {
+  flex: 1;
+  min-width: 150px;
+  background: #131e30;
+  border: 1px solid #25364e;
+  border-radius: 14px;
+  padding: 18px;
+}
+.bandCardResult {
+  background: linear-gradient(135deg, #16314f, #123a39);
+  border-color: #2a6e6a;
+}
+.bandEyebrow {
+  font-family: var(--at-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.bandCode {
+  font-family: var(--at-font-mono);
+  font-size: 13px;
+  color: var(--at-ink-text);
+  margin-top: 9px;
+}
+.bandText {
+  font-size: 12.5px;
+  color: #7e91ab;
+  margin-top: 8px;
+}
+.bandHint {
+  color: #9fb0c6;
+}
+.bandResultValue {
+  font-size: 14px;
+  color: #d6f5ee;
+  margin-top: 9px;
+  font-weight: 600;
+}
+.bandResultCaption {
+  font-size: 12.5px;
+  color: #8fc7bf;
+  margin-top: 8px;
+}
+.bandConnector {
+  display: flex;
+  align-items: center;
+  color: #3a567c;
+  font-size: 22px;
+}
+
+/* ============================ HOW IT WORKS ============================ */
+.howBand {
+  background: var(--at-bg-alt);
+  border-top: 1px solid var(--at-border);
+  border-bottom: 1px solid var(--at-border);
+}
+.howInner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+.howHead {
+  max-width: 620px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+.howTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--at-text);
+}
+.howSubtitle {
+  font-size: 16px;
+  color: var(--at-text-muted);
+  margin: 12px 0 0;
+}
+.howGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.howCard {
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 14px;
+  padding: 22px;
+}
+.howNumber {
+  font-family: var(--at-font-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+.howCardTitle {
+  font-family: var(--at-font-display);
+  font-weight: 600;
+  font-size: 16.5px;
+  margin: 8px 0 0;
+  color: var(--at-text);
+}
+.howCardBody {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--at-text-muted);
+  margin: 7px 0 0;
+}
+.howCode {
+  font-family: var(--at-font-mono);
+  font-size: 12px;
+  color: var(--at-code-chip-ink);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* ============================ FINAL CTA ============================ */
+.ctaSection {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 90px 24px;
+}
+.ctaCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #0e1726 0%, #10243f 55%, #0c2e2c 100%);
+  padding: 64px 48px;
+  text-align: center;
+}
+.ctaGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(600px 300px at 50% 0%, #000, transparent 80%);
+}
+.ctaContent {
+  position: relative;
+}
+.ctaTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #fff;
+}
+.ctaSubtitle {
+  font-size: 17px;
+  color: #9fb0c6;
+  margin: 14px auto 0;
+  max-width: 520px;
+}
+.ctaActions {
+  display: flex;
+  gap: 13px;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+.ctaPrimary {
+  font-family: var(--at-font-body);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--at-ink);
+  background: #fff;
+  border: none;
+  padding: 13px 26px;
+  border-radius: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.ctaPrimary:hover {
+  color: var(--at-ink);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.ctaSecondary {
+  font-family: var(--at-font-body);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 13px 22px;
+  border-radius: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.ctaSecondary:hover {
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ============================ responsive ============================ */
+@media (max-width: 996px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 56px 20px 64px;
+  }
+  .heroVisual {
+    min-height: 420px;
+    margin-top: 16px;
+  }
+  .howGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sectionTitle,
+  .bandTitle {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .magic,
+  .ctaSection {
+    padding: 56px 16px;
+  }
+  .howGrid {
+    grid-template-columns: 1fr;
+  }
+  .ctaCard {
+    padding: 48px 24px;
+  }
+  .ctaTitle {
+    font-size: 32px;
+  }
+  .bandRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .bandConnector {
+    justify-content: center;
+  }
+}
+
+/* ============================ reduced motion ============================ */
+@media (prefers-reduced-motion: reduce) {
+  .nucleus,
+  .nucleusGlow,
+  .ringSpin1,
+  .ringSpin2,
+  .ringSpin3,
+  .chipTopLeft,
+  .chipTopRight,
+  .chipBottomLeft,
+  .compose,
+  .composeResult,
+  .btnPrimary,
+  .btnSecondary,
+  .animTab,
+  .ctaPrimary,
+  .ctaSecondary {
+    animation: none !important;
+    transition: none !important;
+  }
+  .btnPrimary:hover,
+  .ctaPrimary:hover {
+    transform: none;
+  }
 }

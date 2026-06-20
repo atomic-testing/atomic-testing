@@ -1,86 +1,74 @@
 import clsx from 'clsx';
-import React, { JSX } from 'react';
+import React, { type JSX, type ReactNode } from 'react';
 
 import styles from './styles.module.css';
 
 type FeatureItem = {
+  icon: string;
+  iconVariant: 'blue' | 'teal';
   title: string;
-  Svg?: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: JSX.Element;
+  description: ReactNode;
 };
 
-const FeatureList: FeatureItem[] = [
+const featureList: FeatureItem[] = [
   {
-    title: 'Write Once, Test Everywhere',
-    // Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    icon: '♻️',
+    iconVariant: 'blue',
+    title: 'Write once, test everywhere',
+    description:
+      'The same test code works across React, Vue, Playwright and DOM testing. Learn once, test any UI framework.',
+  },
+  {
+    icon: '🎯',
+    iconVariant: 'teal',
+    title: 'High-level semantic APIs',
     description: (
       <>
-        Same test code works across React, Vue, Playwright, and DOM testing.
-        <br />
-        <strong>Learn once, test any UI framework.</strong>
+        <code className={styles.inlineCode}>select.selectByLabel(&apos;Option 2&apos;)</code> instead of brittle DOM
+        queries. Focus on behavior, not implementation.
       </>
     ),
   },
   {
-    title: 'High-Level Semantic APIs',
-    // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: (
-      <>
-        <code>muiSelect.selectByLabel('Option 2')</code> instead of complex DOM queries.
-        <br />
-        <strong>Focus on user behavior, not implementation details.</strong>
-      </>
-    ),
+    icon: '🧩',
+    iconVariant: 'blue',
+    title: 'Framework-agnostic drivers',
+    description:
+      'Reuse component drivers across Material-UI, Bootstrap and custom components. Component library changes don’t break your tests.',
   },
   {
-    title: 'Framework Agnostic Drivers',
-    // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: (
-      <>
-        Reuse component drivers across Material-UI, Bootstrap, and custom components.
-        <br />
-        <strong>Component library changes don't break your tests.</strong>
-      </>
-    ),
-  },
-  {
-    title: 'Future-Proof Architecture',
-    // Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: (
-      <>
-        Framework migrations, library upgrades, and test environment changes become trivial.
-        <br />
-        <strong>Your testing investment scales with your application.</strong>
-      </>
-    ),
+    icon: '🛡️',
+    iconVariant: 'teal',
+    title: 'Future-proof architecture',
+    description:
+      'Framework migrations, library upgrades and environment changes become trivial. Your testing investment scales with your app.',
   },
 ];
 
-function Feature({ title, Svg, description, index }: FeatureItem & { index: number }) {
-  const isOdd = index % 2 === 1;
-  const padder = <div className={clsx('col col--6')}></div>;
+function Feature({ icon, iconVariant, title, description }: FeatureItem): JSX.Element {
   return (
-    <div className='row'>
-      {isOdd ? padder : null}
-      <div className={clsx('col col--6')}>
-        <div>{Svg ? <Svg className={styles.featureSvg} role='img' /> : null}</div>
-        <div className='padding-horiz--md'>
-          <h3>{title}</h3>
-          <p>{description}</p>
-        </div>
+    <article className={styles.card}>
+      <div className={clsx(styles.iconTile, styles[iconVariant])} aria-hidden='true'>
+        {icon}
       </div>
-      {!isOdd ? padder : null}
-    </div>
+      <h3 className={styles.cardTitle}>{title}</h3>
+      <p className={styles.cardBody}>{description}</p>
+    </article>
   );
 }
 
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
-      <div className='container'>
-        {FeatureList.map((props, idx) => (
-          <Feature key={idx} index={idx} {...props} />
-        ))}
+      <div className={styles.inner}>
+        <header className={styles.heading}>
+          <h2 className={styles.headingTitle}>Why teams adopt it</h2>
+        </header>
+        <div className={styles.grid}>
+          {featureList.map((feature) => (
+            <Feature key={feature.title} {...feature} />
+          ))}
+        </div>
       </div>
     </section>
   );

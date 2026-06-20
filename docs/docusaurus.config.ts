@@ -6,10 +6,28 @@ import path from 'path';
 // require('prism-react-renderer/themes/github');
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
-import { themes } from 'prism-react-renderer';
+import type { PrismTheme } from 'prism-react-renderer';
 
-const darkCodeTheme = themes.dracula; // require('prism-react-renderer/themes/dracula');
-const lightCodeTheme = themes.github;
+// Custom Prism theme: code blocks are always dark navy with the design's token colors,
+// in both light and dark site themes. Colors mirror the design tokenizer palette.
+const atomicCodeTheme: PrismTheme = {
+  plain: { color: '#cbd7e6', backgroundColor: '#0e1726' },
+  styles: [
+    { types: ['comment', 'prolog', 'doctype', 'cdata'], style: { color: '#5e7488', fontStyle: 'italic' } },
+    { types: ['punctuation'], style: { color: '#7e91ab' } },
+    { types: ['operator', 'entity', 'url'], style: { color: '#9fb3cc' } },
+    { types: ['keyword', 'storage', 'keyword-control', 'atrule'], style: { color: '#c9a6f0' } },
+    { types: ['boolean', 'number', 'constant', 'symbol', 'inserted'], style: { color: '#5fe3c8' } },
+    { types: ['string', 'char', 'attr-value'], style: { color: '#7fd1f0' } },
+    { types: ['function', 'function-variable'], style: { color: '#7fd1f0' } },
+    { types: ['class-name', 'maybe-class-name', 'builtin'], style: { color: '#8fd4ff' } },
+    { types: ['tag', 'deleted'], style: { color: '#7fb0f5' } },
+    { types: ['attr-name', 'property', 'selector'], style: { color: '#9bd0ff' } },
+    { types: ['variable', 'parameter'], style: { color: '#cbd7e6' } },
+    { types: ['regex', 'important'], style: { color: '#5fe3c8' } },
+    { types: ['namespace'], style: { opacity: '0.7' } },
+  ],
+};
 
 function getPackageNames() {
   const baseDir = path.join(__dirname, '../packages');
@@ -103,7 +121,7 @@ const config: Config = {
       title: 'Atomic Testing',
       logo: {
         alt: 'Atomic Testing Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo-atom.svg',
       },
       items: [
         {
@@ -185,8 +203,8 @@ const config: Config = {
       copyright: `Copyright © 2022-${new Date().getFullYear()} Tangent Lin`,
     },
     prism: {
-      theme: lightCodeTheme,
-      darkTheme: darkCodeTheme,
+      theme: atomicCodeTheme,
+      darkTheme: atomicCodeTheme,
     },
     colorMode: {
       defaultMode: 'light',
