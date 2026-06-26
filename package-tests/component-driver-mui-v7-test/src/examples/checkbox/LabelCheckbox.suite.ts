@@ -23,12 +23,22 @@ export const labelCheckboxExample: IExampleUnit<typeof labelCheckboxExampleScene
 export const labelCheckboxTestSuite: TestSuiteInfo<typeof labelCheckboxExample.scene> = {
   title: 'Label Checkbox',
   url: '/checkbox',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse, assertEqual }) => {
     const engine = useTestEngine(labelCheckboxExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Apple checkbox should be checked by default', async () => {
       const isSelected = await engine().parts.apple.isSelected();
       assertTrue(isSelected);
+    });
+
+    test('Apple checkbox exposes its label text', async () => {
+      const label = await engine().parts.apple.getLabel();
+      assertEqual(label, 'Apple');
+    });
+
+    test('Banana checkbox exposes its own label, not a sibling label', async () => {
+      const label = await engine().parts.banana.getLabel();
+      assertEqual(label, 'Banana');
     });
 
     test('Banana checkbox should not be checked by default', async () => {

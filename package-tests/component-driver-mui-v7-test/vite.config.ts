@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       '@': '/src', // Assuming your source code is in the 'src' directory
     },
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     host: true,
