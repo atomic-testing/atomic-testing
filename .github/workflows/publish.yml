@@ -33,6 +33,13 @@ jobs:
       - name: Set package versions
         run: pnpm bumpVersion $VERSION
 
+      - name: Upgrade npm for OIDC trusted publishing
+        # `pnpm publish` shells out to npm, and OIDC trusted publishing requires
+        # npm >= 11.5.1. The Node 22 runner ships npm 10.x, which doesn't attempt
+        # the OIDC token exchange and fails with ENEEDAUTH. Keep pnpm on 10.x —
+        # pnpm 11 has a known OIDC regression.
+        run: npm install -g npm@latest
+
       - name: Publish packages
         # Auth via npm Trusted Publishing (OIDC) — no NPM_TOKEN needed.
         # Requires `id-token: write` (above) plus a Trusted Publisher configured
