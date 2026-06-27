@@ -1,5 +1,8 @@
 # @atomic-testing/component-driver-mui-v5
 
+> [!WARNING]
+> **Deprecated — MUI 5 reached end of support on 2026-06-27.** This package is frozen at `0.81.0`; it receives no fixes, new drivers, or CI/e2e coverage. Migrate to [`@atomic-testing/component-driver-mui-v6`](../component-driver-mui-v6) or [`-v7`](../component-driver-mui-v7). Rationale: [ADR-005](../../agent-docs/adr/005-drop-mui-5-support.md).
+
 Component drivers for [Material UI](https://mui.com) v5 components. Component drivers expose simple APIs for unit tests or end‑to‑end tests to interact with MUI components—such as reading states and setting values—so test engineers can focus on test flows without needing to track how the inner MUI components work.
 
 ## The problem
