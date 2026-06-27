@@ -4,6 +4,11 @@
 
 Accepted (describes the existing design).
 
+> **Update (2026-06-27):** MUI 5 and MUI-X 5 reached end of support — the
+> `mui-v5` / `mui-x-v5` packages are frozen and deprecated in place. See
+> [ADR-005](005-drop-mui-5-support.md). Mentions of v5 below describe the
+> original design, not the currently supported set (v6/v7; v8 for MUI-X).
+
 ## Context
 
 Two dependencies make breaking changes across major versions in ways that affect this library:
