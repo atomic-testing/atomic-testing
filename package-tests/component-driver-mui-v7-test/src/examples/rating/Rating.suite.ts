@@ -13,6 +13,10 @@ export const basicRatingExampleScenePart = {
     locator: byDataTestId('readonly'),
     driver: RatingDriver,
   },
+  readonlyCustomLabel: {
+    locator: byDataTestId('readonly-custom-label'),
+    driver: RatingDriver,
+  },
   disabled: {
     locator: byDataTestId('disabled'),
     driver: RatingDriver,
@@ -31,7 +35,7 @@ export const basicRatingExample: IExampleUnit<typeof basicRatingExampleScenePart
 export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene> = {
   title: 'Basic Rating',
   url: '/rating',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(basicRatingExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Basic rating should exist', async () => {
@@ -55,14 +59,29 @@ export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene
       assertTrue(exists);
     });
 
+    test('Readonly rating value is read from the accessible aria-label', async () => {
+      const value = await engine().parts.readonly.getValue();
+      assertEqual(value, 2.5);
+    });
+
+    test('Readonly rating with a custom label falls back to counting filled stars', async () => {
+      const value = await engine().parts.readonlyCustomLabel.getValue();
+      assertEqual(value, 3);
+    });
+
     test('Disabled rating should exist', async () => {
       const exists = await engine().parts.disabled.exists();
       assertTrue(exists);
     });
 
+    test('isDisabled reflects the disabled state', async () => {
+      assertTrue(await engine().parts.disabled.isDisabled());
+      assertFalse(await engine().parts.basic.isDisabled());
+    });
+
     test('Initially empty rating should start empty', async () => {
       const value = await engine().parts.initiallyEmpty.getValue();
-      assertEqual(value || 0, 0);
+      assertEqual(value, null);
     });
   },
 };

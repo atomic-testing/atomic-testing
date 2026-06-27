@@ -26,7 +26,12 @@ export const BasicRating: React.FunctionComponent = () => {
       <Divider />
 
       <Typography>Readonly</Typography>
-      <Rating data-testid='readonly' aria-label='SSS' precision={0.5} value={2.5} readOnly />
+      <Rating data-testid='readonly' precision={0.5} value={2.5} readOnly />
+
+      <Divider />
+
+      <Typography>Readonly with custom label</Typography>
+      <Rating data-testid='readonly-custom-label' aria-label='Great movie' value={3} readOnly />
 
       <Divider />
 

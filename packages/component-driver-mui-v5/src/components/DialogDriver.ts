@@ -50,6 +50,31 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   /**
+   * Dismiss the dialog by clicking outside its content, then wait for it to close.
+   *
+   * MUI's "backdrop click" is handled on the `.MuiDialog-container` surface (which
+   * overlays the visual `.MuiBackdrop-root`), firing `onClose` only when the click
+   * target is the container itself. The click therefore lands on the container near
+   * its top-left corner to avoid the centered paper. Whether it actually closes
+   * depends on the consumer's `onClose` handling (MUI reports a `"backdropClick"`
+   * reason); the returned boolean reflects the observed close, not merely the click.
+   *
+   * @param timeoutMs How long to wait for the close transition to finish
+   * @returns true if the dialog closed
+   */
+  async closeByBackdropClick(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
+    await this.enforcePartExistence('dialogContainer');
+    // MUI only dismisses when the same element receives mousedown and click, so
+    // drive the full press/release/click sequence on the container's empty corner
+    // (the click target must be the container, not the centered paper).
+    const cornerClick = { position: { x: 5, y: 5 } } as const;
+    await this.parts.dialogContainer.mouseDown(cornerClick);
+    await this.parts.dialogContainer.mouseUp(cornerClick);
+    await this.parts.dialogContainer.click(cornerClick);
+    return this.waitForClose(timeoutMs);
+  }
+
+  /**
    * Wait for dialog to open
    * @param timeoutMs
    * @returns true open has performed successfully
