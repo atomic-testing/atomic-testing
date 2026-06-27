@@ -79,6 +79,31 @@ export const BasicAutoComplete: React.FunctionComponent = () => {
           renderInput={params => <TextField {...params} label='Movie' />}
         />
       </Stack>
+
+      <Stack direction='column'>
+        <Stack direction='row'>
+          <span>No options: </span>
+        </Stack>
+        <Autocomplete
+          data-testid='empty-options-auto-complete'
+          options={[] as string[]}
+          sx={{ width: 300 }}
+          renderInput={params => <TextField {...params} label='Movie' />}
+        />
+      </Stack>
+
+      <Stack direction='column'>
+        <Stack direction='row'>
+          <span>Loading: </span>
+        </Stack>
+        <Autocomplete
+          data-testid='loading-auto-complete'
+          loading
+          options={[] as string[]}
+          sx={{ width: 300 }}
+          renderInput={params => <TextField {...params} label='Movie' />}
+        />
+      </Stack>
     </Stack>
   );
 };

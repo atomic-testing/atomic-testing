@@ -33,6 +33,16 @@ export const basicAutoCompleteExampleScenePart = {
     locator: byDataTestId('disabled-auto-complete'),
     driver: AutoCompleteDriver,
   },
+
+  emptyOptionsSelect: {
+    locator: byDataTestId('empty-options-auto-complete'),
+    driver: AutoCompleteDriver,
+  },
+
+  loadingSelect: {
+    locator: byDataTestId('loading-auto-complete'),
+    driver: AutoCompleteDriver,
+  },
 } satisfies ScenePart;
 
 export const basicAutoCompleteExample: IExampleUnit<typeof basicAutoCompleteExampleScenePart, JSX.Element> = {
@@ -43,7 +53,7 @@ export const basicAutoCompleteExample: IExampleUnit<typeof basicAutoCompleteExam
 export const basicAutoCompleteTestSuite: TestSuiteInfo<typeof basicAutoCompleteExample.scene> = {
   title: 'Basic AutoComplete',
   url: '/autocomplete',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(basicAutoCompleteExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Selected label should be empty initially', async () => {
@@ -71,6 +81,29 @@ export const basicAutoCompleteTestSuite: TestSuiteInfo<typeof basicAutoCompleteE
     test('Disabled select should be disabled', async () => {
       const isDisabled = await engine().parts.disabledSelect.isDisabled();
       assertTrue(isDisabled);
+    });
+
+    test('No-options state is detected once the popup is opened', async () => {
+      await engine().parts.emptyOptionsSelect.parts.input.setValue('a');
+      assertTrue(await engine().parts.emptyOptionsSelect.hasNoOptions());
+      assertFalse(await engine().parts.emptyOptionsSelect.isLoading());
+    });
+
+    test('Loading state is detected once the popup is opened', async () => {
+      await engine().parts.loadingSelect.parts.input.setValue('a');
+      assertTrue(await engine().parts.loadingSelect.isLoading());
+      assertFalse(await engine().parts.loadingSelect.hasNoOptions());
+    });
+
+    test('Neither state is reported while the popup is closed', async () => {
+      assertFalse(await engine().parts.emptyOptionsSelect.hasNoOptions());
+      assertFalse(await engine().parts.loadingSelect.isLoading());
+    });
+
+    test('Neither state is reported when options are available', async () => {
+      await engine().parts.select.parts.input.setValue('The');
+      assertFalse(await engine().parts.select.hasNoOptions());
+      assertFalse(await engine().parts.select.isLoading());
     });
   },
 };
