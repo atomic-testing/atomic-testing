@@ -1,5 +1,7 @@
 export { AccordionDriver } from './components/AccordionDriver';
 export { AlertDriver } from './components/AlertDriver';
+export { AvatarDriver } from './components/AvatarDriver';
+export { AvatarGroupDriver, defaultAvatarGroupDriverOption } from './components/AvatarGroupDriver';
 export { AutoCompleteDriver, defaultAutoCompleteDriverOption } from './components/AutoCompleteDriver';
 export type {
   AutoCompleteDriverOption,
@@ -7,22 +9,35 @@ export type {
   AutoCompleteMatchType,
 } from './components/AutoCompleteDriver';
 export { BadgeDriver } from './components/BadgeDriver';
+export { BottomNavigationActionDriver } from './components/BottomNavigationActionDriver';
+export type { BottomNavigationActionInfo } from './components/BottomNavigationDriver';
+export { BottomNavigationDriver } from './components/BottomNavigationDriver';
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
 export { ChipDriver } from './components/ChipDriver';
 export { DialogDriver } from './components/DialogDriver';
+export type { DrawerAnchor } from './components/DrawerDriver';
+export { drawerParts, DrawerDriver } from './components/DrawerDriver';
 export { FabDriver } from './components/FabDriver';
+export { OverlayDriver } from './components/OverlayDriver';
 export { InputDriver } from './components/InputDriver';
 export { ListDriver } from './components/ListDriver';
 export { ListItemDriver } from './components/ListItemDriver';
 export { MenuDriver } from './components/MenuDriver';
 export { MenuItemDriver } from './components/MenuItemDriver';
+export { PaginationDriver } from './components/PaginationDriver';
 export { ProgressDriver } from './components/ProgressDriver';
 export { RatingDriver } from './components/RatingDriver';
 export { SelectDriver } from './components/SelectDriver';
 export { SliderDriver } from './components/SliderDriver';
 export { SnackbarDriver } from './components/SnackbarDriver';
+export { SpeedDialDriver } from './components/SpeedDialDriver';
+export type { StepInfo } from './components/StepperDriver';
+export { StepperDriver } from './components/StepperDriver';
 export { SwitchDriver } from './components/SwitchDriver';
+export { TablePaginationDriver } from './components/TablePaginationDriver';
+export { TabDriver } from './components/TabDriver';
+export { defaultTabsDriverOption, TabsDriver } from './components/TabsDriver';
 export { TextFieldDriver } from './components/TextFieldDriver';
 export { ToggleButtonDriver } from './components/ToggleButtonDriver';
 export { ExclusiveToggleButtonGroupDriver, ToggleButtonGroupDriver } from './components/ToggleButtonGroupDriver';
