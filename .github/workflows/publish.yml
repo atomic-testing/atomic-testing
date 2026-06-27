@@ -30,12 +30,7 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Determined version: $VERSION"
 
-      - name: Update package versions
-        run: |
-          # This command updates all packages to the new version
-          pnpm -r version $VERSION --no-git-tag-version
-
-      - name: Build packages
+      - name: Set package versions
         run: pnpm bumpVersion $VERSION
 
       - name: Publish packages
