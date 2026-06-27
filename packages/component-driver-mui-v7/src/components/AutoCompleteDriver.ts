@@ -1,5 +1,6 @@
 import { HTMLButtonDriver, HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssClass,
   byLinkedElement,
   byRole,
   ComponentDriver,
@@ -27,6 +28,14 @@ export const parts = {
 } satisfies ScenePart;
 
 const optionLocator = byRole('option');
+
+// In the "no options" and "loading" states MUI renders no listbox, so the popup
+// cannot be reached through the `dropdown` part (which keys off the combobox's
+// `aria-controls`). These nodes live in the popper (portaled outside the driver
+// subtree), so they are matched by their global class. Only one Autocomplete
+// popup is open at a time, so a global match is unambiguous in practice.
+const noOptionsLocator = byCssClass('MuiAutocomplete-noOptions');
+const loadingLocator = byCssClass('MuiAutocomplete-loading');
 
 /**
  * The match type of the autocomplete, default to 'exact'
@@ -117,6 +126,23 @@ export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements
 
   async isReadonly(): Promise<boolean> {
     return this.parts.input.isReadonly();
+  }
+
+  /**
+   * Whether the popup is currently showing its loading indicator (the
+   * `loadingText`). Only meaningful while the popup is open — open it first
+   * (e.g. by typing into the input), since MUI renders nothing otherwise.
+   */
+  async isLoading(): Promise<boolean> {
+    return this.interactor.exists(loadingLocator);
+  }
+
+  /**
+   * Whether the popup is currently showing its "no options" message. Same
+   * open-the-popup-first caveat as {@link AutoCompleteDriver.isLoading}.
+   */
+  async hasNoOptions(): Promise<boolean> {
+    return this.interactor.exists(noOptionsLocator);
   }
 
   get driverName(): string {
