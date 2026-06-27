@@ -106,14 +106,12 @@ jobs:
         include:
           - name: 'HTML components'
             directory: 'component-driver-html-test'
-          - name: 'MUI v5 components'
-            directory: 'component-driver-mui-v5-test'
+          # MUI v5 / MUI X v5 reached end of support (2026-06-27) and are no longer
+          # tested in CI. See agent-docs/adr/005-drop-mui-5-support.md
           - name: 'MUI v6 components'
             directory: 'component-driver-mui-v6-test'
           - name: 'MUI v7 components'
             directory: 'component-driver-mui-v7-test'
-          - name: 'MUI X v5 components'
-            directory: 'component-driver-mui-x-v5-test'
           - name: 'MUI X v6 components'
             directory: 'component-driver-mui-x-v6-test'
           - name: 'MUI X v7 components'

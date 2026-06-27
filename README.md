@@ -27,6 +27,30 @@ including but not limited to:
 
   runner.
 
+## Version support policy
+
+Material UI moves fast and each major has a distinct rendered DOM, so this
+project ships one driver package per MUI major (see
+[ADR-003](agent-docs/adr/003-version-specific-packages.md)). To keep the
+maintained surface focused, older majors reach **end of support** once newer
+ones are stable.
+
+| Driver family | Supported majors | End of support            |
+| ------------- | ---------------- | ------------------------- |
+| MUI (core)    | v6, v7           | **v5 - ended 2026-06-27** |
+| MUI-X         | v6, v7, v8       | **v5 - ended 2026-06-27** |
+
+**MUI 5 / MUI-X 5 are no longer supported** as of **2026-06-27**. The
+`@atomic-testing/component-driver-mui-v5` and
+`@atomic-testing/component-driver-mui-x-v5` packages are frozen at `0.81.0`:
+they remain installable at that version but receive no fixes, new drivers, or
+CI/e2e coverage, and their test suites no longer run. New work targets v6/v7
+(MUI-X also v8). Rationale and migration notes:
+[ADR-005](agent-docs/adr/005-drop-mui-5-support.md).
+
+> Note: the MUI-X date/time **picker** drivers only ever shipped in the v5
+> package; they have no v6–v8 successor at this time.
+
 ## Getting Started
 
 1. Install Node.js (v22.12 or newer) and [pnpm](https://pnpm.io/) (v10 or newer).
