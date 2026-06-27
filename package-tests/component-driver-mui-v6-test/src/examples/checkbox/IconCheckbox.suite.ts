@@ -23,12 +23,17 @@ export const iconCheckboxExample: IExampleUnit<typeof iconCheckboxExampleScenePa
 export const iconCheckboxTestSuite: TestSuiteInfo<typeof iconCheckboxExample.scene> = {
   title: 'Icon Checkbox',
   url: '/checkbox',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse, assertEqual }) => {
     const engine = useTestEngine(iconCheckboxExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Favorite checkbox should not be selected initially', async () => {
       const isSelected = await engine().parts.favorite.isSelected();
       assertFalse(isSelected);
+    });
+
+    test('Icon checkbox without a FormControlLabel has no label', async () => {
+      const label = await engine().parts.favorite.getLabel();
+      assertEqual(label, undefined);
     });
 
     test('Bookmark checkbox should not be selected initially', async () => {
