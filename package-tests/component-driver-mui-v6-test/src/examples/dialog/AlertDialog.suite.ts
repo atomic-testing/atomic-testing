@@ -64,5 +64,14 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
     });
+
+    test('Clicking the backdrop should close the dialog', async () => {
+      await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
+
+      const closed = await engine().parts.dialog.closeByBackdropClick();
+      assertTrue(closed);
+      assertFalse(await engine().parts.dialog.isOpen());
+    });
   },
 };
