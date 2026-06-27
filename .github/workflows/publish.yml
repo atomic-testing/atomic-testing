@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   publish:
@@ -38,13 +39,11 @@ jobs:
         run: pnpm bumpVersion $VERSION
 
       - name: Publish packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          # Publish each package in the monorepo (customize as needed)
-          ./publish.sh
-          rm ~/.npmrc
+        # Auth via npm Trusted Publishing (OIDC) — no NPM_TOKEN needed.
+        # Requires `id-token: write` (above) plus a Trusted Publisher configured
+        # for every @atomic-testing/* package on npmjs.com (org: atomic-testing,
+        # repo: atomic-testing, workflow file: publish.yml).
+        run: ./publish.sh
 
       - name: Commit version updates
         run: |
