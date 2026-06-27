@@ -38,6 +38,12 @@ ended by deprecation in place rather than deletion:
 - They are excluded from `publish.sh` (so the release pipeline no longer
   republishes them) — they are **not** marked deprecated on the npm registry, so
   the already-published `0.81.0` keeps installing silently.
+- Their `check:type` scripts are removed so the recursive `pnpm -r check:type`
+  skips them. This is required, not cosmetic: excluding them from `publish.sh`
+  means their `dist` (and thus `.d.ts`) is no longer built, and `mui-x-v5`
+  imports `ButtonDriver` from `mui-v5` — type-checking the frozen packages would
+  fail to resolve that cross-package type. v5 is no longer type-checked,
+  consistent with being frozen.
 - Their test packages (`package-tests/component-driver-mui-v5-test`,
   `…-mui-x-v5-test`) remain but are removed from the CI test matrix
   (`.github/workflows/buildui.yml`); their suites no longer run.
@@ -73,7 +79,7 @@ ended by deprecation in place rather than deletion:
 ## Alternatives considered
 
 | Alternative | Why not chosen |
-|-------------|----------------|
+| ----------- | -------------- |
 | Delete the v5 packages and tests outright | Would break the example app and docs immediately and discard installable history; reversible deprecation chosen instead |
 | `npm deprecate` the published packages | Out of scope for this pass — kept to repo/docs signals only to avoid surfacing install-time warnings now |
 | Keep v5 on full support | The maintenance/CI cost no longer matched its usage; new work targets v6/v7 |
