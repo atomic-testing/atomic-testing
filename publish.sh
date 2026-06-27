@@ -3,6 +3,13 @@ set -euo pipefail
 
 # Bulk publish all packages (or just build if --build-only)
 # Use in conjunction with pnpm bumpVersion #.#.# to update all package versions
+#
+# Auth is npm Trusted Publishing (OIDC) — see .github/workflows/publish.yml.
+# Adding a NEW package? npm can't attach a trusted publisher to a package that
+# doesn't exist yet, so its first publish can't use OIDC. Bootstrap it once:
+#     ./bootstrap-new-package.sh <package-folder-name>
+# After that it publishes here automatically. To (re)apply every trusted-publisher
+# config at once: ./setup-trusted-publishers.sh
 
 BUILD_ONLY=false
 
