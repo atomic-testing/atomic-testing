@@ -47,6 +47,20 @@ export class ChipDriver extends ComponentDriver<typeof parts> {
     await this.parts.removeButton.click();
   }
 
+  /**
+   * Delete the chip via the keyboard: focus the chip root, then press `Backspace`.
+   *
+   * MUI fires `onDelete` for `Backspace`/`Delete` only when the keydown target is the
+   * chip root itself — a code path distinct from {@link clickRemove}, which clicks the
+   * cancel icon. Requires the chip to be deletable (rendered with `onDelete`, which
+   * makes the root focusable). Focus is taken first so the key event originates from
+   * the chip root.
+   */
+  async deleteViaKeyboard(): Promise<void> {
+    await this.focus();
+    await this.pressKey('Backspace');
+  }
+
   override get driverName(): string {
     return 'MuiV6ChipDriver';
   }

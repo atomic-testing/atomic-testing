@@ -54,6 +54,18 @@ export const basicRatingTestSuite: TestSuiteInfo<typeof basicRatingExample.scene
       assertEqual(value, 4);
     });
 
+    test('Can set a fractional rating value', async () => {
+      await engine().parts.basic.setValue(3.5);
+      const value = await engine().parts.basic.getValue();
+      assertEqual(value, 3.5);
+    });
+
+    test('Can clear the rating to null', async () => {
+      await engine().parts.basic.setValue(null);
+      const value = await engine().parts.basic.getValue();
+      assertEqual(value, null);
+    });
+
     test('Readonly rating should exist', async () => {
       const exists = await engine().parts.readonly.exists();
       assertTrue(exists);

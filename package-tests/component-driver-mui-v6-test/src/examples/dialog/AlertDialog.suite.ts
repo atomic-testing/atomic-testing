@@ -47,20 +47,27 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
 
     test('Clicking open trigger should open dialog', async () => {
       await engine().parts.openTrigger.click();
+      // Wait out the open transition before asserting; isOpen() reads the
+      // container's visibility, which is mid-animation right after the click.
+      await engine().parts.dialog.waitForOpen();
       const isOpen = await engine().parts.dialog.isOpen();
       assertTrue(isOpen);
     });
 
     test('Clicking agree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
       await engine().parts.dialog.content.agree.click();
+      await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
     });
 
     test('Clicking disagree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
       await engine().parts.dialog.content.disagree.click();
+      await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
     });
@@ -70,6 +77,15 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
       await engine().parts.dialog.waitForOpen();
 
       const closed = await engine().parts.dialog.closeByBackdropClick();
+      assertTrue(closed);
+      assertFalse(await engine().parts.dialog.isOpen());
+    });
+
+    test('Pressing Escape should close the dialog', async () => {
+      await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
+
+      const closed = await engine().parts.dialog.closeByEscape();
       assertTrue(closed);
       assertFalse(await engine().parts.dialog.isOpen());
     });

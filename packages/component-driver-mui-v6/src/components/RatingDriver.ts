@@ -1,7 +1,6 @@
 import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
-  byCssSelector,
   byInputType,
   byValue,
   ComponentDriver,
@@ -92,24 +91,17 @@ export class RatingDriver extends ComponentDriver<typeof parts> implements IInpu
       return true;
     }
 
-    // Clearing (value == null) reuses MUI's "click the selected star again to
-    // reset" behaviour by re-clicking the current value's label. This resets the
-    // rating in real browsers but not in jsdom, where MUI's clear path depends on
-    // pointer coordinates that jsdom does not provide; the empty radio (`value=""`)
-    // that jsdom could click has no `<label>` and is not reliably clickable in
-    // browsers. A fully portable clear needs a coordinate-free click primitive on
-    // the Interactor. TODO(#68): revisit once that primitive exists.
-    const valueToClick = value ?? currentValue;
-    if (valueToClick == null) {
-      return true;
-    }
-
-    const targetLocator = locatorUtil.append(this.parts.choices.locator, byValue(valueToClick.toString(), 'Same'));
+    // Activate the visually-hidden `<input type="radio">` whose `value` attribute
+    // matches the target — the empty-string radio (MUI's "no rating") for a clear.
+    // `activate` is coordinate-free, so it reaches inputs a positional click cannot:
+    // the half-star label for fractional values is zero-width and unclickable in a
+    // real browser (#86), and the clear radio has no `<label>` at all (#68). This
+    // unifies integer, fractional, and clear on one portable path.
+    const targetValue = value == null ? '' : value.toString();
+    const targetLocator = locatorUtil.append(this.parts.choices.locator, byValue(targetValue, 'Same'));
     const targetExists = await this.interactor.exists(targetLocator);
     if (targetExists) {
-      const id = await this.interactor.getAttribute(targetLocator, 'id');
-      const labelLocator = locatorUtil.append(this.locator, byCssSelector(`label[for="${id}"]`));
-      await this.interactor.click(labelLocator);
+      await this.interactor.activate(targetLocator);
     }
     // TODO: throw error if the value does not exist
     return targetExists;
