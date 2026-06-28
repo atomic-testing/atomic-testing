@@ -118,8 +118,14 @@ jobs:
             directory: 'component-driver-mui-x-v7-test'
           - name: 'MUI X v8 components'
             directory: 'component-driver-mui-x-v8-test'
+          - name: 'MUI v9 components'
+            directory: 'component-driver-mui-v9-test'
+          - name: 'MUI X v9 components'
+            directory: 'component-driver-mui-x-v9-test'
           - name: 'Vue 3 components'
             directory: 'vue-3-test'
+          - name: 'Astryx components'
+            directory: 'component-driver-astryx-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
