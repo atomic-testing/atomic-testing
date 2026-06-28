@@ -47,6 +47,9 @@ export const slideinDialogTestSuite: TestSuiteInfo<typeof slideInDialogExample.s
 
     test('Clicking open trigger should open dialog', async () => {
       await engine().parts.openTrigger.click();
+      // The Slide transition (theme default ~225ms) keeps the container mounted, so isOpen()
+      // relies on visibility crossing the threshold; settle the open before sampling.
+      await engine().parts.dialog.waitForOpen();
       const isOpen = await engine().parts.dialog.isOpen();
       assertTrue(isOpen);
     });
@@ -61,6 +64,7 @@ export const slideinDialogTestSuite: TestSuiteInfo<typeof slideInDialogExample.s
 
     test('Dialog title should be correct', async () => {
       await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
       const title = await engine().parts.dialog.getTitle();
       assertEqual(title, "Use Google's location service?");
     });
