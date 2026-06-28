@@ -29,10 +29,15 @@ const atomicCodeTheme: PrismTheme = {
   ],
 };
 
+// MUI 5 / MUI-X 5 are frozen & EOL (ADR-005) and no longer built, so their type
+// declarations are absent and TypeDoc can't resolve cross-package imports from
+// them — exclude from API docs. Keep in sync with publish.sh's exclude list.
+const EXCLUDED_FROM_DOCS = new Set(['component-driver-mui-v5', 'component-driver-mui-x-v5']);
+
 function getPackageNames() {
   const baseDir = path.join(__dirname, '../packages');
   const packageNames = fs.readdirSync(baseDir).filter(name => {
-    if (name.startsWith('internal-')) {
+    if (name.startsWith('internal-') || EXCLUDED_FROM_DOCS.has(name)) {
       return false;
     }
     const fullPath = path.join(baseDir, name);
