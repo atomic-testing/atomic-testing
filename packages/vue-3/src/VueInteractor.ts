@@ -13,6 +13,7 @@ import {
   MouseOutOption,
   MouseUpOption,
   PartLocator,
+  Point,
   PressKeyOption,
   WaitForOption,
   WaitUntilOption,
@@ -90,6 +91,11 @@ export class VueInteractor extends DOMInteractor {
     await this.flush();
   }
 
+  override async contextMenu(locator: PartLocator): Promise<void> {
+    await super.contextMenu(locator);
+    await this.flush();
+  }
+
   override async activate(locator: PartLocator): Promise<void> {
     await super.activate(locator);
     await this.flush();
@@ -97,6 +103,31 @@ export class VueInteractor extends DOMInteractor {
 
   override async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     await super.selectOptionValue(locator, values);
+    await this.flush();
+  }
+
+  override async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
+    await super.setInputFiles(locator, files);
+    await this.flush();
+  }
+
+  override async scrollIntoView(locator: PartLocator): Promise<void> {
+    await super.scrollIntoView(locator);
+    await this.flush();
+  }
+
+  override async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
+    await super.scrollBy(locator, delta);
+    await this.flush();
+  }
+
+  override async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
+    await super.dragTo(source, target);
+    await this.flush();
+  }
+
+  override async drag(locator: PartLocator, delta: Point): Promise<void> {
+    await super.drag(locator, delta);
     await this.flush();
   }
 

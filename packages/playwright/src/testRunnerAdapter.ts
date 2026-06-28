@@ -66,6 +66,8 @@ export const playWrightTestFrameworkMapper: TestFrameworkMapper = {
 
   // @ts-expect-error - Playwright test signature differs from TestFrameworkMapper.Test
   it: test,
+
+  hasLayout: true,
 };
 
 /**

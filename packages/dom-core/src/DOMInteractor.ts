@@ -1,5 +1,6 @@
 import {
   BlurOption,
+  BoundingRect,
   ClickOption,
   CssProperty,
   dateUtil,
@@ -313,11 +314,13 @@ export class DOMInteractor implements Interactor {
    *
    * @param locator - Locator used to find the target element
    * @param key - A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`
-   * @param _option - Reserved for future modifier-key support
+   * @param option - Modifier flags folded into the event init as
+   * `ctrlKey`/`shiftKey`/`altKey`/`metaKey`, so a handler reading
+   * `event.ctrlKey` (etc.) sees the chord — see {@link PressKeyOption}
    * @returns Promise resolved once the events have been dispatched
    * @throws {ElementNotFoundError} If the element is not found
    */
-  async pressKey(locator: PartLocator, key: string, _option?: Partial<PressKeyOption>): Promise<void> {
+  async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
     const el = await this.getElement(locator);
     if (el == null) {
       throw new ElementNotFoundError(locator, 'pressKey');
@@ -325,8 +328,38 @@ export class DOMInteractor implements Interactor {
     if ('focus' in el) {
       (el as HTMLElement).focus();
     }
-    fireEvent.keyDown(el, { key });
-    fireEvent.keyUp(el, { key });
+    const eventInit = {
+      key,
+      ctrlKey: !!option?.ctrl,
+      shiftKey: !!option?.shift,
+      altKey: !!option?.alt,
+      metaKey: !!option?.meta,
+    };
+    fireEvent.keyDown(el, eventInit);
+    fireEvent.keyUp(el, eventInit);
+  }
+
+  /**
+   * Dispatch a `contextmenu` (right-click) event on the element matched by the locator.
+   *
+   * The element is focused first if focusable, mirroring {@link pressKey}, so the
+   * event originates from the active element as a real right-click would. A
+   * context menu has no `aria-expanded`/controlled-open path, so this dispatched
+   * event is the only way to exercise the menu-opening behavior.
+   *
+   * @param locator - Locator used to find the target element
+   * @returns Promise resolved once the event has been dispatched
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async contextMenu(locator: PartLocator): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'contextMenu');
+    }
+    if ('focus' in el) {
+      (el as HTMLElement).focus();
+    }
+    fireEvent.contextMenu(el);
   }
 
   /**
@@ -397,6 +430,158 @@ export class DOMInteractor implements Interactor {
       throw new ElementNotFoundError(locator, 'selectOptionValue');
     }
     await userEvent.selectOptions(el, values);
+  }
+
+  /**
+   * Set the selected files on an `<input type="file">` element.
+   *
+   * The interactor contract passes filesystem paths, but a file input's value
+   * cannot be assigned programmatically — the browser blocks it — so the
+   * `FileList` must be populated through `userEvent.upload`, which also fires the
+   * `change` event. jsdom has no filesystem and never reads file bytes; only
+   * `File.name` is observable, so each path is wrapped in an empty `File` named
+   * by its basename. The real bytes matter only to the Playwright layer, which
+   * reads the paths natively — keeping `dom-core` free of any `node` dependency.
+   *
+   * @param locator - Locator used to find the file input element
+   * @param files - One or more filesystem paths to upload
+   * @returns Promise resolved once the upload change event has fired
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'setInputFiles');
+    }
+    const paths = Array.isArray(files) ? files : [files];
+    const fileObjects = paths.map(filePath => {
+      // `||` (not `??`): split().pop() yields '' (not undefined) for a
+      // trailing-separator path, and an empty File name is useless — fall back
+      // to the full path in that case.
+      const name = filePath.split(/[\\/]/).pop() || filePath;
+      return new File([], name);
+    });
+    await userEvent.upload(el as HTMLElement, fileObjects);
+  }
+
+  /**
+   * Scroll the located element into view.
+   *
+   * jsdom has no layout engine, so this never produces an observable scroll —
+   * geometry stays zeroed and nothing becomes "visible". Worse, jsdom does not
+   * implement `Element.prototype.scrollIntoView` as a function in every version,
+   * so calling it unguarded would throw a `TypeError`. The `typeof` guard keeps
+   * this a safe no-op that resolves; real scrolling behavior is E2E-only.
+   *
+   * @param locator - Locator used to find the element
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async scrollIntoView(locator: PartLocator): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'scrollIntoView');
+    }
+    if (typeof (el as HTMLElement).scrollIntoView === 'function') {
+      (el as HTMLElement).scrollIntoView();
+    }
+  }
+
+  /**
+   * Scroll the located element by the given pixel delta.
+   *
+   * jsdom has no layout engine, so the scroll offset never changes — this is a
+   * no-op behaviorally. As with {@link scrollIntoView}, jsdom may not implement
+   * `Element.prototype.scrollBy` as a function, so the `typeof` guard prevents a
+   * `TypeError` and keeps the call a safe no-op that resolves; real scroll
+   * behavior is E2E-only.
+   *
+   * @param locator - Locator used to find the scrollable element
+   * @param delta - Pixel offset to scroll by
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'scrollBy');
+    }
+    if (typeof (el as HTMLElement).scrollBy === 'function') {
+      (el as HTMLElement).scrollBy(delta.x, delta.y);
+    }
+  }
+
+  /**
+   * Dispatch a single bubbling mouse event at `point` using the shared
+   * {@link FakeMouseEvent}. Centralizes the drag gesture's event shape so
+   * {@link drag} and {@link dragTo} cannot drift apart.
+   */
+  private dispatchMouse(el: Element, type: string, point: Point): void {
+    fireEvent(el, new FakeMouseEvent(type, { bubbles: true, clientX: point.x, clientY: point.y }));
+  }
+
+  /**
+   * Drag the source element and drop it onto the target element.
+   *
+   * The pointer sequence (`mousedown` on source → `mousemove` on target →
+   * `mouseup` on target) is synthesized with the shared {@link dispatchMouse} +
+   * {@link calculateMousePosition} pattern. jsdom has no layout, so those
+   * coordinates are all zeros — the event wiring (and any drop handler the
+   * sequence triggers) is exercised, but the positional outcome is E2E-only.
+   *
+   * Only raw mouse events are fired; native HTML5 drag-and-drop
+   * (`dragstart`/`dragover`/`drop` + `dataTransfer`) is NOT synthesized, so
+   * components built on the HTML5 DnD API are not driven by this — see #922.
+   *
+   * @param source - Locator used to find the element to drag
+   * @param target - Locator used to find the drop target
+   * @throws {ElementNotFoundError} If either element is not found
+   */
+  async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
+    const sourceEl = await this.getElement(source);
+    if (sourceEl == null) {
+      throw new ElementNotFoundError(source, 'dragTo');
+    }
+    const targetEl = await this.getElement(target);
+    if (targetEl == null) {
+      throw new ElementNotFoundError(target, 'dragTo');
+    }
+
+    const sourcePoint = this.calculateMousePosition(sourceEl);
+    const targetPoint = this.calculateMousePosition(targetEl);
+
+    this.dispatchMouse(sourceEl, 'mousedown', sourcePoint);
+    this.dispatchMouse(targetEl, 'mousemove', targetPoint);
+    this.dispatchMouse(targetEl, 'mouseup', targetPoint);
+  }
+
+  /**
+   * Drag the located element by the given pixel delta from its center.
+   *
+   * The sequence (`mousedown` at center → `mousemove` at center + delta →
+   * `mouseup` at center + delta) is synthesized with the shared
+   * {@link dispatchMouse} + {@link calculateMousePosition} pattern, using the
+   * caller-supplied delta for the move/up coordinates. jsdom has no layout, so the
+   * center resolves to zeros and only the event wiring is exercised — the
+   * behavioral outcome of the drag is E2E-only.
+   *
+   * Only raw mouse events are fired; native HTML5 drag-and-drop is NOT
+   * synthesized — see #922.
+   *
+   * @param locator - Locator used to find the element to drag
+   * @param delta - Pixel offset to drag by
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async drag(locator: PartLocator, delta: Point): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'drag');
+    }
+
+    const start = this.calculateMousePosition(el);
+    const end: Point = { x: start.x + delta.x, y: start.y + delta.y };
+
+    this.dispatchMouse(el, 'mousedown', start);
+    this.dispatchMouse(el, 'mousemove', end);
+    this.dispatchMouse(el, 'mouseup', end);
   }
 
   //#region wait conditions
@@ -473,6 +658,26 @@ export class DOMInteractor implements Interactor {
       return Promise.resolve(el.textContent ?? undefined);
     }
     return undefined;
+  }
+
+  /**
+   * Get the located element's bounding rectangle.
+   *
+   * jsdom has no layout engine, so `getBoundingClientRect` returns all zeros: the
+   * rect is structurally valid but behaviorally meaningless. Real geometry is
+   * E2E-only.
+   *
+   * @param locator - Locator used to find the element to measure
+   * @returns The element's bounding rectangle (a zero-rect under jsdom)
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async getBoundingRect(locator: PartLocator): Promise<BoundingRect> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'getBoundingRect');
+    }
+    const r = el.getBoundingClientRect();
+    return { x: r.x, y: r.y, width: r.width, height: r.height };
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {

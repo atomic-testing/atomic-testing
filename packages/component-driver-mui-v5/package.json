@@ -1,7 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-v5",
   "version": "0.87.0",
-  "deprecated": "MUI 5 reached end of support in atomic-testing on 2026-06-27. This package is frozen at 0.81.0 and will not receive fixes or new drivers. Migrate to @atomic-testing/component-driver-mui-v6 or -v7. See https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md",
   "description": "[DEPRECATED: MUI 5 end of support] Atomic Testing Component driver to help drive Material UI v5 components",
   "keywords": [
     "integration",
@@ -40,5 +39,6 @@
   "dependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/core": "workspace:*"
-  }
+  },
+  "deprecated": "MUI 5 reached end of support in atomic-testing on 2026-06-27. This package is frozen at 0.81.0 and will not receive fixes or new drivers. Migrate to @atomic-testing/component-driver-mui-v6 or -v7. See https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md"
 }

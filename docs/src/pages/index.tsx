@@ -1,7 +1,7 @@
-import CodeBlock from '@theme/CodeBlock';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import CodeBlock from '@theme/CodeBlock';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React, { type JSX, type ReactNode, useCallback, useRef, useState } from 'react';
@@ -126,8 +126,7 @@ function InstallBox(): JSX.Element {
         type='button'
         className={styles.installCopy}
         onClick={() => copy(HERO_INSTALL)}
-        aria-label='Copy install command'
-      >
+        aria-label='Copy install command'>
         {copied ? <span className={styles.copied}>✓ copied</span> : <span>copy</span>}
       </button>
     </div>
@@ -216,8 +215,7 @@ function AnimationToggle({
         role='tab'
         aria-selected={active === 'orbit'}
         className={clsx(styles.animTab, active === 'orbit' && styles.animTabActive)}
-        onClick={() => onSelect('orbit')}
-      >
+        onClick={() => onSelect('orbit')}>
         ⚛ Orbit
       </button>
       <button
@@ -225,8 +223,7 @@ function AnimationToggle({
         role='tab'
         aria-selected={active === 'compose'}
         className={clsx(styles.animTab, active === 'compose' && styles.animTabActive)}
-        onClick={() => onSelect('compose')}
-      >
+        onClick={() => onSelect('compose')}>
         🧩 Assemble
       </button>
     </div>
@@ -282,7 +279,7 @@ function HeroSection(): JSX.Element {
 function MagicSection(): JSX.Element {
   const [active, setActive] = useState<FrameworkId>('react');
   const { copied, copy } = useCopy();
-  const activeFramework = frameworks.find((framework) => framework.id === active) ?? frameworks[0];
+  const activeFramework = frameworks.find(framework => framework.id === active) ?? frameworks[0];
 
   return (
     <section className={styles.magic}>
@@ -302,15 +299,14 @@ function MagicSection(): JSX.Element {
             <span className={styles.dotYellow} />
             <span className={styles.dotGreen} />
           </span>
-          {frameworks.map((framework) => (
+          {frameworks.map(framework => (
             <button
               type='button'
               key={framework.id}
               className={clsx(styles.fwTab, active === framework.id && styles.fwTabActive)}
               style={active === framework.id ? { boxShadow: `inset 0 -2px 0 ${framework.accent}` } : undefined}
               onClick={() => setActive(framework.id)}
-              aria-pressed={active === framework.id}
-            >
+              aria-pressed={active === framework.id}>
               {framework.label}
             </button>
           ))}
@@ -319,8 +315,7 @@ function MagicSection(): JSX.Element {
             type='button'
             className={styles.terminalCopy}
             onClick={() => copy(activeFramework.code)}
-            aria-label='Copy test code'
-          >
+            aria-label='Copy test code'>
             {copied ? <span className={styles.copied}>✓ copied</span> : <span>copy</span>}
           </button>
         </div>
@@ -462,7 +457,7 @@ function HowItWorksSection(): JSX.Element {
           <p className={styles.howSubtitle}>Four building blocks orchestrate every test.</p>
         </header>
         <div className={styles.howGrid}>
-          {howSteps.map((step) => (
+          {howSteps.map(step => (
             <div key={step.number} className={styles.howCard}>
               <div className={styles.howNumber} style={{ color: step.color }}>
                 {step.number}
@@ -504,8 +499,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={`${siteConfig.title} — Write your UI tests once`}
-      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and the DOM.'
-    >
+      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and the DOM.'>
       <main>
         <HeroSection />
         <MagicSection />

@@ -28,11 +28,11 @@ The right implementation is injected by the environment's `createTestEngine`.
 
 ## Alternatives considered
 
-| Alternative | Why not chosen |
-|-------------|----------------|
-| One implementation per environment with no shared interface | No driver reuse; logic duplicated per environment |
-| Make Playwright extend `DOMInteractor` | Playwright's model (browser-side, auto-wait) doesn't match jsdom's synchronous DOM; forcing inheritance would fight both |
-| Compile-time environment switch | Loses runtime flexibility (same suite, two runners) and complicates packaging |
+| Alternative                                                 | Why not chosen                                                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| One implementation per environment with no shared interface | No driver reuse; logic duplicated per environment                                                                        |
+| Make Playwright extend `DOMInteractor`                      | Playwright's model (browser-side, auto-wait) doesn't match jsdom's synchronous DOM; forcing inheritance would fight both |
+| Compile-time environment switch                             | Loses runtime flexibility (same suite, two runners) and complicates packaging                                            |
 
 ## Related
 

@@ -27,11 +27,11 @@ Author each component's tests **once** as a framework-agnostic `TestSuiteInfo` i
 
 ## Alternatives considered
 
-| Alternative | Why not chosen |
-|-------------|----------------|
-| Separate Jest and Playwright suites | Duplication; unit/E2E assertions drift |
-| Standardize on one runner | Loses either fast jsdom unit runs or real-browser fidelity |
-| A heavier cross-runner framework | Overkill; the mapper is a few dozen lines and dependency-free |
+| Alternative                         | Why not chosen                                                |
+| ----------------------------------- | ------------------------------------------------------------- |
+| Separate Jest and Playwright suites | Duplication; unit/E2E assertions drift                        |
+| Standardize on one runner           | Loses either fast jsdom unit runs or real-browser fidelity    |
+| A heavier cross-runner framework    | Overkill; the mapper is a few dozen lines and dependency-free |
 
 ## Related
 

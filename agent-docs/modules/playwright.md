@@ -8,14 +8,14 @@ Run the same component drivers in a real browser via Playwright. Provides a `Pla
 
 Barrel: [playwright/src/index.ts](../../packages/playwright/src/index.ts).
 
-| Export | Kind | File |
-|--------|------|------|
-| `PlaywrightInteractor` | class (`implements Interactor`) | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
-| `createTestEngine(page, parts)` | function | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14) |
-| `goto(url, fixture?)` | function | [testRunnerAdapter.ts](../../packages/playwright/src/testRunnerAdapter.ts#L17) |
-| `playwrightGetTestEngine(scenePart, fixture)` | function | [testRunnerAdapter.ts#L30](../../packages/playwright/src/testRunnerAdapter.ts#L30) |
-| `playWrightTestFrameworkMapper` | `TestFrameworkMapper` | [testRunnerAdapter.ts#L41](../../packages/playwright/src/testRunnerAdapter.ts#L41) |
-| `getTestRunnerInterface<T>()` | function → `E2eTestInterface<T>` | [testRunnerAdapter.ts#L74](../../packages/playwright/src/testRunnerAdapter.ts#L74) |
+| Export                                        | Kind                             | File                                                                                 |
+| --------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
+| `PlaywrightInteractor`                        | class (`implements Interactor`)  | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
+| `createTestEngine(page, parts)`               | function                         | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14)         |
+| `goto(url, fixture?)`                         | function                         | [testRunnerAdapter.ts](../../packages/playwright/src/testRunnerAdapter.ts#L17)       |
+| `playwrightGetTestEngine(scenePart, fixture)` | function                         | [testRunnerAdapter.ts#L30](../../packages/playwright/src/testRunnerAdapter.ts#L30)   |
+| `playWrightTestFrameworkMapper`               | `TestFrameworkMapper`            | [testRunnerAdapter.ts#L41](../../packages/playwright/src/testRunnerAdapter.ts#L41)   |
+| `getTestRunnerInterface<T>()`                 | function → `E2eTestInterface<T>` | [testRunnerAdapter.ts#L74](../../packages/playwright/src/testRunnerAdapter.ts#L74)   |
 
 Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@playwright/test` is a peer ([package.json#L31-L37](../../packages/playwright/package.json#L31-L37)).
 
@@ -40,6 +40,7 @@ Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@pl
 - **`enterText`** clears (unless `append`) and validates date-typed input formats, mirroring `DOMInteractor` ([L104-L121](../../packages/playwright/src/PlaywrightInteractor.ts#L104-L121)).
 - **`isVisible`** checks `opacity`/`visibility`/`display` but wraps reads in try/catch so an element detaching mid-animation resolves to `false` instead of throwing ([L259-L297](../../packages/playwright/src/PlaywrightInteractor.ts#L259-L297)).
 - **`isReadonly`** is inferred from the `readonly` attribute; **`isDisabled`** uses Playwright's `isDisabled()` ([L248-L257](../../packages/playwright/src/PlaywrightInteractor.ts#L248-L257)).
+- **Layout/geometry primitives are Playwright-native**: `getBoundingRect`/`drag` use `boundingBox()` (throwing `ElementNotFoundError` on a null box); `drag` builds the gesture from `getBoundingRect`'s center via `page.mouse` (no `(0,0)` reset, unlike `mouseMove`); `scrollIntoView` uses `scrollIntoViewIfNeeded`, `scrollBy` evaluates `el.scrollBy` (deterministic cross-engine, vs `mouse.wheel`); `dragTo` uses native `Locator.dragTo`; `setInputFiles` reads paths from disk; `contextMenu` is a right-button `click`; `pressKey` builds a `Modifier+Key` chord (Shift + a printable key case-folds `event.key`, differing from jsdom — #924).
 
 `createTestEngine(page, parts)` builds `new TestEngine([], new PlaywrightInteractor(page), { parts })` with no cleanup hook (Playwright owns the page lifecycle) ([createTestEngine.ts#L14-L20](../../packages/playwright/src/createTestEngine.ts#L14-L20)).
 
@@ -49,6 +50,7 @@ Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@pl
 - `getTestRunnerInterface()` returns `{ getTestEngine: playwrightGetTestEngine, goto }` — passed as the third arg to `testRunner` ([testRunnerAdapter.ts#L74-L79](../../packages/playwright/src/testRunnerAdapter.ts#L74-L79)).
 
 E2E adapter file (from `CLAUDE.md`):
+
 ```ts
 testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 ```

@@ -41,6 +41,10 @@ When you spot a code-smell next to your work:
 
 **Atomic Testing** - A portable UI testing library using the "component driver" pattern. Provides consistent APIs for testing across React, Vue, Playwright, and DOM environments.
 
+## Version control
+
+The local SCM may be **Git, Sapling (`sl`), or any git-compatible system** — this repo currently uses **Sapling**. Two traps to avoid: the environment's `Is a git repository: false` probe is **unreliable** (Sapling reports this; the repo _is_ versioned — detect, don't trust it), and **GitHub operations are SCM-agnostic** — raise issues/PRs/reviews with the authenticated `gh` CLI regardless of the local SCM (pass `-R atomic-testing/atomic-testing`, since `gh` can't infer the repo from a Sapling checkout). **One carve-out:** a PR's _title and description_ are NOT host-side state under Sapling — they derive from the **local commit message, which is their single source of truth**. Set them via `sl metaedit` + `sl pr submit`; never `gh pr edit` for title/body (the next submit regenerates the PR from the commit message and erases any host-side edit). See [`.claude/commands/pr.md`](.claude/commands/pr.md). A SessionStart hook surfaces the active SCM each session. Canonical detection + command map: [`.claude/scm.md`](.claude/scm.md).
+
 ## Commands
 
 ```bash
