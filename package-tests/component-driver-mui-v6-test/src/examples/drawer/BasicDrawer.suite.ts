@@ -66,6 +66,13 @@ export const basicDrawerTestSuite: TestSuiteInfo<typeof basicDrawerExampleSceneP
       assertFalse(await engine().parts.drawer.isOpen());
     });
 
+    test('closes when Escape is pressed', async () => {
+      await engine().parts.openTrigger.click();
+      await engine().parts.drawer.waitForOpen();
+      assertTrue(await engine().parts.drawer.closeByEscape());
+      assertFalse(await engine().parts.drawer.isOpen());
+    });
+
     test('reports no anchor when closed', async () => {
       assertEqual(await engine().parts.drawer.getAnchor(), undefined);
     });
