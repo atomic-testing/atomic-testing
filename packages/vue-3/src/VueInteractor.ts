@@ -13,6 +13,7 @@ import {
   MouseOutOption,
   MouseUpOption,
   PartLocator,
+  PressKeyOption,
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
@@ -81,6 +82,16 @@ export class VueInteractor extends DOMInteractor {
 
   override async blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void> {
     await super.blur(locator, option);
+    await this.flush();
+  }
+
+  override async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
+    await super.pressKey(locator, key, option);
+    await this.flush();
+  }
+
+  override async activate(locator: PartLocator): Promise<void> {
+    await super.activate(locator);
     await this.flush();
   }
 

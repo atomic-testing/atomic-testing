@@ -1,11 +1,13 @@
 import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
 
+import { activateUIExample } from './examples/activate/Activate.examples';
 import { checkboxGroupUIExample } from './examples/checkbox/CheckboxGroup.examples';
 import { singleCheckboxUIExample } from './examples/checkbox/SingleCheckbox.examples';
 import { focusEventUIExample } from './examples/focusEvent/Focus.examples';
 import { linkedElementUIExample } from './examples/form/LinkedElement.examples';
 import { controlledTextInputUIExample } from './examples/input/Controlled.examples';
 import { uncontrolledTextInputUIExample } from './examples/input/Uncontrolled.examples';
+import { keyboardEventUIExample } from './examples/keyboardEvent/KeyboardEvent.examples';
 import { clickLocationMouseEventUIExample } from './examples/mouseEvent/ClickLocation.examples';
 import { hoverMouseEventUIExample } from './examples/mouseEvent/Hover.examples';
 import { mouseLocationMouseEventUIExample } from './examples/mouseEvent/MouseLocation.examples';
@@ -44,6 +46,16 @@ export const tocs: ExampleToc[] = [
     label: 'Focus Event',
     path: '/focus-event',
     ui: <ExampleList examples={[focusEventUIExample]} />,
+  },
+  {
+    label: 'Keyboard Event',
+    path: '/keyboard-event',
+    ui: <ExampleList examples={[keyboardEventUIExample]} />,
+  },
+  {
+    label: 'Activate',
+    path: '/activate',
+    ui: <ExampleList examples={[activateUIExample]} />,
   },
   {
     label: 'Mouse Event',

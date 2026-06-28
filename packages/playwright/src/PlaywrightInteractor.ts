@@ -19,6 +19,7 @@ import {
   MouseUpOption,
   Optional,
   PartLocator,
+  PressKeyOption,
   timingUtil,
   WaitForOption,
   WaitUntilOption,
@@ -183,6 +184,21 @@ export class PlaywrightInteractor implements Interactor {
   async blur(locator: PartLocator, _option?: Partial<BlurOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).blur();
+  }
+
+  async pressKey(locator: PartLocator, key: string, _option?: Partial<PressKeyOption>): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    // locator.press auto-focuses the element, then dispatches a real, trusted
+    // KeyboardEvent — the browser equivalent of the DOM focus-first keyDown/keyUp.
+    await this.page.locator(cssLocator).press(key);
+  }
+
+  async activate(locator: PartLocator): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    // Geometry-free activation mirrors the mouseout dispatch precedent above: it
+    // bypasses hit-testing to actuate a covered or zero-size input that
+    // locator.click() (a real geometry hit-test) cannot reach.
+    await this.page.locator(cssLocator).dispatchEvent('click');
   }
 
   //#region wait conditions

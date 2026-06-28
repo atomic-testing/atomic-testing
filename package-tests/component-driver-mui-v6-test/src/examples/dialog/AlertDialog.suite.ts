@@ -73,5 +73,14 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
       assertTrue(closed);
       assertFalse(await engine().parts.dialog.isOpen());
     });
+
+    test('Pressing Escape should close the dialog', async () => {
+      await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
+
+      const closed = await engine().parts.dialog.closeByEscape();
+      assertTrue(closed);
+      assertFalse(await engine().parts.dialog.isOpen());
+    });
   },
 };

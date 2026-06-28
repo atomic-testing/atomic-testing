@@ -3,3 +3,4 @@ export type { EnterTextOption } from './EnterTextOption';
 export * from './FocusOption';
 export type { Interactor } from './Interactor';
 export * from './MouseOption';
+export type { PressKeyOption } from './PressKeyOption';
