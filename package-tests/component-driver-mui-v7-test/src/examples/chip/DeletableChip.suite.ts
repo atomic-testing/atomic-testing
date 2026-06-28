@@ -44,5 +44,11 @@ export const deletableChipTestSuite: TestSuiteInfo<typeof deletableChipExample.s
       const jackExists = await engine().parts.jackChip.exists();
       assertFalse(jackExists);
     });
+
+    test('Deleting Lucy chip via keyboard should remove it', async () => {
+      await engine().parts.lucyChip.deleteViaKeyboard();
+      const lucyExists = await engine().parts.lucyChip.exists();
+      assertFalse(lucyExists);
+    });
   },
 };
