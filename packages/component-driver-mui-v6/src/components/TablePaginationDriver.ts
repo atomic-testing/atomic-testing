@@ -26,13 +26,15 @@ export class TablePaginationDriver extends ComponentDriver {
   }
 
   /**
-   * The current rows-per-page value (read from the select's hidden input), or
-   * `-1` when it cannot be parsed.
+   * The current rows-per-page value, read from the select's hidden input, or
+   * `undefined` when it cannot be read/parsed. MUI's "All" option is not a parse
+   * failure — it has the real value `-1` and is returned verbatim, so the
+   * not-readable sentinel must not reuse `-1`.
    */
-  async getRowsPerPage(): Promise<number> {
+  async getRowsPerPage(): Promise<Optional<number>> {
     const value = await this.rowsPerPageSelect.getValue();
     const parsed = Number.parseInt(value ?? '', 10);
-    return Number.isNaN(parsed) ? -1 : parsed;
+    return Number.isNaN(parsed) ? undefined : parsed;
   }
 
   /**
@@ -96,11 +98,13 @@ export class TablePaginationDriver extends ComponentDriver {
   }
 
   private async clickNavButton(navLocator: PartLocator): Promise<boolean> {
-    const locator = locatorUtil.append(this.locator, navLocator);
-    if (!(await this.interactor.exists(locator)) || (await this.interactor.isDisabled(locator))) {
+    // Clicking an absent or disabled control is a no-op; isNavDisabled already
+    // treats a missing control as disabled, so reuse it instead of repeating the
+    // exists/isDisabled checks.
+    if (await this.isNavDisabled(navLocator)) {
       return false;
     }
-    await this.interactor.click(locator);
+    await this.interactor.click(locatorUtil.append(this.locator, navLocator));
     return true;
   }
 
