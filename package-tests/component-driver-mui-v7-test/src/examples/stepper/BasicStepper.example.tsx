@@ -36,6 +36,10 @@ export const BasicStepperExample = () => {
           </Step>
         ))}
       </Stepper>
+
+      {/* An empty stepper pins the zero-step contract (count 0, active index -1,
+          getSteps []) so it can't silently regress. */}
+      <Stepper data-testid='empty-stepper' activeStep={0} />
     </Box>
   );
 };

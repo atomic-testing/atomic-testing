@@ -13,6 +13,10 @@ export const basicStepperExampleScenePart = {
     locator: byDataTestId('other-stepper'),
     driver: StepperDriver,
   },
+  empty: {
+    locator: byDataTestId('empty-stepper'),
+    driver: StepperDriver,
+  },
 } satisfies ScenePart;
 
 export const basicStepperExample: IExampleUnit<typeof basicStepperExampleScenePart, JSX.Element> = {
@@ -56,6 +60,12 @@ export const basicStepperTestSuite: TestSuiteInfo<typeof basicStepperExampleScen
 
     test('returns false for an out-of-range step', async () => {
       assertFalse(await engine().parts.stepper.goToStep(99));
+    });
+
+    test('handles a stepper with no steps', async () => {
+      assertEqual(await engine().parts.empty.getStepCount(), 0);
+      assertEqual(await engine().parts.empty.getActiveStepIndex(), -1);
+      assertEqual(await engine().parts.empty.getSteps(), []);
     });
   },
 };
