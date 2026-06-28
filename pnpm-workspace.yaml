@@ -2,6 +2,10 @@ packages:
   - packages/*
   - package-tests/*
 
+overrides:
+  '@atomic-testing/internal-react-example>react': ^19.2.3
+  '@atomic-testing/internal-react-example>react-dom': ^19.2.3
+
 ignoredBuiltDependencies:
   - '@mui/x-telemetry'
   - unrs-resolver
