@@ -13,8 +13,13 @@ using **npm Trusted Publishing (OIDC)** — no long-lived npm token.
    (with provenance), and commits the version bump back to `main`.
 4. Verify: `npm view @atomic-testing/core version` → `X.Y.Z`.
 
-`publish.sh` is idempotent — it skips any `name@version` already on the registry,
-so re-running after a partial publish resumes instead of failing.
+`publish.sh` publishes in **dependency (topological) order** — `core`/`dom-core`
+before the drivers that pin them, computed by
+[`scripts/publishOrder.js`](../scripts/publishOrder.js) — and **preflights** that
+every package already exists on npm, aborting _before_ any publish (naming the
+offender) if one is missing, so a forgotten bootstrap can't half-ship a release.
+It is also idempotent: it skips any `name@version` already on the registry, so
+re-running after a partial publish resumes instead of failing.
 
 ### If a release fails
 
@@ -39,7 +44,8 @@ On expiry, releases fail at **checkout** with the cryptic
 
 npm can't attach a trusted publisher before a package exists, so a new package's
 first publish can't use OIDC. Bootstrap it once, **before** the first release that
-includes it:
+includes it — otherwise `publish.sh`'s preflight aborts the whole release (cleanly,
+naming the un-bootstrapped package) rather than half-publishing it:
 
 1. On a clean checkout of `main` containing the new package: `pnpm install`
 2. `npm login` (npm CLI ≥ 11.10.0; account 2FA enabled)

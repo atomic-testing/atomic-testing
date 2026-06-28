@@ -38,21 +38,55 @@ declare -a exclude=(
 )
 
 
-cd packages
+# Publish dependencies before dependents (topological order). pnpm rewrites
+# workspace:* deps to EXACT version pins at publish time, so a dependency must be
+# on npm before the packages that pin it — otherwise a partial publish strands a
+# dependent referencing a version that was never published. publishOrder.js
+# derives the order from packages/*; the exclude list is passed in so it stays a
+# single source of truth (no second copy to keep in sync).
+order_raw="$(node scripts/publishOrder.js "${exclude[@]}")"
+publish_order=()
+while IFS= read -r folder; do
+  [[ -n "$folder" ]] && publish_order+=("$folder")
+done <<< "$order_raw"
 
-for dir in */; do
-  pkg="${dir%/}"  # strip trailing slash
+if (( ${#publish_order[@]} == 0 )); then
+  echo "ERROR: publishOrder.js produced no packages — aborting." >&2
+  exit 1
+fi
 
-  # check if $pkg is in the exclude list
-  skip=false
-  for ex in "${exclude[@]}"; do
-    if [[ "$pkg" == "$ex" ]]; then
-      skip=true
-      break
+# Preflight (publish mode only): every package must ALREADY exist on npm. OIDC
+# trusted publishing can't attach to a package that doesn't exist yet, so a
+# brand-new package's first publish fails with ENEEDAUTH. Catch that here and
+# fail fast BEFORE touching the registry, instead of aborting mid-loop and
+# leaving a half-published, broken release. Bootstrap new packages once with
+# ./bootstrap-new-package.sh (see header).
+if [[ "$BUILD_ONLY" == false ]]; then
+  echo "→ Preflight: verifying every package exists on npm…"
+  missing=()
+  for pkg in "${publish_order[@]}"; do
+    pkgName="$(node -p "require('./packages/$pkg/package.json').name")"
+    if ! npm view "$pkgName" version > /dev/null 2>&1; then
+      missing+=("$pkg  ($pkgName)")
     fi
   done
-  $skip && continue
+  if (( ${#missing[@]} )); then
+    {
+      echo "ERROR: these package(s) are not on npm yet, so OIDC publishing will fail (ENEEDAUTH):"
+      printf '   - %s\n' "${missing[@]}"
+      echo
+      echo "Bootstrap each NEW package once (creates it + attaches the trusted publisher):"
+      echo "    ./bootstrap-new-package.sh <package-folder-name>"
+      echo "Aborting before any package is published to avoid a partial release."
+    } >&2
+    exit 1
+  fi
+  echo "  ✓ all ${#publish_order[@]} package(s) exist on npm"
+fi
 
+cd packages
+
+for pkg in "${publish_order[@]}"; do
   echo "→ Processing $pkg"
   pushd "$pkg" > /dev/null
 
