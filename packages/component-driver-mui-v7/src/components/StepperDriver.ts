@@ -20,6 +20,10 @@ const stepLabelLocator = byCssSelector('.MuiStepLabel-label');
  * as alternating `<div>` children (step, connector, step, …), so the step at
  * `index` is the `2*index+1`-th element of its type; nth-of-type addresses it
  * without the connectors shifting positions.
+ *
+ * The `2*index+1` stride encodes this interleaved-connector layout and is a
+ * per-MUI-version invariant: v9 renders the connector inside each step (stride
+ * `index+1`), so a MUI major bump must re-verify it.
  */
 function stepLabelAt(index: number): PartLocator {
   return byCssSelector(`.MuiStep-root:nth-of-type(${2 * index + 1}) .MuiStepLabel-label`);
