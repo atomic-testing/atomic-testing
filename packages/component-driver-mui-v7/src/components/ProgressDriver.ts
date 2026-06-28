@@ -1,39 +1,24 @@
-import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
-import {
-  byCssSelector,
-  byInputType,
-  byValue,
-  ComponentDriver,
-  IComponentDriverOption,
-  IInputDriver,
-  Interactor,
-  locatorUtil,
-  PartLocator,
-  ScenePart,
-} from '@atomic-testing/core';
+import { ComponentDriver } from '@atomic-testing/core';
 
-export const parts = {
-  choices: {
-    locator: byInputType('radio'),
-    driver: HTMLRadioButtonGroupDriver,
-  },
-} satisfies ScenePart;
-
-export class ProgressDriver extends ComponentDriver<typeof parts> implements IInputDriver<number | null> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
-    super(locator, interactor, {
-      ...option,
-      parts,
-    });
-  }
-
+/**
+ * Driver for the Material UI v7 Progress components (`LinearProgress` / `CircularProgress`).
+ *
+ * A progress indicator is a read-only, non-interactive status component: it has no
+ * user-settable value and renders no form controls. The driver therefore only reads
+ * state (`getValue` from `aria-valuenow`, `getType`, `isDeterminate`) and deliberately
+ * does NOT implement `IInputDriver` — an earlier version mistakenly modelled it on a
+ * radio-group input, exposing a nonsensical `setValue`.
+ *
+ * @see https://mui.com/material-ui/react-progress/
+ */
+export class ProgressDriver extends ComponentDriver {
   async getValue(): Promise<number | null> {
     const rawValue = await this.getAttribute('aria-valuenow');
     const numValue = Number(rawValue);
     if (rawValue == null || isNaN(numValue)) {
       return null;
     }
-    return Number(rawValue);
+    return numValue;
   }
 
   async getType(): Promise<'linear' | 'circular'> {
@@ -49,28 +34,9 @@ export class ProgressDriver extends ComponentDriver<typeof parts> implements IIn
     return val != null;
   }
 
-  //TODO: Buffer value can be extracted from style="transform: translateX(-15%);" actual value would be 100 - 15 = 85
-  // <span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-colorPrimary MuiLinearProgress-bar2Buffer css-1v1662g-MuiLinearProgress-bar2" style="transform: translateX(-15%);"></span>
-
-  async setValue(value: number | null): Promise<boolean> {
-    // TODO: Setting value to null is not supported.  https://github.com/atomic-testing/atomic-testing/issues/68
-    const currentValue = await this.getValue();
-    if (value === currentValue) {
-      return true;
-    }
-
-    const valueToClick = (value == null ? currentValue : value) as number;
-    const targetLocator = locatorUtil.append(this.parts.choices.locator, byValue(valueToClick.toString(), 'Same'));
-
-    const targetExists = await this.interactor.exists(targetLocator);
-    if (targetExists) {
-      const id = await this.interactor.getAttribute(targetLocator, 'id');
-      const labelLocator = locatorUtil.append(this.locator, byCssSelector(`label[for="${id}"]`));
-      await this.interactor.click(labelLocator);
-    }
-    // TODO: throw error if the value does not exist
-    return targetExists;
-  }
+  // The buffer value of variant="buffer" (derivable from the bar2 transform,
+  // e.g. style="transform: translateX(-15%)" → 85) is not yet exposed; tracked
+  // as getBufferValue in the state-accessor work (#872).
 
   get driverName(): string {
     return 'MuiV7ProgressDriver';

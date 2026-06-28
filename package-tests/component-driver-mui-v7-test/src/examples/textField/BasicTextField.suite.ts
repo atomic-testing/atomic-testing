@@ -10,6 +10,10 @@ export const basicTextFieldExampleScenePart = {
     locator: byDataTestId('basic'),
     driver: TextFieldDriver,
   },
+  required: {
+    locator: byDataTestId('required'),
+    driver: TextFieldDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -34,6 +38,11 @@ export const basicTextFieldTestSuite: TestSuiteInfo<typeof basicTextFieldExample
     test('it should have the correct label', async () => {
       const label = await engine().parts.basic.getLabel();
       assertEqual(label, 'Basic Field');
+    });
+
+    test('a required field label excludes the asterisk', async () => {
+      const label = await engine().parts.required.getLabel();
+      assertEqual(label, 'Required Field');
     });
 
     test('it should have the correct helper text', async () => {
