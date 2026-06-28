@@ -54,6 +54,17 @@ export const basicAlertTestSuite: TestSuiteInfo<typeof basicAlertExample.scene> 
       assertTrue((message ?? '').includes('This is an error alert'));
     });
 
+    test("Error alert's message should exclude the AlertTitle text", async () => {
+      // AlertTitle renders inside .MuiAlert-message; getMessage must return only the body.
+      const message = await engine().parts.error.getMessage();
+      assertEqual(message, 'code: red — This is an error alert — check it out!');
+    });
+
+    test('Info alert (no title) message is returned verbatim', async () => {
+      const message = await engine().parts.info.getMessage();
+      assertEqual(message, 'This is an info alert — check it out!');
+    });
+
     test('Warning alert\'s code should be "code: yellow"', async () => {
       const message = await engine().parts.warning.getMessage();
       assertTrue((message ?? '').includes('code: yellow'));

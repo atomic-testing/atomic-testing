@@ -18,6 +18,7 @@ import { alertDialogUIExample } from './examples/dialog/AlertDialog.examples';
 import { slideInDialogUIExample } from './examples/dialog/SlideInDialog.examples';
 import { basicDrawerUIExample } from './examples/drawer/BasicDrawer.example';
 import { basicInputUIExample } from './examples/input/BasicInput.examples';
+import { plainListUIExample } from './examples/list/PlainList.example';
 import { selectableListUIExample } from './examples/list/SelectableList.example';
 import { accountMenuUIExample } from './examples/menu/AccountMenu.examples';
 import { basicPaginationUIExample } from './examples/pagination/BasicPagination.example';
@@ -105,7 +106,7 @@ export const tocs: ExampleToc[] = [
   {
     label: 'List',
     path: '/list',
-    ui: <ExampleList examples={[selectableListUIExample]} />,
+    ui: <ExampleList examples={[selectableListUIExample, plainListUIExample]} />,
   },
   {
     label: 'Menu',

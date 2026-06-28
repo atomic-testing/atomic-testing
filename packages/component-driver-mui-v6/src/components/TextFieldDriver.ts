@@ -19,6 +19,12 @@ export const parts = {
     locator: byCssSelector('>label'),
     driver: HTMLElementDriver,
   },
+  // The required-field asterisk renders as a `.MuiFormLabel-asterisk` span *inside*
+  // the `<label>`; tracked separately so getLabel can subtract it from the label text.
+  labelAsterisk: {
+    locator: byCssSelector('>label .MuiFormLabel-asterisk'),
+    driver: HTMLElementDriver,
+  },
   helperText: {
     locator: byCssSelector('>p'),
     driver: HTMLElementDriver,
@@ -107,7 +113,21 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
   }
 
   async getLabel(): Promise<Optional<string>> {
-    return this.parts.label.getText();
+    const label = await this.parts.label.getText();
+    if (label == null) {
+      return label;
+    }
+    // A required field appends a `.MuiFormLabel-asterisk` span (" *") to the label text;
+    // strip it so getLabel returns just the field's label (e.g. "Email", not "Email *").
+    // Guard with exists() first — reading text off an absent node auto-waits to the
+    // timeout in Playwright (jsdom returns undefined immediately).
+    if (await this.interactor.exists(this.parts.labelAsterisk.locator)) {
+      const asterisk = await this.parts.labelAsterisk.getText();
+      if (asterisk != null && asterisk !== '' && label.endsWith(asterisk)) {
+        return label.slice(0, label.length - asterisk.length).trim();
+      }
+    }
+    return label.trim();
   }
 
   async getHelperText(): Promise<Optional<string>> {

@@ -50,7 +50,21 @@ export class AlertDriver<ContentT extends ScenePart = {}> extends ContainerDrive
 
   async getMessage(): Promise<string | null> {
     const message = await this.parts.message.getText();
-    return message ?? null;
+    if (message == null) {
+      return null;
+    }
+    // `AlertTitle` (`.MuiAlertTitle-root`) renders *inside* `.MuiAlert-message`, so the
+    // message node's text is the title concatenated ahead of the body. Strip the title
+    // prefix so getMessage returns only the body; with no title the message is returned
+    // verbatim. Guard with exists() first — reading text off an absent node auto-waits to
+    // the timeout in Playwright (jsdom returns undefined immediately).
+    if (await this.interactor.exists(this.parts.title.locator)) {
+      const title = await this.parts.title.getText();
+      if (title != null && title !== '' && message.startsWith(title)) {
+        return message.slice(title.length).trim();
+      }
+    }
+    return message;
   }
 
   async getSeverity(): Promise<string | null> {
