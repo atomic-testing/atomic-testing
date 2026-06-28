@@ -1,0 +1,43 @@
+{
+  "name": "@atomic-testing/component-driver-mui-v9",
+  "version": "0.81.0",
+  "description": "Component driver for Material-UI v9",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*",
+    "@atomic-testing/react-18": "workspace:*",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/react": ">=18.0.0",
+    "@types/react-dom": ">=18.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  }
+}
