@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-test-runner-vitest-adapter",
-  "version": "0.81.0",
+  "version": "0.84.1",
   "description": "Vitest adapter for atomic-testing",
   "keywords": [],
   "license": "MIT",

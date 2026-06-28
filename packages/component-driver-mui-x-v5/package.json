@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-x-v5",
-  "version": "0.81.0",
+  "version": "0.84.1",
   "deprecated": "MUI-X 5 reached end of support in atomic-testing on 2026-06-27. This package is frozen at 0.81.0 and will not receive fixes or new drivers. For DataGrid, migrate to @atomic-testing/component-driver-mui-x-v6/-v7/-v8; note the date/time picker drivers were never carried past v5. See https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md",
   "description": "[DEPRECATED: MUI-X 5 end of support] Atomic Testing Component driver to help drive Material UI X v5 components",
   "keywords": [
