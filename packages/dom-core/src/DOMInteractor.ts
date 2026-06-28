@@ -20,6 +20,7 @@ import {
   Optional,
   PartLocator,
   Point,
+  PressKeyOption,
   timingUtil,
   WaitForOption,
   WaitUntilOption,
@@ -301,6 +302,50 @@ export class DOMInteractor implements Interactor {
       return;
     }
     (el as HTMLInputElement).blur();
+  }
+
+  /**
+   * Dispatch a key press (`keydown` + `keyup`) on the element matched by the locator.
+   *
+   * The element is focused first so the key originates from the active element,
+   * matching a real key press. `fireEvent` is used over `userEvent.keyboard` for
+   * determinism and because MUI handlers read `event.key` directly.
+   *
+   * @param locator - Locator used to find the target element
+   * @param key - A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`
+   * @param _option - Reserved for future modifier-key support
+   * @returns Promise resolved once the events have been dispatched
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async pressKey(locator: PartLocator, key: string, _option?: Partial<PressKeyOption>): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'pressKey');
+    }
+    if ('focus' in el) {
+      (el as HTMLElement).focus();
+    }
+    fireEvent.keyDown(el, { key });
+    fireEvent.keyUp(el, { key });
+  }
+
+  /**
+   * Activate the element matched by the locator without pointer geometry.
+   *
+   * Uses `userEvent.click`, which ignores layout and coordinates, so it reaches a
+   * visually-hidden or covered input that a positional click would miss (e.g. MUI
+   * Rating's hidden `<input type="radio">`).
+   *
+   * @param locator - Locator used to find the target element
+   * @returns Promise resolved once the element has been activated
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async activate(locator: PartLocator): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'activate');
+    }
+    await userEvent.click(el);
   }
 
   /**

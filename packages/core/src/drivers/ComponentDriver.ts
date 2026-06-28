@@ -12,6 +12,7 @@ import {
   MouseMoveOption,
   MouseOutOption,
   MouseUpOption,
+  PressKeyOption,
 } from '../interactor';
 import type { LocatorRelativePosition, PartLocator } from '../locators';
 import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
@@ -189,6 +190,22 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   async focus(option?: Partial<FocusOption>): Promise<void> {
     return this.interactor.focus(this.locator, option);
+  }
+
+  /**
+   * Dispatch a keyboard key press on the component. See {@link Interactor.pressKey}.
+   * @param key A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`, `'Enter'`
+   * @param option Reserved for future modifier-key support
+   */
+  async pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void> {
+    return this.interactor.pressKey(this.locator, key, option);
+  }
+
+  /**
+   * Activate the component without relying on pointer geometry. See {@link Interactor.activate}.
+   */
+  async activate(): Promise<void> {
+    return this.interactor.activate(this.locator);
   }
 
   /**
