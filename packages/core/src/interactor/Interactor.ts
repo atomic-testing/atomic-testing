@@ -15,6 +15,7 @@ import {
   MouseOutOption,
   MouseUpOption,
 } from './MouseOption';
+import type { PressKeyOption } from './PressKeyOption';
 
 /**
  * Environment specific implementation that performs low level actions on the UI.
@@ -59,6 +60,35 @@ export interface Interactor {
    * @param option
    */
   blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
+
+  /**
+   * Dispatch a keyboard key press on the desired element.
+   *
+   * Unlike {@link enterText}, which fills a value, this dispatches an actual key
+   * event so components that key off `KeyboardEvent.key` are exercised — e.g.
+   * Dialog dismissal on `Escape` or Chip deletion on `Backspace`/`Delete`. The
+   * element is focused first so the event originates from the active element,
+   * matching a real key press. No pointer event is involved, so behaviours
+   * unreachable by {@link click} (geometry or not) become testable.
+   *
+   * @param locator
+   * @param key A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`, `'Enter'`
+   * @param option Reserved for future modifier-key support
+   */
+  pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void>;
+
+  /**
+   * Activate the desired element without relying on pointer geometry — a
+   * coordinate-free, dispatch-based click.
+   *
+   * This reaches elements an ordinary {@link click} cannot: a visually-hidden or
+   * zero-size input covered by another element (e.g. MUI Rating's hidden
+   * `<input type="radio">`, where a positional click hit-tests to the covering
+   * star label instead). Prefer {@link click} for ordinary, visible targets.
+   *
+   * @param locator
+   */
+  activate(locator: PartLocator): Promise<void>;
 
   /**
    * Type text into the desired element

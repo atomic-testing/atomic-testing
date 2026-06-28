@@ -13,6 +13,7 @@ import {
   MouseOutOption,
   MouseUpOption,
   PartLocator,
+  PressKeyOption,
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
@@ -89,6 +90,18 @@ export class ReactInteractor extends DOMInteractor {
   override async blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void> {
     await act(async () => {
       await super.blur(locator, option);
+    });
+  }
+
+  override async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
+    await act(async () => {
+      await super.pressKey(locator, key, option);
+    });
+  }
+
+  override async activate(locator: PartLocator): Promise<void> {
+    await act(async () => {
+      await super.activate(locator);
     });
   }
 
