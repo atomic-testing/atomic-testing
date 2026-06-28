@@ -75,6 +75,26 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   /**
+   * Dismiss the dialog by pressing `Escape`, then wait for it to close.
+   *
+   * MUI dismisses on a `keydown` of `Escape` (reason `"escapeKeyDown"`), bubbling
+   * to the Modal root's key handler — a code path distinct from the backdrop click
+   * ({@link closeByBackdropClick}) and unreachable by any click, since a click never
+   * produces a key event. The key is pressed on the dialog container, which holds
+   * focus while the dialog is open. Whether it actually closes depends on the
+   * consumer's `onClose` (and `disableEscapeKeyDown`); the returned boolean reflects
+   * the observed close, not merely the key press.
+   *
+   * @param timeoutMs How long to wait for the close transition to finish
+   * @returns true if the dialog closed
+   */
+  async closeByEscape(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
+    await this.enforcePartExistence('dialogContainer');
+    await this.parts.dialogContainer.pressKey('Escape');
+    return this.waitForClose(timeoutMs);
+  }
+
+  /**
    * Wait for dialog to open
    * @param timeoutMs
    * @returns true open has performed successfully
