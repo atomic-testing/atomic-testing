@@ -7,6 +7,7 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 | [AGENTS.md](AGENTS.md) | Agent playbook — **read first**. Routing table, conventions, change workflows, build/test commands. |
 | [DOMAIN.md](DOMAIN.md) | Vocabulary, type system, invariants, error catalog. |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Entry points, layer stack, interactor inheritance, dependency graph, shared three-file test pattern. |
+| [RELEASING.md](RELEASING.md) | Release & publish runbook — cut a release, rotate `CODEMOD_TOKEN`, add a new package (bootstrap); OIDC trusted publishing. |
 
 ## Modules
 
