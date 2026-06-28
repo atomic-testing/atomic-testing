@@ -38,22 +38,24 @@ ones are stable.
 | Driver family | Supported majors | End of support            |
 | ------------- | ---------------- | ------------------------- |
 | MUI (core)    | v6, v7, v9       | **v5 - ended 2026-06-27** |
-| MUI-X         | v6, v7, v8       | **v5 - ended 2026-06-27** |
+| MUI-X         | v6, v7, v8, v9   | **v5 - ended 2026-06-27** |
 
 **MUI 5 / MUI-X 5 are no longer supported** as of **2026-06-27**. The
 `@atomic-testing/component-driver-mui-v5` and
 `@atomic-testing/component-driver-mui-x-v5` packages are frozen at `0.81.0`:
 they remain installable at that version but receive no fixes, new drivers, or
 CI/e2e coverage, and their test suites no longer run. New work targets v6/v7/v9
-(MUI-X also v8). Rationale and migration notes:
+(MUI-X also v8 and v9). Rationale and migration notes:
 [ADR-005](agent-docs/adr/005-drop-mui-5-support.md).
 
 > Note: MUI Core has **no v8** — it jumped `7.3.11 → 9.0.0` to unify versioning
 > with MUI X, so `@atomic-testing/component-driver-mui-v9` is the successor to v7
 > (there is no `-mui-v8` package).
 >
-> Note: the MUI-X date/time **picker** drivers only ever shipped in the v5
-> package; they have no v6–v8 successor at this time.
+> Note: the MUI-X date/time **picker** drivers originally shipped only in the v5
+> package. The v9 package revives a read-capable `DesktopDatePicker` driver
+> (rewritten for the v9 `PickersSectionList` field DOM); writing a value and the
+> other picker variants are tracked as follow-ups.
 
 ## Getting Started
 
