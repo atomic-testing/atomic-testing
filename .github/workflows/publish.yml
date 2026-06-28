@@ -51,6 +51,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore: bump version to $VERSION [skip ci]"
+          # Re-apply the bump onto the latest main so the push fast-forwards even
+          # if main advanced (e.g. a merge) while this release was building.
+          git fetch origin main
+          git reset --hard
+          git checkout -B main origin/main
+          pnpm bumpVersion "$VERSION"
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: bump version to $VERSION [skip ci]"
           git push origin HEAD:main
