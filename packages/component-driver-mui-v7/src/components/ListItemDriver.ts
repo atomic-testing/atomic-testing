@@ -16,8 +16,17 @@ export class ListItemDriver extends ComponentDriver {
   }
 
   async isDisabled(): Promise<boolean> {
-    const disabledVal = await this.interactor.getAttribute(this.locator, 'aria-disabled');
-    return disabledVal === 'true';
+    // A disabled list item can surface its state three ways depending on how it
+    // renders: a default `<ListItemButton>` is a `<div role="button">` with
+    // `aria-disabled="true"`, while `<ListItemButton component="button">` is a native
+    // `<button disabled>` (no `aria-disabled`). Both also carry the `Mui-disabled`
+    // class, so check all three to avoid reporting a visibly disabled item as enabled.
+    const [ariaDisabled, hasDisabledClass, disabledAttr] = await Promise.all([
+      this.interactor.getAttribute(this.locator, 'aria-disabled'),
+      this.interactor.hasCssClass(this.locator, 'Mui-disabled'),
+      this.interactor.getAttribute(this.locator, 'disabled'),
+    ]);
+    return ariaDisabled === 'true' || hasDisabledClass || disabledAttr != null;
   }
 
   async click(): Promise<void> {

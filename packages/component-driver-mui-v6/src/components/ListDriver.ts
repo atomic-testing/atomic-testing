@@ -1,5 +1,5 @@
 import {
-  byRole,
+  byCssSelector,
   IComponentDriverOption,
   Interactor,
   ListComponentDriver,
@@ -10,9 +10,15 @@ import {
 
 import { ListItemDriver } from './ListItemDriver';
 
+// A plain MUI `<List>` renders its `<ListItem>`s as `<li>` elements that carry no
+// explicit `role` attribute (the `listitem` role is implicit). `byRole('listitem')`
+// resolves to `[role="listitem"]` and would therefore match none of them, so the
+// portable default is the `<li>` tag itself. Consumers whose items render as other
+// roles (e.g. `<ListItemButton>` → `role="button"`, MenuList → `menuitem`) override
+// `itemLocator`.
 export const defaultListDriverOption: ListComponentDriverSpecificOption<ListItemDriver> = {
   itemClass: ListItemDriver,
-  itemLocator: byRole('option'),
+  itemLocator: byCssSelector('li'),
 };
 
 type ListDriverOption<ItemT extends ListItemDriver> = ListComponentDriverSpecificOption<ItemT> &
@@ -24,7 +30,10 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
     interactor: Interactor,
     option: ListDriverOption<ItemT> = { ...defaultListDriverOption } as ListDriverOption<ItemT>
   ) {
-    super(locator, interactor, option);
+    // The framework always supplies a (defined) option object, so a default-valued
+    // constructor parameter never applies; merge the defaults so `itemLocator`/`itemClass`
+    // are filled for a plain `<List>` while any explicit override still wins.
+    super(locator, interactor, { ...defaultListDriverOption, ...option } as ListDriverOption<ItemT>);
   }
 
   async getSelected(): Promise<ListItemDriver | null> {
