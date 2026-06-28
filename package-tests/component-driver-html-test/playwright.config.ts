@@ -14,8 +14,10 @@ const baseUrl = 'http://localhost:3010';
 export default defineConfig({
   testDir: './__tests__',
   testMatch: /.*\.e2e\.(test|spec)\.(ts|tsx)$/,
-  /* Maximum time one test can run for. */
-  timeout: 3 * 1000, // 30 * 1000,
+  /* Maximum time one test can run for. Headroom for cold-server navigation plus
+   * the scroll/drag/context-menu suites' 2s waitUntil polls — a 3s ceiling flaked
+   * those on slow workers. */
+  timeout: 10 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -31,8 +33,10 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /* Reporter to use. See https://playwright.dev/docs/test-reporters.
+   * `list` (not `html`) — the html reporter starts a blocking report server that
+   * hangs headless CI runs. */
+  reporter: 'list',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
@@ -85,11 +89,15 @@ export default defineConfig({
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
 
-  /* Run your local dev server before starting the tests */
+  /* Auto-start/stop the Vite dev server (port 3010) so e2e gates run
+   * deterministically without a manually-launched server. `reuseExistingServer`
+   * is disabled on CI to avoid binding to a stale process, but kept locally so a
+   * dev server already running on 3010 is reused. The generous timeout absorbs
+   * Vite's cold first-compile. */
   webServer: {
     command: 'pnpm start',
     timeout: 120 * 1000,
     url: baseUrl,
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
   },
 });

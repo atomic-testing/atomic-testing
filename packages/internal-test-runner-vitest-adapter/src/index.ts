@@ -21,4 +21,5 @@ export const vitestAdapter: TestFrameworkMapper = {
   afterAll: afterAll,
   test: test,
   it: test,
+  hasLayout: false,
 };

@@ -2,12 +2,12 @@
 
 Covers the suite-orchestration layer that makes one test suite run in Jest, Vitest, and Playwright, plus the demo app used by suites/docs:
 
-| Package | Provides |
-|---------|----------|
-| `@atomic-testing/internal-test-runner` | `testRunner`, `useTestEngine`, `TestFrameworkMapper`, `TestSuiteInfo`, interface types |
-| `@atomic-testing/internal-test-runner-jest-adapter` | `jestTestAdapter` |
-| `@atomic-testing/internal-test-runner-vitest-adapter` | `vitestAdapter` |
-| `@atomic-testing/internal-react-example` | `ExampleApp`, `ExampleList` — demo harness |
+| Package                                               | Provides                                                                               |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `@atomic-testing/internal-test-runner`                | `testRunner`, `useTestEngine`, `TestFrameworkMapper`, `TestSuiteInfo`, interface types |
+| `@atomic-testing/internal-test-runner-jest-adapter`   | `jestTestAdapter`                                                                      |
+| `@atomic-testing/internal-test-runner-vitest-adapter` | `vitestAdapter`                                                                        |
+| `@atomic-testing/internal-react-example`              | `ExampleApp`, `ExampleList` — demo harness                                             |
 
 > `internal-*` packages are workspace-private dev tooling (not published consumer API). The Playwright mapper (`playWrightTestFrameworkMapper`) lives in `@atomic-testing/playwright` — see [modules/playwright.md](playwright.md).
 
@@ -19,17 +19,17 @@ Define a framework-neutral way to describe a test suite (`TestSuiteInfo`), a nor
 
 Barrel: [internal-test-runner/src/index.ts](../../packages/internal-test-runner/src/index.ts).
 
-| Export | Kind | File |
-|--------|------|------|
-| `testRunner(suite \| suites, mapper, interactionInterface)` | function | [testRunner.ts#L7](../../packages/internal-test-runner/src/testRunner.ts#L7) |
-| `useTestEngine(scenePart, getTestEngine, { beforeEach, afterEach })` | function | [useTestEngine.ts#L21](../../packages/internal-test-runner/src/useTestEngine.ts#L21) |
-| `TestSuiteInfo<T>` | type | [types.ts#L114](../../packages/internal-test-runner/src/types.ts#L114) |
-| `TestFrameworkMapper` | type | [types.ts#L72](../../packages/internal-test-runner/src/types.ts#L72) |
-| `GetTestEngine<T>`, `InteractionInterface<T>`, `E2eTestInterface<T>`, `E2eTestRunEnvironmentFixture`, `TestFixture` | types | [types.ts](../../packages/internal-test-runner/src/types.ts) |
-| `emptyGoto` | const | [testRunner.ts#L5](../../packages/internal-test-runner/src/testRunner.ts#L5) |
-| `jestTestAdapter` | `TestFrameworkMapper` | [jest-adapter/index.ts#L13](../../packages/internal-test-runner-jest-adapter/src/index.ts#L13) |
-| `vitestAdapter` | `TestFrameworkMapper` | [vitest-adapter/index.ts#L10](../../packages/internal-test-runner-vitest-adapter/src/index.ts#L10) |
-| `ExampleApp`, `ExampleList`, `ExampleToc`, `AppProps` | React components/types | [internal-react-example/src/index.ts](../../packages/internal-react-example/src/index.ts) |
+| Export                                                                                                              | Kind                   | File                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `testRunner(suite \| suites, mapper, interactionInterface)`                                                         | function               | [testRunner.ts#L7](../../packages/internal-test-runner/src/testRunner.ts#L7)                       |
+| `useTestEngine(scenePart, getTestEngine, { beforeEach, afterEach })`                                                | function               | [useTestEngine.ts#L21](../../packages/internal-test-runner/src/useTestEngine.ts#L21)               |
+| `TestSuiteInfo<T>`                                                                                                  | type                   | [types.ts#L114](../../packages/internal-test-runner/src/types.ts#L114)                             |
+| `TestFrameworkMapper`                                                                                               | type                   | [types.ts#L72](../../packages/internal-test-runner/src/types.ts#L72)                               |
+| `GetTestEngine<T>`, `InteractionInterface<T>`, `E2eTestInterface<T>`, `E2eTestRunEnvironmentFixture`, `TestFixture` | types                  | [types.ts](../../packages/internal-test-runner/src/types.ts)                                       |
+| `emptyGoto`                                                                                                         | const                  | [testRunner.ts#L5](../../packages/internal-test-runner/src/testRunner.ts#L5)                       |
+| `jestTestAdapter`                                                                                                   | `TestFrameworkMapper`  | [jest-adapter/index.ts#L13](../../packages/internal-test-runner-jest-adapter/src/index.ts#L13)     |
+| `vitestAdapter`                                                                                                     | `TestFrameworkMapper`  | [vitest-adapter/index.ts#L10](../../packages/internal-test-runner-vitest-adapter/src/index.ts#L10) |
+| `ExampleApp`, `ExampleList`, `ExampleToc`, `AppProps`                                                               | React components/types | [internal-react-example/src/index.ts](../../packages/internal-react-example/src/index.ts)          |
 
 ## Key types
 
@@ -48,17 +48,18 @@ Barrel: [internal-test-runner/src/index.ts](../../packages/internal-test-runner/
 4. Calls `suite.tests(getTestEngine, testMethod)`, where the suite author writes the actual `test(...)` cases.
 
 `useTestEngine(scenePart, getTestEngine, { beforeEach, afterEach })` ([useTestEngine.ts#L21-L46](../../packages/internal-test-runner/src/useTestEngine.ts#L21-L46)):
+
 - `beforeEach`: `testEngine = getTestEngine(scenePart, { page })` (page is `undefined` for DOM).
 - `afterEach`: `await testEngine.cleanUp()`.
 - Returns a getter `() => testEngine`; tests call `engine()` to read the current instance.
 
 ### Adapters
 
-| Adapter | Backs assertions/lifecycle with | `@ts` notes |
-|---------|---------------------------------|-------------|
-| `jestTestAdapter` | `@jest/globals` `expect`/`describe`/`test`/hooks | `@ts-ignore` on `describe`/`test`/`it` (signature mismatch) ([jest-adapter/index.ts](../../packages/internal-test-runner-jest-adapter/src/index.ts)) |
-| `vitestAdapter` | `vitest` `expect`/`describe`/`test`/hooks | none needed — Vitest 4 aligns ([vitest-adapter/index.ts](../../packages/internal-test-runner-vitest-adapter/src/index.ts)) |
-| `playWrightTestFrameworkMapper` | `@playwright/test` | `@ts-expect-error` (fixture-callback mismatch); in the playwright package |
+| Adapter                         | Backs assertions/lifecycle with                  | `@ts` notes                                                                                                                                          |
+| ------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `jestTestAdapter`               | `@jest/globals` `expect`/`describe`/`test`/hooks | `@ts-ignore` on `describe`/`test`/`it` (signature mismatch) ([jest-adapter/index.ts](../../packages/internal-test-runner-jest-adapter/src/index.ts)) |
+| `vitestAdapter`                 | `vitest` `expect`/`describe`/`test`/hooks        | none needed — Vitest 4 aligns ([vitest-adapter/index.ts](../../packages/internal-test-runner-vitest-adapter/src/index.ts))                           |
+| `playWrightTestFrameworkMapper` | `@playwright/test`                               | `@ts-expect-error` (fixture-callback mismatch); in the playwright package                                                                            |
 
 All three implement `assertApproxEqual` as `expect(Math.abs(actual-expected)).toBeLessThanOrEqual(tolerance)`.
 
@@ -69,10 +70,12 @@ All three implement `assertApproxEqual` as `expect(Math.abs(actual-expected)).to
 ## Worked example (three-file pattern)
 
 Suite (`*.suite.ts`):
+
 ```ts
 export const scenePart = { input: { locator: byDataTestId('input'), driver: HTMLTextInputDriver } } satisfies ScenePart;
 export const testSuite: TestSuiteInfo<typeof scenePart> = {
-  title: 'MyComponent', url: '/my-component',
+  title: 'MyComponent',
+  url: '/my-component',
   tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
     describe('MyComponent', () => {
       const engine = useTestEngine(scenePart, getTestEngine, { beforeEach, afterEach });
@@ -84,6 +87,7 @@ export const testSuite: TestSuiteInfo<typeof scenePart> = {
   },
 };
 ```
+
 DOM adapter (`*.dom.test.ts`): `testRunner(testSuite, jestTestAdapter, { getTestEngine: (p) => createTestEngine(<MyComponent/>, p) })`.
 E2E adapter (`*.e2e.test.ts`): `testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface())`.
 

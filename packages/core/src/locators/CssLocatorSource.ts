@@ -1,3 +1,4 @@
+import { ByAriaLabelSource } from './byAriaLabel';
 import { ByAttributeSource } from './byAttribute';
 import { ByCheckedSource } from './byChecked';
 import { ByCssClassSource } from './byCssClass';
@@ -10,6 +11,7 @@ import { ByTagNameSource } from './byTagName';
 import { ByValueSource } from './byValue';
 
 export type CssLocatorSource =
+  | ByAriaLabelSource
   | ByAttributeSource
   | ByCheckedSource
   | ByCssClassSource

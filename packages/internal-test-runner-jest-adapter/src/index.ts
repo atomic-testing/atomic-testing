@@ -27,4 +27,5 @@ export const jestTestAdapter: TestFrameworkMapper = {
   test: test,
   // @ts-ignore - Jest test signature differs from TestFrameworkMapper.Test
   it: test,
+  hasLayout: false,
 };

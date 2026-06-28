@@ -38,11 +38,11 @@ Consumers install the package matching their framework major; each pins the appr
 
 ## Alternatives considered
 
-| Alternative | Why not chosen |
-|-------------|----------------|
-| Single package + runtime version detection | Branchy, fragile selector logic; ships dead code for unused majors |
-| Single package + peer-dep range spanning majors | Cannot encode per-major DOM/role/class differences |
-| Codegen one source → version variants | Added build complexity; not adopted (variants are maintained directly) |
+| Alternative                                     | Why not chosen                                                         |
+| ----------------------------------------------- | ---------------------------------------------------------------------- |
+| Single package + runtime version detection      | Branchy, fragile selector logic; ships dead code for unused majors     |
+| Single package + peer-dep range spanning majors | Cannot encode per-major DOM/role/class differences                     |
+| Codegen one source → version variants           | Added build complexity; not adopted (variants are maintained directly) |
 
 ## Related
 

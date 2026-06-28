@@ -29,11 +29,11 @@ The driver tree is built eagerly from the scene parts at construction (`getPartF
 
 ## Alternatives considered
 
-| Alternative | Why not chosen |
-|-------------|----------------|
-| Raw queries / Testing-Library calls inline | Selector duplication, DOM-level test reading, brittle to markup change |
-| Page Object Model (hand-rolled per app) | No shared abstraction or typing; reinvented per project; no cross-environment reuse |
-| Snapshot testing | Doesn't express interaction/intent; noisy diffs |
+| Alternative                                | Why not chosen                                                                      |
+| ------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Raw queries / Testing-Library calls inline | Selector duplication, DOM-level test reading, brittle to markup change              |
+| Page Object Model (hand-rolled per app)    | No shared abstraction or typing; reinvented per project; no cross-environment reuse |
+| Snapshot testing                           | Doesn't express interaction/intent; noisy diffs                                     |
 
 ## Related
 

@@ -8,20 +8,20 @@ The framework-agnostic foundation: all types, base driver classes, the `Interact
 
 Barrel: [core/src/index.ts](../../packages/core/src/index.ts). Highlights:
 
-| Export | Kind | File |
-|--------|------|------|
-| `TestEngine` | class | [TestEngine.ts](../../packages/core/src/TestEngine.ts#L12) |
-| `ComponentDriver`, `ContainerDriver`, `ListComponentDriver` | classes | [drivers/index.ts](../../packages/core/src/drivers/index.ts) |
-| `IInputDriver`, `IFormFieldDriver`, `IToggleDriver`, `IClickableDriver`, `IMouseInteractableDriver` | interfaces | [driverTypes.ts](../../packages/core/src/drivers/driverTypes.ts) |
-| `Interactor` | interface | [interactor/Interactor.ts](../../packages/core/src/interactor/Interactor.ts#L26) |
-| `ScenePart`, `ScenePartDefinition`, `ScenePartDriver`, `IComponentDriverOption`, `IContainerDriverOption`, `ComponentDriverCtor` | types | [partTypes.ts](../../packages/core/src/partTypes.ts) |
-| `by*` locator builders, `CssLocator`, `LinkedCssLocator`, `PartLocator` | functions/types | [locators/index.ts](../../packages/core/src/locators/index.ts) |
-| `WaitForOption`, `WaitForCondition`, `defaultWaitForOption`, `WaitUntilOption` | types/const | [WaitForOption.ts](../../packages/core/src/drivers/WaitForOption.ts), [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts#L14) |
-| errors: `ElementNotFoundError`, `WaitForFailureError`, `MissingPartError`, `TooManyMatchingElementError`, `ItemNotFoundError` (+ `*Id`) | classes | [errors/index.ts](../../packages/core/src/errors/index.ts) |
-| `Point` | type | [geometry/index.ts](../../packages/core/src/geometry/index.ts) |
-| `collectionUtil`, `dateUtil`, `escapeUtil`, `locatorUtil`, `timingUtil`, `interactorUtil` | namespaces | [index.ts#L17-L30](../../packages/core/src/index.ts#L17-L30) |
-| `Nullable`, `Optional` | type helpers | [dataTypes.ts](../../packages/core/src/dataTypes.ts) |
-| `IExampleUIUnit`, `IExampleUnit` | types (example harness) | [example/types.ts](../../packages/core/src/example/types.ts) |
+| Export                                                                                                                                  | Kind                    | File                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `TestEngine`                                                                                                                            | class                   | [TestEngine.ts](../../packages/core/src/TestEngine.ts#L12)                                                                             |
+| `ComponentDriver`, `ContainerDriver`, `ListComponentDriver`                                                                             | classes                 | [drivers/index.ts](../../packages/core/src/drivers/index.ts)                                                                           |
+| `IInputDriver`, `IFormFieldDriver`, `IToggleDriver`, `IClickableDriver`, `IMouseInteractableDriver`                                     | interfaces              | [driverTypes.ts](../../packages/core/src/drivers/driverTypes.ts)                                                                       |
+| `Interactor`                                                                                                                            | interface               | [interactor/Interactor.ts](../../packages/core/src/interactor/Interactor.ts#L26)                                                       |
+| `ScenePart`, `ScenePartDefinition`, `ScenePartDriver`, `IComponentDriverOption`, `IContainerDriverOption`, `ComponentDriverCtor`        | types                   | [partTypes.ts](../../packages/core/src/partTypes.ts)                                                                                   |
+| `by*` locator builders, `CssLocator`, `LinkedCssLocator`, `PartLocator`                                                                 | functions/types         | [locators/index.ts](../../packages/core/src/locators/index.ts)                                                                         |
+| `WaitForOption`, `WaitForCondition`, `defaultWaitForOption`, `WaitUntilOption`                                                          | types/const             | [WaitForOption.ts](../../packages/core/src/drivers/WaitForOption.ts), [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts#L14) |
+| errors: `ElementNotFoundError`, `WaitForFailureError`, `MissingPartError`, `TooManyMatchingElementError`, `ItemNotFoundError` (+ `*Id`) | classes                 | [errors/index.ts](../../packages/core/src/errors/index.ts)                                                                             |
+| `BoundingRect`, `Point`                                                                                                                 | types                   | [geometry/index.ts](../../packages/core/src/geometry/index.ts)                                                                         |
+| `collectionUtil`, `dateUtil`, `escapeUtil`, `locatorUtil`, `timingUtil`, `interactorUtil`                                               | namespaces              | [index.ts#L17-L30](../../packages/core/src/index.ts#L17-L30)                                                                           |
+| `Nullable`, `Optional`                                                                                                                  | type helpers            | [dataTypes.ts](../../packages/core/src/dataTypes.ts)                                                                                   |
+| `IExampleUIUnit`, `IExampleUnit`                                                                                                        | types (example harness) | [example/types.ts](../../packages/core/src/example/types.ts)                                                                           |
 
 > Utilities are exported as **namespaces** (`export * as locatorUtil`), so call them as `locatorUtil.append(...)`, `timingUtil.waitUntil(...)`, etc.
 
@@ -55,41 +55,42 @@ See [DOMAIN.md → Type system](../DOMAIN.md#type-system) for the full picture. 
 
 The contract every environment implements ([Interactor.ts](../../packages/core/src/interactor/Interactor.ts#L26-L153)):
 
-- **Mutative**: `click`, `mouseMove/Down/Up/Over/Out/Enter/Leave`, `focus`, `blur`, `enterText`, `selectOptionValue`, `hover`, `wait`, `waitUntilComponentState`, `waitUntil<T>`.
-- **Read-only**: `getInputValue`, `getSelectValues`, `getSelectLabels`, `getAttribute` (3 overloads incl. `isMultiple`), `getStyleValue`, `getText`, `exists`, `isChecked`, `isDisabled`, `isReadonly`, `isVisible`, `hasCssClass`, `hasAttribute`.
+- **Mutative**: `click`, `mouseMove/Down/Up/Over/Out/Enter/Leave`, `focus`, `blur`, `enterText`, `selectOptionValue`, `hover`, `pressKey` (modifier chords), `activate`, `contextMenu`, `setInputFiles`, `scrollIntoView`, `scrollBy`, `dragTo`, `drag` (pointer-based; not HTML5 DnD — #922), `wait`, `waitUntilComponentState`, `waitUntil<T>`.
+- **Read-only**: `getInputValue`, `getSelectValues`, `getSelectLabels`, `getAttribute` (3 overloads incl. `isMultiple`), `getStyleValue`, `getText`, `getBoundingRect`, `exists`, `isChecked`, `isDisabled`, `isReadonly`, `isVisible`, `hasCssClass`, `hasAttribute`.
 - **Debug**: `innerHTML`, `clone()`.
 
 ## Locators
 
 Builders in [locators/](../../packages/core/src/locators/index.ts), each returning a `CssLocator` (and accepting an optional `relative` position):
 
-| Builder | Selects | File |
-|---------|---------|------|
-| `byDataTestId(id)` | `[data-testid="id"]` | [byDataTestId.ts](../../packages/core/src/locators/byDataTestId.ts) |
-| `byAttribute(name, value)` | `[name="value"]` (special-cases `id`) | [byAttribute.ts](../../packages/core/src/locators/byAttribute.ts) |
-| `byRole(role)` | `[role="role"]` | [byRole.ts](../../packages/core/src/locators/byRole.ts) |
-| `byCssClass(...names)` | `.a.b` | [byCssClass.ts](../../packages/core/src/locators/byCssClass.ts) |
-| `byTagName(tag)` | `tag` | [byTagName.ts](../../packages/core/src/locators/byTagName.ts) |
-| `byName(name)` | `[name="name"]` | [byName.ts](../../packages/core/src/locators/byName.ts) |
-| `byValue(value)` | `[value="value"]` | [byValue.ts](../../packages/core/src/locators/byValue.ts) |
-| `byInputType(type)` | `input[type="type"]` | [byInputType.ts](../../packages/core/src/locators/byInputType.ts) |
-| `byChecked(state?)` | `:checked` / `:not(:checked)` | [byChecked.ts](../../packages/core/src/locators/byChecked.ts) |
-| `byCssSelector(sel, relative?)` | raw CSS (escape hatch) | [byCssSelector.ts](../../packages/core/src/locators/byCssSelector.ts) |
-| `byLinkedElement()` | fluent → `LinkedCssLocator` | [byLinkedElement.ts](../../packages/core/src/locators/byLinkedElement.ts#L19) |
+| Builder                         | Selects                               | File                                                                          |
+| ------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------- |
+| `byDataTestId(id)`              | `[data-testid="id"]`                  | [byDataTestId.ts](../../packages/core/src/locators/byDataTestId.ts)           |
+| `byAttribute(name, value)`      | `[name="value"]` (special-cases `id`) | [byAttribute.ts](../../packages/core/src/locators/byAttribute.ts)             |
+| `byRole(role)`                  | `[role="role"]`                       | [byRole.ts](../../packages/core/src/locators/byRole.ts)                       |
+| `byAriaLabel(name)`             | `[aria-label="name"]`                 | [byAriaLabel.ts](../../packages/core/src/locators/byAriaLabel.ts)             |
+| `byCssClass(...names)`          | `.a.b`                                | [byCssClass.ts](../../packages/core/src/locators/byCssClass.ts)               |
+| `byTagName(tag)`                | `tag`                                 | [byTagName.ts](../../packages/core/src/locators/byTagName.ts)                 |
+| `byName(name)`                  | `[name="name"]`                       | [byName.ts](../../packages/core/src/locators/byName.ts)                       |
+| `byValue(value)`                | `[value="value"]`                     | [byValue.ts](../../packages/core/src/locators/byValue.ts)                     |
+| `byInputType(type)`             | `input[type="type"]`                  | [byInputType.ts](../../packages/core/src/locators/byInputType.ts)             |
+| `byChecked(state?)`             | `:checked` / `:not(:checked)`         | [byChecked.ts](../../packages/core/src/locators/byChecked.ts)                 |
+| `byCssSelector(sel, relative?)` | raw CSS (escape hatch)                | [byCssSelector.ts](../../packages/core/src/locators/byCssSelector.ts)         |
+| `byLinkedElement()`             | fluent → `LinkedCssLocator`           | [byLinkedElement.ts](../../packages/core/src/locators/byLinkedElement.ts#L19) |
 
-Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)): `append(...locators)` chains while respecting `Root` boundaries; `toCssSelector(locator, interactor)` resolves to a runtime selector (awaiting linked-locator resolution); `overrideLocatorRelativePosition(...)` rewrites a locator's relative position.
+Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)): `append(...locators)` chains while respecting `Root` boundaries; `toCssSelector(locator, interactor)` resolves to a runtime selector (awaiting linked-locator resolution); `overrideLocatorRelativePosition(...)` rewrites a locator's relative position. Disambiguate two same-role elements by accessible name with `append(byRole(role), byAriaLabel(name, 'Same'))`; computed accessible names (not CSS-expressible) await the deferred name-aware `findByRole` (see #923).
 
 ## Utilities
 
-| Namespace | Notable members | File |
-|-----------|-----------------|------|
-| `timingUtil` | `wait(ms)`, `waitUntil(option)` (probe loop, interval = `timeoutMs/probeCount`, default 10) | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts) |
-| `interactorUtil` | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError` | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts) |
-| `locatorUtil` | `append`, `toCssSelector`, `overrideLocatorRelativePosition`, chain helpers | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts) |
-| `escapeUtil` | `escapeValue` (CSS escape, LRU-cached), `escapeCssClassName`, `escapeName` | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts) |
-| `dateUtil` | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes` | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts) |
-| `collectionUtil` | `toArray`, `getDifference` | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts) |
-| `listHelper` | `getListItemByIndex`, `getListItemIterator`, `getListItemCount` (exported via `drivers`) | [listHelper.ts](../../packages/core/src/drivers/listHelper.ts) |
+| Namespace        | Notable members                                                                                               | File                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `timingUtil`     | `wait(ms)`, `waitUntil(option)` (probe loop, interval = `timeoutMs/probeCount`, default 10)                   | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts)         |
+| `interactorUtil` | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError`                              | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts) |
+| `locatorUtil`    | `append`, `toCssSelector`, `overrideLocatorRelativePosition`, chain helpers                                   | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)       |
+| `escapeUtil`     | `escapeValue` (CSS escape, LRU-cached), `escapeCssClassName`, `escapeName`                                    | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts)         |
+| `dateUtil`       | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes` | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts)             |
+| `collectionUtil` | `toArray`, `getDifference`                                                                                    | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts) |
+| `listHelper`     | `getListItemByIndex`, `getListItemIterator`, `getListItemCount` (exported via `drivers`)                      | [listHelper.ts](../../packages/core/src/drivers/listHelper.ts)       |
 
 ## Invariants & failure modes
 

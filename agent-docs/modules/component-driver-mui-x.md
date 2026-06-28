@@ -2,18 +2,19 @@
 
 Drivers for Material-UI X components (DataGrid, and Date/Time Pickers), one package per MUI-X major:
 
-| Package | DataGrid | Date/Time pickers |
-|---------|----------|-------------------|
-| `@atomic-testing/component-driver-mui-x-v5` | ✅ | ✅ ([datepicker/](../../packages/component-driver-mui-x-v5/src/components/datepicker/index.ts)) |
-| `@atomic-testing/component-driver-mui-x-v6` | ✅ | — |
-| `@atomic-testing/component-driver-mui-x-v7` | ✅ | — |
-| `@atomic-testing/component-driver-mui-x-v8` | ✅ | — |
+| Package                                     | DataGrid | Date/Time pickers                                                                               |
+| ------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| `@atomic-testing/component-driver-mui-x-v5` | ✅       | ✅ ([datepicker/](../../packages/component-driver-mui-x-v5/src/components/datepicker/index.ts)) |
+| `@atomic-testing/component-driver-mui-x-v6` | ✅       | —                                                                                               |
+| `@atomic-testing/component-driver-mui-x-v7` | ✅       | —                                                                                               |
+| `@atomic-testing/component-driver-mui-x-v8` | ✅       | —                                                                                               |
 
 > Only **v5** ships datepicker drivers; v6–v8 are DataGrid-only ([v5/index.ts](../../packages/component-driver-mui-x-v5/src/index.ts) re-exports both `datagrid` and `datepicker`; [v8/index.ts](../../packages/component-driver-mui-x-v8/src/index.ts) re-exports only `datagrid`). [inferred] datepicker drivers were not carried forward past v5.
 
 ## Public surface
 
 DataGrid (all versions) — barrel `components/datagrid/index.ts`, e.g. [v8](../../packages/component-driver-mui-x-v8/src/components/datagrid/index.ts):
+
 - `DataGridProDriver` — the grid driver
 - `DataGridDataRowDriver` — a data row
 - `DataGridHeaderRowDriver` — the header row
@@ -38,6 +39,7 @@ Date/Time pickers (v5 only) — [datepicker/index.ts](../../packages/component-d
 ## Test fixture — `@atomic-testing/internal-mui-x-test-fixture`
 
 Shared grid config + data for DataGrid driver tests/examples ([src/index.ts](../../packages/internal-mui-x-test-fixture/src/index.ts) re-exports `gridConfig` + `gridData`):
+
 - `gridConfig` — `initialState` (column visibility) and `basicGridColumnConfig` (field, headerName, type, valueOptions, width, editable) ([gridConfig.ts](../../packages/internal-mui-x-test-fixture/src/gridConfig.ts)).
 - `gridData` — a commodity-trading dataset (desk, commodity, trader, quantity, status, prices, dates, broker, counterparty, etc.) ([gridData.ts](../../packages/internal-mui-x-test-fixture/src/gridData.ts)).
 

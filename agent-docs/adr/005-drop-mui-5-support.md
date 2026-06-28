@@ -78,8 +78,8 @@ ended by deprecation in place rather than deletion:
 
 ## Alternatives considered
 
-| Alternative | Why not chosen |
-| ----------- | -------------- |
+| Alternative                               | Why not chosen                                                                                                          |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Delete the v5 packages and tests outright | Would break the example app and docs immediately and discard installable history; reversible deprecation chosen instead |
-| `npm deprecate` the published packages | Out of scope for this pass — kept to repo/docs signals only to avoid surfacing install-time warnings now |
-| Keep v5 on full support | The maintenance/CI cost no longer matched its usage; new work targets v6/v7 |
+| `npm deprecate` the published packages    | Out of scope for this pass — kept to repo/docs signals only to avoid surfacing install-time warnings now                |
+| Keep v5 on full support                   | The maintenance/CI cost no longer matched its usage; new work targets v6/v7                                             |

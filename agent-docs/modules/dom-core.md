@@ -8,12 +8,12 @@ The base DOM implementation of `Interactor`. Turns a `PartLocator` into real DOM
 
 Barrel: [dom-core/src/index.ts](../../packages/dom-core/src/index.ts).
 
-| Export | Kind | File |
-|--------|------|------|
-| `DOMInteractor` | class (`implements Interactor`) | [DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts#L32) |
-| `createDomTestEngine(element, parts, _option?)` | function | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13) |
-| `FakeMouseEvent` | class | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5) |
-| `IDomTestEngineOption` | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3) |
+| Export                                          | Kind                              | File                                                                                        |
+| ----------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------- |
+| `DOMInteractor`                                 | class (`implements Interactor`)   | [DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts#L32)                        |
+| `createDomTestEngine(element, parts, _option?)` | function                          | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13)            |
+| `FakeMouseEvent`                                | class                             | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5) |
+| `IDomTestEngineOption`                          | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3)                                         |
 
 Depends on: `@atomic-testing/core`, `@testing-library/dom`, `@testing-library/user-event`.
 
@@ -39,6 +39,7 @@ Interaction details worth knowing:
 - **Mouse position** is computed relative to the element's bounding box (`calculateMousePosition`), centering when no preferred point is given ([DOMInteractor.ts#L64-L71](../../packages/dom-core/src/DOMInteractor.ts#L64-L71)).
 - **`isVisible`** returns false on `opacity: 0`, `visibility: hidden`, or `display: none` (does not check viewport) ([DOMInteractor.ts#L456-L478](../../packages/dom-core/src/DOMInteractor.ts#L456-L478)).
 - **`mouseEnter`/`mouseLeave`** are emulated with `fireEvent.mouseOver`/`mouseOut` (testing-library nuance) ([DOMInteractor.ts#L240-L266](../../packages/dom-core/src/DOMInteractor.ts#L240-L266)).
+- **Layout-dependent primitives** — `scrollIntoView`/`scrollBy`/`getBoundingRect` are jsdom no-ops / zero-rects (no layout engine); `drag`/`dragTo` share a private `dispatchMouse` helper firing raw mouse events only, never HTML5 DnD (#922); `setInputFiles` uploads via `userEvent.upload`; `contextMenu` fires a focused `contextmenu` event; `pressKey` folds `ctrl/shift/alt/meta` into the event init (a Shift + printable key reports a different `event.key` than Playwright — #924). Real geometry/scroll/drag outcomes are E2E-only.
 
 `createDomTestEngine(element, parts)` simply wraps `new DOMInteractor(element)` in a `TestEngine` with an empty root locator and a no-op cleanup ([createDomTestEngine.ts#L13-L27](../../packages/dom-core/src/createDomTestEngine.ts#L13-L27)).
 

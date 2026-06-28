@@ -1,20 +1,25 @@
 Generate a pull request title and description based on the current changes.
 
-## VCS Detection
+## SCM & base-branch detection
 
-Detect which version control system is in use:
+Detect the active SCM (`sl` vs `git`) and the base branch using the canonical recipe in
+[`.claude/scm.md`](../scm.md) — `sl root` → else `git rev-parse`; base branch `main` → `master` →
+remote default. A SessionStart hook already surfaces the active SCM each session. The diff and
+PR-submission steps below branch on that detected SCM.
 
-1. Run `sl root 2>/dev/null` - if successful, use **Sapling** workflow
-2. Otherwise, run `git rev-parse --show-toplevel 2>/dev/null` - if successful, use **Git** workflow
-3. If neither succeeds, inform the user they're not in a recognized repository
+## Source of truth
 
-## Base Branch Detection
+The **local environment is the single source of truth** for a PR's title and description.
+Author them locally and publish through the SCM's native flow — never by editing the PR on the
+host afterward.
 
-Auto-detect the base branch (check in order):
-
-1. `main`
-2. `master`
-3. Default branch from remote (e.g., `git symbolic-ref refs/remotes/origin/HEAD` or `sl config paths.default`)
+- **Sapling**: the commit message *is* the PR title (first line) and body (the rest). Set them
+  with `sl metaedit` and publish with `sl pr submit`. **Do NOT use `gh pr edit` to change a
+  Sapling PR's title/body** — the next `sl pr submit` regenerates the PR from the commit message
+  and silently erases any host-side edit. (`gh` remains correct for SCM-agnostic GitHub actions —
+  comments, reviews, labels, merges — per [`.claude/scm.md`](../scm.md); just not the title/body.)
+- **Git**: the title/body are set with `gh pr create` / `gh pr edit`; nothing regenerates them,
+  so keep them recoverable locally (commit message / PR template) to stay authoritative.
 
 ## Getting the Diff
 
@@ -49,6 +54,8 @@ sl log -r ".^ and draft()" --template "{node}"
 - Use conventional commit format: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `perf:`
 - Keep under 72 characters
 - Use imperative mood ("Add feature" not "Added feature")
+- Describe the **delivered capability**, not an internal plan item — no "Wave N", "phase",
+  "step", or tracker-issue numbers in the title
 
 ## Description Format
 
@@ -61,6 +68,11 @@ sl log -r ".^ and draft()" --template "{node}"
 - [Be specific but concise]
 - [Each line under 100 characters]
 ```
+
+**Voice and focus**: describe what was delivered and the value it brings to library users.
+Do not reference internal planning scaffolding — no "Wave N", "phase", "step", "plan",
+"prerequisite", "epic number", "per request", or "in-flight housekeeping" language.
+Tracker-issue links belong in the footer only, not in the narrative.
 
 ## After Generating
 
@@ -76,5 +88,9 @@ Present the title and description to the user, then ask if they want to create t
 
 ### If Using Sapling
 
-1. Update the commit message: `sl metaedit -m "..."`
-2. Submit the PR: `sl pr submit`
+The commit message is the single source of truth (see [Source of truth](#source-of-truth)) — set
+the title/body there, never with `gh pr edit`.
+
+1. Update the commit message so its first line is the title and the rest is the body
+   (`sl metaedit` opens an editor; `-m` only fits a one-line message).
+2. Submit / refresh the PR: `sl pr submit`
