@@ -170,7 +170,17 @@ pnpm add @atomic-testing/playwright
 ### **Material-UI Drivers**
 
 <Tabs>
-<TabItem value="mui-v7" label="MUI v7 (Latest)">
+<TabItem value="mui-v9" label="MUI v9 (Latest)">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-v9
+```
+
+**Supports**: the full v7 driver set plus RadioGroup, Table, and Tooltip drivers (MUI Core has no v8; v9 succeeds v7)
+
+</TabItem>
+
+<TabItem value="mui-v7" label="MUI v7">
 
 ```bash
 pnpm add @atomic-testing/component-driver-mui-v7
@@ -230,7 +240,7 @@ You can always add more packages later. HTML drivers work with any components.
    - Multiple/E2E → `@atomic-testing/playwright`
 
 2. **What UI library do you use?**
-   - Material-UI → `@atomic-testing/component-driver-mui-v7`
+   - Material-UI → `@atomic-testing/component-driver-mui-v9`
    - Custom/HTML → `@atomic-testing/component-driver-html`
    - Bootstrap/Other → Start with HTML drivers, build custom as needed
 

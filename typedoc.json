@@ -11,6 +11,7 @@
     "packages/component-driver-html",
     "packages/component-driver-mui-v5",
     "packages/component-driver-mui-v6",
+    "packages/component-driver-mui-v9",
     "packages/component-driver-mui-x-v5",
     "packages/component-driver-mui-x-v6",
     "packages/component-driver-mui-x-v7",

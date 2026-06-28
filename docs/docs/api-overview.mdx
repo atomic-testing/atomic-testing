@@ -214,6 +214,51 @@ pnpm add @atomic-testing/component-driver-mui-v7
 | ExclusiveToggleButtonGroupDriver | Driver for ToggleButtonGroup with exclusive selection |
 
 </details>
+### [MUI V9](https://mui.com/material-ui/getting-started/overview/) components
+
+<details>
+  <summary>Component list</summary>
+
+Package: [@atomic-testing/component-driver-mui-v9](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v9/src/components)
+
+> MUI Core has no v8 — it jumped `7.3.11 → 9.0.0`, so v9 is the successor to v7.
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-mui-v9
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-mui-v9
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-v9
+```
+
+</TabItem>
+</Tabs>
+
+The v9 package exposes the **same driver set as v7** (validated against MUI 9's DOM)
+plus three additional drivers. See the generated
+[API reference](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v9/src/components)
+for the full list; the net-new drivers are:
+
+| Driver           | Description                                                |
+| ---------------- | ---------------------------------------------------------- |
+| RadioGroupDriver | Driver for RadioGroup (with per-option `RadioDriver`)      |
+| TableDriver      | Driver for Table (rows/cells via `TableRowDriver`, sort)   |
+| TooltipDriver    | Driver for Tooltip (hover-to-reveal title)                 |
+
+</details>
 ### [MUI X V5](https://mui.com/x/) components
 
 <details>
