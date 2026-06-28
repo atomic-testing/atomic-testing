@@ -28,8 +28,54 @@ Refer to the [documentation](https://atomic-testing.dev/) for usage patterns and
 
 ## Drivers
 
-| Driver         | Astryx component | Notes                                                                                                            |
-| -------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `ButtonDriver` | `Button`         | `getLabel` (verbatim `aria-label` or visible text), `isDisabled` (native or `aria-disabled`), inherited `click`. |
+Wave 1 — buttons, inputs, toggles and the structural/feedback primitives around
+them. Each driver locates its component by `data-testid`, `role`, or accessible
+name (never a StyleX class) and exposes high-level reads and interactions. Method
+details are in the [API docs](https://atomic-testing.dev); anchoring rationale and
+any E2E-only behaviour live in each driver's source doc comment.
+
+### Buttons & actions
+
+| Driver                    | Astryx component    | Notes                                                                      |
+| ------------------------- | ------------------- | -------------------------------------------------------------------------- |
+| `ButtonDriver`            | `Button`            | `getLabel`/`isDisabled`/`isLoading`; inherited `click`.                    |
+| `IconButtonDriver`        | `IconButton`        | Icon-only Button; `getLabel` reads the always-present `aria-label`.        |
+| `ToggleButtonDriver`      | `ToggleButton`      | `isSelected`/`setSelected` via `aria-pressed`.                             |
+| `ButtonGroupDriver`       | `ButtonGroup`       | List of buttons; `clickButton(name)`, `getButtonCount`, `getOrientation`.  |
+| `ToggleButtonGroupDriver` | `ToggleButtonGroup` | `select`/`deselect`/`isSelected` by `aria-label`; `getSelectedLabels`.     |
+| `LinkDriver`              | `Link`              | `getHref`/`getTarget`/`getRel`; `isButtonFallback` (no-`href` `<button>`). |
+
+### Text inputs
+
+| Driver                   | Astryx component | Notes                                                                                 |
+| ------------------------ | ---------------- | ------------------------------------------------------------------------------------- |
+| `TextInputDriver`        | `TextInput`      | Value, `clear`, `getLabel`/`getStatusMessage` (a11y links), `isRequired`/`isInvalid`. |
+| `TextAreaDriver`         | `TextArea`       | Value, `getRows`, `getCharCount`.                                                     |
+| `NumberInputDriver`      | `NumberInput`    | Value, `getMin`/`getMax`/`getStep`/`getUnits`; `stepUp`/`stepDown` (E2E).             |
+| `TimeInputDriver`        | `TimeInput`      | `getValue` returns the display string (not ISO); `increment`/`decrement` (E2E).       |
+| `AstryxFieldInputDriver` | —                | Shared base for the field inputs above (linked label/status resolution).              |
+
+### Selection controls
+
+| Driver                   | Astryx component   | Notes                                                                      |
+| ------------------------ | ------------------ | -------------------------------------------------------------------------- |
+| `CheckboxInputDriver`    | `CheckboxInput`    | `isChecked`/`toggle`; `isIndeterminate` (`aria-checked="mixed"`).          |
+| `RadioListDriver`        | `RadioList`        | `getSelectedValue`/`selectByValue` by radio `value`; `isItemChecked`.      |
+| `CheckboxListDriver`     | `CheckboxList`     | Label/index addressed (item value is not in the DOM); `getCheckedLabels`.  |
+| `SwitchDriver`           | `Switch`           | `isOn`/`turnOn`/`turnOff` via the `role="switch"` input.                   |
+| `SegmentedControlDriver` | `SegmentedControl` | Single-select radiogroup; value via `data-value`.                          |
+| `SelectableCardDriver`   | `SelectableCard`   | `isSelected`/`toggle` via the card's hidden checkbox; clicks the card.     |
+| `SliderDriver`           | `Slider`           | Single-thumb; `getValue` (`aria-valuenow`), keyboard `setValue` (no drag). |
+
+### Structure & feedback
+
+| Driver              | Astryx component | Notes                                                                            |
+| ------------------- | ---------------- | -------------------------------------------------------------------------------- |
+| `FieldDriver`       | `Field`          | `getLabel`/`getDescription`/`getStatusMessage`, `isRequired`/`isOptional`.       |
+| `InputGroupDriver`  | `InputGroup`     | `getLabel`, `getAddonTexts`.                                                     |
+| `FieldStatusDriver` | `FieldStatus`    | `getStatus`/`getMessage`/`isError` via stable `data-type` (role is conditional). |
+| `BannerDriver`      | `Banner`         | `getTitle`/`getDescription`/`getStatus`, `dismiss`, `toggleExpand`.              |
+| `PaginationDriver`  | `Pagination`     | `getCurrentPage`, `goToPage`/`next`/`previous`, `getCountText`.                  |
+| `CollapsibleDriver` | `Collapsible`    | `isExpanded`/`expand`/`collapse` via the trigger's `aria-expanded`.              |
 
 For more in-depth information, visit [https://atomic-testing.dev](https://atomic-testing.dev).

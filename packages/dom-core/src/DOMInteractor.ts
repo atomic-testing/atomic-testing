@@ -413,7 +413,14 @@ export class DOMInteractor implements Interactor {
       }
     }
 
-    await userEvent.type(el, text);
+    // `userEvent.type` rejects an empty string ("Expected key descriptor"). The
+    // preceding `userEvent.clear()` already empties the field, so an empty value
+    // is a pure clear — matching PlaywrightInteractor's `clear()` + `fill('')`,
+    // which handles `''` natively. Skipping the keystroke keeps the two engines
+    // at parity (e.g. an input driver's `clear()` via `setValue('')`).
+    if (text !== '') {
+      await userEvent.type(el, text);
+    }
   }
 
   /**
