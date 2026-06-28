@@ -8,19 +8,19 @@ Drivers for native HTML elements. These are the lowest-level concrete drivers an
 
 Barrel: [component-driver-html/src/index.ts](../../packages/component-driver-html/src/index.ts).
 
-| Driver | Targets | Implements |
-|--------|---------|------------|
-| `HTMLElementDriver` | any element (generic `div`/`span`/container) | `ComponentDriver<{}>` |
-| `HTMLAnchorDriver` | `<a>` | clickable link |
-| `HTMLButtonDriver` | `<button>` | `IClickableDriver`, `IMouseInteractableDriver` |
-| `HTMLTextInputDriver` | `<input>` (text/date/time/etc.) | `IInputDriver<string \| null>` |
-| `HTMLTextAreaDriver` | `<textarea>` | `IInputDriver<string \| null>` |
-| `HTMLSelectDriver` | `<select>` (native) | `IInputDriver<Nullable<string \| readonly string[]>>` |
-| `HTMLOptionDriver` | `<option>` | label/value reads |
-| `HTMLCheckboxDriver` | `<input type=checkbox>` | toggle |
-| `HTMLCheckboxGroupDriver` | a set of checkboxes | group selection |
-| `HTMLRadioButtonGroupDriver` | a set of radios | group selection |
-| `HTMLHiddenInputDriver` | `<input type=hidden>` | value read |
+| Driver                       | Targets                                      | Implements                                            |
+| ---------------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| `HTMLElementDriver`          | any element (generic `div`/`span`/container) | `ComponentDriver<{}>`                                 |
+| `HTMLAnchorDriver`           | `<a>`                                        | clickable link                                        |
+| `HTMLButtonDriver`           | `<button>`                                   | `IClickableDriver`, `IMouseInteractableDriver`        |
+| `HTMLTextInputDriver`        | `<input>` (text/date/time/etc.)              | `IInputDriver<string \| null>`                        |
+| `HTMLTextAreaDriver`         | `<textarea>`                                 | `IInputDriver<string \| null>`                        |
+| `HTMLSelectDriver`           | `<select>` (native)                          | `IInputDriver<Nullable<string \| readonly string[]>>` |
+| `HTMLOptionDriver`           | `<option>`                                   | label/value reads                                     |
+| `HTMLCheckboxDriver`         | `<input type=checkbox>`                      | toggle                                                |
+| `HTMLCheckboxGroupDriver`    | a set of checkboxes                          | group selection                                       |
+| `HTMLRadioButtonGroupDriver` | a set of radios                              | group selection                                       |
+| `HTMLHiddenInputDriver`      | `<input type=hidden>`                        | value read                                            |
 
 ## Responsibilities
 
@@ -37,14 +37,28 @@ Barrel: [component-driver-html/src/index.ts](../../packages/component-driver-htm
 A driver extends `ComponentDriver<parts>`, optionally implements a capability interface, passes `parts` to `super`, and implements `driverName`.
 
 **Leaf input driver** — `HTMLTextInputDriver` ([HTMLTextInputDriver.ts](../../packages/component-driver-html/src/components/HTMLTextInputDriver.ts#L3-L54)):
+
 ```ts
 export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
-  constructor(locator, interactor, option?) { super(locator, interactor, { ...option, parts: {} }); }
-  async getValue() { return (await this.interactor.getInputValue(this.locator)) ?? null; }
-  async setValue(v) { await this.interactor.enterText(this.locator, v ?? ''); return true; }
-  isDisabled() { return this.interactor.isDisabled(this.locator); }
-  isReadonly() { return this.interactor.isReadonly(this.locator); }
-  get driverName() { return 'HTMLTextInput'; }
+  constructor(locator, interactor, option?) {
+    super(locator, interactor, { ...option, parts: {} });
+  }
+  async getValue() {
+    return (await this.interactor.getInputValue(this.locator)) ?? null;
+  }
+  async setValue(v) {
+    await this.interactor.enterText(this.locator, v ?? '');
+    return true;
+  }
+  isDisabled() {
+    return this.interactor.isDisabled(this.locator);
+  }
+  isReadonly() {
+    return this.interactor.isReadonly(this.locator);
+  }
+  get driverName() {
+    return 'HTMLTextInput';
+  }
 }
 ```
 

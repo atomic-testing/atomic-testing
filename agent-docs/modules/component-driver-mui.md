@@ -2,11 +2,11 @@
 
 Drivers for Material-UI core components, one package per MUI major:
 
-| Package | Targets | MUI peer |
-|---------|---------|----------|
-| `@atomic-testing/component-driver-mui-v5` | MUI v5 | `@mui/material@^5` |
-| `@atomic-testing/component-driver-mui-v6` | MUI v6 | `@mui/material@^6` |
-| `@atomic-testing/component-driver-mui-v7` | MUI v7 | `@mui/material@^7` |
+| Package                                   | Targets | MUI peer           |
+| ----------------------------------------- | ------- | ------------------ |
+| `@atomic-testing/component-driver-mui-v5` | MUI v5  | `@mui/material@^5` |
+| `@atomic-testing/component-driver-mui-v6` | MUI v6  | `@mui/material@^6` |
+| `@atomic-testing/component-driver-mui-v7` | MUI v7  | `@mui/material@^7` |
 
 > The three packages are ~95% identical at the code level — same exports, same APIs. They diverge only where a MUI major changes DOM structure, roles, or class names. See [ADR-003](../adr/003-version-specific-packages.md). This doc uses **v7** as the reference; the catalog and patterns apply to v5/v6 too.
 
@@ -27,23 +27,28 @@ Errors: `MenuItemDisabledError`, `MenuItemNotFoundError` (+ `*Id`) ([index.ts#L2
 
 ## Non-goals
 
-- Not a re-implementation of MUI behavior — drivers only *observe and act on* rendered MUI DOM.
+- Not a re-implementation of MUI behavior — drivers only _observe and act on_ rendered MUI DOM.
 - No cross-version abstraction layer — each major is its own package.
 
 ## How it works — three representative drivers
 
 ### Portal/list driver — `MenuDriver`
+
 MUI menus render in a portal outside the trigger's DOM. The driver escapes its declared parent via the locator-override hooks ([MenuDriver.ts](../../packages/component-driver-mui-v7/src/components/MenuDriver.ts#L24-L65)):
+
 ```ts
 override overriddenParentLocator() { return byRole('presentation', 'Root'); }
 override overrideLocatorRelativePosition() { return 'Same'; }
 ```
+
 It iterates `byRole('menuitem')` with `listHelper.getListItemIterator(..., MenuItemDriver)`; `selectByLabel` clicks the match or throws `MenuItemNotFoundError`.
 
 ### Container driver — `DialogDriver`
+
 `DialogDriver<ContentT> extends ContainerDriver<ContentT, typeof parts>` with `parts = { title, dialogContainer }` and a generic `content` for the dialog body ([DialogDriver.ts](../../packages/component-driver-mui-v7/src/components/DialogDriver.ts#L29-L97)). It also uses `overriddenParentLocator() → byRole('presentation','Root')`, and adds `getTitle`, `isOpen`, and transition-aware `waitForOpen`/`waitForClose` (built on `interactor.waitUntil`).
 
 ### Composite input — `SelectDriver`
+
 Handles both native `<select>` and MUI's custom dropdown via a four-part scene (`trigger`, `dropdown`, `input`, `nativeSelect`) ([SelectDriver.ts](../../packages/component-driver-mui-v7/src/components/SelectDriver.ts#L27-L223)). Notable: `trigger` uses `byRole('combobox')` with an inline comment that MUI changed the role from `button` to `combobox` at 5.12 — **this kind of selector difference is exactly why versions are split**. Methods: `getValue`, `setValue`, `selectByLabel`, `getSelectedLabel`, `openDropdown`/`closeDropdown`, `isNative`, `isDropdownOpen`, `isDisabled`.
 
 ## Version differences (v5 → v6 → v7)

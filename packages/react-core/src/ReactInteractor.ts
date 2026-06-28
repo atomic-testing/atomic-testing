@@ -13,6 +13,7 @@ import {
   MouseOutOption,
   MouseUpOption,
   PartLocator,
+  Point,
   PressKeyOption,
   WaitForOption,
   WaitUntilOption,
@@ -99,6 +100,12 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
+  override async contextMenu(locator: PartLocator): Promise<void> {
+    await act(async () => {
+      await super.contextMenu(locator);
+    });
+  }
+
   override async activate(locator: PartLocator): Promise<void> {
     await act(async () => {
       await super.activate(locator);
@@ -108,6 +115,36 @@ export class ReactInteractor extends DOMInteractor {
   override async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     await act(async () => {
       await super.selectOptionValue(locator, values);
+    });
+  }
+
+  override async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
+    await act(async () => {
+      await super.setInputFiles(locator, files);
+    });
+  }
+
+  override async scrollIntoView(locator: PartLocator): Promise<void> {
+    await act(async () => {
+      await super.scrollIntoView(locator);
+    });
+  }
+
+  override async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
+    await act(async () => {
+      await super.scrollBy(locator, delta);
+    });
+  }
+
+  override async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
+    await act(async () => {
+      await super.dragTo(source, target);
+    });
+  }
+
+  override async drag(locator: PartLocator, delta: Point): Promise<void> {
+    await act(async () => {
+      await super.drag(locator, delta);
     });
   }
 

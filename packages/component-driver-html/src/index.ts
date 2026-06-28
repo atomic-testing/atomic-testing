@@ -3,6 +3,7 @@ export { HTMLButtonDriver } from './components/HTMLButtonDriver';
 export { HTMLCheckboxDriver } from './components/HTMLCheckboxDriver';
 export { HTMLCheckboxGroupDriver } from './components/HTMLCheckboxGroupDriver';
 export { HTMLElementDriver } from './components/HTMLElementDriver';
+export { HTMLFileInputDriver } from './components/HTMLFileInputDriver';
 export { HTMLHiddenInputDriver } from './components/HTMLHiddenInputDriver';
 export { HTMLOptionDriver } from './components/HTMLOptionDriver';
 export { HTMLRadioButtonGroupDriver } from './components/HTMLRadioButtonGroupDriver';

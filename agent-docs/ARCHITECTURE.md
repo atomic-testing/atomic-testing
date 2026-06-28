@@ -6,14 +6,14 @@ How the pieces connect at runtime. Terms are defined in [DOMAIN.md](DOMAIN.md). 
 
 A test always starts by building a `TestEngine` with an environment-specific factory. All factories produce the same `TestEngine<T>` type; they differ only in which `Interactor` they inject and how they render/clean up.
 
-| Factory | Environment | Interactor injected | File |
-|---------|-------------|---------------------|------|
-| `createDomTestEngine(element, parts)` | Raw DOM (pre-rendered) | `DOMInteractor` | [dom-core/createDomTestEngine.ts](../packages/dom-core/src/createDomTestEngine.ts#L13) |
-| `createTestEngine(node, parts, opt?)` | React 18 / 19 | `ReactInteractor` (`createRoot`) | [react-18/createTestEngine.ts](../packages/react-18/src/createTestEngine.ts#L25) |
-| `createTestEngine(node, parts, opt?)` | React ≤17 | `ReactInteractor` (`ReactDOM.render`) | [react-legacy/createTestEngine.ts](../packages/react-legacy/src/createTestEngine.ts#L25) |
-| `createTestEngine(component, parts, opt?)` | Vue 3 | `VueInteractor` | [vue-3/createTestEngine.ts](../packages/vue-3/src/createTestEngine.ts#L50) |
-| `createTestEngine(page, parts)` | Playwright (browser) | `PlaywrightInteractor` | [playwright/createTestEngine.ts](../packages/playwright/src/createTestEngine.ts#L14) |
-| `createRenderedTestEngine(rootEl, parts)` | React/Vue, already rendered (e.g. Storybook) | React/Vue interactor | [react-18](../packages/react-18/src/createTestEngine.ts#L65), [vue-3](../packages/vue-3/src/createTestEngine.ts#L98) |
+| Factory                                    | Environment                                  | Interactor injected                   | File                                                                                                                 |
+| ------------------------------------------ | -------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `createDomTestEngine(element, parts)`      | Raw DOM (pre-rendered)                       | `DOMInteractor`                       | [dom-core/createDomTestEngine.ts](../packages/dom-core/src/createDomTestEngine.ts#L13)                               |
+| `createTestEngine(node, parts, opt?)`      | React 18 / 19                                | `ReactInteractor` (`createRoot`)      | [react-18/createTestEngine.ts](../packages/react-18/src/createTestEngine.ts#L25)                                     |
+| `createTestEngine(node, parts, opt?)`      | React ≤17                                    | `ReactInteractor` (`ReactDOM.render`) | [react-legacy/createTestEngine.ts](../packages/react-legacy/src/createTestEngine.ts#L25)                             |
+| `createTestEngine(component, parts, opt?)` | Vue 3                                        | `VueInteractor`                       | [vue-3/createTestEngine.ts](../packages/vue-3/src/createTestEngine.ts#L50)                                           |
+| `createTestEngine(page, parts)`            | Playwright (browser)                         | `PlaywrightInteractor`                | [playwright/createTestEngine.ts](../packages/playwright/src/createTestEngine.ts#L14)                                 |
+| `createRenderedTestEngine(rootEl, parts)`  | React/Vue, already rendered (e.g. Storybook) | React/Vue interactor                  | [react-18](../packages/react-18/src/createTestEngine.ts#L65), [vue-3](../packages/vue-3/src/createTestEngine.ts#L98) |
 
 `TestEngine`'s constructor is `(locator, interactor, option?, cleanUp?)` ([TestEngine.ts#L23-L31](../packages/core/src/TestEngine.ts#L23-L31)). DOM/Playwright engines use an empty `[]` root locator; React/Vue engines tag their mount container with a `data-*` attribute and use `byAttribute(...)` as the root.
 
@@ -63,18 +63,19 @@ flowchart TD
 - **`PlaywrightInteractor implements Interactor` directly** — it does **not** extend `DOMInteractor`. Every method resolves the locator to CSS and calls `page.locator(css).<action>()`; Playwright handles waiting/retrying natively, so there is no `act()`/`nextTick()` ([PlaywrightInteractor.ts](../packages/playwright/src/PlaywrightInteractor.ts#L31-L324)). See [ADR-002](adr/002-interactor-abstraction.md).
 
 Key behavior differences to remember:
+
 - React/Vue interactors `clone()` to their own subclass (`new ReactInteractor(this.rootEl)`); the base `rootEl` is `protected` ([DOMInteractor.ts#L33](../packages/dom-core/src/DOMInteractor.ts#L33), [ReactInteractor.ts#L124-L126](../packages/react-core/src/ReactInteractor.ts#L124-L126)).
 - `PlaywrightInteractor.isVisible` wraps style reads in try/catch to tolerate elements detaching mid-animation ([PlaywrightInteractor.ts#L259-L297](../packages/playwright/src/PlaywrightInteractor.ts#L259-L297)); `DOMInteractor.isVisible` does not ([DOMInteractor.ts#L456-L478](../packages/dom-core/src/DOMInteractor.ts#L456-L478)).
 
 ## createTestEngine variants — what actually differs
 
-| Aspect | react-18 / react-19 | react-legacy | vue-3 |
-|--------|---------------------|--------------|-------|
-| Render API | `createRoot(container).render(node)` in `act()` | `ReactDOM.render(node, container)` in `act()` | `@testing-library/vue` `render()`, falls back to `createApp().mount()` |
-| `act` source | `@testing-library/react` | `react-dom/test-utils` | n/a (uses `nextTick`) |
-| Unmount | `root.unmount()` in `act()` | `ReactDOM.unmountComponentAtNode` | `renderResult.unmount()` / `app.unmount()` |
-| Root marker attribute | `data-atomic-testing-react` | `data-atomic-testing-react-legacy` | `data-atomic-testing-vue` |
-| Input node type | `ReactNode` | `ReactElement` | `Component \| VueSFCLikeComponent` |
+| Aspect                | react-18 / react-19                             | react-legacy                                  | vue-3                                                                  |
+| --------------------- | ----------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------- |
+| Render API            | `createRoot(container).render(node)` in `act()` | `ReactDOM.render(node, container)` in `act()` | `@testing-library/vue` `render()`, falls back to `createApp().mount()` |
+| `act` source          | `@testing-library/react`                        | `react-dom/test-utils`                        | n/a (uses `nextTick`)                                                  |
+| Unmount               | `root.unmount()` in `act()`                     | `ReactDOM.unmountComponentAtNode`             | `renderResult.unmount()` / `app.unmount()`                             |
+| Root marker attribute | `data-atomic-testing-react`                     | `data-atomic-testing-react-legacy`            | `data-atomic-testing-vue`                                              |
+| Input node type       | `ReactNode`                                     | `ReactElement`                                | `Component \| VueSFCLikeComponent`                                     |
 
 `react-18` and `react-19` are byte-for-byte equivalent in implementation (both target the `createRoot` API); they exist as separate packages only to pin different React peer ranges. See [ADR-003](adr/003-version-specific-packages.md). Option types `IReactTestEngineOption` / `IVueTestEngineOption` both add an optional `rootElement` mount target ([react-18/types.ts](../packages/react-18/src/types.ts#L3), [vue-3/types.ts](../packages/vue-3/src/types.ts#L3)).
 
@@ -118,8 +119,9 @@ flowchart TD
 ```
 
 Edges are "depends on" (arrow points from dependency to dependent). Notable real edges from `package.json`:
+
 - `component-driver-mui-v7` depends on `react-18` (and `@mui/material@^7`, `component-driver-html`, `core`, `dom-core`) ([mui-v7/package.json#L25-L33](../packages/component-driver-mui-v7/package.json#L25-L33)).
-- `component-driver-mui-x-v8` depends on `component-driver-mui-v6` (plus `component-driver-html`, `core`) ([mui-x-v8/package.json#L40-L45](../packages/component-driver-mui-x-v8/package.json#L40-L45)). [inferred] other mui-x versions pair with their contemporaneous mui-v* package — confirm in each `package.json`.
+- `component-driver-mui-x-v8` depends on `component-driver-mui-v6` (plus `component-driver-html`, `core`) ([mui-x-v8/package.json#L40-L45](../packages/component-driver-mui-x-v8/package.json#L40-L45)). [inferred] other mui-x versions pair with their contemporaneous mui-v\* package — confirm in each `package.json`.
 - `playwright` depends on `internal-test-runner` and `core` only; `@playwright/test` is a peer ([playwright/package.json#L31-L37](../packages/playwright/package.json#L31-L37)).
 
 ## The shared three-file test pattern
@@ -138,6 +140,7 @@ flowchart LR
 ```
 
 Mechanism:
+
 - **`TestSuiteInfo<T>`** = `{ title?, url, tests(getTestEngine, mapper) }` ([types.ts#L114-L121](../packages/internal-test-runner/src/types.ts#L114-L121)). `url` is where the E2E runner navigates in `beforeEach`; DOM runs ignore it.
 - **`testRunner(suite|suites, mapper, interactionInterface)`** wraps each suite in `mapper.describe`, installs a `beforeEach` that detects Jest's done-callback vs Playwright's fixture by inspecting `arguments[0]`, and calls `goto(url)` for E2E interfaces before invoking `suite.tests(getTestEngine, mapper)` ([testRunner.ts](../packages/internal-test-runner/src/testRunner.ts#L7-L50)).
 - **`TestFrameworkMapper`** normalizes assertions + lifecycle across runners: `assertEqual/assertNotEqual/assertTrue/assertFalse/assertApproxEqual`, `describe/test/it`, `beforeEach/afterEach/beforeAll/afterAll` ([types.ts#L72-L88](../packages/internal-test-runner/src/types.ts#L72-L88)). Adapters: `jestTestAdapter` (`@jest/globals`), `vitestAdapter` (`vitest`), `playWrightTestFrameworkMapper` (`@playwright/test`).
@@ -154,9 +157,9 @@ See [modules/test-runner.md](modules/test-runner.md) for the worked three-file e
 
 ## Key design decisions
 
-| Decision | Rationale | ADR |
-|----------|-----------|-----|
-| Semantic component-driver API over raw queries | Tests read in domain terms; selectors live in one place | [ADR-001](adr/001-component-driver-pattern.md) |
-| `Interactor` abstraction | One driver runs across DOM/React/Vue/Playwright | [ADR-002](adr/002-interactor-abstraction.md) |
-| Version-specific packages (mui-v5/6/7, react-18/19/legacy) | Isolate framework-major DOM/API differences from consumers | [ADR-003](adr/003-version-specific-packages.md) |
-| Shared `*.suite.ts` + `TestFrameworkMapper` | Author once, run in Jest/Vitest/Playwright | [ADR-004](adr/004-shared-three-file-test-pattern.md) |
+| Decision                                                   | Rationale                                                  | ADR                                                  |
+| ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| Semantic component-driver API over raw queries             | Tests read in domain terms; selectors live in one place    | [ADR-001](adr/001-component-driver-pattern.md)       |
+| `Interactor` abstraction                                   | One driver runs across DOM/React/Vue/Playwright            | [ADR-002](adr/002-interactor-abstraction.md)         |
+| Version-specific packages (mui-v5/6/7, react-18/19/legacy) | Isolate framework-major DOM/API differences from consumers | [ADR-003](adr/003-version-specific-packages.md)      |
+| Shared `*.suite.ts` + `TestFrameworkMapper`                | Author once, run in Jest/Vitest/Playwright                 | [ADR-004](adr/004-shared-three-file-test-pattern.md) |

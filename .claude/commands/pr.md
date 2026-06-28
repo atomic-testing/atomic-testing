@@ -1,20 +1,11 @@
 Generate a pull request title and description based on the current changes.
 
-## VCS Detection
+## SCM & base-branch detection
 
-Detect which version control system is in use:
-
-1. Run `sl root 2>/dev/null` - if successful, use **Sapling** workflow
-2. Otherwise, run `git rev-parse --show-toplevel 2>/dev/null` - if successful, use **Git** workflow
-3. If neither succeeds, inform the user they're not in a recognized repository
-
-## Base Branch Detection
-
-Auto-detect the base branch (check in order):
-
-1. `main`
-2. `master`
-3. Default branch from remote (e.g., `git symbolic-ref refs/remotes/origin/HEAD` or `sl config paths.default`)
+Detect the active SCM (`sl` vs `git`) and the base branch using the canonical recipe in
+[`.claude/scm.md`](../scm.md) — `sl root` → else `git rev-parse`; base branch `main` → `master` →
+remote default. A SessionStart hook already surfaces the active SCM each session. The diff and
+PR-submission steps below branch on that detected SCM.
 
 ## Getting the Diff
 

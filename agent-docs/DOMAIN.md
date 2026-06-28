@@ -4,22 +4,22 @@ Vocabulary, type system, and invariants for the `atomic-testing` library. Read t
 
 ## Glossary
 
-| Term | Definition | Code Reference |
-|------|-----------|----------------|
-| **TestEngine** | Root driver for a test scene. A `ComponentDriver` plus a `cleanUp()` hook. Created per-environment by a `createTestEngine` factory. | [TestEngine.ts](../packages/core/src/TestEngine.ts#L12) |
-| **ComponentDriver** | Base class exposing a semantic API (`click`, `getText`, `exists`, `hover`, `waitUntilComponentState`, …) over one component, plus typed access to its child `parts`. | [ComponentDriver.ts](../packages/core/src/drivers/ComponentDriver.ts#L25) |
-| **ContainerDriver** | A `ComponentDriver` that also exposes `content` parts — for components whose inner DOM is dynamic or portal-rendered (dialogs, popovers). | [ContainerDriver.ts](../packages/core/src/drivers/ContainerDriver.ts#L13) |
-| **ListComponentDriver** | A `ComponentDriver` for repeated, indefinite-length item collections; iterates items by `:nth-of-type`. | [ListComponentDriver.ts](../packages/core/src/drivers/ListComponentDriver.ts#L16) |
-| **Interactor** | Environment adapter interface. Performs the low-level actions a driver requests, against DOM, React, Vue, or Playwright. | [Interactor.ts](../packages/core/src/interactor/Interactor.ts#L26) |
-| **PartLocator** | How to find an element. Either a single `CssLocator` or a `CssLocator[]` chain. | [PartLocator.ts](../packages/core/src/locators/PartLocator.ts) |
-| **CssLocator** | A primitive selector + its relative position (`Root`/`Descendant`/`Same`) + source metadata. | [CssLocator.ts](../packages/core/src/locators/CssLocator.ts#L13) |
-| **LinkedCssLocator** | Experimental relational locator: match an element by an attribute extracted from another element. | [LinkedCssLocator.ts](../packages/core/src/locators/LinkedCssLocator.ts), [byLinkedElement.ts](../packages/core/src/locators/byLinkedElement.ts#L19) |
-| **ScenePart** | `Record<string, ScenePartDefinition>` — the declarative map of a component's named child parts. | [partTypes.ts](../packages/core/src/partTypes.ts#L119) |
-| **ScenePartDefinition** | One entry in a `ScenePart`: a `{ locator, driver, option? }` triple (component, container, or list variant). | [partTypes.ts](../packages/core/src/partTypes.ts#L111-L114) |
-| **`ScenePartDriver<T>`** | Computed type mapping each part name to its instantiated driver (`InstanceType<T[name]['driver']>`). | [partTypes.ts](../packages/core/src/partTypes.ts#L121-L123) |
-| **`IInputDriver<V>`** | Form-field driver contract: `getValue(): Promise<V>` + `setValue(v): Promise<boolean>`. | [driverTypes.ts](../packages/core/src/drivers/driverTypes.ts#L7) |
-| **driverName** | Abstract getter every driver implements; a human-readable id used in error messages and debugging. | [ComponentDriver.ts](../packages/core/src/drivers/ComponentDriver.ts#L253) |
-| **Interactor (clone)** | Interactors are cloneable (`clone()`), so a driver subtree can be re-bound to a fresh adapter. | [Interactor.ts](../packages/core/src/interactor/Interactor.ts#L152) |
+| Term                     | Definition                                                                                                                                                           | Code Reference                                                                                                                                       |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **TestEngine**           | Root driver for a test scene. A `ComponentDriver` plus a `cleanUp()` hook. Created per-environment by a `createTestEngine` factory.                                  | [TestEngine.ts](../packages/core/src/TestEngine.ts#L12)                                                                                              |
+| **ComponentDriver**      | Base class exposing a semantic API (`click`, `getText`, `exists`, `hover`, `waitUntilComponentState`, …) over one component, plus typed access to its child `parts`. | [ComponentDriver.ts](../packages/core/src/drivers/ComponentDriver.ts#L25)                                                                            |
+| **ContainerDriver**      | A `ComponentDriver` that also exposes `content` parts — for components whose inner DOM is dynamic or portal-rendered (dialogs, popovers).                            | [ContainerDriver.ts](../packages/core/src/drivers/ContainerDriver.ts#L13)                                                                            |
+| **ListComponentDriver**  | A `ComponentDriver` for repeated, indefinite-length item collections; iterates items by `:nth-of-type`.                                                              | [ListComponentDriver.ts](../packages/core/src/drivers/ListComponentDriver.ts#L16)                                                                    |
+| **Interactor**           | Environment adapter interface. Performs the low-level actions a driver requests, against DOM, React, Vue, or Playwright.                                             | [Interactor.ts](../packages/core/src/interactor/Interactor.ts#L26)                                                                                   |
+| **PartLocator**          | How to find an element. Either a single `CssLocator` or a `CssLocator[]` chain.                                                                                      | [PartLocator.ts](../packages/core/src/locators/PartLocator.ts)                                                                                       |
+| **CssLocator**           | A primitive selector + its relative position (`Root`/`Descendant`/`Same`) + source metadata.                                                                         | [CssLocator.ts](../packages/core/src/locators/CssLocator.ts#L13)                                                                                     |
+| **LinkedCssLocator**     | Experimental relational locator: match an element by an attribute extracted from another element.                                                                    | [LinkedCssLocator.ts](../packages/core/src/locators/LinkedCssLocator.ts), [byLinkedElement.ts](../packages/core/src/locators/byLinkedElement.ts#L19) |
+| **ScenePart**            | `Record<string, ScenePartDefinition>` — the declarative map of a component's named child parts.                                                                      | [partTypes.ts](../packages/core/src/partTypes.ts#L119)                                                                                               |
+| **ScenePartDefinition**  | One entry in a `ScenePart`: a `{ locator, driver, option? }` triple (component, container, or list variant).                                                         | [partTypes.ts](../packages/core/src/partTypes.ts#L111-L114)                                                                                          |
+| **`ScenePartDriver<T>`** | Computed type mapping each part name to its instantiated driver (`InstanceType<T[name]['driver']>`).                                                                 | [partTypes.ts](../packages/core/src/partTypes.ts#L121-L123)                                                                                          |
+| **`IInputDriver<V>`**    | Form-field driver contract: `getValue(): Promise<V>` + `setValue(v): Promise<boolean>`.                                                                              | [driverTypes.ts](../packages/core/src/drivers/driverTypes.ts#L7)                                                                                     |
+| **driverName**           | Abstract getter every driver implements; a human-readable id used in error messages and debugging.                                                                   | [ComponentDriver.ts](../packages/core/src/drivers/ComponentDriver.ts#L253)                                                                           |
+| **Interactor (clone)**   | Interactors are cloneable (`clone()`), so a driver subtree can be re-bound to a fresh adapter.                                                                       | [Interactor.ts](../packages/core/src/interactor/Interactor.ts#L152)                                                                                  |
 
 ## Type system
 
@@ -76,13 +76,13 @@ classDiagram
 
 Drivers implement small capability interfaces from [driverTypes.ts](../packages/core/src/drivers/driverTypes.ts):
 
-| Interface | Members | Implemented by (example) |
-|-----------|---------|--------------------------|
-| `IFormFieldDriver<T>` | `getValue()` | base of input drivers |
-| `IInputDriver<T>` | `getValue()`, `setValue()` | `HTMLTextInputDriver`, `HTMLSelectDriver`, mui `SelectDriver` |
-| `IToggleDriver` | `isSelected()`, `setSelected()` | checkbox/switch drivers |
-| `IClickableDriver` | `click()` | `HTMLButtonDriver` |
-| `IMouseInteractableDriver` | `hover()` | `HTMLButtonDriver` |
+| Interface                  | Members                         | Implemented by (example)                                      |
+| -------------------------- | ------------------------------- | ------------------------------------------------------------- |
+| `IFormFieldDriver<T>`      | `getValue()`                    | base of input drivers                                         |
+| `IInputDriver<T>`          | `getValue()`, `setValue()`      | `HTMLTextInputDriver`, `HTMLSelectDriver`, mui `SelectDriver` |
+| `IToggleDriver`            | `isSelected()`, `setSelected()` | checkbox/switch drivers                                       |
+| `IClickableDriver`         | `click()`                       | `HTMLButtonDriver`                                            |
+| `IMouseInteractableDriver` | `hover()`                       | `HTMLButtonDriver`                                            |
 
 ## Locator vocabulary
 
@@ -112,14 +112,14 @@ Builders (all in [locators/](../packages/core/src/locators/index.ts)) produce `C
 
 All errors are exported from [core/src/errors/index.ts](../packages/core/src/errors/index.ts); each has a matching string id constant.
 
-| Error | Thrown when | Base |
-|-------|-------------|------|
-| `ElementNotFoundError` | a mutative interactor action targets a non-existent element | `InteractorErrorBase` (locator-scoped) |
-| `WaitForFailureError` | `waitUntilComponentState` times out before reaching the condition | `InteractorErrorBase` |
-| `MissingPartError` | `enforcePartExistence` finds a declared part absent | `ErrorBase` (driver-scoped) |
-| `TooManyMatchingElementError` | a single-element query matches more than one element | `ErrorBase` |
-| `ItemNotFoundError` | a list/item lookup fails | `ErrorBase` |
-| `MenuItemNotFoundError` / `MenuItemDisabledError` | MUI menu/select item missing or disabled | `ErrorBase` (in the mui driver packages) |
+| Error                                             | Thrown when                                                       | Base                                     |
+| ------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------- |
+| `ElementNotFoundError`                            | a mutative interactor action targets a non-existent element       | `InteractorErrorBase` (locator-scoped)   |
+| `WaitForFailureError`                             | `waitUntilComponentState` times out before reaching the condition | `InteractorErrorBase`                    |
+| `MissingPartError`                                | `enforcePartExistence` finds a declared part absent               | `ErrorBase` (driver-scoped)              |
+| `TooManyMatchingElementError`                     | a single-element query matches more than one element              | `ErrorBase`                              |
+| `ItemNotFoundError`                               | a list/item lookup fails                                          | `ErrorBase`                              |
+| `MenuItemNotFoundError` / `MenuItemDisabledError` | MUI menu/select item missing or disabled                          | `ErrorBase` (in the mui driver packages) |
 
 ## See also
 

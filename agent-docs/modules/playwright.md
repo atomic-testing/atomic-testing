@@ -8,14 +8,14 @@ Run the same component drivers in a real browser via Playwright. Provides a `Pla
 
 Barrel: [playwright/src/index.ts](../../packages/playwright/src/index.ts).
 
-| Export | Kind | File |
-|--------|------|------|
-| `PlaywrightInteractor` | class (`implements Interactor`) | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
-| `createTestEngine(page, parts)` | function | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14) |
-| `goto(url, fixture?)` | function | [testRunnerAdapter.ts](../../packages/playwright/src/testRunnerAdapter.ts#L17) |
-| `playwrightGetTestEngine(scenePart, fixture)` | function | [testRunnerAdapter.ts#L30](../../packages/playwright/src/testRunnerAdapter.ts#L30) |
-| `playWrightTestFrameworkMapper` | `TestFrameworkMapper` | [testRunnerAdapter.ts#L41](../../packages/playwright/src/testRunnerAdapter.ts#L41) |
-| `getTestRunnerInterface<T>()` | function → `E2eTestInterface<T>` | [testRunnerAdapter.ts#L74](../../packages/playwright/src/testRunnerAdapter.ts#L74) |
+| Export                                        | Kind                             | File                                                                                 |
+| --------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
+| `PlaywrightInteractor`                        | class (`implements Interactor`)  | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
+| `createTestEngine(page, parts)`               | function                         | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14)         |
+| `goto(url, fixture?)`                         | function                         | [testRunnerAdapter.ts](../../packages/playwright/src/testRunnerAdapter.ts#L17)       |
+| `playwrightGetTestEngine(scenePart, fixture)` | function                         | [testRunnerAdapter.ts#L30](../../packages/playwright/src/testRunnerAdapter.ts#L30)   |
+| `playWrightTestFrameworkMapper`               | `TestFrameworkMapper`            | [testRunnerAdapter.ts#L41](../../packages/playwright/src/testRunnerAdapter.ts#L41)   |
+| `getTestRunnerInterface<T>()`                 | function → `E2eTestInterface<T>` | [testRunnerAdapter.ts#L74](../../packages/playwright/src/testRunnerAdapter.ts#L74)   |
 
 Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@playwright/test` is a peer ([package.json#L31-L37](../../packages/playwright/package.json#L31-L37)).
 
@@ -49,6 +49,7 @@ Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@pl
 - `getTestRunnerInterface()` returns `{ getTestEngine: playwrightGetTestEngine, goto }` — passed as the third arg to `testRunner` ([testRunnerAdapter.ts#L74-L79](../../packages/playwright/src/testRunnerAdapter.ts#L74-L79)).
 
 E2E adapter file (from `CLAUDE.md`):
+
 ```ts
 testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 ```
