@@ -13,6 +13,10 @@ export const basicTablePaginationExampleScenePart = {
     locator: byDataTestId('beta-table-pagination'),
     driver: TablePaginationDriver,
   },
+  gamma: {
+    locator: byDataTestId('gamma-table-pagination'),
+    driver: TablePaginationDriver,
+  },
 } satisfies ScenePart;
 
 export const basicTablePaginationExample: IExampleUnit<typeof basicTablePaginationExampleScenePart, JSX.Element> = {
@@ -66,6 +70,12 @@ export const basicTablePaginationTestSuite: TestSuiteInfo<typeof basicTablePagin
     test('previousPage returns false on the first page', async () => {
       assertFalse(await engine().parts.alpha.previousPage());
       assertEqual(await engine().parts.alpha.getDisplayedRowsText(), '1–5 of 13');
+    });
+
+    test('reports the "All" option as its real value -1, not a read failure', async () => {
+      // MUI's "All" option has value -1; getRowsPerPage returns it verbatim and
+      // reserves undefined for the unreadable case, so the two never collide.
+      assertEqual(await engine().parts.gamma.getRowsPerPage(), -1);
     });
   },
 };
