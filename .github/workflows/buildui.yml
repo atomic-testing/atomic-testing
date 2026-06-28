@@ -20,13 +20,13 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup with build
         uses: ./.github/actions/builderui-setup
 
       - name: Cache built packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             packages/*/build
@@ -34,7 +34,7 @@ jobs:
           key: build-packages-${{ github.sha }}
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: built-packages
           path: |
@@ -52,13 +52,13 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup dependencies only
         uses: ./.github/actions/deps-setup
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: built-packages
           path: packages
@@ -78,13 +78,13 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup dependencies only
         uses: ./.github/actions/deps-setup
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: built-packages
           path: packages
@@ -126,13 +126,13 @@ jobs:
             directory: 'vue-3-test'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup dependencies only
         uses: ./.github/actions/deps-setup
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: built-packages
           path: packages
@@ -155,15 +155,15 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Use Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
       - name: PNPM Setup
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10
           run_install: false
