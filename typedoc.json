@@ -15,7 +15,8 @@
     "packages/component-driver-mui-x-v5",
     "packages/component-driver-mui-x-v6",
     "packages/component-driver-mui-x-v7",
-    "packages/component-driver-mui-x-v8"
+    "packages/component-driver-mui-x-v8",
+    "packages/component-driver-mui-x-v9"
   ],
   "name": "Atomic Testing",
   "entryPointStrategy": "packages",
