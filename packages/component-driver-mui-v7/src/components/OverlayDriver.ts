@@ -8,16 +8,11 @@ const defaultTransitionDuration = 250;
  * Popover and SpeedDial are prospective consumers). It owns the open/close
  * lifecycle that {@link DialogDriver} first proved out: `isOpen` derived from the
  * visible surface, `waitForOpen`/`waitForClose` spanning the transition, and
- * `closeByBackdrop`.
+ * dismissal via `closeByBackdrop`/`closeByEscape`.
  *
  * Subclasses supply {@link getSurfaceLocator} (the element whose visibility means
  * "open") and, when the overlay is portal-rendered, override
  * `overriddenParentLocator()`/`overrideLocatorRelativePosition()` to re-root.
- *
- * `closeByEscape` is intentionally absent: keyboard dismissal needs a key-press
- * primitive the `Interactor` interface does not yet expose, which would have to be
- * added to every interactor (DOM/React/Vue/Playwright). It is deferred rather than
- * partially implemented.
  */
 export abstract class OverlayDriver<ContentT extends ScenePart, T extends ScenePart = {}> extends ContainerDriver<
   ContentT,
@@ -92,6 +87,26 @@ export abstract class OverlayDriver<ContentT extends ScenePart, T extends SceneP
       // onClick listens for. (A separate trailing click would race the dismissal
       // and miss the unmounting backdrop in Playwright.)
       await this.interactor.click(backdrop);
+    }
+    return this.waitForClose(timeoutMs);
+  }
+
+  /**
+   * Dismiss by pressing `Escape` on the overlay surface, then wait for the close
+   * transition. MUI's Modal handles a `keydown` of `Escape` (reason
+   * `"escapeKeyDown"`) at the portal root; the event bubbles there from the
+   * focused surface — a code path distinct from {@link closeByBackdrop} and
+   * unreachable by any click, since a click never produces a key event. The
+   * surface is the focus-holding element while the overlay is open, mirroring how
+   * {@link DialogDriver} presses Escape on its container. Whether it actually
+   * closes depends on the consumer honoring the dismissal (and
+   * `disableEscapeKeyDown`); the returned boolean reflects the observed close, not
+   * merely the key press.
+   */
+  async closeByEscape(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
+    const surface = this.getSurfaceLocator();
+    if (await this.interactor.exists(surface)) {
+      await this.interactor.pressKey(surface, 'Escape');
     }
     return this.waitForClose(timeoutMs);
   }
