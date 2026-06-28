@@ -1,10 +1,12 @@
 import {
   BlurOption,
+  BoundingRect,
   byCssSelector,
   ClickOption,
   CssProperty,
   dateUtil,
   defaultWaitForOption,
+  ElementNotFoundError,
   EnterTextOption,
   FocusOption,
   HoverOption,
@@ -19,6 +21,7 @@ import {
   MouseUpOption,
   Optional,
   PartLocator,
+  Point,
   PressKeyOption,
   timingUtil,
   WaitForOption,
@@ -44,6 +47,105 @@ export class PlaywrightInteractor implements Interactor {
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).selectOption(values);
+  }
+
+  /**
+   * Set the selected files on a `<input type="file">` element.
+   *
+   * Playwright's native `setInputFiles` reads the given paths from disk and
+   * populates the input's `FileList`, firing the change event — the only way to
+   * fill a file input, whose value cannot be set programmatically. Following
+   * this layer's convention, no `ElementNotFoundError` is fabricated: a missing
+   * element surfaces through Playwright's own auto-wait timeout.
+   *
+   * @param locator - Locator of the `<input type="file">` element
+   * @param files - One or more filesystem paths to upload
+   */
+  async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    await this.page.locator(cssLocator).setInputFiles(files);
+  }
+
+  /**
+   * Scroll the located element into view, no-op if already visible.
+   *
+   * Delegates to Playwright's `scrollIntoViewIfNeeded`, which performs a real
+   * layout-aware scroll in the browser. Per this layer's convention, no
+   * `ElementNotFoundError` is fabricated: a missing element surfaces through
+   * Playwright's own auto-wait timeout.
+   *
+   * @param locator - Locator of the element to scroll into view
+   */
+  async scrollIntoView(locator: PartLocator): Promise<void> {
+    const css = await locatorUtil.toCssSelector(locator, this);
+    await this.page.locator(css).scrollIntoViewIfNeeded();
+  }
+
+  /**
+   * Scroll the located element by the given pixel delta.
+   *
+   * The scroll is performed by evaluating `el.scrollBy(dx, dy)` on the element
+   * itself rather than `page.mouse.wheel`. A wheel event scrolls whatever sits
+   * under the pointer and is non-deterministic across chromium/firefox/webkit,
+   * whereas evaluating `scrollBy` on the resolved element scrolls exactly that
+   * element. This is a deliberate deviation from ADR 0001's per-engine table
+   * (which lists `page.mouse.wheel`), taking the alternative the step-5 prompt
+   * permits ("or evaluate el.scrollBy") for cross-browser determinism. As with
+   * {@link scrollIntoView}, no `ElementNotFoundError` is fabricated; a missing
+   * element surfaces through Playwright's own auto-wait timeout.
+   *
+   * @param locator - Locator of the scrollable element
+   * @param delta - Pixel offset to scroll by
+   */
+  async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
+    const css = await locatorUtil.toCssSelector(locator, this);
+    await this.page.locator(css).evaluate((el, d) => el.scrollBy(d.x, d.y), { x: delta.x, y: delta.y });
+  }
+
+  /**
+   * Drag the source element and drop it onto the target element.
+   *
+   * Delegates to Playwright's native `Locator.dragTo`, which performs a real,
+   * layout-aware drag gesture in the browser. Per this layer's convention, no
+   * `ElementNotFoundError` is fabricated: a missing element surfaces through
+   * Playwright's own auto-wait timeout.
+   *
+   * @param source - Locator of the element to drag
+   * @param target - Locator of the drop target
+   */
+  async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
+    const srcCss = await locatorUtil.toCssSelector(source, this);
+    const tgtCss = await locatorUtil.toCssSelector(target, this);
+    await this.page.locator(srcCss).dragTo(this.page.locator(tgtCss));
+  }
+
+  /**
+   * Drag the located element by the given pixel delta from its center.
+   *
+   * The gesture is a single uninterrupted `move → down → move → up` sequence
+   * computed from the element's `boundingBox()` center. It deliberately does NOT
+   * reuse {@link mouseMove}/{@link mouseDown} — `mouseMove` resets the pointer
+   * with `page.mouse.move(0, 0)` after hovering, which would corrupt the drag
+   * path (see ADR 0001, option 5). `boundingBox()` returns `null` for a
+   * detached/invisible element rather than auto-waiting, so this is one of the
+   * few Playwright methods that throws `ElementNotFoundError`.
+   *
+   * @param locator - Locator of the element to drag
+   * @param delta - Pixel offset to drag by
+   * @throws {ElementNotFoundError} If the element has no bounding box
+   */
+  async drag(locator: PartLocator, delta: Point): Promise<void> {
+    const css = await locatorUtil.toCssSelector(locator, this);
+    const box = await this.page.locator(css).boundingBox();
+    if (box == null) {
+      throw new ElementNotFoundError(locator, 'drag');
+    }
+    const cx = box.x + box.width / 2;
+    const cy = box.y + box.height / 2;
+    await this.page.mouse.move(cx, cy);
+    await this.page.mouse.down();
+    await this.page.mouse.move(cx + delta.x, cy + delta.y, { steps: 8 });
+    await this.page.mouse.up();
   }
 
   /**
@@ -126,6 +228,21 @@ export class PlaywrightInteractor implements Interactor {
     await this.page.locator(cssLocator).click({ position: option?.position });
   }
 
+  /**
+   * Dispatch a right-click on the located element to open its context menu.
+   *
+   * Delegates to Playwright's native right-button click, which fires a real
+   * `contextmenu` event in the browser. Per this layer's convention, no
+   * `ElementNotFoundError` is fabricated: a missing element surfaces through
+   * Playwright's own auto-wait timeout.
+   *
+   * @param locator - Locator of the element to right-click
+   */
+  async contextMenu(locator: PartLocator): Promise<void> {
+    const css = await locatorUtil.toCssSelector(locator, this);
+    await this.page.locator(css).click({ button: 'right' });
+  }
+
   async hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).hover({ position: option?.position });
@@ -186,11 +303,28 @@ export class PlaywrightInteractor implements Interactor {
     await this.page.locator(cssLocator).blur();
   }
 
-  async pressKey(locator: PartLocator, key: string, _option?: Partial<PressKeyOption>): Promise<void> {
+  async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    // Compose Playwright's chord syntax — modifiers joined to the key by `+`, in
+    // Playwright's accepted Control+Alt+Shift+Meta order — so the browser holds
+    // those modifiers across the keypress and the event carries ctrlKey/etc.
+    const modifiers: string[] = [];
+    if (option?.ctrl) {
+      modifiers.push('Control');
+    }
+    if (option?.alt) {
+      modifiers.push('Alt');
+    }
+    if (option?.shift) {
+      modifiers.push('Shift');
+    }
+    if (option?.meta) {
+      modifiers.push('Meta');
+    }
+    const chord = modifiers.length > 0 ? `${modifiers.join('+')}+${key}` : key;
     // locator.press auto-focuses the element, then dispatches a real, trusted
     // KeyboardEvent — the browser equivalent of the DOM focus-first keyDown/keyUp.
-    await this.page.locator(cssLocator).press(key);
+    await this.page.locator(cssLocator).press(chord);
   }
 
   async activate(locator: PartLocator): Promise<void> {
@@ -247,6 +381,27 @@ export class PlaywrightInteractor implements Interactor {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const text = await this.page.locator(cssLocator).textContent();
     return text ?? undefined;
+  }
+
+  /**
+   * Get the located element's bounding rectangle.
+   *
+   * `boundingBox()` returns `null` for a detached/invisible element rather than
+   * auto-waiting, so this is one of the few Playwright methods that throws
+   * `ElementNotFoundError` — matching the house "element not found" contract
+   * (ADR 0001).
+   *
+   * @param locator - Locator of the element to measure
+   * @returns The element's bounding rectangle in CSS pixels
+   * @throws {ElementNotFoundError} If the element has no bounding box
+   */
+  async getBoundingRect(locator: PartLocator): Promise<BoundingRect> {
+    const css = await locatorUtil.toCssSelector(locator, this);
+    const box = await this.page.locator(css).boundingBox();
+    if (box == null) {
+      throw new ElementNotFoundError(locator, 'getBoundingRect');
+    }
+    return { x: box.x, y: box.y, width: box.width, height: box.height };
   }
 
   async exists(locator: PartLocator): Promise<boolean> {

@@ -46,11 +46,11 @@ diff surgical; surface adjacent smells, don't silently fix them.
 ## Phase 1 — Find the real DOM (don't guess)
 
 The component library's DOM is rarely what you'd assume (MUI puts `data-testid`
-on the Checkbox **root span**, not the `<input>`; the label is a *sibling under a
-wrapping `<label>`*, not a sibling of the input). **Render it and look.**
+on the Checkbox **root span**, not the `<input>`; the label is a _sibling under a
+wrapping `<label>`_, not a sibling of the input). **Render it and look.**
 
 Fastest authoritative probe — a throwaway `*.dom.test.ts` in the test package's
-`__tests__/` (jsdom is the *stricter* selector engine, so what passes here passes
+`__tests__/` (jsdom is the _stricter_ selector engine, so what passes here passes
 in real browsers):
 
 ```ts
@@ -95,20 +95,21 @@ that are stable across library versions and semantic over class-coupled. In orde
    appends as a descendant). Mirror `TextFieldDriver`'s `label`/`helperText` parts.
 4. **Ancestor / sibling outside the subtree** (e.g. MUI's implicit wrapping
    `<label>`): CSS can only go "up" via `:has()`. Re-root at the ancestor matched
-   against *this* element, **keeping the surrounding scope** so sibling instances
+   against _this_ element, **keeping the surrounding scope** so sibling instances
    never collide:
 
    ```ts
    const chain = locatorUtil.toChain(this.locator);
-   const self = chain[chain.length - 1].selector;            // this element's own selector
+   const self = chain[chain.length - 1].selector; // this element's own selector
    const target = locatorUtil.append(
-     chain.slice(0, -1),                                     // keep engine-root scope
-     byCssSelector(`<ancestor>:has(${self}) <descendant>`),  // e.g. `label:has(${self})`
+     chain.slice(0, -1), // keep engine-root scope
+     byCssSelector(`<ancestor>:has(${self}) <descendant>`) // e.g. `label:has(${self})`
    );
    ```
 
    `:has()` is supported by jsdom's nwsapi (≥2.2) and all three Playwright engines
    (Chromium/Firefox/WebKit) — but **verify in Phase 1**, don't assume.
+
 5. **Portal / outside-the-tree content** (Dialog, Menu, Drawer): override
    `overriddenParentLocator()` + `overrideLocatorRelativePosition()` to re-root
    (see `DialogDriver`/`MenuDriver`).
@@ -128,10 +129,10 @@ selector, not the full chain.
 - `getLabel`/`getText` is **not** an interface method — adding it needs no
   interface change. State accessors map to existing `interactor` ops
   (`hasAttribute`, `hasCssClass`, `getAttribute`, `isDisabled`, …).
-- Only if a genuinely new *interaction* is needed (e.g. keyboard Arrow/Home for
+- Only if a genuinely new _interaction_ is needed (e.g. keyboard Arrow/Home for
   sliders) do you touch the `Interactor` interface — then you must implement it in
   **every** interactor (DOM/React/Vue/Playwright) and prove it via the HTML driver
-  + `component-driver-html-test`. This is the expensive path; avoid if a locator works.
+  - `component-driver-html-test`. This is the expensive path; avoid if a locator works.
 
 ## Phase 4 — Tests (shared suite, runs in both worlds)
 
@@ -162,12 +163,12 @@ the order they bite:
   `baseURL` must equal that port — **clone leftovers get this wrong** (v7's was
   stale at 5116). Fix the config to match.
 - **React duplication**: if the app shows a blank `#root` and the console throws
-  *"Invalid hook call … more than one copy of React" / "reading 'useContext' of
-  null"*, add `resolve.dedupe: ['react','react-dom']` to the package's
+  _"Invalid hook call … more than one copy of React" / "reading 'useContext' of
+  null"_, add `resolve.dedupe: ['react','react-dom']` to the package's
   `vite.config.ts`, then restart Vite with `rm -rf node_modules/.vite`.
 - **Reporter**: the default `html` reporter hangs serving a report (no stdout in a
   headless run). Use `--reporter=list` and redirect to a file.
-- **Timeout**: the per-test timeout is a tight 3s; a *cold* Vite first-compile can
+- **Timeout**: the per-test timeout is a tight 3s; a _cold_ Vite first-compile can
   blow it. If pre-existing tests time out at the wall, the app likely isn't
   rendering (see React-dup above), not your code.
 

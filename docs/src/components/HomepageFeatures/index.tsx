@@ -65,7 +65,7 @@ export default function HomepageFeatures(): JSX.Element {
           <h2 className={styles.headingTitle}>Why teams adopt it</h2>
         </header>
         <div className={styles.grid}>
-          {featureList.map((feature) => (
+          {featureList.map(feature => (
             <Feature key={feature.title} {...feature} />
           ))}
         </div>

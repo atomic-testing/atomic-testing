@@ -1,6 +1,7 @@
 import { locatorUtil } from '..';
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
+import { BoundingRect, Point } from '../geometry';
 import {
   ClickOption,
   FocusOption,
@@ -202,10 +203,77 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
+   * Dispatch a right-click / `contextmenu` event on the component. See {@link Interactor.contextMenu}.
+   */
+  async contextMenu(): Promise<void> {
+    return this.interactor.contextMenu(this.locator);
+  }
+
+  /**
    * Activate the component without relying on pointer geometry. See {@link Interactor.activate}.
    */
   async activate(): Promise<void> {
     return this.interactor.activate(this.locator);
+  }
+
+  /**
+   * Scroll the component into the viewport. See {@link Interactor.scrollIntoView}.
+   *
+   * jsdom has no layout engine, so the scroll is a no-op there and behavioral
+   * assertions (visibility, offset) are E2E-only.
+   */
+  async scrollIntoView(): Promise<void> {
+    return this.interactor.scrollIntoView(this.locator);
+  }
+
+  /**
+   * Scroll the component by the given pixel delta. See {@link Interactor.scrollBy}.
+   *
+   * jsdom has no layout engine, so the scroll is a no-op there and behavioral
+   * assertions (resulting offset) are E2E-only.
+   *
+   * @param delta Pixel offset to scroll by
+   */
+  async scrollBy(delta: Point): Promise<void> {
+    return this.interactor.scrollBy(this.locator, delta);
+  }
+
+  /**
+   * Drag this component and drop it onto another component. See {@link Interactor.dragTo}.
+   *
+   * Prefer a keyboard-driven `setValue` over a true drag in real drivers — these
+   * drag primitives exist only for cases keyboard cannot express (e.g. panning a
+   * Lightbox, reordering a column). jsdom has no layout engine, so the positional
+   * outcome of the drag is E2E-only there.
+   *
+   * @param target Another driver whose root element is the drop target
+   */
+  async dragTo(target: ComponentDriver<any>): Promise<void> {
+    return this.interactor.dragTo(this.locator, target.locator);
+  }
+
+  /**
+   * Drag this component by the given pixel delta from its center. See {@link Interactor.drag}.
+   *
+   * Prefer a keyboard-driven `setValue` over a true drag in real drivers — these
+   * drag primitives exist only for cases keyboard cannot express (e.g. panning a
+   * Lightbox, reordering a column). jsdom has no layout engine, so the positional
+   * outcome of the drag is E2E-only there.
+   *
+   * @param delta Pixel offset to drag by
+   */
+  async drag(delta: Point): Promise<void> {
+    return this.interactor.drag(this.locator, delta);
+  }
+
+  /**
+   * Get this component's bounding rectangle. See {@link Interactor.getBoundingRect}.
+   *
+   * jsdom has no layout engine, so every coordinate and dimension is `0` there;
+   * real geometry is E2E-only.
+   */
+  getBoundingRect(): Promise<BoundingRect> {
+    return this.interactor.getBoundingRect(this.locator);
   }
 
   /**

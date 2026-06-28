@@ -85,6 +85,21 @@ export interface TestFrameworkMapper {
 
   test: Test;
   it: Test;
+
+  /**
+   * Whether the test environment has a real layout engine.
+   *
+   * `true` => a real browser with layout (Playwright): `getBoundingClientRect`
+   * returns real geometry and `scrollIntoView` / `scrollBy` / drag produce
+   * observable effects.
+   *
+   * `false` / `undefined` => jsdom, which has no layout: `getBoundingClientRect`
+   * is all zeros and `scrollIntoView` / `scrollBy` / drag are no-ops. Suites gate
+   * behavioral scroll / drag / geometry assertions on this flag.
+   *
+   * Optional so existing adapters (e.g. vitest) need no change to keep compiling.
+   */
+  hasLayout?: boolean;
 }
 
 export type GetTestEngine<T extends ScenePart> = (scenePart: T, context?: any) => TestEngine<T>;

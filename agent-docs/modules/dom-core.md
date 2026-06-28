@@ -8,12 +8,12 @@ The base DOM implementation of `Interactor`. Turns a `PartLocator` into real DOM
 
 Barrel: [dom-core/src/index.ts](../../packages/dom-core/src/index.ts).
 
-| Export | Kind | File |
-|--------|------|------|
-| `DOMInteractor` | class (`implements Interactor`) | [DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts#L32) |
-| `createDomTestEngine(element, parts, _option?)` | function | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13) |
-| `FakeMouseEvent` | class | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5) |
-| `IDomTestEngineOption` | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3) |
+| Export                                          | Kind                              | File                                                                                        |
+| ----------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------- |
+| `DOMInteractor`                                 | class (`implements Interactor`)   | [DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts#L32)                        |
+| `createDomTestEngine(element, parts, _option?)` | function                          | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13)            |
+| `FakeMouseEvent`                                | class                             | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5) |
+| `IDomTestEngineOption`                          | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3)                                         |
 
 Depends on: `@atomic-testing/core`, `@testing-library/dom`, `@testing-library/user-event`.
 

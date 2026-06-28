@@ -61,6 +61,55 @@ importers:
         specifier: ^8.0.16
         version: 8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0)
 
+  package-tests/component-driver-astryx-test:
+    dependencies:
+      '@astryxdesign/core':
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@astryxdesign/theme-neutral':
+        specifier: ^0.1.1
+        version: 0.1.1(@astryxdesign/core@0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@atomic-testing/internal-react-example':
+        specifier: workspace:*
+        version: link:../../packages/internal-react-example
+      react:
+        specifier: ^19.2.3
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.3
+        version: 19.2.7(react@19.2.7)
+      react-router-dom:
+        specifier: ^7.7.1
+        version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+    devDependencies:
+      '@atomic-testing/component-driver-astryx':
+        specifier: workspace:*
+        version: link:../../packages/component-driver-astryx
+      '@atomic-testing/component-driver-html':
+        specifier: workspace:*
+        version: link:../../packages/component-driver-html
+      '@atomic-testing/internal-test-runner':
+        specifier: workspace:*
+        version: link:../../packages/internal-test-runner
+      '@atomic-testing/internal-test-runner-jest-adapter':
+        specifier: workspace:*
+        version: link:../../packages/internal-test-runner-jest-adapter
+      '@atomic-testing/playwright':
+        specifier: workspace:*
+        version: link:../../packages/playwright
+      '@atomic-testing/react-19':
+        specifier: workspace:*
+        version: link:../../packages/react-19
+      '@types/react':
+        specifier: ^19.2.7
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.17)
+
   package-tests/component-driver-html-test:
     dependencies:
       '@atomic-testing/core':
@@ -779,6 +828,31 @@ importers:
         specifier: ^3.5.0
         version: 3.5.17(typescript@5.8.3)
 
+  packages/component-driver-astryx:
+    dependencies:
+      '@astryxdesign/core':
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@atomic-testing/component-driver-html':
+        specifier: workspace:*
+        version: link:../component-driver-html
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../core
+      react:
+        specifier: '>=19.0.0'
+        version: 19.2.7
+      react-dom:
+        specifier: '>=19.0.0'
+        version: 19.2.7(react@19.2.7)
+    devDependencies:
+      '@types/react':
+        specifier: '>=19.0.0'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: '>=19.0.0'
+        version: 19.2.3(@types/react@19.2.17)
+
   packages/component-driver-html:
     dependencies:
       '@atomic-testing/core':
@@ -1185,6 +1259,18 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@astryxdesign/core@0.1.1':
+    resolution: {integrity: sha512-9lU1lY4ztfgYsfkaXzQ3P3igXvTLN5CRqHoLgrVCkTYYciGxU8GitDBq+mWoa1TDxQgBB8ZTLNKPK3o5Hqeiiw==}
+    peerDependencies:
+      react: '>=19.0.0'
+      react-dom: '>=19.0.0'
+
+  '@astryxdesign/theme-neutral@0.1.1':
+    resolution: {integrity: sha512-B3+q0z4exOnT7AXTAEqHq1eVetWzkbkAU2SC3pdQgEGTqDt3kaqIYCbnVEjja6QUTjwHwQYrAh8LmdXFpRlNPg==}
+    peerDependencies:
+      '@astryxdesign/core': 0.1.1
+      react: '>=19'
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -3885,6 +3971,9 @@ packages:
       storybook: ^8.6.14
       vue: ^3.0.0
 
+  '@stylexjs/stylex@0.18.3':
+    resolution: {integrity: sha512-15gDzAJAorOE0yzxaWLNxldW2aqdmCiLG5QcPD8nmVCVqvrWp0Asgv45zk7LtN86WJb/4Ym9eQ6qT5MJW59tWQ==}
+
   '@swc/core-darwin-arm64@1.12.9':
     resolution: {integrity: sha512-GACFEp4nD6V+TZNR2JwbMZRHB+Yyvp14FrcmB6UCUYmhuNWjkxi+CLnEvdbuiKyQYv0zA+TRpCHZ+whEs6gwfA==}
     engines: {node: '>=10'}
@@ -4775,6 +4864,9 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
+  css-mediaquery@0.1.2:
+    resolution: {integrity: sha512-COtn4EROW5dBGlE/4PiKnh6rZpAPxDeFLaEEwt4i10jpDMFt2EhQGS79QmmrO+iKCHv0PU/HrOWEhijFd1x99Q==}
+
   css.escape@1.5.1:
     resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
 
@@ -5346,6 +5438,9 @@ packages:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
 
+  invariant@2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+
   is-arguments@1.2.0:
     resolution: {integrity: sha512-7bVbi0huj/wrIAOzb8U1aszg9kdi3KN/CyU19CTI7tAoZYEZoL9yCDXpbXN+uPsuWnP02cyug1gleqq+TU+YCA==}
     engines: {node: '>= 0.4'}
@@ -5896,6 +5991,11 @@ packages:
   lru-cache@8.0.5:
     resolution: {integrity: sha512-MhWWlVnuab1RG5/zMRRcVGXZLCXrZTgfwMikgzCegsPnG62yDQo5JnqKkrK4jO5iKqDAZGItAqN5CtKBCBWRUA==}
     engines: {node: '>=16.14'}
+
+  lucide-react@1.22.0:
+    resolution: {integrity: sha512-c9o3l0PiNcgOQDW4F31BEYHudE7kgxVt3o30qMl36ZPwTxXlGB4QnLilhERvVM4uh/pl5MDyY1/gzZSYcHDtBg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   lunr@2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
@@ -6676,6 +6776,9 @@ packages:
   stubborn-fs@1.2.5:
     resolution: {integrity: sha512-H2N9c26eXjzL/S/K+i/RHHcFanE74dptvvjM8iwzwbVcWY/zjBbgRqF3K0DY4+OD+uTTASTBvDoxPDaPN02D7g==}
 
+  styleq@0.2.1:
+    resolution: {integrity: sha512-L0TR0NQb+X4/ktDEKmjWyp27gla+LUYi/by5k5SjKXf6/pvZP7wbwEB5J+tqxdFVPgzbsuz+d4RTScO/QZquBw==}
+
   stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
 
@@ -7154,6 +7257,18 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.12
       '@jridgewell/trace-mapping': 0.3.29
+
+  '@astryxdesign/core@0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@stylexjs/stylex': 0.18.3
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
+  '@astryxdesign/theme-neutral@0.1.1(@astryxdesign/core@0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@astryxdesign/core': 0.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      lucide-react: 1.22.0(react@19.2.7)
+      react: 19.2.7
 
   '@babel/code-frame@7.27.1':
     dependencies:
@@ -10177,6 +10292,12 @@ snapshots:
       vue: 3.5.17(typescript@5.8.3)
       vue-component-type-helpers: 3.3.5
 
+  '@stylexjs/stylex@0.18.3':
+    dependencies:
+      css-mediaquery: 0.1.2
+      invariant: 2.2.4
+      styleq: 0.2.1
+
   '@swc/core-darwin-arm64@1.12.9':
     optional: true
 
@@ -11190,6 +11311,8 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
+  css-mediaquery@0.1.2: {}
+
   css.escape@1.5.1: {}
 
   cssom@0.3.8: {}
@@ -11778,6 +11901,10 @@ snapshots:
       side-channel: 1.1.0
 
   internmap@2.0.3: {}
+
+  invariant@2.2.4:
+    dependencies:
+      loose-envify: 1.4.0
 
   is-arguments@1.2.0:
     dependencies:
@@ -12508,6 +12635,10 @@ snapshots:
   lru-cache@7.18.3: {}
 
   lru-cache@8.0.5: {}
+
+  lucide-react@1.22.0(react@19.2.7):
+    dependencies:
+      react: 19.2.7
 
   lunr@2.3.9: {}
 
@@ -13367,6 +13498,8 @@ snapshots:
   strip-json-comments@3.1.1: {}
 
   stubborn-fs@1.2.5: {}
+
+  styleq@0.2.1: {}
 
   stylis@4.2.0: {}
 

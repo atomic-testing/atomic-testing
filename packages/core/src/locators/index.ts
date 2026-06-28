@@ -7,6 +7,7 @@ export { byInputType } from './byInputType';
 export { byLinkedElement } from './byLinkedElement';
 export { byName } from './byName';
 export { byRole } from './byRole';
+export type { ByRoleOptions } from './byRole';
 export { byTagName } from './byTagName';
 export { byValue } from './byValue';
 export { CssLocator } from './CssLocator';

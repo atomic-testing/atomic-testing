@@ -1,0 +1,10 @@
+/* Astryx ships pre-built CSS — import order maps to the layer cascade:
+   reset → component base → theme token overrides. */
+@import '@astryxdesign/core/reset.css';
+@import '@astryxdesign/core/astryx.css';
+@import '@astryxdesign/theme-neutral/theme.css';
+
+html,
+body {
+  height: 100%;
+}
