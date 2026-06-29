@@ -5,6 +5,8 @@ module.exports = {
   testRegex: '(/__tests__/.*.dom.(test|spec)).(jsx?|tsx?)$',
   displayName: 'component-driver-astryx-test',
   testEnvironment: 'jsdom',
+  // Polyfill the native Popover API jsdom lacks (Astryx tooltips use it). See jest.setup.ts.
+  setupFiles: ['<rootDir>/jest.setup.ts'],
   // The base config only transforms the package's own .ts/.tsx. @astryxdesign/core
   // ships ESM-only, so jest must also transform its (and the StyleX runtime's)
   // .js/.mjs — hence the extra transform rule plus the transformIgnorePatterns
