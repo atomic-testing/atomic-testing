@@ -1,5 +1,6 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { DeepPartial } from 'utility-types';
+import { afterEach, beforeEach, describe, expect, test, vi, type Mock } from 'vitest';
 
 import { getGoodCredentialMock, getGoodShippingMock } from '../../../models/__mocks__/signupModelMock';
 import { ShippingModel, SignupModel } from '../../../models/SignupModel';
@@ -26,8 +27,8 @@ const goodShippingEntry: ShippingModel = getGoodShippingMock();
 
 describe('ShippingForm', () => {
   let testEngine: TestEngine<typeof parts>;
-  let onNext: jest.Mock;
-  let onPrevious: jest.Mock;
+  let onNext: Mock;
+  let onPrevious: Mock;
 
   afterEach(async () => {
     await testEngine?.cleanUp();
@@ -35,8 +36,8 @@ describe('ShippingForm', () => {
 
   describe('When starting from empty form', () => {
     beforeEach(() => {
-      onNext = jest.fn();
-      onPrevious = jest.fn();
+      onNext = vi.fn();
+      onPrevious = vi.fn();
       testEngine = createTestEngineForComponent(
         <ShippingAddressForm
           data={emptyData}
@@ -57,7 +58,7 @@ describe('ShippingForm', () => {
       ['Previous', 'onPreviousStep'],
       ['Next', 'onNextStep'],
     ])('When clicking on %s button while the form is empty', (button, callbackName) => {
-      let handleToCheck: jest.Mock;
+      let handleToCheck: Mock;
       beforeEach(async () => {
         if (button === 'Previous') {
           await testEngine.parts.form.previous();
