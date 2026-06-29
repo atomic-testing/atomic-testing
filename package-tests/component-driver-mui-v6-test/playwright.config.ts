@@ -85,11 +85,13 @@ export default defineConfig({
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'pnpm start',
-  //   timeout: 120 * 1000,
-  //   url: baseUrl,
-  //   reuseExistingServer: true,
-  // },
+  /* Run your local dev server before starting the tests. Re-enabled now that the
+   * Vite 8 / Rolldown dep-optimizer regression that left #root empty (#877) no longer
+   * reproduces — the app boots and v6 e2e runs across chromium/firefox/webkit. */
+  webServer: {
+    command: 'pnpm start',
+    timeout: 120 * 1000,
+    url: baseUrl,
+    reuseExistingServer: true,
+  },
 });
