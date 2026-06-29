@@ -77,3 +77,17 @@ export async function getListItemCount<HostPartT extends ScenePart>(
 
   return count;
 }
+
+/**
+ * Collect the non-null visible labels of labelled list items, in DOM order.
+ *
+ * Shared by the list-family drivers whose item drivers expose `getLabel()`
+ * (`ListComponentDriver` subclasses and `PositionalListDriver`), so the
+ * "map → filter the absent ones" idiom lives in one place.
+ */
+export async function collectItemLabels(
+  items: ReadonlyArray<{ getLabel(): Promise<string | null | undefined> }>
+): Promise<string[]> {
+  const labels = await Promise.all(items.map(item => item.getLabel()));
+  return labels.filter((label): label is string => label != null);
+}

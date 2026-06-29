@@ -110,4 +110,55 @@ comment.
 | `AlertDialogDriver` | `AlertDialog`    | `role="alertdialog"`; `getTitle`/`getDescription`, `clickAction`/`clickCancel`.  |
 | `ToastDriver`       | `Toast`          | Stable `data-type`: `getType`/`isError`/`getRole`/`getMessage`, `dismiss`.       |
 
+Wave 3 — lists, tables, selectors & dates. The list/table/tree drivers read
+structure from native semantics (`<li>`, `<table>`, `ul[role="tree"]`) and per-row
+state from ARIA. The combobox family (Selector/MultiSelector/Typeahead/Tokenizer,
+plus the CommandPalette dialog and PowerSearch's field suggestions) shares one
+option-enumeration mechanism — options are addressed by their contiguous
+`${listboxId}-${item|option}-${i}` ids — exposed through `AstryxComboboxDriver` (its
+trigger open/close layer) over an internal `IndexedOptionListDriver` base. Popup and
+calendar-popover visibility are native behaviours covered by the Playwright run;
+structure and ARIA render faithfully in jsdom. Anchoring rationale and the
+scroll/layout-only caveats (Carousel overflow, Outline scroll-spy) live in each
+driver's source doc comment.
+
+### Lists & display
+
+| Driver               | Astryx component | Notes                                                                                        |
+| -------------------- | ---------------- | -------------------------------------------------------------------------------------------- |
+| `ListDriver`         | `List`           | `<li>`-addressed rows; `getItemLabels`/`getSelectedLabels`/`clickItem`/`isOrdered`.          |
+| `ListItemDriver`     | —                | A single row: `getLabel` (full text), `isSelected`/`isDisabled` (ARIA), `isLink`/`getHref`.  |
+| `MetadataListDriver` | `MetadataList`   | `<dl>` pairs; `getLabels`/`getValueByLabel`/`getEntryCount`, `showMore`/`showLess`.          |
+| `OutlineDriver`      | `Outline`        | TOC nav; `getItemLabels`/`getActiveLabel` (`aria-current`)/`getHref`/`getLevel`/`clickItem`. |
+| `OutlineItemDriver`  | —                | A single entry: `getLabel`/`getHref`/`getLevel` (`data-level`)/`isActive`.                   |
+| `CarouselDriver`     | `Carousel`       | `getLabel`/`getItemCount`/`hasNavButtons`; `scrollNext`/`scrollPrev` are E2E-only.           |
+
+### Tables & trees
+
+| Driver           | Astryx component | Notes                                                                                                                                                   |
+| ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TableDriver`    | `Table`          | `data-column-key`/`aria-sort`/`aria-selected`; headers, data rows (empty-state row excluded), sort, row selection. `TableSortDirection` is re-exported. |
+| `TreeListDriver` | `TreeList`       | `ul[role="tree"]` walked depth-first; `getVisibleItemLabels`/`getItemDepth`/`expandItem`/`collapseItem`/`clickItem`.                                    |
+
+### Selectors, typeaheads & search
+
+| Driver                 | Astryx component | Notes                                                                                                                                           |
+| ---------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AstryxComboboxDriver` | —                | Shared combobox base: trigger `open`/`close`/`isExpanded` over the option-enumeration surface.                                                  |
+| `SelectorDriver`       | `Selector`       | Single-select; `getOptionLabels`/`selectByLabel`/`getSelectedLabel`/`isOptionSelected`.                                                         |
+| `MultiSelectorDriver`  | `MultiSelector`  | Multi-select; `toggleByLabel`/`getSelectedLabels` (excludes select-all)/`selectAll`/`clearAll`.                                                 |
+| `TypeaheadDriver`      | `Typeahead`      | Search-as-you-type single-select; `type`/`getResultLabels`/`selectByLabel`/`clear`/`isLoading`.                                                 |
+| `TokenizerDriver`      | `Tokenizer`      | Multi-token; `getTokenLabels`/`addByLabel`/`create`/`removeToken`/`clearAll`/`isLoading`.                                                       |
+| `CommandPaletteDriver` | `CommandPalette` | Host-controlled `<dialog>`; `search`/`getOptionLabels`/`getOptionValue`/`selectByLabel`/`getActiveValue`.                                       |
+| `PowerSearchDriver`    | `PowerSearch`    | **Best-effort v1**: `getFilterLabels`/`removeFilter`/`clearAll`/`getFieldSuggestionLabels`/`getResultCount` (in-popover edit is E2E/follow-up). |
+
+### Dates
+
+| Driver                 | Astryx component | Notes                                                                                                                       |
+| ---------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `CalendarDriver`       | `Calendar`       | Inline; `[data-date]` cells, `getMode`/`getVisibleMonthLabel`/`selectDay`/`selectRange`/`previousMonth`/`nextMonth`.        |
+| `DateInputDriver`      | `DateInput`      | Input value + calendar popover; `open`/`pickDate` (via `aria-controls`)/`isInvalid`/`clear`.                                |
+| `DateTimeInputDriver`  | `DateTimeInput`  | Extends `DateInputDriver` with a paired time field (`getTimeValue`/`setTime`).                                              |
+| `DateRangeInputDriver` | `DateRangeInput` | **Best-effort v1**: popover `<dialog>` with presets + range `pickRange` (the end day is re-resolved after the start click). |
+
 For more in-depth information, visit [https://atomic-testing.dev](https://atomic-testing.dev).
