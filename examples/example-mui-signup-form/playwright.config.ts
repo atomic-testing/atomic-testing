@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// const baseURL = 'https://atomic-testing.github.io/example-mui5-signup-form/';
+// const baseURL = 'https://atomic-testing.github.io/example-mui7-signup-form/';
 
 // Use for local development
 const baseURL = 'http://localhost:5173';

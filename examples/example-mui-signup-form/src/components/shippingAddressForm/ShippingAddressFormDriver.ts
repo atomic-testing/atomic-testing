@@ -1,13 +1,13 @@
-import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
+import { TextFieldDriver } from '@atomic-testing/component-driver-mui-v7';
 import {
   ComponentDriver,
   IComponentDriverOption,
+  IInputDriver,
   Interactor,
   PartLocator,
   ScenePart,
   byDataTestId,
 } from '@atomic-testing/core';
-import { IInputDriver } from '@atomic-testing/core/src';
 import { DeepPartial } from 'utility-types';
 
 import { ShippingModel } from '../../models/SignupModel';

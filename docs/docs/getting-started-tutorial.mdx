@@ -33,7 +33,7 @@ Run the app locally to see the signup form in action:
 pnpm dev
 ```
 
-Open [http://localhost:5371](http://localhost:5371) in your browser to interact with the multi‑step form.
+Open [http://localhost:5173](http://localhost:5173) in your browser to interact with the multi‑step form.
 
 ## 3. Run the component tests
 
@@ -93,11 +93,13 @@ const parts = {
 ### Instantiate the Test Engine and write a test
 
 ```ts title="CredentialForm.test.tsx"
+import { afterEach, beforeEach, expect, test, vi, type Mock } from 'vitest';
+
 let testEngine: TestEngine<typeof parts>;
-let onNext: jest.Mock;
+let onNext: Mock;
 
 beforeEach(() => {
-  onNext = jest.fn();
+  onNext = vi.fn();
   testEngine = createTestEngineForComponent(
     <CredentialForm data-testid={DataTestId.form} onNextStep={onNext} />,
     parts

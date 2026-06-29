@@ -1,4 +1,5 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
+import { afterEach, beforeEach, describe, expect, test, vi, type Mock } from 'vitest';
 
 import { getGoodCredentialMock } from '../../../models/__mocks__/signupModelMock';
 import { createTestEngineForComponent } from '../../../utils/testUtil';
@@ -20,7 +21,7 @@ const goodCredentialEntry: CredentialFormValue = getGoodCredentialMock();
 
 describe('CredentialForm', () => {
   let testEngine: TestEngine<typeof parts>;
-  let onNext: jest.Mock;
+  let onNext: Mock;
 
   afterEach(async () => {
     await testEngine?.cleanUp();
@@ -28,7 +29,7 @@ describe('CredentialForm', () => {
 
   describe('When starting from empty form', () => {
     beforeEach(() => {
-      onNext = jest.fn();
+      onNext = vi.fn();
       testEngine = createTestEngineForComponent(
         <CredentialForm data={{}} data-testid={DataTestId.form} onNextStep={onNext} />,
         parts

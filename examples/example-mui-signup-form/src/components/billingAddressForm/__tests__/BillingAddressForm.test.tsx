@@ -1,5 +1,6 @@
 import { ScenePart, TestEngine, byDataTestId } from '@atomic-testing/core';
 import { DeepPartial } from 'utility-types';
+import { afterEach, beforeEach, describe, expect, test, vi, type Mock } from 'vitest';
 
 import { getGoodAlternateAddressMock } from '../../../models/__mocks__/addressMock';
 import {
@@ -32,8 +33,8 @@ const goodBillingEntry: BillingModel = getGoodBillingMock();
 
 describe('BillingForm', () => {
   let testEngine: TestEngine<typeof parts>;
-  let onNext: jest.Mock;
-  let onPrevious: jest.Mock;
+  let onNext: Mock;
+  let onPrevious: Mock;
 
   afterEach(async () => {
     await testEngine?.cleanUp();
@@ -41,8 +42,8 @@ describe('BillingForm', () => {
 
   describe('When starting from empty form', () => {
     beforeEach(() => {
-      onNext = jest.fn();
-      onPrevious = jest.fn();
+      onNext = vi.fn();
+      onPrevious = vi.fn();
       testEngine = createTestEngineForComponent(
         <BillingAddressForm
           data={emptyData}
@@ -63,7 +64,7 @@ describe('BillingForm', () => {
       ['Previous', 'onPreviousStep'],
       ['Next', 'onNextStep'],
     ])('When clicking on %s button while the form is empty', (button, callbackName) => {
-      let handleToCheck: jest.Mock;
+      let handleToCheck: Mock;
       beforeEach(async () => {
         if (button === 'Previous') {
           await testEngine.parts.form.previous();

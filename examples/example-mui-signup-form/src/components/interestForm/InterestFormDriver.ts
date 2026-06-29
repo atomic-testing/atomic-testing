@@ -1,5 +1,5 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v5';
+import { CheckboxDriver } from '@atomic-testing/component-driver-mui-v7';
 import {
   ComponentDriver,
   IComponentDriverOption,

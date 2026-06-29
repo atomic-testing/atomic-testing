@@ -1,5 +1,6 @@
 import { byDataTestId, ScenePart, TestEngine } from '@atomic-testing/core';
 import { DeepPartial } from 'react-hook-form';
+import { afterEach, beforeEach, describe, expect, test, vi, type Mock } from 'vitest';
 
 import {
   getGoodBillingMock,
@@ -33,8 +34,8 @@ const goodInterestEntry: InterestModel = getGoodInterestMock();
 
 describe('InterestForm', () => {
   let testEngine: TestEngine<typeof parts>;
-  let onNext: jest.Mock;
-  let onPrevious: jest.Mock;
+  let onNext: Mock;
+  let onPrevious: Mock;
 
   afterEach(async () => {
     await testEngine?.cleanUp();
@@ -42,8 +43,8 @@ describe('InterestForm', () => {
 
   describe('When starting from empty form', () => {
     beforeEach(() => {
-      onNext = jest.fn();
-      onPrevious = jest.fn();
+      onNext = vi.fn();
+      onPrevious = vi.fn();
       testEngine = createTestEngineForComponent(
         <InterestForm data={emptyData} data-testid={DataTestId.form} onNextStep={onNext} onPreviousStep={onPrevious} />,
         parts
@@ -59,7 +60,7 @@ describe('InterestForm', () => {
       ['Previous', 'onPreviousStep'],
       ['Next', 'onNextStep'],
     ])('When clicking on %s button while the form is empty', (button, callbackName) => {
-      let handleToCheck: jest.Mock;
+      let handleToCheck: Mock;
       beforeEach(async () => {
         if (button === 'Previous') {
           await testEngine.parts.form.previous();
