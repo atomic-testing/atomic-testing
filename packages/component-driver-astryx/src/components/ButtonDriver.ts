@@ -46,6 +46,16 @@ export class ButtonDriver extends HTMLButtonDriver {
     return ariaDisabled === 'true';
   }
 
+  /**
+   * Whether the button is in a loading state.
+   *
+   * Astryx keeps the button mounted while an async `clickAction` runs and signals
+   * the pending state with `aria-busy="true"` (plus an inner live-region spinner).
+   */
+  async isLoading(): Promise<boolean> {
+    return (await this.interactor.getAttribute(this.locator, 'aria-busy')) === 'true';
+  }
+
   override get driverName(): string {
     return 'AstryxButtonDriver';
   }
