@@ -5,6 +5,10 @@ packages:
 overrides:
   '@atomic-testing/internal-react-example>react': ^19.2.3
   '@atomic-testing/internal-react-example>react-dom': ^19.2.3
+  # Playwright hard-errors when two copies of @playwright/test load in one
+  # process. The adapter's permissive peer (>=1.50.0) lets pnpm auto-install a
+  # stale minor alongside the root devDependency, so pin one version tree-wide.
+  '@playwright/test': ^1.61.1
 
 ignoredBuiltDependencies:
   - '@mui/x-telemetry'

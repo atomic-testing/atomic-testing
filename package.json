@@ -17,7 +17,7 @@
     "bumpVersion": "node scripts/bumpVersion.js"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.1",
+    "@playwright/test": "^1.61.1",
     "@swc/jest": ">=0.2.37",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/user-event": "^14.6.1",
