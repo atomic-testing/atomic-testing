@@ -220,6 +220,23 @@ export class PlaywrightInteractor implements Interactor {
     await this.page.locator(cssLocator).fill(text);
   }
 
+  async setRangeValue(locator: PartLocator, value: number): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    // Playwright's `fill` rejects `<input type="range">` (it is not a fillable
+    // text control), so set the value in-page through the native value setter.
+    // Calling the prototype setter both sanitizes the value to the input's step
+    // (the browser snaps an off-step target to the nearest valid step) and lets
+    // React's value tracker observe the change; the dispatched input/change
+    // events then drive a controlled component (e.g. MUI Slider) to re-render.
+    await this.page.locator(cssLocator).evaluate((el, nextValue) => {
+      const input = el as HTMLInputElement;
+      const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
+      setter?.call(input, nextValue);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }, String(value));
+  }
+
   async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.page.locator(cssLocator).click({ position: option?.position });

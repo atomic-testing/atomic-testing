@@ -17,6 +17,7 @@ import { hoverMouseEventUIExample } from './examples/mouseEvent/Hover.examples';
 import { mouseLocationMouseEventUIExample } from './examples/mouseEvent/MouseLocation.examples';
 import { mouseOverMouseEventUIExample } from './examples/mouseEvent/MouseOver.examples';
 import { uncontrolledRadioButtonGroupUIExample } from './examples/radioButtonGroup/Uncontrolled.examples';
+import { rangeInputUIExample } from './examples/rangeInput/RangeInput.examples';
 import { scrollUIExample } from './examples/scroll/Scroll.examples';
 import { multipleSelectUIExample } from './examples/select/MultipleSelect.examples';
 import { singleSelectUIExample } from './examples/select/SingleSelect.examples';
@@ -71,6 +72,11 @@ export const tocs: ExampleToc[] = [
     label: 'Activate',
     path: '/activate',
     ui: <ExampleList examples={[activateUIExample]} />,
+  },
+  {
+    label: 'Range Input',
+    path: '/range-input',
+    ui: <ExampleList examples={[rangeInputUIExample]} />,
   },
   {
     label: 'Context Menu',

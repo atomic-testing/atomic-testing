@@ -9,6 +9,7 @@ export * from './input';
 export * from './keyboardEvent';
 export * from './mouseEvent';
 export * from './radioButtonGroup';
+export * from './rangeInput';
 export * from './scroll';
 export * from './select';
 export * from './anchor';

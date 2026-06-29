@@ -31,6 +31,11 @@ export class VueInteractor extends DOMInteractor {
     await this.flush();
   }
 
+  override async setRangeValue(locator: PartLocator, value: number): Promise<void> {
+    await super.setRangeValue(locator, value);
+    await this.flush();
+  }
+
   override async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     await super.click(locator, option);
     await this.flush();

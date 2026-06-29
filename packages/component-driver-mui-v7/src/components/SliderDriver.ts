@@ -40,13 +40,18 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
   }
 
   /**
-   * Set slider's range value.  Do not use as it will throw an error
-   * @param values
-   * @see https://github.com/atomic-testing/atomic-testing/issues/73
+   * Set the slider's value by driving its range input to the target.
+   *
+   * The value is applied through the {@link Interactor.setRangeValue} primitive,
+   * so the browser snaps an off-step target to the slider's nearest step. On a
+   * multi-thumb (range) slider this sets the first thumb only; use
+   * {@link setRangeValues} to set every thumb.
+   *
+   * @param value The target value; snapped to the slider's step in-browser
+   * @returns Whether the slider's input was found and set
    */
   async setValue(value: number): Promise<boolean> {
-    const success = await this.setRangeValues([value]);
-    return success;
+    return this.setRangeValues([value]);
   }
 
   async getRangeValues(count?: number): Promise<readonly number[]> {
@@ -61,7 +66,9 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
       if (exists) {
         index++;
         done = count != null && index >= count;
-        const value = await this.interactor.getAttribute(locator, 'value');
+        // Read the value *property* (not the `value` attribute, which keeps the
+        // initial value after a programmatic change in real browsers).
+        const value = await this.interactor.getInputValue(locator);
         result.push(parseFloat(value!));
       } else {
         done = true;
@@ -75,27 +82,28 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
   }
 
   /**
-   * Set slider's range values.  Do not use as it will throw an error
-   * @param values
-   * @see https://github.com/atomic-testing/atomic-testing/issues/73
+   * Set every thumb of the slider, one `value` per thumb in document order.
+   *
+   * Each thumb's range input is driven through the {@link Interactor.setRangeValue}
+   * primitive, so the browser snaps an off-step target to the slider's nearest
+   * step. Thumbs are set in index order and MUI clamps a thumb at its neighbor, so
+   * pass already-ordered, non-crossing values (e.g. `[20, 70]`, not `[70, 20]`).
+   *
+   * @param values One target per thumb, lowest thumb first
+   * @returns `true` once every thumb was set; `false` if more values than thumbs
+   *   were supplied (a missing thumb input stops the run)
    */
-  async setRangeValues(_values: readonly number[]): Promise<boolean> {
+  async setRangeValues(values: readonly number[]): Promise<boolean> {
     await this.enforcePartExistence('input');
-    throw new Error('setRangeValue is not supported.');
-    // for (let index = 0; index < values.length; index++) {
-    //   const locator = locatorUtil.append(this.locator, this.getInputLocator(index));
-    //   const exists = await this.interactor.exists(locator);
-    //   if (exists) {
-    //     // @ts-ignore
-    //     await this.interactor.changeValue(locator, values[index].toString());
-    //     // const driver = new HTMLTextInputDriver(locator, this.interactor);
-    //     // await driver.setValue(values[index].toString());
-    //   } else {
-    //     return false;
-    //   }
-    // }
-
-    // return true;
+    for (let index = 0; index < values.length; index++) {
+      const locator = locatorUtil.append(this.locator, this.getInputLocator(index));
+      const exists = await this.interactor.exists(locator);
+      if (!exists) {
+        return false;
+      }
+      await this.interactor.setRangeValue(locator, values[index]!);
+    }
+    return true;
   }
 
   async isDisabled(): Promise<boolean> {
