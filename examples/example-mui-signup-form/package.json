@@ -34,7 +34,7 @@
     "@atomic-testing/dom-core": "^0.77.0",
     "@atomic-testing/playwright": "^0.77.0",
     "@atomic-testing/react-18": "^0.77.0",
-    "@playwright/test": "^1.42.1",
+    "@playwright/test": "^1.61.1",
     "@storybook/addon-themes": "^10.4.6",
     "@storybook/react": "^10.4.6",
     "@storybook/react-vite": "^10.4.6",

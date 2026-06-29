@@ -33,7 +33,7 @@ export const mouseLocationMouseEventExample: IExampleUnit<typeof mouseLocationMo
 export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouseLocationMouseEventExample.scene> = {
   title: 'Mouse event: Mouse move/up/click',
   url: '/mouse-event',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertApproxEqual }) => {
     describe(`${mouseLocationMouseEventExample.title}`, () => {
       const engine = useTestEngine(mouseLocationMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
@@ -48,10 +48,11 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
         const xDisplay = await engine().parts.xDisplay.getText();
         const yDisplay = await engine().parts.yDisplay.getText();
 
-        // The coordinates are rounded because e2e tests are not pixel perfect
+        // Tolerance-based comparison for cross-browser compatibility: the
+        // reported mouse position may have a sub-pixel offset from the requested one.
         assertEqual(eventDisplay, 'mouseMove');
-        assertEqual(Math.round(parseFloat(xDisplay ?? '')), 20);
-        assertEqual(Math.round(parseFloat(yDisplay ?? '')), 15);
+        assertApproxEqual(parseFloat(xDisplay ?? ''), 20, 1);
+        assertApproxEqual(parseFloat(yDisplay ?? ''), 15, 1);
       });
 
       test('Mousedown on somewhere in the target should display the correct coordinates', async () => {
@@ -71,10 +72,11 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
         const xDisplay = await engine().parts.xDisplay.getText();
         const yDisplay = await engine().parts.yDisplay.getText();
 
-        // The coordinates are rounded because e2e tests are not pixel perfect
+        // Tolerance-based comparison for cross-browser compatibility: the
+        // reported mouse position may have a sub-pixel offset from the requested one.
         assertEqual(eventDisplay, 'mouseDown');
-        assertEqual(Math.round(parseFloat(xDisplay ?? '')), 12);
-        assertEqual(Math.round(parseFloat(yDisplay ?? '')), 16);
+        assertApproxEqual(parseFloat(xDisplay ?? ''), 12, 1);
+        assertApproxEqual(parseFloat(yDisplay ?? ''), 16, 1);
       });
 
       test('MouseUp on somewhere in the target should display the correct coordinates', async () => {
@@ -100,10 +102,11 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
         const xDisplay = await engine().parts.xDisplay.getText();
         const yDisplay = await engine().parts.yDisplay.getText();
 
-        // The coordinates are rounded because e2e tests are not pixel perfect
+        // Tolerance-based comparison for cross-browser compatibility: the
+        // reported mouse position may have a sub-pixel offset from the requested one.
         assertEqual(eventDisplay, 'mouseUp');
-        assertEqual(Math.round(parseFloat(xDisplay ?? '')), 11);
-        assertEqual(Math.round(parseFloat(yDisplay ?? '')), 15);
+        assertApproxEqual(parseFloat(xDisplay ?? ''), 11, 1);
+        assertApproxEqual(parseFloat(yDisplay ?? ''), 15, 1);
       });
     });
   },

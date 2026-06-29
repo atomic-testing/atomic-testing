@@ -54,6 +54,8 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
     test('Clicking agree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
       await engine().parts.dialog.content.agree.click();
+      // Settle the close transition before sampling, so isOpen() isn't read mid-fade.
+      await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
     });
@@ -61,6 +63,8 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
     test('Clicking disagree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
       await engine().parts.dialog.content.disagree.click();
+      // Settle the close transition before sampling, so isOpen() isn't read mid-fade.
+      await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
     });
