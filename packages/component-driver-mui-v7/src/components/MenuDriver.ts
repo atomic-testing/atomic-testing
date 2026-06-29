@@ -59,6 +59,21 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     }
   }
 
+  /**
+   * The number of items (role `menuitem`) in the open menu.
+   */
+  async getMenuItemCount(): Promise<number> {
+    return listHelper.getListItemCount(this, menuItemLocator);
+  }
+
+  /**
+   * Get the menu item at the given zero-based index, or `null` if out of range.
+   * Complements the existing label-based {@link getMenuItemByLabel}.
+   */
+  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+    return listHelper.getListItemByIndex(this, menuItemLocator, index, MenuItemDriver);
+  }
+
   get driverName(): string {
     return 'MuiV7MenuDriver';
   }

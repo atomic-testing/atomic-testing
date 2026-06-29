@@ -117,5 +117,15 @@ export const progressTestSuite: TestSuiteInfo<typeof basicProgressExampleScenePa
       const determinate = await engine().parts.linearBuffer.isDeterminate();
       assertTrue(determinate);
     });
+
+    test('linear buffer should report its buffer value', async () => {
+      const buffer = await engine().parts.linearBuffer.getBufferValue();
+      assertEqual(buffer, 85);
+    });
+
+    test('a non-buffer progress has no buffer value', async () => {
+      const buffer = await engine().parts.linear.getBufferValue();
+      assertEqual(buffer, null);
+    });
   },
 };

@@ -4,8 +4,10 @@ import {
   byTagName,
   ComponentDriver,
   IComponentDriverOption,
+  IDisableableDriver,
   IFormFieldDriver,
   Interactor,
+  IRequirableDriver,
   IToggleDriver,
   locatorUtil,
   Optional,
@@ -26,7 +28,7 @@ export type CheckboxScenePartDriver = ScenePartDriver<CheckboxScenePart>;
 
 export class CheckboxDriver
   extends ComponentDriver<CheckboxScenePart>
-  implements IFormFieldDriver<string | null>, IToggleDriver
+  implements IFormFieldDriver<string | null>, IToggleDriver, IDisableableDriver, IRequirableDriver
 {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
@@ -63,6 +65,13 @@ export class CheckboxDriver
 
   isReadonly(): Promise<boolean> {
     return this.parts.checkbox.isReadonly();
+  }
+
+  /**
+   * Whether the checkbox is required (MUI sets the native `required` attribute on the input).
+   */
+  async isRequired(): Promise<boolean> {
+    return (await this.interactor.getAttribute(this.parts.checkbox.locator, 'required')) != null;
   }
 
   /**

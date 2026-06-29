@@ -13,6 +13,29 @@ export interface IToggleDriver {
   setSelected(selected: boolean): Promise<void>;
 }
 
+/**
+ * A driver whose component can be disabled. Implemented uniformly so the obvious
+ * assertion `expect(await driver.isDisabled()).toBe(true)` works across components,
+ * rather than each consumer reaching into a component-specific attribute or class.
+ */
+export interface IDisableableDriver {
+  isDisabled(): Promise<boolean>;
+}
+
+/**
+ * A driver whose component can be marked required (a form control).
+ */
+export interface IRequirableDriver {
+  isRequired(): Promise<boolean>;
+}
+
+/**
+ * A driver whose component can be in an invalid/error state (a form control).
+ */
+export interface IValidatableDriver {
+  isError(): Promise<boolean>;
+}
+
 export interface IClickableDriver {
   click(option?: ClickOption): Promise<void>;
 }

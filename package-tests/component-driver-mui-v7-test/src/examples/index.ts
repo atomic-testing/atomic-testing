@@ -19,6 +19,7 @@ export * from './select';
 export * from './slider';
 export * from './snackbar';
 export * from './speedDial';
+export * from './stateAccessors';
 export * from './stepper';
 export * from './switch';
 export * from './tablePagination';

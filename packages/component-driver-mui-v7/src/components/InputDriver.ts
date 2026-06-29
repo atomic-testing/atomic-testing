@@ -5,6 +5,8 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
+  IRequirableDriver,
+  IValidatableDriver,
   PartLocator,
   ScenePart,
 } from '@atomic-testing/core';
@@ -25,7 +27,10 @@ type TextFieldInputType = 'singleLine' | 'multiline';
 /**
  * A driver for the Material UI v7 Input, FilledInput, OutlinedInput, and StandardInput components.
  */
-export class InputDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
+export class InputDriver
+  extends ComponentDriver<typeof parts>
+  implements IInputDriver<string | null>, IRequirableDriver, IValidatableDriver
+{
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
@@ -101,6 +106,25 @@ export class InputDriver extends ComponentDriver<typeof parts> implements IInput
       case 'multiline':
         return this.parts.multilineInput.isReadonly();
     }
+  }
+
+  private async getValueInputLocator(): Promise<PartLocator> {
+    const inputType = await this.getInputType();
+    return inputType === 'singleLine' ? this.parts.singlelineInput.locator : this.parts.multilineInput.locator;
+  }
+
+  /**
+   * Whether the input is required (MUI sets the native `required` attribute).
+   */
+  async isRequired(): Promise<boolean> {
+    return (await this.interactor.getAttribute(await this.getValueInputLocator(), 'required')) != null;
+  }
+
+  /**
+   * Whether the input is in the error state (`error` prop → `aria-invalid="true"`).
+   */
+  async isError(): Promise<boolean> {
+    return (await this.interactor.getAttribute(await this.getValueInputLocator(), 'aria-invalid')) === 'true';
   }
 
   /**

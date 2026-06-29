@@ -13,6 +13,7 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
+  IRequirableDriver,
   listHelper,
   locatorUtil,
   Nullable,
@@ -53,7 +54,10 @@ export interface MenuItemGetOption {
 }
 const optionLocator = byRole('option');
 
-export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
+export class SelectDriver
+  extends ComponentDriver<SelectScenePart>
+  implements IInputDriver<string | null>, IRequirableDriver
+{
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
@@ -215,6 +219,29 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
       // Cannot determine readonly state of a select input.
       return false;
     }
+  }
+
+  /**
+   * Whether the select is required. MUI mirrors the value into a hidden `<input>` that
+   * carries the native `required` attribute (the native select carries it directly).
+   */
+  async isRequired(): Promise<boolean> {
+    const isNative = await this.isNative();
+    const locator = isNative ? this.parts.nativeSelect.locator : this.parts.input.locator;
+    return (await this.interactor.getAttribute(locator, 'required')) != null;
+  }
+
+  /**
+   * The selected values of a `multiple` select as an array. MUI stores a multi-select's
+   * value as a comma-joined string in the hidden input (what {@link getValue} returns),
+   * so this splits it; an empty selection yields `[]`.
+   */
+  async getSelectedValues(): Promise<string[]> {
+    const value = await this.getValue();
+    if (value == null || value === '') {
+      return [];
+    }
+    return value.split(',');
   }
 
   get driverName(): string {
