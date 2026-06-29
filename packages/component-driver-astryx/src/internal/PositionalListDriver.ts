@@ -1,4 +1,11 @@
-import { childListHelper, ComponentDriver, ComponentDriverCtor, Optional, PartLocator } from '@atomic-testing/core';
+import {
+  childListHelper,
+  ComponentDriver,
+  ComponentDriverCtor,
+  listHelper,
+  Optional,
+  PartLocator,
+} from '@atomic-testing/core';
 
 /** A list-item driver that exposes a visible label — the key the list matches on. */
 export interface LabelledItemDriver extends ComponentDriver {
@@ -59,9 +66,7 @@ export abstract class PositionalListDriver<ItemT extends LabelledItemDriver> ext
 
   /** Every item's visible label, in DOM order. */
   async getItemLabels(): Promise<readonly string[]> {
-    const items = await this.getItems();
-    const labels = await Promise.all(items.map(item => item.getLabel()));
-    return labels.filter((label): label is string => label != null);
+    return listHelper.collectItemLabels(await this.getItems());
   }
 
   /** The item driver whose visible label matches `label`, or `null` when absent. */
