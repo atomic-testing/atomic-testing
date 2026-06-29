@@ -17,6 +17,9 @@ jobs:
       - name: Setup dependencies only
         uses: ./.github/actions/deps-setup
 
+      - name: Check doc accuracy (imports match real package exports)
+        run: node docs/scripts/check-doc-accuracy.mjs
+
       - name: Build packages
         run: ./publish.sh --build-only
 
