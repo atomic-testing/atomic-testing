@@ -47,6 +47,34 @@ if (dialogProto != null && typeof dialogProto.showModal !== 'function') {
 }
 
 /**
+ * jsdom implements neither `ResizeObserver` nor `IntersectionObserver`, but Astryx
+ * scroll-aware chrome constructs them on mount: `Carousel` (via `useScrollOverflow`)
+ * and `Outline` (scroll-spy). A missing constructor throws during the mount effect
+ * and tears down the subtree. Polyfill both as inert no-ops — they never fire, so
+ * the observed *layout* behaviour (overflow buttons, scroll-spy active item) is not
+ * modelled here and is covered by the Playwright E2E run; drivers read structure and
+ * ARIA/data attributes, which render faithfully.
+ */
+const g = globalThis as unknown as { ResizeObserver?: unknown; IntersectionObserver?: unknown };
+if (typeof g.ResizeObserver !== 'function') {
+  g.ResizeObserver = class {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  };
+}
+if (typeof g.IntersectionObserver !== 'function') {
+  g.IntersectionObserver = class {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+    takeRecords(): [] {
+      return [];
+    }
+  };
+}
+
+/**
  * Astryx `Toast` reads the theme via `useMediaQuery` → `window.matchMedia`, which
  * jsdom does not provide. Polyfill a no-op (no media matches) so toast-bearing
  * scenes render under jsdom; responsive behaviour is a visual concern covered by
