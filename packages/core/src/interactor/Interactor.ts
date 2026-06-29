@@ -123,6 +123,27 @@ export interface Interactor {
   enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void>;
 
   /**
+   * Set the value of a range input (`<input type="range">`, the element behind a
+   * slider) and fire its change so the host framework reacts.
+   *
+   * A dedicated primitive exists because a range input cannot be driven through
+   * {@link enterText} (it accepts no typed text) nor reliably through {@link click}
+   * (a positional click on the track sets a coordinate-derived, not an exact,
+   * value). The value is assigned through the element's native value setter — so
+   * the browser sanitizes it to the input's `min`/`max`/`step`, snapping an
+   * off-step target to the nearest valid step — and an `input`/`change` event is
+   * dispatched so controlled components (e.g. MUI Slider) update their state.
+   *
+   * jsdom has no range sanitization, so it stores an off-step value verbatim
+   * whereas a real browser snaps it; pass a step-aligned `value` for assertions
+   * that must hold in both environments. See #73.
+   *
+   * @param locator Locator of the `<input type="range">` element
+   * @param value The numeric value to set; sanitized to the input's step in-browser
+   */
+  setRangeValue(locator: PartLocator, value: number): Promise<void>;
+
+  /**
    * Select option by value from a select element
    * @param locator
    * @param values

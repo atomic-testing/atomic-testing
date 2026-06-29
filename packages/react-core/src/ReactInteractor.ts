@@ -28,6 +28,12 @@ export class ReactInteractor extends DOMInteractor {
     });
   }
 
+  override async setRangeValue(locator: PartLocator, value: number): Promise<void> {
+    await act(async () => {
+      await super.setRangeValue(locator, value);
+    });
+  }
+
   override async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     await act(async () => {
       await super.click(locator, option);

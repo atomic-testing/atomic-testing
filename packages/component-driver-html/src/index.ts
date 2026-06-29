@@ -7,6 +7,7 @@ export { HTMLFileInputDriver } from './components/HTMLFileInputDriver';
 export { HTMLHiddenInputDriver } from './components/HTMLHiddenInputDriver';
 export { HTMLOptionDriver } from './components/HTMLOptionDriver';
 export { HTMLRadioButtonGroupDriver } from './components/HTMLRadioButtonGroupDriver';
+export { HTMLRangeInputDriver } from './components/HTMLRangeInputDriver';
 export { HTMLSelectDriver } from './components/HTMLSelectDriver';
 export { HTMLTextAreaDriver } from './components/HTMLTextAreaDriver';
 export { HTMLTextInputDriver } from './components/HTMLTextInputDriver';

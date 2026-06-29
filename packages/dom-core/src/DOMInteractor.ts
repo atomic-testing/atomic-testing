@@ -426,6 +426,27 @@ export class DOMInteractor implements Interactor {
   }
 
   /**
+   * Set the value of a range input and fire its change event.
+   *
+   * `fireEvent.change` assigns the value through the element's native value
+   * setter (which both sanitizes it to the input's step and lets React's value
+   * tracker observe the change) and dispatches the event so a controlled
+   * component re-renders. Typing (`enterText`) does not apply to a range input.
+   *
+   * @param locator - Locator used to find the range input element
+   * @param value - The numeric value to set
+   * @returns Promise resolved once the change event has fired
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async setRangeValue(locator: PartLocator, value: number): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'setRangeValue');
+    }
+    fireEvent.change(el, { target: { value: String(value) } });
+  }
+
+  /**
    * Select one or more option values in a `<select>` element.
    *
    * @param locator - Locator used to find the select element
