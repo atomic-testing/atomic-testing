@@ -13,4 +13,5 @@ export type {
 export type { ListComponentDriverOption, ListComponentDriverSpecificOption } from './ListComponentDriver';
 export { ListComponentDriver } from './ListComponentDriver';
 export * as listHelper from './listHelper';
+export * as childListHelper from './childListHelper';
 export * from './WaitForOption';
