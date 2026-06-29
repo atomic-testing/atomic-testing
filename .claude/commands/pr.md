@@ -13,7 +13,7 @@ The **local environment is the single source of truth** for a PR's title and des
 Author them locally and publish through the SCM's native flow — never by editing the PR on the
 host afterward.
 
-- **Sapling**: the commit message *is* the PR title (first line) and body (the rest). Set them
+- **Sapling**: the commit message _is_ the PR title (first line) and body (the rest). Set them
   with `sl metaedit` and publish with `sl pr submit`. **Do NOT use `gh pr edit` to change a
   Sapling PR's title/body** — the next `sl pr submit` regenerates the PR from the commit message
   and silently erases any host-side edit. (`gh` remains correct for SCM-agnostic GitHub actions —
