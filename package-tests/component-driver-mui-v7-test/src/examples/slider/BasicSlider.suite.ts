@@ -48,10 +48,16 @@ export const basicSliderTestSuite: TestSuiteInfo<typeof basicSliderExampleSceneP
       assertTrue(await engine().parts.range.exists());
     });
 
-    test.skip('it should be able to set value on basic slider', async () => {
+    test('it should be able to set value on basic slider', async () => {
       await engine().parts.basic.setValue(50);
       const value = await engine().parts.basic.getValue();
       assertEqual(value, 50);
+    });
+
+    test('it should set every thumb of a range slider in order', async () => {
+      await engine().parts.range.setRangeValues([20, 70]);
+      const values = await engine().parts.range.getRangeValues();
+      assertEqual(values, [20, 70]);
     });
   },
 };
