@@ -34,7 +34,7 @@ pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-test
 ```tsx
 import { useState } from 'react';
 
-import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/react-19';
 
@@ -54,7 +54,7 @@ function WelcomeButton({ name }: { name: string }) {
 
 // Test setup
 const welcomeScene = {
-  greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
+  greeting: { locator: byDataTestId('greeting'), driver: HTMLElementDriver },
   button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
@@ -86,7 +86,7 @@ pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
 ## Your First Test
 
 ```typescript
-import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/vue-3';
 import { ref } from 'vue';
@@ -116,7 +116,7 @@ const WelcomeButton = {
 
 // Test setup (identical to React!)
 const welcomeScene = {
-  greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
+  greeting: { locator: byDataTestId('greeting'), driver: HTMLElementDriver },
   button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
@@ -145,14 +145,14 @@ pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
 ## Your First Test
 
 ```typescript
-import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/playwright';
 import { test, expect } from '@playwright/test';
 
 // Same scene definition as React/Vue ✨
 const welcomeScene = {
-  greeting: { locator: byDataTestId('greeting'), driver: HTMLComponentDriver },
+  greeting: { locator: byDataTestId('greeting'), driver: HTMLElementDriver },
   button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 

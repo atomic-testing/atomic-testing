@@ -35,14 +35,14 @@ Mark the key components with a `data-testid` attribute. These elements are the o
 A **ScenePart** describes how to locate a key component and which driver to use for interacting with it. For instance, the example above can be mapped as follows:
 
 ```ts
-import { HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, ScenePart } from '@atomic-testing/core';
 
 const parts = {
   personDisplay: {
     locator: byDataTestId('person-name'),
-    driver: HTMLComponentDriver,
+    driver: HTMLElementDriver,
   },
   favoriteColorInput: {
     locator: byDataTestId('favorite-color-value'),
