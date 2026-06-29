@@ -79,4 +79,35 @@ any E2E-only behaviour live in each driver's source doc comment.
 | `PaginationDriver`  | `Pagination`     | `getCurrentPage`, `goToPage`/`next`/`previous`, `getCountText`.                  |
 | `CollapsibleDriver` | `Collapsible`    | `isExpanded`/`expand`/`collapse` via the trigger's `aria-expanded`.              |
 
+Wave 2 — overlays & menus. Astryx renders these **in-tree** (no portal): menus and
+popovers mount their panel as a sibling of the trigger via the native Popover API,
+and dialogs are native `<dialog>` elements. Each driver anchors on the trigger (or
+the `<dialog>`) and reads open state from `aria-expanded` or the `<dialog>` `open`
+attribute; panel visibility and `Escape`/backdrop dismissal are native behaviours
+covered only by the Playwright run (and skipped on WebKit, which cannot drive
+native-popover interactions). Anchoring rationale lives in each driver's source doc
+comment.
+
+### Menus & navigation
+
+| Driver               | Astryx component | Notes                                                                            |
+| -------------------- | ---------------- | -------------------------------------------------------------------------------- |
+| `NavMenuDriver`      | `NavHeadingMenu` | Flat link/action menu; `getItemLabels`/`getItemCount`/`clickItem`/`getItemHref`. |
+| `DropdownMenuDriver` | `DropdownMenu`   | Trigger-anchored; `open`/`close`/`isOpen`, `selectByLabel`, `getTriggerLabel`.   |
+| `MoreMenuDriver`     | `MoreMenu`       | Icon-only `DropdownMenu`; `getTriggerLabel` reads the `aria-label`.              |
+| `TabListDriver`      | `TabList`        | `getItemLabels`/`getActiveLabel`/`selectTab`/`isActive`/`getTabHref`.            |
+| `TabDriver`          | `Tab`            | A single tab: `getLabel`/`isActive` (`aria-current="page"`)/`getHref`.           |
+| `ToolbarDriver`      | `Toolbar`        | `getLabel`/`getOrientation`/`getSize`/`getItemCount`.                            |
+| `AstryxMenuDriver`   | —                | Shared menu base (positional `role="menuitem"` iteration).                       |
+| `MenuItemDriver`     | —                | A single `role="menuitem"` (`<a>`/`<div>`): `getLabel`/`isDisabled`/`getHref`.   |
+
+### Overlays & feedback
+
+| Driver              | Astryx component | Notes                                                                            |
+| ------------------- | ---------------- | -------------------------------------------------------------------------------- |
+| `PopoverDriver`     | `Popover`        | Trigger-anchored; `open`/`close`/`isOpen`, `getLabel`/`getContent`.              |
+| `DialogDriver`      | `Dialog`         | Native `<dialog>`; `isOpen`/`isModal`/`getTitle`/`closeByEscape`; content parts. |
+| `AlertDialogDriver` | `AlertDialog`    | `role="alertdialog"`; `getTitle`/`getDescription`, `clickAction`/`clickCancel`.  |
+| `ToastDriver`       | `Toast`          | Stable `data-type`: `getType`/`isError`/`getRole`/`getMessage`, `dismiss`.       |
+
 For more in-depth information, visit [https://atomic-testing.dev](https://atomic-testing.dev).

@@ -32,3 +32,16 @@ export { FieldStatusDriver } from './components/FieldStatusDriver';
 export { BannerDriver } from './components/BannerDriver';
 export { PaginationDriver } from './components/PaginationDriver';
 export { CollapsibleDriver } from './components/CollapsibleDriver';
+
+// Overlays & menus (Wave 2)
+export { AstryxMenuDriver } from './components/AstryxMenuDriver';
+export { MenuItemDriver } from './components/MenuItemDriver';
+export { NavMenuDriver } from './components/NavMenuDriver';
+export { ToolbarDriver } from './components/ToolbarDriver';
+export { ToastDriver } from './components/ToastDriver';
+export { TabDriver } from './components/TabDriver';
+export { TabListDriver } from './components/TabListDriver';
+export { DropdownMenuDriver, MoreMenuDriver } from './components/DropdownMenuDriver';
+export { PopoverDriver } from './components/PopoverDriver';
+export { DialogDriver } from './components/DialogDriver';
+export { AlertDialogDriver } from './components/AlertDialogDriver';
