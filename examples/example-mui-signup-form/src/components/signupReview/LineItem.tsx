@@ -1,7 +1,6 @@
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
 import { HasDataTestId } from '../../models/types';
 
@@ -22,10 +21,12 @@ export function LineItem(props: LineItemProps) {
 
   return (
     <>
-      <ListItem data-testid={props['data-testid']}>
+      <ListItem
+        data-testid={props['data-testid']}
+        disablePadding
+        secondaryAction={<span data-testid={LineItemDataTestId.name}>{value}</span>}>
         <ListItemButton onClick={onClick}>
           <span data-testid={LineItemDataTestId.name}>{label}</span>
-          <ListItemSecondaryAction data-testid={LineItemDataTestId.name}>{value}</ListItemSecondaryAction>
         </ListItemButton>
       </ListItem>
       {noDivider ? null : <Divider />}

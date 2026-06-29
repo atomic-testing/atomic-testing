@@ -67,8 +67,8 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
   );
 
   return (
-    <Grid data-testid={props['data-testid']} container spacing={2}>
-      <Grid item xs={12}>
+    <Grid data-testid={props['data-testid']} container spacing={2} sx={{ width: '100%' }}>
+      <Grid size={12}>
         <TextField
           data-testid={AddressEntryDataTestId.addressInput}
           {...register('address', { required: 'Address is required' })}
@@ -80,7 +80,7 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
           disabled={disabled}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <TextField
           data-testid={AddressEntryDataTestId.cityInput}
           {...register('city', { required: 'City is required' })}
@@ -92,7 +92,7 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
           disabled={disabled}
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid size={3}>
         <Controller
           control={control}
           name='state'
@@ -108,8 +108,10 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
                 helperText={errors.state?.message?.toString()}
                 fullWidth
                 disabled={disabled}
-                inputProps={{
-                  ...props.field,
+                slotProps={{
+                  htmlInput: {
+                    ...props.field,
+                  },
                 }}>
                 {usStates.map(option => (
                   <MenuItem key={option.code} value={option.code}>
@@ -121,7 +123,7 @@ export const AddressEntry = forwardRef<AddressEntryHandle, AddressEntryProps>((p
           }}
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid size={3}>
         <TextField
           data-testid={AddressEntryDataTestId.zipInput}
           {...register('zip', {

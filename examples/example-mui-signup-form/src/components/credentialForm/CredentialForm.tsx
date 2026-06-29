@@ -113,7 +113,7 @@ export function CredentialForm(props: WizardProps) {
           data-testid={CredentialFormDataTestId.birthdayInput}
           label='Birthday'
           type='date'
-          InputLabelProps={{ shrink: true }}
+          slotProps={{ inputLabel: { shrink: true } }}
           error={!!errors.birthday}
           helperText={errors.birthday?.message?.toString()}
           {...register('birthday', { required: 'Birthday is required' })}
