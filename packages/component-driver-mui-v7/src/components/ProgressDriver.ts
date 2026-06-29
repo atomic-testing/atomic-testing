@@ -1,5 +1,6 @@
 import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssClass,
   byCssSelector,
   byInputType,
   byValue,
@@ -47,6 +48,24 @@ export class ProgressDriver extends ComponentDriver<typeof parts> implements IIn
   async isDeterminate(): Promise<boolean> {
     const val = await this.getValue();
     return val != null;
+  }
+
+  /**
+   * The buffer value of a `variant="buffer"` LinearProgress, or `null` when there is no
+   * buffer bar. MUI has no `aria-` attribute for the buffer, so it is derived from the
+   * second bar's `transform: translateX(-N%)` (buffer = 100 − N).
+   */
+  async getBufferValue(): Promise<number | null> {
+    const bufferBar = locatorUtil.append(this.locator, byCssClass('MuiLinearProgress-bar2Buffer'));
+    if (!(await this.interactor.exists(bufferBar))) {
+      return null;
+    }
+    const style = await this.interactor.getAttribute(bufferBar, 'style');
+    const match = style?.match(/translateX\(\s*(-?[\d.]+)%\)/);
+    if (match == null) {
+      return null;
+    }
+    return 100 + parseFloat(match[1]!);
   }
 
   //TODO: Buffer value can be extracted from style="transform: translateX(-15%);" actual value would be 100 - 15 = 85

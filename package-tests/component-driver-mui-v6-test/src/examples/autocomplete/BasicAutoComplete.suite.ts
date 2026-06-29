@@ -105,5 +105,17 @@ export const basicAutoCompleteTestSuite: TestSuiteInfo<typeof basicAutoCompleteE
       assertFalse(await engine().parts.select.hasNoOptions());
       assertFalse(await engine().parts.select.isLoading());
     });
+
+    test('getOptions lists the currently visible options', async () => {
+      await engine().parts.select.parts.input.setValue('Godfather');
+      const options = await engine().parts.select.getOptions();
+      assertTrue(options.includes('The Godfather'));
+    });
+
+    test('clear empties the current selection', async () => {
+      await engine().parts.select.setValue('The Shawshank Redemption');
+      await engine().parts.select.clear();
+      assertEqual(await engine().parts.select.getValue(), '');
+    });
   },
 };

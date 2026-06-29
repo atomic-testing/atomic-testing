@@ -38,6 +38,53 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
     return true;
   }
 
+  /**
+   * The number of toggle buttons in the group.
+   */
+  async getButtonCount(): Promise<number> {
+    return listHelper.getListItemCount(this, this.itemLocator);
+  }
+
+  /**
+   * Get the toggle button at the given zero-based index, or `null` if out of range.
+   */
+  async getButtonByIndex(index: number): Promise<ToggleButtonDriver | null> {
+    return listHelper.getListItemByIndex(this, this.itemLocator, index, ToggleButtonDriver);
+  }
+
+  /**
+   * Get the toggle button whose `value` matches, or `null` if none.
+   */
+  async getButtonByValue(value: string): Promise<ToggleButtonDriver | null> {
+    for await (const itemDriver of listHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
+      if ((await itemDriver.getValue()) === value) {
+        return itemDriver;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get the toggle button whose visible label (text content) matches, or `null` if none.
+   */
+  async getButtonByLabel(label: string): Promise<ToggleButtonDriver | null> {
+    for await (const itemDriver of listHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
+      if ((await itemDriver.getText())?.trim() === label) {
+        return itemDriver;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Whether the option with the given `value` is disabled. Returns `false` when no such
+   * option exists.
+   */
+  async isOptionDisabled(value: string): Promise<boolean> {
+    const button = await this.getButtonByValue(value);
+    return button != null && (await button.isDisabled());
+  }
+
   get driverName(): string {
     return 'MuiV6ToggleButtonGroupDriver';
   }

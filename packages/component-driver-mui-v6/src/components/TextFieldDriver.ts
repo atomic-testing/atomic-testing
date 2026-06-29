@@ -7,6 +7,9 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
+  IRequirableDriver,
+  IValidatableDriver,
+  locatorUtil,
   Optional,
   PartLocator,
   ScenePart,
@@ -51,7 +54,10 @@ type TextFieldInputType = 'singleLine' | 'multiline' | 'select';
 /**
  * A driver for the Material UI v6 TextField component with single line or multiline text input.
  */
-export class TextFieldDriver extends ComponentDriver<typeof parts> implements IInputDriver<string | null> {
+export class TextFieldDriver
+  extends ComponentDriver<typeof parts>
+  implements IInputDriver<string | null>, IRequirableDriver, IValidatableDriver
+{
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
@@ -59,7 +65,7 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
     });
   }
 
-  private async getInputType(): Promise<TextFieldInputType> {
+  async getInputType(): Promise<TextFieldInputType> {
     const result = await Promise.all([
       this.parts.singlelineInput.exists(),
       this.parts.richSelectInputDetect.exists(),
@@ -139,6 +145,50 @@ export class TextFieldDriver extends ComponentDriver<typeof parts> implements II
       case 'multiline':
         return this.parts.multilineInput.isReadonly();
     }
+  }
+
+  /**
+   * Locator of the element that carries the native validation attributes
+   * (`required`, `aria-invalid`, `placeholder`). For text/multiline that is the
+   * visible input/textarea; for a select TextField it is the hidden value input.
+   */
+  private async getValueInputLocator(): Promise<PartLocator> {
+    const inputType = await this.getInputType();
+    switch (inputType) {
+      case 'singleLine':
+        return this.parts.singlelineInput.locator;
+      case 'multiline':
+        return this.parts.multilineInput.locator;
+      case 'select':
+        return locatorUtil.append(this.locator, byCssSelector('input'));
+    }
+  }
+
+  /**
+   * Whether the field is required. MUI sets the native `required` attribute on the
+   * underlying input (present with an empty value), so a first-class accessor saves
+   * consumers from reaching into the nested input themselves.
+   */
+  async isRequired(): Promise<boolean> {
+    const locator = await this.getValueInputLocator();
+    return (await this.interactor.getAttribute(locator, 'required')) != null;
+  }
+
+  /**
+   * Whether the field is in the error state. MUI's `error` prop sets
+   * `aria-invalid="true"` on the underlying input.
+   */
+  async isError(): Promise<boolean> {
+    const locator = await this.getValueInputLocator();
+    return (await this.interactor.getAttribute(locator, 'aria-invalid')) === 'true';
+  }
+
+  /**
+   * The input's placeholder text, or `undefined` when none is set.
+   */
+  async getPlaceholder(): Promise<Optional<string>> {
+    const locator = await this.getValueInputLocator();
+    return (await this.interactor.getAttribute(locator, 'placeholder')) ?? undefined;
   }
 
   get driverName(): string {

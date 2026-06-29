@@ -120,6 +120,41 @@ export class AutoCompleteDriver extends ComponentDriver<typeof parts> implements
     return false;
   }
 
+  /**
+   * Open the popup (if closed) and return the visible option labels in order. Opens by
+   * clicking the input; returns `[]` when the popup renders no listbox (e.g. no options).
+   */
+  async getOptions(): Promise<string[]> {
+    if (!(await this.interactor.exists(this.parts.dropdown.locator))) {
+      await this.parts.input.click();
+    }
+    if (!(await this.interactor.exists(this.parts.dropdown.locator))) {
+      return [];
+    }
+    const optionItemLocator = locatorUtil.append(this.parts.dropdown.locator, optionLocator);
+    const result: string[] = [];
+    for await (const optionDriver of listHelper.getListItemIterator(this, optionItemLocator, HTMLElementDriver)) {
+      const text = await optionDriver.getText();
+      if (text != null) {
+        result.push(text.trim());
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Clear the current selection via the clear (✕) indicator. The indicator is
+   * hover-gated, so the root is hovered first to reveal it; a no-op when there is
+   * nothing to clear (no clear indicator rendered).
+   */
+  async clear(): Promise<void> {
+    const clearButton = locatorUtil.append(this.locator, byCssClass('MuiAutocomplete-clearIndicator'));
+    if (await this.interactor.exists(clearButton)) {
+      await this.interactor.hover(this.locator);
+      await this.interactor.click(clearButton);
+    }
+  }
+
   async isDisabled(): Promise<boolean> {
     return this.parts.input.isDisabled();
   }
