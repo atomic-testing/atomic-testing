@@ -1,4 +1,4 @@
-import { ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
+import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 import {
   ComponentDriver,
   IComponentDriverOption,
