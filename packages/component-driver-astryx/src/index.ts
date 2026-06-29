@@ -45,3 +45,30 @@ export { DropdownMenuDriver, MoreMenuDriver } from './components/DropdownMenuDri
 export { PopoverDriver } from './components/PopoverDriver';
 export { DialogDriver } from './components/DialogDriver';
 export { AlertDialogDriver } from './components/AlertDialogDriver';
+
+// Lists, tables & display (Wave 3)
+export { ListDriver } from './components/ListDriver';
+export { ListItemDriver } from './components/ListItemDriver';
+export { MetadataListDriver } from './components/MetadataListDriver';
+export { OutlineDriver } from './components/OutlineDriver';
+export { OutlineItemDriver } from './components/OutlineItemDriver';
+export { CarouselDriver } from './components/CarouselDriver';
+export { TableDriver, type TableSortDirection } from './components/TableDriver';
+export { TreeListDriver } from './components/TreeListDriver';
+
+// Selectors & typeaheads (Wave 3)
+export { AstryxComboboxDriver } from './components/AstryxComboboxDriver';
+export { SelectorDriver } from './components/SelectorDriver';
+export { MultiSelectorDriver } from './components/MultiSelectorDriver';
+export { TypeaheadDriver } from './components/TypeaheadDriver';
+export { TokenizerDriver } from './components/TokenizerDriver';
+export { CommandPaletteDriver } from './components/CommandPaletteDriver';
+
+// Date & time (Wave 3)
+export { CalendarDriver } from './components/CalendarDriver';
+export { DateInputDriver } from './components/DateInputDriver';
+export { DateTimeInputDriver } from './components/DateTimeInputDriver';
+export { DateRangeInputDriver } from './components/DateRangeInputDriver';
+
+// PowerSearch (Wave 3, best-effort v1)
+export { PowerSearchDriver } from './components/PowerSearchDriver';

@@ -26,14 +26,7 @@ export class CheckboxListDriver extends ListComponentDriver<CheckboxListItemDriv
   /** Visible labels of every row, in DOM order. */
   async getItemLabels(): Promise<string[]> {
     const items = await this.getItems();
-    const labels: string[] = [];
-    for (const item of items) {
-      const label = await item.getLabel();
-      if (label != null) {
-        labels.push(label);
-      }
-    }
-    return labels;
+    return listHelper.collectItemLabels(items);
   }
 
   /** Visible labels of the checked rows, in DOM order. */
