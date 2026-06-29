@@ -400,6 +400,15 @@ export class DOMInteractor implements Interactor {
       await userEvent.clear(el);
     }
 
+    // An empty value is a pure clear: `userEvent.clear()` above already emptied
+    // the field, there is no text to type or date format to validate, and
+    // `userEvent.type` rejects `''` ("Expected key descriptor"). Return early —
+    // this also keeps clearing a date/time input from tripping the date-format
+    // validation below, and matches PlaywrightInteractor's `clear()` + `fill('')`.
+    if (text === '') {
+      return;
+    }
+
     // If it is a date, time or datetime-local input, validate the date format
     if (el.tagName === 'INPUT') {
       const type = el.getAttribute('type') ?? '';
