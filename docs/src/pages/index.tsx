@@ -13,12 +13,12 @@ const HERO_INSTALL = 'pnpm add @atomic-testing/core @atomic-testing/react-19';
 const COPY_FEEDBACK_MS = 1600;
 
 const reactCode = `import { createTestEngine } from '@atomic-testing/react-19';
-import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 
 // One scene definition — reused on every runtime
 const scene = {
-  greeting: { locator: byDataTestId('greeting'),   driver: HTMLComponentDriver },
+  greeting: { locator: byDataTestId('greeting'),   driver: HTMLElementDriver },
   button:   { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
@@ -33,13 +33,13 @@ it('welcomes the user on click', async () => {
 });`;
 
 const vueCode = `import { createTestEngine } from '@atomic-testing/vue-3';
-import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 import Welcome from './Welcome.vue';
 
 // Same scene definition — nothing changes
 const scene = {
-  greeting: { locator: byDataTestId('greeting'),   driver: HTMLComponentDriver },
+  greeting: { locator: byDataTestId('greeting'),   driver: HTMLElementDriver },
   button:   { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
@@ -54,13 +54,13 @@ it('welcomes the user on click', async () => {
 });`;
 
 const playCode = `import { createTestEngine } from '@atomic-testing/playwright';
-import { HTMLButtonDriver, HTMLComponentDriver } from '@atomic-testing/component-driver-html';
+import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId } from '@atomic-testing/core';
 import { test, expect } from '@playwright/test';
 
 // Same scene definition — nothing changes
 const scene = {
-  greeting: { locator: byDataTestId('greeting'),   driver: HTMLComponentDriver },
+  greeting: { locator: byDataTestId('greeting'),   driver: HTMLElementDriver },
   button:   { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
@@ -170,7 +170,7 @@ function OrbitVisual(): JSX.Element {
       </div>
 
       <span className={clsx(styles.chip, styles.chipBlue, styles.chipTopLeft)}>byDataTestId()</span>
-      <span className={clsx(styles.chip, styles.chipTeal, styles.chipTopRight)}>MUIButtonDriver</span>
+      <span className={clsx(styles.chip, styles.chipTeal, styles.chipTopRight)}>MUIV8ButtonDriver</span>
       <span className={clsx(styles.chip, styles.chipInk, styles.chipBottomLeft)}>engine.parts</span>
     </div>
   );
@@ -352,7 +352,7 @@ const composeSteps: ComposeStep[] = [
   {
     eyebrow: 'Driver',
     eyebrowColor: '#38bdf8',
-    code: 'MUIButtonDriver',
+    code: 'MUIV8ButtonDriver',
     text: (
       <>
         Semantic API — <span className={styles.bandHint}>.click()</span>,{' '}
