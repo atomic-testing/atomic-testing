@@ -37,6 +37,35 @@ export class BadgeDriver extends ComponentDriver<typeof parts> {
     return content ?? null;
   }
 
+  /**
+   * Whether the badge bubble is currently hidden. The `.MuiBadge-badge` node is always
+   * mounted (so inherited `isVisible`/`getContent` cannot distinguish shown from hidden);
+   * MUI toggles visibility with the `MuiBadge-invisible` class.
+   */
+  async isInvisible(): Promise<boolean> {
+    return this.interactor.hasCssClass(this.parts.contentDisplay.locator, 'MuiBadge-invisible');
+  }
+
+  /**
+   * Whether the badge bubble is currently shown (the badge node exists and is not
+   * marked invisible).
+   */
+  async isBadgeVisible(): Promise<boolean> {
+    const exists = await this.interactor.exists(this.parts.contentDisplay.locator);
+    if (!exists) {
+      return false;
+    }
+    return !(await this.isInvisible());
+  }
+
+  /**
+   * Whether the badge is a dot variant (`variant="dot"` → `MuiBadge-dot`), which renders
+   * a marker with no content.
+   */
+  async isDot(): Promise<boolean> {
+    return this.interactor.hasCssClass(this.parts.contentDisplay.locator, 'MuiBadge-dot');
+  }
+
   override get driverName(): string {
     return 'MuiV7BadgeDriver';
   }

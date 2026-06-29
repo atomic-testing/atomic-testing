@@ -3,8 +3,10 @@ import {
   byAttribute,
   ComponentDriver,
   IComponentDriverOption,
+  IDisableableDriver,
   IFormFieldDriver,
   Interactor,
+  IRequirableDriver,
   IToggleDriver,
   PartLocator,
   ScenePart,
@@ -19,7 +21,7 @@ export const parts = {
 
 export class SwitchDriver
   extends ComponentDriver<typeof parts>
-  implements IFormFieldDriver<string | null>, IToggleDriver
+  implements IFormFieldDriver<string | null>, IToggleDriver, IDisableableDriver, IRequirableDriver
 {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
@@ -54,6 +56,14 @@ export class SwitchDriver
   async isReadonly(): Promise<boolean> {
     // MUI v5 does not have a readonly state for the switch
     return Promise.resolve(false);
+  }
+
+  /**
+   * Whether the switch is required (MUI sets the native `required` attribute on the input).
+   */
+  async isRequired(): Promise<boolean> {
+    await this.enforcePartExistence('input');
+    return (await this.interactor.getAttribute(this.parts.input.locator, 'required')) != null;
   }
 
   get driverName(): string {

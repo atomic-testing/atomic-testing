@@ -4,6 +4,7 @@ import {
   byDataTestId,
   ComponentDriver,
   IComponentDriverOption,
+  IDisableableDriver,
   Interactor,
   PartLocator,
   ScenePart,
@@ -24,12 +25,20 @@ export const parts = {
  * Driver for Material UI v6 Chip component.
  * @see https://mui.com/material-ui/react-chip/
  */
-export class ChipDriver extends ComponentDriver<typeof parts> {
+export class ChipDriver extends ComponentDriver<typeof parts> implements IDisableableDriver {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
     });
+  }
+
+  /**
+   * Whether the chip is disabled. A Chip has no native form control; MUI marks the
+   * disabled state with the `Mui-disabled` class on the chip root.
+   */
+  async isDisabled(): Promise<boolean> {
+    return this.interactor.hasCssClass(this.locator, 'Mui-disabled');
   }
 
   /**

@@ -63,6 +63,17 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene
         const isDisabled = await item?.isDisabled();
         assertTrue(isDisabled);
       });
+
+      test('getMenuItemCount reports the number of items', async () => {
+        assertEqual(await engine().parts.menu.getMenuItemCount(), 5);
+      });
+
+      test('getMenuItemByIndex returns the item at that position', async () => {
+        const first = await engine().parts.menu.getMenuItemByIndex(0);
+        assertEqual(await first?.label(), 'Profile');
+        const outOfRange = await engine().parts.menu.getMenuItemByIndex(99);
+        assertEqual(outOfRange, null);
+      });
     });
   },
 };

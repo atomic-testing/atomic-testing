@@ -29,6 +29,7 @@ import { nativeSelectUIExample } from './examples/select/NativeSelect.examples';
 import { basicSliderUIExample } from './examples/slider/BasicSlider.examples';
 import { basicSnackbarUIExample } from './examples/snackbar/BasicSnackbar.examples';
 import { basicSpeedDialUIExample } from './examples/speedDial/BasicSpeedDial.example';
+import { stateAccessorsUIExample } from './examples/stateAccessors/StateAccessors.example';
 import { basicStepperUIExample } from './examples/stepper/BasicStepper.example';
 import { basicSwitchUIExample } from './examples/switch/BasicSwitch.examples';
 import { basicTablePaginationUIExample } from './examples/tablePagination/BasicTablePagination.example';
@@ -147,6 +148,11 @@ export const tocs: ExampleToc[] = [
     label: 'SpeedDial',
     path: '/speed-dial',
     ui: <ExampleList examples={[basicSpeedDialUIExample]} />,
+  },
+  {
+    label: 'State Accessors',
+    path: '/state-accessors',
+    ui: <ExampleList examples={[stateAccessorsUIExample]} />,
   },
   {
     label: 'Stepper',

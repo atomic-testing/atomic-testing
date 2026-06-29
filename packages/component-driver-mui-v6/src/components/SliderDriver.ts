@@ -6,6 +6,7 @@ import {
   IInputDriver,
   Interactor,
   locatorUtil,
+  Optional,
   PartLocator,
   ScenePart,
   ScenePartDriver,
@@ -101,6 +102,66 @@ export class SliderDriver extends ComponentDriver<SelectScenePart> implements II
     await this.enforcePartExistence('input');
     const disabled = await this.parts.input.isDisabled();
     return disabled;
+  }
+
+  /**
+   * The minimum value of the slider (the input's native `min` attribute).
+   */
+  async getMin(): Promise<number> {
+    await this.enforcePartExistence('input');
+    return parseFloat((await this.interactor.getAttribute(this.parts.input.locator, 'min'))!);
+  }
+
+  /**
+   * The maximum value of the slider (the input's native `max` attribute).
+   */
+  async getMax(): Promise<number> {
+    await this.enforcePartExistence('input');
+    return parseFloat((await this.interactor.getAttribute(this.parts.input.locator, 'max'))!);
+  }
+
+  /**
+   * The slider's step increment, or `null` when stepping is disabled (`step={null}`,
+   * i.e. the thumb may only land on marks).
+   */
+  async getStep(): Promise<number | null> {
+    await this.enforcePartExistence('input');
+    const step = await this.interactor.getAttribute(this.parts.input.locator, 'step');
+    const parsed = parseFloat(step!);
+    return isNaN(parsed) ? null : parsed;
+  }
+
+  /**
+   * The accessible value text of the active thumb (`aria-valuetext`, set via
+   * `getAriaValueText`/`valueLabelFormat`), or `undefined` when none.
+   */
+  async getValueText(): Promise<Optional<string>> {
+    await this.enforcePartExistence('input');
+    return (await this.interactor.getAttribute(this.parts.input.locator, 'aria-valuetext')) ?? undefined;
+  }
+
+  /**
+   * The labels of the slider's marks, in document order. Returns `[]` when the slider
+   * has no labelled marks. Mark labels are addressed by their `data-index` (0,1,2,…)
+   * rather than `:nth-of-type`, because they are spans interleaved with the slider's
+   * other spans (rail/track/thumb) — a position `:nth-of-type` cannot express portably.
+   */
+  async getMarks(): Promise<string[]> {
+    const result: string[] = [];
+    for (let index = 0; ; index++) {
+      const markLocator = locatorUtil.append(
+        this.locator,
+        byCssSelector(`.MuiSlider-markLabel[data-index="${index}"]`)
+      );
+      if (!(await this.interactor.exists(markLocator))) {
+        break;
+      }
+      const text = await this.interactor.getText(markLocator);
+      if (text != null) {
+        result.push(text.trim());
+      }
+    }
+    return result;
   }
 
   get driverName(): string {
