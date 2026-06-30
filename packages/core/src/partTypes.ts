@@ -9,33 +9,18 @@ import { PartLocator } from './locators/PartLocator';
 export type PartName<T extends ScenePart> = keyof T;
 
 /**
- * Constructor type for ComponentDriver classes. The `any` in the constraint
- * `T extends ComponentDriver<any>` is necessary because T represents the entire
- * driver class type, and we need to accept any driver regardless of its ScenePart
- * type parameter. Using a more restrictive type would break covariance when
- * passing concrete driver classes.
- */
-
-export type ComponentDriverClass<T extends ComponentDriver<any>> = new (
-  locator: PartLocator,
-  interactor: Interactor,
-
-  option?: Partial<IComponentDriverOption<any>>
-) => T;
-
-/**
- * Constructor signature for a {@link ComponentDriver}. This mirrors
- * {@link ComponentDriverClass} but is exported publicly so packages can
- * reference the type without importing from internal paths.
+ * Constructor signature for a {@link ComponentDriver}, exported publicly so
+ * packages can reference the type without importing from internal paths.
  *
- * The `any` types are necessary for the same variance reasons as ComponentDriverClass.
+ * The `any` in the constraint `T extends ComponentDriver<any>` is load-bearing:
+ * it lets the type accept any concrete driver regardless of its ScenePart type
+ * parameter. The option position, by contrast, is honestly typed to
+ * {@link ScenePart} — every driver's parts ultimately satisfy that constraint.
  */
-
 export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (
   locator: PartLocator,
   interactor: Interactor,
-
-  option?: Partial<IComponentDriverOption<any>>
+  option?: Partial<IComponentDriverOption<ScenePart>>
 ) => T;
 
 export interface ComponentPartDefinition<T extends ScenePart> {
@@ -98,14 +83,14 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
         locator: PartLocator,
         interactor: Interactor,
 
-        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>
+        option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>
       ) => ListComponentDriver<ItemT>);
 
   /**
    * Option for the driver
    */
 
-  option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>;
+  option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>;
 }
 
 export type ScenePartDefinition =
