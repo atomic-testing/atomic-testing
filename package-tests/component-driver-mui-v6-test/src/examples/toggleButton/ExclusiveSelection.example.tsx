@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';

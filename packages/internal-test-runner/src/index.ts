@@ -1,3 +1,4 @@
+export type { IExampleUIUnit, IExampleUnit } from './exampleTypes';
 export { emptyGoto, testRunner } from './testRunner';
 export { useTestEngine } from './useTestEngine';
 export type {

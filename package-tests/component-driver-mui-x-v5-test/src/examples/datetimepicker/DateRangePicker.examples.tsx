@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';

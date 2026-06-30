@@ -1,6 +1,6 @@
 import { AccordionDriver } from '@atomic-testing/component-driver-mui-v5';
-import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicAccordionUIExample } from './BasicAccordion.examples';
 

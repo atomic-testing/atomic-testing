@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useCallback } from 'react';
 
 // Two independent step=1 range inputs, each echoing its value into a sibling

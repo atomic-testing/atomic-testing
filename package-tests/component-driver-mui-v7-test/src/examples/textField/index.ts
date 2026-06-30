@@ -1,4 +1,5 @@
-import { IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { basicTextFieldUIExample } from './BasicTextField.examples';

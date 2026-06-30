@@ -1,7 +1,7 @@
 import { AlertDialogDriver } from '@atomic-testing/component-driver-astryx';
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { alertDialogUIExample } from './AlertDialog.examples';

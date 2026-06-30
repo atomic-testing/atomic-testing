@@ -1,5 +1,5 @@
 import { DateTimeInput, type ISODateTimeString } from '@astryxdesign/core/DateTimeInput';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useState } from 'react';
 
 const MeetingInput = () => {

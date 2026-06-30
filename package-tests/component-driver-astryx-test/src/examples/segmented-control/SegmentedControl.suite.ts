@@ -1,6 +1,6 @@
 import { SegmentedControlDriver } from '@atomic-testing/component-driver-astryx';
-import { byAriaLabel, byRole, IExampleUnit, locatorUtil, ScenePart } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byAriaLabel, byRole, locatorUtil, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { segmentedControlUIExample } from './SegmentedControl.examples';

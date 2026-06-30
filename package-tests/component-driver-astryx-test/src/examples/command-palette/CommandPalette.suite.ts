@@ -1,6 +1,6 @@
 import { CommandPaletteDriver } from '@atomic-testing/component-driver-astryx';
-import { byCssSelector, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byCssSelector, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { skipInteractionOnWebkit, useBrowserName } from '../../webkitGate';

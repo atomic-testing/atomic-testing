@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import PrintIcon from '@mui/icons-material/Print';
 import SaveIcon from '@mui/icons-material/Save';

@@ -1,5 +1,5 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
 import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { alertDialogUIExample } from './examples/alert-dialog/AlertDialog.examples';

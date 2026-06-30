@@ -1,6 +1,6 @@
 import { Tokenizer } from '@astryxdesign/core/Tokenizer';
 import { createStaticSource } from '@astryxdesign/core/Typeahead';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useState } from 'react';
 
 type Item = { id: string; label: string };

@@ -2,17 +2,22 @@ export { TestEngine } from './TestEngine';
 export type { Nullable, Optional } from './dataTypes';
 export * from './drivers';
 export * from './errors';
-export * from './example/types';
 export * from './geometry';
 export * from './interactor';
 export * from './locators/';
 export type {
+  ComponentDriverCtor,
+  ComponentPartDefinition,
+  ContainerPartDefinition,
+  IComponentDriver,
   IComponentDriverOption,
   IContainerDriverOption,
+  ITestEngine,
+  ListComponentPartDefinition,
+  PartName,
   ScenePart,
   ScenePartDefinition,
   ScenePartDriver,
-  ComponentDriverCtor,
 } from './partTypes';
 export * as collectionUtil from './utils/collectionUtil';
 export * as dateUtil from './utils/dateUtil';

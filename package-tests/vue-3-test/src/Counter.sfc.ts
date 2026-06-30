@@ -1,5 +1,6 @@
 import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId, IExampleUnit, IExampleUIUnit, ScenePart } from '@atomic-testing/core';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import { VueSFCLikeComponent } from '@atomic-testing/vue-3';
 import { ref } from 'vue';
 

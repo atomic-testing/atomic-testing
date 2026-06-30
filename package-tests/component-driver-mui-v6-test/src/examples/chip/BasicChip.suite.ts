@@ -1,6 +1,6 @@
 import { ChipDriver } from '@atomic-testing/component-driver-mui-v6';
-import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { basicChipUIExample } from './BasicChip.examples';
 

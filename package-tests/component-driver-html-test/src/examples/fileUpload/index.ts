@@ -1,4 +1,5 @@
-import { IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { ScenePart } from '@atomic-testing/core';
+import { IExampleUnit } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { fileUploadExample, fileUploadExampleTestSuite } from './FileUpload.suite';

@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';

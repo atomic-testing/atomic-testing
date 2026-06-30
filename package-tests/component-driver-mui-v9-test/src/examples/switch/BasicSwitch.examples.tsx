@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import React from 'react';

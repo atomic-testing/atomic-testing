@@ -1,6 +1,6 @@
 import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { ScenePart, byDataTestId } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { hoverAnchorUIExample } from './HoverAnchor.examples';

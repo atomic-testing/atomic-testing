@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import MailIcon from '@mui/icons-material/Mail';
 import Badge from '@mui/material/Badge';
 import React from 'react';

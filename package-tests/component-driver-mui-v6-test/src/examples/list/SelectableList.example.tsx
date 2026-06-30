@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import InboxIcon from '@mui/icons-material/Inbox';
 import Box from '@mui/material/Box';
