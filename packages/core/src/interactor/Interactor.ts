@@ -303,6 +303,17 @@ export interface Interactor {
   isChecked(locator: PartLocator): Promise<boolean>;
   isDisabled(locator: PartLocator): Promise<boolean>;
   isReadonly(locator: PartLocator): Promise<boolean>;
+  /**
+   * Whether the element is marked required, via the native `required` property or
+   * an `aria-required="true"` attribute.
+   */
+  isRequired(locator: PartLocator): Promise<boolean>;
+  /**
+   * Whether the element is in an invalid/error state, signalled by
+   * `aria-invalid="true"` (the cross-widget convention; native validity state is
+   * not consulted).
+   */
+  isError(locator: PartLocator): Promise<boolean>;
   isVisible(locator: PartLocator): Promise<boolean>;
 
   hasCssClass(locator: PartLocator, className: string): Promise<boolean>;

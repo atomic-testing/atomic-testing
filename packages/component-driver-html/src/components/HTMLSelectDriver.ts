@@ -2,7 +2,9 @@ import {
   byTagName,
   collectionUtil,
   ComponentDriver,
+  IDisableableDriver,
   IInputDriver,
+  IReadonlyableDriver,
   listHelper,
   locatorUtil,
   Nullable,
@@ -13,7 +15,10 @@ import { HTMLOptionDriver } from './HTMLOptionDriver';
 type ValueT = string | readonly string[];
 const optionLocator = byTagName('option');
 
-export class HTMLSelectDriver extends ComponentDriver<{}> implements IInputDriver<Nullable<ValueT>> {
+export class HTMLSelectDriver
+  extends ComponentDriver<{}>
+  implements IInputDriver<Nullable<ValueT>>, IDisableableDriver, IReadonlyableDriver
+{
   /**
    * Determine whether the select element allows multiple selections.
    */
