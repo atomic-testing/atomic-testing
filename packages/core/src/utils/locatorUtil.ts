@@ -65,6 +65,12 @@ export async function getEffectiveLocator(locator: PartLocator, interactor: Inte
   return shouldSkip ? list : list.slice(rootLocatorIndex);
 }
 
+/**
+ * Reduce a {@link PartLocator} to the single CSS selector the interactor runs
+ * against the DOM. This is the one locator-resolution seam in the system, and it
+ * is **CSS-only by design** for 1.0 — every locator must express itself as CSS
+ * here (see [ADR-008](../../../../agent-docs/adr/008-css-dom-only-locator-boundary.md)).
+ */
 export async function toCssSelector(locator: PartLocator, interactor: Interactor): Promise<string> {
   const effectiveLocator = await getEffectiveLocator(locator, interactor);
   const statements: string[] = [];

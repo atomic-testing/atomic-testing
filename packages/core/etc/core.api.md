@@ -542,7 +542,7 @@ export type Nullable<T> = T | null;
 // @public (undocumented)
 export type Optional<T> = T | undefined;
 
-// @public (undocumented)
+// @public
 export type PartLocator = CssLocator | CssLocatorChain;
 
 // @public (undocumented)
