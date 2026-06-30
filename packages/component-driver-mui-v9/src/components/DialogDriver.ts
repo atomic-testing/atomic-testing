@@ -35,11 +35,11 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
     });
   }
 
-  override overriddenParentLocator(): Optional<PartLocator> {
+  static override overriddenParentLocator(): Optional<PartLocator> {
     return dialogRootLocator;
   }
 
-  override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
+  static override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
     return 'Same';
   }
 

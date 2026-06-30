@@ -23,6 +23,15 @@ export interface IDisableableDriver {
 }
 
 /**
+ * A driver whose component can be put in a read-only state — its value is shown
+ * but not editable. Distinct from {@link IDisableableDriver}: a read-only control
+ * is still focusable and is submitted with its form.
+ */
+export interface IReadonlyableDriver {
+  isReadonly(): Promise<boolean>;
+}
+
+/**
  * A driver whose component can be marked required (a form control).
  */
 export interface IRequirableDriver {

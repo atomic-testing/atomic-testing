@@ -23,10 +23,14 @@ export function getPartFromDefinition<T extends ScenePart>(
       parts: undefined,
     };
 
-    const locatorContext: PartLocator = driver.prototype.overriddenParentLocator() ?? parentLocator;
+    // Portal hooks are static class metadata read off the constructor, never
+    // instance methods (they run before any instance exists).
+    const portalHostDriver = driver as unknown as typeof ComponentDriver;
+    const relativePositionOverride = portalHostDriver.overrideLocatorRelativePosition();
+    const locatorContext: PartLocator = portalHostDriver.overriddenParentLocator() ?? parentLocator;
     const actualLocator: PartLocator =
-      driver.prototype.overrideLocatorRelativePosition() != null
-        ? locatorUtil.overrideLocatorRelativePosition(locator, driver.prototype.overrideLocatorRelativePosition()!)
+      relativePositionOverride != null
+        ? locatorUtil.overrideLocatorRelativePosition(locator, relativePositionOverride)
         : locator;
 
     const componentLocator = locatorUtil.append(locatorContext, actualLocator);

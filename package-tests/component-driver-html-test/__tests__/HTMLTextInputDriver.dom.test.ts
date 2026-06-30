@@ -5,6 +5,8 @@ import { createTestEngine } from '@atomic-testing/react-19';
 import {
   controlledTextInputExample,
   controlledTextInputExampleTestSuite,
+  textInputCapabilitiesExample,
+  textInputCapabilitiesExampleTestSuite,
   uncontrolledTextInputExample,
   uncontrolledTextInputExampleTestSuite,
 } from '../src/examples';
@@ -18,5 +20,11 @@ testRunner(uncontrolledTextInputExampleTestSuite, jestTestAdapter, {
 testRunner(controlledTextInputExampleTestSuite, jestTestAdapter, {
   getTestEngine: (scenePart: typeof controlledTextInputExample.scene) => {
     return createTestEngine(controlledTextInputExample.ui, scenePart);
+  },
+});
+
+testRunner(textInputCapabilitiesExampleTestSuite, jestTestAdapter, {
+  getTestEngine: (scenePart: typeof textInputCapabilitiesExample.scene) => {
+    return createTestEngine(textInputCapabilitiesExample.ui, scenePart);
   },
 });
