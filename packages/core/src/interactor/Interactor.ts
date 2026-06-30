@@ -24,6 +24,17 @@ import type { PressKeyOption } from './PressKeyOption';
  * Component drivers delegate every interaction to an instance of this interface
  * so tests can run in different environments by simply providing a different
  * interactor implementation.
+ *
+ * **1.0 boundary — DOM and CSS only.** Every method resolves its target by
+ * reducing a {@link PartLocator} to a single CSS selector
+ * (`locatorUtil.toCssSelector`) and running it against a DOM — jsdom via
+ * `@testing-library` in `DOMInteractor`, or a real browser via Playwright. The
+ * 1.0 contract is therefore deliberately scoped to **DOM environments addressed
+ * by CSS**: there is no seam for a non-DOM target, and a computed ARIA accessible
+ * name (`aria-labelledby` / `<label>` / text — not CSS-expressible) is out of
+ * scope. See [ADR-008](../../../../agent-docs/adr/008-css-dom-only-locator-boundary.md);
+ * the deferred name-aware resolution is tracked in #923. Post-1.0 the interface
+ * grows additively per [ADR-007](../../../../agent-docs/adr/007-interactor-evolution-and-composition.md).
  */
 export interface Interactor {
   //#region Potentially DOM mutative interactions
