@@ -177,10 +177,6 @@ export class CssLocator {
     get relative(): LocatorRelativePosition;
     // (undocumented)
     readonly selector: string;
-    // Warning: (ae-forgotten-export) The symbol "CssLocatorSource" needs to be exported by the entry point index.d.mts
-    //
-    // (undocumented)
-    get source(): Optional<CssLocatorSource>;
 }
 
 // @public (undocumented)
