@@ -47,3 +47,10 @@ await engine.cleanUp();
 Refer to the [documentation](https://atomic-testing.dev/) for detailed guides
 and more examples. A complete signup form example can be found under
 `examples/example-mui-signup-form`.
+
+## Public API & stability
+
+The stable surface of this package is its `.` barrel exports, frozen under
+SemVer and machine-checked by the committed [API Extractor](https://api-extractor.com/)
+report at [`etc/core.api.md`](etc/core.api.md). Exports tagged `@internal` are
+not part of that guarantee. See the [1.0 API freeze & evolution policy](../../agent-docs/adr/006-1.0-api-freeze-and-evolution.md).

@@ -92,3 +92,4 @@ docs/docs/api
 .rollup.cache/
 
 .claude/settings.local.json
+temp/

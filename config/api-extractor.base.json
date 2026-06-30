@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+
+  // Shared base for every in-scope 1.0 package. Each package's api-extractor.json
+  // only needs `{ "extends": "../../config/api-extractor.base.json" }`; the tokens
+  // below resolve per package. The committed etc/<pkg>.api.md report is the
+  // machine-checked snapshot of the frozen public surface (see ADR-006).
+  "mainEntryPointFilePath": "<projectFolder>/dist/index.d.mts",
+
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/etc/",
+    "reportTempFolder": "<projectFolder>/temp/",
+    "reportFileName": "<unscopedPackageName>.api.md"
+  },
+
+  "docModel": { "enabled": false },
+  "dtsRollup": { "enabled": false },
+  "tsdocMetadata": { "enabled": false },
+
+  "compiler": {
+    // dist/index.d.mts is the single ENTRY point api-extractor parses (tsdown
+    // bundles each package's OWN types into it); cross-package and external
+    // (react) type references inside it are still resolved from node_modules,
+    // which is why the api-report CI job needs both deps-setup and the built
+    // dist artifacts. A minimal override avoids the workspace tsconfig's
+    // composite/project-graph settings (which fight analyzing a file outside
+    // the src rootDir).
+    "overrideTsconfig": {
+      "compilerOptions": {
+        "target": "es2020",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "jsx": "preserve",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "types": []
+      },
+      "include": ["dist/index.d.mts"]
+    }
+  },
+
+  "messages": {
+    "compilerMessageReporting": {
+      "default": { "logLevel": "warning" }
+    },
+    "extractorMessageReporting": {
+      "default": { "logLevel": "warning" },
+      // The report itself is the contract; per-symbol release tags are optional
+      // (incidental exports are annotated with @internal in source instead).
+      "ae-missing-release-tag": { "logLevel": "none" },
+      // {@link} targets inside method JSDoc (e.g. {@link click}) point at class
+      // members, not barrel exports — api-extractor cannot resolve those and they
+      // are irrelevant to the public-surface snapshot.
+      "ae-unresolved-link": { "logLevel": "none" },
+      // @internal symbols are intentionally NOT underscore-prefixed: they already
+      // ship under their current names, and renaming would itself be a breaking
+      // change. The @internal tag alone is the demotion signal we want.
+      "ae-internal-missing-underscore": { "logLevel": "none", "addToApiReportFile": false }
+    },
+    "tsdocMessageReporting": {
+      "default": { "logLevel": "none" }
+    }
+  }
+}
