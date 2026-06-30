@@ -18,7 +18,7 @@ export class ElementNotFoundError extends InteractorErrorBase {
     locator: PartLocator,
     public readonly action: string
   ) {
-    super(getErrorMessage(locator, action), locator);
+    super(getErrorMessage(locator, action), getLocatorInfoForErrorLog(locator));
     this.name = ElementNotFoundErrorId;
   }
 }
