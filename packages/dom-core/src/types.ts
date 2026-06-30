@@ -1,3 +1,6 @@
-import { IComponentDriverOption } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 
-export type IDomTestEngineOption = IComponentDriverOption;
+/**
+ * @deprecated Use {@link ITestEngineOption} from `@atomic-testing/core`.
+ */
+export type IDomTestEngineOption = ITestEngineOption;

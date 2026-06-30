@@ -1,8 +1,9 @@
-import { IComponentDriverOption } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 
-export interface IVueTestEngineOption extends IComponentDriverOption {
-  rootElement?: Element;
-}
+/**
+ * @deprecated Use {@link ITestEngineOption} from `@atomic-testing/core`.
+ */
+export type IVueTestEngineOption = ITestEngineOption;
 
 // Simple SFC-like object interface for template-based components
 export interface VueSFCLikeComponent {

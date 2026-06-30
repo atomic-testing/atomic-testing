@@ -1,3 +1,3 @@
 export { DOMInteractor } from './DOMInteractor';
-export * from './createDomTestEngine';
+export * from './createTestEngine';
 export * from './types';
