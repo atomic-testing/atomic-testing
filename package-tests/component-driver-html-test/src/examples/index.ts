@@ -2,6 +2,7 @@ export * from './activate';
 export * from './checkbox';
 export * from './contextMenu';
 export * from './drag';
+export * from './elementNotFound';
 export * from './fileUpload';
 export * from './focusEvent';
 export * from './form';
