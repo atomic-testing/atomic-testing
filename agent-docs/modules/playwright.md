@@ -2,28 +2,25 @@
 
 ## Purpose
 
-Run the same component drivers in a real browser via Playwright. Provides a `PlaywrightInteractor` that implements `Interactor` directly over a Playwright `Page`, a `createTestEngine`, and the glue (`testRunnerAdapter`) that lets a shared `*.suite.ts` execute as an E2E test.
+Run the same component drivers in a real browser via Playwright. Provides a `PlaywrightInteractor` that implements `Interactor` directly over a Playwright `Page` and a `createTestEngine`. The test-runner glue that lets a shared `*.suite.ts` execute as an E2E test lives in a separate package, [`@atomic-testing/internal-test-runner-playwright-adapter`](test-runner.md#playwright-adapter-glue-internal-test-runner-playwright-adapter), so this published driver stays free of any internal/experimental dependency (see [ADR-006](../adr/006-1.0-api-freeze-and-evolution.md)).
 
 ## Public surface
 
 Barrel: [playwright/src/index.ts](../../packages/playwright/src/index.ts).
 
-| Export                                        | Kind                             | File                                                                                 |
-| --------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
-| `PlaywrightInteractor`                        | class (`implements Interactor`)  | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
-| `createTestEngine(page, parts)`               | function                         | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14)         |
-| `goto(url, fixture?)`                         | function                         | [testRunnerAdapter.ts](../../packages/playwright/src/testRunnerAdapter.ts#L17)       |
-| `playwrightGetTestEngine(scenePart, fixture)` | function                         | [testRunnerAdapter.ts#L30](../../packages/playwright/src/testRunnerAdapter.ts#L30)   |
-| `playWrightTestFrameworkMapper`               | `TestFrameworkMapper`            | [testRunnerAdapter.ts#L41](../../packages/playwright/src/testRunnerAdapter.ts#L41)   |
-| `getTestRunnerInterface<T>()`                 | function → `E2eTestInterface<T>` | [testRunnerAdapter.ts#L74](../../packages/playwright/src/testRunnerAdapter.ts#L74)   |
+| Export | Kind | File |
+| --- | --- | --- |
+| `PlaywrightInteractor` | class (`implements Interactor`) | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
+| `createTestEngine(page, parts)` | function | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14) |
 
-Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@playwright/test` is a peer ([package.json#L31-L37](../../packages/playwright/package.json#L31-L37)).
+Depends on: `@atomic-testing/core`; `@playwright/test` is a peer ([package.json](../../packages/playwright/package.json)).
 
 ## Responsibilities
 
 - Implement `Interactor` using Playwright's locator/mouse/keyboard APIs.
-- Adapt Playwright's `test.*` lifecycle + `expect` to the shared `TestFrameworkMapper`.
-- Navigate to the suite's `url` before each E2E test.
+- Build a `TestEngine` bound to a Playwright `Page` via `createTestEngine`.
+
+(Adapting Playwright's `test.*` lifecycle/`expect` to `TestFrameworkMapper` and navigating to the suite's `url` are the job of `internal-test-runner-playwright-adapter`, not this package.)
 
 ## Non-goals
 
@@ -46,18 +43,10 @@ Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@pl
 
 ### Test-runner glue
 
-- `playWrightTestFrameworkMapper` maps `expect`/`test.*` to `TestFrameworkMapper`. It carries intentional `@ts-expect-error`s because Playwright's fixture-destructuring callback signatures differ from the normalized interface (compatible at runtime) ([testRunnerAdapter.ts#L41-L69](../../packages/playwright/src/testRunnerAdapter.ts#L41-L69)).
-- `getTestRunnerInterface()` returns `{ getTestEngine: playwrightGetTestEngine, goto }` — passed as the third arg to `testRunner` ([testRunnerAdapter.ts#L74-L79](../../packages/playwright/src/testRunnerAdapter.ts#L74-L79)).
-
-E2E adapter file (from `CLAUDE.md`):
-
-```ts
-testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
-```
+The Playwright `TestFrameworkMapper` and E2E interface (`playWrightTestFrameworkMapper`, `getTestRunnerInterface`, `goto`, `playwrightGetTestEngine`) live in [`@atomic-testing/internal-test-runner-playwright-adapter`](test-runner.md#playwright-adapter-glue-internal-test-runner-playwright-adapter). That package depends on this one (for `createTestEngine`) and on `@atomic-testing/internal-test-runner` — keeping the published driver here off the internal graph.
 
 ## Invariants & failure modes
 
-- `goto` requires the fixture's `page`; it is called in `beforeEach` by `testRunner` for E2E interfaces ([testRunner.ts#L34-L43](../../packages/internal-test-runner/src/testRunner.ts#L34-L43)).
 - Cross-browser caveats (from `CLAUDE.md`): mouse events differ across engines; click coordinates can have sub-pixel offsets — use `assertApproxEqual` with tolerance.
 
 ## Extension points

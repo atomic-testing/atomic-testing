@@ -22,7 +22,7 @@ Author each component's tests **once** as a framework-agnostic `TestSuiteInfo` i
 
 - ✅ One suite verifies both unit and E2E behavior — no drift, half the maintenance.
 - ✅ Adding a runner (Vitest was added) is one new adapter, no suite changes.
-- ⚠️ Runner signatures genuinely differ, so adapters/`testRunner` carry intentional `@ts-ignore`/`@ts-expect-error` and `arguments`-based dispatch — these are load-bearing; preserve them ([jest-adapter](../../packages/internal-test-runner-jest-adapter/src/index.ts#L20-L29), [testRunnerAdapter.ts#L41-L69](../../packages/playwright/src/testRunnerAdapter.ts#L41-L69)).
+- ⚠️ Runner signatures genuinely differ, so adapters/`testRunner` carry intentional `@ts-ignore`/`@ts-expect-error` and `arguments`-based dispatch — these are load-bearing; preserve them ([jest-adapter](../../packages/internal-test-runner-jest-adapter/src/index.ts#L20-L29), [playwright-adapter](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L41-L69)).
 - ⚠️ Suite code is constrained to the mapper's surface (no runner-specific matchers).
 
 ## Alternatives considered

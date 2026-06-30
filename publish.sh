@@ -65,6 +65,11 @@ if [[ "$BUILD_ONLY" == false ]]; then
   echo "→ Preflight: verifying every package exists on npm…"
   missing=()
   for pkg in "${publish_order[@]}"; do
+    # Private packages (internal test runners, fixtures, examples) are built for
+    # the monorepo's own tests but never published, so they need not exist on npm.
+    if [[ "$(node -p "require('./packages/$pkg/package.json').private === true")" == "true" ]]; then
+      continue
+    fi
     pkgName="$(node -p "require('./packages/$pkg/package.json').name")"
     if ! npm view "$pkgName" version > /dev/null 2>&1; then
       missing+=("$pkg  ($pkgName)")
@@ -94,15 +99,21 @@ for pkg in "${publish_order[@]}"; do
     pnpm build
 
     if [[ "$BUILD_ONLY" == false ]]; then
-      pkgName="$(node -p "require('./package.json').name")"
-      pkgVer="$(node -p "require('./package.json').version")"
-      # Idempotent: skip versions already on the registry so a re-run after a
-      # partial publish resumes instead of failing on "cannot publish over".
-      if npm view "${pkgName}@${pkgVer}" version > /dev/null 2>&1; then
-        echo "↷ Skipping $pkgName@$pkgVer (already published)"
+      # Private packages are built above (the monorepo's own tests consume their
+      # dist) but are never published to npm.
+      if [[ "$(node -p "require('./package.json').private === true")" == "true" ]]; then
+        echo "↷ Skipping publish for $pkg (private)"
       else
-        echo "→ Publishing $pkgName@$pkgVer"
-        pnpm publish --access=public --no-git-checks
+        pkgName="$(node -p "require('./package.json').name")"
+        pkgVer="$(node -p "require('./package.json').version")"
+        # Idempotent: skip versions already on the registry so a re-run after a
+        # partial publish resumes instead of failing on "cannot publish over".
+        if npm view "${pkgName}@${pkgVer}" version > /dev/null 2>&1; then
+          echo "↷ Skipping $pkgName@$pkgVer (already published)"
+        else
+          echo "→ Publishing $pkgName@$pkgVer"
+          pnpm publish --access=public --no-git-checks
+        fi
       fi
     else
       echo "→ Skipping publish for $pkg"
