@@ -1,6 +1,9 @@
-import { ComponentDriver, IClickableDriver, IMouseInteractableDriver } from '@atomic-testing/core';
+import { ComponentDriver, IClickableDriver, IDisableableDriver, IMouseInteractableDriver } from '@atomic-testing/core';
 
-export class HTMLButtonDriver extends ComponentDriver<{}> implements IClickableDriver, IMouseInteractableDriver {
+export class HTMLButtonDriver
+  extends ComponentDriver<{}>
+  implements IClickableDriver, IMouseInteractableDriver, IDisableableDriver
+{
   /**
    * Check if the button element is disabled.
    *

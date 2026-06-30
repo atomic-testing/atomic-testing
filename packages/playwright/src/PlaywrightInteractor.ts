@@ -485,6 +485,18 @@ export class PlaywrightInteractor implements Interactor {
     return readonly != null;
   }
 
+  async isRequired(locator: PartLocator): Promise<boolean> {
+    const required = await this.getAttribute(locator, 'required');
+    if (required != null) {
+      return true;
+    }
+    return (await this.getAttribute(locator, 'aria-required')) === 'true';
+  }
+
+  async isError(locator: PartLocator): Promise<boolean> {
+    return (await this.getAttribute(locator, 'aria-invalid')) === 'true';
+  }
+
   async isVisible(locator: PartLocator): Promise<boolean> {
     const exists = await this.exists(locator);
     if (!exists) {

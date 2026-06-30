@@ -32,11 +32,11 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     });
   }
 
-  override overriddenParentLocator(): Optional<PartLocator> {
+  static override overriddenParentLocator(): Optional<PartLocator> {
     return menuRootLocator;
   }
 
-  override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
+  static override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
     return 'Same';
   }
 
