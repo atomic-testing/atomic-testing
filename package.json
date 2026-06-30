@@ -11,12 +11,14 @@
   "scripts": {
     "build:packages": "./publish.sh --build-only",
     "check:type": "pnpm -r check:type",
+    "check:api": "pnpm -r check:api",
     "check:lint": "oxlint --fix",
-    "check:style": "oxfmt",
+    "check:style": "oxfmt --ignore-path .gitignore --ignore-path .oxfmtignore",
     "typedoc": "typedoc --out typedocs",
     "bumpVersion": "node scripts/bumpVersion.js"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.58.9",
     "@playwright/test": "^1.61.1",
     "@swc/jest": ">=0.2.37",
     "@testing-library/dom": "^10.4.1",
