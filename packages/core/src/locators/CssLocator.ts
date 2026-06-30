@@ -1,4 +1,3 @@
-import { Optional } from '../dataTypes';
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -13,6 +12,10 @@ export interface CssLocatorInitializer {
 export class CssLocator {
   private _relativePosition: LocatorRelativePosition = 'Descendant';
   private _type: LocatorType = 'css';
+  // Descriptive build-time AST, retained PRIVATELY (no public getter) so the
+  // selector could later be reinterpreted for a non-CSS engine without freezing
+  // the shape into the 1.0 surface. Preserved through clone(); never read for
+  // behavior today. See ADR-011.
   private _source?: CssLocatorSource;
 
   constructor(
@@ -21,7 +24,7 @@ export class CssLocator {
   ) {
     if (initializeValue) {
       this._relativePosition = initializeValue.relative || this.relative;
-      this._source = initializeValue.source || this.source;
+      this._source = initializeValue.source;
     }
   }
 
@@ -31,10 +34,6 @@ export class CssLocator {
 
   get type(): LocatorType {
     return this._type;
-  }
-
-  get source(): Optional<CssLocatorSource> {
-    return this._source;
   }
 
   chain(...locatorsToAppend: PartLocator[]): PartLocator {
