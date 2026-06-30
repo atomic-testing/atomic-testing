@@ -2,28 +2,25 @@
 
 ## Purpose
 
-Run the same component drivers in a real browser via Playwright. Provides a `PlaywrightInteractor` that implements `Interactor` directly over a Playwright `Page`, a `createTestEngine`, and the glue (`testRunnerAdapter`) that lets a shared `*.suite.ts` execute as an E2E test.
+Run the same component drivers in a real browser via Playwright. Provides a `PlaywrightInteractor` that implements `Interactor` directly over a Playwright `Page` and a `createTestEngine`. The test-runner glue that lets a shared `*.suite.ts` execute as an E2E test lives in a separate package, [`@atomic-testing/internal-test-runner-playwright-adapter`](test-runner.md#playwright-adapter-glue-internal-test-runner-playwright-adapter), so this published driver stays free of any internal/experimental dependency (see [ADR-006](../adr/006-1.0-api-freeze-and-evolution.md)).
 
 ## Public surface
 
 Barrel: [playwright/src/index.ts](../../packages/playwright/src/index.ts).
 
-| Export                                        | Kind                             | File                                                                                 |
-| --------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
-| `PlaywrightInteractor`                        | class (`implements Interactor`)  | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31) |
-| `createTestEngine(page, parts)`               | function                         | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14)         |
-| `goto(url, fixture?)`                         | function                         | [testRunnerAdapter.ts](../../packages/playwright/src/testRunnerAdapter.ts#L17)       |
-| `playwrightGetTestEngine(scenePart, fixture)` | function                         | [testRunnerAdapter.ts#L30](../../packages/playwright/src/testRunnerAdapter.ts#L30)   |
-| `playWrightTestFrameworkMapper`               | `TestFrameworkMapper`            | [testRunnerAdapter.ts#L41](../../packages/playwright/src/testRunnerAdapter.ts#L41)   |
-| `getTestRunnerInterface<T>()`                 | function → `E2eTestInterface<T>` | [testRunnerAdapter.ts#L74](../../packages/playwright/src/testRunnerAdapter.ts#L74)   |
+| Export | Kind | File |
+| --- | --- | --- |
+| `PlaywrightInteractor` | class (`implements Interactor`) | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts) |
+| `createTestEngine(page, parts)` | function | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14) |
 
-Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@playwright/test` is a peer ([package.json#L31-L37](../../packages/playwright/package.json#L31-L37)).
+Depends on: `@atomic-testing/core`; `@playwright/test` is a peer ([package.json](../../packages/playwright/package.json)).
 
 ## Responsibilities
 
 - Implement `Interactor` using Playwright's locator/mouse/keyboard APIs.
-- Adapt Playwright's `test.*` lifecycle + `expect` to the shared `TestFrameworkMapper`.
-- Navigate to the suite's `url` before each E2E test.
+- Build a `TestEngine` bound to a Playwright `Page` via `createTestEngine`.
+
+(Adapting Playwright's `test.*` lifecycle/`expect` to `TestFrameworkMapper` and navigating to the suite's `url` are the job of `internal-test-runner-playwright-adapter`, not this package.)
 
 ## Non-goals
 
@@ -32,32 +29,25 @@ Depends on: `@atomic-testing/core`, `@atomic-testing/internal-test-runner`; `@pl
 
 ## How it works
 
-`PlaywrightInteractor(page)` resolves each `PartLocator` via `locatorUtil.toCssSelector(locator, this)` and calls `page.locator(css).<action>()` ([PlaywrightInteractor.ts#L31-L324](../../packages/playwright/src/PlaywrightInteractor.ts#L31-L324)). Notable points vs the DOM implementation:
+`PlaywrightInteractor(page)` resolves each `PartLocator` via `locatorUtil.toCssSelector(locator, this)` and calls `page.locator(css).<action>()` ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts)). Notable points vs the DOM implementation:
 
 - **No `act()`/`nextTick()`** — Playwright auto-waits for actionability.
-- **`mouseMove`** hovers then `page.mouse.move(0, 0)` to reset pointer ([L133-L138](../../packages/playwright/src/PlaywrightInteractor.ts#L133-L138)).
-- **`mouseOut`/`mouseLeave`** hover then `dispatchEvent('mouseout')` for cross-browser reliability ([L158-L176](../../packages/playwright/src/PlaywrightInteractor.ts#L158-L176)).
-- **`enterText`** clears (unless `append`) and validates date-typed input formats, mirroring `DOMInteractor` ([L104-L121](../../packages/playwright/src/PlaywrightInteractor.ts#L104-L121)).
-- **`isVisible`** checks `opacity`/`visibility`/`display` but wraps reads in try/catch so an element detaching mid-animation resolves to `false` instead of throwing ([L259-L297](../../packages/playwright/src/PlaywrightInteractor.ts#L259-L297)).
-- **`isReadonly`** is inferred from the `readonly` attribute; **`isDisabled`** uses Playwright's `isDisabled()` ([L248-L257](../../packages/playwright/src/PlaywrightInteractor.ts#L248-L257)).
-- **Layout/geometry primitives are Playwright-native**: `getBoundingRect`/`drag` use `boundingBox()` (throwing `ElementNotFoundError` on a null box); `drag` builds the gesture from `getBoundingRect`'s center via `page.mouse` (no `(0,0)` reset, unlike `mouseMove`); `scrollIntoView` uses `scrollIntoViewIfNeeded`, `scrollBy` evaluates `el.scrollBy` (deterministic cross-engine, vs `mouse.wheel`); `dragTo` uses native `Locator.dragTo`; `setInputFiles` reads paths from disk; `contextMenu` is a right-button `click`; `pressKey` builds a `Modifier+Key` chord (Shift + a printable key case-folds `event.key`, differing from jsdom — #924).
+- **Unified element-not-found contract** — every mutative method runs through the private `runMutation` wrapper, which translates Playwright's auto-wait `TimeoutError` into `ElementNotFoundError` when (and only when) the locator matches nothing, otherwise rethrowing. This makes a missing-element mutation throw the same error class as `DOMInteractor`, so a shared `*.suite.ts` can assert it without branching on the environment (ADR-006). The trade-off: a truly-missing element waits out the page's action timeout before failing — bound it with `page.setDefaultTimeout` when fast failure matters.
+- **`mouseMove`** hovers then `page.mouse.move(0, 0)` to reset pointer ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts)).
+- **`mouseOut`/`mouseLeave`** hover then `dispatchEvent('mouseout')` for cross-browser reliability ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts)).
+- **`enterText`** clears (unless `append`) and validates date-typed input formats, mirroring `DOMInteractor` ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts)).
+- **`isVisible`** checks `opacity`/`visibility`/`display` but wraps reads in try/catch so an element detaching mid-animation resolves to `false` instead of throwing ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts)).
+- **`isReadonly`** is inferred from the `readonly` attribute; **`isDisabled`** uses Playwright's `isDisabled()` ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts)).
+- **Layout/geometry primitives are Playwright-native**: `getBoundingRect`/`drag` use `boundingBox()` (which returns `null` rather than auto-waiting, so they throw `ElementNotFoundError` synchronously instead of via the `runMutation` timeout path); `drag` builds the gesture from `getBoundingRect`'s center via `page.mouse` (no `(0,0)` reset, unlike `mouseMove`); `scrollIntoView` uses `scrollIntoViewIfNeeded`, `scrollBy` evaluates `el.scrollBy` (deterministic cross-engine, vs `mouse.wheel`); `dragTo` uses native `Locator.dragTo`; `setInputFiles` reads paths from disk; `contextMenu` is a right-button `click`; `pressKey` builds a `Modifier+Key` chord (Shift + a printable key case-folds `event.key`, differing from jsdom — #924).
 
 `createTestEngine(page, parts)` builds `new TestEngine([], new PlaywrightInteractor(page), { parts })` with no cleanup hook (Playwright owns the page lifecycle) ([createTestEngine.ts#L14-L20](../../packages/playwright/src/createTestEngine.ts#L14-L20)).
 
 ### Test-runner glue
 
-- `playWrightTestFrameworkMapper` maps `expect`/`test.*` to `TestFrameworkMapper`. It carries intentional `@ts-expect-error`s because Playwright's fixture-destructuring callback signatures differ from the normalized interface (compatible at runtime) ([testRunnerAdapter.ts#L41-L69](../../packages/playwright/src/testRunnerAdapter.ts#L41-L69)).
-- `getTestRunnerInterface()` returns `{ getTestEngine: playwrightGetTestEngine, goto }` — passed as the third arg to `testRunner` ([testRunnerAdapter.ts#L74-L79](../../packages/playwright/src/testRunnerAdapter.ts#L74-L79)).
-
-E2E adapter file (from `CLAUDE.md`):
-
-```ts
-testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
-```
+The Playwright `TestFrameworkMapper` and E2E interface (`playWrightTestFrameworkMapper`, `getTestRunnerInterface`, `goto`, `playwrightGetTestEngine`) live in [`@atomic-testing/internal-test-runner-playwright-adapter`](test-runner.md#playwright-adapter-glue-internal-test-runner-playwright-adapter). That package depends on this one (for `createTestEngine`) and on `@atomic-testing/internal-test-runner` — keeping the published driver here off the internal graph.
 
 ## Invariants & failure modes
 
-- `goto` requires the fixture's `page`; it is called in `beforeEach` by `testRunner` for E2E interfaces ([testRunner.ts#L34-L43](../../packages/internal-test-runner/src/testRunner.ts#L34-L43)).
 - Cross-browser caveats (from `CLAUDE.md`): mouse events differ across engines; click coordinates can have sub-pixel offsets — use `assertApproxEqual` with tolerance.
 
 ## Extension points

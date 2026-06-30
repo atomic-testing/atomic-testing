@@ -164,3 +164,10 @@ const engine = createTestEngine<Component>(MyVueComponent, sceneParts);
 3. **High-Level APIs**: Focus on user interactions, not DOM implementation details
 4. **Framework Agnostic Drivers**: Reuse component drivers across different frameworks and test environments
 5. **Future-Proof**: As your app grows or changes frameworks, your test patterns remain consistent
+
+## Public API & stability
+
+The stable surface of this package is its `.` barrel exports, frozen under
+SemVer and machine-checked by the committed [API Extractor](https://api-extractor.com/)
+report at [`etc/vue-3.api.md`](etc/vue-3.api.md). Exports tagged `@internal` are
+not part of that guarantee. See the [1.0 API freeze & evolution policy](../../agent-docs/adr/006-1.0-api-freeze-and-evolution.md).

@@ -8,3 +8,6 @@ pnpm-lock.yaml
 **/build/**/*
 typedocs/**/*
 CNAME
+# API Extractor reports — oxfmt reformats the embedded TS code fence and breaks
+# the byte-exact `check:api` gate. They are generated, never hand-edited.
+**/etc/**/*

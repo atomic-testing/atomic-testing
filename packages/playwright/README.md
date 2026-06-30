@@ -12,3 +12,10 @@ pnpm add @atomic-testing/playwright
 ```
 
 See the [docs](https://atomic-testing.dev/) for configuration and usage details.
+
+## Public API & stability
+
+The stable surface of this package is its `.` barrel exports, frozen under
+SemVer and machine-checked by the committed [API Extractor](https://api-extractor.com/)
+report at [`etc/playwright.api.md`](etc/playwright.api.md). Exports tagged `@internal` are
+not part of that guarantee. See the [1.0 API freeze & evolution policy](../../agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
