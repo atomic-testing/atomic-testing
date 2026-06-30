@@ -78,7 +78,7 @@ Builders in [locators/](../../packages/core/src/locators/index.ts), each returni
 | `byCssSelector(sel, relative?)` | raw CSS (escape hatch)                | [byCssSelector.ts](../../packages/core/src/locators/byCssSelector.ts)         |
 | `byLinkedElement()`             | fluent → `LinkedCssLocator`           | [byLinkedElement.ts](../../packages/core/src/locators/byLinkedElement.ts#L19) |
 
-Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)): `append(...locators)` chains while respecting `Root` boundaries; `toCssSelector(locator, interactor)` resolves to a runtime selector (awaiting linked-locator resolution); `overrideLocatorRelativePosition(...)` rewrites a locator's relative position. Disambiguate two same-role elements by accessible name with `append(byRole(role), byAriaLabel(name, 'Same'))`; computed accessible names (not CSS-expressible) await the deferred name-aware `findByRole` (see #923).
+Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)): `append(...locators)` chains while respecting `Root` boundaries; `toCssSelector(locator, interactor)` resolves to a runtime selector (awaiting linked-locator resolution); `overrideLocatorRelativePosition(...)` rewrites a locator's relative position. Disambiguate two same-role elements by accessible name with the same-element compound `byRole(role).and(byAriaLabel(name))` ([CssLocator.and](../../packages/core/src/locators/CssLocator.ts) — supersedes the older `append(byRole(role), byAriaLabel(name, 'Same'))`); computed accessible names (not CSS-expressible) await the deferred name-aware `findByRole` (see #923).
 
 ## Utilities
 
