@@ -115,6 +115,20 @@ export interface IComponentDriverOption<T extends ScenePart = {}> {
   parts: T;
 }
 
+/**
+ * Shared base option for the framework adapters' `createTestEngine` entry points.
+ * Defined once in core so every adapter option type stays in lockstep and future
+ * universal bootstrap options have a single home.
+ */
+export interface ITestEngineOption extends IComponentDriverOption {
+  /**
+   * Element to host the rendered subject. Defaults to `document.body` for the
+   * in-DOM adapters (DOM/React/Vue); ignored by out-of-process adapters such as
+   * Playwright.
+   */
+  rootElement?: Element;
+}
+
 export interface IContainerDriverOption<
   ContentT extends ScenePart = {},
   T extends ScenePart = {},
