@@ -18,12 +18,12 @@ export type ByAriaLabelSource = {
  *
  * Most commonly composed with {@link byRole} on the SAME element to tell two
  * same-role siblings apart without relying on unstable (e.g. StyleX-hashed) class
- * names — pass `'Same'` so the selector compounds rather than descends:
+ * names. Use {@link CssLocator.and} to compound the matchers onto one element:
  *
  * ```ts
- * import { byAriaLabel, byRole, locatorUtil } from '@atomic-testing/core';
- * const openButton = locatorUtil.append(byRole('button'), byAriaLabel('Open', 'Same'));
- * const closeButton = locatorUtil.append(byRole('button'), byAriaLabel('Close', 'Same'));
+ * import { byAriaLabel, byRole } from '@atomic-testing/core';
+ * const openButton = byRole('button').and(byAriaLabel('Open'));
+ * const closeButton = byRole('button').and(byAriaLabel('Close'));
  * ```
  *
  * @param value - Verbatim `aria-label` to match.

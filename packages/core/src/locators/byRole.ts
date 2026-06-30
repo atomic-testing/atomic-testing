@@ -12,11 +12,12 @@ export type ByRoleSource = {
  * Locate elements by their ARIA `role` attribute.
  *
  * To additionally disambiguate two same-role elements by their accessible name,
- * compose with {@link byAriaLabel} (verbatim `aria-label`) on the SAME element:
+ * compose with {@link byAriaLabel} (verbatim `aria-label`) on the SAME element
+ * via {@link CssLocator.and}:
  *
  * ```ts
- * import { byAriaLabel, byRole, locatorUtil } from '@atomic-testing/core';
- * const openButton = locatorUtil.append(byRole('button'), byAriaLabel('Open', 'Same'));
+ * import { byAriaLabel, byRole } from '@atomic-testing/core';
+ * const openButton = byRole('button').and(byAriaLabel('Open'));
  * ```
  *
  * Computed accessible names (`aria-labelledby` / `<label>` / text content) are

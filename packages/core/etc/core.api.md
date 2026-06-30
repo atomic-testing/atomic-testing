@@ -160,6 +160,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
 export class CssLocator {
     // Warning: (ae-forgotten-export) The symbol "CssLocatorInitializer" needs to be exported by the entry point index.d.mts
     constructor(selector: string, initializeValue?: Partial<CssLocatorInitializer>);
+    and(...locators: CssLocator[]): CssLocator;
     // (undocumented)
     chain(...locatorsToAppend: PartLocator[]): PartLocator;
     // (undocumented)

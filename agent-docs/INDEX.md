@@ -26,14 +26,19 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 
 ## ADRs
 
-| ADR                                              | Decision                                                  |
-| ------------------------------------------------ | --------------------------------------------------------- |
-| [001](adr/001-component-driver-pattern.md)       | Component-driver pattern with declarative scene parts.    |
-| [002](adr/002-interactor-abstraction.md)         | `Interactor` abstraction for environment portability.     |
-| [003](adr/003-version-specific-packages.md)      | Version-specific packages for React and MUI majors.       |
-| [004](adr/004-shared-three-file-test-pattern.md) | Shared three-file test pattern via `TestFrameworkMapper`. |
-| [005](adr/005-drop-mui-5-support.md)             | End of support for MUI 5 and MUI-X 5.                     |
-| [006](adr/006-1.0-api-freeze-and-evolution.md)   | 1.0 public-API freeze, SemVer & deprecation policy.       |
+| ADR                                                      | Decision                                                                   |
+| -------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [001](adr/001-component-driver-pattern.md)               | Component-driver pattern with declarative scene parts.                     |
+| [002](adr/002-interactor-abstraction.md)                 | `Interactor` abstraction for environment portability.                      |
+| [003](adr/003-version-specific-packages.md)              | Version-specific packages for React and MUI majors.                        |
+| [004](adr/004-shared-three-file-test-pattern.md)         | Shared three-file test pattern via `TestFrameworkMapper`.                  |
+| [005](adr/005-drop-mui-5-support.md)                     | End of support for MUI 5 and MUI-X 5.                                      |
+| [006](adr/006-1.0-api-freeze-and-evolution.md)           | 1.0 public-API freeze, SemVer & deprecation policy.                        |
+| [007](adr/007-interactor-evolution-and-composition.md)   | Interactor evolution strategy & same-element `CssLocator.and` composition. |
+| [008](adr/008-css-dom-only-locator-boundary.md)          | The 1.0 locator boundary is CSS- and DOM-only.                             |
+| [010](adr/010-narrow-error-payload.md)                   | Narrow the error payload to a serializable shape.                          |
+| [011](adr/011-retract-locator-source-ast.md)             | Retract the locator descriptive `source` AST.                              |
+| [012](adr/012-remove-dead-clone-wait-from-interactor.md) | Remove dead `clone()` / `wait()` from the `Interactor` contract.           |
 
 ## Fresh repo tree
 
