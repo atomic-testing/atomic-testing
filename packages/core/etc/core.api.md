@@ -130,7 +130,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 }
 
 // @public
-export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<any>>) => T;
+export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>) => T;
 
 // @public (undocumented)
 export interface ComponentPartDefinition<T extends ScenePart> {
@@ -177,15 +177,13 @@ export class CssLocator {
     //
     // (undocumented)
     get source(): Optional<CssLocatorSource>;
-    // (undocumented)
-    get type(): LocatorType;
 }
 
 // @public (undocumented)
 export type CssLocatorChain = CssLocator[];
 
 // @public
-export type CssProperty = Exclude<keyof CSSStyleDeclaration, ['parentRule', 'length', 'getPropertyPriority', 'getPropertyValue', 'item', 'removeProperty', 'setProperty']>;
+export type CssProperty = Exclude<keyof CSSStyleDeclaration, 'parentRule' | 'length' | 'getPropertyPriority' | 'getPropertyValue' | 'item' | 'removeProperty' | 'setProperty'>;
 
 // @public (undocumented)
 export namespace dateUtil {
@@ -403,13 +401,11 @@ export interface IRequirableDriver {
     isRequired(): Promise<boolean>;
 }
 
-// @public (undocumented)
+// @public
 export class ItemNotFoundError extends ErrorBase {
-    constructor(locator: PartLocator, driver: ComponentDriver<any>);
+    constructor(query: PartLocator | string, driver: ComponentDriver<any>, message?: string);
     // (undocumented)
-    readonly driver: ComponentDriver<any>;
-    // (undocumented)
-    readonly locator: PartLocator;
+    readonly query: PartLocator | string;
 }
 
 // @public (undocumented)
@@ -481,9 +477,9 @@ export interface ListComponentDriverSpecificOption<ItemT extends ComponentDriver
 
 // @public
 export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>> {
-    driver: typeof ListComponentDriver<ItemT> | (new (locator: PartLocator, interactor: Interactor, option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>) => ListComponentDriver<ItemT>);
+    driver: typeof ListComponentDriver<ItemT> | (new (locator: PartLocator, interactor: Interactor, option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>) => ListComponentDriver<ItemT>);
     locator: PartLocator;
-    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<any>>;
+    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>;
 }
 
 // @public (undocumented)
@@ -491,14 +487,11 @@ export namespace listHelper {
     export { collectItemLabels, getListItemByIndex, getListItemCount, getListItemIterator };
 }
 
-// @public @deprecated (undocumented)
-export type LocatorChain = PartLocator;
-
 // @public
 export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same';
 
 // @public (undocumented)
-export type LocatorType = 'css' | 'xpath';
+export type LocatorType = 'css';
 
 // @public (undocumented)
 export const LocatorTypeLookup: Record<string, LocatorType>;
@@ -593,18 +586,6 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
 export namespace timingUtil {
     export { WaitUntilOption, wait, waitUntil };
 }
-
-// @public (undocumented)
-export class TooManyMatchingElementError extends ErrorBase {
-    constructor(query: PartLocator, driver: ComponentDriver<any>);
-    // (undocumented)
-    readonly driver: ComponentDriver<any>;
-    // (undocumented)
-    readonly query: PartLocator;
-}
-
-// @public (undocumented)
-export const TooManyMatchingElementErrorId = "TooManyMatchingElementError";
 
 // @public (undocumented)
 export type WaitForCondition = 'attached' | 'visible' | 'detached' | 'hidden';

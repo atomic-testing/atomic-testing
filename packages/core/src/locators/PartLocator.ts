@@ -15,8 +15,3 @@ export type CssLocatorChain = CssLocator[];
  * [ADR-008](../../../../agent-docs/adr/008-css-dom-only-locator-boundary.md).
  */
 export type PartLocator = CssLocator | CssLocatorChain;
-
-/**
- * @deprecated LocatorChain is deprecated, please use PartLocator instead
- */
-export type LocatorChain = PartLocator;
