@@ -1,6 +1,24 @@
-import { ComponentDriver, IComponentDriverOption, IInputDriver, Interactor, PartLocator } from '@atomic-testing/core';
+import {
+  ComponentDriver,
+  IComponentDriverOption,
+  IDisableableDriver,
+  IInputDriver,
+  Interactor,
+  IReadonlyableDriver,
+  IRequirableDriver,
+  IValidatableDriver,
+  PartLocator,
+} from '@atomic-testing/core';
 
-export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDriver<string | null> {
+export class HTMLTextInputDriver
+  extends ComponentDriver<{}>
+  implements
+    IInputDriver<string | null>,
+    IDisableableDriver,
+    IReadonlyableDriver,
+    IRequirableDriver,
+    IValidatableDriver
+{
   /**
    * Create a text input driver.
    */
@@ -43,6 +61,21 @@ export class HTMLTextInputDriver extends ComponentDriver<{}> implements IInputDr
    */
   isReadonly(): Promise<boolean> {
     return this.interactor.isReadonly(this.locator);
+  }
+
+  /**
+   * Check whether the text input is marked required.
+   */
+  isRequired(): Promise<boolean> {
+    return this.interactor.isRequired(this.locator);
+  }
+
+  /**
+   * Check whether the text input is in an invalid/error state
+   * (signalled by `aria-invalid="true"`).
+   */
+  isError(): Promise<boolean> {
+    return this.interactor.isError(this.locator);
   }
 
   /**

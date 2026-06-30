@@ -1,6 +1,15 @@
-import { ComponentDriver, IFormFieldDriver, IToggleDriver } from '@atomic-testing/core';
+import {
+  ComponentDriver,
+  IDisableableDriver,
+  IFormFieldDriver,
+  IReadonlyableDriver,
+  IToggleDriver,
+} from '@atomic-testing/core';
 
-export class HTMLCheckboxDriver extends ComponentDriver<{}> implements IFormFieldDriver<string | null>, IToggleDriver {
+export class HTMLCheckboxDriver
+  extends ComponentDriver<{}>
+  implements IFormFieldDriver<string | null>, IToggleDriver, IDisableableDriver, IReadonlyableDriver
+{
   /**
    * Read the checkbox value attribute.
    *

@@ -11,8 +11,8 @@ const defaultTransitionDuration = 250;
  * `closeByBackdrop`.
  *
  * Subclasses supply {@link getSurfaceLocator} (the element whose visibility means
- * "open") and, when the overlay is portal-rendered, override
- * `overriddenParentLocator()`/`overrideLocatorRelativePosition()` to re-root.
+ * "open") and, when the overlay is portal-rendered, override the static
+ * `overriddenParentLocator()`/`overrideLocatorRelativePosition()` portal hooks to re-root.
  *
  * `closeByEscape` is intentionally absent: keyboard dismissal needs a key-press
  * primitive the `Interactor` interface does not yet expose, which would have to be

@@ -9,6 +9,7 @@ import { dragUIExample } from './examples/drag/Drag.examples';
 import { fileUploadUIExample } from './examples/fileUpload/FileUpload.examples';
 import { focusEventUIExample } from './examples/focusEvent/Focus.examples';
 import { linkedElementUIExample } from './examples/form/LinkedElement.examples';
+import { textInputCapabilitiesUIExample } from './examples/input/Capabilities.examples';
 import { controlledTextInputUIExample } from './examples/input/Controlled.examples';
 import { uncontrolledTextInputUIExample } from './examples/input/Uncontrolled.examples';
 import { keyboardEventUIExample } from './examples/keyboardEvent/KeyboardEvent.examples';
@@ -31,7 +32,11 @@ export const tocs: ExampleToc[] = [
   {
     label: 'Text Input',
     path: '/input',
-    ui: <ExampleList examples={[uncontrolledTextInputUIExample, controlledTextInputUIExample]} />,
+    ui: (
+      <ExampleList
+        examples={[uncontrolledTextInputUIExample, controlledTextInputUIExample, textInputCapabilitiesUIExample]}
+      />
+    ),
   },
   {
     label: 'Radio Buttons',
