@@ -1,0 +1,39 @@
+{
+  "name": "example-astryx-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check:type": "tsc --noEmit",
+    "test:dom": "vitest run",
+    "test:dom:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
+  },
+  "dependencies": {
+    "@astryxdesign/core": "^0.1.2",
+    "@astryxdesign/theme-neutral": "^0.1.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-router-dom": "^7.7.1"
+  },
+  "devDependencies": {
+    "@atomic-testing/component-driver-astryx": "^0.89.0",
+    "@atomic-testing/component-driver-html": "^0.89.0",
+    "@atomic-testing/core": "^0.89.0",
+    "@atomic-testing/dom-core": "^0.89.0",
+    "@atomic-testing/playwright": "^0.89.0",
+    "@atomic-testing/react-19": "^0.89.0",
+    "@playwright/test": "^1.61.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9"
+  }
+}
