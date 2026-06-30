@@ -1,9 +1,9 @@
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
-import { ReactInteractor } from '@atomic-testing/react-core';
 import { ReactElement } from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 
+import { LegacyReactInteractor } from './LegacyReactInteractor';
 import { IReactTestEngineOption } from './types';
 
 let _rootId = 0;
@@ -43,7 +43,7 @@ export function createTestEngine<T extends ScenePart>(
 
   const engine = new TestEngine(
     byAttribute(rootElementAttributeName, rootId),
-    new ReactInteractor(),
+    new LegacyReactInteractor(),
     {
       parts: partDefinitions,
     },
@@ -77,7 +77,7 @@ export function createRenderedTestEngine<T extends ScenePart>(
 
   const engine = new TestEngine(
     byAttribute(rootElementAttributeName, rootId),
-    new ReactInteractor(),
+    new LegacyReactInteractor(),
     {
       parts: partDefinitions,
     },
