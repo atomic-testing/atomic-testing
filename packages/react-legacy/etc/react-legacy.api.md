@@ -4,7 +4,7 @@
 
 ```ts
 
-import { IComponentDriverOption } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 import { ReactElement } from 'react';
 import { ScenePart } from '@atomic-testing/core';
 import { TestEngine } from '@atomic-testing/core';
@@ -15,11 +15,8 @@ export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLE
 // @public
 export function createTestEngine<T extends ScenePart>(node: ReactElement, partDefinitions: T, option?: Readonly<Partial<IReactTestEngineOption>>): TestEngine<T>;
 
-// @public (undocumented)
-export interface IReactTestEngineOption extends IComponentDriverOption {
-    // (undocumented)
-    rootElement?: Element;
-}
+// @public @deprecated (undocumented)
+export type IReactTestEngineOption = ITestEngineOption;
 
 // (No @packageDocumentation comment for this package)
 
