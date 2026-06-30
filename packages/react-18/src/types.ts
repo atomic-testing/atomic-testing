@@ -1,5 +1,6 @@
-import { IComponentDriverOption } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 
-export interface IReactTestEngineOption extends IComponentDriverOption {
-  rootElement?: Element;
-}
+/**
+ * @deprecated Use {@link ITestEngineOption} from `@atomic-testing/core`.
+ */
+export type IReactTestEngineOption = ITestEngineOption;

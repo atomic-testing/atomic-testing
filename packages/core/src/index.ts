@@ -14,6 +14,7 @@ export type {
   IComponentDriverOption,
   IContainerDriverOption,
   ITestEngine,
+  ITestEngineOption,
   ListComponentPartDefinition,
   PartName,
   ScenePart,
