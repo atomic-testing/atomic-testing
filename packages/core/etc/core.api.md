@@ -74,8 +74,6 @@ export namespace collectionUtil {
     export { DifferenceResult, getDifference, toArray };
 }
 
-// Warning: (ae-forgotten-export) The symbol "IComponentDriver" needs to be exported by the entry point index.d.mts
-//
 // @public
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<T>>);
@@ -88,7 +86,6 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     dragTo(target: ComponentDriver<any>): Promise<void>;
     // (undocumented)
     abstract get driverName(): string;
-    // Warning: (ae-forgotten-export) The symbol "PartName" needs to be exported by the entry point index.d.mts
     protected enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void>;
     exists(): Promise<boolean>;
     // (undocumented)
@@ -119,8 +116,8 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     mouseOver(option?: Partial<HoverOption>): Promise<void>;
     // (undocumented)
     mouseUp(option?: Partial<MouseUpOption>): Promise<void>;
-    overriddenParentLocator(): Optional<PartLocator>;
-    overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+    static overriddenParentLocator(): Optional<PartLocator>;
+    static overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
     get parts(): ScenePartDriver<T>;
     pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void>;
     runtimeCssSelector(): Promise<string>;
@@ -133,13 +130,34 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 }
 
 // @public
-export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<any>>) => T;
+export type ComponentDriverCtor<T extends ComponentDriver<any>> = {
+    new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>): T;
+    overriddenParentLocator(): Optional<PartLocator>;
+    overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+};
+
+// @public (undocumented)
+export interface ComponentPartDefinition<T extends ScenePart> {
+    driver: {
+        new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<T>>): ComponentDriver<T>;
+    };
+    locator: PartLocator;
+    // (undocumented)
+    option?: Partial<IComponentDriverOption<T>>;
+}
 
 // @public (undocumented)
 export abstract class ContainerDriver<ContentT extends ScenePart, T extends ScenePart = {}> extends ComponentDriver<T> implements IComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>);
     // (undocumented)
     get content(): ScenePartDriver<ContentT>;
+}
+
+// @public (undocumented)
+export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
+    driver: typeof ContainerDriver<ContentT, T> | (new (locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) => ContainerDriver<ContentT, T>);
+    locator: PartLocator;
+    option?: Partial<IContainerDriverOption<ContentT, T>>;
 }
 
 // @public (undocumented)
@@ -162,15 +180,13 @@ export class CssLocator {
     //
     // (undocumented)
     get source(): Optional<CssLocatorSource>;
-    // (undocumented)
-    get type(): LocatorType;
 }
 
 // @public (undocumented)
 export type CssLocatorChain = CssLocator[];
 
 // @public
-export type CssProperty = Exclude<keyof CSSStyleDeclaration, ['parentRule', 'length', 'getPropertyPriority', 'getPropertyValue', 'item', 'removeProperty', 'setProperty']>;
+export type CssProperty = Exclude<keyof CSSStyleDeclaration, 'parentRule' | 'length' | 'getPropertyPriority' | 'getPropertyValue' | 'item' | 'removeProperty' | 'setProperty'>;
 
 // @public (undocumented)
 export namespace dateUtil {
@@ -242,6 +258,16 @@ export const htmlInputDateTypes: readonly string[];
 export interface IClickableDriver {
     // (undocumented)
     click(option?: ClickOption): Promise<void>;
+}
+
+// @public (undocumented)
+export interface IComponentDriver<T extends ScenePart = {}> {
+    exists(): Promise<boolean>;
+    getText(): Promise<Optional<string>>;
+    isVisible(): Promise<boolean>;
+    readonly locator: PartLocator;
+    readonly parts: ScenePartDriver<T>;
+    waitUntilComponentState(option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
 // @public (undocumented)
@@ -335,8 +361,10 @@ export interface Interactor {
     isChecked(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isDisabled(locator: PartLocator): Promise<boolean>;
+    isError(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isReadonly(locator: PartLocator): Promise<boolean>;
+    isRequired(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isVisible(locator: PartLocator): Promise<boolean>;
     // (undocumented)
@@ -376,22 +404,37 @@ export namespace interactorUtil {
 }
 
 // @public
+export interface IReadonlyableDriver {
+    // (undocumented)
+    isReadonly(): Promise<boolean>;
+}
+
+// @public
 export interface IRequirableDriver {
     // (undocumented)
     isRequired(): Promise<boolean>;
 }
 
-// @public (undocumented)
+// @public
 export class ItemNotFoundError extends ErrorBase {
-    constructor(locator: PartLocator, driver: ComponentDriver<any>);
+    constructor(query: PartLocator | string, driver: ComponentDriver<any>, message?: string);
     // (undocumented)
-    readonly driver: ComponentDriver<any>;
-    // (undocumented)
-    readonly locator: PartLocator;
+    readonly query: PartLocator | string;
 }
 
 // @public (undocumented)
 export const ItemNotFoundErrorId = "ItemNotFoundError";
+
+// @public (undocumented)
+export interface ITestEngine<T extends ScenePart = {}> extends IComponentDriver<T> {
+    // (undocumented)
+    cleanUp(): Promise<void>;
+}
+
+// @public
+export interface ITestEngineOption extends IComponentDriverOption {
+    rootElement?: Element;
+}
 
 // @public (undocumented)
 export interface IToggleDriver {
@@ -409,6 +452,7 @@ export interface IValidatableDriver {
 
 // @public (undocumented)
 export class LinkedCssLocator extends CssLocator {
+    // Warning: (ae-forgotten-export) The symbol "LinkedCssLocatorInitializer" needs to be exported by the entry point index.d.mts
     constructor(selector: string, initializeValue: LinkedCssLocatorInitializer & Partial<CssLocatorInitializer>);
     // (undocumented)
     clone(override?: Partial<LinkedCssLocatorInitializer> & Partial<CssLocatorInitializer>): LinkedCssLocator;
@@ -418,42 +462,11 @@ export class LinkedCssLocator extends CssLocator {
     get matchingTargetLocator(): PartLocator;
     // (undocumented)
     get matchingTargetValueExtract(): LinkedCssLocatorValueExtract;
+    // Warning: (ae-forgotten-export) The symbol "LinkedCssLocatorValueExtract" needs to be exported by the entry point index.d.mts
+    //
     // (undocumented)
     get valueExtract(): LinkedCssLocatorValueExtract;
 }
-
-// @public (undocumented)
-export interface LinkedCssLocatorAttributeValueExtract {
-    // (undocumented)
-    attributeName: string;
-    // (undocumented)
-    type: 'attribute';
-}
-
-// @public (undocumented)
-export interface LinkedCssLocatorInitializer {
-    // (undocumented)
-    matchingTargetLocator: PartLocator;
-    // (undocumented)
-    matchingTargetValueExtract: LinkedCssLocatorValueExtract;
-    // (undocumented)
-    valueExtract: LinkedCssLocatorValueExtract;
-}
-
-// @public (undocumented)
-export type LinkedCssLocatorSource = {
-    _id: 'byLinkedCssLocatorSource';
-    relative: LocatorRelativePosition;
-    valueExtract: LinkedCssLocatorValueExtract;
-    matchingTargetLocator: PartLocator;
-    matchingTargetValueExtract: LinkedCssLocatorValueExtract;
-};
-
-// @public (undocumented)
-export type LinkedCssLocatorValueExtract = LinkedCssLocatorAttributeValueExtract;
-
-// @public (undocumented)
-export type LinkedCssLocatorValueExtractType = 'text' | 'attribute';
 
 // @public (undocumented)
 export class ListComponentDriver<ItemT extends ComponentDriver> extends ComponentDriver {
@@ -481,26 +494,30 @@ export interface ListComponentDriverSpecificOption<ItemT extends ComponentDriver
     itemLocator: PartLocator;
 }
 
+// @public
+export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>> {
+    driver: typeof ListComponentDriver<ItemT> | (new (locator: PartLocator, interactor: Interactor, option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>) => ListComponentDriver<ItemT>);
+    locator: PartLocator;
+    option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>;
+}
+
 // @public (undocumented)
 export namespace listHelper {
     export { collectItemLabels, getListItemByIndex, getListItemCount, getListItemIterator };
 }
 
-// @public @deprecated (undocumented)
-export type LocatorChain = PartLocator;
-
 // @public
 export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same';
 
 // @public (undocumented)
-export type LocatorType = 'css' | 'xpath';
+export type LocatorType = 'css';
 
 // @public (undocumented)
 export const LocatorTypeLookup: Record<string, LocatorType>;
 
 // @public (undocumented)
 export namespace locatorUtil {
-    export { OverrideLocatorRelativePositionOption, append, defaultOverrideLocatorRelativePositionOption, findRootLocatorIndex, getEffectiveLocator, getLinkedCssLocator, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, getLocatorStatement, isChain, overrideLocatorRelativePosition, toChain, toCssSelector, toPrimitiveLocators };
+    export { OverrideLocatorRelativePositionOption, append, defaultOverrideLocatorRelativePositionOption, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, isChain, overrideLocatorRelativePosition, toChain, toCssSelector };
 }
 
 // @public (undocumented)
@@ -548,6 +565,9 @@ export type Optional<T> = T | undefined;
 export type PartLocator = CssLocator | CssLocatorChain;
 
 // @public (undocumented)
+export type PartName<T extends ScenePart> = keyof T;
+
+// @public (undocumented)
 export interface Point {
     // (undocumented)
     x: number;
@@ -566,10 +586,6 @@ export interface PressKeyOption {
 // @public
 export interface ScenePart extends Record<string, ScenePartDefinition> {}
 
-// Warning: (ae-forgotten-export) The symbol "ComponentPartDefinition" needs to be exported by the entry point index.d.mts
-// Warning: (ae-forgotten-export) The symbol "ContainerPartDefinition" needs to be exported by the entry point index.d.mts
-// Warning: (ae-forgotten-export) The symbol "ListComponentPartDefinition" needs to be exported by the entry point index.d.mts
-//
 // @public (undocumented)
 export type ScenePartDefinition = ComponentPartDefinition<ScenePart> | ContainerPartDefinition<ScenePart, ScenePart> | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
 
@@ -589,18 +605,6 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
 export namespace timingUtil {
     export { WaitUntilOption, wait, waitUntil };
 }
-
-// @public (undocumented)
-export class TooManyMatchingElementError extends ErrorBase {
-    constructor(query: PartLocator, driver: ComponentDriver<any>);
-    // (undocumented)
-    readonly driver: ComponentDriver<any>;
-    // (undocumented)
-    readonly query: PartLocator;
-}
-
-// @public (undocumented)
-export const TooManyMatchingElementErrorId = "TooManyMatchingElementError";
 
 // @public (undocumented)
 export type WaitForCondition = 'attached' | 'visible' | 'detached' | 'hidden';
