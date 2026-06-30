@@ -60,9 +60,26 @@ cd docs && pnpm build           # Build documentation (test before doc PRs)
 
 > **Toolchain note:** Type-_checking_ uses `tsgo` (TypeScript 7 beta / native port, `@typescript/native-preview`). Builds, `.d.ts` emit (tsdown), and TypeDoc still use the classic TypeScript compiler (`typescript@^6.0`) because the native preview has no programmatic API yet. Linting is oxlint (replaced ESLint); formatting is oxfmt (replaced Prettier + `@trivago/prettier-plugin-sort-imports`).
 
+**Build before you test (stale-`dist` trap):** every test runner resolves
+`@atomic-testing/*` imports to that package's built **`dist`**, never its `src` —
+jest via `moduleNameMapper` (see [`jest.config.base.js`](jest.config.base.js)),
+Vite/Playwright via the package's `exports`. So a source edit is invisible both to
+the package's own `test:dom`/`test:e2e` **and** to any other package's tests that
+import it, until you `pnpm run build` that package **and every changed dependency**
+(most often `core`). A stale `dist` silently runs the _old_ code with no error — a
+real trap when verifying a fix: e.g. an out-of-date `core` kept a `childListHelper`
+enumeration that stopped at the first non-matching child, truncating list counts so
+a green test was meaningless. Rebuild the touched packages (and `core`) before
+trusting any dom/e2e result. (`tsgo` also reads the stale `.d.ts`, so cross-package
+typecheck errors that name newly-added exports usually just mean "rebuild," not a
+real bug.)
+
 ### Running E2E Tests
 
-E2E tests require the dev server to be running first:
+E2E tests require the dev server (rebuild the driver packages first — see the
+stale-`dist` trap above; the served examples come from `src`, but the drivers they
+import come from `dist`). The `component-driver-astryx-test` Playwright config
+auto-starts/stops the server itself; other packages start it manually:
 
 ```bash
 cd package-tests/component-driver-html-test
