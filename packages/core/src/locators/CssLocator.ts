@@ -1,4 +1,3 @@
-import { Optional } from '../dataTypes';
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
@@ -19,16 +18,12 @@ export class CssLocator {
   ) {
     if (initializeValue) {
       this._relativePosition = initializeValue.relative || this.relative;
-      this._source = initializeValue.source || this.source;
+      this._source = initializeValue.source;
     }
   }
 
   get relative(): LocatorRelativePosition {
     return this._relativePosition;
-  }
-
-  get source(): Optional<CssLocatorSource> {
-    return this._source;
   }
 
   chain(...locatorsToAppend: PartLocator[]): PartLocator {

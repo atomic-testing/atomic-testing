@@ -12,7 +12,7 @@ function getErrorMessage(locator: PartLocator, option: WaitForOption): string {
 
 export class WaitForFailureError extends InteractorErrorBase {
   constructor(locator: PartLocator, option: WaitForOption) {
-    super(getErrorMessage(locator, option), locator);
+    super(getErrorMessage(locator, option), getLocatorInfoForErrorLog(locator));
     this.name = WaitForFailureErrorId;
   }
 }
