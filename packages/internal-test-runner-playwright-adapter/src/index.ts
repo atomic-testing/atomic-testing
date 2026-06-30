@@ -4,9 +4,8 @@ import {
   E2eTestRunEnvironmentFixture,
   TestFrameworkMapper,
 } from '@atomic-testing/internal-test-runner';
+import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, Page, test } from '@playwright/test';
-
-import { createTestEngine } from './createTestEngine';
 
 /**
  * Navigate the current Playwright page to the provided URL.
