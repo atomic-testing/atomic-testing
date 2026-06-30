@@ -326,8 +326,6 @@ export interface Interactor {
     activate(locator: PartLocator): Promise<void>;
     blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
     click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
-    // (undocumented)
-    clone(): Interactor;
     contextMenu(locator: PartLocator): Promise<void>;
     drag(locator: PartLocator, delta: Point): Promise<void>;
     dragTo(source: PartLocator, target: PartLocator): Promise<void>;
@@ -383,7 +381,6 @@ export interface Interactor {
     selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
-    wait(ms: number): Promise<void>;
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }

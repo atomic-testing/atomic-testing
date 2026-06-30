@@ -5,7 +5,6 @@ import {
   EnterTextOption,
   FocusOption,
   HoverOption,
-  Interactor,
   MouseDownOption,
   MouseEnterOption,
   MouseLeaveOption,
@@ -136,11 +135,6 @@ export class VueInteractor extends DOMInteractor {
     await this.flush();
   }
 
-  override async wait(ms: number): Promise<void> {
-    await super.wait(ms);
-    await this.flush();
-  }
-
   override async waitUntilComponentState(
     locator: PartLocator,
     option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
@@ -153,9 +147,5 @@ export class VueInteractor extends DOMInteractor {
     const result = await super.waitUntil(option);
     await this.flush();
     return result;
-  }
-
-  override clone(): Interactor {
-    return new VueInteractor(this.rootEl);
   }
 }

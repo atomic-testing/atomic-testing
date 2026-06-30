@@ -615,10 +615,6 @@ export class DOMInteractor implements Interactor {
   }
 
   //#region wait conditions
-  wait(ms: number): Promise<void> {
-    return timingUtil.wait(ms);
-  }
-
   async waitUntilComponentState(
     locator: PartLocator,
     option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
@@ -779,8 +775,4 @@ export class DOMInteractor implements Interactor {
     return el?.innerHTML ?? '';
   }
   //#endregion
-
-  clone(): Interactor {
-    return new DOMInteractor(this.rootEl);
-  }
 }

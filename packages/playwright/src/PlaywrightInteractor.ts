@@ -399,10 +399,6 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   //#region wait conditions
-  wait(ms: number): Promise<void> {
-    return timingUtil.wait(ms);
-  }
-
   async waitUntilComponentState(
     locator: PartLocator,
     option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
@@ -550,8 +546,4 @@ export class PlaywrightInteractor implements Interactor {
     return this.page.locator(cssLocator).innerHTML();
   }
   //#endregion
-
-  clone(): Interactor {
-    return new PlaywrightInteractor(this.page);
-  }
 }

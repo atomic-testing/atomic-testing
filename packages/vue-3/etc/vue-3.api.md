@@ -12,7 +12,6 @@ import { EnterTextOption } from '@atomic-testing/core';
 import { FocusOption } from '@atomic-testing/core';
 import { HoverOption } from '@atomic-testing/core';
 import { IComponentDriverOption } from '@atomic-testing/core';
-import { Interactor } from '@atomic-testing/core';
 import { MouseDownOption } from '@atomic-testing/core';
 import { MouseEnterOption } from '@atomic-testing/core';
 import { MouseLeaveOption } from '@atomic-testing/core';
@@ -47,8 +46,6 @@ export class VueInteractor extends DOMInteractor {
     blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
     // (undocumented)
     click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
-    // (undocumented)
-    clone(): Interactor;
     // (undocumented)
     contextMenu(locator: PartLocator): Promise<void>;
     // (undocumented)
@@ -87,8 +84,6 @@ export class VueInteractor extends DOMInteractor {
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     // (undocumented)
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
-    // (undocumented)
-    wait(ms: number): Promise<void>;
     // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     // (undocumented)
