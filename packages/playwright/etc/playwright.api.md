@@ -77,7 +77,11 @@ export class PlaywrightInteractor implements Interactor {
     // (undocumented)
     isDisabled(locator: PartLocator): Promise<boolean>;
     // (undocumented)
+    isError(locator: PartLocator): Promise<boolean>;
+    // (undocumented)
     isReadonly(locator: PartLocator): Promise<boolean>;
+    // (undocumented)
+    isRequired(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isVisible(locator: PartLocator): Promise<boolean>;
     // (undocumented)

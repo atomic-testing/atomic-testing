@@ -116,8 +116,8 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     mouseOver(option?: Partial<HoverOption>): Promise<void>;
     // (undocumented)
     mouseUp(option?: Partial<MouseUpOption>): Promise<void>;
-    overriddenParentLocator(): Optional<PartLocator>;
-    overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+    static overriddenParentLocator(): Optional<PartLocator>;
+    static overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
     get parts(): ScenePartDriver<T>;
     pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void>;
     runtimeCssSelector(): Promise<string>;
@@ -130,7 +130,11 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 }
 
 // @public
-export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>) => T;
+export type ComponentDriverCtor<T extends ComponentDriver<any>> = {
+    new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>): T;
+    overriddenParentLocator(): Optional<PartLocator>;
+    overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+};
 
 // @public (undocumented)
 export interface ComponentPartDefinition<T extends ScenePart> {
@@ -153,7 +157,7 @@ export abstract class ContainerDriver<ContentT extends ScenePart, T extends Scen
 export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
     driver: typeof ContainerDriver<ContentT, T> | (new (locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) => ContainerDriver<ContentT, T>);
     locator: PartLocator;
-    option: Partial<IContainerDriverOption<ContentT, T>>;
+    option?: Partial<IContainerDriverOption<ContentT, T>>;
 }
 
 // @public (undocumented)
@@ -356,8 +360,10 @@ export interface Interactor {
     isChecked(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isDisabled(locator: PartLocator): Promise<boolean>;
+    isError(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isReadonly(locator: PartLocator): Promise<boolean>;
+    isRequired(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isVisible(locator: PartLocator): Promise<boolean>;
     // (undocumented)
@@ -393,6 +399,12 @@ export class InteractorErrorBase extends Error {
 // @public (undocumented)
 export namespace interactorUtil {
     export { interactorWaitUtil };
+}
+
+// @public
+export interface IReadonlyableDriver {
+    // (undocumented)
+    isReadonly(): Promise<boolean>;
 }
 
 // @public

@@ -1,4 +1,12 @@
-import { ComponentDriver, IComponentDriverOption, IInputDriver, Interactor, PartLocator } from '@atomic-testing/core';
+import {
+  ComponentDriver,
+  IComponentDriverOption,
+  IDisableableDriver,
+  IInputDriver,
+  Interactor,
+  IReadonlyableDriver,
+  PartLocator,
+} from '@atomic-testing/core';
 
 /**
  * Driver for a range input (`<input type="range">`), the native control behind a
@@ -8,7 +16,10 @@ import { ComponentDriver, IComponentDriverOption, IInputDriver, Interactor, Part
  * {@link Interactor.setRangeValue} primitive, since a range input accepts no typed
  * text and a positional click yields only a coordinate-derived value.
  */
-export class HTMLRangeInputDriver extends ComponentDriver<{}> implements IInputDriver<number> {
+export class HTMLRangeInputDriver
+  extends ComponentDriver<{}>
+  implements IInputDriver<number>, IDisableableDriver, IReadonlyableDriver
+{
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,

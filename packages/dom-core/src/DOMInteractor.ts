@@ -729,6 +729,22 @@ export class DOMInteractor implements Interactor {
     return this.hasAttribute(locator, 'readonly');
   }
 
+  async isRequired(locator: PartLocator): Promise<boolean> {
+    const el = await this.getElement(locator);
+    if (el != null) {
+      if ('required' in el && Boolean((el as { required?: boolean }).required)) {
+        return true;
+      }
+      return el.getAttribute('aria-required') === 'true';
+    }
+    return false;
+  }
+
+  async isError(locator: PartLocator): Promise<boolean> {
+    const el = await this.getElement(locator);
+    return el != null && el.getAttribute('aria-invalid') === 'true';
+  }
+
   async isVisible(locator: PartLocator): Promise<boolean> {
     const exists = await this.exists(locator);
     if (!exists) {

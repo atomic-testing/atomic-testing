@@ -6,6 +6,7 @@ export type {
   IFormFieldDriver,
   IInputDriver,
   IMouseInteractableDriver,
+  IReadonlyableDriver,
   IRequirableDriver,
   IToggleDriver,
   IValidatableDriver,

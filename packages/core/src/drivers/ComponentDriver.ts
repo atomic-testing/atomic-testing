@@ -36,6 +36,21 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    */
   public readonly commutableOption: IComponentDriverOption<T>;
 
+  /**
+   * @param locator Locator for the root of this component.
+   * @param interactor Environment adapter used for all interactions.
+   * @param option Driver option carrying the shared driver-tree context.
+   *
+   * Composite-driver authoring rule: a driver that declares non-empty `parts`
+   * must type this parameter as `Partial<IComponentDriverOption>` (i.e. the empty
+   * `<{}>` default) and hardcode its own `parts` in the body —
+   * `super(locator, interactor, { ...option, parts })`. The "natural"
+   * `Partial<IComponentDriverOption<typeof parts>>` signature does NOT satisfy
+   * `ScenePartDefinition['driver']` (constructor parameters are checked
+   * contravariantly), so a driver written that way could not be placed in a
+   * parent `ScenePart`. See the type-level fixture in
+   * `@atomic-testing/component-driver-html`.
+   */
   constructor(
     locator: PartLocator,
     public readonly interactor: Interactor,
@@ -50,30 +65,29 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
-   * Usually this should be undefined as the component driver corresponds to a component nested inside the parent DOM, thus
-   * the driver's locator would automatically chain with its parent's locator.
+   * Portal hook: where to re-root this driver's locator when its component renders
+   * outside the parent's DOM (a modal, popup, drawer). Return the {@link PartLocator}
+   * that locates the component from the document root, or `undefined` (the default)
+   * for normal in-tree components whose locator chains from the parent.
    *
-   * When the component is rendered outside the parent's DOM, which usually happens when the component is a modal or popup,
-   * supply the PartLocator on how to locate the component with the component's own locator.
-   *
-   * Caution of usage: this function is called before the construction of the driver, so it should not use any instance properties
+   * This is **static** because it is per-class metadata read off the constructor
+   * before any instance exists — which makes the "no instance state" constraint
+   * structural rather than a documented caution. Override with `static override`.
    */
-  overriddenParentLocator(): Optional<PartLocator> {
+  static overriddenParentLocator(): Optional<PartLocator> {
     return undefined;
   }
 
   /**
-   * Usually this should be undefined when the locator is defined by the ScenePart, thus it reflects the natural relative position
-   * of the component
+   * Portal hook: the locator relative position to apply when the component's real
+   * DOM is a sibling/elsewhere rather than a descendant (e.g. a MUI dialog rendered
+   * at the document root, located by a "Same"-level selector). Return `undefined`
+   * (the default) to keep the natural position declared by the ScenePart.
    *
-   * However, in some implementation such as MUI v5 dialog, the actual dialog DOM is rendered outside the parent DOM,
-   * and the selector is "siblings", by defining this function, it allows the driver to have the knowledge of the actual relative position
-   * instead of offloading the knowledge to the consumer.
-   *
-   * Caution of usage: this function is called before the construction of the driver, so it should not use any instance properties
-   * @returns
+   * Static for the same reason as {@link ComponentDriver.overriddenParentLocator}:
+   * it is class-level metadata read before construction. Override with `static override`.
    */
-  overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
+  static overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
     return undefined;
   }
 
