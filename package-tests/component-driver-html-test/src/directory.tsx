@@ -6,6 +6,7 @@ import { checkboxGroupUIExample } from './examples/checkbox/CheckboxGroup.exampl
 import { singleCheckboxUIExample } from './examples/checkbox/SingleCheckbox.examples';
 import { contextMenuUIExample } from './examples/contextMenu/ContextMenu.examples';
 import { dragUIExample } from './examples/drag/Drag.examples';
+import { elementNotFoundUIExample } from './examples/elementNotFound/ElementNotFound.examples';
 import { fileUploadUIExample } from './examples/fileUpload/FileUpload.examples';
 import { focusEventUIExample } from './examples/focusEvent/Focus.examples';
 import { linkedElementUIExample } from './examples/form/LinkedElement.examples';
@@ -92,6 +93,11 @@ export const tocs: ExampleToc[] = [
     label: 'Drag',
     path: '/drag',
     ui: <ExampleList examples={[dragUIExample]} />,
+  },
+  {
+    label: 'Element Not Found',
+    path: '/element-not-found',
+    ui: <ExampleList examples={[elementNotFoundUIExample]} />,
   },
   {
     label: 'Mouse Event',
