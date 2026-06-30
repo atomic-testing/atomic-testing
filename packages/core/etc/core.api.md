@@ -213,9 +213,11 @@ export interface EnterTextOption {
 
 // @public
 export class ErrorBase extends Error {
-    constructor(message: string, driver: ComponentDriver<any>);
+    constructor(message: string, driver: {
+        driverName: string;
+    });
     // (undocumented)
-    readonly driver: ComponentDriver<any>;
+    readonly driverName: string;
 }
 
 // @public (undocumented)
@@ -359,9 +361,9 @@ export interface Interactor {
 
 // @public
 export class InteractorErrorBase extends Error {
-    constructor(message: string, locator: PartLocator);
+    constructor(message: string, locatorDescription: string);
     // (undocumented)
-    readonly locator: PartLocator;
+    readonly locatorDescription: string;
 }
 
 // @public (undocumented)
@@ -377,11 +379,11 @@ export interface IRequirableDriver {
 
 // @public (undocumented)
 export class ItemNotFoundError extends ErrorBase {
-    constructor(locator: PartLocator, driver: ComponentDriver<any>);
+    constructor(locator: PartLocator, driver: {
+        driverName: string;
+    });
     // (undocumented)
-    readonly driver: ComponentDriver<any>;
-    // (undocumented)
-    readonly locator: PartLocator;
+    readonly locatorDescription: string;
 }
 
 // @public (undocumented)
@@ -499,9 +501,9 @@ export namespace locatorUtil {
 
 // @public (undocumented)
 export class MissingPartError<T extends ScenePart> extends ErrorBase {
-    constructor(missingPartName: keyof T | ReadonlyArray<keyof T>, driver: ComponentDriver<T>);
-    // (undocumented)
-    readonly driver: ComponentDriver<T>;
+    constructor(missingPartName: keyof T | ReadonlyArray<keyof T>, driver: {
+        driverName: string;
+    });
     // (undocumented)
     readonly missingPartName: keyof T | ReadonlyArray<keyof T>;
 }
@@ -586,11 +588,11 @@ export namespace timingUtil {
 
 // @public (undocumented)
 export class TooManyMatchingElementError extends ErrorBase {
-    constructor(query: PartLocator, driver: ComponentDriver<any>);
+    constructor(query: PartLocator, driver: {
+        driverName: string;
+    });
     // (undocumented)
-    readonly driver: ComponentDriver<any>;
-    // (undocumented)
-    readonly query: PartLocator;
+    readonly locatorDescription: string;
 }
 
 // @public (undocumented)
