@@ -122,7 +122,7 @@ Edges are "depends on" (arrow points from dependency to dependent). Notable real
 
 - `component-driver-mui-v7` depends on `react-18` (and `@mui/material@^7`, `component-driver-html`, `core`, `dom-core`) ([mui-v7/package.json#L25-L33](../packages/component-driver-mui-v7/package.json#L25-L33)).
 - `component-driver-mui-x-v8` depends on `component-driver-mui-v6` (plus `component-driver-html`, `core`) ([mui-x-v8/package.json#L40-L45](../packages/component-driver-mui-x-v8/package.json#L40-L45)). [inferred] other mui-x versions pair with their contemporaneous mui-v\* package — confirm in each `package.json`.
-- `playwright` depends on `internal-test-runner` and `core` only; `@playwright/test` is a peer ([playwright/package.json#L31-L37](../packages/playwright/package.json#L31-L37)).
+- `playwright` depends on `core` only; `@playwright/test` is a peer ([playwright/package.json](../packages/playwright/package.json)). Its E2E test-runner glue lives in the workspace-private `internal-test-runner-playwright-adapter` (which depends on `playwright` + `internal-test-runner`), so the published driver never depends on an internal package.
 
 ## The shared three-file test pattern
 
