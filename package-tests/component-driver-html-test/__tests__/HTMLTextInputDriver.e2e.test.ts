@@ -4,8 +4,14 @@ import {
   playWrightTestFrameworkMapper,
 } from '@atomic-testing/internal-test-runner-playwright-adapter';
 
-import { controlledTextInputExampleTestSuite, uncontrolledTextInputExampleTestSuite } from '../src/examples';
+import {
+  controlledTextInputExampleTestSuite,
+  textInputCapabilitiesExampleTestSuite,
+  uncontrolledTextInputExampleTestSuite,
+} from '../src/examples';
 
 testRunner(uncontrolledTextInputExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 
 testRunner(controlledTextInputExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
+
+testRunner(textInputCapabilitiesExampleTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());

@@ -4,24 +4,27 @@ import { ContainerDriver } from './drivers/ContainerDriver';
 import { ListComponentDriver, ListComponentDriverSpecificOption } from './drivers/ListComponentDriver';
 import { WaitForOption } from './drivers/WaitForOption';
 import { Interactor } from './interactor';
+import type { LocatorRelativePosition } from './locators/LocatorRelativePosition';
 import { PartLocator } from './locators/PartLocator';
 
 export type PartName<T extends ScenePart> = keyof T;
 
 /**
- * Constructor signature for a {@link ComponentDriver}, exported publicly so
- * packages can reference the type without importing from internal paths.
+ * Constructor type for a {@link ComponentDriver}, exported publicly so packages
+ * can reference it without importing from internal paths. It carries both the
+ * construct signature and the static portal hooks every driver class inherits, so
+ * concrete driver classes structurally match it.
  *
  * The `any` in the constraint `T extends ComponentDriver<any>` is load-bearing:
  * it lets the type accept any concrete driver regardless of its ScenePart type
  * parameter. The option position, by contrast, is honestly typed to
  * {@link ScenePart} — every driver's parts ultimately satisfy that constraint.
  */
-export type ComponentDriverCtor<T extends ComponentDriver<any>> = new (
-  locator: PartLocator,
-  interactor: Interactor,
-  option?: Partial<IComponentDriverOption<ScenePart>>
-) => T;
+export type ComponentDriverCtor<T extends ComponentDriver<any>> = {
+  new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>): T;
+  overriddenParentLocator(): Optional<PartLocator>;
+  overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+};
 
 export interface ComponentPartDefinition<T extends ScenePart> {
   /**
@@ -57,9 +60,10 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
       ) => ContainerDriver<ContentT, T>);
 
   /**
-   * Option for the driver
+   * Option for the driver. Optional, mirroring {@link ComponentPartDefinition.option};
+   * a container with no extra content/parts can omit it.
    */
-  option: Partial<IContainerDriverOption<ContentT, T>>;
+  option?: Partial<IContainerDriverOption<ContentT, T>>;
 }
 
 /**

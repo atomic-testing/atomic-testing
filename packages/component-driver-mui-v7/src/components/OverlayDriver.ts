@@ -11,8 +11,8 @@ const defaultTransitionDuration = 250;
  * dismissal via `closeByBackdrop`/`closeByEscape`.
  *
  * Subclasses supply {@link getSurfaceLocator} (the element whose visibility means
- * "open") and, when the overlay is portal-rendered, override
- * `overriddenParentLocator()`/`overrideLocatorRelativePosition()` to re-root.
+ * "open") and, when the overlay is portal-rendered, override the static
+ * `overriddenParentLocator()`/`overrideLocatorRelativePosition()` portal hooks to re-root.
  */
 export abstract class OverlayDriver<ContentT extends ScenePart, T extends ScenePart = {}> extends ContainerDriver<
   ContentT,

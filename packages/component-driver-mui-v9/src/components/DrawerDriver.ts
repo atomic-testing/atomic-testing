@@ -52,11 +52,11 @@ export class DrawerDriver<ContentT extends ScenePart> extends OverlayDriver<Cont
     });
   }
 
-  override overriddenParentLocator(): Optional<PartLocator> {
+  static override overriddenParentLocator(): Optional<PartLocator> {
     return drawerRootLocator;
   }
 
-  override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
+  static override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
     return 'Same';
   }
 
