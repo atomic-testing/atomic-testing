@@ -92,6 +92,33 @@ jobs:
       - name: Run type checker
         run: pnpm check:type
 
+  # Public API freeze gate: fails if any in-scope package's exported surface
+  # drifts from its committed etc/<pkg>.api.md report. Regenerate locally with
+  # `pnpm -r check:api` after running each package's `api-extractor run --local`.
+  # See agent-docs/adr/006-1.0-api-freeze-and-evolution.md.
+  api-report:
+    name: API surface freeze
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: built-packages
+          path: packages
+
+      - name: Verify public API reports
+        run: pnpm check:api
+
   # Test matrix for component drivers
   component-driver-tests:
     name: Test ${{ matrix.name }}
