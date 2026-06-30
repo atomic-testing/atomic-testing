@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Matches vite.config.ts — defaults to 5173, override with PORT.
-const port = process.env.PORT ?? '5173';
+// Matches vite.config.ts — defaults to the example's dedicated port 8088, override with PORT.
+const port = process.env.PORT ?? '8088';
 const baseURL = `http://localhost:${port}`;
 
 /**

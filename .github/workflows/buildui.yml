@@ -231,3 +231,40 @@ jobs:
       - name: Run dom test
         run: pnpm test:dom
         working-directory: ./examples/example-mui-signup-form
+
+  example-astryx-workspace-test:
+    name: Test example Astryx workspace
+    runs-on: ubuntu-latest
+    # Standalone example: it installs from its OWN lockfile and consumes PUBLISHED
+    # @atomic-testing/* packages, so it does not depend on the monorepo build
+    # (no `needs: build`) — it runs immediately for the fastest regression signal.
+    # Fast check only: type-check + jsdom unit tests (e2e needs browsers + a dev server).
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: PNPM Setup
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install .
+        working-directory: ./examples/example-astryx-workspace
+
+      - name: Type check
+        run: pnpm check:type
+        working-directory: ./examples/example-astryx-workspace
+
+      - name: Run dom test
+        run: pnpm test:dom
+        working-directory: ./examples/example-astryx-workspace
