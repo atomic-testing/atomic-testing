@@ -2,7 +2,6 @@ import { Optional } from '../dataTypes';
 import { CssLocatorSource } from './CssLocatorSource';
 import { LocatorComplexity } from './LocatorComplexity';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
-import { LocatorType } from './LocatorType';
 import { CssLocatorChain, PartLocator } from './PartLocator';
 
 export interface CssLocatorInitializer {
@@ -12,7 +11,6 @@ export interface CssLocatorInitializer {
 
 export class CssLocator {
   private _relativePosition: LocatorRelativePosition = 'Descendant';
-  private _type: LocatorType = 'css';
   private _source?: CssLocatorSource;
 
   constructor(
@@ -27,10 +25,6 @@ export class CssLocator {
 
   get relative(): LocatorRelativePosition {
     return this._relativePosition;
-  }
-
-  get type(): LocatorType {
-    return this._type;
   }
 
   get source(): Optional<CssLocatorSource> {
