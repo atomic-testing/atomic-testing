@@ -1,0 +1,19 @@
+# Marks this example as its OWN pnpm workspace root so it installs standalone (its own lockfile,
+# isolated from the monorepo's root workspace — it is intentionally NOT a member of that one).
+#
+# The atomic-testing dependencies are declared at ^0.90.0 (the release that adds
+# DesktopDatePickerDriver.pickDate / setValue and SimpleTreeViewDriver.selectItem). Until 0.90.0 is
+# published to npm, these `overrides` resolve every atomic-testing dependency — direct AND the
+# packages' own transitive `workspace:*` deps — to the in-repo builds, so the example runs against
+# the exact driver code its tests rely on. Once 0.90.0 is on npm, delete this overrides block and
+# the ^0.90.0 ranges resolve straight from the registry, mirroring a real consumer install.
+overrides:
+  '@atomic-testing/core': link:../../packages/core
+  '@atomic-testing/dom-core': link:../../packages/dom-core
+  '@atomic-testing/react-core': link:../../packages/react-core
+  '@atomic-testing/react-18': link:../../packages/react-18
+  '@atomic-testing/react-19': link:../../packages/react-19
+  '@atomic-testing/playwright': link:../../packages/playwright
+  '@atomic-testing/component-driver-html': link:../../packages/component-driver-html
+  '@atomic-testing/component-driver-mui-v9': link:../../packages/component-driver-mui-v9
+  '@atomic-testing/component-driver-mui-x-v9': link:../../packages/component-driver-mui-x-v9

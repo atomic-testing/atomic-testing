@@ -47,5 +47,28 @@ export const desktopDatePickerTestSuite: TestSuiteInfo<typeof desktopDatePickerE
       assertEqual(second?.getMonth(), 0); // January
       assertEqual(second?.getDate(), 15);
     });
+
+    test('setValue selects a day in the currently shown month', async () => {
+      // Default value is June 2026, so the popup opens on the target month directly.
+      await engine().parts.picker.setValue(new Date(2026, 5, 30));
+      assertEqual(await engine().parts.picker.getValueText(), '06/30/2026');
+    });
+
+    test('pickDate pages forward across months', async () => {
+      await engine().parts.picker.pickDate('2026-09-14');
+      assertEqual(await engine().parts.picker.getValueText(), '09/14/2026');
+    });
+
+    test('pickDate pages backward across months', async () => {
+      await engine().parts.picker.pickDate('2026-02-03');
+      assertEqual(await engine().parts.picker.getValueText(), '02/03/2026');
+    });
+
+    test('pickDate operates each picker independently', async () => {
+      await engine().parts.secondPicker.pickDate('2020-01-20');
+      assertEqual(await engine().parts.secondPicker.getValueText(), '01/20/2020');
+      // The first picker is untouched.
+      assertEqual(await engine().parts.picker.getValueText(), '06/27/2026');
+    });
   },
 };

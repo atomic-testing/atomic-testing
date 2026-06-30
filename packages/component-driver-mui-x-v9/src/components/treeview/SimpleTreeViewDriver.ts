@@ -10,10 +10,13 @@ import {
 } from '@atomic-testing/core';
 
 // MUI X Tree View renders an accessible tree: a `[role=tree]` container whose items are
-// `<li role="treeitem">` carrying `aria-expanded` (expandable items only) and `aria-selected`
-// (when selection is enabled). Each item's own label lives in `.MuiTreeItem-label` inside its
-// `.MuiTreeItem-content`; child items live in a nested `<ul>` that is only rendered while the
-// parent is expanded (collapsed branches are absent from the DOM).
+// `<li role="treeitem">` carrying `aria-expanded` (expandable items only). Selection is reflected
+// on the item's `.MuiTreeItem-content` row via a `data-selected` marker (and the `<li>`'s
+// `aria-checked`), not the `aria-selected` older tree markup used — so selection is read from that
+// content marker, which holds across single/multi/checkbox selection modes. Each item's own label
+// lives in `.MuiTreeItem-label` inside its `.MuiTreeItem-content`; child items live in a nested
+// `<ul>` that is only rendered while the parent is expanded (collapsed branches are absent from the
+// DOM).
 //
 // Items are identified by the app-assigned `itemId`, which MUI emits as the suffix of the
 // element `id` (`mui-tree-view-<n>-<itemId>`). There is no dedicated `data-itemid`, so this
@@ -102,15 +105,11 @@ export class SimpleTreeViewDriver extends ComponentDriver {
   }
 
   /**
-   * Whether an item is selected. Reads `aria-selected`; only meaningful when the tree has
-   * selection enabled.
+   * Whether an item is selected. Reads the `data-selected` marker MUI X v9 places on the item's
+   * content row when it is selected; returns false for unselected or unrendered items.
    */
   async isSelected(itemId: string): Promise<boolean> {
-    const selected = await this.interactor.getAttribute(
-      locatorUtil.append(this.locator, itemLocator(itemId)),
-      'aria-selected'
-    );
-    return selected === 'true';
+    return this.interactor.hasAttribute(locatorUtil.append(this.locator, itemContentLocator(itemId)), 'data-selected');
   }
 
   /**
@@ -130,6 +129,20 @@ export class SimpleTreeViewDriver extends ComponentDriver {
     if (await this.isExpanded(itemId)) {
       await this.interactor.click(locatorUtil.append(this.locator, itemContentLocator(itemId)));
     }
+  }
+
+  /**
+   * Select the item identified by `itemId` by clicking its content row, the same row a user
+   * clicks to select. Selection must be enabled on the tree for this to register; verify with
+   * {@link isSelected}.
+   *
+   * Caveat: in a default tree the content row is also the expansion toggle, so selecting an
+   * EXPANDABLE item flips its expanded state as a side effect (MUI's own behavior). Leaf items
+   * — the common selection target — only select. Use {@link expandItem}/{@link collapseItem} to
+   * restore a parent's expansion state if both selection and a fixed expansion are needed.
+   */
+  async selectItem(itemId: string): Promise<void> {
+    await this.interactor.click(locatorUtil.append(this.locator, itemContentLocator(itemId)));
   }
 
   override get driverName(): string {
