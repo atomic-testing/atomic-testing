@@ -72,3 +72,59 @@ export { DateRangeInputDriver } from './components/DateRangeInputDriver';
 
 // PowerSearch (Wave 3, best-effort v1)
 export { PowerSearchDriver } from './components/PowerSearchDriver';
+
+// Display & typography (Wave 4)
+export { BadgeDriver } from './components/BadgeDriver';
+export { TextDriver } from './components/TextDriver';
+export { HeadingDriver } from './components/HeadingDriver';
+export { CodeDriver } from './components/CodeDriver';
+export { BlockquoteDriver } from './components/BlockquoteDriver';
+export { TimestampDriver } from './components/TimestampDriver';
+export { DividerDriver } from './components/DividerDriver';
+
+// Media & status (Wave 4)
+export { StatusDotDriver } from './components/StatusDotDriver';
+export { CitationDriver } from './components/CitationDriver';
+export { TokenDriver } from './components/TokenDriver';
+export { AvatarDriver } from './components/AvatarDriver';
+export { AvatarGroupDriver } from './components/AvatarGroupDriver';
+export { ThumbnailDriver } from './components/ThumbnailDriver';
+
+// Feedback & misc (Wave 4)
+export { EmptyStateDriver } from './components/EmptyStateDriver';
+export { ProgressBarDriver } from './components/ProgressBarDriver';
+export { SpinnerDriver } from './components/SpinnerDriver';
+export { NavIconDriver } from './components/NavIconDriver';
+export { ItemDriver } from './components/ItemDriver';
+export { MarkdownDriver } from './components/MarkdownDriver';
+export { CodeBlockDriver } from './components/CodeBlockDriver';
+
+// Hard set, best-effort v1 (Wave 4)
+export { FileInputDriver } from './components/FileInputDriver';
+export { ContextMenuDriver } from './components/ContextMenuDriver';
+export { AppShellDriver } from './components/AppShellDriver';
+export { ChatComposerInputDriver } from './components/ChatComposerInputDriver';
+export { ChatComposerDriver } from './components/ChatComposerDriver';
+export { HoverCardDriver } from './components/HoverCardDriver';
+export { TooltipDriver } from './components/TooltipDriver';
+
+// Nav chrome (Wave 4)
+export { TopNavDriver } from './components/TopNavDriver';
+export { TopNavItemDriver } from './components/TopNavItemDriver';
+export { TopNavMenuDriver } from './components/TopNavMenuDriver';
+export { TopNavMegaMenuDriver } from './components/TopNavMegaMenuDriver';
+export { BreadcrumbsDriver } from './components/BreadcrumbsDriver';
+export { BreadcrumbItemDriver } from './components/BreadcrumbItemDriver';
+export { SideNavDriver } from './components/SideNavDriver';
+export { SideNavItemDriver } from './components/SideNavItemDriver';
+export { MobileNavDriver } from './components/MobileNavDriver';
+
+// Chat suite (Wave 4)
+export { ChatMessageDriver } from './components/ChatMessageDriver';
+export { ChatMessageBubbleDriver } from './components/ChatMessageBubbleDriver';
+export { ChatMessageListDriver } from './components/ChatMessageListDriver';
+export { ChatSystemMessageDriver } from './components/ChatSystemMessageDriver';
+export { ChatToolCallsDriver } from './components/ChatToolCallsDriver';
+export { ChatLayoutDriver } from './components/ChatLayoutDriver';
+export { ChatSendButtonDriver } from './components/ChatSendButtonDriver';
+export { ChatDictationButtonDriver } from './components/ChatDictationButtonDriver';
