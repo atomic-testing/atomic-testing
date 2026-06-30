@@ -7,7 +7,7 @@ import {
   useTableSortable,
   useTableSortableState,
 } from '@astryxdesign/core/Table';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useState } from 'react';
 
 type User = { id: string; name: string; role: string };

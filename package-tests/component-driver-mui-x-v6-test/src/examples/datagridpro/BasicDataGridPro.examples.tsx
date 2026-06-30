@@ -1,5 +1,5 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
 import { basicGridColumnConfig, gridData, initialState } from '@atomic-testing/internal-mui-x-test-fixture';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import React, { JSX } from 'react';

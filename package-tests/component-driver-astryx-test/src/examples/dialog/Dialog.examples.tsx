@@ -1,5 +1,5 @@
 import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useState } from 'react';
 
 /**

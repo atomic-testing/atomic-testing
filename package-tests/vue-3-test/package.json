@@ -20,6 +20,7 @@
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/internal-test-runner": "workspace:*",
     "@atomic-testing/vue-3": "workspace:*",
     "@storybook/addon-essentials": "^8.0.5",
     "@storybook/addon-themes": "^8.0.5",

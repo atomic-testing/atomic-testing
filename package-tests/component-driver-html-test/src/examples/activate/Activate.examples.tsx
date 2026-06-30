@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { CSSProperties, JSX, useCallback } from 'react';
 
 // Mirrors MUI Rating's `.MuiRating-visuallyHidden` inputs: a 1px clipped radio a

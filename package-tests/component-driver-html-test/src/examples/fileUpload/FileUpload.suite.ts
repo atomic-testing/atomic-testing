@@ -1,8 +1,8 @@
 import { resolve } from 'node:path';
 
 import { HTMLElementDriver, HTMLFileInputDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { fileUploadUIExample } from './FileUpload.examples';

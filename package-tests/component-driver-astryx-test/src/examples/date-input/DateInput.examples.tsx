@@ -1,6 +1,6 @@
 import type { ISODateString } from '@astryxdesign/core/Calendar';
 import { DateInput } from '@astryxdesign/core/DateInput';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useState } from 'react';
 
 const BirthdayInput = () => {

@@ -1,5 +1,5 @@
 import { Outline } from '@astryxdesign/core/Outline';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX } from 'react';
 
 /**

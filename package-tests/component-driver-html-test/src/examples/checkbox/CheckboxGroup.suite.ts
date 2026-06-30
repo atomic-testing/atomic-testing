@@ -1,6 +1,6 @@
 import { HTMLCheckboxGroupDriver } from '@atomic-testing/component-driver-html';
-import { byName, IExampleUnit, ScenePart } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byName, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { checkboxGroupUIExample } from './CheckboxGroup.examples';

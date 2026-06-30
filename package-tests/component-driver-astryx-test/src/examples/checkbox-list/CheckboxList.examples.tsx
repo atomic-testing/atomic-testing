@@ -1,5 +1,5 @@
 import { CheckboxList, CheckboxListItem } from '@astryxdesign/core/CheckboxList';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX, useState } from 'react';
 
 /**

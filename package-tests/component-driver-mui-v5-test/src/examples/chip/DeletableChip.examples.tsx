@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import React, { useCallback } from 'react';

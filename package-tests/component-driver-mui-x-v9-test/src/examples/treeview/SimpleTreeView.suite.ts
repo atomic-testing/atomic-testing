@@ -1,6 +1,6 @@
 import { SimpleTreeViewDriver } from '@atomic-testing/component-driver-mui-x-v9';
-import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { ScenePart, byDataTestId } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { basicSimpleTreeViewUIExample } from './SimpleTreeView.examples';

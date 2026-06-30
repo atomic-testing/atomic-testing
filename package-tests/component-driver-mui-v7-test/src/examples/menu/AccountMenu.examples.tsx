@@ -1,4 +1,4 @@
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import { Logout, PersonAdd, Settings } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';

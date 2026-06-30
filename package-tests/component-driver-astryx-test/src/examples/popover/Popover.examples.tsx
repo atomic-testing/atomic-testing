@@ -1,6 +1,6 @@
 import { Button } from '@astryxdesign/core/Button';
 import { Popover } from '@astryxdesign/core/Popover';
-import { IExampleUIUnit } from '@atomic-testing/core';
+import { IExampleUIUnit } from '@atomic-testing/internal-test-runner';
 import React, { JSX } from 'react';
 
 /**

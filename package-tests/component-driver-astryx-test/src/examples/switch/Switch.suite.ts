@@ -1,6 +1,6 @@
 import { SwitchDriver } from '@atomic-testing/component-driver-astryx';
-import { byDataTestId, byRole, IExampleUnit, locatorUtil, ScenePart } from '@atomic-testing/core';
-import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+import { byDataTestId, byRole, locatorUtil, ScenePart } from '@atomic-testing/core';
+import { IExampleUnit, TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { switchControlUIExample } from './Switch.examples';
