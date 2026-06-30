@@ -26,14 +26,15 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 
 ## ADRs
 
-| ADR                                              | Decision                                                  |
-| ------------------------------------------------ | --------------------------------------------------------- |
-| [001](adr/001-component-driver-pattern.md)       | Component-driver pattern with declarative scene parts.    |
-| [002](adr/002-interactor-abstraction.md)         | `Interactor` abstraction for environment portability.     |
-| [003](adr/003-version-specific-packages.md)      | Version-specific packages for React and MUI majors.       |
-| [004](adr/004-shared-three-file-test-pattern.md) | Shared three-file test pattern via `TestFrameworkMapper`. |
-| [005](adr/005-drop-mui-5-support.md)             | End of support for MUI 5 and MUI-X 5.                     |
-| [006](adr/006-1.0-api-freeze-and-evolution.md)   | 1.0 public-API freeze, SemVer & deprecation policy.       |
+| ADR                                              | Decision                                                     |
+| ------------------------------------------------ | ------------------------------------------------------------ |
+| [001](adr/001-component-driver-pattern.md)       | Component-driver pattern with declarative scene parts.       |
+| [002](adr/002-interactor-abstraction.md)         | `Interactor` abstraction for environment portability.        |
+| [003](adr/003-version-specific-packages.md)      | Version-specific packages for React and MUI majors.          |
+| [004](adr/004-shared-three-file-test-pattern.md) | Shared three-file test pattern via `TestFrameworkMapper`.    |
+| [005](adr/005-drop-mui-5-support.md)             | End of support for MUI 5 and MUI-X 5.                        |
+| [006](adr/006-1.0-api-freeze-and-evolution.md)   | 1.0 public-API freeze, SemVer & deprecation policy.          |
+| [009](adr/009-split-core-driver-versioning.md)   | Split versioning: frozen core group vs. independent drivers. |
 
 ## Fresh repo tree
 

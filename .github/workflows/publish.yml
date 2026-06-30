@@ -31,6 +31,9 @@ jobs:
           echo "Determined version: $VERSION"
 
       - name: Set package versions
+        # Bumps the frozen CORE GROUP to the release tag's version (ADR-009). The
+        # independently-versioned component-driver-* drivers are released
+        # separately (`pnpm bumpVersion <ver> <folder>`), not by this core release.
         run: pnpm bumpVersion $VERSION
 
       - name: Upgrade npm for OIDC trusted publishing
