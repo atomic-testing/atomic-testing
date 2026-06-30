@@ -26,7 +26,7 @@ export function append(locatorBase: PartLocator, ...locatorsToAppend: PartLocato
   return baseLocator.concat(toAppend);
 }
 
-export function findRootLocatorIndex(locator: PartLocator): number {
+function findRootLocatorIndex(locator: PartLocator): number {
   const list = toChain(locator);
   const length = list.length;
   for (let i = length - 1; i >= 0; i--) {
@@ -39,7 +39,7 @@ export function findRootLocatorIndex(locator: PartLocator): number {
   return -1;
 }
 
-export async function toPrimitiveLocators(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
+async function toPrimitiveLocators(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
   const list = toChain(locator);
   let result: CssLocator[] = [];
   for (let i = 0; i < list.length; i++) {
@@ -56,7 +56,7 @@ export async function toPrimitiveLocators(locator: PartLocator, interactor: Inte
   return result;
 }
 
-export async function getEffectiveLocator(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
+async function getEffectiveLocator(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
   const list = await toPrimitiveLocators(locator, interactor);
   const rootLocatorIndex = findRootLocatorIndex(list);
   // If the locator is linked, we should skip because it has matching locator
@@ -79,7 +79,7 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
   return Promise.resolve(statements.join('').trim());
 }
 
-export async function getLinkedCssLocator(
+async function getLinkedCssLocator(
   locator: LinkedCssLocator,
   context: PartLocator,
   interactor: Interactor
@@ -113,7 +113,7 @@ export async function getLinkedCssLocatorMatchingTargetValue(
   throw new Error(`Cannot handle valueExtract method type ${locator.matchingTargetValueExtract.type}`);
 }
 
-export function getLocatorStatement(locator: CssLocator): string {
+function getLocatorStatement(locator: CssLocator): string {
   return locator.selector;
 }
 
