@@ -46,3 +46,58 @@ export * from './date-input';
 export * from './date-time-input';
 export * from './date-range-input';
 export * from './power-search';
+
+// Display & typography (Wave 4)
+export * from './badge';
+export * from './text';
+export * from './heading';
+export * from './code';
+export * from './blockquote';
+export * from './timestamp';
+export * from './divider';
+
+// Media & status (Wave 4)
+export * from './status-dot';
+export * from './citation';
+export * from './token';
+export * from './avatar';
+export * from './avatar-group';
+export * from './thumbnail';
+
+// Feedback & misc (Wave 4)
+export * from './empty-state';
+export * from './progress-bar';
+export * from './spinner';
+export * from './nav-icon';
+export * from './item';
+export * from './markdown';
+export * from './code-block';
+
+// Nav chrome (Wave 4)
+export * from './top-nav';
+export * from './top-nav-item';
+export * from './top-nav-menu';
+export * from './top-nav-mega-menu';
+export * from './breadcrumbs';
+export * from './side-nav';
+export * from './side-nav-item';
+export * from './mobile-nav';
+
+// Hard set, best-effort v1 (Wave 4)
+export * from './file-input';
+export * from './context-menu';
+export * from './app-shell';
+export * from './chat-composer-input';
+export * from './chat-composer';
+export * from './hover-card';
+export * from './tooltip';
+
+// Chat suite (Wave 4)
+export * from './chat-message';
+export * from './chat-message-bubble';
+export * from './chat-message-list';
+export * from './chat-system-message';
+export * from './chat-tool-calls';
+export * from './chat-layout';
+export * from './chat-send-button';
+export * from './chat-dictation-button';
