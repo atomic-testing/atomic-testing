@@ -11,7 +11,7 @@ import { DOMInteractor } from '@atomic-testing/dom-core';
 import { EnterTextOption } from '@atomic-testing/core';
 import { FocusOption } from '@atomic-testing/core';
 import { HoverOption } from '@atomic-testing/core';
-import { IComponentDriverOption } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 import { MouseDownOption } from '@atomic-testing/core';
 import { MouseEnterOption } from '@atomic-testing/core';
 import { MouseLeaveOption } from '@atomic-testing/core';
@@ -32,11 +32,8 @@ export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLE
 // @public (undocumented)
 export function createTestEngine<T extends ScenePart>(component: Component | VueSFCLikeComponent, partDefinitions: T, option?: Readonly<Partial<IVueTestEngineOption>>): TestEngine<T>;
 
-// @public (undocumented)
-export interface IVueTestEngineOption extends IComponentDriverOption {
-    // (undocumented)
-    rootElement?: Element;
-}
+// @public @deprecated (undocumented)
+export type IVueTestEngineOption = ITestEngineOption;
 
 // @public (undocumented)
 export class VueInteractor extends DOMInteractor {

@@ -11,8 +11,8 @@ import { CssProperty } from '@atomic-testing/core';
 import { EnterTextOption } from '@atomic-testing/core';
 import { FocusOption } from '@atomic-testing/core';
 import { HoverOption } from '@atomic-testing/core';
-import { IComponentDriverOption } from '@atomic-testing/core';
 import { Interactor } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 import { MouseDownOption } from '@atomic-testing/core';
 import { MouseEnterOption } from '@atomic-testing/core';
 import { MouseLeaveOption } from '@atomic-testing/core';
@@ -28,8 +28,11 @@ import { TestEngine } from '@atomic-testing/core';
 import { WaitForOption } from '@atomic-testing/core';
 import { WaitUntilOption } from '@atomic-testing/core';
 
+// @public @deprecated (undocumented)
+export const createDomTestEngine: typeof createTestEngine;
+
 // @public
-export function createDomTestEngine<T extends ScenePart>(element: HTMLElement, partDefinitions: T, _option?: IDomTestEngineOption): TestEngine<T>;
+export function createTestEngine<T extends ScenePart>(element: HTMLElement, partDefinitions: T, _option?: ITestEngineOption): TestEngine<T>;
 
 // @public (undocumented)
 export class DOMInteractor implements Interactor {
@@ -114,8 +117,8 @@ export class FakeMouseEvent extends MouseEvent {
     constructor(type: string, overrides?: Partial<MouseEvent>);
 }
 
-// @public (undocumented)
-export type IDomTestEngineOption = IComponentDriverOption;
+// @public @deprecated (undocumented)
+export type IDomTestEngineOption = ITestEngineOption;
 
 // (No @packageDocumentation comment for this package)
 

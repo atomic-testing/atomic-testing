@@ -429,6 +429,11 @@ export interface ITestEngine<T extends ScenePart = {}> extends IComponentDriver<
     cleanUp(): Promise<void>;
 }
 
+// @public
+export interface ITestEngineOption extends IComponentDriverOption {
+    rootElement?: Element;
+}
+
 // @public (undocumented)
 export interface IToggleDriver {
     // (undocumented)
