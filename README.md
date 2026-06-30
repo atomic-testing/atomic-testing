@@ -27,7 +27,19 @@ including but not limited to:
 
   runner.
 
-## Version support policy
+## Stability & version support policy
+
+The stable public API is the `.` barrel exports of the in-scope packages —
+`core`, `dom-core`, `react-core`, `react-18`, `react-19`, `react-legacy`,
+`vue-3`, `playwright`, and `component-driver-html`. That surface is frozen under
+SemVer, machine-checked by a committed [API Extractor](https://api-extractor.com/)
+report per package (`etc/<package>.api.md`), and governed by a documented
+deprecation lifecycle. Anything else — every `@atomic-testing/internal-*` package
+and every export tagged `@internal` — is not covered by the guarantee.
+Full policy, including the framework/Playwright/Node support matrix:
+[ADR-006](agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
+
+### MUI driver majors
 
 Material UI moves fast and each major has a distinct rendered DOM, so this
 project ships one driver package per MUI major (see

@@ -2,8 +2,11 @@
 
 How `@atomic-testing/*` packages reach npm. Publishing runs in CI on GitHub
 **release publish** via [`publish.yml`](../.github/workflows/publish.yml), which
-builds and publishes every non-excluded package through [`publish.sh`](../publish.sh)
-using **npm Trusted Publishing (OIDC)** — no long-lived npm token.
+builds and publishes every non-excluded, **non-`private`** package through
+[`publish.sh`](../publish.sh) using **npm Trusted Publishing (OIDC)** — no
+long-lived npm token. Packages marked `"private": true` (the `internal-*` test
+tooling, example harness, and MUI-X fixture) are still **built** — the repo's own
+tests consume their `dist` — but are never published.
 
 ## Cut a release
 
@@ -41,6 +44,10 @@ On expiry, releases fail at **checkout** with the cryptic
 3. Re-fire the failed release (see above).
 
 ## Add a new package
+
+A **`private: true`** package needs no bootstrap and no trusted publisher — the
+preflight and publish loop both skip it (it only builds). The steps below apply to
+a new **published** package.
 
 npm can't attach a trusted publisher before a package exists, so a new package's
 first publish can't use OIDC. Bootstrap it once, **before** the first release that
