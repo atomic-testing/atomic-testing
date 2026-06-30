@@ -235,12 +235,6 @@ export interface Interactor {
   hover(locator: PartLocator, option?: HoverOption): Promise<void>;
 
   /**
-   * Wait for a given amount of time in milliseconds
-   * @param ms
-   */
-  wait(ms: number): Promise<void>;
-
-  /**
    * Wait until the component is in the expected state such as
    * the component's visibility or existence. If the component has
    * not reached the expected state within the timeout, it will throw
@@ -315,6 +309,4 @@ export interface Interactor {
    * @param locator
    */
   innerHTML(locator: PartLocator): Promise<string>;
-
-  clone(): Interactor;
 }

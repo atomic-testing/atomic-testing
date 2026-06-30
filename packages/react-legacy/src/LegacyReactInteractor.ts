@@ -5,7 +5,6 @@ import {
   EnterTextOption,
   FocusOption,
   HoverOption,
-  Interactor,
   MouseDownOption,
   MouseEnterOption,
   MouseLeaveOption,
@@ -167,12 +166,6 @@ export class LegacyReactInteractor extends DOMInteractor {
   }
 
   //#region wait condition
-  override async wait(ms: number): Promise<void> {
-    await act(async () => {
-      await super.wait(ms);
-    });
-  }
-
   override async waitUntilComponentState(
     locator: PartLocator,
     option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
@@ -193,8 +186,4 @@ export class LegacyReactInteractor extends DOMInteractor {
     return result;
   }
   //#endregion
-
-  override clone(): Interactor {
-    return new LegacyReactInteractor(this.rootEl);
-  }
 }

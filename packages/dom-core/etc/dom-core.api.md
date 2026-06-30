@@ -39,8 +39,6 @@ export class DOMInteractor implements Interactor {
     // (undocumented)
     protected calculateMousePosition(el: Element, preferredPoint?: Point): Point;
     click(locator: PartLocator, option?: ClickOption): Promise<void>;
-    // (undocumented)
-    clone(): Interactor;
     contextMenu(locator: PartLocator): Promise<void>;
     drag(locator: PartLocator, delta: Point): Promise<void>;
     dragTo(source: PartLocator, target: PartLocator): Promise<void>;
@@ -101,8 +99,6 @@ export class DOMInteractor implements Interactor {
     selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
-    // (undocumented)
-    wait(ms: number): Promise<void>;
     // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     // (undocumented)
