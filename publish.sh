@@ -10,6 +10,14 @@ set -euo pipefail
 #     ./bootstrap-new-package.sh <package-folder-name>
 # After that it publishes here automatically. To (re)apply every trusted-publisher
 # config at once: ./setup-trusted-publishers.sh
+#
+# Versioning (ADR-009): the frozen CORE GROUP (core, dom-core, the react/vue
+# adapters, playwright, component-driver-html) versions in lockstep — `pnpm
+# bumpVersion <ver>` bumps exactly that group. The published component-driver-*
+# drivers version INDEPENDENTLY (`pnpm bumpVersion <ver> <folder>`). This script
+# needs no version logic: it publishes each package at the version in its own
+# package.json and skips versions already on npm, so a core release leaves the
+# unchanged drivers untouched (already-published → skipped) and vice versa.
 
 BUILD_ONLY=false
 
