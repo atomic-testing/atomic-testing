@@ -1,6 +1,5 @@
 export const AdminSettingsDataTestId = {
   tabs: 'admin-tabs',
-  orgField: 'org-field',
   orgInput: 'org-input',
   channels: 'admin-channels',
   density: 'admin-density',
@@ -12,9 +11,6 @@ export const AdminSettingsDataTestId = {
   deleteTrigger: 'delete-button',
   deleteDialog: 'delete-dialog',
 } as const;
-
-/** Links the org-name `Field`'s label to its raw `<input>` via `inputID`/`id`. */
-export const ORG_INPUT_ID = 'org-name-control';
 
 /** Tab values/labels for the settings console. */
 export const ADMIN_TABS = [

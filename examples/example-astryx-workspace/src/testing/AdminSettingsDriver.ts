@@ -4,7 +4,6 @@ import {
   ButtonDriver,
   CheckboxListDriver,
   DateInputDriver,
-  FieldDriver,
   RadioListDriver,
   SegmentedControlDriver,
   SelectorDriver,
@@ -49,7 +48,6 @@ export interface AdminSettingsSnapshot {
  */
 const parts = {
   tabs: { locator: byDataTestId(T.tabs), driver: TabListDriver },
-  orgField: { locator: byDataTestId(T.orgField), driver: FieldDriver },
   orgInput: { locator: byDataTestId(T.orgInput), driver: TextInputDriver },
   plan: { locator: locatorUtil.append(byRole('radiogroup'), byAriaLabel(PLAN_LABEL, 'Same')), driver: SegmentedControlDriver },
   channels: { locator: byDataTestId(T.channels), driver: CheckboxListDriver },
@@ -158,10 +156,6 @@ export class AdminSettingsDriver extends ComponentDriver<typeof parts> {
 
   get tabs(): TabListDriver {
     return this.parts.tabs;
-  }
-
-  get orgField(): FieldDriver {
-    return this.parts.orgField;
   }
 
   get deleteDialog(): AlertDialogDriver {

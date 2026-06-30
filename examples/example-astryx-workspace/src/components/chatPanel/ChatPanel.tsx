@@ -8,6 +8,7 @@ import {
   ChatToolCalls,
 } from '@astryxdesign/core/Chat';
 import { Selector } from '@astryxdesign/core/Selector';
+import { Stack } from '@astryxdesign/core/Stack';
 
 import { AppDataTestId } from '../../AppDataTestId';
 import { useChatSession } from '../../hooks/ChatSessionProvider';
@@ -25,7 +26,7 @@ export function ChatPanel() {
   const lastIndex = messages.length - 1;
 
   return (
-    <section data-testid={AppDataTestId.chatSection}>
+    <Stack as='section' data-testid={AppDataTestId.chatSection} gap={3} height='100%'>
       <header data-testid={ChatPanelDataTestId.header}>
         <Selector
           data-testid={ChatPanelDataTestId.modelSelector}
@@ -33,17 +34,18 @@ export function ChatPanel() {
           value={model}
           onChange={selectModel}
           options={[...MODEL_OPTIONS]}
+          width={240}
         />
       </header>
       <ChatLayout
         data-testid={ChatPanelDataTestId.layout}
-        density='compact'
+        density='balanced'
         composer={
           <ChatComposer data-testid={ChatPanelDataTestId.composer} placeholder='Type a message…' onSubmit={send} />
         }>
         <ChatMessageList
           data-testid={ChatPanelDataTestId.messageList}
-          density='compact'
+          density='balanced'
           emptyState={<div data-testid={ChatPanelDataTestId.listEmptyState}>No messages yet — say hello 👋</div>}>
           {messages.length > 0 && <ChatSystemMessage variant='divider'>Today</ChatSystemMessage>}
           {messages.map((message, index) => (
@@ -59,6 +61,6 @@ export function ChatPanel() {
           ))}
         </ChatMessageList>
       </ChatLayout>
-    </section>
+    </Stack>
   );
 }
