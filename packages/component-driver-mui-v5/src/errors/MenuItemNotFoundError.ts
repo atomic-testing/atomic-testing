@@ -1,17 +1,13 @@
-import { ComponentDriver, ErrorBase } from '@atomic-testing/core';
+import { ComponentDriver, ItemNotFoundError } from '@atomic-testing/core';
 
 export const MenuItemNotFoundErrorId = 'MenuItemNotFoundError';
 
-function getErrorMessage(label: string): string {
-  return `Cannot find menu item with label: ${label}`;
-}
-
-export class MenuItemNotFoundError extends ErrorBase {
+export class MenuItemNotFoundError extends ItemNotFoundError {
   constructor(
     public readonly label: string,
-    public readonly driver: ComponentDriver<any>
+    driver: ComponentDriver<any>
   ) {
-    super(getErrorMessage(label), driver);
+    super(label, driver, `Cannot find menu item with label: ${label}`);
     this.name = MenuItemNotFoundErrorId;
   }
 }
