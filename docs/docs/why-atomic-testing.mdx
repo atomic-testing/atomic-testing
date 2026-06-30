@@ -21,7 +21,7 @@ const loginScene = {
   email: { locator: byDataTestId('email'), driver: TextFieldDriver },
   password: { locator: byDataTestId('password'), driver: TextFieldDriver },
   submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
-  error: { locator: byDataTestId('error'), driver: HTMLComponentDriver },
+  error: { locator: byDataTestId('error'), driver: HTMLElementDriver },
 } satisfies ScenePart;
 ```
 
