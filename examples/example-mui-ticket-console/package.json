@@ -1,0 +1,45 @@
+{
+  "name": "example-mui9-ticket-console",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check:type": "tsc --noEmit",
+    "test:dom": "vitest run",
+    "test:dom:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
+    "@mui/x-data-grid": "^9.7.0",
+    "@mui/x-date-pickers": "^9.7.0",
+    "@mui/x-tree-view": "^9.7.0",
+    "date-fns": "^4.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@atomic-testing/component-driver-html": "^0.90.0",
+    "@atomic-testing/component-driver-mui-v9": "^0.90.0",
+    "@atomic-testing/component-driver-mui-x-v9": "^0.90.0",
+    "@atomic-testing/core": "^0.90.0",
+    "@atomic-testing/dom-core": "^0.90.0",
+    "@atomic-testing/playwright": "^0.90.0",
+    "@atomic-testing/react-19": "^0.90.0",
+    "@playwright/test": "^1.61.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9"
+  }
+}
