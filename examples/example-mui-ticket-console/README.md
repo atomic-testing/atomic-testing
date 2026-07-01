@@ -81,7 +81,7 @@ This scenario needs to *set* a date picker and *select* a tree item — capabili
 - `DesktopDatePickerDriver.setValue(date)` / `pickDate('yyyy-mm-dd')` — operates the calendar popup (open → page to the month → click the day), the one write path that behaves identically in jsdom and in real browsers.
 - `SimpleTreeViewDriver.selectItem(itemId)` — clicks the item's content row to select it.
 
-Because this example consumes those methods, it depends on `@atomic-testing/*@^0.90.0`. See *Dependency wiring* for how it runs before that version is published.
+Because this example consumes those methods, it depends on `@atomic-testing/*@^0.90.0`.
 
 ### Community vs. premium DataGrid
 
@@ -91,4 +91,4 @@ The example uses the **community** `@mui/x-data-grid` (no license watermark). Th
 
 This example is a **standalone pnpm workspace** (its own `pnpm-lock.yaml`, intentionally not a member of the monorepo's root workspace), mirroring a real consumer install.
 
-It pins `@atomic-testing/*@^0.90.0`. Until 0.90.0 is published to npm, [`pnpm-workspace.yaml`](pnpm-workspace.yaml) carries an `overrides` block that resolves every atomic-testing dependency — direct and the packages' own transitive `workspace:*` deps — to the in-repo builds, so the example runs against the exact driver code the 0.90.0 release adds. **Once 0.90.0 is on npm, delete that overrides block** and the `^0.90.0` ranges resolve straight from the registry.
+It pins `@atomic-testing/*@^0.90.0`, resolved straight from the npm registry.
