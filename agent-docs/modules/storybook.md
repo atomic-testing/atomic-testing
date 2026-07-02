@@ -16,6 +16,9 @@ Barrel: [storybook/src/index.ts](../../packages/storybook/src/index.ts).
 | -------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------- |
 | `StorybookInteractor`                              | class (`extends DOMInteractor`) | [StorybookInteractor.ts](../../packages/storybook/src/StorybookInteractor.ts) |
 | `createTestEngine(canvasElement, parts, _option?)` | function                        | [createTestEngine.ts](../../packages/storybook/src/createTestEngine.ts)       |
+| `withTestEngine(parts, fn)`                        | `play`-wrapping helper          | [withTestEngine.ts](../../packages/storybook/src/withTestEngine.ts)           |
+| `withDriver(DriverClass, fn, option?)`             | `play`-wrapping helper          | [withDriver.ts](../../packages/storybook/src/withDriver.ts)                   |
+| `StorybookPlayContext`, `WithDriverOption`         | types                           | [types.ts](../../packages/storybook/src/types.ts)                             |
 
 Depends on: `@atomic-testing/core`, `@atomic-testing/dom-core` (`workspace:*`); peer `storybook@^10` (imports `storybook/test`).
 

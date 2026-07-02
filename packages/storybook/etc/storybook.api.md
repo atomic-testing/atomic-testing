@@ -6,6 +6,8 @@
 
 import { BlurOption } from '@atomic-testing/core';
 import { ClickOption } from '@atomic-testing/core';
+import { ComponentDriver } from '@atomic-testing/core';
+import { ComponentDriverCtor } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { EnterTextOption } from '@atomic-testing/core';
 import { FocusOption } from '@atomic-testing/core';
@@ -78,6 +80,28 @@ export class StorybookInteractor extends DOMInteractor {
     // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
 }
+
+// @public
+export interface StorybookPlayContext {
+    // (undocumented)
+    readonly canvasElement: HTMLElement;
+}
+
+// @public
+export function withDriver<D extends ComponentDriver<any>, // eslint-disable-line @typescript-eslint/no-explicit-any -- matches ComponentDriverCtor's variance-driven `any`
+C extends StorybookPlayContext = StorybookPlayContext>(driverClass: ComponentDriverCtor<D>, fn: (context: C & {
+    driver: D;
+}) => Promise<void>, option?: WithDriverOption): (context: C) => Promise<void>;
+
+// @public (undocumented)
+export interface WithDriverOption {
+    readonly locator?: PartLocator;
+}
+
+// @public
+export function withTestEngine<T extends ScenePart, C extends StorybookPlayContext = StorybookPlayContext>(parts: T, fn: (context: C & {
+    engine: TestEngine<T>;
+}) => Promise<void>): (context: C) => Promise<void>;
 
 // (No @packageDocumentation comment for this package)
 
