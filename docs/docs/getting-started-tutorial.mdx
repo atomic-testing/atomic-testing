@@ -4,153 +4,241 @@ title: 'Step-by-Step Tutorial'
 sidebar_position: 5
 ---
 
-import loginFormDriver from '!!raw-loader!./snippets/login-form-driver';
+import loginFormDriver from '!!raw-loader!./snippets/login-form-driver-html';
 import signupE2e from '!!raw-loader!./snippets/signup-form-e2e.spec';
 import CodeBlock from '@theme/CodeBlock';
 
-This tutorial walks you through the [example-mui-signup-form](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) found in the [examples](https://github.com/atomic-testing/atomic-testing/tree/main/examples) folder. You may run and see it live in [Codesandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form). It demonstrates how to run the example application and introduces the basic **Atomic Testing** APIs for writing tests. Component drivers work the same in isolated unit tests or full browser tests so the code you see here applies to both environments.
+This tutorial builds one complete, runnable **Atomic Testing** test from scratch using the canonical stack — `@atomic-testing/react-19` + `@atomic-testing/component-driver-html` + Jest — the same stack introduced in [Quick Start](./quick-start.mdx). Component drivers work the same way in isolated unit tests or full browser tests, so everything you see here applies to both.
+
+Once you have a green test, the tutorial shows how to wrap a component library like Material UI, compose drivers for reuse, and reuse the same scene in a Playwright E2E test. An **optional** section at the end walks through the full [example-mui-signup-form](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) app if you want to see a larger, real-world codebase.
 
 ## 1. Install dependencies
 
-From the repository root run:
+```bash
+pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html
+pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
+```
+
+(Already have a runner configured? Skip to [step 2](#2-configure-jest). See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the Vitest equivalent.)
+
+## 2. Configure Jest
+
+```js title="jest.config.js"
+/** @type {import('jest').Config} */
+module.exports = {
+  testEnvironment: 'jsdom',
+  transform: {
+    '^.+\\.tsx?$': ['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }],
+  },
+  // ReactInteractor wraps every interaction in React's act(); this flag stops
+  // React from logging spurious "not wrapped in act(...)" warnings.
+  globals: { IS_REACT_ACT_ENVIRONMENT: true },
+};
+```
+
+## 3. Write the component under test
+
+```tsx title="LoginForm.tsx"
+import { useState } from 'react';
+
+export function LoginForm({ onSubmit }: { onSubmit: (username: string) => void }) {
+  const [username, setUsername] = useState('');
+
+  return (
+    <form
+      data-testid='login-form'
+      onSubmit={e => {
+        e.preventDefault();
+        onSubmit(username);
+      }}
+    >
+      <input data-testid='username' value={username} onChange={e => setUsername(e.target.value)} />
+      <button data-testid='submit' disabled={username.length === 0}>
+        Log in
+      </button>
+    </form>
+  );
+}
+```
+
+## 4. Declare a ScenePart
+
+A ScenePart maps each `data-testid` to a locator and the driver that knows how to interact with it:
+
+```ts title="LoginForm.scene.ts"
+import { HTMLButtonDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+
+export const loginFormScene = {
+  username: { locator: byDataTestId('username'), driver: HTMLTextInputDriver },
+  submit: { locator: byDataTestId('submit'), driver: HTMLButtonDriver },
+} satisfies ScenePart;
+```
+
+## 5. Render, interact, assert, clean up
+
+```tsx title="LoginForm.test.tsx"
+import { TestEngine } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/react-19';
+
+import { LoginForm } from './LoginForm';
+import { loginFormScene } from './LoginForm.scene';
+
+describe('LoginForm', () => {
+  let engine: TestEngine<typeof loginFormScene>;
+  let onSubmit: jest.Mock;
+
+  beforeEach(() => {
+    onSubmit = jest.fn();
+    engine = createTestEngine(<LoginForm onSubmit={onSubmit} />, loginFormScene);
+  });
+
+  afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  it('enables submit once a username is entered', async () => {
+    expect(await engine.parts.submit.isDisabled()).toBe(true);
+
+    await engine.parts.username.setValue('ada');
+    expect(await engine.parts.submit.isDisabled()).toBe(false);
+
+    await engine.parts.submit.click();
+    expect(onSubmit).toHaveBeenCalledWith('ada');
+  });
+});
+```
+
+## 6. Run it
+
+```bash
+npx jest
+```
+
+You should see one passing test. That's the whole loop: **install → configure → render → interact → assert → clean up.**
+
+## 7. Compose a driver for reuse
+
+For larger forms it's convenient to wrap the individual inputs in a driver of your own, exposing a high-level action instead of making tests poke at each field. Below is a driver for the `LoginForm` above, combining `HTMLTextInputDriver` and `HTMLButtonDriver`:
+
+<CodeBlock language='ts'>{loginFormDriver}</CodeBlock>
+
+Use it in place of the raw scene parts:
+
+```ts title="LoginForm.test.tsx (with a composed driver)"
+const parts = {
+  form: { locator: byDataTestId('login-form'), driver: LoginFormDriver },
+} satisfies ScenePart;
+
+const engine = createTestEngine(<LoginForm onSubmit={onSubmit} />, parts);
+await engine.parts.form.login({ username: 'ada' });
+```
+
+With the `login()` helper, tests stay declarative and don't depend on the form's markup. If the implementation changes, update only `LoginFormDriver`.
+
+## 8. Same scene, now in Playwright (E2E)
+
+Because drivers depend only on the `Interactor` abstraction, the exact same `loginFormScene` from step 4 works against a real browser page — you just create the engine with `@atomic-testing/playwright`'s `createTestEngine(page, ...)` instead of React's. As covered in the [Playwright notes on Quick Start](./quick-start.mdx), this requires an actual page served by your app (Playwright drives a real browser, not jsdom) — configure `webServer`/`baseURL` in `playwright.config.ts` to point at it:
+
+```ts title="login.e2e.spec.ts"
+import { createTestEngine } from '@atomic-testing/playwright';
+import { test, expect } from '@playwright/test';
+
+import { loginFormScene } from './LoginForm.scene';
+
+test('enables submit once a username is entered', async ({ page }) => {
+  await page.goto('/login'); // a route your app actually serves
+  const engine = createTestEngine(page, loginFormScene);
+
+  expect(await engine.parts.submit.isDisabled()).toBe(true);
+  await engine.parts.username.setValue('ada');
+  expect(await engine.parts.submit.isDisabled()).toBe(false);
+
+  await engine.cleanUp();
+});
+```
+
+## Testing a component library (e.g. MUI)
+
+Component libraries like Material UI often need a context provider — a `ThemeProvider`, a router, etc. — to render correctly. `createTestEngine` has no knowledge of your app's providers, so wrap the component yourself before passing it in.
+
+The [example-mui-signup-form](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) app does exactly this with a small local helper. It is **not** a package export — you write the equivalent for your own app:
+
+```tsx title="testUtil.tsx (example-local helper, not a package export)"
+import { createTestEngine } from '@atomic-testing/react-19';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import { ReactNode } from 'react';
+
+import { theme } from './theme';
+
+const ComponentWrapper = ({ children }: { children: ReactNode }) => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    {children}
+  </ThemeProvider>
+);
+
+export const createTestEngineForComponent: typeof createTestEngine = (node, partDefinitions, option) =>
+  createTestEngine(<ComponentWrapper>{node}</ComponentWrapper>, partDefinitions, option);
+```
+
+Once you have that wrapper, use it exactly like `createTestEngine`, and reach for a component-library driver package instead of the HTML drivers — for example `@atomic-testing/component-driver-mui-v7` (see the [Package Guide](./framework-guide.mdx) for which MUI version matches your app):
+
+```ts
+import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v7';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+
+const parts = {
+  username: { locator: byDataTestId('username'), driver: TextFieldDriver },
+  submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
+} satisfies ScenePart;
+
+const engine = createTestEngineForComponent(<CredentialForm />, parts);
+```
+
+## Optional: explore the full example app
+
+The rest of this section tours [example-mui-signup-form](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form), a larger multi-step signup form in the monorepo's [examples](https://github.com/atomic-testing/atomic-testing/tree/main/examples) folder, built with the `createTestEngineForComponent` wrapper from the previous section. You may also run it live in [Codesandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) without installing anything locally.
+
+### Install and run it
+
+From the repository root:
 
 ```bash
 pnpm install
-```
-
-The example project has its own dependencies so install them as well:
-
-```bash
 cd examples/example-mui-signup-form
 pnpm install
-```
-
-## 2. Start the example application
-
-Run the app locally to see the signup form in action:
-
-```bash
 pnpm dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser to interact with the multi‑step form.
+Open [http://localhost:5173](http://localhost:5173) to interact with the multi-step form.
 
-## 3. Run the component tests
-
-Unit tests for each form step live under their respective `__tests__` directories. Execute them with:
+### Run its tests
 
 ```bash
-pnpm test:dom
+pnpm test:dom          # Unit tests for each form step
+pnpm test:e2e:chrome   # e2e/success.spec.ts in Chrome (add --ui to watch it)
 ```
 
-## 4. Run the end‑to‑end test
+### Explore Storybook (optional)
 
-The example also includes an end‑to‑end scenario located in `e2e/success.spec.ts`. Launch it in Chrome with:
-
-```bash
-pnpm test:e2e:chrome
-```
-
-Add the `--ui` flag to open Playwright in UI mode if you want to watch the interactions.
-
-## 5. Explore Storybook (optional)
-
-Some components contain Storybook stories with interaction tests. To view them, run:
+Some components contain Storybook stories with interaction tests:
 
 ```bash
 pnpm storybook
 ```
 
-## 6. Write your first Atomic test
+### Write an end-to-end test
 
-The signup form example includes unit tests written with **Atomic Testing**. The steps below outline the main pieces required to create a test.
-
-### Declare `data-testid`
-
-Assign the `data-testid` attribute on components that you need to interact with. This example shows the markup for the credential form:
-
-```tsx title="CredentialForm.tsx"
-<form data-testid={DataTestId.form}>
-  <TextField data-testid={DataTestId.emailInput} label='Email' />
-  <TextField data-testid={DataTestId.passwordInput} label='Password' />
-  <WizardButton data-testid={DataTestId.navigation} onNextStep={onNextStep} />
-</form>
-```
-
-### Define a ScenePart
-
-Create a ScenePart describing how to locate each component and which driver to use:
-
-```ts title="credentialScenePart.ts"
-const parts = {
-  form: {
-    locator: byDataTestId(DataTestId.form),
-    driver: CredentialFormDriver,
-  },
-} satisfies ScenePart;
-```
-
-### Instantiate the Test Engine and write a test
-
-```ts title="CredentialForm.test.tsx"
-import { afterEach, beforeEach, expect, test, vi, type Mock } from 'vitest';
-
-let testEngine: TestEngine<typeof parts>;
-let onNext: Mock;
-
-beforeEach(() => {
-  onNext = vi.fn();
-  testEngine = createTestEngineForComponent(
-    <CredentialForm data-testid={DataTestId.form} onNextStep={onNext} />,
-    parts
-  );
-});
-
-afterEach(async () => {
-  await testEngine.cleanUp();
-});
-
-test('submits valid data', async () => {
-  await testEngine.parts.form.setValue({
-    email: 'john@example.com',
-    password: 'secret123',
-    confirmPassword: 'secret123',
-    birthday: '1990-01-01',
-  });
-  await testEngine.parts.form.next();
-  expect(onNext).toHaveBeenCalled();
-});
-```
-
-The test engine renders the component, exposes the parts defined in the `ScenePart`, and provides helper methods from the driver to interact with the component. Always call `cleanUp()` after each test to unmount the component and release resources.
-
-## 7. Build a form driver
-
-For larger forms it is convenient to create a driver that wraps the individual inputs. Below is a simplified driver for a login form.
-
-<CodeBlock language='ts'>{loginFormDriver}</CodeBlock>
-
-Use it in a test:
-
-```ts title="LoginForm.test.tsx"
-const parts = {
-  form: { locator: byDataTestId('login-form'), driver: LoginFormDriver },
-} satisfies ScenePart;
-
-const engine = createTestEngineForComponent(<LoginForm />, parts);
-await engine.parts.form.login({ username: 'admin', password: 'secret' });
-```
-
-With the `login()` helper tests stay declarative and don't depend on the form's markup. If the implementation changes, update only `LoginFormDriver`.
-
-## 8. Write an end-to-end test
-
-Drivers work the same way in browser-based tests. The snippet below shows a Playwright test that reuses the drivers from the unit tests.
+The example's `e2e/success.spec.ts` reuses the same drivers as its unit tests — this is the pattern from [step 8](#8-same-scene-now-in-playwright-e2e) above, applied to the full signup flow:
 
 <CodeBlock language='ts'>{signupE2e}</CodeBlock>
 
-Because the driver encapsulates how to fill in the form, the test logic is short and can run in any browser supported by Playwright.
+## What to try next
 
-## Next steps
-
-Browse the example source code to see how scene parts, drivers and the test engine are set up. Then refer back to the [Setup](./setup.mdx) and [Core Concepts](./core-concepts.mdx) pages for more details on creating your own tests.
+- [Core Concepts](./core-concepts.mdx) — the vocabulary behind ScenePart, Locator, and TestEngine
+- [Best Practices](./best-practices.mdx) — patterns for keeping tests portable and maintainable
+- [Package Guide](./framework-guide.mdx) — which driver and framework packages to install for your stack
+- [Build Component Driver](./advanced-concepts/build-component-driver.mdx) — write a driver for a custom or unsupported component
+- [API Reference](./api-overview.mdx) — the full list of locators, drivers, and interactor methods

@@ -19,15 +19,14 @@ import Tabs from '@theme/Tabs';
 ## Installation
 
 ```bash
-# For React 19 with MUI v7
-pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19 @atomic-testing/component-driver-mui-v7
-
-# For React 18 with MUI v6
-pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-18 @atomic-testing/component-driver-mui-v6
-
-# For React 17 or earlier with MUI v5
-pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-legacy @atomic-testing/component-driver-mui-v5
+pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
 ```
+
+On React 18 or React 17, swap in `@atomic-testing/react-18` or `@atomic-testing/react-legacy` — see the [Package Guide](./framework-guide.mdx) for the full matrix. Testing Material UI or another component library instead of plain HTML elements? See [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui).
+
+:::info Before you run this
+This test needs a jsdom-based runner (Jest or Vitest) with `IS_REACT_ACT_ENVIRONMENT` set. See [Configure your test runner](./setup.mdx#configure-your-test-runner) — one-time setup, applies to every example on this page.
+:::
 
 ## Your First Test
 
@@ -82,6 +81,20 @@ it('should welcome the user when clicked', async () => {
 ```bash
 pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
 ```
+
+:::info Before you run this
+Vue tests run under [Vitest](https://vitest.dev) with the `jsdom` environment:
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: { environment: 'jsdom' },
+});
+```
+
+Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInteractor` calls Vue's own `nextTick()` internally. See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the Jest equivalent if you're testing React elsewhere in the same repo.
+:::
 
 ## Your First Test
 
@@ -142,6 +155,25 @@ it('should welcome the user when clicked', async () => {
 pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
 ```
 
+:::info DOM tests vs. Playwright tests
+The React and Vue tabs above render components directly into an in-memory jsdom document — nothing is served over HTTP. Playwright is different: `page.goto('/welcome')` drives a **real browser against a page your app actually serves**. The snippet below is illustrative — it only turns green once you have an app running that serves a `/welcome` route rendering the equivalent of the `WelcomeButton` component from the React tab (same `data-testid`s). Point Playwright at that server with `webServer`/`baseURL` in `playwright.config.ts`:
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  use: {
+    baseURL: 'http://localhost:5173',
+  },
+  webServer: {
+    command: 'pnpm dev', // starts your app's dev server
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+:::
+
 ## Your First Test
 
 ```typescript
@@ -156,8 +188,11 @@ const welcomeScene = {
   button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
+// Assumes a served page at "/welcome" that renders a WelcomeButton with
+// name="Alice" (see the caveat above) — this is illustrative, not copy-paste
+// runnable against an empty project.
 test('should welcome the user when clicked', async ({ page }) => {
-  // Navigate to your app
+  // Navigate to your app (driven by baseURL from playwright.config.ts)
   await page.goto('/welcome');
 
   // Create test engine with same scene
@@ -181,7 +216,7 @@ Notice how the test logic is **identical across frameworks**:
 
 1. **Same Scene Definition**: `welcomeScene` works everywhere
 2. **Same Test Code**: `engine.parts.button.click()` works everywhere
-3. **Same Component Drivers**: HTML/MUI drivers work everywhere
+3. **Same Component Drivers**: `component-driver-html` (or a component-library driver package, if you use one) works everywhere
 
 **This means**: Learn once, test everywhere. Your testing knowledge transfers completely between frameworks.
 

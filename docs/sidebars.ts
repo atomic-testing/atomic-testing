@@ -20,6 +20,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'quick-start', // NEW: Choose your framework + 5-minute example
+        'setup', // EXISTING: Runner config + step-by-step setup (must precede tutorial)
         'framework-guide', // NEW: React vs Vue vs Playwright decision guide
         'why-atomic-testing', // NEW: Long-term value demonstration
         'tutorial', // EXISTING: Detailed tutorial
@@ -34,7 +35,6 @@ const sidebars = {
       items: [
         'intro', // EXISTING: Introduction (moved here)
         'concepts', // EXISTING: Component drivers, locators, etc.
-        'setup', // EXISTING: Step-by-step setup
       ],
     },
 
