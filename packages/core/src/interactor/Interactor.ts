@@ -32,9 +32,9 @@ import type { PressKeyOption } from './PressKeyOption';
  * 1.0 contract is therefore deliberately scoped to **DOM environments addressed
  * by CSS**: there is no seam for a non-DOM target, and a computed ARIA accessible
  * name (`aria-labelledby` / `<label>` / text — not CSS-expressible) is out of
- * scope. See [ADR-008](../../../../agent-docs/adr/008-css-dom-only-locator-boundary.md);
+ * scope. See [ADR-008](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/008-css-dom-only-locator-boundary.md);
  * the deferred name-aware resolution is tracked in #923. Post-1.0 the interface
- * grows additively per [ADR-007](../../../../agent-docs/adr/007-interactor-evolution-and-composition.md).
+ * grows additively per [ADR-007](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/007-interactor-evolution-and-composition.md).
  */
 export interface Interactor {
   //#region Potentially DOM mutative interactions
