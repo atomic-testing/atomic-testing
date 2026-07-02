@@ -37,13 +37,13 @@ report per package (`etc/<package>.api.md`), and governed by a documented
 deprecation lifecycle. Anything else — every `@atomic-testing/internal-*` package
 and every export tagged `@internal` — is not covered by the guarantee.
 Full policy, including the framework/Playwright/Node support matrix:
-[ADR-006](agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
+[ADR-006](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
 
 ### MUI driver majors
 
 Material UI moves fast and each major has a distinct rendered DOM, so this
 project ships one driver package per MUI major (see
-[ADR-003](agent-docs/adr/003-version-specific-packages.md)). To keep the
+[ADR-003](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/003-version-specific-packages.md)). To keep the
 maintained surface focused, older majors reach **end of support** once newer
 ones are stable.
 
@@ -58,7 +58,7 @@ ones are stable.
 they remain installable at that version but receive no fixes, new drivers, or
 CI/e2e coverage, and their test suites no longer run. New work targets v6/v7/v9
 (MUI-X also v8 and v9). Rationale and migration notes:
-[ADR-005](agent-docs/adr/005-drop-mui-5-support.md).
+[ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
 
 > Note: MUI Core has **no v8** — it jumped `7.3.11 → 9.0.0` to unify versioning
 > with MUI X, so `@atomic-testing/component-driver-mui-v9` is the successor to v7

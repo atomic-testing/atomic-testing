@@ -15,8 +15,8 @@ For usage examples see the [documentation](https://atomic-testing.dev/).
 
 The stable surface of this package is its `.` barrel exports, frozen under
 SemVer and machine-checked by the committed [API Extractor](https://api-extractor.com/)
-report at [`etc/component-driver-html.api.md`](etc/component-driver-html.api.md). Exports tagged `@internal` are
-not part of that guarantee. See the [1.0 API freeze & evolution policy](../../agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
+report at [`etc/component-driver-html.api.md`](https://github.com/atomic-testing/atomic-testing/blob/main/packages/component-driver-html/etc/component-driver-html.api.md). Exports tagged `@internal` are
+not part of that guarantee. See the [1.0 API freeze & evolution policy](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
 
 ## Capability interfaces
 

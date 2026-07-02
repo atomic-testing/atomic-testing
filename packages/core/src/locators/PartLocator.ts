@@ -12,6 +12,6 @@ export type CssLocatorChain = CssLocator[];
  * …) emits a CSS fragment, same-element matchers compose via {@link CssLocator.and},
  * and `byCssSelector` is the raw-CSS escape hatch. XPath, text, and computed-ARIA
  * -name engines are out of scope — see
- * [ADR-008](../../../../agent-docs/adr/008-css-dom-only-locator-boundary.md).
+ * [ADR-008](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/008-css-dom-only-locator-boundary.md).
  */
 export type PartLocator = CssLocator | CssLocatorChain;
