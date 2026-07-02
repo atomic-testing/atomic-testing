@@ -27,12 +27,20 @@ import {
   WaitUntilOption,
 } from '@atomic-testing/core';
 import { fireEvent } from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
+import defaultUserEvent from '@testing-library/user-event';
 
 import { FakeMouseEvent } from './fakeEvents';
+import { DOMInteractorOption, UserEventDispatcher } from './types';
 
 export class DOMInteractor implements Interactor {
-  constructor(protected readonly rootEl: HTMLElement = document.documentElement) {}
+  protected readonly userEvent: UserEventDispatcher;
+
+  constructor(
+    protected readonly rootEl: HTMLElement = document.documentElement,
+    option?: DOMInteractorOption
+  ) {
+    this.userEvent = option?.userEvent ?? defaultUserEvent;
+  }
   async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
@@ -89,7 +97,7 @@ export class DOMInteractor implements Interactor {
     const isSimpleEvent = option?.position == null;
     if (isSimpleEvent) {
       // Some MUI component does not work with fireEvent('click', ...)
-      await userEvent.click(el);
+      await this.userEvent.click(el);
     } else {
       const clickLocation = this.calculateMousePosition(el, option?.position);
       const evt = new FakeMouseEvent('click', {
@@ -115,7 +123,7 @@ export class DOMInteractor implements Interactor {
     if (el == null) {
       throw new ElementNotFoundError(locator, 'hover');
     }
-    await userEvent.hover(el);
+    await this.userEvent.hover(el);
   }
 
   /**
@@ -378,7 +386,7 @@ export class DOMInteractor implements Interactor {
     if (el == null) {
       throw new ElementNotFoundError(locator, 'activate');
     }
-    await userEvent.click(el);
+    await this.userEvent.click(el);
   }
 
   /**
@@ -397,7 +405,7 @@ export class DOMInteractor implements Interactor {
     }
 
     if (!option?.append) {
-      await userEvent.clear(el);
+      await this.userEvent.clear(el);
     }
 
     // An empty value is a pure clear: `userEvent.clear()` above already emptied
@@ -422,7 +430,7 @@ export class DOMInteractor implements Interactor {
       }
     }
 
-    await userEvent.type(el, text);
+    await this.userEvent.type(el, text);
   }
 
   /**
@@ -459,7 +467,7 @@ export class DOMInteractor implements Interactor {
     if (el == null) {
       throw new ElementNotFoundError(locator, 'selectOptionValue');
     }
-    await userEvent.selectOptions(el, values);
+    await this.userEvent.selectOptions(el, values);
   }
 
   /**
@@ -491,7 +499,7 @@ export class DOMInteractor implements Interactor {
       const name = filePath.split(/[\\/]/).pop() || filePath;
       return new File([], name);
     });
-    await userEvent.upload(el as HTMLElement, fileObjects);
+    await this.userEvent.upload(el as HTMLElement, fileObjects);
   }
 
   /**
