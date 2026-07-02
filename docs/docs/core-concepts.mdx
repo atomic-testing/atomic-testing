@@ -4,11 +4,22 @@ sidebar_position: 2
 ---
 
 import loginScreenScenePart from '!!raw-loader!./snippets/login-screen-scene-part';
+import ArchitectureDiagram from '@site/src/components/ArchitectureDiagram';
 import CodeBlock from '@theme/CodeBlock';
 
 # Core Concepts
 
 Before using Atomic Testing, familiarize yourself with the following key concepts:
+
+## Architecture at a glance
+
+Every piece below fits into one pipeline: a declarative `ScenePart` is what the
+`TestEngine` is built from, each `ComponentDriver` it creates delegates to an
+`Interactor`, and the `Interactor` you get — `ReactInteractor`, `VueInteractor`
+or `PlaywrightInteractor` — depends on which `createTestEngine` you called.
+Hover, focus, or press any node below to see what it does.
+
+<ArchitectureDiagram />
 
 ## Component Driver
 

@@ -24,6 +24,9 @@ The project ships with several interactors:
   React adapters – extensions of `DOMInteractor` that wrap interactions in
   React's `act()` helper so state updates are flushed correctly when testing
   React 18 or later.
+- **VueInteractor** from **@atomic-testing/vue-3** – an extension of
+  `DOMInteractor` that calls Vue's `nextTick()` after every interaction so
+  reactive state settles before the next assertion.
 - **PlaywrightInteractor** – drives a Playwright `Page` object to execute tests
   in a real browser.
 

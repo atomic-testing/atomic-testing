@@ -1,0 +1,399 @@
+/**
+ * ArchitectureDiagram — consumes the global --at-* token contract from
+ * src/css/custom.css so it auto-adapts between light/dark theme, matching the
+ * rest of the site (see docs/src/pages/index.module.css for the same pattern).
+ *
+ * The brand accent colors (--at-blue, --at-teal, --at-sky, --at-indigo,
+ * --at-mint) are theme-independent (defined once in :root), so the rgba()
+ * glow shadows below are exact color-matches in both themes, not
+ * approximations — the same technique index.module.css already uses for its
+ * button/chip shadows.
+ */
+
+.wrapper {
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 18px;
+  padding: 22px 24px 20px;
+  margin: 32px 0 40px;
+  box-shadow: 0 10px 30px rgba(18, 32, 46, 0.06);
+}
+
+/* ---------------- toolbar ---------------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.toolbarLabel {
+  font-family: var(--at-font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--at-text-faint);
+  margin-right: 4px;
+}
+
+.branchButton {
+  font-family: var(--at-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--at-text-muted);
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.branchButton:hover {
+  border-color: var(--at-text-faint);
+}
+
+.branchButtonActive,
+.branchButtonActive:hover {
+  background: var(--at-gradient-btn);
+  color: #fff;
+  border-color: transparent;
+}
+
+.clearButton {
+  font-family: var(--at-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--at-text-faint);
+  background: transparent;
+  border: 1px dashed var(--at-border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.clearButton:hover {
+  color: var(--at-text-strong);
+  border-color: var(--at-text-faint);
+}
+
+/* ---------------- stage: diagram + side panel ---------------- */
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.diagramScroll {
+  overflow-x: auto;
+  border-radius: 14px;
+  background: var(--at-bg-alt);
+}
+
+.diagramPane {
+  position: relative;
+}
+
+.edgesLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nodesLayer {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------------- nodes ---------------- */
+.node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 10px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1.5px solid var(--at-border);
+  background: var(--at-surface);
+  box-shadow: 0 2px 6px rgba(18, 32, 46, 0.05);
+  cursor: pointer;
+  transition:
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.node::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  border-radius: 11px 11px 0 0;
+  background: var(--node-accent);
+  opacity: 0.7;
+}
+
+.node:focus-visible {
+  outline: 2px solid var(--at-blue);
+  outline-offset: 2px;
+}
+
+.nodeBlueprint,
+.nodeInterface {
+  border-style: dashed;
+}
+
+.nodeTarget {
+  border-style: dotted;
+  background: var(--at-bg-alt);
+}
+
+.nodeLabel {
+  font-family: var(--at-font-display);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--at-text-strong);
+}
+
+.nodeSublabel {
+  font-family: var(--at-font-mono);
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--at-text-faint);
+}
+
+.nodeActive {
+  border-color: var(--node-accent);
+  box-shadow:
+    0 0 0 4px var(--node-accent-soft),
+    0 10px 24px rgba(18, 32, 46, 0.12);
+  transform: translateY(-2px);
+}
+
+.nodeDimmed {
+  opacity: 0.32;
+}
+
+/* Accent tokens: brand colors are theme-independent, so these match exactly
+   in both light and dark. --node-accent-soft is used for the active glow. */
+.accentBlue {
+  --node-accent: var(--at-blue);
+  --node-accent-soft: rgba(45, 107, 230, 0.22);
+}
+.accentBlueDeep {
+  --node-accent: var(--at-blue-deep);
+  --node-accent-soft: rgba(31, 88, 201, 0.22);
+}
+.accentSky {
+  --node-accent: var(--at-sky);
+  --node-accent-soft: rgba(56, 189, 248, 0.26);
+}
+.accentTeal {
+  --node-accent: var(--at-teal);
+  --node-accent-soft: rgba(20, 184, 176, 0.22);
+}
+.accentIndigo {
+  --node-accent: var(--at-indigo);
+  --node-accent-soft: rgba(99, 102, 241, 0.26);
+}
+.accentMint {
+  --node-accent: var(--at-mint);
+  --node-accent-soft: rgba(95, 227, 200, 0.28);
+}
+.accentNeutral {
+  --node-accent: var(--at-text-faint);
+  --node-accent-soft: var(--at-hover);
+}
+
+/* ---------------- edges ---------------- */
+.edge {
+  opacity: 0.75;
+  transition: opacity 0.18s ease;
+}
+
+.edge line {
+  stroke: var(--at-border);
+  stroke-width: 1.6;
+  transition:
+    stroke 0.18s ease,
+    stroke-width 0.18s ease;
+}
+
+.edgeLabelBg {
+  fill: var(--at-surface);
+  stroke: var(--at-border);
+  stroke-width: 1;
+  transition: stroke 0.18s ease;
+}
+
+.edgeLabelText {
+  font-family: var(--at-font-mono);
+  font-size: 10px;
+  fill: var(--at-text-faint);
+  transition: fill 0.18s ease;
+}
+
+.edgeActive {
+  opacity: 1;
+}
+
+.edgeActive line {
+  stroke: var(--at-blue);
+  stroke-width: 2.4;
+}
+
+.edgeActive .edgeLabelBg {
+  stroke: var(--at-blue);
+}
+
+.edgeActive .edgeLabelText {
+  fill: var(--at-blue);
+  font-weight: 600;
+}
+
+.edgeDimmed {
+  opacity: 0.15;
+}
+
+.arrowMuted {
+  fill: var(--at-border);
+}
+
+.arrowActive {
+  fill: var(--at-blue);
+}
+
+.annotationText {
+  font-family: var(--at-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  fill: var(--at-text-faint);
+}
+
+/* ---------------- side panel ---------------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--at-bg-alt);
+  border: 1px solid var(--at-border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  min-height: 220px;
+}
+
+.panelKind {
+  font-family: var(--at-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--at-blue);
+}
+
+.panelTitle {
+  font-family: var(--at-font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--at-text-strong);
+  margin: 0;
+}
+
+.panelSublabel {
+  font-family: var(--at-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--at-text-faint);
+}
+
+.panelBody {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--at-text-muted);
+  margin: 0;
+  flex: 1;
+}
+
+.panelLink {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--at-blue);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.panelLink:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- legend ---------------- */
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--at-text-faint);
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  border-top: 2px solid var(--at-text-faint);
+  margin-right: 2px;
+}
+
+.legendSwatchDashed {
+  border-top-style: dashed;
+}
+
+.legendSwatchDotted {
+  border-top-style: dotted;
+}
+
+.legendSwatchSolid {
+  border-top-style: solid;
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 900px) {
+  .stage {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    min-height: unset;
+  }
+}
+
+/* ---------------- reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .edge,
+  .edge line,
+  .edgeLabelBg,
+  .edgeLabelText,
+  .branchButton {
+    transition: none !important;
+  }
+
+  .nodeActive {
+    transform: none;
+  }
+}
