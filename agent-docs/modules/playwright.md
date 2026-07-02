@@ -8,10 +8,10 @@ Run the same component drivers in a real browser via Playwright. Provides a `Pla
 
 Barrel: [playwright/src/index.ts](../../packages/playwright/src/index.ts).
 
-| Export | Kind | File |
-| --- | --- | --- |
-| `PlaywrightInteractor` | class (`implements Interactor`) | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts) |
-| `createTestEngine(page, parts)` | function | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14) |
+| Export                          | Kind                            | File                                                                             |
+| ------------------------------- | ------------------------------- | -------------------------------------------------------------------------------- |
+| `PlaywrightInteractor`          | class (`implements Interactor`) | [PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts) |
+| `createTestEngine(page, parts)` | function                        | [createTestEngine.ts](../../packages/playwright/src/createTestEngine.ts#L14)     |
 
 Depends on: `@atomic-testing/core`; `@playwright/test` is a peer ([package.json](../../packages/playwright/package.json)).
 

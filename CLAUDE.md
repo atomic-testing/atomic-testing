@@ -317,19 +317,22 @@ testRunner(testSuite, jestTestAdapter, {
 ```typescript
 // __tests__/MyComponent.e2e.test.ts
 import { testRunner } from '@atomic-testing/internal-test-runner';
-import { getTestRunnerInterface, playWrightTestFrameworkMapper } from '@atomic-testing/internal-test-runner-playwright-adapter';
+import {
+  getTestRunnerInterface,
+  playWrightTestFrameworkMapper,
+} from '@atomic-testing/internal-test-runner-playwright-adapter';
 
 testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 ```
 
 #### Key Packages
 
-| Package | Purpose |
-| --- | --- |
-| `@atomic-testing/internal-test-runner` | `testRunner()`, `useTestEngine()` orchestrator |
-| `@atomic-testing/internal-test-runner-jest-adapter` | Jest adapter (`jestTestAdapter`) |
+| Package                                                   | Purpose                                                                                 |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `@atomic-testing/internal-test-runner`                    | `testRunner()`, `useTestEngine()` orchestrator                                          |
+| `@atomic-testing/internal-test-runner-jest-adapter`       | Jest adapter (`jestTestAdapter`)                                                        |
 | `@atomic-testing/internal-test-runner-playwright-adapter` | Playwright test-runner glue (`getTestRunnerInterface`, `playWrightTestFrameworkMapper`) |
-| `@atomic-testing/playwright` | Browser driver (`PlaywrightInteractor`, `createTestEngine`) |
+| `@atomic-testing/playwright`                              | Browser driver (`PlaywrightInteractor`, `createTestEngine`)                             |
 
 #### Available Assertions
 

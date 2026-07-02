@@ -1,20 +1,24 @@
 export const meta = {
   name: 'atomic-testing-docs-audit',
-  description: 'Audit Atomic Testing Docusaurus docs: market research + 5-dimension evaluation, each finding adversarially verified against source files',
+  description:
+    'Audit Atomic Testing Docusaurus docs: market research + 5-dimension evaluation, each finding adversarially verified against source files',
   phases: [
-    { title: 'Market', detail: 'research how leading testing/docs sites organize content, pitch, present architecture' },
+    {
+      title: 'Market',
+      detail: 'research how leading testing/docs sites organize content, pitch, present architecture',
+    },
     { title: 'Evaluate', detail: 'one agent per audit dimension, grounded in actual files + package source' },
     { title: 'Verify', detail: 'adversarially re-check each finding against the cited file/source' },
     { title: 'Synthesize', detail: 'cross-cutting prioritization' },
   ],
-}
+};
 
 // Repo root the audit reads from. Defaults to the current working directory so the
 // harness is portable across machines; override by passing { repoRoot } as the
 // workflow's args. DOCS/PKGS derive from it.
-const REPO = (typeof args === 'object' && args?.repoRoot) || '.'
-const DOCS = `${REPO}/docs`
-const PKGS = `${REPO}/packages`
+const REPO = (typeof args === 'object' && args?.repoRoot) || '.';
+const DOCS = `${REPO}/docs`;
+const PKGS = `${REPO}/packages`;
 
 const FILE_INVENTORY = `
 Hand-authored narrative docs (under ${DOCS}/docs):
@@ -33,7 +37,7 @@ Source packages (ground truth for accuracy): ${PKGS}/core, ${PKGS}/dom-core, ${P
   ${PKGS}/react-18, ${PKGS}/react-19, ${PKGS}/vue-3, ${PKGS}/playwright, ${PKGS}/component-driver-html,
   ${PKGS}/component-driver-mui-v9, etc.
 Canonical intended architecture is described in ${REPO}/CLAUDE.md (Layer Stack, Interactor Hierarchy, Driver Types).
-`
+`;
 
 const FINDINGS_SCHEMA = {
   type: 'object',
@@ -52,7 +56,10 @@ const FINDINGS_SCHEMA = {
           id: { type: 'string', description: 'short stable id e.g. D1-01' },
           title: { type: 'string' },
           severity: { type: 'string', enum: ['critical', 'high', 'medium', 'low', 'nit'] },
-          category: { type: 'string', enum: ['accuracy', 'clarity', 'completeness', 'structure', 'pitch', 'consistency', 'accessibility'] },
+          category: {
+            type: 'string',
+            enum: ['accuracy', 'clarity', 'completeness', 'structure', 'pitch', 'consistency', 'accessibility'],
+          },
           evidence: { type: 'string', description: 'exact file path + line(s) + short quote proving the issue' },
           why: { type: 'string', description: 'why it matters to a reader/adopter' },
           recommendation: { type: 'string', description: 'concrete, specific fix' },
@@ -63,7 +70,7 @@ const FINDINGS_SCHEMA = {
     },
   },
   required: ['dimension', 'summary', 'grade', 'strengths', 'findings'],
-}
+};
 
 const MARKET_SCHEMA = {
   type: 'object',
@@ -73,12 +80,19 @@ const MARKET_SCHEMA = {
     url: { type: 'string' },
     organization: { type: 'string', description: 'how top-level content is organized (sections, Diataxis adherence)' },
     homepagePitch: { type: 'string', description: 'the elevator pitch / how the landing page sells it' },
-    architecturePresentation: { type: 'string', description: 'how they teach core concepts / architecture, diagrams used' },
+    architecturePresentation: {
+      type: 'string',
+      description: 'how they teach core concepts / architecture, diagrams used',
+    },
     tutorialApproach: { type: 'string', description: 'how they get a newcomer to a first passing test' },
-    takeaways: { type: 'array', items: { type: 'string' }, description: 'specific, transferable lessons for Atomic Testing docs' },
+    takeaways: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'specific, transferable lessons for Atomic Testing docs',
+    },
   },
   required: ['target', 'organization', 'homepagePitch', 'architecturePresentation', 'tutorialApproach', 'takeaways'],
-}
+};
 
 const VERDICT_SCHEMA = {
   type: 'object',
@@ -87,40 +101,62 @@ const VERDICT_SCHEMA = {
     findingId: { type: 'string' },
     verdict: { type: 'string', enum: ['confirmed', 'partially-confirmed', 'refuted', 'unverifiable'] },
     adjustedSeverity: { type: 'string', enum: ['critical', 'high', 'medium', 'low', 'nit'] },
-    correctedEvidence: { type: 'string', description: 'what the file actually says (quote), or "" if evidence stands as-is' },
+    correctedEvidence: {
+      type: 'string',
+      description: 'what the file actually says (quote), or "" if evidence stands as-is',
+    },
     note: { type: 'string', description: 'why confirmed/refuted; flag any overstatement' },
   },
   required: ['findingId', 'verdict', 'note'],
-}
+};
 
 // ---------- Phase 1: Market research ----------
 const MARKET_TARGETS = [
-  { key: 'testing-library', prompt: `Research the Testing Library docs (testing-library.com — Guiding Principles, intro, React Testing Library docs). It is the closest philosophical sibling/foil to Atomic Testing (Atomic Testing has a page "atomic-testing-vs-rtl"). Focus on: how they articulate their guiding philosophy ("test like a user", avoid implementation details) as a PITCH, how the docs are organized, and how they onboard a newcomer to a first test.` },
-  { key: 'playwright', prompt: `Research the Playwright docs (playwright.dev): the "Why Playwright"/intro, Getting Started, "Writing tests", the Page Object Model guide, and how Core Concepts/architecture are presented. Note their information architecture (Docs vs API split), use of diagrams, and the first-test onboarding flow.` },
-  { key: 'cypress', prompt: `Research Cypress docs (docs.cypress.io): "Why Cypress", the Component Testing section, and "Writing Your First Test". Note how they pitch, how they organize end-to-end vs component testing, and how they teach core concepts.` },
-  { key: 'storybook', prompt: `Research Storybook docs (storybook.js.org/docs) and component-driven.org. Storybook centers a "component-driven" methodology (atoms->molecules->organisms, which Atomic Testing's homepage echoes). Note how they present that methodology, interaction/play-function testing, the "Why Storybook" pitch, and doc organization.` },
-  { key: 'diataxis-docusaurus', prompt: `Research the Diataxis documentation framework (diataxis.fr) — the canonical model splitting docs into Tutorials, How-to guides, Reference, and Explanation. Also note Docusaurus's own recommended docs structure. Explain the model precisely and how a developer-tool library should map its content onto it. "homepagePitch" can describe how Diataxis says to think about audience/intent.` },
-  { key: 'pom-and-arch-diagrams', prompt: `Research how libraries that use a Driver/Adapter/Page-Object architecture present that architecture with DIAGRAMS and concept pages. Look at: Playwright's Page Object Model page, Martin Fowler's PageObject article (martinfowler.com), WebdriverIO PageObjects, and any exemplary layered-architecture concept docs you can find. Atomic Testing's component-driver pattern IS a page-object-for-components. Focus "architecturePresentation" on what makes a layered-architecture diagram clear and where these do it well or poorly. tutorialApproach/homepagePitch can be brief.` },
-]
+  {
+    key: 'testing-library',
+    prompt: `Research the Testing Library docs (testing-library.com — Guiding Principles, intro, React Testing Library docs). It is the closest philosophical sibling/foil to Atomic Testing (Atomic Testing has a page "atomic-testing-vs-rtl"). Focus on: how they articulate their guiding philosophy ("test like a user", avoid implementation details) as a PITCH, how the docs are organized, and how they onboard a newcomer to a first test.`,
+  },
+  {
+    key: 'playwright',
+    prompt: `Research the Playwright docs (playwright.dev): the "Why Playwright"/intro, Getting Started, "Writing tests", the Page Object Model guide, and how Core Concepts/architecture are presented. Note their information architecture (Docs vs API split), use of diagrams, and the first-test onboarding flow.`,
+  },
+  {
+    key: 'cypress',
+    prompt: `Research Cypress docs (docs.cypress.io): "Why Cypress", the Component Testing section, and "Writing Your First Test". Note how they pitch, how they organize end-to-end vs component testing, and how they teach core concepts.`,
+  },
+  {
+    key: 'storybook',
+    prompt: `Research Storybook docs (storybook.js.org/docs) and component-driven.org. Storybook centers a "component-driven" methodology (atoms->molecules->organisms, which Atomic Testing's homepage echoes). Note how they present that methodology, interaction/play-function testing, the "Why Storybook" pitch, and doc organization.`,
+  },
+  {
+    key: 'diataxis-docusaurus',
+    prompt: `Research the Diataxis documentation framework (diataxis.fr) — the canonical model splitting docs into Tutorials, How-to guides, Reference, and Explanation. Also note Docusaurus's own recommended docs structure. Explain the model precisely and how a developer-tool library should map its content onto it. "homepagePitch" can describe how Diataxis says to think about audience/intent.`,
+  },
+  {
+    key: 'pom-and-arch-diagrams',
+    prompt: `Research how libraries that use a Driver/Adapter/Page-Object architecture present that architecture with DIAGRAMS and concept pages. Look at: Playwright's Page Object Model page, Martin Fowler's PageObject article (martinfowler.com), WebdriverIO PageObjects, and any exemplary layered-architecture concept docs you can find. Atomic Testing's component-driver pattern IS a page-object-for-components. Focus "architecturePresentation" on what makes a layered-architecture diagram clear and where these do it well or poorly. tutorialApproach/homepagePitch can be brief.`,
+  },
+];
 
-phase('Market')
+phase('Market');
 const market = await parallel(
-  MARKET_TARGETS.map((t, i) => () =>
-    agent(
-      `You are auditing the documentation market to extract transferable lessons for the "Atomic Testing" library — a portable UI testing library using the "component driver" pattern (compose tiny reusable component drivers into test "scenes" that run identically across React, Vue, Playwright, and the DOM). Its core nouns are: Driver (semantic API like .click()/.getText()), Interactor (environment adapter), ScenePart (declares which components a test cares about), Locator (finds elements), TestEngine (orchestrator).
+  MARKET_TARGETS.map(
+    (t, i) => () =>
+      agent(
+        `You are auditing the documentation market to extract transferable lessons for the "Atomic Testing" library — a portable UI testing library using the "component driver" pattern (compose tiny reusable component drivers into test "scenes" that run identically across React, Vue, Playwright, and the DOM). Its core nouns are: Driver (semantic API like .click()/.getText()), Interactor (environment adapter), ScenePart (declares which components a test cares about), Locator (finds elements), TestEngine (orchestrator).
 
 TASK: ${t.prompt}
 
 Use WebSearch and WebFetch. Cite concrete URLs. Be specific and concrete — name actual page titles, section structures, and phrasings. Then give transferable, actionable takeaways for Atomic Testing's docs. Return the structured object.`,
-      { label: `market:${t.key}`, phase: 'Market', schema: MARKET_SCHEMA, effort: 'medium' },
-    ),
-  ),
-)
+        { label: `market:${t.key}`, phase: 'Market', schema: MARKET_SCHEMA, effort: 'medium' }
+      )
+  )
+);
 
 // ---------- Phase 2+3: Dimension evaluation, each pipelined into adversarial verification ----------
 const GROUND = `You are a senior docs reviewer + staff engineer auditing the Atomic Testing documentation in this repo. ALWAYS read the actual files before judging — do not assume. Cite exact file paths and line numbers with short quotes as evidence. Prefer fewer, substantive findings (aim 6-12) over nitpicks; include a "nit" only if genuinely worth fixing. For each finding give a concrete, specific recommendation. Be skeptical and precise.
 
-${FILE_INVENTORY}`
+${FILE_INVENTORY}`;
 
 const DIMENSIONS = [
   {
@@ -193,32 +229,33 @@ Steps:
 3. Also check prose technical claims (e.g. "wraps in act()", "calls nextTick()") against react-core / vue-3 source.
 Report each mismatch as a finding with category 'accuracy', exact evidence (doc file:line quote + the contradicting source file:line). This is the dimension where confidence and exact citations matter most.`,
   },
-]
+];
 
-phase('Evaluate')
+phase('Evaluate');
 const evaluated = await pipeline(
   DIMENSIONS,
   d => agent(d.prompt, { label: `eval:${d.key}`, phase: 'Evaluate', schema: FINDINGS_SCHEMA, effort: 'high' }),
   (res, d) => {
-    if (!res || !res.findings || res.findings.length === 0) return res
+    if (!res || !res.findings || res.findings.length === 0) return res;
     return parallel(
-      res.findings.map(f => () =>
-        agent(
-          `Adversarially verify a single documentation-audit finding by re-reading the ACTUAL files. Do not trust the finding — try to refute it. If it overstates severity or misquotes, say so and correct it. If the cited file/line does not support the claim, mark refuted. If the underlying code contradicts the claim, mark refuted.
+      res.findings.map(
+        f => () =>
+          agent(
+            `Adversarially verify a single documentation-audit finding by re-reading the ACTUAL files. Do not trust the finding — try to refute it. If it overstates severity or misquotes, say so and correct it. If the cited file/line does not support the claim, mark refuted. If the underlying code contradicts the claim, mark refuted.
 
 FINDING (dimension ${d.key}):
 ${JSON.stringify(f, null, 2)}
 
 Re-read the cited evidence path(s) under ${REPO} and any source package needed to confirm/deny. Return the verdict object. Set verdict='confirmed' only if the evidence genuinely supports the finding as stated; 'partially-confirmed' if the core point holds but it is overstated or the evidence is imprecise (give correctedEvidence); 'refuted' if wrong; 'unverifiable' only if the file truly cannot be checked.`,
-          { label: `verify:${d.key}:${f.id}`, phase: 'Verify', schema: VERDICT_SCHEMA, effort: 'medium' },
-        ).then(v => ({ ...f, verdict: v })),
-      ),
-    ).then(verified => ({ ...res, findings: verified.filter(Boolean) }))
-  },
-)
+            { label: `verify:${d.key}:${f.id}`, phase: 'Verify', schema: VERDICT_SCHEMA, effort: 'medium' }
+          ).then(v => ({ ...f, verdict: v }))
+      )
+    ).then(verified => ({ ...res, findings: verified.filter(Boolean) }));
+  }
+);
 
 // ---------- Phase 4: Synthesis ----------
-phase('Synthesize')
+phase('Synthesize');
 const dimsForSynth = evaluated.filter(Boolean).map(d => ({
   dimension: d.dimension,
   grade: d.grade,
@@ -227,14 +264,16 @@ const dimsForSynth = evaluated.filter(Boolean).map(d => ({
   findings: (d.findings || [])
     .filter(f => !f.verdict || f.verdict.verdict !== 'refuted')
     .map(f => ({
-      id: f.id, title: f.title,
+      id: f.id,
+      title: f.title,
       severity: (f.verdict && f.verdict.adjustedSeverity) || f.severity,
       category: f.category,
       verdict: f.verdict && f.verdict.verdict,
       evidence: (f.verdict && f.verdict.correctedEvidence) || f.evidence,
-      why: f.why, recommendation: f.recommendation,
+      why: f.why,
+      recommendation: f.recommendation,
     })),
-}))
+}));
 
 const synthesis = await agent(
   `You are the lead reviewer synthesizing a documentation audit of the Atomic Testing library docs. Below is (A) market research on leading docs sites and (B) per-dimension findings that have each already been adversarially verified (refuted ones removed).
@@ -251,11 +290,11 @@ ${JSON.stringify(market.filter(Boolean), null, 2)}
 
 (B) VERIFIED DIMENSION FINDINGS:
 ${JSON.stringify(dimsForSynth, null, 2)}`,
-  { label: 'synthesize', phase: 'Synthesize', effort: 'high' },
-)
+  { label: 'synthesize', phase: 'Synthesize', effort: 'high' }
+);
 
 return {
   market: market.filter(Boolean),
   dimensions: evaluated.filter(Boolean),
   synthesis,
-}
+};

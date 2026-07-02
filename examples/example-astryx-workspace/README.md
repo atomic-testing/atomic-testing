@@ -51,21 +51,21 @@ and the E2E spec ([`e2e/workspace.spec.ts`](e2e/workspace.spec.ts)) import the *
 [`workspaceParts`](src/testing/workspaceParts.ts) scene and the **same** composed drivers. The only
 difference is how the engine is built:
 
-| | Engine construction |
-| --- | --- |
+|                     | Engine construction                                                           |
+| ------------------- | ----------------------------------------------------------------------------- |
 | DOM (Vitest, jsdom) | `createTestEngine(<App />, workspaceParts)` — from `@atomic-testing/react-19` |
-| E2E (Playwright) | `createTestEngine(page, workspaceParts)` — from `@atomic-testing/playwright` |
+| E2E (Playwright)    | `createTestEngine(page, workspaceParts)` — from `@atomic-testing/playwright`  |
 
 ## Commands
 
-| Command | Description |
-| --- | --- |
-| `pnpm install` | Install deps (standalone — this package has its own lockfile and is outside the repo's pnpm workspace) |
-| `pnpm dev` | Run the app at <http://localhost:8088> (a dedicated port, distinct from every other app in the repo; override with `PORT`) |
-| `pnpm test:dom` | Vitest (jsdom) — `src/**/__tests__/*.test.tsx` |
-| `pnpm test:e2e:chrome` | Playwright on Chromium (fast iteration; the Vite server auto-starts) |
-| `pnpm test:e2e` | Playwright on Chromium, Firefox, and WebKit |
-| `pnpm check:type` | `tsc --noEmit` |
+| Command                | Description                                                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm install`         | Install deps (standalone — this package has its own lockfile and is outside the repo's pnpm workspace)                     |
+| `pnpm dev`             | Run the app at <http://localhost:8088> (a dedicated port, distinct from every other app in the repo; override with `PORT`) |
+| `pnpm test:dom`        | Vitest (jsdom) — `src/**/__tests__/*.test.tsx`                                                                             |
+| `pnpm test:e2e:chrome` | Playwright on Chromium (fast iteration; the Vite server auto-starts)                                                       |
+| `pnpm test:e2e`        | Playwright on Chromium, Firefox, and WebKit                                                                                |
+| `pnpm check:type`      | `tsc --noEmit`                                                                                                             |
 
 ## Stack
 

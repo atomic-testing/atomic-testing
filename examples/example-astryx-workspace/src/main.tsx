@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
+
 import './index.css';
 
 // The Theme provider lives at the browser app shell. The jsdom suite renders <App />
@@ -14,5 +15,5 @@ createRoot(document.getElementById('root')!).render(
     <Theme theme={neutralTheme}>
       <App />
     </Theme>
-  </StrictMode>,
+  </StrictMode>
 );

@@ -63,6 +63,6 @@ export function settingsEqual(a: SettingsModel, b: SettingsModel): boolean {
     a.model === b.model &&
     a.renewal === b.renewal &&
     a.channels.length === b.channels.length &&
-    a.channels.every((c) => b.channels.includes(c))
+    a.channels.every(c => b.channels.includes(c))
   );
 }
