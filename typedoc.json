@@ -4,6 +4,7 @@
     "packages/core",
     "packages/dom-core",
     "packages/playwright",
+    "packages/storybook",
     "packages/react-core",
     "packages/react-legacy",
     "packages/react-18",
