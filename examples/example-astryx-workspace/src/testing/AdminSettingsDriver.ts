@@ -49,7 +49,10 @@ export interface AdminSettingsSnapshot {
 const parts = {
   tabs: { locator: byDataTestId(T.tabs), driver: TabListDriver },
   orgInput: { locator: byDataTestId(T.orgInput), driver: TextInputDriver },
-  plan: { locator: locatorUtil.append(byRole('radiogroup'), byAriaLabel(PLAN_LABEL, 'Same')), driver: SegmentedControlDriver },
+  plan: {
+    locator: locatorUtil.append(byRole('radiogroup'), byAriaLabel(PLAN_LABEL, 'Same')),
+    driver: SegmentedControlDriver,
+  },
   channels: { locator: byDataTestId(T.channels), driver: CheckboxListDriver },
   density: { locator: byDataTestId(T.density), driver: RadioListDriver },
   beta: { locator: locatorUtil.append(byDataTestId(T.betaField), byRole('switch')), driver: SwitchDriver },

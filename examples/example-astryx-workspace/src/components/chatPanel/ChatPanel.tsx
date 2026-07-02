@@ -49,7 +49,10 @@ export function ChatPanel() {
           emptyState={<div data-testid={ChatPanelDataTestId.listEmptyState}>No messages yet — say hello 👋</div>}>
           {messages.length > 0 && <ChatSystemMessage variant='divider'>Today</ChatSystemMessage>}
           {messages.map((message, index) => (
-            <ChatMessage key={message.id} sender={message.sender} name={message.sender === 'user' ? 'You' : 'Assistant'}>
+            <ChatMessage
+              key={message.id}
+              sender={message.sender}
+              name={message.sender === 'user' ? 'You' : 'Assistant'}>
               <ChatMessageBubble>{message.text}</ChatMessageBubble>
               {message.toolCalls != null && (
                 <ChatToolCalls

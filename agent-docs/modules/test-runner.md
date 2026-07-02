@@ -2,13 +2,13 @@
 
 Covers the suite-orchestration layer that makes one test suite run in Jest, Vitest, and Playwright, plus the demo app used by suites/docs:
 
-| Package | Provides |
-| --- | --- |
-| `@atomic-testing/internal-test-runner` | `testRunner`, `useTestEngine`, `TestFrameworkMapper`, `TestSuiteInfo`, interface types |
-| `@atomic-testing/internal-test-runner-jest-adapter` | `jestTestAdapter` |
-| `@atomic-testing/internal-test-runner-vitest-adapter` | `vitestAdapter` |
+| Package                                                   | Provides                                                                                     |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `@atomic-testing/internal-test-runner`                    | `testRunner`, `useTestEngine`, `TestFrameworkMapper`, `TestSuiteInfo`, interface types       |
+| `@atomic-testing/internal-test-runner-jest-adapter`       | `jestTestAdapter`                                                                            |
+| `@atomic-testing/internal-test-runner-vitest-adapter`     | `vitestAdapter`                                                                              |
 | `@atomic-testing/internal-test-runner-playwright-adapter` | `playWrightTestFrameworkMapper`, `getTestRunnerInterface`, `goto`, `playwrightGetTestEngine` |
-| `@atomic-testing/internal-react-example` | `ExampleApp`, `ExampleList` — demo harness |
+| `@atomic-testing/internal-react-example`                  | `ExampleApp`, `ExampleList` — demo harness                                                   |
 
 > `internal-*` packages are workspace-private (`private: true`) dev tooling, not published consumer API. The Playwright glue lives in `@atomic-testing/internal-test-runner-playwright-adapter`, which depends on `@atomic-testing/playwright` (the published browser driver) — keeping `@atomic-testing/playwright` itself free of any internal/experimental dependency. See [modules/playwright.md](playwright.md) and [ADR-006](../adr/006-1.0-api-freeze-and-evolution.md).
 
@@ -56,11 +56,11 @@ Barrel: [internal-test-runner/src/index.ts](../../packages/internal-test-runner/
 
 ### Adapters
 
-| Adapter | Backs assertions/lifecycle with | `@ts` notes |
-| --- | --- | --- |
-| `jestTestAdapter` | `@jest/globals` `expect`/`describe`/`test`/hooks | `@ts-ignore` on `describe`/`test`/`it` (signature mismatch) ([jest-adapter/index.ts](../../packages/internal-test-runner-jest-adapter/src/index.ts)) |
-| `vitestAdapter` | `vitest` `expect`/`describe`/`test`/hooks | none needed — Vitest 4 aligns ([vitest-adapter/index.ts](../../packages/internal-test-runner-vitest-adapter/src/index.ts)) |
-| `playWrightTestFrameworkMapper` | `@playwright/test` | `@ts-expect-error` (fixture-callback mismatch); in `internal-test-runner-playwright-adapter` ([playwright-adapter/index.ts](../../packages/internal-test-runner-playwright-adapter/src/index.ts)) |
+| Adapter                         | Backs assertions/lifecycle with                  | `@ts` notes                                                                                                                                                                                       |
+| ------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `jestTestAdapter`               | `@jest/globals` `expect`/`describe`/`test`/hooks | `@ts-ignore` on `describe`/`test`/`it` (signature mismatch) ([jest-adapter/index.ts](../../packages/internal-test-runner-jest-adapter/src/index.ts))                                              |
+| `vitestAdapter`                 | `vitest` `expect`/`describe`/`test`/hooks        | none needed — Vitest 4 aligns ([vitest-adapter/index.ts](../../packages/internal-test-runner-vitest-adapter/src/index.ts))                                                                        |
+| `playWrightTestFrameworkMapper` | `@playwright/test`                               | `@ts-expect-error` (fixture-callback mismatch); in `internal-test-runner-playwright-adapter` ([playwright-adapter/index.ts](../../packages/internal-test-runner-playwright-adapter/src/index.ts)) |
 
 ### Playwright adapter glue (`internal-test-runner-playwright-adapter`)
 
@@ -69,12 +69,12 @@ published `@atomic-testing/playwright` driver depends only on stable packages.
 It re-uses `@atomic-testing/playwright`'s `createTestEngine` to bind a scene to
 the Playwright `Page`:
 
-| Export | Kind | File |
-| --- | --- | --- |
-| `playWrightTestFrameworkMapper` | `TestFrameworkMapper` | [playwright-adapter/index.ts#L41](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L41) |
-| `getTestRunnerInterface<T>()` | function → `E2eTestInterface<T>` | [playwright-adapter/index.ts#L74](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L74) |
-| `goto(url, fixture?)` | function | [playwright-adapter/index.ts#L17](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L17) |
-| `playwrightGetTestEngine(scenePart, fixture)` | function | [playwright-adapter/index.ts#L30](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L30) |
+| Export                                        | Kind                             | File                                                                                                       |
+| --------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `playWrightTestFrameworkMapper`               | `TestFrameworkMapper`            | [playwright-adapter/index.ts#L41](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L41) |
+| `getTestRunnerInterface<T>()`                 | function → `E2eTestInterface<T>` | [playwright-adapter/index.ts#L74](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L74) |
+| `goto(url, fixture?)`                         | function                         | [playwright-adapter/index.ts#L17](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L17) |
+| `playwrightGetTestEngine(scenePart, fixture)` | function                         | [playwright-adapter/index.ts#L30](../../packages/internal-test-runner-playwright-adapter/src/index.ts#L30) |
 
 All three implement `assertApproxEqual` as `expect(Math.abs(actual-expected)).toBeLessThanOrEqual(tolerance)`.
 

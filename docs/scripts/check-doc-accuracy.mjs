@@ -37,7 +37,13 @@ const exportCache = new Map();
 
 function resolveModule(fromFile, spec) {
   const base = path.resolve(path.dirname(fromFile), spec);
-  for (const candidate of [base, `${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts'), path.join(base, 'index.tsx')]) {
+  for (const candidate of [
+    base,
+    `${base}.ts`,
+    `${base}.tsx`,
+    path.join(base, 'index.ts'),
+    path.join(base, 'index.tsx'),
+  ]) {
     if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) return candidate;
   }
   return null;
@@ -49,7 +55,12 @@ function parseBraceList(raw) {
     .split(',')
     .map(s => s.trim())
     .filter(Boolean)
-    .map(s => s.replace(/^type\s+/, '').split(/\s+as\s+/)[0].trim())
+    .map(s =>
+      s
+        .replace(/^type\s+/, '')
+        .split(/\s+as\s+/)[0]
+        .trim()
+    )
     .filter(Boolean);
 }
 
@@ -75,7 +86,7 @@ function collectExports(file, seen = new Set()) {
   }
   // export (declare)? (abstract)? class|const|let|var|function|function*|interface|type|enum|namespace NAME
   for (const m of src.matchAll(
-    /export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|let|var|function\*?|interface|type|enum|namespace)\s+([A-Za-z0-9_$]+)/g,
+    /export\s+(?:declare\s+)?(?:abstract\s+)?(?:class|const|let|var|function\*?|interface|type|enum|namespace)\s+([A-Za-z0-9_$]+)/g
   )) {
     names.add(m[1]);
   }

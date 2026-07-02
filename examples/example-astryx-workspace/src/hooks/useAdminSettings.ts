@@ -30,7 +30,7 @@ export function useAdminSettings(): AdminSettingsController {
       draft,
       dirty: !settingsEqual(draft, saved),
       savedToast,
-      update: (patch) => setDraft((current) => ({ ...current, ...patch })),
+      update: patch => setDraft(current => ({ ...current, ...patch })),
       save: () => {
         setSaved(draft);
         setSavedToast(true);
@@ -38,6 +38,6 @@ export function useAdminSettings(): AdminSettingsController {
       dismissToast: () => setSavedToast(false),
       reset: () => setDraft(saved),
     }),
-    [draft, saved, savedToast],
+    [draft, saved, savedToast]
   );
 }
