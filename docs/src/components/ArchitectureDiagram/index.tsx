@@ -1,6 +1,6 @@
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
-import React, { type JSX, type KeyboardEvent, useCallback, useMemo, useState } from 'react';
+import React, { type JSX, type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styles from './styles.module.css';
 
@@ -38,6 +38,7 @@ type DiagramEdge = {
   id: string;
   from: string;
   to: string;
+  /** Empty string omits the label entirely — see e-dom-target below. */
   label: string;
 };
 
@@ -233,7 +234,13 @@ const EDGES: readonly DiagramEdge[] = [
   { id: 'e-interactor-pw', from: 'interactor', to: 'playwrightInteractor', label: 'implemented by' },
   { id: 'e-dom-react', from: 'domInteractor', to: 'reactInteractor', label: 'extended by' },
   { id: 'e-dom-vue', from: 'domInteractor', to: 'vueInteractor', label: 'extended by' },
-  { id: 'e-dom-target', from: 'domInteractor', to: 'domTarget', label: 'resolves against' },
+  // No label: this straight vertical run passes directly through the
+  // ReactInteractor/VueInteractor row and the target they converge on, so
+  // any position along it collides with either that row's own labels or
+  // the react-target/vue-target edges' labels converging on the same node.
+  // The arrow alone still shows the relationship; "resolves against" is
+  // already spelled out by the two sibling edges landing on domTarget.
+  { id: 'e-dom-target', from: 'domInteractor', to: 'domTarget', label: '' },
   { id: 'e-react-target', from: 'reactInteractor', to: 'domTarget', label: 'resolves against' },
   { id: 'e-vue-target', from: 'vueInteractor', to: 'domTarget', label: 'resolves against' },
   { id: 'e-pw-target', from: 'playwrightInteractor', to: 'browserTarget', label: 'resolves against' },
@@ -375,6 +382,43 @@ function resolveActiveContent(activeId: string | null): PanelContent | null {
   };
 }
 
+// Below this scale, node/edge labels (10-14px at natural size) stop being
+// comfortably legible. Docusaurus's sidebar + right TOC can leave the real
+// content column well under half of VIEW_WIDTH even on ordinary desktop
+// viewports, so unclamped fit-to-width alone would shrink text past reading
+// size on much more than an edge-case narrow screen.
+const MIN_SCALE = 0.78;
+
+/**
+ * Scales the fixed-coordinate diagram down to fit its container's actual
+ * width, instead of relying on a viewport-width media query — Docusaurus's
+ * sidebar + right TOC already eat into the real content column, so the
+ * article can be far narrower than the browser viewport suggests. Never
+ * scales up past 1 (no benefit past the diagram's natural size) or down past
+ * MIN_SCALE (below that, `overflow-x: auto` on the container takes over —
+ * legible-but-scrollable beats fully shrunk-to-fit but unreadable).
+ */
+function useScaleToFit(naturalWidth: number): [React.RefObject<HTMLDivElement>, number, boolean] {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return undefined;
+
+    const observer = new ResizeObserver(entries => {
+      const width = entries[0]?.contentRect.width;
+      if (!width) return;
+      setScale(Math.max(MIN_SCALE, Math.min(1, width / naturalWidth)));
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [naturalWidth]);
+
+  const isOverflowing = scale === MIN_SCALE;
+  return [containerRef, scale, isOverflowing];
+}
+
 /** Hover, keyboard focus, and click-to-pin all drive the same highlight state. */
 function useHighlightState() {
   const [pinnedId, setPinnedId] = useState<string | null>(null);
@@ -441,12 +485,14 @@ function DiagramEdgeLine({ edge, isActive, isDimmed }: { edge: DiagramEdge; isAc
   return (
     <g className={clsx(styles.edge, isActive && styles.edgeActive, isDimmed && styles.edgeDimmed)}>
       <line x1={x1} y1={y1} x2={x2} y2={y2} markerEnd={isActive ? 'url(#at-arrow-active)' : 'url(#at-arrow-muted)'} />
-      <g transform={`translate(${midX - labelWidth / 2}, ${midY - 10})`}>
-        <rect width={labelWidth} height={20} rx={10} className={styles.edgeLabelBg} />
-        <text x={labelWidth / 2} y={14} textAnchor='middle' className={styles.edgeLabelText}>
-          {edge.label}
-        </text>
-      </g>
+      {edge.label ? (
+        <g transform={`translate(${midX - labelWidth / 2}, ${midY - 10})`}>
+          <rect width={labelWidth} height={20} rx={10} className={styles.edgeLabelBg} />
+          <text x={labelWidth / 2} y={14} textAnchor='middle' className={styles.edgeLabelText}>
+            {edge.label}
+          </text>
+        </g>
+      ) : null}
     </g>
   );
 }
@@ -455,6 +501,7 @@ export default function ArchitectureDiagram(): JSX.Element {
   const { activeId, preview, endPreview, togglePin, clear } = useHighlightState();
   const highlight = useMemo(() => computeHighlight(activeId), [activeId]);
   const content = resolveActiveContent(activeId);
+  const [scrollRef, scale, isOverflowing] = useScaleToFit(VIEW_WIDTH);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -486,11 +533,14 @@ export default function ArchitectureDiagram(): JSX.Element {
             Clear
           </button>
         ) : null}
+        {isOverflowing ? <span className={styles.scrollHint}>↔ scroll to see the full diagram</span> : null}
       </div>
 
       <div className={styles.stage}>
-        <div className={styles.diagramScroll}>
-          <div className={styles.diagramPane} style={{ width: VIEW_WIDTH, height: VIEW_HEIGHT }}>
+        <div ref={scrollRef} className={styles.diagramScroll} style={{ height: VIEW_HEIGHT * scale }}>
+          <div
+            className={styles.diagramPane}
+            style={{ width: VIEW_WIDTH, height: VIEW_HEIGHT, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
             <svg
               className={styles.edgesLayer}
               viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}

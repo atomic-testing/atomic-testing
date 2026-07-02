@@ -83,6 +83,17 @@
   border-color: var(--at-text-faint);
 }
 
+.scrollHint {
+  font-family: var(--at-font-mono);
+  font-size: 11px;
+  color: var(--at-text-faint);
+  margin-left: auto;
+}
+
+.clearButton + .scrollHint {
+  margin-left: 8px;
+}
+
 /* ---------------- stage: diagram + side panel ---------------- */
 .stage {
   display: grid;
@@ -92,7 +103,14 @@
 }
 
 .diagramScroll {
+  /* The diagram pane is scaled to fit via a CSS transform (its layout box
+     stays at its natural size — transforms don't affect flow), so this
+     container's height is set inline to the scaled height and vertical
+     overflow is clipped. Below MIN_SCALE the scaled pane can still be wider
+     than the container (a floor on how small the text is allowed to get) —
+     overflow-x stays scrollable for that case. */
   overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 14px;
   background: var(--at-bg-alt);
 }
