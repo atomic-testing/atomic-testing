@@ -627,6 +627,7 @@ export interface WaitUntilOption<T> {
     debug?: boolean;
     probeCount?: number;
     probeFn: () => Promise<T> | T;
+    probeIntervals?: readonly number[];
     terminateCondition: T | ((currentValue: T) => boolean);
     timeoutMs: number;
 }
