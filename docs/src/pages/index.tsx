@@ -170,7 +170,7 @@ function OrbitVisual(): JSX.Element {
       </div>
 
       <span className={clsx(styles.chip, styles.chipBlue, styles.chipTopLeft)}>byDataTestId()</span>
-      <span className={clsx(styles.chip, styles.chipTeal, styles.chipTopRight)}>MUIV8ButtonDriver</span>
+      <span className={clsx(styles.chip, styles.chipTeal, styles.chipTopRight)}>HTMLButtonDriver</span>
       <span className={clsx(styles.chip, styles.chipInk, styles.chipBottomLeft)}>engine.parts</span>
     </div>
   );
@@ -239,7 +239,7 @@ function HeroSection(): JSX.Element {
       <div className={styles.heroInner}>
         <div className={styles.heroCopy}>
           <div className={styles.badge}>
-            <span className={styles.badgeChip}>v3 · stable</span>
+            <span className={styles.badgeChip}>Pre-1.0</span>
             Portable UI testing for React · Vue · Playwright
           </div>
 
@@ -265,6 +265,10 @@ function HeroSection(): JSX.Element {
           </div>
 
           <InstallBox />
+
+          <Link className={styles.heroWhyLink} to='/docs/why-atomic-testing'>
+            Why Atomic Testing — and when NOT to use it →
+          </Link>
         </div>
 
         <div className={styles.heroVisual}>
@@ -352,7 +356,7 @@ const composeSteps: ComposeStep[] = [
   {
     eyebrow: 'Driver',
     eyebrowColor: '#38bdf8',
-    code: 'MUIV8ButtonDriver',
+    code: 'HTMLButtonDriver',
     text: (
       <>
         Semantic API — <span className={styles.bandHint}>.click()</span>,{' '}
@@ -472,6 +476,30 @@ function HowItWorksSection(): JSX.Element {
   );
 }
 
+function TradeoffsSection(): JSX.Element {
+  return (
+    <section className={styles.tradeoffs}>
+      <div className={styles.tradeoffsInner}>
+        <div className={clsx(styles.eyebrow, styles.eyebrowBlue)}>Is it for you?</div>
+        <h2 className={styles.tradeoffsTitle}>Honest tradeoffs</h2>
+        <p className={styles.tradeoffsSubtitle}>
+          Atomic Testing adds a driver layer on top of RTL, Vue Test Utils and Playwright — that&apos;s a learning curve
+          and a dependency, not a free lunch. It&apos;s a poor fit for a single throwaway component, a prototype
+          you&apos;ll never maintain, or a team unwilling to invest in the pattern up front.
+        </p>
+        <div className={styles.tradeoffsLinks}>
+          <Link className={styles.tradeoffsLink} to='/docs/why-atomic-testing'>
+            When NOT to use Atomic Testing →
+          </Link>
+          <Link className={styles.tradeoffsLink} to='/docs/advanced-concepts/atomic-testing-vs-rtl'>
+            How it compares to React Testing Library →
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCtaSection(): JSX.Element {
   return (
     <section className={styles.ctaSection}>
@@ -506,6 +534,7 @@ export default function Home(): JSX.Element {
         <ComposableSection />
         <HomepageFeatures />
         <HowItWorksSection />
+        <TradeoffsSection />
         <FinalCtaSection />
       </main>
     </Layout>

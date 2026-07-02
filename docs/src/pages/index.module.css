@@ -306,6 +306,21 @@
   color: var(--at-mint);
 }
 
+.heroWhyLink {
+  display: inline-flex;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--at-text-muted);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--at-border);
+}
+.heroWhyLink:hover {
+  color: var(--at-blue);
+  text-decoration: none;
+  border-bottom-color: var(--at-blue);
+}
+
 /* ---------------- hero visual ---------------- */
 .heroVisual {
   position: relative;
@@ -799,6 +814,49 @@
   background: none;
   border: 0;
   padding: 0;
+}
+
+/* ============================ TRADEOFFS ============================ */
+.tradeoffs {
+  border-top: 1px solid var(--at-border);
+  border-bottom: 1px solid var(--at-border);
+  background: var(--at-bg);
+}
+.tradeoffsInner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  text-align: center;
+}
+.tradeoffsTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  margin: 10px 0 0;
+  color: var(--at-text);
+}
+.tradeoffsSubtitle {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--at-text-muted);
+  margin: 16px 0 0;
+}
+.tradeoffsLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 28px;
+  margin-top: 26px;
+}
+.tradeoffsLink {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--at-blue);
+  text-decoration: none;
+}
+.tradeoffsLink:hover {
+  text-decoration: underline;
 }
 
 /* ============================ FINAL CTA ============================ */
