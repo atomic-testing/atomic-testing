@@ -20,6 +20,9 @@ jobs:
       - name: Check doc accuracy (imports match real package exports)
         run: node docs/scripts/check-doc-accuracy.mjs
 
+      - name: Check doc/driver sync (excluded packages are EOL-flagged, not presented as normal options)
+        run: node docs/scripts/check-doc-driver-sync.mjs
+
       - name: Build packages
         run: ./publish.sh --build-only
 

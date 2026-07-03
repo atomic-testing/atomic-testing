@@ -14,6 +14,7 @@ Barrel: [dom-core/src/index.ts](../../packages/dom-core/src/index.ts).
 | `createDomTestEngine(element, parts, _option?)` | function                          | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13)            |
 | `FakeMouseEvent`                                | class                             | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5) |
 | `IDomTestEngineOption`                          | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3)                                         |
+| `DOMInteractorOption`, `UserEventDispatcher`    | types (constructor DI seam)       | [types.ts](../../packages/dom-core/src/types.ts)                                            |
 
 Depends on: `@atomic-testing/core`, `@testing-library/dom`, `@testing-library/user-event`.
 
@@ -30,7 +31,7 @@ Depends on: `@atomic-testing/core`, `@testing-library/dom`, `@testing-library/us
 
 ## How it works
 
-`DOMInteractor` is constructed with a `rootEl` (default `document.documentElement`), held as `protected readonly` so subclasses can re-`clone()` ([DOMInteractor.ts#L33](../../packages/dom-core/src/DOMInteractor.ts#L33)). The private workhorse is `getElement(locator, isMultiple?)`: it calls `locatorUtil.toCssSelector(locator, this)` then `rootEl.querySelector`/`querySelectorAll` ([DOMInteractor.ts#L379-L391](../../packages/dom-core/src/DOMInteractor.ts#L379-L391)).
+`DOMInteractor` is constructed with a `rootEl` (default `document.documentElement`) and an optional `DOMInteractorOption` whose `userEvent` (a structural `UserEventDispatcher`) defaults to the `@testing-library/user-event` singleton — the injection seam `StorybookInteractor` uses to supply Storybook's instrumented `userEvent` ([DOMInteractor.ts#L35-L43](../../packages/dom-core/src/DOMInteractor.ts#L35-L43)). The private workhorse is `getElement(locator, isMultiple?)`: it calls `locatorUtil.toCssSelector(locator, this)` then `rootEl.querySelector`/`querySelectorAll` ([DOMInteractor.ts#L379-L391](../../packages/dom-core/src/DOMInteractor.ts#L379-L391)).
 
 Interaction details worth knowing:
 

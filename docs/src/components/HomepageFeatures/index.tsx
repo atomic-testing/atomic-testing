@@ -57,6 +57,22 @@ function Feature({ icon, iconVariant, title, description }: FeatureItem): JSX.El
   );
 }
 
+const PACKAGE_TESTS_URL = 'https://github.com/atomic-testing/atomic-testing/tree/main/package-tests';
+
+function ProofStrip(): JSX.Element {
+  return (
+    <p className={styles.proof}>
+      <span className={styles.proofBadge}>✓ verifiable</span>
+      Not just a claim: this repo&apos;s own <code className={styles.inlineCode}>*.suite.ts</code> test logic runs
+      unmodified under Jest <em>and</em> across Chromium, Firefox &amp; WebKit via Playwright — see{' '}
+      <a href={PACKAGE_TESTS_URL} target='_blank' rel='noopener noreferrer'>
+        package-tests/
+      </a>{' '}
+      in this monorepo.
+    </p>
+  );
+}
+
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
@@ -69,6 +85,7 @@ export default function HomepageFeatures(): JSX.Element {
             <Feature key={feature.title} {...feature} />
           ))}
         </div>
+        <ProofStrip />
       </div>
     </section>
   );

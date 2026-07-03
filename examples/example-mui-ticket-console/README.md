@@ -5,8 +5,8 @@ A data-dense **support ticket triage console** built on **MUI Material v9 + MUI-
 It is a sibling to [`example-mui-signup-form`](../example-mui-signup-form), and exists to show three things the library is for:
 
 1. **Driver composability** — small shipped drivers compose into page-object drivers (`FilterBarDriver`, `TicketGridDriver`, `TicketEditorDriver`, `TeamNavDriver`), which compose again into one top-level `TicketConsoleDriver`.
-2. **DOM/E2E dedup** — the *same* composed drivers, the *same* `parts` scene, and the *same* scenario flows are imported by both the Vitest DOM tests and the Playwright E2E specs. The only thing that differs is how the `TestEngine` is built.
-3. **Readability** — a test reads like a person triaging tickets: *filter to Open due this week, open the first ticket, reassign it to me, save, expect a success toast.*
+2. **DOM/E2E dedup** — the _same_ composed drivers, the _same_ `parts` scene, and the _same_ scenario flows are imported by both the Vitest DOM tests and the Playwright E2E specs. The only thing that differs is how the `TestEngine` is built.
+3. **Readability** — a test reads like a person triaging tickets: _filter to Open due this week, open the first ticket, reassign it to me, save, expect a success toast._
 
 ## The scenario
 
@@ -38,11 +38,11 @@ All state is client-side. The seed (`src/data`) is a small fixed fixture and the
 
 The DOM test and the E2E spec are thin adapters around shared modules:
 
-| | DOM (`src/__tests__/ticketConsole.test.tsx`) | E2E (`e2e/ticketConsole.spec.ts`) |
-| --- | --- | --- |
+|        | DOM (`src/__tests__/ticketConsole.test.tsx`)                             | E2E (`e2e/ticketConsole.spec.ts`)                                        |
+| ------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
 | Engine | `createTestEngine(<App/>, consoleParts)` from `@atomic-testing/react-19` | `createTestEngine(page, consoleParts)` from `@atomic-testing/playwright` |
-| Scene | `consoleParts` (imported) | `consoleParts` (imported) |
-| Flows | `triageFlow`, `emptyQueueFlow`, … (imported) | the same functions (imported) |
+| Scene  | `consoleParts` (imported)                                                | `consoleParts` (imported)                                                |
+| Flows  | `triageFlow`, `emptyQueueFlow`, … (imported)                             | the same functions (imported)                                            |
 
 Each scenario in [`src/testing/scenarios.ts`](src/testing/scenarios.ts) is written **once** as a flow over `TicketConsoleDriver`. For example:
 
@@ -76,7 +76,7 @@ pnpm check:type         # tsc --noEmit
 
 ### Two driver gaps were filled upstream
 
-This scenario needs to *set* a date picker and *select* a tree item — capabilities the shipped MUI-X v9 drivers did not have. They were added to the monorepo as general, reusable driver methods (not example-local workarounds):
+This scenario needs to _set_ a date picker and _select_ a tree item — capabilities the shipped MUI-X v9 drivers did not have. They were added to the monorepo as general, reusable driver methods (not example-local workarounds):
 
 - `DesktopDatePickerDriver.setValue(date)` / `pickDate('yyyy-mm-dd')` — operates the calendar popup (open → page to the month → click the day), the one write path that behaves identically in jsdom and in real browsers.
 - `SimpleTreeViewDriver.selectItem(itemId)` — clicks the item's content row to select it.

@@ -4,11 +4,22 @@ sidebar_position: 2
 ---
 
 import loginScreenScenePart from '!!raw-loader!./snippets/login-screen-scene-part';
+import ArchitectureDiagram from '@site/src/components/ArchitectureDiagram';
 import CodeBlock from '@theme/CodeBlock';
 
 # Core Concepts
 
 Before using Atomic Testing, familiarize yourself with the following key concepts:
+
+## Architecture at a glance
+
+Every piece below fits into one pipeline: a declarative `ScenePart` is what the
+`TestEngine` is built from, each `ComponentDriver` it creates delegates to an
+`Interactor`, and the `Interactor` you get — `ReactInteractor`, `VueInteractor`
+or `PlaywrightInteractor` — depends on which `createTestEngine` you called.
+Hover, focus, or press any node below to see what it does.
+
+<ArchitectureDiagram />
 
 ## Component Driver
 
@@ -28,6 +39,12 @@ Locators help find components on a page, using various [locator strategies](./ap
 The use of the data-testid attribute is recommended for locating components on a page. Refer to [Best Practices](./best-practices.mdx#4-use-data-testid-for-key-elements) for more details. Use the `byDataTestId(value)` API as the recommended approach for building locators.
 
 :::
+
+By default, a child part's locator is resolved as a descendant of its parent
+driver's element. Dialogs, menus, and other overlays commonly break that
+assumption by rendering outside their trigger's subtree — see
+[Testing portals & overlays](./guides/portal-and-overlays.md) for the recipe
+component drivers use to locate that content anyway.
 
 ## ScenePart
 
@@ -116,3 +133,15 @@ await testEngine.parts.submit.click();
 const error = await testEngine.parts.error.getText();
 expect(error).toEqual('Password is required'); // Jest assertion, but any assertion library can be used
 ```
+
+## Going deeper
+
+Once these core concepts feel familiar, the "🔧 Advanced" section covers the
+next layer of detail:
+
+- [Architecture](./advanced-concepts/architecture.mdx) — how the TestEngine,
+  ComponentDriver, Interactor, and PartLocator layers fit together.
+- [The Interactor](./advanced-concepts/interactor.mdx) — the environment-adapter
+  layer underneath every component driver, and how it differs per framework.
+- [Atomic Testing vs. React Testing Library](./advanced-concepts/atomic-testing-vs-rtl.mdx) —
+  how the component-driver pattern compares to RTL's query-based approach.

@@ -8,35 +8,35 @@ This file is the single source of truth for **what** we measure, **how** we grad
 
 Five criteria, each graded A–F. The first two are launch-blocking because they can carry `critical` findings.
 
-| # | Criterion | What it measures |
-|---|-----------|------------------|
-| 1 | **Technical accuracy & drift** | Every code sample, import, API name, signature, capability table, and version claim matches the real, currently-built packages. |
-| 2 | **Walkthrough / build a unit test** | A newcomer can go install → configure a runner → render → assert → clean up and reach a green test **from the docs alone**. |
-| 3 | **Architecture clarity** | One early, correct, canonical picture maps Driver / Interactor / ScenePart / Locator / TestEngine and where each binds to React / Vue / Playwright / DOM. |
-| 4 | **Homepage / elevator pitch** | The landing page names the problem, makes the unique value credible and provable, and lets a reader imagine the gains. |
-| 5 | **Information architecture & navigation** | Coherent Diátaxis-shaped structure, working links, curated bridge into the generated API, no dead ends. |
+| #   | Criterion                                 | What it measures                                                                                                                                          |
+| --- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Technical accuracy & drift**            | Every code sample, import, API name, signature, capability table, and version claim matches the real, currently-built packages.                           |
+| 2   | **Walkthrough / build a unit test**       | A newcomer can go install → configure a runner → render → assert → clean up and reach a green test **from the docs alone**.                               |
+| 3   | **Architecture clarity**                  | One early, correct, canonical picture maps Driver / Interactor / ScenePart / Locator / TestEngine and where each binds to React / Vue / Playwright / DOM. |
+| 4   | **Homepage / elevator pitch**             | The landing page names the problem, makes the unique value credible and provable, and lets a reader imagine the gains.                                    |
+| 5   | **Information architecture & navigation** | Coherent Diátaxis-shaped structure, working links, curated bridge into the generated API, no dead ends.                                                   |
 
 ## Grading bands
 
-| Grade | Meaning |
-|-------|---------|
-| **A** | Exemplary. No open findings above `low`. A skeptic finds nothing material. |
-| **B** | Solid. No `critical`/`high`; only `medium`/`low` polish remains. |
+| Grade | Meaning                                                                                         |
+| ----- | ----------------------------------------------------------------------------------------------- |
+| **A** | Exemplary. No open findings above `low`. A skeptic finds nothing material.                      |
+| **B** | Solid. No `critical`/`high`; only `medium`/`low` polish remains.                                |
 | **C** | Serviceable but flawed. No `critical`, but `high` issues remain that a careful reader will hit. |
-| **D** | Misleading. At least one `critical`, or many `high`, that break trust or block the happy path. |
-| **F** | Broken. The primary path fails (e.g. the first copy-pasted example doesn't compile). |
+| **D** | Misleading. At least one `critical`, or many `high`, that break trust or block the happy path.  |
+| **F** | Broken. The primary path fails (e.g. the first copy-pasted example doesn't compile).            |
 
 Use `+`/`−` for within-band nuance.
 
 ### Severity of individual findings
 
-| Severity | Definition |
-|----------|------------|
+| Severity   | Definition                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------- |
 | `critical` | Breaks the reader's happy path or headline claim (e.g. the hero/Quick-Start code doesn't compile). |
-| `high` | Materially misleads or blocks a common task; a careful reader hits it. |
-| `medium` | Wrong/confusing but with a workaround or limited blast radius. |
-| `low` | Minor inaccuracy or polish. |
-| `nit` | Cosmetic. |
+| `high`     | Materially misleads or blocks a common task; a careful reader hits it.                             |
+| `medium`   | Wrong/confusing but with a workaround or limited blast radius.                                     |
+| `low`      | Minor inaccuracy or polish.                                                                        |
+| `nit`      | Cosmetic.                                                                                          |
 
 ## Launch bar (current policy: **moderate**)
 
@@ -59,8 +59,8 @@ The gate is **wired into CI** and currently green: the symbol fixes landed along
 
 ```yaml
 # .github/workflows/doc-ci.yml
-      - name: Check doc accuracy (imports match real package exports)
-        run: node docs/scripts/check-doc-accuracy.mjs
+- name: Check doc accuracy (imports match real package exports)
+  run: node docs/scripts/check-doc-accuracy.mjs
 ```
 
 These two cover most of **criterion 1** and the link half of **criterion 5** automatically. They are the durable guardrails — green here is necessary but not sufficient for launch.
@@ -81,13 +81,13 @@ Add a snippet-level `tsc` doctest (extract fenced `ts`/`tsx` blocks and type-che
 
 ### Baseline — 2026-06-29 (initial audit)
 
-| Criterion | Grade | Open `critical` | Launch-ready? | Issue |
-|-----------|:-----:|:---------------:|:-------------:|-------|
-| 1. Technical accuracy & drift | **C** | 1 | ❌ | [#939](https://github.com/atomic-testing/atomic-testing/issues/939) |
-| 2. Walkthrough / build a unit test | **C−** | 3 | ❌ | [#940](https://github.com/atomic-testing/atomic-testing/issues/940) |
-| 3. Architecture clarity | **C+** | 0 | ⚠️ (≥C but improve) | [#941](https://github.com/atomic-testing/atomic-testing/issues/941) |
-| 4. Homepage / elevator pitch | **C+** | 1 | ❌ | [#942](https://github.com/atomic-testing/atomic-testing/issues/942) |
-| 5. Information architecture | **C+** | 0 | ⚠️ (≥C but improve) | [#943](https://github.com/atomic-testing/atomic-testing/issues/943) |
+| Criterion                          | Grade  | Open `critical` |    Launch-ready?    | Issue                                                               |
+| ---------------------------------- | :----: | :-------------: | :-----------------: | ------------------------------------------------------------------- |
+| 1. Technical accuracy & drift      | **C**  |        1        |         ❌          | [#939](https://github.com/atomic-testing/atomic-testing/issues/939) |
+| 2. Walkthrough / build a unit test | **C−** |        3        |         ❌          | [#940](https://github.com/atomic-testing/atomic-testing/issues/940) |
+| 3. Architecture clarity            | **C+** |        0        | ⚠️ (≥C but improve) | [#941](https://github.com/atomic-testing/atomic-testing/issues/941) |
+| 4. Homepage / elevator pitch       | **C+** |        1        |         ❌          | [#942](https://github.com/atomic-testing/atomic-testing/issues/942) |
+| 5. Information architecture        | **C+** |        0        | ⚠️ (≥C but improve) | [#943](https://github.com/atomic-testing/atomic-testing/issues/943) |
 
 **Overall: NOT launch-ready** — 4 open `critical` findings (all one root cause: inline examples were never compiled). The doc-accuracy gate reproduces them (`node docs/scripts/check-doc-accuracy.mjs` currently reports them). Clearing #939 + #940 + #942 removes every `critical` and should move all criteria to ≥ C.
 

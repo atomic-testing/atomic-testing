@@ -90,6 +90,33 @@
   border: 0;
 }
 
+.proof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 760px;
+  margin: 40px auto 0;
+  text-align: center;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--at-text-muted);
+}
+
+.proofBadge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--at-tip-bg);
+  border: 1px solid var(--at-tip-border);
+  color: var(--at-tip-ink);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12.5px;
+}
+
 @media (max-width: 996px) {
   .grid {
     grid-template-columns: 1fr;

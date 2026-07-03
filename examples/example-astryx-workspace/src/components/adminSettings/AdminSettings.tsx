@@ -34,7 +34,7 @@ export function AdminSettings() {
   return (
     <Stack as='section' data-testid={AppDataTestId.adminSection} gap={4} style={{ maxWidth: 720 }}>
       <TabList data-testid={AdminSettingsDataTestId.tabs} value={activeTab} onChange={setActiveTab} hasDivider>
-        {ADMIN_TABS.map((tab) => (
+        {ADMIN_TABS.map(tab => (
           <Tab key={tab.value} value={tab.value} label={tab.label} />
         ))}
       </TabList>
@@ -46,15 +46,13 @@ export function AdminSettings() {
             label='Organization name'
             isRequired
             value={draft.orgName}
-            onChange={(orgName) => update({ orgName })}
+            onChange={orgName => update({ orgName })}
             status={
-              draft.orgName.trim().length > 0
-                ? undefined
-                : { type: 'error', message: 'Organization name is required' }
+              draft.orgName.trim().length > 0 ? undefined : { type: 'error', message: 'Organization name is required' }
             }
           />
-          <SegmentedControl value={draft.plan} onChange={(plan) => update({ plan })} label={PLAN_LABEL}>
-            {PLAN_OPTIONS.map((option) => (
+          <SegmentedControl value={draft.plan} onChange={plan => update({ plan })} label={PLAN_LABEL}>
+            {PLAN_OPTIONS.map(option => (
               <SegmentedControlItem key={option.value} value={option.value} label={option.label} />
             ))}
           </SegmentedControl>
@@ -62,7 +60,7 @@ export function AdminSettings() {
             data-testid={AdminSettingsDataTestId.renewal}
             label='Renews'
             value={draft.renewal}
-            onChange={(renewal) => renewal != null && update({ renewal })}
+            onChange={renewal => renewal != null && update({ renewal })}
           />
         </FormLayout>
       )}
@@ -73,8 +71,8 @@ export function AdminSettings() {
             data-testid={AdminSettingsDataTestId.channels}
             label='Notification channels'
             value={draft.channels}
-            onChange={(channels) => update({ channels })}>
-            {CHANNEL_OPTIONS.map((option) => (
+            onChange={channels => update({ channels })}>
+            {CHANNEL_OPTIONS.map(option => (
               <CheckboxListItem key={option.value} value={option.value} label={option.label} />
             ))}
           </CheckboxList>
@@ -87,19 +85,19 @@ export function AdminSettings() {
             data-testid={AdminSettingsDataTestId.density}
             label='Density'
             value={draft.density}
-            onChange={(density) => update({ density })}>
-            {DENSITY_OPTIONS.map((option) => (
+            onChange={density => update({ density })}>
+            {DENSITY_OPTIONS.map(option => (
               <RadioListItem key={option.value} value={option.value} label={option.label} />
             ))}
           </RadioList>
           <div data-testid={AdminSettingsDataTestId.betaField}>
-            <Switch label='Beta features' value={draft.beta} onChange={(beta) => update({ beta })} />
+            <Switch label='Beta features' value={draft.beta} onChange={beta => update({ beta })} />
           </div>
           <Selector
             data-testid={AdminSettingsDataTestId.model}
             label='Default model'
             value={draft.model}
-            onChange={(model) => update({ model })}
+            onChange={model => update({ model })}
             options={[...MODEL_OPTIONS]}
             width={280}
           />

@@ -27,7 +27,7 @@ export function ChatSessionProvider({ children }: { children: ReactNode }) {
     if (trimmed.length === 0) {
       return;
     }
-    setMessages((prev) => {
+    setMessages(prev => {
       const turn = prev.length;
       return [...prev, buildUserMessage(trimmed, turn), buildAssistantReply(trimmed, turn + 1)];
     });
@@ -37,7 +37,7 @@ export function ChatSessionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ChatSession>(
     () => ({ messages, model, send, clear, selectModel: setModel }),
-    [messages, model, send, clear],
+    [messages, model, send, clear]
   );
 
   return <ChatSessionContext.Provider value={value}>{children}</ChatSessionContext.Provider>;

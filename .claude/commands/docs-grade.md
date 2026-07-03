@@ -1,6 +1,6 @@
 ---
 description: Grade the docs site against the launch-readiness rubric and print the scorecard (objective gate always; add "deep" for a full multi-agent re-grade)
-argument-hint: "[deep]"
+argument-hint: '[deep]'
 ---
 
 You are producing a **launch-readiness scorecard** for the Atomic Testing documentation site.
@@ -51,11 +51,12 @@ files by absolute path):
 
 ## Step 3 — Verdict
 
-Evaluate against the launch bar (currently *moderate*: **zero `critical`** findings + **every criterion ≥ C**
-+ clean docs build / gate green). Output:
+Evaluate against the launch bar (currently _moderate_: **zero `critical`** findings + **every criterion ≥ C**
 
-- The scorecard table (criterion · grade · open criticals · issue link).
-- **GO / NO-GO** against the bar, with the specific blockers and their issue numbers.
-- In fast mode, state plainly that grades are "last recorded" unless the gate or known fixes changed them.
+- clean docs build / gate green). Output:
+
+* The scorecard table (criterion · grade · open criticals · issue link).
+* **GO / NO-GO** against the bar, with the specific blockers and their issue numbers.
+* In fast mode, state plainly that grades are "last recorded" unless the gate or known fixes changed them.
 
 Keep the report tight; cite `file:line` for any new concrete finding.
