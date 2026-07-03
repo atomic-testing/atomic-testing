@@ -5,6 +5,7 @@ module.exports = {
   testRegex: '(/__tests__/.*.dom.(test|spec)).(jsx?|tsx?)$',
   displayName: 'component-driver-radix-test',
   testEnvironment: 'jsdom',
+  setupFiles: ['<rootDir>/jest.setup.ts'],
   // The base config only transforms the package's own .ts/.tsx. The unified
   // `radix-ui` package (and the per-primitive `@radix-ui/react-*` packages it
   // re-exports) ships ESM that jest cannot parse untransformed, so jest must

@@ -15,11 +15,20 @@ Radix also generates ids like `radix-_r_0_` at render time — **never hardcode 
 
 ## Public surface
 
-Barrel: [component-driver-radix-v1/src/index.ts](../../packages/component-driver-radix-v1/src/index.ts) — the canonical export list. Wave 0 ships the proof-of-life `SeparatorDriver` (`getOrientation` via `data-orientation`; `isDecorative` via `role="none"`); driver waves 1–5 extend it. Errors follow the mui-v7 `src/errors/<Name>Error.ts` pattern when a driver first needs one.
+Barrel: [component-driver-radix-v1/src/index.ts](../../packages/component-driver-radix-v1/src/index.ts) — the canonical export list. Wave 0 shipped the proof-of-life `SeparatorDriver` (`getOrientation` via `data-orientation`; `isDecorative` via `role="none"`). Wave 4 (#1006) added the interaction-heavy set:
+
+- **`SliderDriver`** — no native `<input type="range">` exists (see the capability-gap audit below), so `setValue` drives the thumb (`role="slider"`) by keyboard arrows (cross-engine) and `dragBy` exposes the pointer path (E2E-only). Single-thumb scope, mirroring the Astryx driver.
+- **`ScrollAreaDriver`** — exposes the real `overflow:scroll` viewport as a `viewport` part so callers reach the inherited `scrollBy`/`scrollIntoView`/`getBoundingRect` directly (E2E-only for positional effect); `getScrollbarState` reads the structural `data-state` (jsdom-safe).
+- **`PasswordToggleFieldDriver`** — driver for `unstable_PasswordToggleField` (`@radix-ui/react-password-toggle-field`, no Astryx/MUI analogue). `PasswordToggleField.Root` renders no DOM node of its own (a pure context provider), so the scene must supply an explicit wrapping element for the driver's root locator — unique among this package's drivers. Visibility has no `data-state`; the portable read is the input's `type` attribute (`isPasswordVisible`).
+- **`OneTimePasswordFieldDriver`** — driver for `unstable_OneTimePasswordField` (`@radix-ui/react-one-time-password-field`, no Astryx/MUI analogue). One `<input>` per character, each addressed by `data-radix-otp-input` + `data-radix-index` (mirroring MUI Slider's `data-index` mark addressing); `setValue` types one character per box rather than using Radix's paste-into-first-box autofill path (no portable `Interactor` primitive for `ClipboardEvent`).
+
+Errors follow the mui-v7 `src/errors/<Name>Error.ts` pattern when a driver first needs one (none of the Wave 0/4 drivers have needed one yet).
 
 ## Test harness
 
-[package-tests/component-driver-radix-test](../../package-tests/component-driver-radix-test) mirrors `component-driver-astryx-test`: a Vite example app on **strictPort 3030** with `resolve.dedupe: ['react','react-dom']`, jsdom (jest) + Playwright (chromium/firefox/webkit, dev server auto-started by `playwright.config.ts`), proven via the three-file Separator suite. No app-shell provider is needed (Radix is unstyled); `Tooltip.Provider` lives inside the tooltip example.
+[package-tests/component-driver-radix-test](../../package-tests/component-driver-radix-test) mirrors `component-driver-astryx-test`: a Vite example app on **strictPort 3030** with `resolve.dedupe: ['react','react-dom']`, jsdom (jest) + Playwright (chromium/firefox/webkit, dev server auto-started by `playwright.config.ts`), proven via the three-file Separator suite and extended by Wave 4's Slider/ScrollArea/PasswordToggleField/OneTimePasswordField suites. No app-shell provider is needed (Radix is unstyled); `Tooltip.Provider` lives inside the tooltip example. `jest.setup.ts` (added in Wave 4) polyfills `ResizeObserver` as an inert no-op — `@radix-ui/react-use-size` (Slider thumb, ScrollArea viewport/scrollbar sizing) constructs one on mount and jsdom has none; added reactively per Wave 0's guidance ("guided by actual failures, not preemptively"), not ahead of need.
+
+Sandbox note: this environment's Playwright install can only fetch Chromium (Firefox/WebKit's CDN hosts are proxy-blocked); Wave 4's DoD was verified as jsdom + chromium E2E green, with Firefox/WebKit left for real CI to confirm — see the Wave 4 issue comment on #1006.
 
 **Critical jsdom/jest detail:** `radix-ui` ships ESM jest cannot parse untransformed, so the harness [jest.config.js](../../package-tests/component-driver-radix-test/jest.config.js) adds `'^.+\.(js|mjs)$': '@swc/jest'` to `transform` **and**
 
