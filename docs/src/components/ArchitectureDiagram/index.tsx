@@ -461,7 +461,7 @@ function DiagramNodeButton({
         KIND_CLASS[node.kind],
         ACCENT_CLASS[node.accent],
         isActive && styles.nodeActive,
-        isDimmed && styles.nodeDimmed,
+        isDimmed && styles.nodeDimmed
       )}
       style={{ left: node.cx - node.w / 2, top: node.cy - node.h / 2, width: node.w, height: node.h }}
       aria-pressed={isPinned}
@@ -476,7 +476,15 @@ function DiagramNodeButton({
   );
 }
 
-function DiagramEdgeLine({ edge, isActive, isDimmed }: { edge: DiagramEdge; isActive: boolean; isDimmed: boolean }): JSX.Element | null {
+function DiagramEdgeLine({
+  edge,
+  isActive,
+  isDimmed,
+}: {
+  edge: DiagramEdge;
+  isActive: boolean;
+  isDimmed: boolean;
+}): JSX.Element | null {
   const geometry = useMemo(() => edgeGeometry(edge), [edge]);
   if (!geometry) return null;
   const { x1, y1, x2, y2, midX, midY } = geometry;
@@ -507,7 +515,7 @@ export default function ArchitectureDiagram(): JSX.Element {
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Escape') clear();
     },
-    [clear],
+    [clear]
   );
 
   return (
@@ -540,7 +548,12 @@ export default function ArchitectureDiagram(): JSX.Element {
         <div ref={scrollRef} className={styles.diagramScroll} style={{ height: VIEW_HEIGHT * scale }}>
           <div
             className={styles.diagramPane}
-            style={{ width: VIEW_WIDTH, height: VIEW_HEIGHT, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
+            style={{
+              width: VIEW_WIDTH,
+              height: VIEW_HEIGHT,
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+            }}>
             <svg
               className={styles.edgesLayer}
               viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
@@ -548,10 +561,24 @@ export default function ArchitectureDiagram(): JSX.Element {
               height={VIEW_HEIGHT}
               aria-hidden='true'>
               <defs>
-                <marker id='at-arrow-muted' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'>
+                <marker
+                  id='at-arrow-muted'
+                  viewBox='0 0 10 10'
+                  refX='9'
+                  refY='5'
+                  markerWidth='7'
+                  markerHeight='7'
+                  orient='auto-start-reverse'>
                   <path d='M0,0 L10,5 L0,10 z' className={styles.arrowMuted} />
                 </marker>
-                <marker id='at-arrow-active' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'>
+                <marker
+                  id='at-arrow-active'
+                  viewBox='0 0 10 10'
+                  refX='9'
+                  refY='5'
+                  markerWidth='7'
+                  markerHeight='7'
+                  orient='auto-start-reverse'>
                   <path d='M0,0 L10,5 L0,10 z' className={styles.arrowActive} />
                 </marker>
               </defs>
@@ -618,8 +645,8 @@ export default function ArchitectureDiagram(): JSX.Element {
         <span className={clsx(styles.legendSwatch, styles.legendSwatchDashed)} aria-hidden='true' /> declarative /
         interface — not a runtime instance
         <span className={clsx(styles.legendSwatch, styles.legendSwatchDotted)} aria-hidden='true' /> test environment
-        <span className={clsx(styles.legendSwatch, styles.legendSwatchSolid)} aria-hidden='true' /> concrete class
-        that runs
+        <span className={clsx(styles.legendSwatch, styles.legendSwatchSolid)} aria-hidden='true' /> concrete class that
+        runs
       </p>
     </div>
   );
