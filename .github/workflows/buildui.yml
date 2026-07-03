@@ -205,6 +205,38 @@ jobs:
         run: pnpm test:storybook
         working-directory: ./package-tests/storybook-test
 
+  # Angular adapter fixture — drives a real Angular component through
+  # AngularInteractor in a real browser (Vitest browser mode, Chromium), once
+  # with zone.js loaded and once zoneless. See issue #1013 and
+  # agent-docs/adr/013-angular-shared-core-thin-packages.md.
+  angular-vitest-test:
+    name: Test Angular adapter (zone + zoneless)
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: built-packages
+          path: packages
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+        working-directory: ./package-tests/angular-20-test
+
+      - name: Run Angular adapter tests
+        run: pnpm test:browser
+        working-directory: ./package-tests/angular-20-test
+
   # React legacy (16/17) adapter test — guards the React 16/17 path against
   # silently regressing back onto the React 18/19 (@testing-library/react) graph.
   # See agent-docs/adr/006-1.0-api-freeze-and-evolution.md and issue #959.
