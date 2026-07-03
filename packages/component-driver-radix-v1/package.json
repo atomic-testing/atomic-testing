@@ -37,10 +37,10 @@
     "@types/react-dom": ">=18.0.0"
   },
   "peerDependencies": {
+    "cmdk": "^1.0.0",
     "radix-ui": "^1.0.0",
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0",
-    "cmdk": "^1.0.0"
+    "react-dom": ">=18.0.0"
   },
   "peerDependenciesMeta": {
     "cmdk": {
