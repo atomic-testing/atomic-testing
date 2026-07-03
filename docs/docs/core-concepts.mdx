@@ -15,8 +15,9 @@ Before using Atomic Testing, familiarize yourself with the following key concept
 
 Every piece below fits into one pipeline: a declarative `ScenePart` is what the
 `TestEngine` is built from, each `ComponentDriver` it creates delegates to an
-`Interactor`, and the `Interactor` you get — `ReactInteractor`, `VueInteractor`
-or `PlaywrightInteractor` — depends on which `createTestEngine` you called.
+`Interactor`, and the `Interactor` you get — `ReactInteractor`, `VueInteractor`,
+`AngularInteractor` or `PlaywrightInteractor` — depends on which
+`createTestEngine` you called.
 Hover, focus, or press any node below to see what it does.
 
 <ArchitectureDiagram />
@@ -103,6 +104,23 @@ import Login from './components/Login.vue';
 import { loginScenePart } from './loginScenePart';
 
 const testEngine = createTestEngine(Login, loginScenePart);
+```
+
+</TabItem>
+
+<TabItem value="angular" label="Angular 20+">
+
+```ts
+// Use the package matching your Angular major:
+// @atomic-testing/angular-20, -21 or -22
+import { createTestEngine } from '@atomic-testing/angular-20';
+
+import { LoginComponent } from './components/login.component';
+import { loginScenePart } from './loginScenePart';
+
+// Angular bootstrapping is asynchronous — await the engine.
+// Works with both zone.js and zoneless applications.
+const testEngine = await createTestEngine(LoginComponent, loginScenePart);
 ```
 
 </TabItem>

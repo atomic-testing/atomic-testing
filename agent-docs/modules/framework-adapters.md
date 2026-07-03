@@ -1,16 +1,18 @@
-# Module group: framework adapters (React & Vue)
+# Module group: framework adapters (React, Vue & Angular)
 
-Covers five packages that adapt the DOM interactor to a UI framework's render lifecycle and reactivity:
+Covers the packages that adapt the DOM interactor to a UI framework's render lifecycle and reactivity:
 
-| Package                        | Provides                                                        | Targets            |
-| ------------------------------ | --------------------------------------------------------------- | ------------------ |
-| `@atomic-testing/react-core`   | `ReactInteractor`                                               | shared React logic |
-| `@atomic-testing/react-18`     | `createTestEngine`, `createRenderedTestEngine`                  | React 18           |
-| `@atomic-testing/react-19`     | same                                                            | React 19           |
-| `@atomic-testing/react-legacy` | same                                                            | React ≤17          |
-| `@atomic-testing/vue-3`        | `VueInteractor`, `createTestEngine`, `createRenderedTestEngine` | Vue 3              |
+| Package                              | Provides                                                            | Targets              |
+| ------------------------------------ | ------------------------------------------------------------------- | -------------------- |
+| `@atomic-testing/react-core`         | `ReactInteractor`                                                   | shared React logic   |
+| `@atomic-testing/react-18`           | `createTestEngine`, `createRenderedTestEngine`                      | React 18             |
+| `@atomic-testing/react-19`           | same                                                                | React 19             |
+| `@atomic-testing/react-legacy`       | same                                                                | React ≤17            |
+| `@atomic-testing/vue-3`              | `VueInteractor`, `createTestEngine`, `createRenderedTestEngine`     | Vue 3                |
+| `@atomic-testing/angular-core`       | `AngularInteractor`, `createTestEngine`, `createRenderedTestEngine` | shared Angular logic |
+| `@atomic-testing/angular-20/-21/-22` | re-export of `angular-core`                                         | Angular 20 / 21 / 22 |
 
-> Why so many React packages? They isolate React-major render-API differences from consumers. `react-18` and `react-19` are implementation-identical; they exist to pin different peer ranges. See [ADR-003](../adr/003-version-specific-packages.md).
+> Why so many React packages? They isolate React-major render-API differences from consumers. `react-18` and `react-19` are implementation-identical; they exist to pin different peer ranges. See [ADR-003](../adr/003-version-specific-packages.md). The Angular packages take the refined shape — implementation once in `angular-core`, per-major packages as pure re-exports pinning `@angular/*` peer ranges — see [ADR-013](../adr/013-angular-shared-core-thin-packages.md).
 
 ## Purpose
 
@@ -18,16 +20,19 @@ Render a component into the DOM (or wrap a pre-rendered one) and inject an inter
 
 ## Public surface
 
-| Export                                         | Package            | File                                                                       |
-| ---------------------------------------------- | ------------------ | -------------------------------------------------------------------------- |
-| `ReactInteractor` (extends `DOMInteractor`)    | react-core         | [ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22) |
-| `createTestEngine`, `createRenderedTestEngine` | react-18           | [createTestEngine.ts](../../packages/react-18/src/createTestEngine.ts)     |
-| `createTestEngine`, `createRenderedTestEngine` | react-19           | [createTestEngine.ts](../../packages/react-19/src/createTestEngine.ts)     |
-| `createTestEngine`, `createRenderedTestEngine` | react-legacy       | [createTestEngine.ts](../../packages/react-legacy/src/createTestEngine.ts) |
-| `IReactTestEngineOption` (`{ rootElement? }`)  | react-18/19/legacy | [react-18/types.ts](../../packages/react-18/src/types.ts#L3)               |
-| `VueInteractor` (extends `DOMInteractor`)      | vue-3              | [VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)          |
-| `createTestEngine`, `createRenderedTestEngine` | vue-3              | [createTestEngine.ts](../../packages/vue-3/src/createTestEngine.ts)        |
-| `IVueTestEngineOption`, `VueSFCLikeComponent`  | vue-3              | [vue-3/types.ts](../../packages/vue-3/src/types.ts)                        |
+| Export                                                                                | Package                                          | File                                                                         |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `ReactInteractor` (extends `DOMInteractor`)                                           | react-core                                       | [ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22)   |
+| `createTestEngine`, `createRenderedTestEngine`                                        | react-18                                         | [createTestEngine.ts](../../packages/react-18/src/createTestEngine.ts)       |
+| `createTestEngine`, `createRenderedTestEngine`                                        | react-19                                         | [createTestEngine.ts](../../packages/react-19/src/createTestEngine.ts)       |
+| `createTestEngine`, `createRenderedTestEngine`                                        | react-legacy                                     | [createTestEngine.ts](../../packages/react-legacy/src/createTestEngine.ts)   |
+| `IReactTestEngineOption` (`{ rootElement? }`)                                         | react-18/19/legacy                               | [react-18/types.ts](../../packages/react-18/src/types.ts#L3)                 |
+| `VueInteractor` (extends `DOMInteractor`)                                             | vue-3                                            | [VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)            |
+| `createTestEngine`, `createRenderedTestEngine`                                        | vue-3                                            | [createTestEngine.ts](../../packages/vue-3/src/createTestEngine.ts)          |
+| `IVueTestEngineOption`, `VueSFCLikeComponent`                                         | vue-3                                            | [vue-3/types.ts](../../packages/vue-3/src/types.ts)                          |
+| `AngularInteractor` (extends `DOMInteractor`)                                         | angular-core                                     | [AngularInteractor.ts](../../packages/angular-core/src/AngularInteractor.ts) |
+| `createTestEngine` (async), `createRenderedTestEngine`                                | angular-core (re-exported by angular-20/-21/-22) | [createTestEngine.ts](../../packages/angular-core/src/createTestEngine.ts)   |
+| `AngularAppStability`, `IAngularTestEngineOption`, `IAngularRenderedTestEngineOption` | angular-core                                     | [angular-core/types.ts](../../packages/angular-core/src/types.ts)            |
 
 ## How it works
 
@@ -47,6 +52,10 @@ override async click(locator, option?) {
 
 Extends `DOMInteractor` and `override`s each method to call `super.*` then `await this.flush()`, where `flush` awaits Vue's `nextTick()` ([VueInteractor.ts#L22-L114](../../packages/vue-3/src/VueInteractor.ts#L22-L114)). The flush happens **after** the action (vs React wrapping the action).
 
+### AngularInteractor
+
+Extends `DOMInteractor` in the Vue shape — `super.*` then settle — where settling awaits the bootstrapped app's `ApplicationRef.whenStable()`, bounded by a `settleTimeoutMs` (apps that never stabilize must not deadlock interactions). `whenStable()` is idle-detection for **both** zone.js and zoneless change detection, so there is no zone feature detection at interaction time. Stability is per-app state, not a global like React's `act()`, so the `ApplicationRef` is injected at construction as the minimal structural `AngularAppStability` (`{ whenStable(): Promise<void> }`) — the interactor has no `@angular/core` import ([AngularInteractor.ts](../../packages/angular-core/src/AngularInteractor.ts), [settling.ts](../../packages/angular-core/src/settling.ts)).
+
 ### createTestEngine variants
 
 All five follow the same shape: append a container to `rootElement ?? document.body`, tag it with a `data-*` attribute, render, build `TestEngine(byAttribute(attr, id), interactor, { parts }, cleanup)`. They differ only in the render/unmount API:
@@ -60,6 +69,8 @@ All five follow the same shape: append a container to `rootElement ?? document.b
 | input        | `ReactNode`                                                                                                          | `ReactElement`                                                                                                         | `Component \| VueSFCLikeComponent`                                                                                                                               |
 
 `createRenderedTestEngine(rootElement, parts)` skips rendering — it tags an existing element and wires cleanup to just remove the attribute. Useful in Storybook-style environments where the host renders the component ([react-18/createTestEngine.ts#L65-L88](../../packages/react-18/src/createTestEngine.ts#L65-L88)).
+
+The Angular `createTestEngine` differs in three deliberate ways ([angular-core/createTestEngine.ts](../../packages/angular-core/src/createTestEngine.ts)): it is **async** (Angular bootstrap is a promise); it mounts through `createApplication` + `appRef.bootstrap(component, hostNode)` — passing the host node directly, so the component's selector never needs to exist in the page; and it feature-detects zone.js once at bootstrap, adding `provideZonelessChangeDetection()` when `Zone` is absent (root marker `data-atomic-testing-angular`, unmount via `appRef.destroy()`).
 
 `vue-3` additionally accepts a `VueSFCLikeComponent` (`{ template, setup?, data?, methods?, computed?, props?, name? }`) and compiles it via `defineComponent` before mounting ([createTestEngine.ts#L15-L48](../../packages/vue-3/src/createTestEngine.ts#L15-L48)).
 
@@ -78,11 +89,13 @@ All five follow the same shape: append a container to `rootElement ?? document.b
 - react-core → `core`, `dom-core`, `@testing-library/react`.
 - react-18/19/legacy → `core`, `dom-core`, `react-core`, plus React peer deps ([react-18/package.json#L36-L54](../../packages/react-18/package.json#L36-L54)).
 - vue-3 → `core`, `dom-core`, `@testing-library/vue`, `@vue/compiler-sfc` ([vue-3/package.json#L36-L52](../../packages/vue-3/package.json#L36-L52)).
+- angular-core → `core`, `dom-core`; `@angular/*` are peers only (`>=20 <23`, with `zone.js` and `@angular/compiler` optional). angular-20/-21/-22 → `angular-core` plus the per-major `@angular/*` peer pins ([angular-20/package.json](../../packages/angular-20/package.json)).
 
 ## Extension points
 
 - **Support a new React major** → copy `react-18`, adjust the render/unmount API and peer ranges; reuse `ReactInteractor` unchanged if `act` semantics match.
 - **Support another DOM framework** → mirror `vue-3`: subclass `DOMInteractor` with the framework's flush primitive, add a `createTestEngine`.
+- **Support a new Angular major** → usually just a new thin package (copy `angular-22`, bump the peer range) and a widened `angular-core` peer range; only a behavioral break would push code out of `angular-core` ([ADR-013](../adr/013-angular-shared-core-thin-packages.md)).
 
 ## Related files
 
