@@ -10,6 +10,7 @@ import { DOMInteractor } from '@atomic-testing/dom-core';
 import { EnterTextOption } from '@atomic-testing/core';
 import { FocusOption } from '@atomic-testing/core';
 import { HoverOption } from '@atomic-testing/core';
+import { ITestEngineOption } from '@atomic-testing/core';
 import { MouseDownOption } from '@atomic-testing/core';
 import { MouseEnterOption } from '@atomic-testing/core';
 import { MouseLeaveOption } from '@atomic-testing/core';
@@ -19,8 +20,20 @@ import { MouseUpOption } from '@atomic-testing/core';
 import { PartLocator } from '@atomic-testing/core';
 import { Point } from '@atomic-testing/core';
 import { PressKeyOption } from '@atomic-testing/core';
+import { ReactNode } from 'react';
+import { ScenePart } from '@atomic-testing/core';
+import { TestEngine } from '@atomic-testing/core';
 import { WaitForOption } from '@atomic-testing/core';
 import { WaitUntilOption } from '@atomic-testing/core';
+
+// @public
+export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLElement, partDefinitions: T, _option?: Readonly<Partial<IReactTestEngineOption>>): TestEngine<T>;
+
+// @public
+export function createTestEngine<T extends ScenePart>(node: ReactNode, partDefinitions: T, option?: Readonly<Partial<IReactTestEngineOption>>): TestEngine<T>;
+
+// @public @deprecated (undocumented)
+export type IReactTestEngineOption = ITestEngineOption;
 
 // @public (undocumented)
 export class ReactInteractor extends DOMInteractor {

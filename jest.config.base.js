@@ -1,11 +1,26 @@
 const path = require('path');
-const { lstatSync, readdirSync, readFileSync } = require('fs');
+const { existsSync, lstatSync, readdirSync, readFileSync } = require('fs');
 // get listing of packages in the mono repo
 const basePath = path.resolve(__dirname, 'packages');
 const packages = readdirSync(basePath).filter(name => {
   const pkgPath = path.join(basePath, name);
   return lstatSync(pkgPath).isDirectory();
 });
+
+// Force a single React instance per test package. @atomic-testing/react-core's
+// dist imports react-dom/client; without this mapping Node would resolve it
+// from packages/react-core/node_modules (its devDependency copy) instead of the
+// test package's React, and mixing two React instances breaks rendering.
+// Published packages are unaffected: react-core declares react/react-dom as
+// peerDependencies, so consumers always resolve to their own single React.
+const reactModuleMappings = existsSync(path.join(process.cwd(), 'node_modules', 'react'))
+  ? {
+      '^react$': '<rootDir>/node_modules/react',
+      '^react/(.*)$': '<rootDir>/node_modules/react/$1',
+      '^react-dom$': '<rootDir>/node_modules/react-dom',
+      '^react-dom/(.*)$': '<rootDir>/node_modules/react-dom/$1',
+    }
+  : {};
 
 module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/__tests__'],
@@ -43,6 +58,7 @@ module.exports = {
       }
       return acc;
     }, {}),
+    ...reactModuleMappings,
     '^.+\\.(css|less)$': path.resolve(__dirname, 'jest.css.js'),
   },
   globals: {
