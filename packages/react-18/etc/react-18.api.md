@@ -4,19 +4,15 @@
 
 ```ts
 
-import { ITestEngineOption } from '@atomic-testing/core';
-import { ReactNode } from 'react';
-import { ScenePart } from '@atomic-testing/core';
-import { TestEngine } from '@atomic-testing/core';
+import { createRenderedTestEngine } from '@atomic-testing/react-core';
+import { createTestEngine } from '@atomic-testing/react-core';
+import { IReactTestEngineOption } from '@atomic-testing/react-core';
 
-// @public
-export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLElement, partDefinitions: T, _option?: Readonly<Partial<IReactTestEngineOption>>): TestEngine<T>;
+export { createRenderedTestEngine }
 
-// @public
-export function createTestEngine<T extends ScenePart>(node: ReactNode, partDefinitions: T, option?: Readonly<Partial<IReactTestEngineOption>>): TestEngine<T>;
+export { createTestEngine }
 
-// @public @deprecated (undocumented)
-export type IReactTestEngineOption = ITestEngineOption;
+export { IReactTestEngineOption }
 
 // (No @packageDocumentation comment for this package)
 

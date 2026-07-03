@@ -2,15 +2,15 @@
 
 Covers five packages that adapt the DOM interactor to a UI framework's render lifecycle and reactivity:
 
-| Package                        | Provides                                                        | Targets            |
-| ------------------------------ | --------------------------------------------------------------- | ------------------ |
-| `@atomic-testing/react-core`   | `ReactInteractor`                                               | shared React logic |
-| `@atomic-testing/react-18`     | `createTestEngine`, `createRenderedTestEngine`                  | React 18           |
-| `@atomic-testing/react-19`     | same                                                            | React 19           |
-| `@atomic-testing/react-legacy` | same                                                            | React ≤17          |
-| `@atomic-testing/vue-3`        | `VueInteractor`, `createTestEngine`, `createRenderedTestEngine` | Vue 3              |
+| Package                        | Provides                                                                  | Targets            |
+| ------------------------------ | ------------------------------------------------------------------------- | ------------------ |
+| `@atomic-testing/react-core`   | `ReactInteractor`, `createTestEngine`, `createRenderedTestEngine`         | shared React logic |
+| `@atomic-testing/react-18`     | re-exports `createTestEngine`, `createRenderedTestEngine` from react-core | React 18           |
+| `@atomic-testing/react-19`     | same                                                                      | React 19           |
+| `@atomic-testing/react-legacy` | same                                                                      | React ≤17          |
+| `@atomic-testing/vue-3`        | `VueInteractor`, `createTestEngine`, `createRenderedTestEngine`           | Vue 3              |
 
-> Why so many React packages? They isolate React-major render-API differences from consumers. `react-18` and `react-19` are implementation-identical; they exist to pin different peer ranges. See [ADR-003](../adr/003-version-specific-packages.md).
+> Why so many React packages? They isolate React-major render-API differences from consumers. `react-18` and `react-19` are thin re-exports of `react-core`'s implementation (#1014); they exist only to pin different peer ranges. See [ADR-003](../adr/003-version-specific-packages.md).
 
 ## Purpose
 
@@ -18,16 +18,15 @@ Render a component into the DOM (or wrap a pre-rendered one) and inject an inter
 
 ## Public surface
 
-| Export                                         | Package            | File                                                                       |
-| ---------------------------------------------- | ------------------ | -------------------------------------------------------------------------- |
-| `ReactInteractor` (extends `DOMInteractor`)    | react-core         | [ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22) |
-| `createTestEngine`, `createRenderedTestEngine` | react-18           | [createTestEngine.ts](../../packages/react-18/src/createTestEngine.ts)     |
-| `createTestEngine`, `createRenderedTestEngine` | react-19           | [createTestEngine.ts](../../packages/react-19/src/createTestEngine.ts)     |
-| `createTestEngine`, `createRenderedTestEngine` | react-legacy       | [createTestEngine.ts](../../packages/react-legacy/src/createTestEngine.ts) |
-| `IReactTestEngineOption` (`{ rootElement? }`)  | react-18/19/legacy | [react-18/types.ts](../../packages/react-18/src/types.ts#L3)               |
-| `VueInteractor` (extends `DOMInteractor`)      | vue-3              | [VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)          |
-| `createTestEngine`, `createRenderedTestEngine` | vue-3              | [createTestEngine.ts](../../packages/vue-3/src/createTestEngine.ts)        |
-| `IVueTestEngineOption`, `VueSFCLikeComponent`  | vue-3              | [vue-3/types.ts](../../packages/vue-3/src/types.ts)                        |
+| Export                                         | Package                                               | File                                                                       |
+| ---------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------- |
+| `ReactInteractor` (extends `DOMInteractor`)    | react-core                                            | [ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22) |
+| `createTestEngine`, `createRenderedTestEngine` | react-core (re-exported by react-18/19)               | [createTestEngine.ts](../../packages/react-core/src/createTestEngine.ts)   |
+| `createTestEngine`, `createRenderedTestEngine` | react-legacy                                          | [createTestEngine.ts](../../packages/react-legacy/src/createTestEngine.ts) |
+| `IReactTestEngineOption` (`{ rootElement? }`)  | react-core (re-exported by react-18/19), react-legacy | [react-core/types.ts](../../packages/react-core/src/types.ts#L3)           |
+| `VueInteractor` (extends `DOMInteractor`)      | vue-3                                                 | [VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)          |
+| `createTestEngine`, `createRenderedTestEngine` | vue-3                                                 | [createTestEngine.ts](../../packages/vue-3/src/createTestEngine.ts)        |
+| `IVueTestEngineOption`, `VueSFCLikeComponent`  | vue-3                                                 | [vue-3/types.ts](../../packages/vue-3/src/types.ts)                        |
 
 ## How it works
 
@@ -51,15 +50,15 @@ Extends `DOMInteractor` and `override`s each method to call `super.*` then `awai
 
 All five follow the same shape: append a container to `rootElement ?? document.body`, tag it with a `data-*` attribute, render, build `TestEngine(byAttribute(attr, id), interactor, { parts }, cleanup)`. They differ only in the render/unmount API:
 
-|              | react-18 / react-19                                                                                                  | react-legacy                                                                                                           | vue-3                                                                                                                                                            |
-| ------------ | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| render       | `createRoot(container).render(node)` in `act()` ([L33-L36](../../packages/react-18/src/createTestEngine.ts#L33-L36)) | `ReactDOM.render(node, container)` in `act()` ([L35-L37](../../packages/react-legacy/src/createTestEngine.ts#L35-L37)) | `render(component, { container })` from `@testing-library/vue`, fallback `createApp().mount()` ([L68-L80](../../packages/vue-3/src/createTestEngine.ts#L68-L80)) |
-| `act` import | `@testing-library/react`                                                                                             | `react-dom/test-utils`                                                                                                 | —                                                                                                                                                                |
-| unmount      | `root.unmount()` in `act()`                                                                                          | `ReactDOM.unmountComponentAtNode`                                                                                      | `unmount()` / `app.unmount()`                                                                                                                                    |
-| attribute    | `data-atomic-testing-react`                                                                                          | `data-atomic-testing-react-legacy`                                                                                     | `data-atomic-testing-vue`                                                                                                                                        |
-| input        | `ReactNode`                                                                                                          | `ReactElement`                                                                                                         | `Component \| VueSFCLikeComponent`                                                                                                                               |
+|              | react-18 / react-19                                                                                                    | react-legacy                                                                                                           | vue-3                                                                                                                                                            |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| render       | `createRoot(container).render(node)` in `act()` ([L33-L36](../../packages/react-core/src/createTestEngine.ts#L33-L36)) | `ReactDOM.render(node, container)` in `act()` ([L35-L37](../../packages/react-legacy/src/createTestEngine.ts#L35-L37)) | `render(component, { container })` from `@testing-library/vue`, fallback `createApp().mount()` ([L68-L80](../../packages/vue-3/src/createTestEngine.ts#L68-L80)) |
+| `act` import | `@testing-library/react`                                                                                               | `react-dom/test-utils`                                                                                                 | —                                                                                                                                                                |
+| unmount      | `root.unmount()` in `act()`                                                                                            | `ReactDOM.unmountComponentAtNode`                                                                                      | `unmount()` / `app.unmount()`                                                                                                                                    |
+| attribute    | `data-atomic-testing-react`                                                                                            | `data-atomic-testing-react-legacy`                                                                                     | `data-atomic-testing-vue`                                                                                                                                        |
+| input        | `ReactNode`                                                                                                            | `ReactElement`                                                                                                         | `Component \| VueSFCLikeComponent`                                                                                                                               |
 
-`createRenderedTestEngine(rootElement, parts)` skips rendering — it tags an existing element and wires cleanup to just remove the attribute. Useful in Storybook-style environments where the host renders the component ([react-18/createTestEngine.ts#L65-L88](../../packages/react-18/src/createTestEngine.ts#L65-L88)).
+`createRenderedTestEngine(rootElement, parts)` skips rendering — it tags an existing element and wires cleanup to just remove the attribute. Useful in Storybook-style environments where the host renders the component ([react-core/createTestEngine.ts#L65-L88](../../packages/react-core/src/createTestEngine.ts#L65-L88)).
 
 `vue-3` additionally accepts a `VueSFCLikeComponent` (`{ template, setup?, data?, methods?, computed?, props?, name? }`) and compiles it via `defineComponent` before mounting ([createTestEngine.ts#L15-L48](../../packages/vue-3/src/createTestEngine.ts#L15-L48)).
 
@@ -75,13 +74,13 @@ All five follow the same shape: append a container to `rootElement ?? document.b
 
 ## Dependencies
 
-- react-core → `core`, `dom-core`, `@testing-library/react`.
-- react-18/19/legacy → `core`, `dom-core`, `react-core`, plus React peer deps ([react-18/package.json#L36-L54](../../packages/react-18/package.json#L36-L54)).
+- react-core → `core`, `dom-core`, `@testing-library/react`, plus wide React peer deps (`react`/`react-dom` `>=18.0.0`).
+- react-18/19/legacy → `core`, `dom-core`, `react-core`, plus React peer deps pinned to their major ([react-18/package.json#L36-L54](../../packages/react-18/package.json#L36-L54)).
 - vue-3 → `core`, `dom-core`, `@testing-library/vue`, `@vue/compiler-sfc` ([vue-3/package.json#L36-L52](../../packages/vue-3/package.json#L36-L52)).
 
 ## Extension points
 
-- **Support a new React major** → copy `react-18`, adjust the render/unmount API and peer ranges; reuse `ReactInteractor` unchanged if `act` semantics match.
+- **Support a new React major** → if the render/unmount API is unchanged, add a thin re-export package like `react-18`/`react-19` that only pins the new peer range; if the API changed, adjust `react-core` (or fork a new core). Reuse `ReactInteractor` unchanged if `act` semantics match.
 - **Support another DOM framework** → mirror `vue-3`: subclass `DOMInteractor` with the framework's flush primitive, add a `createTestEngine`.
 
 ## Related files

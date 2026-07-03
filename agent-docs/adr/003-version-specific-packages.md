@@ -9,6 +9,14 @@ Accepted (describes the existing design).
 > [ADR-005](005-drop-mui-5-support.md). Mentions of v5 below describe the
 > original design, not the currently supported set (v6/v7; v8 for MUI-X).
 
+> **Update (2026-07-03, #1014):** `react-18` and `react-19` are no longer
+> copies — `createTestEngine`/`createRenderedTestEngine` (and the deprecated
+> `IReactTestEngineOption` alias) now live in `react-core`, and each version
+> package is a thin re-export whose only remaining job is pinning its
+> `react`/`react-dom` peerDependency range. A cross-cutting fix in `react-core`
+> requires no changes to either version package. The duplication caveat under
+> Consequences now applies to the MUI packages only.
+
 ## Context
 
 Two dependencies make breaking changes across major versions in ways that affect this library:
@@ -33,7 +41,7 @@ Consumers install the package matching their framework major; each pins the appr
 - ✅ No runtime version branching; selectors/APIs are correct for one major.
 - ✅ Consumers pull only the version they use.
 - ✅ A MUI-major DOM change is fixed in one package without risk to others.
-- ⚠️ **Code duplication**: mui-v5/v6/v7 are ~95% identical; a cross-cutting fix or new driver must be replicated across version packages. `react-18` and `react-19` are implementation-identical.
+- ⚠️ **Code duplication**: mui-v5/v6/v7 are ~95% identical; a cross-cutting fix or new driver must be replicated across version packages. `react-18` and `react-19` were originally duplicated copies; since #1014 they are thin re-exports of `react-core`'s implementation (see the 2026-07-03 update above).
 - ⚠️ Cross-package coupling exists where a driver package depends on a specific adapter (`mui-v7` → `react-18`; `mui-x-v8` → `mui-v6`) — see [ARCHITECTURE.md dependency graph](../ARCHITECTURE.md#package-dependency-graph).
 
 ## Alternatives considered

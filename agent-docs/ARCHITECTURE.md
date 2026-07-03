@@ -77,7 +77,7 @@ Key behavior differences to remember:
 | Root marker attribute | `data-atomic-testing-react`                     | `data-atomic-testing-react-legacy`            | `data-atomic-testing-vue`                                              |
 | Input node type       | `ReactNode`                                     | `ReactElement`                                | `Component \| VueSFCLikeComponent`                                     |
 
-`react-18` and `react-19` are byte-for-byte equivalent in implementation (both target the `createRoot` API); they exist as separate packages only to pin different React peer ranges. See [ADR-003](adr/003-version-specific-packages.md). Option types `IReactTestEngineOption` / `IVueTestEngineOption` both add an optional `rootElement` mount target ([react-18/types.ts](../packages/react-18/src/types.ts#L3), [vue-3/types.ts](../packages/vue-3/src/types.ts#L3)).
+`react-18` and `react-19` share one implementation (both target the `createRoot` API): since #1014 it lives in `react-core` ([createTestEngine.ts](../packages/react-core/src/createTestEngine.ts)) and each version package is a thin re-export that exists only to pin its React peer range. See [ADR-003](adr/003-version-specific-packages.md). Option types `IReactTestEngineOption` / `IVueTestEngineOption` both add an optional `rootElement` mount target ([react-core/types.ts](../packages/react-core/src/types.ts#L3), [vue-3/types.ts](../packages/vue-3/src/types.ts#L3)).
 
 ## Package dependency graph
 
