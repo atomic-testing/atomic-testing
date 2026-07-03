@@ -50,8 +50,7 @@ export function LoginForm({ onSubmit }: { onSubmit: (username: string) => void }
       onSubmit={e => {
         e.preventDefault();
         onSubmit(username);
-      }}
-    >
+      }}>
       <input data-testid='username' value={username} onChange={e => setUsername(e.target.value)} />
       <button data-testid='submit' disabled={username.length === 0}>
         Log in
