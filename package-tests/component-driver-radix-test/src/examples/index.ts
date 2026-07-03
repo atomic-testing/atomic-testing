@@ -17,6 +17,8 @@ export * from './one-time-password-field';
 export * from './password-toggle-field';
 export * from './scroll-area';
 export * from './slider';
+// Wave 5 (#1007): Popover + cmdk composition
+export * from './combobox';
 // Wave 0 audit scenes (no driver/suite yet — see agent-docs/modules/component-driver-radix.md)
 export * from './context-menu';
 export * from './dialog';

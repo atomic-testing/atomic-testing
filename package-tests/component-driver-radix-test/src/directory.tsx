@@ -7,6 +7,7 @@ import { aspectRatioUIExample } from './examples/aspect-ratio/AspectRatio.exampl
 import { avatarUIExample } from './examples/avatar/Avatar.examples';
 import { checkboxUIExample } from './examples/checkbox/Checkbox.examples';
 import { collapsibleUIExample } from './examples/collapsible/Collapsible.examples';
+import { comboboxUIExample } from './examples/combobox/Combobox.examples';
 import { contextMenuUIExample } from './examples/context-menu/ContextMenu.examples';
 import { dialogUIExample } from './examples/dialog/Dialog.examples';
 import { dropdownMenuUIExample } from './examples/dropdown-menu/DropdownMenu.examples';
@@ -52,6 +53,8 @@ export const tocs: ExampleToc[] = [
   toc('ScrollArea', '/scroll-area', scrollAreaUIExample),
   toc('PasswordToggleField', '/password-toggle-field', passwordToggleFieldUIExample),
   toc('OneTimePasswordField', '/one-time-password-field', oneTimePasswordFieldUIExample),
+  // Wave 5 (#1007)
+  toc('Combobox', '/combobox', comboboxUIExample),
   // Wave 0 audit scenes
   toc('ContextMenu', '/context-menu', contextMenuUIExample),
   toc('Dialog', '/dialog', dialogUIExample),

@@ -3,6 +3,7 @@ export { AspectRatioDriver } from './components/AspectRatioDriver';
 export { AvatarDriver } from './components/AvatarDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
 export { CollapsibleDriver } from './components/CollapsibleDriver';
+export { ComboboxDriver, ComboboxOptionDriver } from './components/ComboboxDriver';
 export { DialogDriver } from './components/DialogDriver';
 export { DropdownMenuDriver } from './components/DropdownMenuDriver';
 export { LabelDriver } from './components/LabelDriver';

@@ -40,7 +40,8 @@ const defaultTransitionDuration = 250;
  * drivers generally.
  */
 export class PopoverDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
-  private readonly triggerLocator: PartLocator;
+  /** The scene-supplied trigger locator — also the anchor subclasses (e.g. `ComboboxDriver`) read trigger-side state from. */
+  protected readonly triggerLocator: PartLocator;
 
   constructor(
     triggerLocator: PartLocator,
