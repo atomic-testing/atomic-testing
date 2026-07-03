@@ -12,17 +12,17 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 
 ## Modules
 
-| Module                                                        | Covers                                                                               | Description                                                                                      |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| [core](modules/core.md)                                       | `@atomic-testing/core`                                                               | Types, base drivers, `Interactor` interface, locators, errors, utils.                            |
-| [dom-core](modules/dom-core.md)                               | `@atomic-testing/dom-core`                                                           | `DOMInteractor` base implementation + `createDomTestEngine`.                                     |
-| [framework-adapters](modules/framework-adapters.md)           | `react-core`, `react-18`, `react-19`, `react-legacy`, `vue-3`                        | `ReactInteractor`/`VueInteractor` + per-environment `createTestEngine`.                          |
-| [playwright](modules/playwright.md)                           | `@atomic-testing/playwright`                                                         | Browser driver: `PlaywrightInteractor` + `createTestEngine`.                                     |
-| [test-runner](modules/test-runner.md)                         | `internal-test-runner` (+ jest/vitest/playwright adapters, `internal-react-example`) | `testRunner`, `useTestEngine`, `TestFrameworkMapper`.                                            |
-| [component-driver-html](modules/component-driver-html.md)     | `@atomic-testing/component-driver-html`                                              | Native HTML element drivers; the canonical driver pattern.                                       |
-| [component-driver-mui](modules/component-driver-mui.md)       | `component-driver-mui-v5/v6/v7`                                                      | MUI core drivers (v7 reference; version-diff notes).                                             |
-| [component-driver-mui-x](modules/component-driver-mui-x.md)   | `component-driver-mui-x-v5..v8` (+ `internal-mui-x-test-fixture`)                    | DataGrid (all) + Date/Time pickers (v5 only).                                                    |
-| [component-driver-astryx](modules/component-driver-astryx.md) | `@atomic-testing/component-driver-astryx`                                            | Astryx (`@astryxdesign/core`) drivers; role/name/testid-first locators; ESM jest-transform note. |
+| Module                                                        | Covers                                                                                              | Description                                                                                      |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [core](modules/core.md)                                       | `@atomic-testing/core`                                                                              | Types, base drivers, `Interactor` interface, locators, errors, utils.                            |
+| [dom-core](modules/dom-core.md)                               | `@atomic-testing/dom-core`                                                                          | `DOMInteractor` base implementation + `createDomTestEngine`.                                     |
+| [framework-adapters](modules/framework-adapters.md)           | `react-core`, `react-18`, `react-19`, `react-legacy`, `vue-3`, `angular-core`, `angular-20/-21/-22` | `ReactInteractor`/`VueInteractor`/`AngularInteractor` + per-environment `createTestEngine`.      |
+| [playwright](modules/playwright.md)                           | `@atomic-testing/playwright`                                                                        | Browser driver: `PlaywrightInteractor` + `createTestEngine`.                                     |
+| [test-runner](modules/test-runner.md)                         | `internal-test-runner` (+ jest/vitest/playwright adapters, `internal-react-example`)                | `testRunner`, `useTestEngine`, `TestFrameworkMapper`.                                            |
+| [component-driver-html](modules/component-driver-html.md)     | `@atomic-testing/component-driver-html`                                                             | Native HTML element drivers; the canonical driver pattern.                                       |
+| [component-driver-mui](modules/component-driver-mui.md)       | `component-driver-mui-v5/v6/v7`                                                                     | MUI core drivers (v7 reference; version-diff notes).                                             |
+| [component-driver-mui-x](modules/component-driver-mui-x.md)   | `component-driver-mui-x-v5..v8` (+ `internal-mui-x-test-fixture`)                                   | DataGrid (all) + Date/Time pickers (v5 only).                                                    |
+| [component-driver-astryx](modules/component-driver-astryx.md) | `@atomic-testing/component-driver-astryx`                                                           | Astryx (`@astryxdesign/core`) drivers; role/name/testid-first locators; ESM jest-transform note. |
 
 ## ADRs
 
@@ -39,6 +39,7 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 | [010](adr/010-narrow-error-payload.md)                   | Narrow the error payload to a serializable shape.                          |
 | [011](adr/011-retract-locator-source-ast.md)             | Retract the locator descriptive `source` AST.                              |
 | [012](adr/012-remove-dead-clone-wait-from-interactor.md) | Remove dead `clone()` / `wait()` from the `Interactor` contract.           |
+| [013](adr/013-angular-shared-core-thin-packages.md)      | Angular 20–22 support via a shared core and thin per-major packages.       |
 
 ## Fresh repo tree
 
