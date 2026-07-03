@@ -645,13 +645,33 @@ export class DOMInteractor implements Interactor {
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const queryRoot = this.escapesToDocumentRoot(locator) ? this.rootEl.ownerDocument : this.rootEl;
     if (isMultiple) {
-      const elList = this.rootEl.querySelectorAll<T>(cssLocator);
+      const elList = queryRoot.querySelectorAll<T>(cssLocator);
       const result: T[] = [];
       elList.forEach(el => result.push(el));
       return result;
     }
-    return this.rootEl.querySelector<T>(cssLocator) ?? undefined;
+    return queryRoot.querySelector<T>(cssLocator) ?? undefined;
+  }
+
+  /**
+   * A `'Root'`-relative locator (the portal escape — see the portals guide) is
+   * documented to search from the document, not from this interactor's root, so
+   * portalled content (dialogs, dropdowns rendered at `<body>`) stays reachable
+   * even when the interactor is scoped to a sub-tree such as a Storybook canvas.
+   * Mirrors `locatorUtil.getEffectiveLocator`'s slicing rule: the last `'Root'`
+   * locator wins unless it is `'linked'`, whose CSS still needs the scoped
+   * context.
+   */
+  private escapesToDocumentRoot(locator: PartLocator): boolean {
+    const list = locatorUtil.toChain(locator);
+    for (let i = list.length - 1; i >= 0; i--) {
+      if (list[i].relative === 'Root') {
+        return list[i].complexity !== 'linked';
+      }
+    }
+    return false;
   }
 
   async getInputValue(locator: PartLocator): Promise<Optional<string>> {
