@@ -19,10 +19,17 @@ export * from './scroll-area';
 export * from './slider';
 // Wave 5 (#1007): Popover + cmdk composition
 export * from './combobox';
-// Wave 0 audit scenes (no driver/suite yet — see agent-docs/modules/component-driver-radix.md)
-export * from './context-menu';
+// Wave 1 (#1003): portalled overlays
 export * from './dialog';
 export * from './dropdown-menu';
 export * from './popover';
-export * from './tooltip';
 export * from './select';
+// Wave 3 (#1005): overlays & menus
+export * from './alert-dialog';
+export * from './context-menu';
+export * from './hover-card';
+export * from './menubar';
+export * from './navigation-menu';
+export * from './toast';
+export * from './toolbar';
+export * from './tooltip';

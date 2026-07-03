@@ -78,3 +78,45 @@ if (typeof g.ResizeObserver !== 'function') {
     disconnect(): void {}
   };
 }
+
+/**
+ * jsdom does not expose a `DOMRect` constructor (no layout engine backs one).
+ * Radix `ContextMenu` constructs one directly — `new DOMRect(x, y, 0, 0)` — as
+ * the virtual popper anchor for the right-click point (see
+ * `@radix-ui/react-context-menu`'s virtual `getBoundingClientRect`), so the
+ * very first `contextmenu` event on a Radix ContextMenu trigger throws
+ * `DOMRect is not defined` under jsdom and the menu never opens (Wave 3, hit
+ * by the ContextMenu scene). The polyfill is the spec's plain data holder —
+ * jsdom has no geometry to compute, and the drivers assert open state via
+ * role/data attributes, never popper coordinates; real positioning is covered
+ * by the chromium E2E run.
+ */
+const g2 = globalThis as unknown as { DOMRect?: unknown };
+if (typeof g2.DOMRect !== 'function') {
+  g2.DOMRect = class DOMRect {
+    constructor(
+      public x: number = 0,
+      public y: number = 0,
+      public width: number = 0,
+      public height: number = 0
+    ) {}
+    get top(): number {
+      return Math.min(this.y, this.y + this.height);
+    }
+    get bottom(): number {
+      return Math.max(this.y, this.y + this.height);
+    }
+    get left(): number {
+      return Math.min(this.x, this.x + this.width);
+    }
+    get right(): number {
+      return Math.max(this.x, this.x + this.width);
+    }
+    static fromRect(rect: { x?: number; y?: number; width?: number; height?: number } = {}): DOMRect {
+      return new DOMRect(rect.x ?? 0, rect.y ?? 0, rect.width ?? 0, rect.height ?? 0);
+    }
+    toJSON(): unknown {
+      return { ...this, top: this.top, bottom: this.bottom, left: this.left, right: this.right };
+    }
+  };
+}
