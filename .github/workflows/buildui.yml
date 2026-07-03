@@ -153,6 +153,8 @@ jobs:
             directory: 'vue-3-test'
           - name: 'Astryx components'
             directory: 'component-driver-astryx-test'
+          - name: 'Radix components'
+            directory: 'component-driver-radix-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
