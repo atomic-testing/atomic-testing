@@ -19,6 +19,7 @@ Perfect for component testing, business logic, and rapid development cycles.
 
 - **React Apps**: `@atomic-testing/react-18` or `@atomic-testing/react-19`
 - **Vue Apps**: `@atomic-testing/vue-3`
+- **Angular Apps**: `@atomic-testing/angular-20`, `-21` or `-22` (match your Angular major)
 - **Vanilla JS**: `@atomic-testing/dom-core`
 
 ### **E2E Testing (Slow, Integration-focused)**
@@ -58,6 +59,22 @@ pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-mui-v7
 ```
 
 **Perfect for**: Vue 3 applications with custom components or HTML-based UI libraries
+
+</TabItem>
+
+<TabItem value="angular-html" label="Angular + HTML">
+
+```bash
+# Angular 20 with standard HTML elements — pick the package matching your Angular major
+pnpm add @atomic-testing/angular-20 @atomic-testing/component-driver-html
+
+# Angular 21 / 22
+pnpm add @atomic-testing/angular-21 @atomic-testing/component-driver-html
+pnpm add @atomic-testing/angular-22 @atomic-testing/component-driver-html
+```
+
+**Perfect for**: Standalone-component Angular apps — works with both zone.js and
+zoneless change detection (`zone.js` is an optional peer; zoneless apps don't need it)
 
 </TabItem>
 

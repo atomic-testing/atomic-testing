@@ -6,14 +6,17 @@ How the pieces connect at runtime. Terms are defined in [DOMAIN.md](DOMAIN.md). 
 
 A test always starts by building a `TestEngine` with an environment-specific factory. All factories produce the same `TestEngine<T>` type; they differ only in which `Interactor` they inject and how they render/clean up.
 
-| Factory                                    | Environment                                  | Interactor injected                   | File                                                                                                                 |
-| ------------------------------------------ | -------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `createDomTestEngine(element, parts)`      | Raw DOM (pre-rendered)                       | `DOMInteractor`                       | [dom-core/createDomTestEngine.ts](../packages/dom-core/src/createDomTestEngine.ts#L13)                               |
-| `createTestEngine(node, parts, opt?)`      | React 18 / 19                                | `ReactInteractor` (`createRoot`)      | [react-18/createTestEngine.ts](../packages/react-18/src/createTestEngine.ts#L25)                                     |
-| `createTestEngine(node, parts, opt?)`      | React ≤17                                    | `ReactInteractor` (`ReactDOM.render`) | [react-legacy/createTestEngine.ts](../packages/react-legacy/src/createTestEngine.ts#L25)                             |
-| `createTestEngine(component, parts, opt?)` | Vue 3                                        | `VueInteractor`                       | [vue-3/createTestEngine.ts](../packages/vue-3/src/createTestEngine.ts#L50)                                           |
-| `createTestEngine(page, parts)`            | Playwright (browser)                         | `PlaywrightInteractor`                | [playwright/createTestEngine.ts](../packages/playwright/src/createTestEngine.ts#L14)                                 |
-| `createRenderedTestEngine(rootEl, parts)`  | React/Vue, already rendered (e.g. Storybook) | React/Vue interactor                  | [react-18](../packages/react-18/src/createTestEngine.ts#L65), [vue-3](../packages/vue-3/src/createTestEngine.ts#L98) |
+| Factory                                          | Environment                                          | Interactor injected                   | File                                                                                                                 |
+| ------------------------------------------------ | ---------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `createDomTestEngine(element, parts)`            | Raw DOM (pre-rendered)                               | `DOMInteractor`                       | [dom-core/createDomTestEngine.ts](../packages/dom-core/src/createDomTestEngine.ts#L13)                               |
+| `createTestEngine(node, parts, opt?)`            | React 18 / 19                                        | `ReactInteractor` (`createRoot`)      | [react-18/createTestEngine.ts](../packages/react-18/src/createTestEngine.ts#L25)                                     |
+| `createTestEngine(node, parts, opt?)`            | React ≤17                                            | `ReactInteractor` (`ReactDOM.render`) | [react-legacy/createTestEngine.ts](../packages/react-legacy/src/createTestEngine.ts#L25)                             |
+| `createTestEngine(component, parts, opt?)`       | Vue 3                                                | `VueInteractor`                       | [vue-3/createTestEngine.ts](../packages/vue-3/src/createTestEngine.ts#L50)                                           |
+| `await createTestEngine(component, parts, opt?)` | Angular 20–22 (via `angular-20/-21/-22`)             | `AngularInteractor`                   | [angular-core/createTestEngine.ts](../packages/angular-core/src/createTestEngine.ts)                                 |
+| `createTestEngine(page, parts)`                  | Playwright (browser)                                 | `PlaywrightInteractor`                | [playwright/createTestEngine.ts](../packages/playwright/src/createTestEngine.ts#L14)                                 |
+| `createRenderedTestEngine(rootEl, parts)`        | React/Vue/Angular, already rendered (e.g. Storybook) | React/Vue/Angular interactor          | [react-18](../packages/react-18/src/createTestEngine.ts#L65), [vue-3](../packages/vue-3/src/createTestEngine.ts#L98) |
+
+The Angular factory is the one **async** variant — Angular's bootstrap API is a promise, so `createTestEngine` returns `Promise<TestEngine<T>>` (see [ADR-013](adr/013-angular-shared-core-thin-packages.md)).
 
 `TestEngine`'s constructor is `(locator, interactor, option?, cleanUp?)` ([TestEngine.ts#L23-L31](../packages/core/src/TestEngine.ts#L23-L31)). DOM/Playwright engines use an empty `[]` root locator; React/Vue engines tag their mount container with a `data-*` attribute and use `byAttribute(...)` as the root.
 
@@ -50,16 +53,19 @@ flowchart TD
     DOM["DOMInteractor<br/>(@testing-library/dom + user-event + FakeMouseEvent)"]
     React["ReactInteractor<br/>wraps each method in act()"]
     Vue["VueInteractor<br/>awaits nextTick() after each method"]
+    Ng["AngularInteractor<br/>awaits ApplicationRef.whenStable() after each method"]
     PW["PlaywrightInteractor<br/>page.locator(css).&lt;action&gt;()"]
     I -. implements .-> DOM
     I -. implements .-> PW
     DOM --> React
     DOM --> Vue
+    DOM --> Ng
 ```
 
 - **`DOMInteractor`** implements `Interactor` over `@testing-library/dom`'s `fireEvent`, `@testing-library/user-event`, and a `FakeMouseEvent` polyfill (testing-library drops `pageX/pageY`). `getElement` runs `rootEl.querySelector(All)` on the resolved selector ([DOMInteractor.ts#L32-L391](../packages/dom-core/src/DOMInteractor.ts#L32-L391)).
 - **`ReactInteractor extends DOMInteractor`** and `override`s every interactive method to wrap `super.*` in `act(async () => …)`, flushing React state updates ([ReactInteractor.ts](../packages/react-core/src/ReactInteractor.ts#L22-L127)).
 - **`VueInteractor extends DOMInteractor`** and `override`s each method to call `super.*` then `await nextTick()`, flushing Vue reactivity ([VueInteractor.ts](../packages/vue-3/src/VueInteractor.ts#L22-L114)).
+- **`AngularInteractor extends DOMInteractor`** and `override`s each method to call `super.*` then settle on the bootstrapped app's `ApplicationRef.whenStable()` (bounded by a timeout; correct under both zone.js and zoneless change detection). Stability is per-app, so the reference is injected at construction — see [AngularInteractor.ts](../packages/angular-core/src/AngularInteractor.ts) and [ADR-013](adr/013-angular-shared-core-thin-packages.md).
 - **`PlaywrightInteractor implements Interactor` directly** — it does **not** extend `DOMInteractor`. Every method resolves the locator to CSS and calls `page.locator(css).<action>()`; Playwright handles waiting/retrying natively, so there is no `act()`/`nextTick()` ([PlaywrightInteractor.ts](../packages/playwright/src/PlaywrightInteractor.ts#L31-L324)). See [ADR-002](adr/002-interactor-abstraction.md).
 
 Key behavior differences to remember:
@@ -77,7 +83,9 @@ Key behavior differences to remember:
 | Root marker attribute | `data-atomic-testing-react`                     | `data-atomic-testing-react-legacy`            | `data-atomic-testing-vue`                                              |
 | Input node type       | `ReactNode`                                     | `ReactElement`                                | `Component \| VueSFCLikeComponent`                                     |
 
-`react-18` and `react-19` share one implementation (both target the `createRoot` API): since #1014 it lives in `react-core` ([createTestEngine.ts](../packages/react-core/src/createTestEngine.ts)) and each version package is a thin re-export that exists only to pin its React peer range. See [ADR-003](adr/003-version-specific-packages.md). Option types `IReactTestEngineOption` / `IVueTestEngineOption` both add an optional `rootElement` mount target ([react-core/types.ts](../packages/react-core/src/types.ts#L3), [vue-3/types.ts](../packages/vue-3/src/types.ts#L3)).
+`react-18` and `react-19` share one implementation (both target the `createRoot` API): since #1014 it lives in `react-core` ([createTestEngine.ts](../packages/react-core/src/createTestEngine.ts)) and each version package is a thin re-export that exists only to pin its React peer range. See [ADR-003](adr/003-version-specific-packages.md).
+
+The Angular variant lives once in `angular-core` (render via `createApplication` + `ApplicationRef.bootstrap`, unmount via `ApplicationRef.destroy()`, root marker `data-atomic-testing-angular`, input `Type<unknown>`); `angular-20/-21/-22` are pure re-exports that pin peer ranges — the same duplication-free shape #1014 brought to React, see [ADR-013](adr/013-angular-shared-core-thin-packages.md). Option types `IReactTestEngineOption` / `IVueTestEngineOption` both add an optional `rootElement` mount target ([react-core/types.ts](../packages/react-core/src/types.ts#L3), [vue-3/types.ts](../packages/vue-3/src/types.ts#L3)).
 
 ## Package dependency graph
 
@@ -90,6 +98,8 @@ flowchart TD
     r19["react-19"]
     rlegacy["react-legacy"]
     vue["vue-3"]
+    ngcore["angular-core"]
+    ng20["angular-20 / -21 / -22"]
     pw["playwright"]
     itr["internal-test-runner"]
     jest["…-jest-adapter"]
@@ -105,6 +115,8 @@ flowchart TD
     reactcore --> rlegacy
     core --> vue
     domcore --> vue
+    domcore --> ngcore
+    ngcore --> ng20
     core --> pw
     itr --> pw
     core --> itr
