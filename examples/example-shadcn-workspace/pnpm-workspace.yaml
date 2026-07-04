@@ -1,6 +1,17 @@
 # Marks this example as its OWN pnpm workspace root so it installs standalone (its own
 # lockfile, isolated from the monorepo's root workspace — it is intentionally not a member
 # of that one), mirroring examples/example-astryx-workspace and
-# examples/example-mui-signup-form.
+# examples/example-mui-signup-form. The excludes opt the pinned, recently-published
+# versions past a minimum-release-age supply-chain gate; they are a no-op where no such
+# gate is configured.
 packages:
   - '.'
+minimumReleaseAgeExclude:
+  - '@atomic-testing/component-driver-html@0.92.0'
+  - '@atomic-testing/component-driver-radix-v1@0.92.0'
+  - '@atomic-testing/component-driver-shadcn-v1@0.92.0'
+  - '@atomic-testing/core@0.92.0'
+  - '@atomic-testing/dom-core@0.92.0'
+  - '@atomic-testing/playwright@0.92.0'
+  - '@atomic-testing/react-19@0.92.0'
+  - '@atomic-testing/react-core@0.92.0'
