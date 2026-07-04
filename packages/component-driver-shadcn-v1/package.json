@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-shadcn-v1",
-  "version": "0.90.0",
+  "version": "0.92.0",
   "description": "Component driver for shadcn/ui (re-export of the Radix UI v1 drivers)",
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react-legacy",
-  "version": "0.91.0",
+  "version": "0.92.0",
   "description": "Adapter for testing React 17 and earlier",
   "keywords": [
     "legacy",
