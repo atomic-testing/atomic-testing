@@ -1,0 +1,6 @@
+# Marks this example as its OWN pnpm workspace root so it installs standalone (its own
+# lockfile, isolated from the monorepo's root workspace — it is intentionally not a member
+# of that one), mirroring examples/example-astryx-workspace and
+# examples/example-mui-signup-form.
+packages:
+  - '.'
