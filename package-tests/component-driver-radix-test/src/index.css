@@ -1,0 +1,5 @@
+/* Radix primitives ship no CSS; only the app frame needs sizing. */
+html,
+body {
+  height: 100%;
+}
