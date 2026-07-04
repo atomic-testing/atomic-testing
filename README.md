@@ -2,6 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/@atomic-testing/core.svg?style=flat)](https://www.npmjs.com/package/@atomic-testing/core)
 ![NPM license](https://img.shields.io/npm/l/@atomic-testing/core.svg?style=flat)
+[![CI](https://github.com/atomic-testing/atomic-testing/actions/workflows/buildui.yml/badge.svg)](https://github.com/atomic-testing/atomic-testing/actions/workflows/buildui.yml)
 
 Portable UI testing utilities that unify test code across frameworks and
 libraries. The project provides a collection of packages for describing UI scenes
@@ -96,13 +97,28 @@ CI/e2e coverage, and their test suites no longer run. New work targets v6/v7/v9
 
 For detailed guides and examples, see the [online documentation](https://atomic-testing.dev/).
 
+## Architecture & design decisions
+
+Design rationale for major decisions — the component-driver pattern,
+versioning policy, locator boundaries — is recorded as ADRs (architecture
+decision records). See the ADR table in
+[`agent-docs/INDEX.md`](agent-docs/INDEX.md) for the full list.
+
+See [`ROADMAP.md`](ROADMAP.md) for a summary of what's currently being worked
+on.
+
 ## Contributing
 
-Pull requests are welcome. Before submitting, run the checks defined in the root
-`package.json`:
+Pull requests are welcome. Before submitting, run:
 
 ```bash
+pnpm run check:type
 pnpm run check:lint
 pnpm run check:style
-pnpm run check:types
+pnpm test:dom
+pnpm test:e2e
 ```
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full contribution guidelines,
+including dev setup and commit message conventions. For reporting a security
+vulnerability, see [`SECURITY.md`](SECURITY.md).
