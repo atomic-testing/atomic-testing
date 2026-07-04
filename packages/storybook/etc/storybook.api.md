@@ -78,6 +78,8 @@ export class StorybookInteractor extends DOMInteractor {
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
     protected settle(): Promise<void>;
     // (undocumented)
+    typeText(locator: PartLocator, text: string): Promise<void>;
+    // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
 }
 

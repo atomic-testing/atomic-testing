@@ -80,8 +80,12 @@ export interface Interactor {
    * event so components that key off `KeyboardEvent.key` are exercised — e.g.
    * Dialog dismissal on `Escape` or Chip deletion on `Backspace`/`Delete`. The
    * element is focused first so the event originates from the active element,
-   * matching a real key press. No pointer event is involved, so behaviours
-   * unreachable by {@link click} (geometry or not) become testable.
+   * matching a real key press. When the element holds focus the press carries
+   * full editing fidelity (`keydown` → `beforeinput`/`input` on editable
+   * targets → `keyup`), so editing keys such as `Backspace` also reach
+   * components that commit changes from input events (e.g. the MUI X picker
+   * section field). No pointer event is involved, so behaviours unreachable by
+   * {@link click} (geometry or not) become testable.
    *
    * Cross-engine caveat: with `shift` and a PRINTABLE key the engines disagree on
    * the resulting `KeyboardEvent.key` — Playwright case-folds (`Shift`+`a` →
@@ -132,6 +136,30 @@ export interface Interactor {
    * @param value
    */
   enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void>;
+
+  /**
+   * Type text into the desired element as a sequence of real per-character
+   * keystrokes.
+   *
+   * Unlike {@link enterText}, which clears the target and fills its value — a
+   * path invisible to widgets that ignore programmatic value assignment — this
+   * focuses the element and dispatches the full key event sequence per
+   * character (`keydown` → `beforeinput` → `input` → `keyup`), inserting at
+   * the element's current caret with no clearing. That reaches keystroke-driven
+   * editors such as the MUI X picker section field (a `contenteditable`
+   * `role="spinbutton"` span that only commits digits arriving as genuine key
+   * events) and grid cell editors entered via {@link pressKey} — see #903/#905.
+   *
+   * The text is typed literally: characters that carry special meaning in an
+   * underlying dispatcher (user-event's `{`/`[` descriptor syntax) are escaped,
+   * so `typeText(locator, '{a}')` types the five characters `{a}` verbatim.
+   * For non-printable keys or modifier chords use {@link pressKey}; to clear
+   * before typing, combine with {@link enterText} or key presses.
+   *
+   * @param locator Locator of the element to type into
+   * @param text The literal text to type, one keystroke per character
+   */
+  typeText(locator: PartLocator, text: string): Promise<void>;
 
   /**
    * Set the value of a range input (`<input type="range">`, the element behind a

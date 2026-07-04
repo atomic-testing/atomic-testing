@@ -106,6 +106,7 @@ export class DOMInteractor implements Interactor {
     selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
+    typeText(locator: PartLocator, text: string): Promise<void>;
     // (undocumented)
     protected readonly userEvent: UserEventDispatcher;
     // (undocumented)
@@ -135,6 +136,8 @@ export interface UserEventDispatcher {
     click(element: Element): Promise<void>;
     // (undocumented)
     hover(element: Element): Promise<void>;
+    // (undocumented)
+    keyboard(text: string): Promise<unknown>;
     // (undocumented)
     selectOptions(element: Element, values: string[]): Promise<void>;
     // (undocumented)

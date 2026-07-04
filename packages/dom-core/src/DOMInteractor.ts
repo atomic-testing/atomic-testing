@@ -396,6 +396,46 @@ export class DOMInteractor implements Interactor {
     if ('focus' in el) {
       (el as HTMLElement).focus();
     }
+
+    // When the element genuinely holds focus, dispatch through
+    // `userEvent.keyboard` so the press carries full editing fidelity —
+    // keydown → beforeinput/input (for editing keys on editable targets) →
+    // keyup — matching Playwright's `locator.press()`. A bare keydown/keyup
+    // pair reaches `KeyboardEvent.key` handlers but is invisible to components
+    // that commit edits from input events (e.g. the MUI X picker section field
+    // clearing on Backspace, see #903).
+    const activeElement = el.ownerDocument?.activeElement;
+    const holdsFocus = el === activeElement || (activeElement != null && el.contains(activeElement));
+    if (holdsFocus) {
+      // Printable keys are typed as-is (doubling `{`/`[` so user-event's
+      // descriptor syntax never engages); named keys become `{Key}` descriptors.
+      const descriptor = key.length === 1 ? key.replace(/[{[]/, '$&$&') : `{${key}}`;
+      let chord = descriptor;
+      if (option?.shift) {
+        chord = `{Shift>}${chord}{/Shift}`;
+      }
+      if (option?.alt) {
+        chord = `{Alt>}${chord}{/Alt}`;
+      }
+      if (option?.ctrl) {
+        chord = `{Control>}${chord}{/Control}`;
+      }
+      if (option?.meta) {
+        chord = `{Meta>}${chord}{/Meta}`;
+      }
+      try {
+        await this.userEvent.keyboard(chord);
+        return;
+      } catch {
+        // user-event rejects keys outside its keyboard map while parsing,
+        // before dispatching anything — fall through to the bare key events so
+        // exotic keys still reach KeyboardEvent.key handlers as before.
+      }
+    }
+
+    // Non-focusable target (or a key user-event cannot type): dispatch the key
+    // events directly on the element, as a real key press cannot originate
+    // from it anyway.
     // `keyCode`/`which` mirror `key` for handlers that still read the legacy
     // numeric code (see legacyKeyCodes above).
     const keyCode = DOMInteractor.legacyKeyCodeOf(key);
@@ -496,6 +536,53 @@ export class DOMInteractor implements Interactor {
     }
 
     await this.userEvent.type(el, text);
+  }
+
+  /**
+   * Type text into the element as real per-character keystrokes.
+   *
+   * Focuses the element, then dispatches the characters through
+   * `userEvent.keyboard`, which fires the full key event sequence
+   * (keydown → beforeinput → input → keyup) against the active element —
+   * matching `PlaywrightInteractor`'s `pressSequentially` (focus + keys, no
+   * pointer event, no clearing). `{`/`[` are doubled so user-event's
+   * descriptor syntax never engages and the text is typed literally.
+   *
+   * @param locator - Locator used to find the target element
+   * @param text - The literal text to type, one keystroke per character
+   * @returns Promise resolved once every keystroke has been dispatched
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async typeText(locator: PartLocator, text: string): Promise<void> {
+    const el = await this.getElement(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'typeText');
+    }
+    if ('focus' in el) {
+      (el as HTMLElement).focus();
+    }
+    // A real browser places a caret inside a contenteditable host on focus;
+    // jsdom does not, and userEvent.keyboard inserts at the document selection
+    // — so without a caret the keystrokes would land nowhere. Collapse a
+    // selection to the end of the host's content (matching userEvent.type's
+    // append behavior) unless the caret is already inside it.
+    if (el.hasAttribute('contenteditable')) {
+      const selection = el.ownerDocument.getSelection();
+      if (selection != null && (selection.anchorNode == null || !el.contains(selection.anchorNode))) {
+        const range = el.ownerDocument.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+    // userEvent.keyboard('') throws ("Expected key descriptor"), so an empty
+    // text is focus-only — the same outcome pressSequentially('') produces.
+    if (text === '') {
+      return;
+    }
+    const literalText = text.replace(/[{[]/g, '$&$&');
+    await this.userEvent.keyboard(literalText);
   }
 
   /**

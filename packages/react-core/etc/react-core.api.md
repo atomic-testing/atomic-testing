@@ -23,7 +23,6 @@ import { PressKeyOption } from '@atomic-testing/core';
 import { ReactNode } from 'react';
 import { ScenePart } from '@atomic-testing/core';
 import { TestEngine } from '@atomic-testing/core';
-import { WaitForOption } from '@atomic-testing/core';
 import { WaitUntilOption } from '@atomic-testing/core';
 
 // @public
@@ -82,9 +81,9 @@ export class ReactInteractor extends DOMInteractor {
     // (undocumented)
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
     // (undocumented)
-    waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
+    typeText(locator: PartLocator, text: string): Promise<void>;
     // (undocumented)
-    waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
+    waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
 }
 
 // (No @packageDocumentation comment for this package)

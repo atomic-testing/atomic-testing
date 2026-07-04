@@ -16,6 +16,10 @@ export interface UserEventDispatcher {
   clear(element: Element): Promise<void>;
   click(element: Element): Promise<void>;
   hover(element: Element): Promise<void>;
+  // Returns unknown (not void): the default user-event export's keyboard()
+  // resolves to its internal keyboard state, and Promise's type parameter is
+  // invariant to the void-return assignability exception.
+  keyboard(text: string): Promise<unknown>;
   selectOptions(element: Element, values: string[]): Promise<void>;
   type(element: Element, text: string): Promise<void>;
   upload(element: HTMLElement, files: File | File[]): Promise<void>;
