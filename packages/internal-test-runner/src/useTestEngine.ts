@@ -32,10 +32,22 @@ export function useTestEngine<T extends ScenePart>(
   // both cases at runtime by inspecting the arguments object.
   // @ts-ignore
   hooks.beforeEach(function ({ page }: TestFixture) {
-    testEngine = getTestEngine(scenePart, { page });
-    if (typeof arguments[0] === 'function') {
-      (arguments[0] as () => void)();
+    const done = typeof arguments[0] === 'function' ? (arguments[0] as () => void) : undefined;
+    const engineOrPromise = getTestEngine(scenePart, { page });
+    // Async factories (e.g. the Angular adapter, whose bootstrap is inherently
+    // async) resolve before the first test runs. The promise is only returned
+    // to promise-aware runners (Vitest/Playwright); done-callback runners
+    // (Jest) signal completion through `done` instead, because a hook may not
+    // both take a done callback and return a promise.
+    if (engineOrPromise instanceof Promise) {
+      const resolved = engineOrPromise.then(engine => {
+        testEngine = engine;
+        done?.();
+      });
+      return done == null ? resolved : undefined;
     }
+    testEngine = engineOrPromise;
+    done?.();
   });
 
   hooks.afterEach(async () => {
