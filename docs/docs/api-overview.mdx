@@ -534,13 +534,21 @@ pnpm add @atomic-testing/component-driver-mui-x-v9
 </TabItem>
 </Tabs>
 
-| Driver                  | Description                                                      |
-| ----------------------- | ---------------------------------------------------------------- |
-| DataGridPremiumDriver   | Driver for DataGrid / DataGridPro / DataGridPremium component    |
-| DataGridHeaderRowDriver | Driver for header rows in DataGrid                               |
-| DataGridDataRowDriver   | Driver for data rows in DataGrid                                 |
-| DesktopDatePickerDriver | Read-capable driver for DesktopDatePicker (v9 section field)     |
-| SimpleTreeViewDriver    | Driver for SimpleTreeView / RichTreeView (expand/collapse, read) |
+| Driver                         | Description                                                                                     |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- |
+| DataGridPremiumDriver          | Driver for DataGrid / DataGridPro / DataGridPremium (reads, sorting, filtering, selection, editing, pagination) |
+| DataGridHeaderRowDriver        | Driver for header rows in DataGrid                                                               |
+| DataGridDataRowDriver          | Driver for data rows in DataGrid                                                                 |
+| DesktopDatePickerDriver        | Driver for DesktopDatePicker (reads + keystroke/calendar writes on the v9 section field)         |
+| DateTimePickerDriver           | Driver for the desktop DateTimePicker (keystroke writes incl. meridiem)                          |
+| TimePickerDriver               | Driver for the desktop TimePicker (keystroke writes incl. meridiem)                              |
+| MobileDatePickerDriver         | Driver for MobileDatePicker (writes through the modal entry dialog)                              |
+| MobileDatePickerDialogDriver   | Driver for the mobile picker's entry dialog (pick day, accept/cancel)                            |
+| DateRangePickerDriver          | Driver for the Pro DateRangePicker's single-input range field                                    |
+| BarChartDriver                 | Driver for BarChart (legend/axis/data-point reads, hover + tooltip)                              |
+| LineChartDriver                | Driver for LineChart (legend/axis/mark reads, hover + tooltip)                                  |
+| PieChartDriver                 | Driver for PieChart (legend/slice reads, hover + tooltip)                                        |
+| SimpleTreeViewDriver           | Driver for SimpleTreeView / RichTreeView (expand/collapse, read)                                 |
 
 </details>
 
