@@ -1,5 +1,6 @@
 import { ScenePart } from '@atomic-testing/core';
 
+import { getDoneCallback } from './doneCallback';
 import { E2eTestRunEnvironmentFixture, InteractionInterface, TestFrameworkMapper, TestSuiteInfo } from './types';
 
 export const emptyGoto = (_url: string) => {};
@@ -14,22 +15,18 @@ export function testRunner<T extends ScenePart>(
   suites.forEach(suite => {
     const { title, tests, url } = suite;
     testMethod.describe(title ?? '', () => {
-      // INTENTIONAL @ts-ignore: This function supports both Jest and Playwright callback signatures.
+      // INTENTIONAL @ts-ignore: This function supports the Jest, Playwright and Vitest
+      // callback signatures.
       // Jest uses a done callback: (done?: DoneCallback) => void
       // Playwright uses fixture destructuring: ({ page, browser }) => Promise<void>
+      // Vitest passes a (callable) TestContext object.
       // These signatures are fundamentally incompatible, so we use @ts-ignore and handle
-      // both cases at runtime by inspecting the arguments object.
+      // all cases at runtime by inspecting the arguments object.
       // @ts-ignore
       testMethod.beforeEach(function ({ page: _page }) {
-        let done: (() => void) | undefined = undefined;
-        let parameters: E2eTestRunEnvironmentFixture | undefined = undefined;
-
         const passIn = arguments[0];
-        if (typeof passIn === 'function') {
-          done = passIn as () => void;
-        } else {
-          parameters = passIn as E2eTestRunEnvironmentFixture;
-        }
+        const done = getDoneCallback(passIn);
+        const parameters = done == null ? (passIn as E2eTestRunEnvironmentFixture) : undefined;
 
         if ('goto' in interactionInterface) {
           const cb = interactionInterface.goto(url, parameters);
