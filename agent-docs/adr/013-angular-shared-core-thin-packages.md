@@ -4,6 +4,23 @@
 
 Accepted (2026-07-03). Implements #1013.
 
+> **Update (2026-07-04):** The zone.js-loaded-at-bootstrap detection described
+> in point 3 below was incomplete. `createApplication()`'s own default change-
+> detection strategy changed between majors: Angular 20's `internalCreateApplication`
+> defaults to zone-based CD, but Angular 21+ defaults to
+> `provideZonelessChangeDetectionInternal()` regardless of whether zone.js is
+> loaded — so merely loading zone.js was not enough on 21/22 to actually get
+> zone-based change detection, and a `setTimeout`-driven update was silently
+> not settled by `whenStable()` under "zone" mode on those majors (Angular 20
+> only worked because its default happened to match). Only surfaced once
+> `angular-21-test`/`angular-22-test` were added and made to actually
+> bootstrap against their own installed major (a separate, now-fixed module-
+> resolution bug had them all silently running Angular 20's runtime
+> regardless). Fixed in `createTestEngine.ts`: the zone.js-presence check now
+> always explicitly provides `provideZoneChangeDetection()` or
+> `provideZonelessChangeDetection()` — never omits both and relies on
+> `createApplication()`'s own default — making the choice version-independent.
+
 ## Context
 
 Angular support (Angular 20–22) was added to the component-driver pattern.
@@ -50,8 +67,11 @@ Angular's specifics shaped three further decisions:
    needed at interaction time; each settle is bounded by a timeout because
    `whenStable()` never resolves for apps that never stabilize (e.g.
    `setInterval` inside the zone). Zone.js feature detection happens once at
-   bootstrap instead: when `Zone` is absent, `createTestEngine` adds
-   `provideZonelessChangeDetection()` automatically. Updates Angular cannot
+   bootstrap instead: `createTestEngine` always explicitly provides
+   `provideZoneChangeDetection()` when `Zone` is present or
+   `provideZonelessChangeDetection()` when it is absent — never omits both,
+   since `createApplication()`'s own default CD strategy is not consistent
+   across majors (see the 2026-07-04 update above). Updates Angular cannot
    track (bare timers under zoneless) remain covered by the existing polling
    `waitUntil` path in `DOMInteractor`.
 4. **Async `createTestEngine`.** Angular bootstrap is inherently async, so the
