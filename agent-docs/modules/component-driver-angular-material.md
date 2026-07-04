@@ -3,8 +3,9 @@
 Covers `component-driver-angular-material-v20` / `-v21` / `-v22` — drivers for
 [Angular Material](https://material.angular.dev) components, one package per
 Material major (ADR-003 model, like the MUI drivers). Phase 1 of #1024
-scaffolded the packages with a smoke `ButtonDriver`; the driver surface grows
-in later phases (#1026–#1028).
+scaffolded the packages with a smoke `ButtonDriver`; Phase 2 (#1026) added the
+six non-overlay drivers below; the overlay-based drivers arrive in
+#1027–#1028.
 
 ## Package shape
 
@@ -19,12 +20,22 @@ Mirrors `component-driver-mui-v7`:
 
 ## Drivers
 
-| Driver         | Anchors on                                                                                                          | File (v20; v21/v22 are per-major copies)                                                               |
-| -------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `ButtonDriver` | native `<button>`/`<a>` host of `matButton`; `disabled` or `aria-disabled="true"` (`disabledInteractive`) for state | [ButtonDriver.ts](../../packages/component-driver-angular-material-v20/src/components/ButtonDriver.ts) |
+| Driver                                | Anchors on                                                                                                                                                | File (v20; v21/v22 are per-major copies)                                                                         |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `ButtonDriver`                        | native `<button>`/`<a>` host of `matButton`; `disabled` or `aria-disabled="true"` (`disabledInteractive`) for state                                        | [ButtonDriver.ts](../../packages/component-driver-angular-material-v20/src/components/ButtonDriver.ts)           |
+| `CheckboxDriver`                      | native `<input type="checkbox">` inside the `<mat-checkbox>` host; `aria-checked="mixed"` for indeterminate                                                | [CheckboxDriver.ts](../../packages/component-driver-angular-material-v20/src/components/CheckboxDriver.ts)       |
+| `InputDriver`                         | `<mat-form-field>` root; `input[matInput]`/`textarea[matInput]` control; `mat-hint`/`mat-error` for messages; `aria-invalid` **or** a rendered error for `isError` (Material drops `aria-invalid` on empty required fields) | [InputDriver.ts](../../packages/component-driver-angular-material-v20/src/components/InputDriver.ts)             |
+| `RadioGroupDriver`/`RadioButtonDriver` | native `<input type="radio">`s inside the `role="radiogroup"`/`<mat-radio-button>` hosts; forwarded `value` attribute                                      | [RadioGroupDriver.ts](../../packages/component-driver-angular-material-v20/src/components/RadioGroupDriver.ts)   |
+| `SlideToggleDriver`                   | `<button role="switch">`; `aria-checked` for state, `aria-required` (no native input exists)                                                               | [SlideToggleDriver.ts](../../packages/component-driver-angular-material-v20/src/components/SlideToggleDriver.ts) |
+| `TabsDriver`/`TabDriver`              | `role="tab"` items under the `<mat-tab-group>` host; `aria-selected`/`aria-disabled`; panel text through the `aria-controls`↔`id` link                     | [TabsDriver.ts](../../packages/component-driver-angular-material-v20/src/components/TabsDriver.ts)               |
 
 **Locator rule:** anchor on ARIA roles/attributes or forwarded `data-testid`,
 never on `.mat-mdc-*` classes — Angular documents them as unstable.
+
+**Labels resolve through `<label for>`↔`id`** — Material links every control's
+label to the control's auto-generated id, and `internal/linkedLocators.ts`
+resolves that link via `byLinkedElement` (astryx precedent). Material always
+renders the label element, so an empty label reports as `undefined`.
 
 ## Test packages (`package-tests/component-driver-angular-material-*-test`)
 
@@ -50,6 +61,12 @@ with an Angular twist on the DOM side:
   two Angular copies and dies with NG0203 unless its vitest config sets
   `resolve.dedupe` for `@angular/*`/`rxjs`/`zone.js` (the React-dedupe
   problem, Angular edition).
+- **Cold-cache dep discovery (Vitest):** the initial optimizeDeps scan only
+  sees the test files, so `@angular/material/*` entries imported by examples
+  are discovered mid-run on a cold cache; the re-optimization hands the
+  JIT-linked components a second, raw `@angular/core` copy (breaks with
+  `firstCreatePass` of null in `providersResolver`). The vitest configs list
+  every Angular entry the examples touch in `optimizeDeps.include`.
 - **One `@playwright/test` instance:** the local `playwright` devDependency
   must match the workspace-root `@playwright/test` pin, or the e2e CLI and the
   adapter's import load two copies and Playwright hard-errors on
