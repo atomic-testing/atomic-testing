@@ -58,6 +58,7 @@ in parentheses, e.g.:
     fix(dom-core): stop enterText clobbering existing selection (#456)
 
 Types:
+
 - `feat` — new capability (Features)
 - `fix` — bug fix (Fixes)
 - `perf` — performance improvement (Performance)

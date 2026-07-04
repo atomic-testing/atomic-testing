@@ -24,10 +24,7 @@ pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 module.exports = {
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.tsx?$': [
-      '@swc/jest',
-      { jsc: { transform: { react: { runtime: 'automatic' } } } },
-    ],
+    '^.+\\.tsx?$': ['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }],
   },
   // ReactInteractor wraps every interaction in React's act(). Without this flag,
   // React 18+ logs "not wrapped in act(...)" warnings even though it is.
