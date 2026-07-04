@@ -1,5 +1,5 @@
 import { ScenePart, byDataTestId } from '@atomic-testing/core';
-import { createRenderedTestEngine } from '@atomic-testing/react-18';
+import { withTestEngine } from '@atomic-testing/storybook';
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn } from 'storybook/test';
 
@@ -34,9 +34,7 @@ export const DefaultTest: Story = {
     onNextStep: fn(),
     onPreviousStep: fn(),
   },
-  play: async ({ args, canvasElement, step }) => {
-    const testEngine = createRenderedTestEngine(canvasElement, parts);
-
+  play: withTestEngine(parts, async ({ args, step, engine: testEngine }) => {
     await step(
       'Click on the Next button while nothing has been filled in, error should show and onNextStep should not be called',
       async () => {
@@ -54,7 +52,7 @@ export const DefaultTest: Story = {
       expect(hasError, 'form hasError should be false').toBe(false);
       expect(args.onNextStep, 'onNextStep should have been called once').toHaveBeenCalledTimes(1);
     });
-  },
+  }),
 };
 
 export const PrefilledData: Story = {

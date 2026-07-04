@@ -155,6 +155,7 @@ packages/
 ├── react-18/, react-19/     # Version-specific createTestEngine
 ├── vue-3/                   # VueInteractor + createTestEngine
 ├── playwright/              # PlaywrightInteractor
+├── storybook/               # StorybookInteractor + play helpers (Storybook 10)
 ├── component-driver-html/   # HTML element drivers
 └── component-driver-mui-*/  # Material-UI drivers
 
