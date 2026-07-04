@@ -23,6 +23,7 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 | [component-driver-mui](modules/component-driver-mui.md)       | `component-driver-mui-v5/v6/v7`                                                                     | MUI core drivers (v7 reference; version-diff notes).                                             |
 | [component-driver-mui-x](modules/component-driver-mui-x.md)   | `component-driver-mui-x-v5..v8` (+ `internal-mui-x-test-fixture`)                                   | DataGrid (all) + Date/Time pickers (v5 only).                                                    |
 | [component-driver-astryx](modules/component-driver-astryx.md) | `@atomic-testing/component-driver-astryx`                                                           | Astryx (`@astryxdesign/core`) drivers; role/name/testid-first locators; ESM jest-transform note. |
+| [component-driver-radix](modules/component-driver-radix.md)   | `component-driver-radix-v1`, `component-driver-shadcn-v1`                                           | Radix UI (`radix-ui` v1) drivers + shadcn shim; portal re-root recipe; Wave 0 capability audit.  |
 
 ## ADRs
 
