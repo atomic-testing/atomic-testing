@@ -102,10 +102,11 @@ For detailed guides and examples, see the [online documentation](https://atomic-
 Design rationale for major decisions — the component-driver pattern,
 versioning policy, locator boundaries — is recorded as ADRs (architecture
 decision records). See the ADR table in
-[`agent-docs/INDEX.md`](agent-docs/INDEX.md) for the full list.
+[`agent-docs/INDEX.md`](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/INDEX.md)
+for the full list.
 
-See [`ROADMAP.md`](ROADMAP.md) for a summary of what's currently being worked
-on.
+See [`ROADMAP.md`](https://github.com/atomic-testing/atomic-testing/blob/main/ROADMAP.md)
+for a summary of what's currently being worked on.
 
 ## Contributing
 
@@ -119,6 +120,7 @@ pnpm test:dom
 pnpm test:e2e
 ```
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full contribution guidelines,
-including dev setup and commit message conventions. For reporting a security
-vulnerability, see [`SECURITY.md`](SECURITY.md).
+See [`CONTRIBUTING.md`](https://github.com/atomic-testing/atomic-testing/blob/main/CONTRIBUTING.md)
+for full contribution guidelines, including dev setup and commit message
+conventions. For reporting a security vulnerability, see
+[`SECURITY.md`](https://github.com/atomic-testing/atomic-testing/blob/main/SECURITY.md).
