@@ -1,5 +1,5 @@
 import { ScenePart, byDataTestId } from '@atomic-testing/core';
-import { createRenderedTestEngine } from '@atomic-testing/react-18';
+import { withTestEngine } from '@atomic-testing/storybook';
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn } from 'storybook/test';
 
@@ -35,9 +35,7 @@ export const DefaultTest: Story = {
     onNextStep: fn(),
     'data-testid': dataTestId,
   },
-  play: async ({ args, canvasElement, step }) => {
-    const testEngine = createRenderedTestEngine(canvasElement, parts);
-
+  play: withTestEngine(parts, async ({ args, step, engine: testEngine }) => {
     await step('Initially the form should have no errors', async () => {
       const hasError = await testEngine.parts.form.hasError();
       expect(hasError, 'form hasError should be false').toBe(false);
@@ -60,7 +58,7 @@ export const DefaultTest: Story = {
       expect(hasError, 'form hasError should be false').toBe(false);
       expect(args.onNextStep, 'onNextStep should have been called once').toHaveBeenCalledTimes(1);
     });
-  },
+  }),
 };
 
 export const PrefilledData: Story = {

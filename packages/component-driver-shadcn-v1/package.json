@@ -1,0 +1,38 @@
+{
+  "name": "@atomic-testing/component-driver-shadcn-v1",
+  "version": "0.92.0",
+  "description": "Component driver for shadcn/ui (re-export of the Radix UI v1 drivers)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/component-driver-shadcn-v1"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@atomic-testing/component-driver-radix-v1": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  }
+}

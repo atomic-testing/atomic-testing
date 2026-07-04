@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/storybook",
-  "version": "0.90.0",
+  "version": "0.92.0",
   "description": "Framework-agnostic Storybook integration for atomic-testing component drivers",
   "keywords": [],
   "license": "MIT",

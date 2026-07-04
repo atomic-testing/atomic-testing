@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-test-runner-playwright-adapter",
-  "version": "0.90.0",
+  "version": "0.92.0",
   "private": true,
   "description": "Playwright adapter for atomic-testing, not for production use",
   "keywords": [],
