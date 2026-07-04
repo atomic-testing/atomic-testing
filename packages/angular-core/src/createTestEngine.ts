@@ -1,4 +1,4 @@
-import { provideZonelessChangeDetection, Type } from '@angular/core';
+import { provideZoneChangeDetection, provideZonelessChangeDetection, Type } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 
@@ -27,10 +27,11 @@ function isZoneJsLoaded(): boolean {
  * adapters this function returns a `Promise` — `await` it in your setup hook.
  *
  * Change detection mode follows the environment: when zone.js is loaded the
- * app bootstraps zone-based (Angular's default); when it is not,
- * `provideZonelessChangeDetection()` is added automatically. Pass explicit
- * providers via `option.providers` to override (e.g. force zoneless with
- * zone.js present).
+ * app bootstraps zone-based — explicitly via `provideZoneChangeDetection()`,
+ * because Angular 21+ defaults to zoneless even with zone.js present — and
+ * when it is not, `provideZonelessChangeDetection()` is added automatically.
+ * Pass explicit providers via `option.providers` to override (e.g. force
+ * zoneless with zone.js present).
  *
  * @param component The standalone component class to bootstrap
  * @param partDefinitions The scene part definitions
@@ -53,7 +54,13 @@ export async function createTestEngine<T extends ScenePart>(
 
   // Auto-detected mode first, caller-supplied providers after — in Angular DI
   // the later provider wins, so option.providers can override the detection.
-  const providers = [...(isZoneJsLoaded() ? [] : [provideZonelessChangeDetection()]), ...(option?.providers ?? [])];
+  // Zone-based mode is provided explicitly: relying on the framework default
+  // stopped being equivalent at Angular 21, which bootstraps zoneless even
+  // when zone.js is loaded.
+  const providers = [
+    isZoneJsLoaded() ? provideZoneChangeDetection() : provideZonelessChangeDetection(),
+    ...(option?.providers ?? []),
+  ];
 
   try {
     const appRef = await createApplication({ providers });

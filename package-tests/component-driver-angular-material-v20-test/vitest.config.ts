@@ -17,6 +17,15 @@ import { defineConfig } from 'vitest/config';
 // browser config object, so sharing one instance across projects collides.
 function browserProject(name: 'zone' | 'zoneless') {
   return {
+    // Force a single @angular/* instance. @atomic-testing/angular-core's dist
+    // would otherwise resolve its own devDependency copy of Angular while the
+    // examples use this package's — mixing two copies breaks DI (NG0203) and
+    // JIT compilation. Workspace-only wrinkle: published consumers resolve
+    // the peer range to their single copy. Mirrors the React dedupe in
+    // jest.config.base.js and the React test apps' vite configs.
+    resolve: {
+      dedupe: ['@angular/common', '@angular/compiler', '@angular/core', '@angular/platform-browser', 'rxjs', 'zone.js'],
+    },
     test: {
       name,
       include: ['__tests__/**/*.dom.test.ts'],

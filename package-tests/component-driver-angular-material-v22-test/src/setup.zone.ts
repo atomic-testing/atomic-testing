@@ -5,4 +5,7 @@
 // styling so interactions run against realistic geometry.
 import 'zone.js';
 import '@angular/compiler';
-import '@angular/material/prebuilt-themes/azure-blue.css';
+// Direct file path on purpose: @angular/material exports prebuilt themes only
+// under the `style` condition, which Vite's JS-import resolution does not
+// apply — the bare specifier fails to resolve.
+import '../node_modules/@angular/material/prebuilt-themes/azure-blue.css';
