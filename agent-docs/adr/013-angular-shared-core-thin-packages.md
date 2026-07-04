@@ -53,7 +53,11 @@ Angular's specifics shaped three further decisions:
    bootstrap instead: when `Zone` is absent, `createTestEngine` adds
    `provideZonelessChangeDetection()` automatically. Updates Angular cannot
    track (bare timers under zoneless) remain covered by the existing polling
-   `waitUntil` path in `DOMInteractor`.
+   `waitUntil` path in `DOMInteractor`. _Amended 2026-07-04 (#1025):_ when
+   `Zone` **is** present the engine now adds `provideZoneChangeDetection()`
+   explicitly rather than relying on the framework default, because Angular 21
+   made zoneless the default even with zone.js loaded — the Angular 21/22
+   fixtures caught the zone-mode settling contract silently breaking.
 4. **Async `createTestEngine`.** Angular bootstrap is inherently async, so the
    Angular `createTestEngine` returns `Promise<TestEngine<T>>` — a deliberate
    signature divergence from the sync React/Vue variants.
@@ -81,9 +85,15 @@ eliminated for Angular — a cross-cutting fix lands once in `angular-core`.
   acceptable; the React layout shows the shape that takes.
 - ⚠️ `angular-core`'s own peer range must span all supported majors
   (`>=20 <23`) and be widened on each new major.
-- ⚠️ The Angular `createTestEngine` is `async`, so it does not fit the
-  synchronous `GetTestEngine` contract of `internal-test-runner` — the
+- ⚠️ The Angular `createTestEngine` is `async`, so it did not fit the
+  then-synchronous `GetTestEngine` contract of `internal-test-runner` — the
   fixture uses plain Vitest instead of the shared three-file pattern.
+  _Amended 2026-07-04 (#1025):_ `GetTestEngine` now also accepts
+  `Promise<TestEngine>` (awaited by `useTestEngine`), so the Angular Material
+  driver suites (`package-tests/component-driver-angular-material-*-test`)
+  do run the shared three-file pattern; the adapter fixtures
+  (`package-tests/angular-*-test`) deliberately stay on plain Vitest to
+  exercise `AngularInteractor` settling directly.
 - ⚠️ A settle that hits the timeout proceeds silently (by design, to avoid
   deadlock); tests on never-stabilizing apps must rely on polling.
 

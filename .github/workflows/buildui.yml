@@ -207,17 +207,40 @@ jobs:
         run: pnpm test:storybook
         working-directory: ./package-tests/storybook-test
 
-  # Angular adapter fixture — drives a real Angular component through
-  # AngularInteractor in a real browser (Vitest browser mode, Chromium), once
-  # with zone.js loaded and once zoneless. See issue #1013 and
-  # agent-docs/adr/013-angular-shared-core-thin-packages.md.
+  # Angular fixtures — drive real Angular components through AngularInteractor
+  # in a real browser (Vitest browser mode, Chromium), once with zone.js loaded
+  # and once zoneless: the adapter fixtures (angular-2x-test, plain Vitest) and
+  # the Angular Material driver suites (three-file pattern). See issues #1013 /
+  # #1025 and agent-docs/adr/013-angular-shared-core-thin-packages.md.
   angular-vitest-test:
-    name: Test Angular adapter (zone + zoneless)
+    name: Test ${{ matrix.name }} (zone + zoneless)
     runs-on: ubuntu-latest
     needs: build
     permissions:
       contents: read
       id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'Angular 20 adapter'
+            directory: 'angular-20-test'
+            command: 'pnpm test:browser'
+          - name: 'Angular 21 adapter'
+            directory: 'angular-21-test'
+            command: 'pnpm test:browser'
+          - name: 'Angular 22 adapter'
+            directory: 'angular-22-test'
+            command: 'pnpm test:browser'
+          - name: 'Angular Material v20 components'
+            directory: 'component-driver-angular-material-v20-test'
+            command: 'pnpm test:dom'
+          - name: 'Angular Material v21 components'
+            directory: 'component-driver-angular-material-v21-test'
+            command: 'pnpm test:dom'
+          - name: 'Angular Material v22 components'
+            directory: 'component-driver-angular-material-v22-test'
+            command: 'pnpm test:dom'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -233,11 +256,11 @@ jobs:
 
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium --with-deps
-        working-directory: ./package-tests/angular-20-test
+        working-directory: ./package-tests/${{ matrix.directory }}
 
-      - name: Run Angular adapter tests
-        run: pnpm test:browser
-        working-directory: ./package-tests/angular-20-test
+      - name: Run Angular tests
+        run: ${{ matrix.command }}
+        working-directory: ./package-tests/${{ matrix.directory }}
 
   # React legacy (16/17) adapter test — guards the React 16/17 path against
   # silently regressing back onto the React 18/19 (@testing-library/react) graph.
