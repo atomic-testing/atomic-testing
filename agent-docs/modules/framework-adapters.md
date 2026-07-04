@@ -3,14 +3,14 @@
 Covers the packages that adapt the DOM interactor to a UI framework's render lifecycle and reactivity:
 
 | Package                              | Provides                                                                  | Targets              |
-| ------------------------------------ | -------------------------------------------------------------------------- | --------------------- |
-| `@atomic-testing/react-core`         | `ReactInteractor`, `createTestEngine`, `createRenderedTestEngine`         | shared React logic    |
-| `@atomic-testing/react-18`           | re-exports `createTestEngine`, `createRenderedTestEngine` from react-core | React 18              |
-| `@atomic-testing/react-19`           | same                                                                      | React 19              |
-| `@atomic-testing/react-legacy`       | same                                                                      | React ≤17              |
-| `@atomic-testing/vue-3`              | `VueInteractor`, `createTestEngine`, `createRenderedTestEngine`           | Vue 3                 |
-| `@atomic-testing/angular-core`       | `AngularInteractor`, `createTestEngine`, `createRenderedTestEngine`       | shared Angular logic  |
-| `@atomic-testing/angular-20/-21/-22` | re-export of `angular-core`                                               | Angular 20 / 21 / 22  |
+| ------------------------------------ | ------------------------------------------------------------------------- | -------------------- |
+| `@atomic-testing/react-core`         | `ReactInteractor`, `createTestEngine`, `createRenderedTestEngine`         | shared React logic   |
+| `@atomic-testing/react-18`           | re-exports `createTestEngine`, `createRenderedTestEngine` from react-core | React 18             |
+| `@atomic-testing/react-19`           | same                                                                      | React 19             |
+| `@atomic-testing/react-legacy`       | same                                                                      | React ≤17            |
+| `@atomic-testing/vue-3`              | `VueInteractor`, `createTestEngine`, `createRenderedTestEngine`           | Vue 3                |
+| `@atomic-testing/angular-core`       | `AngularInteractor`, `createTestEngine`, `createRenderedTestEngine`       | shared Angular logic |
+| `@atomic-testing/angular-20/-21/-22` | re-export of `angular-core`                                               | Angular 20 / 21 / 22 |
 
 > Why so many React packages? They isolate React-major render-API differences from consumers. `react-18` and `react-19` are thin re-exports of `react-core`'s implementation (#1014); they exist only to pin different peer ranges. See [ADR-003](../adr/003-version-specific-packages.md). The Angular packages take the same refined shape from day one — implementation once in `angular-core`, per-major packages as pure re-exports pinning `@angular/*` peer ranges — see [ADR-013](../adr/013-angular-shared-core-thin-packages.md).
 
@@ -20,18 +20,18 @@ Render a component into the DOM (or wrap a pre-rendered one) and inject an inter
 
 ## Public surface
 
-| Export                                                                                | Package                                          | File                                                                         |
-| -------------------------------------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------- |
-| `ReactInteractor` (extends `DOMInteractor`)                                           | react-core                                       | [ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22)   |
-| `createTestEngine`, `createRenderedTestEngine`                                        | react-core (re-exported by react-18/19)          | [createTestEngine.ts](../../packages/react-core/src/createTestEngine.ts)     |
-| `createTestEngine`, `createRenderedTestEngine`                                        | react-legacy                                     | [createTestEngine.ts](../../packages/react-legacy/src/createTestEngine.ts)   |
-| `IReactTestEngineOption` (`{ rootElement? }`)                                         | react-core (re-exported by react-18/19), react-legacy | [react-core/types.ts](../../packages/react-core/src/types.ts#L3)       |
-| `VueInteractor` (extends `DOMInteractor`)                                             | vue-3                                            | [VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)            |
-| `createTestEngine`, `createRenderedTestEngine`                                        | vue-3                                            | [createTestEngine.ts](../../packages/vue-3/src/createTestEngine.ts)          |
-| `IVueTestEngineOption`, `VueSFCLikeComponent`                                         | vue-3                                            | [vue-3/types.ts](../../packages/vue-3/src/types.ts)                          |
-| `AngularInteractor` (extends `DOMInteractor`)                                         | angular-core                                     | [AngularInteractor.ts](../../packages/angular-core/src/AngularInteractor.ts) |
-| `createTestEngine` (async), `createRenderedTestEngine`                                | angular-core (re-exported by angular-20/-21/-22) | [createTestEngine.ts](../../packages/angular-core/src/createTestEngine.ts)   |
-| `AngularAppStability`, `IAngularTestEngineOption`, `IAngularRenderedTestEngineOption` | angular-core                                     | [angular-core/types.ts](../../packages/angular-core/src/types.ts)            |
+| Export                                                                                | Package                                               | File                                                                         |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `ReactInteractor` (extends `DOMInteractor`)                                           | react-core                                            | [ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22)   |
+| `createTestEngine`, `createRenderedTestEngine`                                        | react-core (re-exported by react-18/19)               | [createTestEngine.ts](../../packages/react-core/src/createTestEngine.ts)     |
+| `createTestEngine`, `createRenderedTestEngine`                                        | react-legacy                                          | [createTestEngine.ts](../../packages/react-legacy/src/createTestEngine.ts)   |
+| `IReactTestEngineOption` (`{ rootElement? }`)                                         | react-core (re-exported by react-18/19), react-legacy | [react-core/types.ts](../../packages/react-core/src/types.ts#L3)             |
+| `VueInteractor` (extends `DOMInteractor`)                                             | vue-3                                                 | [VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)            |
+| `createTestEngine`, `createRenderedTestEngine`                                        | vue-3                                                 | [createTestEngine.ts](../../packages/vue-3/src/createTestEngine.ts)          |
+| `IVueTestEngineOption`, `VueSFCLikeComponent`                                         | vue-3                                                 | [vue-3/types.ts](../../packages/vue-3/src/types.ts)                          |
+| `AngularInteractor` (extends `DOMInteractor`)                                         | angular-core                                          | [AngularInteractor.ts](../../packages/angular-core/src/AngularInteractor.ts) |
+| `createTestEngine` (async), `createRenderedTestEngine`                                | angular-core (re-exported by angular-20/-21/-22)      | [createTestEngine.ts](../../packages/angular-core/src/createTestEngine.ts)   |
+| `AngularAppStability`, `IAngularTestEngineOption`, `IAngularRenderedTestEngineOption` | angular-core                                          | [angular-core/types.ts](../../packages/angular-core/src/types.ts)            |
 
 ## How it works
 
