@@ -63,67 +63,67 @@ copy the shape from the Material UI drivers, exactly as the guide says — but
 per-primitive re-root anchors differ enough from MUI's own DOM that they're
 worth cataloguing:
 
-| Primitive                  | Portalled node under `<body>`                                                                        | Re-root anchor                                                             |
-| --------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| Dialog / AlertDialog       | overlay `<div data-state>` and content `<div role="dialog"\|"alertdialog">` are **each** direct body children | `byRole('dialog'\|'alertdialog', 'Root')`                                   |
-| DropdownMenu / ContextMenu | `div[data-radix-popper-content-wrapper]` wrapping content `<div role="menu">`                          | `byRole('menu', 'Root')`                                                    |
-| Select                     | content `<div role="listbox">` (direct body child)                                                     | `byRole('listbox', 'Root')`                                                 |
-| Popover                    | `div[data-radix-popper-content-wrapper]` wrapping content `<div role="dialog">` — collides with an open modal Dialog's role | trigger's `aria-controls` → `byLinkedElement` (not a static role re-root)   |
-| Tooltip / HoverCard        | `div[data-radix-popper-content-wrapper]` wrapping a **role-less** positioned `<div>`                    | trigger's `aria-describedby`/forwarded `data-testid` (no shared role to anchor on) |
-| Menubar (per menu)         | one `data-radix-popper-content-wrapper` per open menu, several same-role menus under one bar           | trigger's `aria-controls` → `byLinkedElement` (role re-root would collide)  |
+| Primitive                  | Portalled node under `<body>`                                                                                               | Re-root anchor                                                                     |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Dialog / AlertDialog       | overlay `<div data-state>` and content `<div role="dialog"\|"alertdialog">` are **each** direct body children               | `byRole('dialog'\|'alertdialog', 'Root')`                                          |
+| DropdownMenu / ContextMenu | `div[data-radix-popper-content-wrapper]` wrapping content `<div role="menu">`                                               | `byRole('menu', 'Root')`                                                           |
+| Select                     | content `<div role="listbox">` (direct body child)                                                                          | `byRole('listbox', 'Root')`                                                        |
+| Popover                    | `div[data-radix-popper-content-wrapper]` wrapping content `<div role="dialog">` — collides with an open modal Dialog's role | trigger's `aria-controls` → `byLinkedElement` (not a static role re-root)          |
+| Tooltip / HoverCard        | `div[data-radix-popper-content-wrapper]` wrapping a **role-less** positioned `<div>`                                        | trigger's `aria-describedby`/forwarded `data-testid` (no shared role to anchor on) |
+| Menubar (per menu)         | one `data-radix-popper-content-wrapper` per open menu, several same-role menus under one bar                                | trigger's `aria-controls` → `byLinkedElement` (role re-root would collide)         |
 
 NavigationMenu, Toast, and Toolbar render **in-tree**, no portal at all.
 
 ## Coverage — Wave 0 (foundation) and Wave 1 (pain-first flagship)
 
-| Component    | Driver               | E2E-only behavior                                                                                                                   |
-| ------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Separator    | `SeparatorDriver`     | —                                                                                                                                   |
-| Select       | `SelectDriver`        | — (jsdom needs `hasPointerCapture`/`scrollIntoView` polyfills the harness ships; **value identity is label-based**, not `data-value`, since Radix renders none on `Select.Item`) |
-| Dialog       | `DialogDriver`        | only `closeByEscape` is exposed — `Dialog.Overlay` carries no ARIA distinguishing it from page content, so there is no portable `closeByBackdropClick` |
-| DropdownMenu | `DropdownMenuDriver`  | a `ContainerDriver`, so scenes can declare custom `content` parts for `CheckboxItem`/`RadioGroup`/submenu content                    |
-| Popover      | `PopoverDriver`       | trigger-anchored via `aria-controls` → `byLinkedElement` (its content shares `role="dialog"` with modal `Dialog`, so a static re-root would collide) |
+| Component    | Driver               | E2E-only behavior                                                                                                                                                                |
+| ------------ | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Separator    | `SeparatorDriver`    | —                                                                                                                                                                                |
+| Select       | `SelectDriver`       | — (jsdom needs `hasPointerCapture`/`scrollIntoView` polyfills the harness ships; **value identity is label-based**, not `data-value`, since Radix renders none on `Select.Item`) |
+| Dialog       | `DialogDriver`       | only `closeByEscape` is exposed — `Dialog.Overlay` carries no ARIA distinguishing it from page content, so there is no portable `closeByBackdropClick`                           |
+| DropdownMenu | `DropdownMenuDriver` | a `ContainerDriver`, so scenes can declare custom `content` parts for `CheckboxItem`/`RadioGroup`/submenu content                                                                |
+| Popover      | `PopoverDriver`      | trigger-anchored via `aria-controls` → `byLinkedElement` (its content shares `role="dialog"` with modal `Dialog`, so a static re-root would collide)                             |
 
 ## Coverage — Wave 2 (foundation controls)
 
 All in-tree — no portals.
 
-| Component    | Driver                                        | E2E-only behavior                                                                                          |
-| ------------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Checkbox     | `CheckboxDriver`                              | — (renders `<button role="checkbox">`, not a native input — reads `aria-checked`/`data-state`)               |
-| RadioGroup   | `RadioGroupDriver` / `RadioGroupItemDriver`   | — (same button-not-input shape as Checkbox/Switch)                                                           |
-| Switch       | `SwitchDriver`                                | —                                                                                                            |
-| Toggle       | `ToggleDriver`                                | —                                                                                                            |
-| ToggleGroup  | `ToggleGroupDriver`                           | — (group value has no single DOM attribute; the driver derives it by scanning per-item `data-state`)         |
-| Tabs         | `TabDriver` / `TabsDriver`                    | —                                                                                                            |
-| Label        | `LabelDriver`                                 | —                                                                                                            |
-| Progress     | `ProgressDriver`                              | —                                                                                                            |
-| AspectRatio  | `AspectRatioDriver`                           | —                                                                                                            |
-| Avatar       | `AvatarDriver`                                | loaded-image path — `Avatar.Image`'s `onLoadingStatusChange` never fires under jsdom; structure/fallback only there |
-| Collapsible  | `CollapsibleDriver`                           | —                                                                                                            |
-| Accordion    | `AccordionDriver`                             | —                                                                                                            |
+| Component   | Driver                                      | E2E-only behavior                                                                                                   |
+| ----------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Checkbox    | `CheckboxDriver`                            | — (renders `<button role="checkbox">`, not a native input — reads `aria-checked`/`data-state`)                      |
+| RadioGroup  | `RadioGroupDriver` / `RadioGroupItemDriver` | — (same button-not-input shape as Checkbox/Switch)                                                                  |
+| Switch      | `SwitchDriver`                              | —                                                                                                                   |
+| Toggle      | `ToggleDriver`                              | —                                                                                                                   |
+| ToggleGroup | `ToggleGroupDriver`                         | — (group value has no single DOM attribute; the driver derives it by scanning per-item `data-state`)                |
+| Tabs        | `TabDriver` / `TabsDriver`                  | —                                                                                                                   |
+| Label       | `LabelDriver`                               | —                                                                                                                   |
+| Progress    | `ProgressDriver`                            | —                                                                                                                   |
+| AspectRatio | `AspectRatioDriver`                         | —                                                                                                                   |
+| Avatar      | `AvatarDriver`                              | loaded-image path — `Avatar.Image`'s `onLoadingStatusChange` never fires under jsdom; structure/fallback only there |
+| Collapsible | `CollapsibleDriver`                         | —                                                                                                                   |
+| Accordion   | `AccordionDriver`                           | —                                                                                                                   |
 
 ## Coverage — Wave 3 (remaining overlays & menus)
 
-| Component      | Driver                                              | E2E-only behavior                                                                                          |
-| -------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| AlertDialog    | `AlertDialogDriver`                                 | — (`DialogDriver`'s shape, re-rooted at `role="alertdialog"`; `Cancel`/`Action` are consumer `content` parts) |
-| Tooltip        | `TooltipDriver`                                     | delay-driven open transitions and pointer-leave close (jsdom fires no `pointerleave`); hover-open itself works under jsdom |
+| Component      | Driver                                              | E2E-only behavior                                                                                                                                                                                 |
+| -------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AlertDialog    | `AlertDialogDriver`                                 | — (`DialogDriver`'s shape, re-rooted at `role="alertdialog"`; `Cancel`/`Action` are consumer `content` parts)                                                                                     |
+| Tooltip        | `TooltipDriver`                                     | delay-driven open transitions and pointer-leave close (jsdom fires no `pointerleave`); hover-open itself works under jsdom                                                                        |
 | HoverCard      | `HoverCardDriver`                                   | same hover-close split as Tooltip. The one Radix overlay with **no a11y anchor at all** (sighted-users-only by design) — re-roots at `[data-radix-popper-content-wrapper]` instead of a role/link |
-| ContextMenu    | `ContextMenuDriver`                                 | — (opens via the right-click primitive; menu surface is document-rooted, safe because Radix menus are modal) |
-| Menubar        | `MenubarDriver` / `MenubarMenuDriver`               | — (bar is in-tree `role="menubar"`; each menu follows its own trigger's `aria-controls` link)                |
-| NavigationMenu | `NavigationMenuDriver` / `NavigationMenuItemDriver` | — (entirely in-tree — content mounts into `NavigationMenu.Viewport`, no portal)                              |
-| Toast          | `ToastDriver`                                       | timer-driven auto-dismissal is untested by the suite (real-time behavior); click paths (`Action`/`Close`) are covered |
-| Toolbar        | `ToolbarDriver`                                     | —                                                                                                            |
+| ContextMenu    | `ContextMenuDriver`                                 | — (opens via the right-click primitive; menu surface is document-rooted, safe because Radix menus are modal)                                                                                      |
+| Menubar        | `MenubarDriver` / `MenubarMenuDriver`               | — (bar is in-tree `role="menubar"`; each menu follows its own trigger's `aria-controls` link)                                                                                                     |
+| NavigationMenu | `NavigationMenuDriver` / `NavigationMenuItemDriver` | — (entirely in-tree — content mounts into `NavigationMenu.Viewport`, no portal)                                                                                                                   |
+| Toast          | `ToastDriver`                                       | timer-driven auto-dismissal is untested by the suite (real-time behavior); click paths (`Action`/`Close`) are covered                                                                             |
+| Toolbar        | `ToolbarDriver`                                     | —                                                                                                                                                                                                 |
 
 ## Coverage — Wave 4 (interaction-heavy)
 
-| Component            | Driver                        | E2E-only behavior                                                                                                            |
-| --------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| Slider                | `SliderDriver`                | pointer-driven `dragBy`; keyboard `setValue` (arrows/Home/End) works in both worlds. No native `<input type="range">` exists in the DOM — single-thumb scope, mirroring the Astryx driver |
-| ScrollArea            | `ScrollAreaDriver`             | positional scroll effects (`scrollBy`/`scrollIntoView` results); `getScrollbarState`'s `data-state` read is jsdom-safe       |
-| PasswordToggleField   | `PasswordToggleFieldDriver`   | — (`PasswordToggleField.Root` renders no DOM node of its own — a pure context provider — so the scene must supply an explicit wrapping element for the driver's root locator) |
-| OneTimePasswordField  | `OneTimePasswordFieldDriver`  | — (`setValue` types one character per box rather than using Radix's paste-into-first-box autofill path — no portable `Interactor` primitive for `ClipboardEvent`) |
+| Component            | Driver                       | E2E-only behavior                                                                                                                                                                         |
+| -------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Slider               | `SliderDriver`               | pointer-driven `dragBy`; keyboard `setValue` (arrows/Home/End) works in both worlds. No native `<input type="range">` exists in the DOM — single-thumb scope, mirroring the Astryx driver |
+| ScrollArea           | `ScrollAreaDriver`           | positional scroll effects (`scrollBy`/`scrollIntoView` results); `getScrollbarState`'s `data-state` read is jsdom-safe                                                                    |
+| PasswordToggleField  | `PasswordToggleFieldDriver`  | — (`PasswordToggleField.Root` renders no DOM node of its own — a pure context provider — so the scene must supply an explicit wrapping element for the driver's root locator)             |
+| OneTimePasswordField | `OneTimePasswordFieldDriver` | — (`setValue` types one character per box rather than using Radix's paste-into-first-box autofill path — no portable `Interactor` primitive for `ClipboardEvent`)                         |
 
 ## Coverage — Wave 5 (best-effort v1: Combobox)
 
@@ -136,9 +136,9 @@ use (see [facebook/astryx#3240](https://github.com/facebook/astryx/issues/3240)
 for that precedent). The ship-vs-descope investigation and evidence are
 recorded on [#1007](https://github.com/atomic-testing/atomic-testing/issues/1007).
 
-| Component | Driver                                     | v1 scope & blocking dependency                                                                                                                                                                                                                        |
-| --------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Combobox  | `ComboboxDriver` / `ComboboxOptionDriver`  | The Radix half (trigger + portalled panel) is inherited from `PopoverDriver` unchanged; the cmdk half anchors on cmdk's public styling attributes (`[cmdk-input]`, `[cmdk-list]`, `[cmdk-item]`, `[cmdk-empty]`). **Selected value** is read as the trigger's visible text — the composition keeps selection in consumer React state, per shadcn's own recipe, so there is no DOM attribute carrying it. **`Command.Group` headings are not modeled** — grouped items are still enumerated (in document order) via `childListHelper`'s wrapper descent. **cmdk-inside-`Dialog`** (the command-palette usage) is out of scope — sustained demand for that pairing would motivate a standalone `component-driver-cmdk` package rather than folding it into this driver. `cmdk` is declared an **optional** peer dependency of `component-driver-radix-v1` (the driver never imports it — the coupling is CSS-attribute-only), so only Combobox consumers need it installed. |
+| Component | Driver                                    | v1 scope & blocking dependency                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Combobox  | `ComboboxDriver` / `ComboboxOptionDriver` | The Radix half (trigger + portalled panel) is inherited from `PopoverDriver` unchanged; the cmdk half anchors on cmdk's public styling attributes (`[cmdk-input]`, `[cmdk-list]`, `[cmdk-item]`, `[cmdk-empty]`). **Selected value** is read as the trigger's visible text — the composition keeps selection in consumer React state, per shadcn's own recipe, so there is no DOM attribute carrying it. **`Command.Group` headings are not modeled** — grouped items are still enumerated (in document order) via `childListHelper`'s wrapper descent. **cmdk-inside-`Dialog`** (the command-palette usage) is out of scope — sustained demand for that pairing would motivate a standalone `component-driver-cmdk` package rather than folding it into this driver. `cmdk` is declared an **optional** peer dependency of `component-driver-radix-v1` (the driver never imports it — the coupling is CSS-attribute-only), so only Combobox consumers need it installed. |
 
 Unlike `SelectDriver` (label-based, since Radix renders no `data-value` on
 `Select.Item`), `ComboboxDriver` is **value-based** (`selectByValue`,
