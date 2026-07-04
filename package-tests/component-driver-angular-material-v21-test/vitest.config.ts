@@ -32,6 +32,31 @@ function browserProject(name: 'zone' | 'zoneless') {
     resolve: {
       dedupe: ['@angular/common', '@angular/compiler', '@angular/core', '@angular/platform-browser', 'rxjs', 'zone.js'],
     },
+    // Pre-bundle every Angular entry the examples touch. Vitest's initial
+    // scan only sees the test files, so on a cold cache the Material
+    // subpackages are discovered mid-run; the re-optimization then serves the
+    // JIT-linked components a second, raw copy of @angular/core whose internal
+    // state is separate from the pre-bundled one (NG0203-style breakage —
+    // `firstCreatePass` null in providersResolver). Listing the entries makes
+    // the first run deterministic.
+    optimizeDeps: {
+      include: [
+        '@angular/common',
+        '@angular/compiler',
+        '@angular/core',
+        '@angular/forms',
+        '@angular/material/button',
+        '@angular/material/checkbox',
+        '@angular/material/form-field',
+        '@angular/material/input',
+        '@angular/material/radio',
+        '@angular/material/slide-toggle',
+        '@angular/material/tabs',
+        '@angular/platform-browser',
+        'rxjs',
+        'zone.js',
+      ],
+    },
     test: {
       name,
       include: ['__tests__/**/*.dom.test.ts'],

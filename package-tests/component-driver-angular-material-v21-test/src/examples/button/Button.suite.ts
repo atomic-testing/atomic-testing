@@ -16,6 +16,10 @@ export const buttonScenePart = {
     locator: byDataTestId('disabled-button'),
     driver: ButtonDriver,
   },
+  interactiveDisabledButton: {
+    locator: byDataTestId('interactive-disabled-button'),
+    driver: ButtonDriver,
+  },
 } satisfies ScenePart;
 
 export const buttonTestSuite: TestSuiteInfo<typeof buttonScenePart> = {
@@ -49,6 +53,12 @@ export const buttonTestSuite: TestSuiteInfo<typeof buttonScenePart> = {
       test('isDisabled reflects the disabled state', async () => {
         assertTrue(await engine().parts.disabledButton.isDisabled());
         assertFalse(await engine().parts.saveButton.isDisabled());
+      });
+
+      // A disabledInteractive button stays focusable and carries no native
+      // disabled attribute — isDisabled reads its aria-disabled="true" instead.
+      test('isDisabled covers the disabledInteractive flavor', async () => {
+        assertTrue(await engine().parts.interactiveDisabledButton.isDisabled());
       });
     });
   },
