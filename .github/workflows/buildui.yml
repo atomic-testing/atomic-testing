@@ -155,6 +155,8 @@ jobs:
             directory: 'component-driver-astryx-test'
           - name: 'Radix components'
             directory: 'component-driver-radix-test'
+          - name: 'PrimeVue components'
+            directory: 'component-driver-primevue-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
