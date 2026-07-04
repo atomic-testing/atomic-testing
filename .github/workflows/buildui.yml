@@ -173,7 +173,16 @@ jobs:
         working-directory: ./package-tests/${{ matrix.directory }}
 
       - name: Run test
-        run: pnpm test:dom
+        shell: bash
+        run: |
+          set +e
+          node --version
+          pnpm test:dom > jest-out.log 2>&1
+          code=$?
+          echo "==== jest exit code: $code ===="
+          echo "==== total lines: $(wc -l < jest-out.log) ===="
+          grep -vE 'at |console\.error|The current testing environment is not configured to support act' jest-out.log | tail -n 3500
+          exit $code
         working-directory: ./package-tests/${{ matrix.directory }}
 
   # Storybook integration fixture — runs Driver-powered stories as real-browser
