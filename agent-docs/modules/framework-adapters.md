@@ -37,13 +37,15 @@ Render a component into the DOM (or wrap a pre-rendered one) and inject an inter
 
 ### ReactInteractor
 
-Extends `DOMInteractor` and `override`s every interactive method to wrap the `super` call in `act()` from `@testing-library/react`, so React state updates are flushed before the method resolves ([ReactInteractor.ts#L22-L127](../../packages/react-core/src/ReactInteractor.ts#L22-L127)):
+Extends `DOMInteractor` and `override`s every interactive method to wrap the `super` call in `act()` from `@testing-library/react`, so React state updates are flushed before the method resolves ([ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts)):
 
 ```ts
 override async click(locator, option?) {
   await act(async () => { await super.click(locator, option); });
 }
 ```
+
+The `user-event`-backed methods (`click`, `hover`, `activate`, `enterText`, `selectOptionValue`, `setInputFiles`) additionally pin the `IS_REACT_ACT_ENVIRONMENT` global to `true` for the duration of the call (`runUserEvent` — see its doc comment): `@testing-library/react`'s `asyncWrapper` temporarily disables the act environment around async `user-event` calls, which is only correct when `user-event` is _not_ already act-managed; nested inside this interactor's `act()` it would otherwise make react-dom log `The current testing environment is not configured to support act(...)` for every update — enough log volume on update-heavy trees (Radix) to kill CI jest runs.
 
 `clone()` returns `new ReactInteractor(this.rootEl)`.
 
