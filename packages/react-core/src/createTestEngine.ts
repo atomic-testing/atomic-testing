@@ -1,9 +1,9 @@
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
-import { ReactInteractor } from '@atomic-testing/react-core';
 import { act } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { ReactInteractor } from './ReactInteractor';
 import { IReactTestEngineOption } from './types';
 
 let _rootId = 0;
@@ -14,7 +14,7 @@ function getNextRootElementId() {
 const rootElementAttributeName = 'data-atomic-testing-react';
 
 /**
- * Create test engine for React 19, for React 17 or before, use createLegacyTestEngine
+ * Create test engine for React 18 or later, for React 17 or before, use createLegacyTestEngine
  * This function takes a react node and render it into a container element.  For rendered
  * components, use createRenderedTestEngine
  * @param node The React node to render
@@ -54,7 +54,7 @@ export function createTestEngine<T extends ScenePart>(
 }
 
 /**
- * Create test engine for React 19, for React 17 or before, use createRenderedLegacyTestEngine
+ * Create test engine for React 18 or later, for React 17 or before, use createRenderedLegacyTestEngine
  * This function takes an html element purportedly rendered by React and create a test engine for it, it
  * can be useful in environment such as Storybook where Storybook renders the component and the test
  * @param rootElement The root HTML element rendered by React
