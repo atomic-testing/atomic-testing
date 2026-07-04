@@ -235,10 +235,10 @@ importers:
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
         specifier: ^4.1.9
-        version: 4.1.9(playwright@1.56.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.9(playwright@1.61.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
       playwright:
-        specifier: ~1.56.1
-        version: 1.56.1
+        specifier: ^1.61.1
+        version: 1.61.1
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@20.0.3)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))
@@ -296,10 +296,10 @@ importers:
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
         specifier: ^4.1.9
-        version: 4.1.9(playwright@1.56.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.9(playwright@1.61.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
       playwright:
-        specifier: ~1.56.1
-        version: 1.56.1
+        specifier: ^1.61.1
+        version: 1.61.1
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@20.0.3)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))
@@ -357,10 +357,10 @@ importers:
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
         specifier: ^4.1.9
-        version: 4.1.9(playwright@1.56.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.9(playwright@1.61.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
       playwright:
-        specifier: ~1.56.1
-        version: 1.56.1
+        specifier: ^1.61.1
+        version: 1.61.1
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@20.0.3)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))

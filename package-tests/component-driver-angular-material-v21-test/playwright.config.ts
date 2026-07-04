@@ -2,6 +2,12 @@ import { defineConfig, devices } from '@playwright/test';
 
 const baseUrl = 'http://localhost:5221';
 
+// CHROMIUM_EXECUTABLE lets sandboxed dev environments point at a preinstalled
+// Chromium (mirroring package-tests/storybook-test); CI and normal dev
+// machines resolve the browsers through Playwright's registry
+// (npx playwright install).
+const executablePath = process.env.CHROMIUM_EXECUTABLE;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -31,7 +37,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], ...(executablePath ? { launchOptions: { executablePath } } : {}) },
     },
     {
       name: 'firefox',

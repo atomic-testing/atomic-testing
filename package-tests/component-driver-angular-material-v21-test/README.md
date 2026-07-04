@@ -42,7 +42,10 @@ pnpm test:e2e            # Playwright on chromium, firefox and webkit
 pnpm test:e2e:chrome     # Chromium only (faster iteration)
 ```
 
-The `playwright` devDependency is pinned (`~1.56.1`) to the chromium revision
-preinstalled in the dev container — see `package-tests/angular-21-test`'s
-README for the full rationale. It only affects Vitest browser mode; the e2e
-suites resolve `@playwright/test` from the workspace root.
+The `playwright` devDependency matches the workspace-root `@playwright/test`
+pin so the e2e CLI and the adapter's import share one instance (two copies of
+@playwright/test in a process hard-error). In sandboxed dev environments
+without browser downloads, point `CHROMIUM_EXECUTABLE` at a preinstalled
+Chromium (both the Vitest browser provider and the e2e chromium project honor
+it — mirroring `package-tests/storybook-test`); CI and normal dev machines
+install browsers through Playwright's registry instead.

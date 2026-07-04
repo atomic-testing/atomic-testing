@@ -108,7 +108,10 @@ export interface TestFrameworkMapper {
  * bootstrap API is inherently async — see ADR-013); `useTestEngine` awaits
  * the result either way.
  */
-export type GetTestEngine<T extends ScenePart> = (scenePart: T, context?: any) => TestEngine<T> | Promise<TestEngine<T>>;
+export type GetTestEngine<T extends ScenePart> = (
+  scenePart: T,
+  context?: any
+) => TestEngine<T> | Promise<TestEngine<T>>;
 
 /**
  * Interface for Dom tests which don't involve navigating to a URL

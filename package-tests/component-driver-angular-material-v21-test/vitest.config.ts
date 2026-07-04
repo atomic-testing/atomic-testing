@@ -1,6 +1,12 @@
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
+// CHROMIUM_EXECUTABLE lets sandboxed dev environments point at a preinstalled
+// Chromium (mirroring package-tests/storybook-test); CI and normal dev
+// machines resolve the browser through Playwright's registry (npx playwright
+// install chromium).
+const executablePath = process.env.CHROMIUM_EXECUTABLE;
+
 // The DOM side of the shared suites runs through AngularInteractor in a real
 // browser (Vitest browser mode), under two projects: with zone.js loaded and
 // without (zoneless) — mirroring package-tests/angular-*-test. A real browser
@@ -34,7 +40,7 @@ function browserProject(name: 'zone' | 'zoneless') {
         enabled: true,
         headless: true,
         screenshotFailures: false,
-        provider: playwright(),
+        provider: playwright(executablePath ? { launchOptions: { executablePath } } : {}),
         instances: [{ browser: 'chromium' }],
       },
     },

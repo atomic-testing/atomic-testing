@@ -7,7 +7,6 @@ import '@angular/compiler';
 // under the `style` condition, which Vite's JS-import resolution does not
 // apply — the bare specifier fails to resolve.
 import '../node_modules/@angular/material/prebuilt-themes/azure-blue.css';
-
 import { bootstrapApplication } from '@angular/platform-browser';
 
 import { AppComponent } from './AppComponent';
