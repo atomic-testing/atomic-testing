@@ -1,1 +1,3 @@
-/* `npx shadcn@latest init` will inject Tailwind directives and CSS theme variables here. */
+@import 'tailwindcss';
+
+/* `npx shadcn@latest init` extends this file with its CSS theme variables. */
