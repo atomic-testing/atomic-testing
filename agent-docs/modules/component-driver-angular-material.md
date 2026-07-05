@@ -4,8 +4,8 @@ Covers `component-driver-angular-material-v20` / `-v21` / `-v22` — drivers for
 [Angular Material](https://material.angular.dev) components, one package per
 Material major (ADR-003 model, like the MUI drivers). Phase 1 of #1024
 scaffolded the packages with a smoke `ButtonDriver`; Phase 2 (#1026) added the
-six non-overlay drivers below; the overlay-based drivers arrive in
-#1027–#1028.
+six non-overlay drivers; Phase 3 (#1027) added the four CDK-overlay drivers
+(Select, Dialog, Menu, Snackbar); #1028 remains.
 
 ## Package shape
 
@@ -20,17 +20,58 @@ Mirrors `component-driver-mui-v7`:
 
 ## Drivers
 
-| Driver                                | Anchors on                                                                                                                                                | File (v20; v21/v22 are per-major copies)                                                                         |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `ButtonDriver`                        | native `<button>`/`<a>` host of `matButton`; `disabled` or `aria-disabled="true"` (`disabledInteractive`) for state                                        | [ButtonDriver.ts](../../packages/component-driver-angular-material-v20/src/components/ButtonDriver.ts)           |
-| `CheckboxDriver`                      | native `<input type="checkbox">` inside the `<mat-checkbox>` host; `aria-checked="mixed"` for indeterminate                                                | [CheckboxDriver.ts](../../packages/component-driver-angular-material-v20/src/components/CheckboxDriver.ts)       |
-| `InputDriver`                         | `<mat-form-field>` root; `input[matInput]`/`textarea[matInput]` control; `mat-hint`/`mat-error` for messages; `aria-invalid` **or** a rendered error for `isError` (Material drops `aria-invalid` on empty required fields) | [InputDriver.ts](../../packages/component-driver-angular-material-v20/src/components/InputDriver.ts)             |
-| `RadioGroupDriver`/`RadioButtonDriver` | native `<input type="radio">`s inside the `role="radiogroup"`/`<mat-radio-button>` hosts; forwarded `value` attribute                                      | [RadioGroupDriver.ts](../../packages/component-driver-angular-material-v20/src/components/RadioGroupDriver.ts)   |
-| `SlideToggleDriver`                   | `<button role="switch">`; `aria-checked` for state, `aria-required` (no native input exists)                                                               | [SlideToggleDriver.ts](../../packages/component-driver-angular-material-v20/src/components/SlideToggleDriver.ts) |
-| `TabsDriver`/`TabDriver`              | `role="tab"` items under the `<mat-tab-group>` host; `aria-selected`/`aria-disabled`; panel text through the `aria-controls`↔`id` link                     | [TabsDriver.ts](../../packages/component-driver-angular-material-v20/src/components/TabsDriver.ts)               |
+| Driver                                 | Anchors on                                                                                                                                                                                                                  | File (v20; v21/v22 are per-major copies)                                                                         |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `ButtonDriver`                         | native `<button>`/`<a>` host of `matButton`; `disabled` or `aria-disabled="true"` (`disabledInteractive`) for state                                                                                                         | [ButtonDriver.ts](../../packages/component-driver-angular-material-v20/src/components/ButtonDriver.ts)           |
+| `CheckboxDriver`                       | native `<input type="checkbox">` inside the `<mat-checkbox>` host; `aria-checked="mixed"` for indeterminate                                                                                                                 | [CheckboxDriver.ts](../../packages/component-driver-angular-material-v20/src/components/CheckboxDriver.ts)       |
+| `InputDriver`                          | `<mat-form-field>` root; `input[matInput]`/`textarea[matInput]` control; `mat-hint`/`mat-error` for messages; `aria-invalid` **or** a rendered error for `isError` (Material drops `aria-invalid` on empty required fields) | [InputDriver.ts](../../packages/component-driver-angular-material-v20/src/components/InputDriver.ts)             |
+| `RadioGroupDriver`/`RadioButtonDriver` | native `<input type="radio">`s inside the `role="radiogroup"`/`<mat-radio-button>` hosts; forwarded `value` attribute                                                                                                       | [RadioGroupDriver.ts](../../packages/component-driver-angular-material-v20/src/components/RadioGroupDriver.ts)   |
+| `SlideToggleDriver`                    | `<button role="switch">`; `aria-checked` for state, `aria-required` (no native input exists)                                                                                                                                | [SlideToggleDriver.ts](../../packages/component-driver-angular-material-v20/src/components/SlideToggleDriver.ts) |
+| `TabsDriver`/`TabDriver`               | `role="tab"` items under the `<mat-tab-group>` host; `aria-selected`/`aria-disabled`; panel text through the `aria-controls`↔`id` link                                                                                      | [TabsDriver.ts](../../packages/component-driver-angular-material-v20/src/components/TabsDriver.ts)               |
+| `SelectDriver`/`OptionDriver`          | `<mat-select>` host = the `role="combobox"` trigger (`aria-expanded`/`aria-disabled`/`aria-required`); the `role="listbox"` panel through the `aria-controls`↔`id` link; keyboard-driven open/close (Enter/Escape — the only click handler is on an inner div); value ≡ option label (no DOM value serialization exists) | [SelectDriver.ts](../../packages/component-driver-angular-material-v20/src/components/SelectDriver.ts)           |
+| `DialogDriver`                         | re-roots to the overlay container + `role="dialog"` (`'Same'` refinement); locate by `MatDialogConfig.id` on the container; title via the `aria-labelledby`↔`id` link; backdrop-corner-click and Escape close paths; `ContainerDriver` content for the consumer's own component                                          | [DialogDriver.ts](../../packages/component-driver-angular-material-v20/src/components/DialogDriver.ts)           |
+| `MenuDriver`/`MenuItemDriver`          | re-roots to the overlay container + `role="menu"` (`'Same'` refinement); locate by the panel's `aria-label` (the `<mat-menu aria-label>` input); `role="menuitem"` items via `listHelper`; item clicks probe the animation's `pointer-events: none` window                                                               | [MenuDriver.ts](../../packages/component-driver-angular-material-v20/src/components/MenuDriver.ts)               |
+| `SnackbarDriver`                       | re-roots to the overlay container; scene locator is the exported `snackbarLocator` (`<mat-snack-bar-container>` — no user-settable identity exists); label/action via the `[matSnackBarLabel]`/`[matSnackBarAction]` directive attributes; `aria-live` politeness; `waitForOpen`/`waitForClose` for auto-dismiss timing  | [SnackbarDriver.ts](../../packages/component-driver-angular-material-v20/src/components/SnackbarDriver.ts)       |
 
 **Locator rule:** anchor on ARIA roles/attributes or forwarded `data-testid`,
-never on `.mat-mdc-*` classes — Angular documents them as unstable.
+never on `.mat-mdc-*` classes — Angular documents them as unstable. The one
+sanctioned exception is the CDK's own containment contract,
+`.cdk-overlay-container`/`.cdk-overlay-backdrop`
+([internal/overlayLocators.ts](../../packages/component-driver-angular-material-v20/src/internal/overlayLocators.ts)) —
+the Angular counterpart of the mui drivers anchoring MUI's
+`role="presentation"` portal root.
+
+### Overlay drivers (Phase 3) — portal re-rooting and per-major drift
+
+Overlay content renders outside both the component subtree and the test
+engine's root, so Dialog/Menu/Snackbar re-root via the
+`overriddenParentLocator()`/`overrideLocatorRelativePosition()` portal hooks
+(mui-v7 `DialogDriver`/`MenuDriver` precedent). **Where** overlays render
+drifts by major — verified against each major's real DOM in Chromium:
+
+- **v20**: every overlay is plain positioned DOM inside
+  `.cdk-overlay-container` on `document.body`.
+- **v21/v22**: overlay hosts are native popovers (`popover="manual"`, browser
+  Top Layer). Dialog/menu/snackbar hosts still live inside
+  `.cdk-overlay-container` (the backdrop moves inside the popover host), but
+  **the select panel does not** — MatSelect uses an inline popover inserted
+  inside the `<mat-select>` host itself. `SelectDriver` is therefore the one
+  overlay driver that never re-roots: it resolves the panel through the
+  host's `aria-controls` link, which is location-independent — and its
+  open-state reads target the `aria-selected` option, because host text is
+  the whole option list while the inline panel is up.
+
+Open/close state is **attachment-based** (`exists()`): the CDK detaches
+overlays on close, and a style probe races the exit-animation detach
+(Playwright's `locator.evaluate` would hang on the vanished element). Waits
+are polling `waitUntil` probes, never sleeps; the select's close wait also
+waits for the panel element's actual detach (captured by `id` beforehand),
+because on v21/v22 the exiting panel lingers _inside the host_.
+
+DOM-mode key presses only reach Material because `DOMInteractor.pressKey`
+mirrors the legacy `event.keyCode` (see
+[modules/dom-core.md](dom-core.md)) — Material dispatches on `keyCode`, not
+`key`.
 
 **Labels resolve through `<label for>`↔`id`** — Material links every control's
 label to the control's auto-generated id, and `internal/linkedLocators.ts`
