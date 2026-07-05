@@ -1,4 +1,9 @@
-import { BarChartDriver, LineChartDriver, PieChartDriver } from '@atomic-testing/component-driver-mui-x-v9';
+import {
+  BarChartDriver,
+  LineChartDriver,
+  PieChartDriver,
+  ScatterChartDriver,
+} from '@atomic-testing/component-driver-mui-x-v9';
 import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
@@ -17,6 +22,10 @@ export const chartsExampleScenePart = {
   pieChart: {
     locator: byDataTestId('basic-pie-chart'),
     driver: PieChartDriver,
+  },
+  scatterChart: {
+    locator: byDataTestId('basic-scatter-chart'),
+    driver: ScatterChartDriver,
   },
 } satisfies ScenePart;
 
@@ -58,6 +67,16 @@ export const chartsTestSuite: TestSuiteInfo<typeof chartsExampleScenePart> = {
     test('pie chart legend lists the slices and renders one arc each', async () => {
       assertEqual(await engine().parts.pieChart.getLegendItems(), ['Alpha', 'Beta', 'Gamma']);
       assertEqual(await engine().parts.pieChart.getDataPointCount(), 3);
+    });
+
+    test('scatter chart legend lists both series', async () => {
+      assertEqual(await engine().parts.scatterChart.getLegendItems(), ['Group A', 'Group B']);
+      assertEqual(await engine().parts.scatterChart.getSeriesLabels(), ['Group A', 'Group B']);
+    });
+
+    test('scatter chart renders one marker per point, per series', async () => {
+      assertEqual(await engine().parts.scatterChart.getDataPointCount(0), 5);
+      assertEqual(await engine().parts.scatterChart.getDataPointCount(1), 5);
     });
 
     test('no tooltip is shown before any pointer interaction', async () => {

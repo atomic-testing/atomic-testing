@@ -2,6 +2,7 @@ import { IExampleUIUnit } from '@atomic-testing/core';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import React, { JSX } from 'react';
 
 // Explicit width/height gives the charts a drawing area without ResizeObserver measurements —
@@ -42,6 +43,35 @@ export const BasicCharts: React.FunctionComponent = () => {
                 { id: 0, value: 10, label: 'Alpha' },
                 { id: 1, value: 20, label: 'Beta' },
                 { id: 2, value: 15, label: 'Gamma' },
+              ],
+            },
+          ]}
+        />
+      </div>
+      <div data-testid='basic-scatter-chart'>
+        <ScatterChart
+          width={500}
+          height={300}
+          skipAnimation
+          series={[
+            {
+              label: 'Group A',
+              data: [
+                { x: 1, y: 2, id: 'a0' },
+                { x: 2, y: 5, id: 'a1' },
+                { x: 3, y: 3, id: 'a2' },
+                { x: 4, y: 6, id: 'a3' },
+                { x: 5, y: 4, id: 'a4' },
+              ],
+            },
+            {
+              label: 'Group B',
+              data: [
+                { x: 1, y: 4, id: 'b0' },
+                { x: 2, y: 1, id: 'b1' },
+                { x: 3, y: 6, id: 'b2' },
+                { x: 4, y: 2, id: 'b3' },
+                { x: 5, y: 5, id: 'b4' },
               ],
             },
           ]}

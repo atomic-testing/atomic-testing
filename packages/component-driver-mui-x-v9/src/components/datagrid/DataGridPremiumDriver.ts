@@ -67,6 +67,34 @@ const selectListboxLocator = byCssSelector('[role="listbox"]', 'Root');
 const columnMenuLocator = byCssSelector('[role="menu"]', 'Root');
 const hideColumnMenuItemLocator = byCssSelector('[role="menu"] li:has([data-testid="VisibilityOffIcon"])', 'Root');
 
+// Pin/unpin column-menu entries. "Pin to left"/"Pin to right" carry distinct pushpin icons, so
+// they follow the icon-`data-testid` convention. "Unpin" is the outlier — it renders with an
+// *empty* icon slot (no `svg[data-testid]`), so it is addressed as the one menu item whose
+// `.MuiListItemIcon-root` holds an empty `<span>`. That empty-icon shape appears only for Unpin,
+// and only while a column is pinned, keeping the locator both unique and locale-independent.
+const pinLeftMenuItemLocator = byCssSelector('[role="menu"] li:has([data-testid="PushPinLeftIcon"])', 'Root');
+const pinRightMenuItemLocator = byCssSelector('[role="menu"] li:has([data-testid="PushPinRightIcon"])', 'Root');
+const unpinMenuItemLocator = byCssSelector('[role="menu"] li:has(.MuiListItemIcon-root > span:empty)', 'Root');
+
+// A pinned column header carries a side-specific modifier class; the body cells mirror it, but the
+// header is the single, stable read.
+const pinnedLeftHeaderClass = 'MuiDataGrid-columnHeader--pinnedLeft';
+const pinnedRightHeaderClass = 'MuiDataGrid-columnHeader--pinnedRight';
+
+// Row grouping: group-header rows are the only rows carrying `aria-expanded` (data rows and the
+// aggregation footer row do not), so that attribute is the structural handle for counting and
+// reading their expand/collapse state. Each group row's toggle button lives in its grouping cell.
+const groupHeaderRowLocator = byCssSelector('[role="row"][aria-expanded]');
+const groupToggleLocator = byCssSelector('.MuiDataGrid-groupingCriteriaCellToggle button');
+
+// The grand-total aggregation row is pinned to the grid bottom with a fixed generated id; its
+// per-column cells hold the aggregated values.
+const aggregationFooterRowLocator = byCssSelector('[role="row"][data-id="auto-generated-group-footer-root"]');
+
+// The resize handle within a column header. MUI drives resizing with mouse events on this
+// separator (not HTML5 drag-and-drop), so the portable pixel-delta `drag` primitive can move it.
+const resizeSeparatorSelector = '.MuiDataGrid-columnSeparator--resizable';
+
 // Both the page-size select's input-base wrapper and its inner combobox carry
 // `MuiTablePagination-select`; the role pins the combobox element itself.
 const pageSizeComboboxLocator = byCssSelector('.MuiTablePagination-select[role="combobox"]');
@@ -564,7 +592,185 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
       timeoutMs,
     });
   }
+
+  /**
+   * Which side the column is pinned to (`'left'`/`'right'`), or `null` when it is not pinned,
+   * read from the column header's side-specific modifier class.
+   */
+  async isColumnPinned(field: string): Promise<'left' | 'right' | null> {
+    const header = this.columnHeaderLocator(field);
+    if (await this.interactor.hasCssClass(header, pinnedLeftHeaderClass)) {
+      return 'left';
+    }
+    if (await this.interactor.hasCssClass(header, pinnedRightHeaderClass)) {
+      return 'right';
+    }
+    return null;
+  }
+
+  /**
+   * Pin the column to the given side through its column menu ("Pin to left"/"Pin to right",
+   * identified by icon so the entry stays locale-independent). No-op when the column is already
+   * pinned to that side — the menu omits that side's entry in that state. Requires a Pro/Premium
+   * grid (the community DataGrid has no column pinning).
+   *
+   * @param field The column's field name.
+   * @param side The side to pin to.
+   */
+  async pinColumn(field: string, side: 'left' | 'right', timeoutMs: number = 10000): Promise<void> {
+    if ((await this.isColumnPinned(field)) === side) {
+      return;
+    }
+    await this.openColumnMenu(field, timeoutMs);
+    await this.interactor.click(side === 'left' ? pinLeftMenuItemLocator : pinRightMenuItemLocator);
+    const pinned = await this.waitUntil({
+      probeFn: () => this.isColumnPinned(field),
+      terminateCondition: side,
+      timeoutMs,
+    });
+    if (pinned !== side) {
+      throw new Error(`${this.driverName}: column "${field}" never pinned to ${side}`);
+    }
+  }
+
+  /**
+   * Unpin the column through its column menu ("Unpin"). No-op when the column is not pinned.
+   *
+   * @param field The column's field name.
+   */
+  async unpinColumn(field: string, timeoutMs: number = 10000): Promise<void> {
+    if ((await this.isColumnPinned(field)) === null) {
+      return;
+    }
+    await this.openColumnMenu(field, timeoutMs);
+    await this.interactor.click(unpinMenuItemLocator);
+    const pinned = await this.waitUntil({
+      probeFn: () => this.isColumnPinned(field),
+      terminateCondition: null,
+      timeoutMs,
+    });
+    if (pinned !== null) {
+      throw new Error(`${this.driverName}: column "${field}" never unpinned (still ${pinned})`);
+    }
+  }
+
+  /**
+   * Resize the column by dragging its header's resize separator by `deltaPx` (positive widens,
+   * negative narrows). MUI drives resizing with mouse events on the separator, so this uses the
+   * portable pixel-delta drag.
+   *
+   * jsdom has no layout engine, so the drag has no positional outcome there and the width does not
+   * change — this only exercises the code path under jsdom; the actual resize is E2E-only.
+   *
+   * @param field The column's field name.
+   * @param deltaPx Horizontal pixels to drag the separator by.
+   */
+  async resizeColumn(field: string, deltaPx: number): Promise<void> {
+    const header = this.columnHeaderLocator(field);
+    if (!(await this.interactor.exists(header))) {
+      throw new Error(`${this.driverName}: column "${field}" is not currently rendered`);
+    }
+    const separator = locatorUtil.append(header, byCssSelector(resizeSeparatorSelector));
+    await this.interactor.drag(separator, { x: deltaPx, y: 0 });
+  }
+
+  /**
+   * The rendered pixel width of the column's header — the observable outcome of
+   * {@link resizeColumn}. Reads the header's bounding box, so it is only meaningful E2E (jsdom
+   * reports a zero-size box).
+   *
+   * @param field The column's field name.
+   */
+  async getColumnWidth(field: string): Promise<number> {
+    const rect = await this.interactor.getBoundingRect(this.columnHeaderLocator(field));
+    return rect.width;
+  }
   //#endregion Column management
+
+  //#region Row grouping and aggregation
+  /**
+   * The number of group-header rows currently rendered. Group headers are the only rows carrying
+   * `aria-expanded`, and this counts every match (not just the virtualization window's first run),
+   * so it stays correct with groups expanded or collapsed. Requires the grid's `rowGrouping`.
+   */
+  async getGroupRowCount(): Promise<number> {
+    const groupRows = await this.interactor.getAttribute(
+      locatorUtil.append(this.locator, groupHeaderRowLocator),
+      'aria-expanded',
+      true
+    );
+    return groupRows.length;
+  }
+
+  /**
+   * Whether the group header at the given row index is expanded, from its `aria-expanded`. Groups
+   * are addressed by row index — the same addressing as {@link getRow}/{@link getCell} — so the
+   * caveat is identical: expanding a group shifts the indices of the rows below it. Throws when the
+   * row at that index is not a group header.
+   *
+   * @param rowIndex The rendered `data-rowindex` of the group header row.
+   */
+  async isGroupExpanded(rowIndex: number): Promise<boolean> {
+    const ariaExpanded = await this.interactor.getAttribute(this.rowLocator(rowIndex), 'aria-expanded');
+    if (ariaExpanded == null) {
+      throw new Error(`${this.driverName}: row ${rowIndex} is not a group header row`);
+    }
+    return ariaExpanded === 'true';
+  }
+
+  /**
+   * Expand the group header at the given row index by clicking its toggle (no-op when already
+   * expanded). See {@link isGroupExpanded} for the row-index addressing caveat.
+   */
+  async expandGroup(rowIndex: number, timeoutMs: number = 10000): Promise<void> {
+    await this.setGroupExpansion(rowIndex, true, timeoutMs);
+  }
+
+  /**
+   * Collapse the group header at the given row index by clicking its toggle (no-op when already
+   * collapsed). See {@link isGroupExpanded} for the row-index addressing caveat.
+   */
+  async collapseGroup(rowIndex: number, timeoutMs: number = 10000): Promise<void> {
+    await this.setGroupExpansion(rowIndex, false, timeoutMs);
+  }
+
+  private async setGroupExpansion(rowIndex: number, expanded: boolean, timeoutMs: number): Promise<void> {
+    if ((await this.isGroupExpanded(rowIndex)) === expanded) {
+      return;
+    }
+    await this.interactor.click(locatorUtil.append(this.rowLocator(rowIndex), groupToggleLocator));
+    const reached = await this.waitUntil({
+      probeFn: () => this.isGroupExpanded(rowIndex),
+      terminateCondition: expanded,
+      timeoutMs,
+    });
+    if (reached !== expanded) {
+      throw new Error(
+        `${this.driverName}: group at row ${rowIndex} never became ${expanded ? 'expanded' : 'collapsed'}`
+      );
+    }
+  }
+
+  /**
+   * The aggregated value shown for a column in the grid's grand-total footer row (e.g. the sum of
+   * a quantity column), as displayed text — `null` when that column has no aggregation. Requires
+   * the grid's `aggregation` model. The text is grid-formatted (e.g. thousands separators); parse
+   * it on the caller side if a number is needed.
+   *
+   * @param field The aggregated column's field name.
+   */
+  async getAggregationValue(field: string): Promise<string | null> {
+    const footerCell = locatorUtil.append(
+      locatorUtil.append(this.locator, aggregationFooterRowLocator),
+      byCssSelector(`[role="gridcell"][data-field="${field}"]`)
+    );
+    if (!(await this.interactor.exists(footerCell))) {
+      return null;
+    }
+    const text = await this.interactor.getText(footerCell);
+    return text == null || text.trim().length === 0 ? null : text.trim();
+  }
+  //#endregion Row grouping and aggregation
 
   //#region Page size and overlays
   /**

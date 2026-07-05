@@ -144,6 +144,44 @@ export const interactiveDataGridPremiumTestSuite: TestSuiteInfo<typeof interacti
       const after = await engine().parts.grid.getHeaderText();
       assertFalse(after.includes('Trader Name'));
     });
+
+    test('pinColumn left keeps the column rendered, unpinColumn restores it', async () => {
+      await engine().parts.grid.waitForLoad();
+      assertEqual(await engine().parts.grid.isColumnPinned('desk'), null);
+      await engine().parts.grid.pinColumn('desk', 'left');
+      assertEqual(await engine().parts.grid.isColumnPinned('desk'), 'left');
+      // A pinned column stays rendered and readable.
+      assertEqual(
+        await engine().parts.grid.getCellText({ rowIndex: 0, columnField: 'desk' }),
+        String(interactiveGridRows[0].desk)
+      );
+      await engine().parts.grid.unpinColumn('desk');
+      assertEqual(await engine().parts.grid.isColumnPinned('desk'), null);
+    });
+
+    test('pinColumn right pins to the right edge', async () => {
+      await engine().parts.grid.waitForLoad();
+      await engine().parts.grid.pinColumn('desk', 'right');
+      assertEqual(await engine().parts.grid.isColumnPinned('desk'), 'right');
+      assertEqual(
+        await engine().parts.grid.getCellText({ rowIndex: 0, columnField: 'desk' }),
+        String(interactiveGridRows[0].desk)
+      );
+    });
+
+    // Resizing is mouse-driven, so the width only actually changes with a real layout engine.
+    // Under jsdom every bounding box is zero, so the resize is a no-op there and reaching this
+    // point without throwing is the jsdom-side assertion; in a real browser the drag widens the
+    // header, asserted via the growing bounding box.
+    test('resizeColumn widens the column header', async () => {
+      await engine().parts.grid.waitForLoad();
+      const before = await engine().parts.grid.getColumnWidth('desk');
+      await engine().parts.grid.resizeColumn('desk', 80);
+      const after = await engine().parts.grid.getColumnWidth('desk');
+      if (before > 0) {
+        assertTrue(after > before);
+      }
+    });
     //#endregion
 
     //#region Page size and overlays

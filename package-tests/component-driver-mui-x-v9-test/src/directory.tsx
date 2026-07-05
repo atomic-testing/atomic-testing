@@ -2,6 +2,7 @@ import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example'
 
 import { basicChartsUIExample } from './examples/charts/Charts.examples';
 import { basicDataGridPremiumUIExample } from './examples/datagridpremium/BasicDataGridPremium.examples';
+import { groupedDataGridPremiumUIExample } from './examples/datagridpremium/GroupedDataGridPremium.examples';
 import { interactiveDataGridPremiumUIExample } from './examples/datagridpremium/InteractiveDataGridPremium.examples';
 import { basicDateRangePickerUIExample } from './examples/datepicker/DateRangePicker.examples';
 import { basicDateTimePickerUIExample } from './examples/datepicker/DateTimePicker.examples';
@@ -25,6 +26,11 @@ export const tocs: ExampleToc[] = [
     label: 'Interactive DataGrid Premium',
     path: '/datagridinteractive',
     ui: <ExampleList examples={[interactiveDataGridPremiumUIExample]} />,
+  },
+  {
+    label: 'Grouped DataGrid Premium',
+    path: '/datagridgrouped',
+    ui: <ExampleList examples={[groupedDataGridPremiumUIExample]} />,
   },
   {
     label: 'Desktop Date Picker',

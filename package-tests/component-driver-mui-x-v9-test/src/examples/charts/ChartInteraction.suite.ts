@@ -46,6 +46,13 @@ export const chartInteractionTestSuite: TestSuiteInfo<typeof chartsExample.scene
       assertTrue(text!.includes('20'));
     });
 
+    test('hovering a scatter marker raises the item tooltip for its series', async () => {
+      await engine().parts.scatterChart.hoverDataPoint(1, 0);
+      const text = await waitForTooltip(() => engine().parts.scatterChart.getTooltipText());
+      assertTrue(text != null);
+      assertTrue(text!.includes('Group A'));
+    });
+
     // The tooltip is a single portaled element shared by every chart on the page, so "cleared"
     // cannot be asserted per-chart; asserting that its content follows the hovered slice pins
     // the same pointer-tracking behavior without that ambiguity.
