@@ -235,7 +235,10 @@ export class PlaywrightInteractor implements Interactor {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     const elLocator = this.page.locator(cssLocator);
     const value = await elLocator.evaluate((element, prop) => {
-      return window.getComputedStyle(element).getPropertyValue(prop as string);
+      // Indexed access, not getPropertyValue: CssProperty is the camelCase
+      // keyof CSSStyleDeclaration (e.g. 'pointerEvents'), which
+      // getPropertyValue — a kebab-case API — would answer with ''.
+      return window.getComputedStyle(element)[prop as keyof CSSStyleDeclaration] as string;
     }, propertyName);
     return value;
   }

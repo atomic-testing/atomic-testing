@@ -43,7 +43,7 @@ export function ProfileSettings() {
   const [deleted, setDeleted] = useState(false);
 
   const save = () => {
-    const timezoneLabel = TIMEZONES.find((tz) => tz.value === timezone)?.label ?? timezone;
+    const timezoneLabel = TIMEZONES.find(tz => tz.value === timezone)?.label ?? timezone;
     setSavedMessage(`Saved — ${displayName} (${timezoneLabel})`);
   };
 
@@ -63,7 +63,7 @@ export function ProfileSettings() {
             id='display-name'
             data-testid={T.displayNameInput}
             value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
+            onChange={e => setDisplayName(e.target.value)}
           />
         </div>
         <div className='flex flex-col gap-2'>
@@ -75,7 +75,7 @@ export function ProfileSettings() {
               <SelectValue placeholder='Pick a timezone' />
             </SelectTrigger>
             <SelectContent>
-              {TIMEZONES.map((tz) => (
+              {TIMEZONES.map(tz => (
                 <SelectItem key={tz.value} value={tz.value}>
                   {tz.label}
                 </SelectItem>
@@ -95,7 +95,9 @@ export function ProfileSettings() {
         </div>
       </div>
 
-      <div data-testid={T.dangerZone} className='flex items-center justify-between gap-4 rounded-lg border border-destructive/30 p-4'>
+      <div
+        data-testid={T.dangerZone}
+        className='flex items-center justify-between gap-4 rounded-lg border border-destructive/30 p-4'>
         <div>
           <h2 className='text-sm font-medium'>Danger zone</h2>
           <p data-testid={T.workspaceStatus} className='text-sm text-muted-foreground'>

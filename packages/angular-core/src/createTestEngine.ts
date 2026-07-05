@@ -27,10 +27,11 @@ function isZoneJsLoaded(): boolean {
  * adapters this function returns a `Promise` — `await` it in your setup hook.
  *
  * Change detection mode follows the environment: when zone.js is loaded the
- * app bootstraps zone-based (Angular's default); when it is not,
- * `provideZonelessChangeDetection()` is added automatically. Pass explicit
- * providers via `option.providers` to override (e.g. force zoneless with
- * zone.js present).
+ * app bootstraps zone-based — explicitly via `provideZoneChangeDetection()`,
+ * because Angular 21+ defaults to zoneless even with zone.js present — and
+ * when it is not, `provideZonelessChangeDetection()` is added automatically.
+ * Pass explicit providers via `option.providers` to override (e.g. force
+ * zoneless with zone.js present).
  *
  * @param component The standalone component class to bootstrap
  * @param partDefinitions The scene part definitions
