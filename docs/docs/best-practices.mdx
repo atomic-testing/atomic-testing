@@ -52,7 +52,10 @@ Complex widgets become easier to test when you encapsulate their
 behaviour in a driver. The signup example composes form drivers that can
 be reused in unit and end‑to‑end scenarios. Implement your own drivers
 when needed and use `satisfies ScenePart` to get strong TypeScript
-support.
+support. If you're testing Astryx components, check the
+[Astryx driver coverage matrix](./guides/astryx-driver-coverage.md) first
+to see which drivers already exist and which behaviours are DOM- or
+E2E-only.
 
 ### 7. Provide the Necessary Context
 
