@@ -228,6 +228,10 @@ Some components contain Storybook stories with interaction tests:
 pnpm storybook
 ```
 
+To drive those stories with the same component drivers used here — inside
+Storybook's play functions and under `@storybook/addon-vitest` — see
+[Testing in Storybook](./guides/testing-in-storybook.md).
+
 ### Write an end-to-end test
 
 The example's `e2e/success.spec.ts` reuses the same drivers as its unit tests — this is the pattern from [step 8](#8-same-scene-now-in-playwright-e2e) above, applied to the full signup flow:
