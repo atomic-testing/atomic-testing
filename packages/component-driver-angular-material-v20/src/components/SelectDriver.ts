@@ -113,16 +113,33 @@ export class SelectDriver
     if (!(await this.isDropdownOpen())) {
       return;
     }
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     await this.interactor.pressKey(this.locator, 'Escape');
-    await this.waitForDropdownClosed();
+    await this.waitForDropdownClosed(panelId);
   }
 
-  private async waitForDropdownClosed(): Promise<void> {
+  /**
+   * Wait until the panel reports closed AND its element has left the DOM.
+   * `aria-expanded` flips immediately, but the panel lingers through its exit
+   * animation — and on v21/v22 it lingers *inside the host*, so a host-text
+   * read taken then would still see the option list. `panelId` must be
+   * captured (from `aria-controls`) while the panel was still open, because
+   * closing removes the attribute.
+   */
+  private async waitForDropdownClosed(panelId: string | null | undefined): Promise<void> {
     await this.interactor.waitUntil({
       probeFn: () => this.isDropdownOpen(),
       terminateCondition: false,
       timeoutMs: defaultDropdownTransitionMs,
     });
+    if (panelId != null) {
+      const detachedPanelLocator = byAttribute('id', panelId, 'Root');
+      await this.interactor.waitUntil({
+        probeFn: () => this.interactor.exists(detachedPanelLocator),
+        terminateCondition: false,
+        timeoutMs: defaultDropdownTransitionMs,
+      });
+    }
   }
 
   /**
@@ -174,11 +191,12 @@ export class SelectDriver
       throw new MenuItemNotFoundError(label, this);
     }
     const isMultiple = (await this.interactor.getAttribute(this.panelLocator, 'aria-multiselectable')) === 'true';
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     await item.click();
     // A single select closes itself upon selection; a multiple select stays
     // open for further picks.
     if (!isMultiple) {
-      await this.waitForDropdownClosed();
+      await this.waitForDropdownClosed(panelId);
     }
   }
 
@@ -234,9 +252,10 @@ export class SelectDriver
       return false;
     }
     const isMultiple = (await this.interactor.getAttribute(this.panelLocator, 'aria-multiselectable')) === 'true';
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     await item.click();
     if (!isMultiple) {
-      await this.waitForDropdownClosed();
+      await this.waitForDropdownClosed(panelId);
     }
     return true;
   }

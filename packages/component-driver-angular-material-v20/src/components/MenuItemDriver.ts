@@ -32,6 +32,15 @@ export class MenuItemDriver extends ComponentDriver {
       const label = await this.label();
       throw new MenuItemDisabledError(label ?? '', this);
     }
+    // The panel suppresses pointer events while its enter/exit animation runs
+    // (pointer-events: none, inherited by the items) — a real user cannot
+    // click during that window and Playwright's click auto-waits for it, so
+    // the DOM path probes the computed style to the same effect.
+    await this.interactor.waitUntil({
+      probeFn: () => this.interactor.getStyleValue(this.locator, 'pointer-events'),
+      terminateCondition: value => value !== 'none',
+      timeoutMs: 1000,
+    });
     await this.interactor.click(this.locator);
   }
 
