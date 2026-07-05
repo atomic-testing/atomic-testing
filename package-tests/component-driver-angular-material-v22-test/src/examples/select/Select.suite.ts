@@ -53,6 +53,16 @@ export const selectTestSuite: TestSuiteInfo<typeof selectScenePart> = {
         assertFalse(await engine().parts.fruit.isDropdownOpen());
       });
 
+      // Regression guard for the v21/v22 inline top-layer panel, which
+      // renders inside the host: the open-state read must target the
+      // selected option, not the host text.
+      test('reads the selected label while the panel is open', async () => {
+        await engine().parts.color.openDropdown();
+        assertEqual(await engine().parts.color.getSelectedLabel(), 'Green');
+        await engine().parts.fruit.openDropdown();
+        assertEqual(await engine().parts.fruit.getSelectedLabel(), null);
+      });
+
       test('enumerates the options', async () => {
         assertEqual(await engine().parts.fruit.getOptionLabels(), ['Apple', 'Banana', 'Cherry']);
         assertEqual(await engine().parts.fruit.getOptionCount(), 3);

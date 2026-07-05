@@ -1,4 +1,5 @@
 import {
+  byAttribute,
   byLinkedElement,
   byRole,
   ComponentDriver,
@@ -112,16 +113,33 @@ export class SelectDriver
     if (!(await this.isDropdownOpen())) {
       return;
     }
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     await this.interactor.pressKey(this.locator, 'Escape');
-    await this.waitForDropdownClosed();
+    await this.waitForDropdownClosed(panelId);
   }
 
-  private async waitForDropdownClosed(): Promise<void> {
+  /**
+   * Wait until the panel reports closed AND its element has left the DOM.
+   * `aria-expanded` flips immediately, but the panel lingers through its exit
+   * animation — and on v21/v22 it lingers *inside the host*, so a host-text
+   * read taken then would still see the option list. `panelId` must be
+   * captured (from `aria-controls`) while the panel was still open, because
+   * closing removes the attribute.
+   */
+  private async waitForDropdownClosed(panelId: string | null | undefined): Promise<void> {
     await this.interactor.waitUntil({
       probeFn: () => this.isDropdownOpen(),
       terminateCondition: false,
       timeoutMs: defaultDropdownTransitionMs,
     });
+    if (panelId != null) {
+      const detachedPanelLocator = byAttribute('id', panelId, 'Root');
+      await this.interactor.waitUntil({
+        probeFn: () => this.interactor.exists(detachedPanelLocator),
+        terminateCondition: false,
+        timeoutMs: defaultDropdownTransitionMs,
+      });
+    }
   }
 
   /**
@@ -173,22 +191,39 @@ export class SelectDriver
       throw new MenuItemNotFoundError(label, this);
     }
     const isMultiple = (await this.interactor.getAttribute(this.panelLocator, 'aria-multiselectable')) === 'true';
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     await item.click();
     // A single select closes itself upon selection; a multiple select stays
     // open for further picks.
     if (!isMultiple) {
-      await this.waitForDropdownClosed();
+      await this.waitForDropdownClosed(panelId);
     }
   }
 
   /**
-   * The selected option's visible label as shown by the trigger, or `null`
-   * when the trigger is empty. When nothing is selected and a `placeholder`
-   * is configured, the placeholder text is returned — it is the accessible
-   * value screen readers announce, and Material exposes no ARIA-level
-   * distinction.
+   * The selected option's visible label, or `null` when nothing is selected.
+   *
+   * Closed, the trigger's text is the value — with the caveat that a
+   * configured `placeholder` is what an empty select shows (it is the
+   * accessible value screen readers announce; Material exposes no ARIA-level
+   * distinction). Open, the trigger's text cannot be used: on v21/v22 the
+   * panel renders inline inside the host, so the host text would be the
+   * whole option list — instead the `aria-selected="true"` option is read
+   * (the first one, for a `multiple` select).
    */
   async getSelectedLabel(): Promise<string | null> {
+    if (await this.isDropdownOpen()) {
+      const selectedOptionLocator = locatorUtil.append(
+        this.panelLocator,
+        optionLocator,
+        byAttribute('aria-selected', 'true', 'Same')
+      );
+      if (!(await this.interactor.exists(selectedOptionLocator))) {
+        return null;
+      }
+      const label = (await this.interactor.getText(selectedOptionLocator))?.trim();
+      return label ? label : null;
+    }
     const label = (await this.getText())?.trim();
     return label ? label : null;
   }
@@ -217,9 +252,10 @@ export class SelectDriver
       return false;
     }
     const isMultiple = (await this.interactor.getAttribute(this.panelLocator, 'aria-multiselectable')) === 'true';
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     await item.click();
     if (!isMultiple) {
-      await this.waitForDropdownClosed();
+      await this.waitForDropdownClosed(panelId);
     }
     return true;
   }
