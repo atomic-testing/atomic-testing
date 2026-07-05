@@ -49,7 +49,7 @@ type BranchGroup = {
   description: string;
 };
 
-const VIEW_WIDTH = 880;
+const VIEW_WIDTH = 1100;
 const VIEW_HEIGHT = 730;
 
 const ANNOTATIONS: readonly { x: number; label: string }[] = [
@@ -59,7 +59,8 @@ const ANNOTATIONS: readonly { x: number; label: string }[] = [
 
 // Real hierarchy verified against packages/core/src/interactor/Interactor.ts,
 // packages/dom-core/src/DOMInteractor.ts, packages/react-core/src/ReactInteractor.ts,
-// packages/vue-3/src/VueInteractor.ts and packages/playwright/src/PlaywrightInteractor.ts.
+// packages/vue-3/src/VueInteractor.ts, packages/angular-core/src/AngularInteractor.ts
+// and packages/playwright/src/PlaywrightInteractor.ts.
 const NODES: readonly DiagramNode[] = [
   {
     id: 'scenePart',
@@ -101,7 +102,7 @@ const NODES: readonly DiagramNode[] = [
     kind: 'concrete',
     accent: 'blue',
     description:
-      "Renders the scene and builds one ComponentDriver per ScenePart entry. Each package's createTestEngine (react-18, react-19, vue-3, playwright, dom-core) constructs the matching Interactor subclass and injects it into every driver.",
+      "Renders the scene and builds one ComponentDriver per ScenePart entry. Each package's createTestEngine (react-18, react-19, vue-3, angular-20/21/22, playwright, dom-core) constructs the matching Interactor subclass and injects it into every driver.",
     docHref: '/docs/core-concepts#test-engine',
     docLabel: 'Test Engine in Core Concepts',
   },
@@ -144,7 +145,7 @@ const NODES: readonly DiagramNode[] = [
     kind: 'concrete',
     accent: 'blueDeep',
     description:
-      'Implements Interactor with @testing-library utilities. Used directly for framework-agnostic DOM tests, and extended by ReactInteractor and VueInteractor.',
+      'Implements Interactor with @testing-library utilities. Used directly for framework-agnostic DOM tests, and extended by ReactInteractor, VueInteractor and AngularInteractor.',
     docHref: '/docs/advanced-concepts/interactor#available-interactors',
     docLabel: 'Available interactors',
   },
@@ -152,7 +153,7 @@ const NODES: readonly DiagramNode[] = [
     id: 'playwrightInteractor',
     label: 'PlaywrightInteractor',
     sublabel: '@atomic-testing/playwright',
-    cx: 660,
+    cx: 885,
     cy: 444,
     w: 220,
     h: 64,
@@ -194,6 +195,21 @@ const NODES: readonly DiagramNode[] = [
     docLabel: 'Available interactors',
   },
   {
+    id: 'angularInteractor',
+    label: 'AngularInteractor',
+    sublabel: '@atomic-testing/angular-core',
+    cx: 640,
+    cy: 566,
+    w: 190,
+    h: 64,
+    kind: 'concrete',
+    accent: 'mint',
+    description:
+      "Extends DOMInteractor and settles after every interaction via Angular's ApplicationRef.whenStable(), so change detection is idle before the next assertion — under both zone.js and zoneless apps. createTestEngine from @atomic-testing/angular-20, -21 and -22 construct it (bootstrapping is async, so the call is awaited).",
+    docHref: '/docs/advanced-concepts/interactor#available-interactors',
+    docLabel: 'Available interactors',
+  },
+  {
     id: 'domTarget',
     label: 'DOM (jsdom)',
     sublabel: 'unit / DOM tests',
@@ -204,13 +220,13 @@ const NODES: readonly DiagramNode[] = [
     kind: 'target',
     accent: 'neutral',
     description:
-      'Where DOMInteractor, ReactInteractor and VueInteractor resolve locators — a jsdom document with no real layout or paint. Exercised by pnpm test:dom.',
+      'Where DOMInteractor, ReactInteractor, VueInteractor and AngularInteractor resolve locators — a jsdom document with no real layout or paint. Exercised by pnpm test:dom.',
   },
   {
     id: 'browserTarget',
     label: 'Browser',
     sublabel: 'end-to-end tests',
-    cx: 660,
+    cx: 885,
     cy: 566,
     w: 220,
     h: 56,
@@ -234,15 +250,17 @@ const EDGES: readonly DiagramEdge[] = [
   { id: 'e-interactor-pw', from: 'interactor', to: 'playwrightInteractor', label: 'implemented by' },
   { id: 'e-dom-react', from: 'domInteractor', to: 'reactInteractor', label: 'extended by' },
   { id: 'e-dom-vue', from: 'domInteractor', to: 'vueInteractor', label: 'extended by' },
+  { id: 'e-dom-angular', from: 'domInteractor', to: 'angularInteractor', label: 'extended by' },
   // No label: this straight vertical run passes directly through the
   // ReactInteractor/VueInteractor row and the target they converge on, so
   // any position along it collides with either that row's own labels or
   // the react-target/vue-target edges' labels converging on the same node.
   // The arrow alone still shows the relationship; "resolves against" is
-  // already spelled out by the two sibling edges landing on domTarget.
+  // already spelled out by the sibling edges landing on domTarget.
   { id: 'e-dom-target', from: 'domInteractor', to: 'domTarget', label: '' },
   { id: 'e-react-target', from: 'reactInteractor', to: 'domTarget', label: 'resolves against' },
   { id: 'e-vue-target', from: 'vueInteractor', to: 'domTarget', label: 'resolves against' },
+  { id: 'e-angular-target', from: 'angularInteractor', to: 'domTarget', label: 'resolves against' },
   { id: 'e-pw-target', from: 'playwrightInteractor', to: 'browserTarget', label: 'resolves against' },
 ];
 
@@ -250,9 +268,9 @@ const BRANCH_GROUPS: readonly BranchGroup[] = [
   {
     id: 'branch:dom',
     label: 'Unit / DOM tests',
-    nodeIds: ['interactor', 'domInteractor', 'reactInteractor', 'vueInteractor', 'domTarget'],
+    nodeIds: ['interactor', 'domInteractor', 'reactInteractor', 'vueInteractor', 'angularInteractor', 'domTarget'],
     description:
-      'Unit and DOM tests run through DOMInteractor — directly, or extended by ReactInteractor (act()) and VueInteractor (nextTick()) — against jsdom. No real browser is involved.',
+      'Unit and DOM tests run through DOMInteractor — directly, or extended by ReactInteractor (act()), VueInteractor (nextTick()) and AngularInteractor (ApplicationRef.whenStable()) — against jsdom. No real browser is involved.',
   },
   {
     id: 'branch:e2e',

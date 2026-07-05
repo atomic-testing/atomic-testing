@@ -27,6 +27,11 @@ The project ships with several interactors:
 - **VueInteractor** from **@atomic-testing/vue-3** – an extension of
   `DOMInteractor` that calls Vue's `nextTick()` after every interaction so
   reactive state settles before the next assertion.
+- **AngularInteractor** from **@atomic-testing/angular-core** (used by the
+  versioned `@atomic-testing/angular-20`, `-21` and `-22` adapters) – an
+  extension of `DOMInteractor` that awaits the app's `ApplicationRef.whenStable()`
+  after every interaction, so change detection has settled before the next
+  assertion. This works under both zone.js and zoneless change detection.
 - **PlaywrightInteractor** – drives a Playwright `Page` object to execute tests
   in a real browser.
 
