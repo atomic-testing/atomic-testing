@@ -1,5 +1,4 @@
 import {
-  byAttribute,
   byLinkedElement,
   byRole,
   ComponentDriver,
@@ -183,29 +182,13 @@ export class SelectDriver
   }
 
   /**
-   * The selected option's visible label, or `null` when nothing is selected.
-   *
-   * Closed, the trigger's text is the value — with the caveat that a
-   * configured `placeholder` is what an empty select shows (it is the
-   * accessible value screen readers announce; Material exposes no ARIA-level
-   * distinction). Open, the trigger's text cannot be used: on v21/v22 the
-   * panel renders inline inside the host, so the host text would be the
-   * whole option list — instead the `aria-selected="true"` option is read
-   * (the first one, for a `multiple` select).
+   * The selected option's visible label as shown by the trigger, or `null`
+   * when the trigger is empty. When nothing is selected and a `placeholder`
+   * is configured, the placeholder text is returned — it is the accessible
+   * value screen readers announce, and Material exposes no ARIA-level
+   * distinction.
    */
   async getSelectedLabel(): Promise<string | null> {
-    if (await this.isDropdownOpen()) {
-      const selectedOptionLocator = locatorUtil.append(
-        this.panelLocator,
-        optionLocator,
-        byAttribute('aria-selected', 'true', 'Same')
-      );
-      if (!(await this.interactor.exists(selectedOptionLocator))) {
-        return null;
-      }
-      const label = (await this.interactor.getText(selectedOptionLocator))?.trim();
-      return label ? label : null;
-    }
     const label = (await this.getText())?.trim();
     return label ? label : null;
   }
@@ -256,6 +239,6 @@ export class SelectDriver
   }
 
   override get driverName(): string {
-    return 'AngularMaterialV20SelectDriver';
+    return 'AngularMaterialV22SelectDriver';
   }
 }

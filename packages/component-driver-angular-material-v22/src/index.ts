@@ -1,8 +1,16 @@
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver, checkboxParts } from './components/CheckboxDriver';
+export { DialogDriver, dialogParts } from './components/DialogDriver';
 export { InputDriver, inputParts } from './components/InputDriver';
+export { MenuDriver } from './components/MenuDriver';
+export { MenuItemDriver } from './components/MenuItemDriver';
+export { OptionDriver } from './components/OptionDriver';
 export { RadioButtonDriver } from './components/RadioButtonDriver';
 export { RadioGroupDriver } from './components/RadioGroupDriver';
+export { SelectDriver, type OptionGetOption } from './components/SelectDriver';
 export { SlideToggleDriver } from './components/SlideToggleDriver';
+export { SnackbarDriver, snackbarLocator, snackbarParts } from './components/SnackbarDriver';
 export { TabDriver } from './components/TabDriver';
 export { defaultTabsDriverOption, TabsDriver } from './components/TabsDriver';
+export { MenuItemDisabledError, MenuItemDisabledErrorId } from './errors/MenuItemDisabledError';
+export { MenuItemNotFoundError, MenuItemNotFoundErrorId } from './errors/MenuItemNotFoundError';
