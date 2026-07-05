@@ -160,7 +160,8 @@ packages/
 ├── storybook/               # StorybookInteractor + play helpers (Storybook 10)
 ├── component-driver-html/   # HTML element drivers
 ├── component-driver-mui-*/  # Material-UI drivers
-└── component-driver-angular-material-*/ # Angular Material drivers (per major)
+├── component-driver-angular-material-*/ # Angular Material drivers (per major)
+└── component-driver-primevue-v4/ # PrimeVue 4 drivers (first Vue 3 design-system package)
 
 package-tests/               # Test suites validating drivers
 ├── component-driver-*-test/ # *.dom.test.ts + *.e2e.test.ts

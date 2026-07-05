@@ -1,0 +1,43 @@
+{
+  "name": "@atomic-testing/component-driver-primevue-v4",
+  "version": "0.92.0",
+  "description": "Component driver for PrimeVue 4 components (Vue 3)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/component-driver-primevue-v4"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/core": "workspace:*"
+  },
+  "devDependencies": {
+    "primevue": "^4.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependencies": {
+    "primevue": "^4.0.0",
+    "vue": ">=3.0.0"
+  }
+}

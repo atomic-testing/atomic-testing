@@ -2,7 +2,7 @@ import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import { render } from '@testing-library/vue';
 import { App, Component, createApp, defineComponent } from 'vue';
 
-import { IVueTestEngineOption, VueSFCLikeComponent } from './types';
+import { VueSFCLikeComponent, VueTestEngineOption } from './types';
 import { VueInteractor } from './VueInteractor';
 
 let _rootId = 0;
@@ -50,7 +50,7 @@ function createComponentFromSFCLike(sfcObj: VueSFCLikeComponent): Component {
 export function createTestEngine<T extends ScenePart>(
   component: Component | VueSFCLikeComponent,
   partDefinitions: T,
-  option?: Readonly<Partial<IVueTestEngineOption>>
+  option?: Readonly<Partial<VueTestEngineOption>>
 ): TestEngine<T> {
   const rootEl = option?.rootElement ?? document.body;
   const container = rootEl.appendChild(document.createElement('div'));
@@ -65,12 +65,35 @@ export function createTestEngine<T extends ScenePart>(
     ? createComponentFromSFCLike(component)
     : (component as Component);
 
+  const plugins = option?.plugins ?? [];
+
   try {
-    const renderResult = render(compiledComponent, { container });
+    const renderResult = render(compiledComponent, {
+      container,
+      global: {
+        plugins,
+        // Vue Test Utils stubs <Transition> by default, replacing it with a
+        // wrapper element that never runs the enter/leave JS hooks. Component
+        // libraries do real work in those hooks (PrimeVue's Dialog binds its
+        // Escape listener in onEnter), so the stub silently disables behavior
+        // the same shared suite verifies in the Playwright leg. Real
+        // transitions resolve immediately under jsdom (computed durations are
+        // 0), so rendering them keeps the jsdom DOM aligned with the browser.
+        stubs: { transition: false },
+      },
+    });
     unmount = renderResult.unmount;
   } catch (_error) {
     // Fallback to manual Vue app creation if render fails
     app = createApp(compiledComponent);
+    for (const plugin of plugins) {
+      if (Array.isArray(plugin)) {
+        const [pluginInstance, ...pluginOptions] = plugin;
+        app.use(pluginInstance, ...pluginOptions);
+      } else {
+        app.use(plugin);
+      }
+    }
     app.mount(container);
     unmount = () => {
       if (app) {
@@ -98,7 +121,7 @@ export function createTestEngine<T extends ScenePart>(
 export function createRenderedTestEngine<T extends ScenePart>(
   rootElement: HTMLElement,
   partDefinitions: T,
-  _option?: Readonly<Partial<IVueTestEngineOption>>
+  _option?: Readonly<Partial<VueTestEngineOption>>
 ): TestEngine<T> {
   const rootId = getNextRootElementId();
   rootElement.setAttribute(rootElementAttributeName, rootId);
