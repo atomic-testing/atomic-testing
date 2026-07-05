@@ -55,11 +55,23 @@ export const checkboxTestSuite: TestSuiteInfo<typeof checkboxScenePart> = {
       test('setSelected toggles the checkbox and reaches the change handler', async () => {
         await engine().parts.terms.setSelected(true);
         assertTrue(await engine().parts.terms.isSelected());
-        assertEqual(await engine().parts.termsState.getText(), 'true');
+        // The echoed state renders a beat after the change event — probe
+        // rather than assert immediately, or the read races the re-render.
+        const checkedEcho = await engine().parts.terms.waitUntil({
+          probeFn: async () => (await engine().parts.termsState.getText())?.trim(),
+          terminateCondition: 'true',
+          timeoutMs: 5000,
+        });
+        assertEqual(checkedEcho, 'true');
 
         await engine().parts.terms.setSelected(false);
         assertFalse(await engine().parts.terms.isSelected());
-        assertEqual(await engine().parts.termsState.getText(), 'false');
+        const uncheckedEcho = await engine().parts.terms.waitUntil({
+          probeFn: async () => (await engine().parts.termsState.getText())?.trim(),
+          terminateCondition: 'false',
+          timeoutMs: 5000,
+        });
+        assertEqual(uncheckedEcho, 'false');
       });
 
       test('reports indeterminate via aria-checked="mixed"', async () => {
