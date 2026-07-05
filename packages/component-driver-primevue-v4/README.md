@@ -32,8 +32,14 @@ Refer to the [documentation](https://atomic-testing.dev/) for usage patterns and
 
 Drivers land in waves (see the umbrella issue #1018); this table grows with each wave.
 
-| Driver | PrimeVue component | Notes |
-| ------ | ------------------ | ----- |
+| Driver                                        | PrimeVue component                          | Notes                                                                                                                                   |
+| --------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `ButtonDriver`                                | `Button`                                    | Native `<button>`; `getLabel` reads the `data-pc-section="label"` span so add-ons (badge) don't leak into the label; native `disabled`. |
+| `InputTextDriver`                             | `InputText`                                 | The root IS a native `<input>` — full `HTMLTextInputDriver` surface, incl. `isError` via `aria-invalid`.                                |
+| `CheckboxDriver`                              | `Checkbox`                                  | Real (visually hidden) native input: `isSelected`/clicks/`disabled`/`required` ride it. Covers `binary` and array-value modes.          |
+| `RadioButtonDriver`, `RadioButtonGroupDriver` | `RadioButton`                               | Native radio input per item; the group driver roots at a consumer container and selects by `value` (PrimeVue has no group component).   |
+| `ToggleSwitchDriver`                          | `ToggleSwitch` (v4 rename of `InputSwitch`) | Hidden native checkbox with `role="switch"`; reads the native `checked` property, the ground truth behind the `aria-checked` mirror.    |
+| `SliderDriver`                                | `Slider`                                    | No native range input — aria reads on the `role="slider"` handle, keyboard-driven `setValue`, `dragBy` for E2E-only positional checks.  |
 
 ## Teleported overlays (`appendTo`)
 

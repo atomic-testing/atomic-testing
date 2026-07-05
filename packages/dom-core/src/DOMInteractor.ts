@@ -32,6 +32,29 @@ import defaultUserEvent from '@testing-library/user-event';
 import { FakeMouseEvent } from './fakeEvents';
 import { DOMInteractorOption, UserEventDispatcher } from './types';
 
+/**
+ * Derive a `KeyboardEvent.code` from a `KeyboardEvent.key`, approximating what
+ * a real browser reports for a standard US layout: letters map to `KeyX`,
+ * digits to `DigitX`, space to `Space`, and named keys (`ArrowRight`, `Enter`,
+ * `Home`, …) carry their own name as the code. jsdom leaves `code` empty
+ * unless supplied, but real keyboard events always populate it — and component
+ * libraries legitimately switch on `code` (PrimeVue's Slider does), so the
+ * jsdom leg must match. Left/right-variant modifiers (`Shift` → `ShiftLeft`)
+ * are not disambiguated; a bare modifier press is not a supported gesture here.
+ */
+function deriveKeyCode(key: string): string {
+  if (key === ' ') {
+    return 'Space';
+  }
+  if (/^[a-zA-Z]$/.test(key)) {
+    return `Key${key.toUpperCase()}`;
+  }
+  if (/^[0-9]$/.test(key)) {
+    return `Digit${key}`;
+  }
+  return key;
+}
+
 export class DOMInteractor implements Interactor {
   protected readonly userEvent: UserEventDispatcher;
 
@@ -318,7 +341,10 @@ export class DOMInteractor implements Interactor {
    *
    * The element is focused first so the key originates from the active element,
    * matching a real key press. `fireEvent` is used over `userEvent.keyboard` for
-   * determinism and because MUI handlers read `event.key` directly.
+   * determinism and because MUI handlers read `event.key` directly. The physical
+   * `code` is derived from `key` (see {@link deriveKeyCode}) so handlers that
+   * switch on `event.code` — e.g. PrimeVue's Slider — behave as they do under a
+   * real browser event, where `code` is always populated.
    *
    * @param locator - Locator used to find the target element
    * @param key - A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`
@@ -338,6 +364,7 @@ export class DOMInteractor implements Interactor {
     }
     const eventInit = {
       key,
+      code: deriveKeyCode(key),
       ctrlKey: !!option?.ctrl,
       shiftKey: !!option?.shift,
       altKey: !!option?.alt,
