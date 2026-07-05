@@ -209,17 +209,46 @@ jobs:
         run: pnpm test:storybook
         working-directory: ./package-tests/storybook-test
 
-  # Angular adapter fixture — drives a real Angular component through
-  # AngularInteractor in a real browser (Vitest browser mode, Chromium), once
-  # with zone.js loaded and once zoneless. See issue #1013 and
-  # agent-docs/adr/013-angular-shared-core-thin-packages.md.
+  # Angular fixtures — drive real Angular components through AngularInteractor
+  # in a real browser (Vitest browser mode, Chromium), once with zone.js loaded
+  # and once zoneless: the adapter fixtures (angular-2x-test, plain Vitest) and
+  # the Angular Material driver suites (three-file pattern). See issues #1013 /
+  # #1025 and agent-docs/adr/013-angular-shared-core-thin-packages.md.
+  #
+  # angular-21/-22 mark one scenario `it.todo` rather than asserting it green:
+  # ApplicationRef.whenStable() does not appear to wait for a zone.js-tracked
+  # pending macrotask (e.g. bare setTimeout) on Angular 21/22 the way it does
+  # on Angular 20 — see the comment in each fixture's
+  # __tests__/CounterComponent.browser.test.ts.
   angular-vitest-test:
-    name: Test Angular adapter (zone + zoneless)
+    name: Test ${{ matrix.name }} (zone + zoneless)
     runs-on: ubuntu-latest
     needs: build
     permissions:
       contents: read
       id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'Angular 20 adapter'
+            directory: 'angular-20-test'
+            command: 'pnpm test:browser'
+          - name: 'Angular 21 adapter'
+            directory: 'angular-21-test'
+            command: 'pnpm test:browser'
+          - name: 'Angular 22 adapter'
+            directory: 'angular-22-test'
+            command: 'pnpm test:browser'
+          - name: 'Angular Material v20 components'
+            directory: 'component-driver-angular-material-v20-test'
+            command: 'pnpm test:dom'
+          - name: 'Angular Material v21 components'
+            directory: 'component-driver-angular-material-v21-test'
+            command: 'pnpm test:dom'
+          - name: 'Angular Material v22 components'
+            directory: 'component-driver-angular-material-v22-test'
+            command: 'pnpm test:dom'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -235,11 +264,11 @@ jobs:
 
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium --with-deps
-        working-directory: ./package-tests/angular-20-test
+        working-directory: ./package-tests/${{ matrix.directory }}
 
-      - name: Run Angular adapter tests
-        run: pnpm test:browser
-        working-directory: ./package-tests/angular-20-test
+      - name: Run Angular tests
+        run: ${{ matrix.command }}
+        working-directory: ./package-tests/${{ matrix.directory }}
 
   # React legacy (16/17) adapter test — guards the React 16/17 path against
   # silently regressing back onto the React 18/19 (@testing-library/react) graph.
@@ -335,3 +364,40 @@ jobs:
       - name: Run dom test
         run: pnpm test:dom
         working-directory: ./examples/example-astryx-workspace
+
+  example-shadcn-workspace-test:
+    name: Test example shadcn workspace
+    runs-on: ubuntu-latest
+    # Standalone example: it installs from its OWN lockfile and consumes PUBLISHED
+    # @atomic-testing/* packages, so it does not depend on the monorepo build
+    # (no `needs: build`) — it runs immediately for the fastest regression signal.
+    # Fast check only: type-check + jsdom unit tests (e2e needs browsers + a dev server).
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: PNPM Setup
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install .
+        working-directory: ./examples/example-shadcn-workspace
+
+      - name: Type check
+        run: pnpm check:type
+        working-directory: ./examples/example-shadcn-workspace
+
+      - name: Run dom test
+        run: pnpm test:dom
+        working-directory: ./examples/example-shadcn-workspace

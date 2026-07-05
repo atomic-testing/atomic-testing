@@ -1,4 +1,4 @@
-import { provideZonelessChangeDetection, Type } from '@angular/core';
+import { provideZoneChangeDetection, provideZonelessChangeDetection, Type } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 
@@ -27,10 +27,11 @@ function isZoneJsLoaded(): boolean {
  * adapters this function returns a `Promise` — `await` it in your setup hook.
  *
  * Change detection mode follows the environment: when zone.js is loaded the
- * app bootstraps zone-based (Angular's default); when it is not,
- * `provideZonelessChangeDetection()` is added automatically. Pass explicit
- * providers via `option.providers` to override (e.g. force zoneless with
- * zone.js present).
+ * app bootstraps zone-based — explicitly via `provideZoneChangeDetection()`,
+ * because Angular 21+ defaults to zoneless even with zone.js present — and
+ * when it is not, `provideZonelessChangeDetection()` is added automatically.
+ * Pass explicit providers via `option.providers` to override (e.g. force
+ * zoneless with zone.js present).
  *
  * @param component The standalone component class to bootstrap
  * @param partDefinitions The scene part definitions
@@ -53,7 +54,18 @@ export async function createTestEngine<T extends ScenePart>(
 
   // Auto-detected mode first, caller-supplied providers after — in Angular DI
   // the later provider wins, so option.providers can override the detection.
-  const providers = [...(isZoneJsLoaded() ? [] : [provideZonelessChangeDetection()]), ...(option?.providers ?? [])];
+  //
+  // Always provide one explicitly — never rely on createApplication()'s own
+  // default. Angular 20's internalCreateApplication() defaults to zone-based
+  // CD, but Angular 21+ defaults to provideZonelessChangeDetectionInternal()
+  // regardless of whether zone.js is loaded, so merely loading zone.js is not
+  // enough on 21+ to get zone-based change detection (confirmed by diffing
+  // internalCreateApplication's baseline providers across majors). Stating
+  // our own choice explicitly makes this version-independent.
+  const providers = [
+    isZoneJsLoaded() ? provideZoneChangeDetection() : provideZonelessChangeDetection(),
+    ...(option?.providers ?? []),
+  ];
 
   try {
     const appRef = await createApplication({ providers });

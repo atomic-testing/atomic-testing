@@ -36,7 +36,7 @@ Barrel: [internal-test-runner/src/index.ts](../../packages/internal-test-runner/
 
 - **`TestSuiteInfo<T>`** = `{ title?, url, tests(getTestEngine, mapper) }`. `url` is the E2E navigation target; DOM runs ignore it ([types.ts#L114-L121](../../packages/internal-test-runner/src/types.ts#L114-L121)).
 - **`TestFrameworkMapper`** — assertions (`assertEqual`, `assertNotEqual`, `assertTrue`, `assertFalse`, `assertApproxEqual`) + lifecycle (`describe`, `test`, `it`, `beforeEach`, `afterEach`, `beforeAll`, `afterAll`). `describe`/`test`/`it` carry `.only`/`.skip` ([types.ts#L53-L88](../../packages/internal-test-runner/src/types.ts#L53-L88)).
-- **`GetTestEngine<T>`** = `(scenePart, context?) => TestEngine<T>` — supplied by each adapter (`context` carries `{ page }` for E2E).
+- **`GetTestEngine<T>`** = `(scenePart, context?) => TestEngine<T> | Promise<TestEngine<T>>` — supplied by each adapter (`context` carries `{ page }` for E2E). The async form exists for the Angular adapter, whose `createTestEngine` is inherently async (ADR-013); `useTestEngine` awaits it before the first test runs.
 - **`InteractionInterface<T>`** = `DomTestInterface<T> | E2eTestInterface<T>`; the E2E variant adds `goto(url, fixture?)`.
 
 ## How it works
@@ -45,12 +45,12 @@ Barrel: [internal-test-runner/src/index.ts](../../packages/internal-test-runner/
 
 1. Normalizes to an array of suites.
 2. For each suite: `testMethod.describe(title, …)`.
-3. Installs a `beforeEach` that reads `arguments[0]` to tell Jest's done-callback from Playwright's fixture, then — if the interface has `goto` (E2E) — navigates to `url` before signalling done.
+3. Installs a `beforeEach` that classifies `arguments[0]` via `getDoneCallback` (Jest's done-callback vs Playwright's fixture vs Vitest's context — see below), then — if the interface has `goto` (E2E) — navigates to `url` before signalling done.
 4. Calls `suite.tests(getTestEngine, testMethod)`, where the suite author writes the actual `test(...)` cases.
 
 `useTestEngine(scenePart, getTestEngine, { beforeEach, afterEach })` ([useTestEngine.ts#L21-L46](../../packages/internal-test-runner/src/useTestEngine.ts#L21-L46)):
 
-- `beforeEach`: `testEngine = getTestEngine(scenePart, { page })` (page is `undefined` for DOM).
+- `beforeEach`: `testEngine = getTestEngine(scenePart, { page })` (page is `undefined` for DOM); an async factory's promise is awaited (returned to promise-aware runners, `done`-signalled for Jest).
 - `afterEach`: `await testEngine.cleanUp()`.
 - Returns a getter `() => testEngine`; tests call `engine()` to read the current instance.
 
@@ -111,7 +111,8 @@ E2E adapter (`*.e2e.test.ts`): `testRunner(testSuite, playWrightTestFrameworkMap
 ## Invariants & failure modes
 
 - A new engine is created per test; `cleanUp` runs in `afterEach`. Sharing engines across tests is unsupported.
-- `beforeEach` runtime dispatch relies on `arguments[0]` being a function (Jest) vs object (Playwright fixture) — do not refactor those callbacks to arrow functions without preserving `arguments`.
+- `beforeEach` runtime dispatch classifies `arguments[0]` with `getDoneCallback` ([doneCallback.ts](../../packages/internal-test-runner/src/doneCallback.ts)): Jest passes a bare `done` function, Playwright a fixture object — and Vitest a `TestContext` that is _also callable_ (invoking it throws), so a function only counts as `done` when it lacks the context's `task` property. Do not refactor those callbacks to arrow functions (they read `arguments`), and do not "simplify" the check back to `typeof === 'function'`.
+- Async-factory detection is thenable duck-typing, not `instanceof Promise` — zone.js swaps the global `Promise` for `ZoneAwarePromise`, which native promises fail `instanceof` against.
 
 ## Extension points
 

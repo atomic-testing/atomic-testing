@@ -41,12 +41,13 @@ Interaction details worth knowing:
 - **`isVisible`** returns false on `opacity: 0`, `visibility: hidden`, or `display: none` (does not check viewport) ([DOMInteractor.ts#L456-L478](../../packages/dom-core/src/DOMInteractor.ts#L456-L478)).
 - **`mouseEnter`/`mouseLeave`** are emulated with `fireEvent.mouseOver`/`mouseOut` (testing-library nuance) ([DOMInteractor.ts#L240-L266](../../packages/dom-core/src/DOMInteractor.ts#L240-L266)).
 - **Layout-dependent primitives** — `scrollIntoView`/`scrollBy`/`getBoundingRect` are jsdom no-ops / zero-rects (no layout engine); `drag`/`dragTo` share a private `dispatchMouse` helper firing raw mouse events only, never HTML5 DnD (#922); `setInputFiles` uploads via `userEvent.upload`; `contextMenu` fires a focused `contextmenu` event; `pressKey` folds `ctrl/shift/alt/meta` into the event init (a Shift + printable key reports a different `event.key` than Playwright — #924). Real geometry/scroll/drag outcomes are E2E-only.
+- **`pressKey` carries the legacy numeric code** — synthetic `KeyboardEvent`s default to `keyCode: 0`, and some libraries (Angular Material/CDK) dispatch on `event.keyCode` rather than `event.key`, silently ignoring the press; the event init mirrors the key into `keyCode`/`which` via `DOMInteractor.legacyKeyCodes` so DOM-mode key presses match real browser input (#1027).
 
 `createDomTestEngine(element, parts)` simply wraps `new DOMInteractor(element)` in a `TestEngine` with an empty root locator and a no-op cleanup ([createDomTestEngine.ts#L13-L27](../../packages/dom-core/src/createDomTestEngine.ts#L13-L27)).
 
 ### FakeMouseEvent
 
-`@testing-library` events drop `pageX/pageY`; `FakeMouseEvent extends MouseEvent` and `Object.assign`s them back so position-based interactions work ([FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5-L13)).
+`@testing-library` events drop `pageX/pageY`; `FakeMouseEvent extends MouseEvent` shadows them with own properties (`Object.defineProperty`, not assignment — real Chromium exposes them as getter-only prototype accessors, and the Angular fixtures run DOM tests in a real browser per ADR-013) so position-based interactions work ([FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts)).
 
 ## Invariants & failure modes
 

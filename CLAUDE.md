@@ -154,10 +154,13 @@ packages/
 ├── react-core/              # ReactInteractor (shared React logic)
 ├── react-18/, react-19/     # Version-specific createTestEngine
 ├── vue-3/                   # VueInteractor + createTestEngine
+├── angular-core/            # AngularInteractor + async createTestEngine (ADR-013)
+├── angular-20|21|22/        # Thin per-major Angular peer-range packages
 ├── playwright/              # PlaywrightInteractor
 ├── storybook/               # StorybookInteractor + play helpers (Storybook 10)
 ├── component-driver-html/   # HTML element drivers
 ├── component-driver-mui-*/  # Material-UI drivers
+├── component-driver-angular-material-*/ # Angular Material drivers (per major)
 └── component-driver-primevue-v4/ # PrimeVue 4 drivers (first Vue 3 design-system package)
 
 package-tests/               # Test suites validating drivers

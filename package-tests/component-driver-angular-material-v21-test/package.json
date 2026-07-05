@@ -1,0 +1,49 @@
+{
+  "name": "@atomic-testing/component-driver-angular-material-v21-test",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Examples and tests for @atomic-testing/component-driver-angular-material-v21: the shared suites run in a real browser twice — through AngularInteractor via Vitest browser mode (zone.js and zoneless), and through PlaywrightInteractor against the served example app.",
+  "keywords": [
+    "angular",
+    "angular-material",
+    "e2e",
+    "testing",
+    "unit"
+  ],
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git"
+  },
+  "scripts": {
+    "start": "vite --force",
+    "build:ui": "vite build",
+    "test:dom": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
+  },
+  "dependencies": {
+    "@angular/cdk": "^21.2.0",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/material": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@atomic-testing/core": "workspace:*",
+    "rxjs": "^7.8.0",
+    "zone.js": "^0.15.0"
+  },
+  "devDependencies": {
+    "@atomic-testing/angular-21": "workspace:*",
+    "@atomic-testing/component-driver-angular-material-v21": "workspace:*",
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/internal-test-runner": "workspace:*",
+    "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
+    "@atomic-testing/internal-test-runner-vitest-adapter": "workspace:*",
+    "@vitest/browser-playwright": "^4.1.9",
+    "playwright": "^1.61.1",
+    "vitest": "^4.1.9"
+  }
+}

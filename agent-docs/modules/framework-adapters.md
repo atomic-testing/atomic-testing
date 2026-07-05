@@ -37,13 +37,15 @@ Render a component into the DOM (or wrap a pre-rendered one) and inject an inter
 
 ### ReactInteractor
 
-Extends `DOMInteractor` and `override`s every interactive method to wrap the `super` call in `act()` from `@testing-library/react`, so React state updates are flushed before the method resolves ([ReactInteractor.ts#L22-L127](../../packages/react-core/src/ReactInteractor.ts#L22-L127)):
+Extends `DOMInteractor` and `override`s every interactive method to wrap the `super` call in `act()` from `@testing-library/react`, so React state updates are flushed before the method resolves ([ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts)):
 
 ```ts
 override async click(locator, option?) {
   await act(async () => { await super.click(locator, option); });
 }
 ```
+
+The `user-event`-backed methods (`click`, `hover`, `activate`, `enterText`, `selectOptionValue`, `setInputFiles`) additionally pin the `IS_REACT_ACT_ENVIRONMENT` global to `true` for the duration of the call (`runUserEvent` — see its doc comment): `@testing-library/react`'s `asyncWrapper` temporarily disables the act environment around async `user-event` calls, which is only correct when `user-event` is _not_ already act-managed; nested inside this interactor's `act()` it would otherwise make react-dom log `The current testing environment is not configured to support act(...)` for every update — enough log volume on update-heavy trees (Radix) to kill CI jest runs.
 
 `clone()` returns `new ReactInteractor(this.rootEl)`.
 
@@ -69,7 +71,7 @@ All five follow the same shape: append a container to `rootElement ?? document.b
 
 `createRenderedTestEngine(rootElement, parts)` skips rendering — it tags an existing element and wires cleanup to just remove the attribute. Useful in Storybook-style environments where the host renders the component ([react-core/createTestEngine.ts#L65-L88](../../packages/react-core/src/createTestEngine.ts#L65-L88)).
 
-The Angular `createTestEngine` differs in three deliberate ways ([angular-core/createTestEngine.ts](../../packages/angular-core/src/createTestEngine.ts)): it is **async** (Angular bootstrap is a promise); it mounts through `createApplication` + `appRef.bootstrap(component, hostNode)` — passing the host node directly, so the component's selector never needs to exist in the page; and it feature-detects zone.js once at bootstrap, adding `provideZonelessChangeDetection()` when `Zone` is absent (root marker `data-atomic-testing-angular`, unmount via `appRef.destroy()`).
+The Angular `createTestEngine` differs in three deliberate ways ([angular-core/createTestEngine.ts](../../packages/angular-core/src/createTestEngine.ts)): it is **async** (Angular bootstrap is a promise); it mounts through `createApplication` + `appRef.bootstrap(component, hostNode)` — passing the host node directly, so the component's selector never needs to exist in the page; and it feature-detects zone.js once at bootstrap, providing the change-detection mode explicitly — `provideZoneChangeDetection()` when `Zone` is present, `provideZonelessChangeDetection()` when it is absent; explicit because Angular 21+ defaults to zoneless even with zone.js loaded (root marker `data-atomic-testing-angular`, unmount via `appRef.destroy()`).
 
 `vue-3` additionally accepts a `VueSFCLikeComponent` (`{ template, setup?, data?, methods?, computed?, props?, name? }`) and compiles it via `defineComponent` before mounting ([createTestEngine.ts#L15-L48](../../packages/vue-3/src/createTestEngine.ts#L15-L48)).
 

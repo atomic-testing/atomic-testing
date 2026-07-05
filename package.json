@@ -15,7 +15,8 @@
     "check:lint": "oxlint --fix",
     "check:style": "oxfmt --ignore-path .gitignore --ignore-path .oxfmtignore",
     "typedoc": "typedoc --out typedocs",
-    "bumpVersion": "node scripts/bumpVersion.js"
+    "bumpVersion": "node scripts/bumpVersion.js",
+    "changelog": "node scripts/generateChangelog.js"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.58.9",

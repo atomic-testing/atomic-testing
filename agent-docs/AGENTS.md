@@ -74,6 +74,13 @@ E2E setup (from `CLAUDE.md`): in `package-tests/component-driver-html-test`, run
 - Version-mirrored packages (`mui-v5/6/7`, `react-18/19/legacy`) keep matching file/export names; differences are selectors/roles/`driverName` only ([ADR-003](adr/003-version-specific-packages.md)).
 - Locator-override hooks (`overriddenParentLocator`, `overrideLocatorRelativePosition`) must be pure (run before construction).
 
+### Commit & PR titles
+
+Since Claude Code agents author most PRs in this repo, this matters here specifically:
+commit subjects and PR titles must follow the `type(scope): summary` convention in
+[`CONTRIBUTING.md`](../CONTRIBUTING.md) — it's what the automatic CHANGELOG is
+generated from ([`agent-docs/RELEASING.md`](RELEASING.md)).
+
 ## Change workflows
 
 ### Add a component driver
