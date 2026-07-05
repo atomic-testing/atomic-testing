@@ -39,11 +39,19 @@ export class SlideToggleDriver
 
   /**
    * Turn the toggle on or off by clicking the switch when its current state
-   * differs from the desired one.
+   * differs from the desired one. The click's effect on `aria-checked` lands
+   * with Angular's change detection, so the new state is probed (bounded)
+   * rather than assumed — a straight follow-up read can beat the update under
+   * load.
    */
   async setSelected(selected: boolean): Promise<void> {
     if ((await this.isSelected()) !== selected) {
       await this.interactor.click(this.switchLocator);
+      await this.interactor.waitUntil({
+        probeFn: () => this.isSelected(),
+        terminateCondition: selected,
+        timeoutMs: 1000,
+      });
     }
   }
 
