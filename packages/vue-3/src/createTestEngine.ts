@@ -68,7 +68,20 @@ export function createTestEngine<T extends ScenePart>(
   const plugins = option?.plugins ?? [];
 
   try {
-    const renderResult = render(compiledComponent, { container, global: { plugins } });
+    const renderResult = render(compiledComponent, {
+      container,
+      global: {
+        plugins,
+        // Vue Test Utils stubs <Transition> by default, replacing it with a
+        // wrapper element that never runs the enter/leave JS hooks. Component
+        // libraries do real work in those hooks (PrimeVue's Dialog binds its
+        // Escape listener in onEnter), so the stub silently disables behavior
+        // the same shared suite verifies in the Playwright leg. Real
+        // transitions resolve immediately under jsdom (computed durations are
+        // 0), so rendering them keeps the jsdom DOM aligned with the browser.
+        stubs: { transition: false },
+      },
+    });
     unmount = renderResult.unmount;
   } catch (_error) {
     // Fallback to manual Vue app creation if render fails
