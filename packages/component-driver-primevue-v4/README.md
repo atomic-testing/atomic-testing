@@ -43,6 +43,8 @@ Drivers land in waves (see the umbrella issue #1018); this table grows with each
 | `SelectDriver`                                | `Select` (v4 rename of `Dropdown`)          | Label-based selection (PrimeVue renders no option value in the DOM); the teleported listbox is pinned via the combobox's `aria-controls` id link.  |
 | `DialogDriver`                                | `Dialog`                                    | `ContainerDriver` with a content scene; portal re-root on `role="dialog"`; title via `aria-labelledby`; close via header button or Escape.         |
 | `MenuDriver`                                  | `Menu` (popup mode)                         | Portal re-root on `data-pc-name="menu"`; items iterated with `childListHelper` (separators share the `<li>` tag); activation clicks the item link. |
+| `TabsDriver`, `TabDriver`                     | `Tabs` (v4 replacement for `TabView`)       | ARIA tabs pattern (`role="tab"`, `aria-selected`, `aria-controls` → panel id); unselected panels stay mounted, hidden.                             |
+| `DataTableDriver`, `DataTableRowDriver`       | `DataTable` + `Column`                      | Real `<table>` with `role` semantics; full-count row/cell iteration via `childListHelper`. v1 covers static read-only tables only.                 |
 
 ## Teleported overlays (`appendTo`)
 

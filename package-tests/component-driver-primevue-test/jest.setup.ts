@@ -29,4 +29,23 @@ if (typeof g.matchMedia !== 'function') {
     }) as unknown as MediaQueryList;
 }
 
+/**
+ * jsdom does not implement `ResizeObserver` (no layout engine to observe).
+ * PrimeVue's `TabList` constructs one on mount (`bindResizeObserver`, sizing
+ * the active-tab ink bar and the scroll buttons), so rendering any Tabs under
+ * jsdom throws `ResizeObserver is not defined` and tears down the subtree.
+ * The stub is inert (no synthetic entries) — the behavior it gates is real
+ * layout, which jsdom does not compute; the drivers read ARIA/DOM structure,
+ * and geometry is the Playwright leg's job. Same precedent as
+ * `component-driver-radix-test`/`component-driver-astryx-test`.
+ */
+const g2 = globalThis as unknown as { ResizeObserver?: unknown };
+if (typeof g2.ResizeObserver !== 'function') {
+  g2.ResizeObserver = class {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  };
+}
+
 export {};

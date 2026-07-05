@@ -2,12 +2,14 @@ import { Component } from 'vue';
 
 import { ButtonExample } from './examples/button/Button.examples';
 import { CheckboxExample } from './examples/checkbox/Checkbox.examples';
+import { DataTableExample } from './examples/data-table/DataTable.examples';
 import { DialogExample } from './examples/dialog/Dialog.examples';
 import { InputTextExample } from './examples/input-text/InputText.examples';
 import { MenuExample } from './examples/menu/Menu.examples';
 import { RadioButtonExample } from './examples/radio-button/RadioButton.examples';
 import { SelectExample } from './examples/select/Select.examples';
 import { SliderExample } from './examples/slider/Slider.examples';
+import { TabsExample } from './examples/tabs/Tabs.examples';
 import { ToggleSwitchExample } from './examples/toggle-switch/ToggleSwitch.examples';
 
 export interface DirectoryEntry {
@@ -31,4 +33,6 @@ export const directory: DirectoryEntry[] = [
   { path: '/select', title: 'Select', component: SelectExample },
   { path: '/dialog', title: 'Dialog', component: DialogExample },
   { path: '/menu', title: 'Menu', component: MenuExample },
+  { path: '/tabs', title: 'Tabs', component: TabsExample },
+  { path: '/data-table', title: 'DataTable', component: DataTableExample },
 ];
