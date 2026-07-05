@@ -1,5 +1,6 @@
 import { Type } from '@angular/core';
 
+import { AutocompleteExampleComponent } from './examples/autocomplete/Autocomplete.examples';
 import { ButtonExampleComponent } from './examples/button/Button.examples';
 import { CheckboxExampleComponent } from './examples/checkbox/Checkbox.examples';
 import { DialogExampleComponent } from './examples/dialog/Dialog.examples';
@@ -9,6 +10,7 @@ import { RadioExampleComponent } from './examples/radio/Radio.examples';
 import { SelectExampleComponent } from './examples/select/Select.examples';
 import { SlideToggleExampleComponent } from './examples/slideToggle/SlideToggle.examples';
 import { SnackbarExampleComponent } from './examples/snackbar/Snackbar.examples';
+import { TableExampleComponent } from './examples/table/Table.examples';
 import { TabsExampleComponent } from './examples/tabs/Tabs.examples';
 
 export interface ExampleEntry {
@@ -23,6 +25,7 @@ export interface ExampleEntry {
  * `directory.tsx`.
  */
 export const directory: ReadonlyArray<ExampleEntry> = [
+  { title: 'Autocomplete', url: '/autocomplete', component: AutocompleteExampleComponent },
   { title: 'Button', url: '/button', component: ButtonExampleComponent },
   { title: 'Checkbox', url: '/checkbox', component: CheckboxExampleComponent },
   { title: 'Dialog', url: '/dialog', component: DialogExampleComponent },
@@ -32,5 +35,6 @@ export const directory: ReadonlyArray<ExampleEntry> = [
   { title: 'Select', url: '/select', component: SelectExampleComponent },
   { title: 'Slide Toggle', url: '/slide-toggle', component: SlideToggleExampleComponent },
   { title: 'Snackbar', url: '/snackbar', component: SnackbarExampleComponent },
+  { title: 'Table', url: '/table', component: TableExampleComponent },
   { title: 'Tabs', url: '/tabs', component: TabsExampleComponent },
 ];

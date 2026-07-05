@@ -1,3 +1,4 @@
+export { AutocompleteDriver } from './components/AutocompleteDriver';
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver, checkboxParts } from './components/CheckboxDriver';
 export { DialogDriver, dialogParts } from './components/DialogDriver';
@@ -11,6 +12,8 @@ export { SelectDriver, type OptionGetOption } from './components/SelectDriver';
 export { SlideToggleDriver } from './components/SlideToggleDriver';
 export { SnackbarDriver, snackbarLocator, snackbarParts } from './components/SnackbarDriver';
 export { TabDriver } from './components/TabDriver';
+export { defaultTableDriverOption, TableDriver } from './components/TableDriver';
+export { TableRowDriver } from './components/TableRowDriver';
 export { defaultTabsDriverOption, TabsDriver } from './components/TabsDriver';
 export { MenuItemDisabledError, MenuItemDisabledErrorId } from './errors/MenuItemDisabledError';
 export { MenuItemNotFoundError, MenuItemNotFoundErrorId } from './errors/MenuItemNotFoundError';
