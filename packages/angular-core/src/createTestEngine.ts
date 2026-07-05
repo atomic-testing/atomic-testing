@@ -54,9 +54,14 @@ export async function createTestEngine<T extends ScenePart>(
 
   // Auto-detected mode first, caller-supplied providers after — in Angular DI
   // the later provider wins, so option.providers can override the detection.
-  // Zone-based mode is provided explicitly: relying on the framework default
-  // stopped being equivalent at Angular 21, which bootstraps zoneless even
-  // when zone.js is loaded.
+  //
+  // Always provide one explicitly — never rely on createApplication()'s own
+  // default. Angular 20's internalCreateApplication() defaults to zone-based
+  // CD, but Angular 21+ defaults to provideZonelessChangeDetectionInternal()
+  // regardless of whether zone.js is loaded, so merely loading zone.js is not
+  // enough on 21+ to get zone-based change detection (confirmed by diffing
+  // internalCreateApplication's baseline providers across majors). Stating
+  // our own choice explicitly makes this version-independent.
   const providers = [
     isZoneJsLoaded() ? provideZoneChangeDetection() : provideZonelessChangeDetection(),
     ...(option?.providers ?? []),

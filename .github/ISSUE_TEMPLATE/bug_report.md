@@ -23,7 +23,9 @@ List the packages (with versions) you are using for your tests, for example
 
 **Component drivers**
 What component driver packages are you using? e.g. `component-driver-html`
-or Material UI drivers.
+or Material UI drivers. Note: `component-driver-mui-v5` and
+`component-driver-mui-x-v5` are frozen/EOL (no fixes or new drivers) — please
+confirm the issue reproduces on a supported major (v6+) before filing.
 
 **Minimal reproduction**
 A link to a repository or code snippet that reproduces the issue is greatly
