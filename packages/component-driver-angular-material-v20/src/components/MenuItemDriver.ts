@@ -37,7 +37,7 @@ export class MenuItemDriver extends ComponentDriver {
     // click during that window and Playwright's click auto-waits for it, so
     // the DOM path probes the computed style to the same effect.
     await this.interactor.waitUntil({
-      probeFn: () => this.interactor.getStyleValue(this.locator, 'pointer-events'),
+      probeFn: () => this.interactor.getStyleValue(this.locator, 'pointerEvents'),
       terminateCondition: value => value !== 'none',
       timeoutMs: 1000,
     });

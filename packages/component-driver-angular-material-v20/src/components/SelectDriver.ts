@@ -76,7 +76,10 @@ export class SelectDriver
    * removes the attribute (and the panel) when closed.
    */
   private get panelLocator(): PartLocator {
-    return byLinkedElement('Root').onLinkedElement(this.locator).extractAttribute('aria-controls').toMatchMyAttribute('id');
+    return byLinkedElement('Root')
+      .onLinkedElement(this.locator)
+      .extractAttribute('aria-controls')
+      .toMatchMyAttribute('id');
   }
 
   private get optionsLocator(): PartLocator {
