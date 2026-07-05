@@ -104,6 +104,84 @@ importers:
         specifier: ^0.15.0
         version: 0.15.1
 
+  package-tests/angular-21-test:
+    devDependencies:
+      '@angular/common':
+        specifier: ^21.2.0
+        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.0
+        version: 21.2.17
+      '@angular/core':
+        specifier: ^21.2.0
+        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/platform-browser':
+        specifier: ^21.2.0
+        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@atomic-testing/angular-21':
+        specifier: workspace:*
+        version: link:../../packages/angular-21
+      '@atomic-testing/component-driver-html':
+        specifier: workspace:*
+        version: link:../../packages/component-driver-html
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@vitest/browser-playwright':
+        specifier: ^4.1.9
+        version: 4.1.9(playwright@1.56.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
+      playwright:
+        specifier: ~1.56.1
+        version: 1.56.1
+      rxjs:
+        specifier: ^7.8.0
+        version: 7.8.2
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@20.0.3)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))
+      zone.js:
+        specifier: ^0.15.0
+        version: 0.15.1
+
+  package-tests/angular-22-test:
+    devDependencies:
+      '@angular/common':
+        specifier: ^22.0.0
+        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^22.0.0
+        version: 22.0.5
+      '@angular/core':
+        specifier: ^22.0.0
+        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/platform-browser':
+        specifier: ^22.0.0
+        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@atomic-testing/angular-22':
+        specifier: workspace:*
+        version: link:../../packages/angular-22
+      '@atomic-testing/component-driver-html':
+        specifier: workspace:*
+        version: link:../../packages/component-driver-html
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@vitest/browser-playwright':
+        specifier: ^4.1.9
+        version: 4.1.9(playwright@1.56.1)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))(vitest@4.1.9)
+      playwright:
+        specifier: ~1.56.1
+        version: 1.56.1
+      rxjs:
+        specifier: ^7.8.0
+        version: 7.8.2
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@20.0.3)(vite@8.0.16(@types/node@24.0.10)(esbuild@0.27.7)(jiti@2.4.2)(yaml@2.9.0))
+      zone.js:
+        specifier: ^0.15.0
+        version: 0.15.1
+
   package-tests/component-driver-astryx-test:
     dependencies:
       '@astryxdesign/core':
@@ -2549,9 +2627,6 @@ packages:
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
-
-  '@jridgewell/sourcemap-codec@1.5.4':
-    resolution: {integrity: sha512-VT2+G1VQs/9oz078bLrYbecdZKs912zQlkelYpuf+SXF+QvZDYJlbx/LSx+meSAwdDFnF8FVXW92AVjjkVmgFw==}
 
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
@@ -10268,8 +10343,6 @@ snapshots:
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
-  '@jridgewell/sourcemap-codec@1.5.4': {}
-
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
   '@jridgewell/trace-mapping@0.3.29':
@@ -13311,7 +13384,7 @@ snapshots:
       recast: 0.23.11
       semver: 7.8.4
       util: 0.12.5
-      ws: 8.18.3
+      ws: 8.21.0
     optionalDependencies:
       prettier: 3.6.2
     transitivePeerDependencies:
@@ -15886,7 +15959,7 @@ snapshots:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.18.3
+      ws: 8.21.0
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -16054,7 +16127,7 @@ snapshots:
 
   magic-string@0.30.17:
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.4
+      '@jridgewell/sourcemap-codec': 1.5.5
 
   magic-string@0.30.21:
     dependencies:

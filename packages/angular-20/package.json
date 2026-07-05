@@ -31,7 +31,8 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check:type": "tsgo --noEmit"
+    "check:type": "tsgo --noEmit",
+    "check:api": "api-extractor run"
   },
   "dependencies": {
     "@atomic-testing/angular-core": "workspace:*",
