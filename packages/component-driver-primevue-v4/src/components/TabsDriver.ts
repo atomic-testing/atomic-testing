@@ -58,7 +58,7 @@ export class TabsDriver<ItemT extends TabDriver = TabDriver> extends ListCompone
   /** The visible label of every tab, in DOM order. */
   async getTabLabels(): Promise<string[]> {
     const labels: string[] = [];
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       labels.push((await tab.getText())?.trim() ?? '');
     }
     return labels;
@@ -72,7 +72,7 @@ export class TabsDriver<ItemT extends TabDriver = TabDriver> extends ListCompone
   /** Zero-based index of the selected tab, or `-1` when none is selected. */
   async getSelectedIndex(): Promise<number> {
     let index = 0;
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
         return index;
       }
@@ -83,7 +83,7 @@ export class TabsDriver<ItemT extends TabDriver = TabDriver> extends ListCompone
 
   /** Label of the selected tab, or `null` when no tab is selected. */
   async getSelectedLabel(): Promise<Nullable<string>> {
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
         return (await tab.getText())?.trim() ?? null;
       }
