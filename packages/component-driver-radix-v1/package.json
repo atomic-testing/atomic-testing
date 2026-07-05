@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-radix-v1",
-  "version": "0.92.0",
+  "version": "0.94.0",
   "description": "Component driver for Radix UI primitives (radix-ui v1)",
   "repository": {
     "type": "git",
