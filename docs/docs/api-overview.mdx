@@ -44,6 +44,7 @@ In a nutshell, locators represent a way to find element on a page or within a te
 | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | [byDataTestId(dataTestId)](./api/@atomic-testing/core/functions/byDataTestId.md) | Locate by data-testid attribute.                                                                                       |
 | [byRole(role)](./api/@atomic-testing/core/functions/byRole.md)                   | Locate by the value of role attribute.                                                                                 |
+| [byAriaLabel(value)](./api/@atomic-testing/core/functions/byAriaLabel.md)        | Locate by the verbatim `aria-label` attribute — often composed with `byRole` to tell same-role siblings apart.         |
 | [byCssSelector(selector)](./api/@atomic-testing/core/functions/byCssSelector.md) | Locate by CSS selector.                                                                                                |
 | [byCssClass(className)](./api/@atomic-testing/core/functions/byCssClass.md)      | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily. |
 | [byAttribute(name, value)](./api/@atomic-testing/core/functions/byAttribute.md)  | Locate element by attribute                                                                                            |
@@ -125,23 +126,34 @@ pnpm add @atomic-testing/component-driver-mui-v5
 | AccordionDriver                  | Driver for Accordion component                        |
 | AlertDriver                      | Driver for Alert component                            |
 | AutoCompleteDriver               | Driver for Autocomplete component                     |
+| AvatarDriver                      | Driver for Avatar component                            |
+| AvatarGroupDriver                 | Driver for AvatarGroup component                       |
 | BadgeDriver                      | Driver for Badge component                            |
+| BottomNavigationDriver            | Driver for BottomNavigation component                  |
+| BottomNavigationActionDriver      | Driver for a single BottomNavigationAction             |
 | ButtonDriver                     | Driver for Button or any clickable component          |
 | CheckboxDriver                   | Driver for Checkbox component                         |
 | ChipDriver                       | Driver for Chip component                             |
 | DialogDriver                     | Driver for Dialog component                           |
+| DrawerDriver                      | Driver for Drawer (and SwipeableDrawer) component      |
 | FabDriver                        | Driver for Floating Action Button component           |
 | InputDriver                      | Driver for Input component and its variants           |
 | ListDriver                       | Driver for List component                             |
 | ListItemDriver                   | Driver for ListItem component                         |
 | MenuDriver                       | Driver for Menu component                             |
 | MenuItemDriver                   | Driver for MenuItem component                         |
+| PaginationDriver                  | Driver for Pagination component                        |
 | ProgressDriver                   | Driver for Progress component                         |
 | RatingDriver                     | Driver for Rating component                           |
 | SelectDriver                     | Driver for Select component                           |
 | SliderDriver                     | Driver for Slider component                           |
 | SnackbarDriver                   | Driver for Snackbar component                         |
+| SpeedDialDriver                   | Driver for SpeedDial component                         |
+| StepperDriver                     | Driver for Stepper component (steps and connectors)    |
 | SwitchDriver                     | Driver for Switch component                           |
+| TablePaginationDriver             | Driver for TablePagination component                   |
+| TabDriver                         | Driver for a single Tab                                |
+| TabsDriver                        | Driver for Tabs (located by role="tab" children)       |
 | TextFieldDriver                  | Driver for TextField component                        |
 | ToggleButtonDriver               | Driver for ToggleButton component                     |
 | ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                |
@@ -162,23 +174,34 @@ Test examples can be found in [the example folder under component-driver-mui-v6-
 | AccordionDriver                  | Driver for Accordion component                                                                   |
 | AlertDriver                      | Driver for Alert component                                                                       |
 | AutoCompleteDriver               | Driver for Autocomplete component (single selection only, multiple selection planned)            |
+| AvatarDriver                      | Driver for Avatar component                            |
+| AvatarGroupDriver                 | Driver for AvatarGroup component                       |
 | BadgeDriver                      | Driver for Badge component                                                                       |
+| BottomNavigationDriver            | Driver for BottomNavigation component                  |
+| BottomNavigationActionDriver      | Driver for a single BottomNavigationAction             |
 | ButtonDriver                     | Driver for Button or any clickable component                                                     |
 | CheckboxDriver                   | Driver for Checkbox component                                                                    |
 | ChipDriver                       | Driver for Chip component                                                                        |
 | DialogDriver                     | Driver for Dialog component                                                                      |
+| DrawerDriver                      | Driver for Drawer (and SwipeableDrawer) component      |
 | FabDriver                        | Driver for Floating Action Button component                                                      |
 | InputDriver                      | Driver for Input component and its variants                                                      |
 | ListDriver                       | Driver for List component                                                                        |
 | ListItemDriver                   | Driver for ListItem component                                                                    |
 | MenuDriver                       | Driver for Menu component                                                                        |
 | MenuItemDriver                   | Driver for MenuItem component                                                                    |
+| PaginationDriver                  | Driver for Pagination component                        |
 | ProgressDriver                   | Driver for Progress component                                                                    |
 | RatingDriver                     | Driver for Rating component                                                                      |
 | SelectDriver                     | Driver for Select component                                                                      |
 | SliderDriver                     | Driver for Slider component                                                                      |
 | SnackbarDriver                   | Driver for Snackbar component                                                                    |
+| SpeedDialDriver                   | Driver for SpeedDial component                         |
+| StepperDriver                     | Driver for Stepper component (steps and connectors)    |
 | SwitchDriver                     | Driver for Switch component                                                                      |
+| TablePaginationDriver             | Driver for TablePagination component                   |
+| TabDriver                         | Driver for a single Tab                                |
+| TabsDriver                        | Driver for Tabs (located by role="tab" children)       |
 | TextFieldDriver                  | Driver for TextField component, supports single-line, multiline and selection TextField variants |
 | ToggleButtonDriver               | Driver for ToggleButton component                                                                |
 | ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                                                           |
@@ -221,23 +244,34 @@ pnpm add @atomic-testing/component-driver-mui-v7
 | AccordionDriver                  | Driver for Accordion component                        |
 | AlertDriver                      | Driver for Alert component                            |
 | AutoCompleteDriver               | Driver for Autocomplete component                     |
+| AvatarDriver                      | Driver for Avatar component                            |
+| AvatarGroupDriver                 | Driver for AvatarGroup component                       |
 | BadgeDriver                      | Driver for Badge component                            |
+| BottomNavigationDriver            | Driver for BottomNavigation component                  |
+| BottomNavigationActionDriver      | Driver for a single BottomNavigationAction             |
 | ButtonDriver                     | Driver for Button or any clickable component          |
 | CheckboxDriver                   | Driver for Checkbox component                         |
 | ChipDriver                       | Driver for Chip component                             |
 | DialogDriver                     | Driver for Dialog component                           |
+| DrawerDriver                      | Driver for Drawer (and SwipeableDrawer) component      |
 | FabDriver                        | Driver for Floating Action Button component           |
 | InputDriver                      | Driver for Input component and its variants           |
 | ListDriver                       | Driver for List component                             |
 | ListItemDriver                   | Driver for ListItem component                         |
 | MenuDriver                       | Driver for Menu component                             |
 | MenuItemDriver                   | Driver for MenuItem component                         |
+| PaginationDriver                  | Driver for Pagination component                        |
 | ProgressDriver                   | Driver for Progress component                         |
 | RatingDriver                     | Driver for Rating component                           |
 | SelectDriver                     | Driver for Select component                           |
 | SliderDriver                     | Driver for Slider component                           |
 | SnackbarDriver                   | Driver for Snackbar component                         |
+| SpeedDialDriver                   | Driver for SpeedDial component                         |
+| StepperDriver                     | Driver for Stepper component (steps and connectors)    |
 | SwitchDriver                     | Driver for Switch component                           |
+| TablePaginationDriver             | Driver for TablePagination component                   |
+| TabDriver                         | Driver for a single Tab                                |
+| TabsDriver                        | Driver for Tabs (located by role="tab" children)       |
 | TextFieldDriver                  | Driver for TextField component                        |
 | ToggleButtonDriver               | Driver for ToggleButton component                     |
 | ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                |
@@ -278,15 +312,18 @@ pnpm add @atomic-testing/component-driver-mui-v9
 </Tabs>
 
 The v9 package exposes the **same driver set as v7** (validated against MUI 9's DOM)
-plus three additional drivers. See the generated
+plus six additional drivers. See the generated
 [API reference](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v9/src/components)
 for the full list; the net-new drivers are:
 
-| Driver           | Description                                              |
-| ---------------- | -------------------------------------------------------- |
-| RadioGroupDriver | Driver for RadioGroup (with per-option `RadioDriver`)    |
-| TableDriver      | Driver for Table (rows/cells via `TableRowDriver`, sort) |
-| TooltipDriver    | Driver for Tooltip (hover-to-reveal title)               |
+| Driver           | Description                                       |
+| ---------------- | -------------------------------------------------- |
+| RadioDriver      | Driver for a single Radio (see RadioGroupDriver)   |
+| RadioGroupDriver | Driver for RadioGroup (with per-option RadioDriver) |
+| TableDriver      | Driver for Table (rows/cells, sort)                |
+| TableRowDriver   | Driver for a single Table row (see TableDriver)    |
+| TableCellDriver  | Driver for a single Table cell (see TableDriver)   |
+| TooltipDriver    | Driver for Tooltip (hover-to-reveal title)          |
 
 </details>
 ### [MUI X V5](https://mui.com/x/) components
