@@ -1,7 +1,7 @@
-import { createTestEngine } from '@atomic-testing/angular-22';
 import { testRunner } from '@atomic-testing/internal-test-runner';
 import { vitestAdapter } from '@atomic-testing/internal-test-runner-vitest-adapter';
 
+import { createTestEngine } from '../src/createTestEngine';
 import { CheckboxExampleComponent } from '../src/examples/checkbox/Checkbox.examples';
 import { checkboxScenePart, checkboxTestSuite } from '../src/examples/checkbox/Checkbox.suite';
 
