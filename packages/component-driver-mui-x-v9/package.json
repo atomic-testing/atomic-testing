@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-x-v9",
-  "version": "0.94.0",
+  "version": "0.95.0",
   "description": "Atomic Testing Component driver to help drive Material UI X V9 components",
   "keywords": [
     "integration",

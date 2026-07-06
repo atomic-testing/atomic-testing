@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.95.0] - 2026-07-06
+
+### Features
+
+- **primevue:** first Vue 3 design-system driver package (@atomic-testing/component-driver-primevue-v4) ([#1032](https://github.com/atomic-testing/atomic-testing/issues/1032))
+
+### Fixes
+
+- **angular-material:** disable test-harness animations to eliminate menu pointer-events race ([#1039](https://github.com/atomic-testing/atomic-testing/issues/1039))
+- repair e2e test failures across astryx, mui, and radix drivers ([#1038](https://github.com/atomic-testing/atomic-testing/issues/1038))
+
 ## [0.94.0] - 2026-07-05
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-html",
-  "version": "0.94.0",
+  "version": "0.95.0",
   "description": "HTML component driver for atomic-testing",
   "keywords": [
     "e2e",

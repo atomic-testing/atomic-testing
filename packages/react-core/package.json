@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react-core",
-  "version": "0.94.0",
+  "version": "0.95.0",
   "description": "Shared utilities for Atomic Testing React adapters",
   "keywords": [
     "react",
