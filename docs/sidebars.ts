@@ -22,8 +22,8 @@ const sidebars = {
         'quick-start', // NEW: Choose your framework + 5-minute example
         'setup', // EXISTING: Runner config + step-by-step setup (must precede tutorial)
         'framework-guide', // NEW: React vs Vue vs Playwright decision guide
-        'why-atomic-testing', // NEW: Long-term value demonstration
         'tutorial', // EXISTING: Detailed tutorial
+        'why-atomic-testing', // NEW: Long-term value demonstration — after the hands-on path, not interrupting it
       ],
     },
 
