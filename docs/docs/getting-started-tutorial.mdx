@@ -30,6 +30,12 @@ pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 
 <CodeBlock language='js' title='jest.config.js'>{jestConfigSnippet}</CodeBlock>
 
+:::info CommonJS vs. ESM
+`jest.config.js` uses `module.exports`, Jest's CommonJS config format. If your `package.json` has
+`"type": "module"` (common with a Vite-scaffolded project), either rename the file to
+`jest.config.cjs`, or switch to `export default { ... }` in a `jest.config.mjs`.
+:::
+
 ## 3. Write the component under test
 
 ```tsx title="LoginForm.tsx"

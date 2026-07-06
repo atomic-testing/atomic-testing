@@ -248,7 +248,7 @@ function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX
         <div className={styles.heroCopy}>
           <div className={styles.badge}>
             <span className={styles.badgeChip}>Pre-1.0</span>
-            Portable UI testing for React · Vue · Angular · Playwright
+            Portable UI testing for React · Vue · Playwright
           </div>
 
           <h1 className={styles.heroTitle}>
@@ -275,6 +275,9 @@ function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX
 
           <InstallBox framework={activeFramework} />
 
+          <Link className={styles.heroWhyLink} to='/docs/quick-start'>
+            Full setup, incl. peer deps →
+          </Link>
           <Link className={styles.heroWhyLink} to='/docs/why-atomic-testing'>
             Why Atomic Testing — and when NOT to use it →
           </Link>
@@ -390,7 +393,7 @@ const composeSteps: ComposeStep[] = [
     eyebrow: 'Result',
     eyebrowColor: '#5fe3c8',
     text: '✓ Passing everywhere',
-    caption: 'React · Vue · Angular · Playwright.',
+    caption: 'React · Vue · Playwright.',
     variant: 'result',
   },
 ];
@@ -495,7 +498,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={`${siteConfig.title} — Write your UI tests once`}
-      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Angular and Playwright.'>
+      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and more.'>
       <main>
         <HeroSection activeFramework={activeFramework} />
         <MagicSection active={activeFramework} onSelect={setActiveFramework} />

@@ -118,41 +118,42 @@ import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/vue-3';
 import { ref } from 'vue';
 
-// Component to test (SFC-like)
-const WelcomeButton = {
-  props: {
-    name: { type: String, default: 'Alice' },
-  },
-  template: `
-    <div>
-      <h1 data-testid="greeting">Hello {{ name }}!</h1>
-      <button 
-        data-testid="welcome-btn" 
-        @click="handleClick"
-      >
-        {{ clicked ? 'Welcome!' : 'Click me' }}
-      </button>
-    </div>
-  `,
-  setup() {
-    const clicked = ref(false);
-    const handleClick = () => (clicked.value = true);
-    return { clicked, handleClick };
-  },
-};
+// Component to test (SFC-like). createTestEngine() doesn't forward props into
+// the rendered component, so — unlike React's <WelcomeButton name="Alice" /> —
+// parametrize via a closure instead of a Vue `props` schema.
+function makeWelcomeButton(name: string) {
+  return {
+    template: `
+      <div>
+        <h1 data-testid="greeting">Hello ${name}!</h1>
+        <button 
+          data-testid="welcome-btn" 
+          @click="handleClick"
+        >
+          {{ clicked ? 'Welcome!' : 'Click me' }}
+        </button>
+      </div>
+    `,
+    setup() {
+      const clicked = ref(false);
+      const handleClick = () => (clicked.value = true);
+      return { clicked, handleClick };
+    },
+  };
+}
 
-// Test setup (identical to React!)
+// Test setup (same shape as React!)
 const welcomeScene = {
   greeting: { locator: byDataTestId('greeting'), driver: HTMLElementDriver },
   button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
-// Test (identical to React!)
+// Test (same logic as React!)
 describe('WelcomeButton', () => {
   let engine: TestEngine<typeof welcomeScene>;
 
   beforeEach(() => {
-    engine = createTestEngine(WelcomeButton, welcomeScene);
+    engine = createTestEngine(makeWelcomeButton('Alice'), welcomeScene);
   });
 
   afterEach(async () => {

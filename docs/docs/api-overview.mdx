@@ -295,8 +295,10 @@ for the full list; the net-new drivers are:
 MUI-X 5 reached end of support on 2026-06-27. `component-driver-mui-x-v5` is
 frozen at `0.81.0`: it stays installable but receives no fixes, new drivers, or
 CI/e2e coverage. For DataGrid, migrate to `-x-v6`/`-x-v7`/`-x-v8`/`-x-v9`. Note
-that the date/time **picker** drivers ship only in this v5 package and were
-never carried forward to a supported major. Rationale:
+that v5's full date/time **picker** driver set (range, time, mobile and
+dialog variants) was not carried forward to v6/v7/v8; v9 reintroduced a
+single picker driver, `DesktopDatePickerDriver` (see below), but not the rest
+of v5's set. Rationale:
 [ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
 :::
 
