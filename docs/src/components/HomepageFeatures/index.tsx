@@ -16,7 +16,7 @@ const featureList: FeatureItem[] = [
     iconVariant: 'blue',
     title: 'Write once, test everywhere',
     description:
-      'The same test code works across React, Vue and Playwright — plus Angular, Storybook, and plain DOM tests. Learn once, test any UI framework.',
+      'The same driver and assertion code works across React, Vue and Playwright — plus Angular (async setup), Storybook, and plain DOM tests. Learn once, test any UI framework.',
   },
   {
     icon: '🎯',

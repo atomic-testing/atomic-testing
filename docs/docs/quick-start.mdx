@@ -19,10 +19,10 @@ import Tabs from '@theme/Tabs';
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
 
 # react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
-pnpm add react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
+pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
 ```
 
 On React 18 or React 17, swap in `@atomic-testing/react-18` or `@atomic-testing/react-legacy` — see the [Package Guide](./framework-guide.mdx) for the full matrix. Testing Material UI or another component library instead of plain HTML elements? See [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui).
@@ -84,16 +84,22 @@ describe('WelcomeButton', () => {
 });
 ```
 
+Run it:
+
+```bash
+npx jest
+```
+
 </TabItem>
 <TabItem value="vue" label="💚 Vue 3">
 
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html
 
 # vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
-pnpm add vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
+pnpm add -D vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
 ```
 
 :::info Before you run this
@@ -169,16 +175,22 @@ describe('WelcomeButton', () => {
 });
 ```
 
+Run it:
+
+```bash
+npx vitest run
+```
+
 </TabItem>
 <TabItem value="playwright" label="🎭 Playwright">
 
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html
 
 # playwright's peer dependency — npm/yarn don't install peers automatically like pnpm can
-pnpm add @playwright/test
+pnpm add -D @playwright/test
 ```
 
 :::info DOM tests vs. Playwright tests
@@ -240,6 +252,12 @@ test.describe('WelcomeButton', () => {
     expect(await engine.parts.button.getText()).toBe('Welcome!');
   });
 });
+```
+
+Once your app is served at the configured `baseURL`, run it:
+
+```bash
+npx playwright test
 ```
 
 </TabItem>

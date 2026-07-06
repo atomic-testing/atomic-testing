@@ -450,10 +450,11 @@ function TradeoffsSection(): JSX.Element {
         <p className={styles.tradeoffsSubtitle}>
           Atomic Testing adds a driver layer on top of Testing Library and Playwright — that&apos;s a learning curve
           and a dependency, not a free lunch. It&apos;s a poor fit for a single throwaway component, a prototype
-          you&apos;ll never maintain, or a team unwilling to invest in the pattern up front. Runtime overhead is
-          negligible — a driver call is a thin async wrapper around the same Testing Library/Playwright call you&apos;d
-          write by hand — and lock-in risk is low: every driver bottoms out in those same portable primitives, so
-          dropping the abstraction later means calling them directly, not rewriting your component tree.
+          you&apos;ll never maintain, or a team unwilling to invest in the pattern up front. Each driver call is a thin async
+          wrapper around the same Testing Library/Playwright call you&apos;d write by hand, so it adds a coordination
+          step rather than real work — and lock-in risk is low: every driver bottoms out in those same portable
+          primitives, so dropping the abstraction later means calling them directly, not rewriting your component
+          tree.
         </p>
         <div className={styles.tradeoffsLinks}>
           <Link className={styles.tradeoffsLink} to='/docs/why-atomic-testing'>

@@ -74,7 +74,7 @@ const NODES: readonly DiagramNode[] = [
     accent: 'neutral',
     description:
       'A declarative blueprint — a plain object pairing each part name with a PartLocator and a driver class. Nothing runs a ScenePart at test time; the TestEngine is built from it.',
-    docHref: '/docs/core-concepts#scenepart',
+    docHref: '/docs/concepts#scenepart',
     docLabel: 'ScenePart in Core Concepts',
   },
   {
@@ -89,7 +89,7 @@ const NODES: readonly DiagramNode[] = [
     accent: 'mint',
     description:
       "Finds a component on the page — e.g. byDataTestId('submit'). ScenePart pairs a locator with a driver class, and the driver carries that locator down to the Interactor.",
-    docHref: '/docs/core-concepts#locator',
+    docHref: '/docs/concepts#locator',
     docLabel: 'Locator in Core Concepts',
   },
   {
@@ -103,7 +103,7 @@ const NODES: readonly DiagramNode[] = [
     accent: 'blue',
     description:
       "Renders the scene and builds one ComponentDriver per ScenePart entry. Each package's createTestEngine (react-18, react-19, vue-3, angular-20/21/22, playwright, dom-core) constructs the matching Interactor subclass and injects it into every driver.",
-    docHref: '/docs/core-concepts#test-engine',
+    docHref: '/docs/concepts#test-engine',
     docLabel: 'Test Engine in Core Concepts',
   },
   {
@@ -117,7 +117,7 @@ const NODES: readonly DiagramNode[] = [
     accent: 'sky',
     description:
       'The semantic API a test calls — click(), setValue(), getText(). Holds the locator and interactor it was built with, and may nest child drivers to compose complex widgets from simpler ones.',
-    docHref: '/docs/core-concepts#component-driver',
+    docHref: '/docs/concepts#component-driver',
     docLabel: 'Component Driver in Core Concepts',
   },
   {
