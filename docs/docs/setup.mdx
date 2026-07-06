@@ -69,113 +69,15 @@ export default defineConfig({
 Skip the `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` and doesn't need it. The `jsdom` environment is still required. See the Vue notes on the [Quick Start](./quick-start.mdx) page.
 :::
 
-## Steps to create a test
+## Write your first test
 
-### 1. Annotate Key Elements with `data-testid`
-
-Mark the key components with a `data-testid` attribute. These elements are the ones you will probe for values, states, or perform interactions like clicks or selections.
-
-#### Example
-
-```tsx
-// Use data-testid on the span for easily retrieving the displayed name.
-<h1>
-  Hello <span data-testid="person-name">{name}</span>
-</h1>
-
-// Annotate the text input so a driver can read and set its value.
-<input data-testid="favorite-color-input" value={color} onChange={(e) => setColor(e.target.value)} />
-
-// A button can be probed for its state (e.g., "disabled") or clicked.
-<button data-testid="submit" disabled={disabled}>
-  Submit
-</button>
-```
-
----
-
-### 2. Define Scene Parts
-
-A **ScenePart** describes how to locate a key component and which driver to use for interacting with it. For instance, the example above can be mapped as follows:
-
-```ts
-import { HTMLButtonDriver, HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId, ScenePart } from '@atomic-testing/core';
-
-const parts = {
-  personDisplay: {
-    locator: byDataTestId('person-name'),
-    driver: HTMLElementDriver,
-  },
-  favoriteColorInput: {
-    locator: byDataTestId('favorite-color-input'),
-    driver: HTMLTextInputDriver,
-  },
-  submitButton: {
-    locator: byDataTestId('submit'),
-    driver: HTMLButtonDriver,
-  },
-} satisfies ScenePart; // Using "satisfies ScenePart" improves TypeScript type-checking.
-```
-
-:::info Testing a component library instead of plain HTML?
-Swap in the matching driver package (e.g. `@atomic-testing/component-driver-mui-v7` for Material UI) — see [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui) in the tutorial.
-:::
-
----
-
-### 3. Render the Component with TestEngine
-
-The **TestEngine** is your entry point for interacting with a component. Use the `createTestEngine()` function from your framework adapter to instantiate the engine. Assign it in `beforeEach` and clean it up in `afterEach` to prevent cross-test contamination.
-
-```ts
-import { TestEngine } from '@atomic-testing/core';
-import { createTestEngine } from '@atomic-testing/react-19';
-
-let testEngine: TestEngine<typeof parts>; // Type declaration ensures precise type checking.
-
-beforeEach(() => {
-  testEngine = createTestEngine(<MyComponent prop1={value1} />, parts);
-});
-
-afterEach(async () => {
-  await testEngine.cleanUp();
-});
-```
-
-After instantiation, you can access your declared parts through the engine's `parts` property:
-
-```ts
-await testEngine.parts.personDisplay.getText(); // Retrieves plain text from the personDisplay part.
-
-await testEngine.parts.favoriteColorInput.setValue('Black');
-// Sets the text input to "Black" using HTMLTextInputDriver's setValue method.
-
-await testEngine.parts.submitButton.isDisabled(); // Checks if the submit button is disabled.
-
-await testEngine.parts.submitButton.click(); // Simulates a click on the submit button.
-```
-
----
-
-### 4. Writing Your Tests
-
-Write tests as you normally would, keeping in mind that most UI interactions are asynchronous. Here's an example of how a test flow might look:
-
-```ts
-it(`should display the person's name as "John Doe"`, async () => {
-  expect(await testEngine.parts.personDisplay.getText()).toEqual('John Doe');
-});
-
-it(`should enable the submit button once a color is chosen`, async () => {
-  await testEngine.parts.favoriteColorInput.setValue('Black');
-  expect(await testEngine.parts.submitButton.isDisabled()).toEqual(false);
-});
-```
+With a runner configured, head to the [Step-by-Step Tutorial](./getting-started-tutorial.mdx) — it builds one
+complete, runnable test from scratch (`data-testid` → `ScenePart` → `TestEngine` → assert → clean up) using a real
+component, not a standalone snippet.
 
 ## Demo
 
-The following demo illustrates the complete setup of a login form using Atomic Testing, including a Material UI provider wrapper (see [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui) for why that's needed).
-
-- [Sample Login Form on Codesandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form)
-- Follow the [Step-by-Step Tutorial](./getting-started-tutorial.mdx) which builds a test from scratch and then walks through this sample form
+- [Sample Signup Form on Codesandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) —
+  the same [example-mui-signup-form](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form)
+  app the tutorial's optional last section tours, including a Material UI provider wrapper (see
+  [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui) for why that's needed).
