@@ -35,6 +35,12 @@ from simpler ones. The engine instantiates drivers based on the `ScenePart`
 definition. Learn how to build your own drivers in
 [Build Component Driver](./build-component-driver.mdx).
 
+Two specializations extend `ComponentDriver` for shapes many UIs share:
+`ContainerDriver` for a component whose content is a caller-supplied scene
+(e.g. a dialog body), and `ListComponentDriver` for a repeated collection of
+items (e.g. a menu). See [Driver Types](../core-concepts.mdx#driver-types) in
+Core Concepts for both, with shipped examples.
+
 ## ScenePart
 
 `ScenePart` acts as a blueprint describing the parts a scene exposes&mdash;their

@@ -48,9 +48,9 @@ reference implementations:
 - `packages/component-driver-mui-v7/src/components/OverlayDriver.ts`
 
 Each overrides the two hooks above to re-root at the overlay's presentation
-container and matches its parts there. A `ContainerDriver` subclass additionally
-exposes dynamic `content` parts, so the caller declares the overlay's interior
-scene the same way as any other component.
+container and matches its parts there. A [`ContainerDriver`](../core-concepts.mdx#driver-types)
+subclass additionally exposes dynamic `content` parts, so the caller declares
+the overlay's interior scene the same way as any other component.
 
 ### Which frameworks this applies to
 

@@ -49,7 +49,7 @@ type BranchGroup = {
   description: string;
 };
 
-const VIEW_WIDTH = 1100;
+const VIEW_WIDTH = 1350;
 const VIEW_HEIGHT = 730;
 
 const ANNOTATIONS: readonly { x: number; label: string }[] = [
@@ -59,8 +59,8 @@ const ANNOTATIONS: readonly { x: number; label: string }[] = [
 
 // Real hierarchy verified against packages/core/src/interactor/Interactor.ts,
 // packages/dom-core/src/DOMInteractor.ts, packages/react-core/src/ReactInteractor.ts,
-// packages/vue-3/src/VueInteractor.ts, packages/angular-core/src/AngularInteractor.ts
-// and packages/playwright/src/PlaywrightInteractor.ts.
+// packages/vue-3/src/VueInteractor.ts, packages/angular-core/src/AngularInteractor.ts,
+// packages/storybook/src/StorybookInteractor.ts and packages/playwright/src/PlaywrightInteractor.ts.
 const NODES: readonly DiagramNode[] = [
   {
     id: 'scenePart',
@@ -145,7 +145,7 @@ const NODES: readonly DiagramNode[] = [
     kind: 'concrete',
     accent: 'blueDeep',
     description:
-      'Implements Interactor with @testing-library utilities. Used directly for framework-agnostic DOM tests, and extended by ReactInteractor, VueInteractor and AngularInteractor.',
+      'Implements Interactor with @testing-library utilities. Used directly for framework-agnostic DOM tests, and extended by ReactInteractor, VueInteractor, AngularInteractor and StorybookInteractor.',
     docHref: '/docs/advanced-concepts/interactor#available-interactors',
     docLabel: 'Available interactors',
   },
@@ -153,7 +153,7 @@ const NODES: readonly DiagramNode[] = [
     id: 'playwrightInteractor',
     label: 'PlaywrightInteractor',
     sublabel: '@atomic-testing/playwright',
-    cx: 885,
+    cx: 1130,
     cy: 444,
     w: 220,
     h: 64,
@@ -210,6 +210,21 @@ const NODES: readonly DiagramNode[] = [
     docLabel: 'Available interactors',
   },
   {
+    id: 'storybookInteractor',
+    label: 'StorybookInteractor',
+    sublabel: '@atomic-testing/storybook',
+    cx: 885,
+    cy: 566,
+    w: 190,
+    h: 64,
+    kind: 'concrete',
+    accent: 'blue',
+    description:
+      "Extends DOMInteractor but, unlike ReactInteractor/VueInteractor/AngularInteractor, targets a real browser instead of jsdom — driving play functions in a Storybook story running under @storybook/addon-vitest. Settles after every interaction with a macrotask plus two animation frames rather than a framework act()/nextTick(), and dispatches through Storybook's instrumented userEvent. createTestEngine from @atomic-testing/storybook constructs it from the story's canvas element.",
+    docHref: '/docs/advanced-concepts/interactor#available-interactors',
+    docLabel: 'Available interactors',
+  },
+  {
     id: 'domTarget',
     label: 'DOM (jsdom)',
     sublabel: 'unit / DOM tests',
@@ -225,15 +240,15 @@ const NODES: readonly DiagramNode[] = [
   {
     id: 'browserTarget',
     label: 'Browser',
-    sublabel: 'end-to-end tests',
-    cx: 885,
+    sublabel: 'real browser',
+    cx: 1130,
     cy: 566,
     w: 220,
     h: 56,
     kind: 'target',
     accent: 'neutral',
     description:
-      'Where PlaywrightInteractor resolves locators — a real Chromium, Firefox or WebKit instance with full layout and paint. Exercised by pnpm test:e2e.',
+      "Where PlaywrightInteractor and StorybookInteractor resolve locators — a real Chromium, Firefox or WebKit instance with full layout and paint, unlike jsdom. PlaywrightInteractor drives it end-to-end (pnpm test:e2e); StorybookInteractor drives a story's canvas inside Storybook's browser-based play functions.",
   },
 ];
 
@@ -251,6 +266,7 @@ const EDGES: readonly DiagramEdge[] = [
   { id: 'e-dom-react', from: 'domInteractor', to: 'reactInteractor', label: 'extended by' },
   { id: 'e-dom-vue', from: 'domInteractor', to: 'vueInteractor', label: 'extended by' },
   { id: 'e-dom-angular', from: 'domInteractor', to: 'angularInteractor', label: 'extended by' },
+  { id: 'e-dom-storybook', from: 'domInteractor', to: 'storybookInteractor', label: 'extended by' },
   // No label: this straight vertical run passes directly through the
   // ReactInteractor/VueInteractor row and the target they converge on, so
   // any position along it collides with either that row's own labels or
@@ -262,6 +278,7 @@ const EDGES: readonly DiagramEdge[] = [
   { id: 'e-vue-target', from: 'vueInteractor', to: 'domTarget', label: 'resolves against' },
   { id: 'e-angular-target', from: 'angularInteractor', to: 'domTarget', label: 'resolves against' },
   { id: 'e-pw-target', from: 'playwrightInteractor', to: 'browserTarget', label: 'resolves against' },
+  { id: 'e-storybook-target', from: 'storybookInteractor', to: 'browserTarget', label: 'resolves against' },
 ];
 
 const BRANCH_GROUPS: readonly BranchGroup[] = [
