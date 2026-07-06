@@ -1,0 +1,51 @@
+import { ButtonDriver } from '@atomic-testing/component-driver-primevue-v4';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
+
+export const buttonScenePart = {
+  counter: {
+    locator: byDataTestId('counter-button'),
+    driver: ButtonDriver,
+  },
+  disabled: {
+    locator: byDataTestId('disabled-button'),
+    driver: ButtonDriver,
+  },
+  badged: {
+    locator: byDataTestId('badge-button'),
+    driver: ButtonDriver,
+  },
+} satisfies ScenePart;
+
+export const buttonTestSuite: TestSuiteInfo<typeof buttonScenePart> = {
+  title: 'PrimeVue Button',
+  url: '/button',
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
+    describe('PrimeVue Button', () => {
+      const engine = useTestEngine(buttonScenePart, getTestEngine, { beforeEach, afterEach });
+
+      test('renders its label', async () => {
+        assertEqual(await engine().parts.counter.getLabel(), 'Count: 0');
+      });
+
+      test('click drives the state round-trip through Vue reactivity', async () => {
+        await engine().parts.counter.click();
+        assertEqual(await engine().parts.counter.getLabel(), 'Count: 1');
+        await engine().parts.counter.click();
+        assertEqual(await engine().parts.counter.getLabel(), 'Count: 2');
+      });
+
+      test('reads the disabled state', async () => {
+        assertFalse(await engine().parts.counter.isDisabled());
+        assertTrue(await engine().parts.disabled.isDisabled());
+      });
+
+      test('getLabel excludes add-ons such as the badge', async () => {
+        assertEqual(await engine().parts.badged.getLabel(), 'Inbox');
+        // The whole-root text read concatenates the badge — the reason
+        // getLabel targets the label section only.
+        assertEqual(await engine().parts.badged.getText(), 'Inbox3');
+      });
+    });
+  },
+};

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-v7",
-  "version": "0.92.0",
+  "version": "0.94.0",
   "description": "Component driver for Material-UI v7",
   "repository": {
     "type": "git",

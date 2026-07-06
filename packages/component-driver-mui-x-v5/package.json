@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-mui-x-v5",
-  "version": "0.92.0",
+  "version": "0.94.0",
   "description": "[DEPRECATED: MUI-X 5 end of support] Atomic Testing Component driver to help drive Material UI X v5 components",
   "keywords": [
     "integration",

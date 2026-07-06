@@ -15,7 +15,7 @@ export const parts = {
    * The clickable area to expand/collapse the accordion.
    */
   disclosure: {
-    locator: byRole('button'),
+    locator: byCssClass('MuiAccordionSummary-root'),
     driver: HTMLElementDriver,
   },
   summary: {

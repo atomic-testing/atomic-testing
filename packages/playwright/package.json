@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/playwright",
-  "version": "0.92.0",
+  "version": "0.94.0",
   "description": "Atomic Testing Playwright Adapter",
   "keywords": [],
   "license": "MIT",

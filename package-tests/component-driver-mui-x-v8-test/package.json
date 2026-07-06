@@ -1,7 +1,7 @@
 {
-  "name": "@atomic-testing/component-driver-mui-x-v7-test",
+  "name": "@atomic-testing/component-driver-mui-x-v8-test",
   "version": "0.0.0",
-  "description": "Examples and tests for @atomic-testing/component-driver-mui-x-v7",
+  "description": "Examples and tests for @atomic-testing/component-driver-mui-x-v8",
   "keywords": [
     "integration",
     "integration-driver",

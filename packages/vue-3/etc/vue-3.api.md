@@ -19,6 +19,7 @@ import { MouseMoveOption } from '@atomic-testing/core';
 import { MouseOutOption } from '@atomic-testing/core';
 import { MouseUpOption } from '@atomic-testing/core';
 import { PartLocator } from '@atomic-testing/core';
+import { Plugin as Plugin_2 } from 'vue';
 import { Point } from '@atomic-testing/core';
 import { PressKeyOption } from '@atomic-testing/core';
 import { ScenePart } from '@atomic-testing/core';
@@ -27,10 +28,10 @@ import { WaitForOption } from '@atomic-testing/core';
 import { WaitUntilOption } from '@atomic-testing/core';
 
 // @public (undocumented)
-export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLElement, partDefinitions: T, _option?: Readonly<Partial<IVueTestEngineOption>>): TestEngine<T>;
+export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLElement, partDefinitions: T, _option?: Readonly<Partial<VueTestEngineOption>>): TestEngine<T>;
 
 // @public (undocumented)
-export function createTestEngine<T extends ScenePart>(component: Component | VueSFCLikeComponent, partDefinitions: T, option?: Readonly<Partial<IVueTestEngineOption>>): TestEngine<T>;
+export function createTestEngine<T extends ScenePart>(component: Component | VueSFCLikeComponent, partDefinitions: T, option?: Readonly<Partial<VueTestEngineOption>>): TestEngine<T>;
 
 // @public @deprecated (undocumented)
 export type IVueTestEngineOption = ITestEngineOption;
@@ -87,6 +88,9 @@ export class VueInteractor extends DOMInteractor {
     waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
+// @public
+export type VuePluginInput = Plugin_2 | [Plugin_2, ...unknown[]];
+
 // @public (undocumented)
 export interface VueSFCLikeComponent {
     // (undocumented)
@@ -103,6 +107,11 @@ export interface VueSFCLikeComponent {
     setup?: () => any;
     // (undocumented)
     template: string;
+}
+
+// @public
+export interface VueTestEngineOption extends ITestEngineOption {
+    plugins?: VuePluginInput[];
 }
 
 // (No @packageDocumentation comment for this package)

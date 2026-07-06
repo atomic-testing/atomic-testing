@@ -7,8 +7,17 @@ import '@angular/compiler';
 // under the `style` condition, which Vite's JS-import resolution does not
 // apply — the bare specifier fails to resolve.
 import '../node_modules/@angular/material/prebuilt-themes/azure-blue.css';
+import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 
 import { AppComponent } from './AppComponent';
 
-bootstrapApplication(AppComponent).catch(error => console.error(error));
+// Animations disabled for the same reason src/createTestEngine.ts disables
+// them for the Vitest dom suites: Material's real CSS enter/exit animations
+// are cleared only by a real `animationend`, which the e2e (Playwright) path
+// can also race under load. See src/createTestEngine.ts for the full root
+// cause and why this uses the ANIMATION_MODULE_TYPE token directly rather
+// than `provideNoopAnimations()`.
+bootstrapApplication(AppComponent, {
+  providers: [{ provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations' }],
+}).catch(error => console.error(error));

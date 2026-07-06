@@ -1,7 +1,7 @@
-import { createTestEngine } from '@atomic-testing/angular-21';
 import { testRunner } from '@atomic-testing/internal-test-runner';
 import { vitestAdapter } from '@atomic-testing/internal-test-runner-vitest-adapter';
 
+import { createTestEngine } from '../src/createTestEngine';
 import { ButtonExampleComponent } from '../src/examples/button/Button.examples';
 import { buttonScenePart, buttonTestSuite } from '../src/examples/button/Button.suite';
 
