@@ -21,4 +21,27 @@ export default defineConfig({
       port,
     },
   },
+  optimizeDeps: {
+    // Works around a Rolldown dependency pre-bundling bug: @mui/material's
+    // styles/index.js was landing in an auto-split shared chunk that calls
+    // init_emotion_react_browser_development_esm() without importing it,
+    // throwing a ReferenceError on every route (the same shared chunk is
+    // imported correctly elsewhere, so this looks like a Rolldown bug in
+    // per-chunk import-list generation, not an app code issue). Forcing all
+    // of @emotion + @mui/material into one named chunk means every call site
+    // shares a module scope with the init function's definition, so there's
+    // no cross-chunk import to generate — and thus none to get lost.
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: 'emotion-mui-vendor',
+              test: /[\\/]node_modules[\\/](@emotion|@mui[\\/]material)[\\/]/,
+            },
+          ],
+        },
+      },
+    },
+  },
 });
