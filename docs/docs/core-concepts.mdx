@@ -32,6 +32,20 @@ A growing number of component drivers are available for popular UI frameworks li
 Refer to the [API Reference](./api-overview.mdx#component-drivers) for a list of available component drivers.
 :::
 
+### Driver Types
+
+Every driver extends `ComponentDriver<T>`, but two specializations exist for shapes many UIs share — dynamic content whose scene is decided by the caller, and repeated lists of same-shaped items:
+
+| Type                     | Purpose                                               | Example       |
+| ------------------------ | ------------------------------------------------------ | ------------- |
+| `ComponentDriver<T>`     | Base driver with a fixed set of child parts             | Most drivers  |
+| `ContainerDriver<C, T>`  | Driver whose content is a caller-supplied `ScenePart`   | Modal, Dialog |
+| `ListComponentDriver<I>` | Driver for a repeated collection of same-shaped items   | Menu, List    |
+
+**`ContainerDriver<ContentT, T>`** (`packages/core/src/drivers/ContainerDriver.ts`) extends `ComponentDriver<T>` and adds a `content` property — a driver tree built from whichever `ScenePart` the caller passes as the `content` option, rather than one hardcoded into the class. Reach for it when a component's chrome is fixed but its interior is scene-specific: a dialog's title and close behavior are the same everywhere, but its body differs per usage. `DialogDriver` in `@atomic-testing/component-driver-mui-v7` (`packages/component-driver-mui-v7/src/components/DialogDriver.ts`) is a shipped example — it re-roots to the dialog's portal target (see [Testing portals & overlays](./guides/portal-and-overlays.md)) and exposes `content` for the caller-supplied interior scene, alongside driver-specific methods like `getTitle()` and `closeByEscape()`.
+
+**`ListComponentDriver<ItemT>`** (`packages/core/src/drivers/ListComponentDriver.ts`) extends `ComponentDriver` and adds `getItemByIndex()`, `getItemByLabel()`, `getItems()`, and `getItemCount()` — all resolved by matching a single `itemLocator` repeatedly and wrapping each match in an `itemClass` driver. Reach for it whenever a component renders a variable-length collection of identically-shaped children. `ListDriver` in `@atomic-testing/component-driver-mui-v7` (`packages/component-driver-mui-v7/src/components/ListDriver.ts`) is a shipped example driving a `<List>` of `<ListItem>`s.
+
 ## Locator
 
 Locators help find components on a page, using various [locator strategies](./api-overview.mdx#locator) such as `byDataTestId` and `byRole`.

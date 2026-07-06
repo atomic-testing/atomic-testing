@@ -32,6 +32,14 @@ The project ships with several interactors:
   extension of `DOMInteractor` that awaits the app's `ApplicationRef.whenStable()`
   after every interaction, so change detection has settled before the next
   assertion. This works under both zone.js and zoneless change detection.
+- **StorybookInteractor** from **@atomic-testing/storybook** – an extension of
+  `DOMInteractor` for driving component drivers inside a real-browser
+  Storybook: `play` functions and stories running under
+  `@storybook/addon-vitest`. Unlike the React/Vue/Angular interactors, it has
+  no framework `act()`/`nextTick()` to hook into, so it settles after every
+  interaction with a macrotask plus two animation frames instead, and
+  dispatches through Storybook's instrumented `userEvent` so interactions show
+  up in the Interactions panel.
 - **PlaywrightInteractor** – drives a Playwright `Page` object to execute tests
   in a real browser.
 
@@ -44,6 +52,31 @@ behaviour that differs. The snippet below logs every click before delegating to
 
 <CodeBlock language='ts'>{loggingInteractor}</CodeBlock>
 
-When creating a test engine, pass an instance of your custom interactor. Refer to
-the implementation of `DOMInteractor` in
-`packages/dom-core/src/DOMInteractor.ts` for a complete example.
+None of the framework `createTestEngine` factories — `@atomic-testing/react-18`/
+`react-19`, `@atomic-testing/vue-3`, `@atomic-testing/angular-20`/`-21`/`-22`,
+`@atomic-testing/playwright`, or `@atomic-testing/dom-core` — accept a custom
+interactor; each one constructs its own hardcoded `Interactor` subclass
+internally (see e.g. `packages/dom-core/src/createTestEngine.ts`). To use a
+custom interactor, construct `TestEngine` (`packages/core/src/TestEngine.ts`)
+directly instead of calling `createTestEngine`. For a DOM-only interactor, that
+means reproducing what `@atomic-testing/dom-core`'s `createTestEngine` does
+internally, with your interactor swapped in for `DOMInteractor`:
+
+```ts
+import { TestEngine } from '@atomic-testing/core';
+
+import { LoggingInteractor } from './LoggingInteractor';
+
+// Same shape as @atomic-testing/dom-core's own createTestEngine, with
+// LoggingInteractor swapped in for DOMInteractor. `element` is whatever root
+// node your component was already rendered into.
+const testEngine = new TestEngine([], new LoggingInteractor(element), { parts: partDefinitions });
+```
+
+The cleanup callback (`TestEngine`'s 4th constructor argument) is optional and
+defaults to a no-op if omitted. If your custom interactor needs React's
+`act()` or Vue's `nextTick()` wrapping too, extend `ReactInteractor` /
+`VueInteractor` instead of `DOMInteractor`, and mirror the locator/mount/cleanup
+logic from that framework's own `createTestEngine`
+(`packages/react-core/src/createTestEngine.ts`,
+`packages/vue-3/src/createTestEngine.ts`).
