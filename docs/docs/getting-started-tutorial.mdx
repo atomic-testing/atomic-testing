@@ -16,6 +16,10 @@ Once you have a green test, the tutorial shows how to wrap a component library l
 
 ```bash
 pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html
+
+# react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
+
 pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 ```
 
@@ -140,20 +144,29 @@ With the `login()` helper, tests stay declarative and don't depend on the form's
 Because drivers depend only on the `Interactor` abstraction, the exact same `loginFormScene` from step 4 works against a real browser page — you just create the engine with `@atomic-testing/playwright`'s `createTestEngine(page, ...)` instead of React's. As covered in the [Playwright notes on Quick Start](./quick-start.mdx), this requires an actual page served by your app (Playwright drives a real browser, not jsdom) — configure `webServer`/`baseURL` in `playwright.config.ts` to point at it:
 
 ```ts title="login.e2e.spec.ts"
+import { TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/playwright';
 import { test, expect } from '@playwright/test';
 
 import { loginFormScene } from './LoginForm.scene';
 
-test('enables submit once a username is entered', async ({ page }) => {
-  await page.goto('/login'); // a route your app actually serves
-  const engine = createTestEngine(page, loginFormScene);
+test.describe('LoginForm', () => {
+  let engine: TestEngine<typeof loginFormScene>;
 
-  expect(await engine.parts.submit.isDisabled()).toBe(true);
-  await engine.parts.username.setValue('ada');
-  expect(await engine.parts.submit.isDisabled()).toBe(false);
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login'); // a route your app actually serves
+    engine = createTestEngine(page, loginFormScene);
+  });
 
-  await engine.cleanUp();
+  test.afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  test('enables submit once a username is entered', async () => {
+    expect(await engine.parts.submit.isDisabled()).toBe(true);
+    await engine.parts.username.setValue('ada');
+    expect(await engine.parts.submit.isDisabled()).toBe(false);
+  });
 });
 ```
 

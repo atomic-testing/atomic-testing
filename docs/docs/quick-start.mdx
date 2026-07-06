@@ -20,6 +20,9 @@ import Tabs from '@theme/Tabs';
 
 ```bash
 pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
+
+# react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
 ```
 
 On React 18 or React 17, swap in `@atomic-testing/react-18` or `@atomic-testing/react-legacy` — see the [Package Guide](./framework-guide.mdx) for the full matrix. Testing Material UI or another component library instead of plain HTML elements? See [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui).
@@ -34,7 +37,7 @@ This test needs a jsdom-based runner (Jest or Vitest) with `IS_REACT_ACT_ENVIRON
 import { useState } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/react-19';
 
 // Component to test
@@ -58,18 +61,26 @@ const welcomeScene = {
 };
 
 // Test
-it('should welcome the user when clicked', async () => {
-  const engine = createTestEngine(<WelcomeButton name='Alice' />, welcomeScene);
+describe('WelcomeButton', () => {
+  let engine: TestEngine<typeof welcomeScene>;
 
-  // Check initial state
-  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
-  expect(await engine.parts.button.getText()).toBe('Click me');
+  beforeEach(() => {
+    engine = createTestEngine(<WelcomeButton name='Alice' />, welcomeScene);
+  });
 
-  // Interact and verify
-  await engine.parts.button.click();
-  expect(await engine.parts.button.getText()).toBe('Welcome!');
+  afterEach(async () => {
+    await engine.cleanUp();
+  });
 
-  await engine.cleanUp();
+  it('should welcome the user when clicked', async () => {
+    // Check initial state
+    expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+    expect(await engine.parts.button.getText()).toBe('Click me');
+
+    // Interact and verify
+    await engine.parts.button.click();
+    expect(await engine.parts.button.getText()).toBe('Welcome!');
+  });
 });
 ```
 
@@ -80,6 +91,9 @@ it('should welcome the user when clicked', async () => {
 
 ```bash
 pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
+
+# vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
 ```
 
 :::info Before you run this
@@ -100,7 +114,7 @@ Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInt
 
 ```typescript
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/vue-3';
 import { ref } from 'vue';
 
@@ -134,15 +148,23 @@ const welcomeScene = {
 };
 
 // Test (identical to React!)
-it('should welcome the user when clicked', async () => {
-  const engine = createTestEngine(WelcomeButton, welcomeScene);
+describe('WelcomeButton', () => {
+  let engine: TestEngine<typeof welcomeScene>;
 
-  // Same test logic as React version ✨
-  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
-  await engine.parts.button.click();
-  expect(await engine.parts.button.getText()).toBe('Welcome!');
+  beforeEach(() => {
+    engine = createTestEngine(WelcomeButton, welcomeScene);
+  });
 
-  await engine.cleanUp();
+  afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  it('should welcome the user when clicked', async () => {
+    // Same test logic as React version ✨
+    expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+    await engine.parts.button.click();
+    expect(await engine.parts.button.getText()).toBe('Welcome!');
+  });
 });
 ```
 
@@ -153,6 +175,9 @@ it('should welcome the user when clicked', async () => {
 
 ```bash
 pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
+
+# playwright's peer dependency — npm/yarn don't install peers automatically like pnpm can
+pnpm add @playwright/test
 ```
 
 :::info DOM tests vs. Playwright tests
@@ -179,7 +204,7 @@ export default defineConfig({
 
 ```typescript
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/playwright';
 import { test, expect } from '@playwright/test';
 
@@ -192,19 +217,27 @@ const welcomeScene = {
 // Assumes a served page at "/welcome" that renders a WelcomeButton with
 // name="Alice" (see the caveat above) — this is illustrative, not copy-paste
 // runnable against an empty project.
-test('should welcome the user when clicked', async ({ page }) => {
-  // Navigate to your app (driven by baseURL from playwright.config.ts)
-  await page.goto('/welcome');
+test.describe('WelcomeButton', () => {
+  let engine: TestEngine<typeof welcomeScene>;
 
-  // Create test engine with same scene
-  const engine = createTestEngine(page, welcomeScene);
+  test.beforeEach(async ({ page }) => {
+    // Navigate to your app (driven by baseURL from playwright.config.ts)
+    await page.goto('/welcome');
 
-  // Same test logic as React/Vue versions ✨
-  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
-  await engine.parts.button.click();
-  expect(await engine.parts.button.getText()).toBe('Welcome!');
+    // Create test engine with same scene
+    engine = createTestEngine(page, welcomeScene);
+  });
 
-  await engine.cleanUp();
+  test.afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  test('should welcome the user when clicked', async () => {
+    // Same test logic as React/Vue versions ✨
+    expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+    await engine.parts.button.click();
+    expect(await engine.parts.button.getText()).toBe('Welcome!');
+  });
 });
 ```
 
