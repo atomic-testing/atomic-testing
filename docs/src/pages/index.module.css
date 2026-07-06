@@ -749,73 +749,6 @@
   font-size: 22px;
 }
 
-/* ============================ HOW IT WORKS ============================ */
-.howBand {
-  background: var(--at-bg-alt);
-  border-top: 1px solid var(--at-border);
-  border-bottom: 1px solid var(--at-border);
-}
-.howInner {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 80px 24px;
-}
-.howHead {
-  max-width: 620px;
-  margin: 0 auto 48px;
-  text-align: center;
-}
-.howTitle {
-  font-family: var(--at-font-display);
-  font-weight: 700;
-  font-size: 34px;
-  letter-spacing: -0.02em;
-  margin: 0;
-  color: var(--at-text);
-}
-.howSubtitle {
-  font-size: 16px;
-  color: var(--at-text-muted);
-  margin: 12px 0 0;
-}
-.howGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-.howCard {
-  background: var(--at-surface);
-  border: 1px solid var(--at-border);
-  border-radius: 14px;
-  padding: 22px;
-}
-.howNumber {
-  font-family: var(--at-font-mono);
-  font-size: 13px;
-  font-weight: 600;
-}
-.howCardTitle {
-  font-family: var(--at-font-display);
-  font-weight: 600;
-  font-size: 16.5px;
-  margin: 8px 0 0;
-  color: var(--at-text);
-}
-.howCardBody {
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--at-text-muted);
-  margin: 7px 0 0;
-}
-.howCode {
-  font-family: var(--at-font-mono);
-  font-size: 12px;
-  color: var(--at-code-chip-ink);
-  background: none;
-  border: 0;
-  padding: 0;
-}
-
 /* ============================ TRADEOFFS ============================ */
 .tradeoffs {
   border-top: 1px solid var(--at-border);
@@ -954,9 +887,6 @@
     min-height: 420px;
     margin-top: 16px;
   }
-  .howGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .sectionTitle,
   .bandTitle {
     font-size: 32px;
@@ -967,9 +897,6 @@
   .magic,
   .ctaSection {
     padding: 56px 16px;
-  }
-  .howGrid {
-    grid-template-columns: 1fr;
   }
   .ctaCard {
     padding: 48px 24px;
