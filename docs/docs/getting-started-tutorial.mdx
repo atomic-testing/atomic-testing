@@ -6,6 +6,7 @@ sidebar_position: 5
 
 import loginFormDriver from '!!raw-loader!./snippets/login-form-driver-html';
 import signupE2e from '!!raw-loader!./snippets/signup-form-e2e.spec';
+import jestConfigSnippet from '!!raw-loader!./snippets/jest.config.snippet';
 import CodeBlock from '@theme/CodeBlock';
 
 This tutorial builds one complete, runnable **Atomic Testing** test from scratch using the canonical stack — `@atomic-testing/react-19` + `@atomic-testing/component-driver-html` + Jest — the same stack introduced in [Quick Start](./quick-start.mdx). Component drivers work the same way in isolated unit tests or full browser tests, so everything you see here applies to both.
@@ -27,18 +28,7 @@ pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 
 ## 2. Configure Jest
 
-```js title="jest.config.js"
-/** @type {import('jest').Config} */
-module.exports = {
-  testEnvironment: 'jsdom',
-  transform: {
-    '^.+\\.tsx?$': ['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }],
-  },
-  // ReactInteractor wraps every interaction in React's act(); this flag stops
-  // React from logging spurious "not wrapped in act(...)" warnings.
-  globals: { IS_REACT_ACT_ENVIRONMENT: true },
-};
-```
+<CodeBlock language='js' title='jest.config.js'>{jestConfigSnippet}</CodeBlock>
 
 ## 3. Write the component under test
 
