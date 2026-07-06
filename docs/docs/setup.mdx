@@ -5,6 +5,8 @@ sidebar_position: 3
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
+import CodeBlock from '@theme/CodeBlock';
+import jestConfigSnippet from '!!raw-loader!./snippets/jest.config.snippet';
 
 # Setup
 
@@ -19,20 +21,13 @@ Atomic Testing renders your component through your framework's real reconciler (
 pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 ```
 
-```js title="jest.config.js"
-/** @type {import('jest').Config} */
-module.exports = {
-  testEnvironment: 'jsdom',
-  transform: {
-    '^.+\\.tsx?$': ['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }],
-  },
-  // ReactInteractor wraps every interaction in React's act(). Without this flag,
-  // React 18+ logs "not wrapped in act(...)" warnings even though it is.
-  globals: {
-    IS_REACT_ACT_ENVIRONMENT: true,
-  },
-};
-```
+<CodeBlock language='js' title='jest.config.js'>{jestConfigSnippet}</CodeBlock>
+
+:::info CommonJS vs. ESM
+`jest.config.js` uses `module.exports`, Jest's CommonJS config format. If your `package.json` has
+`"type": "module"`, either rename the file to `jest.config.cjs`, or switch to `export default { ... }`
+in a `jest.config.mjs` (Jest resolves either alongside an ESM `package.json`).
+:::
 
 ```json title="package.json"
 {
