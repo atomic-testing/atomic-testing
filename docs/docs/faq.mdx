@@ -13,11 +13,11 @@ Install the packages for your preferred test environment and UI library. Then de
 
 ### Which UI frameworks are supported?
 
-Drivers are provided for popular React frameworks, including Material UI and MUI&nbsp;X. You can also create drivers for your own component library if one is not available.
+Atomic Testing is framework-agnostic — the same drivers run under React, Vue, Angular, Playwright and plain DOM tests. Drivers ship for popular component libraries including Material UI, MUI&nbsp;X, Angular Material, Radix and shadcn/ui. You can also create drivers for your own component library if one is not available.
 
 ### Does Atomic Testing replace React Testing Library?
 
-No. Atomic Testing uses React Testing Library under the hood for DOM interactions. It layers reusable component drivers and the `TestEngine` on top of RTL. See [Atomic Testing vs React Testing Library](./advanced-concepts/atomic-testing-vs-rtl.mdx) for details.
+No. Atomic Testing uses `@testing-library/dom` under the hood for DOM interactions — the same framework-agnostic library React Testing Library itself builds on, not RTL directly. It layers reusable component drivers and the `TestEngine` on top, which is what lets the same drivers work across React, Vue, Angular and Playwright rather than just React. See [Atomic Testing vs React Testing Library](./advanced-concepts/atomic-testing-vs-rtl.mdx) for details.
 
 ### Can I use it with unit tests and end‑to‑end tests?
 

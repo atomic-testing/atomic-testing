@@ -1,5 +1,5 @@
 import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v5';
+import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, ScenePart } from '@atomic-testing/core';
 
 const loginScenePart: ScenePart = {
