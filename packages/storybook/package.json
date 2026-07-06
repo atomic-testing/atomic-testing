@@ -1,0 +1,42 @@
+{
+  "name": "@atomic-testing/storybook",
+  "version": "0.92.0",
+  "description": "Framework-agnostic Storybook integration for atomic-testing component drivers",
+  "keywords": [],
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/storybook"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit",
+    "check:api": "api-extractor run"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*"
+  },
+  "devDependencies": {
+    "storybook": "^10.4.6"
+  },
+  "peerDependencies": {
+    "storybook": "^10.0.0"
+  }
+}

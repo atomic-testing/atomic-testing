@@ -1,0 +1,65 @@
+{
+  "name": "@atomic-testing/angular-22",
+  "version": "0.90.0",
+  "description": "Angular 22 test adapter for Atomic Testing: bootstrap standalone components with Angular's real bootstrap API and test them through the component driver pattern. Thin re-export of @atomic-testing/angular-core pinned to the Angular 22 peer range.",
+  "keywords": [
+    "angular",
+    "integration",
+    "testing",
+    "unit"
+  ],
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/angular-22"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit",
+    "check:api": "api-extractor run"
+  },
+  "dependencies": {
+    "@atomic-testing/angular-core": "workspace:*",
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "rxjs": "^7.8.0",
+    "zone.js": "^0.15.0"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=22.0.0 <23.0.0",
+    "@angular/compiler": ">=22.0.0 <23.0.0",
+    "@angular/core": ">=22.0.0 <23.0.0",
+    "@angular/platform-browser": ">=22.0.0 <23.0.0",
+    "zone.js": ">=0.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/compiler": {
+      "optional": true
+    },
+    "zone.js": {
+      "optional": true
+    }
+  }
+}

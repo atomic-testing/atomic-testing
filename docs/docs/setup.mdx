@@ -3,7 +3,76 @@ id: setup
 sidebar_position: 3
 ---
 
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+
 # Setup
+
+## Configure your test runner
+
+Atomic Testing renders your component through your framework's real reconciler (React's `act()`, Vue's `nextTick()`), so before writing any test you need a runner that gives you a DOM to render into and compiles TSX. The configs below are the same ones used by this repo's own test suites (see [`package-tests/component-driver-html-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-html-test)).
+
+<Tabs>
+<TabItem value="jest" label="Jest">
+
+```bash
+pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
+```
+
+```js title="jest.config.js"
+/** @type {import('jest').Config} */
+module.exports = {
+  testEnvironment: 'jsdom',
+  transform: {
+    '^.+\\.tsx?$': ['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }],
+  },
+  // ReactInteractor wraps every interaction in React's act(). Without this flag,
+  // React 18+ logs "not wrapped in act(...)" warnings even though it is.
+  globals: {
+    IS_REACT_ACT_ENVIRONMENT: true,
+  },
+};
+```
+
+```json title="package.json"
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="vitest" label="Vitest">
+
+```bash
+pnpm add -D vitest jsdom
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+  },
+});
+```
+
+```ts title="vitest.setup.ts"
+// Same act()-environment flag as the Jest config above — required whenever
+// you're testing React components through `@atomic-testing/react-19` (or
+// react-18 / react-legacy).
+(globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+```
+
+</TabItem>
+</Tabs>
+
+:::tip Testing Vue instead?
+Skip the `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` and doesn't need it. The `jsdom` environment is still required. See the Vue notes on the [Quick Start](./quick-start.mdx) page.
+:::
 
 ## Steps to create a test
 
@@ -15,17 +84,17 @@ Mark the key components with a `data-testid` attribute. These elements are the o
 
 ```tsx
 // Use data-testid on the span for easily retrieving the displayed name.
-<Typography variant="h1">
+<h1>
   Hello <span data-testid="person-name">{name}</span>
-</Typography>
+</h1>
 
-// Annotate the AutoComplete component to set its selection.
-<AutoComplete data-testid="favorite-color-value" choices={choices} />
+// Annotate the text input so a driver can read and set its value.
+<input data-testid="favorite-color-input" value={color} onChange={(e) => setColor(e.target.value)} />
 
-// A MUI button can be probed for its state (e.g., "disabled") or clicked.
-<MuiButton data-testid="submit" disabled={disabled}>
+// A button can be probed for its state (e.g., "disabled") or clicked.
+<button data-testid="submit" disabled={disabled}>
   Submit
-</MuiButton>
+</button>
 ```
 
 ---
@@ -35,8 +104,7 @@ Mark the key components with a `data-testid` attribute. These elements are the o
 A **ScenePart** describes how to locate a key component and which driver to use for interacting with it. For instance, the example above can be mapped as follows:
 
 ```ts
-import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { ButtonDriver, AutoCompleteDriver } from '@atomic-testing/component-driver-mui-v6';
+import { HTMLButtonDriver, HTMLElementDriver, HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, ScenePart } from '@atomic-testing/core';
 
 const parts = {
@@ -45,15 +113,19 @@ const parts = {
     driver: HTMLElementDriver,
   },
   favoriteColorInput: {
-    locator: byDataTestId('favorite-color-value'),
-    driver: AutoCompleteDriver,
+    locator: byDataTestId('favorite-color-input'),
+    driver: HTMLTextInputDriver,
   },
   submitButton: {
     locator: byDataTestId('submit'),
-    driver: ButtonDriver,
+    driver: HTMLButtonDriver,
   },
 } satisfies ScenePart; // Using "satisfies ScenePart" improves TypeScript type-checking.
 ```
+
+:::info Testing a component library instead of plain HTML?
+Swap in the matching driver package (e.g. `@atomic-testing/component-driver-mui-v7` for Material UI) — see [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui) in the tutorial.
+:::
 
 ---
 
@@ -76,13 +148,13 @@ afterEach(async () => {
 });
 ```
 
-After instantiation, you can access your declared parts through the engine’s `parts` property:
+After instantiation, you can access your declared parts through the engine's `parts` property:
 
 ```ts
 await testEngine.parts.personDisplay.getText(); // Retrieves plain text from the personDisplay part.
 
 await testEngine.parts.favoriteColorInput.setValue('Black');
-// Sets the auto-complete component to "Black" using the AutoCompleteDriver's method.
+// Sets the text input to "Black" using HTMLTextInputDriver's setValue method.
 
 await testEngine.parts.submitButton.isDisabled(); // Checks if the submit button is disabled.
 
@@ -93,7 +165,7 @@ await testEngine.parts.submitButton.click(); // Simulates a click on the submit 
 
 ### 4. Writing Your Tests
 
-Write tests as you normally would, keeping in mind that most UI interactions are asynchronous. Here’s an example of how a test flow might look:
+Write tests as you normally would, keeping in mind that most UI interactions are asynchronous. Here's an example of how a test flow might look:
 
 ```ts
 it(`should display the person's name as "John Doe"`, async () => {
@@ -108,7 +180,7 @@ it(`should enable the submit button once a color is chosen`, async () => {
 
 ## Demo
 
-The following demo illustrates the complete setup of a login form using Atomic Testing. It includes the test setup, component rendering, and interaction with the UI elements.
+The following demo illustrates the complete setup of a login form using Atomic Testing, including a Material UI provider wrapper (see [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui) for why that's needed).
 
 - [Sample Login Form on Codesandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form)
-- Follow the [Step-by-Step Tutorial](./getting-started-tutorial.mdx) which walks you through the sample form and how tests are written
+- Follow the [Step-by-Step Tutorial](./getting-started-tutorial.mdx) which builds a test from scratch and then walks through this sample form

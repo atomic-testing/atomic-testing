@@ -1,0 +1,6 @@
+# Marks this example as its OWN pnpm workspace root so it installs standalone (its own lockfile,
+# isolated from the monorepo's root workspace — it is intentionally NOT a member of that one).
+#
+# The atomic-testing dependencies are declared at ^0.90.0 (the release that adds
+# DesktopDatePickerDriver.pickDate / setValue and SimpleTreeViewDriver.selectItem) and resolve
+# straight from the npm registry, mirroring a real consumer install.

@@ -2,6 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/@atomic-testing/core.svg?style=flat)](https://www.npmjs.com/package/@atomic-testing/core)
 ![NPM license](https://img.shields.io/npm/l/@atomic-testing/core.svg?style=flat)
+[![CI](https://github.com/atomic-testing/atomic-testing/actions/workflows/buildui.yml/badge.svg)](https://github.com/atomic-testing/atomic-testing/actions/workflows/buildui.yml)
 
 Portable UI testing utilities that unify test code across frameworks and
 libraries. The project provides a collection of packages for describing UI scenes
@@ -37,13 +38,13 @@ report per package (`etc/<package>.api.md`), and governed by a documented
 deprecation lifecycle. Anything else — every `@atomic-testing/internal-*` package
 and every export tagged `@internal` — is not covered by the guarantee.
 Full policy, including the framework/Playwright/Node support matrix:
-[ADR-006](agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
+[ADR-006](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
 
 ### MUI driver majors
 
 Material UI moves fast and each major has a distinct rendered DOM, so this
 project ships one driver package per MUI major (see
-[ADR-003](agent-docs/adr/003-version-specific-packages.md)). To keep the
+[ADR-003](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/003-version-specific-packages.md)). To keep the
 maintained surface focused, older majors reach **end of support** once newer
 ones are stable.
 
@@ -58,7 +59,7 @@ ones are stable.
 they remain installable at that version but receive no fixes, new drivers, or
 CI/e2e coverage, and their test suites no longer run. New work targets v6/v7/v9
 (MUI-X also v8 and v9). Rationale and migration notes:
-[ADR-005](agent-docs/adr/005-drop-mui-5-support.md).
+[ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
 
 > Note: MUI Core has **no v8** — it jumped `7.3.11 → 9.0.0` to unify versioning
 > with MUI X, so `@atomic-testing/component-driver-mui-v9` is the successor to v7
@@ -96,13 +97,30 @@ CI/e2e coverage, and their test suites no longer run. New work targets v6/v7/v9
 
 For detailed guides and examples, see the [online documentation](https://atomic-testing.dev/).
 
+## Architecture & design decisions
+
+Design rationale for major decisions — the component-driver pattern,
+versioning policy, locator boundaries — is recorded as ADRs (architecture
+decision records). See the ADR table in
+[`agent-docs/INDEX.md`](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/INDEX.md)
+for the full list.
+
+See [`ROADMAP.md`](https://github.com/atomic-testing/atomic-testing/blob/main/ROADMAP.md)
+for a summary of what's currently being worked on.
+
 ## Contributing
 
-Pull requests are welcome. Before submitting, run the checks defined in the root
-`package.json`:
+Pull requests are welcome. Before submitting, run:
 
 ```bash
+pnpm run check:type
 pnpm run check:lint
 pnpm run check:style
-pnpm run check:types
+pnpm test:dom
+pnpm test:e2e
 ```
+
+See [`CONTRIBUTING.md`](https://github.com/atomic-testing/atomic-testing/blob/main/CONTRIBUTING.md)
+for full contribution guidelines, including dev setup and commit message
+conventions. For reporting a security vulnerability, see
+[`SECURITY.md`](https://github.com/atomic-testing/atomic-testing/blob/main/SECURITY.md).

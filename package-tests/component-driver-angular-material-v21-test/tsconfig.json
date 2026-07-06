@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["./src", "./__tests__", "./vite.config.ts", "./vitest.config.ts", "./playwright.config.ts"],
+  "compilerOptions": {
+    "outDir": "./build"
+  }
+}

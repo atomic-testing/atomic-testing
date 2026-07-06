@@ -82,15 +82,15 @@ Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/s
 
 ## Utilities
 
-| Namespace        | Notable members                                                                                               | File                                                                 |
-| ---------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `timingUtil`     | `wait(ms)`, `waitUntil(option)` (probe loop, interval = `timeoutMs/probeCount`, default 10)                   | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts)         |
-| `interactorUtil` | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError`                              | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts) |
-| `locatorUtil`    | `append`, `toCssSelector`, `overrideLocatorRelativePosition`, chain helpers                                   | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)       |
-| `escapeUtil`     | `escapeValue` (CSS escape, LRU-cached), `escapeCssClassName`, `escapeName`                                    | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts)         |
-| `dateUtil`       | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes` | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts)             |
-| `collectionUtil` | `toArray`, `getDifference`                                                                                    | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts) |
-| `listHelper`     | `getListItemByIndex`, `getListItemIterator`, `getListItemCount` (exported via `drivers`)                      | [listHelper.ts](../../packages/core/src/drivers/listHelper.ts)       |
+| Namespace        | Notable members                                                                                                                            | File                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `timingUtil`     | `wait(ms)`, `waitUntil(option)` (probe loop; even cadence `timeoutMs/probeCount` default 10, or escalating `probeIntervals` when provided) | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts)         |
+| `interactorUtil` | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError`                                                           | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts) |
+| `locatorUtil`    | `append`, `toCssSelector`, `overrideLocatorRelativePosition`, chain helpers                                                                | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)       |
+| `escapeUtil`     | `escapeValue` (CSS escape, LRU-cached), `escapeCssClassName`, `escapeName`                                                                 | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts)         |
+| `dateUtil`       | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes`                              | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts)             |
+| `collectionUtil` | `toArray`, `getDifference`                                                                                                                 | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts) |
+| `listHelper`     | `getListItemByIndex`, `getListItemIterator`, `getListItemCount` (exported via `drivers`)                                                   | [listHelper.ts](../../packages/core/src/drivers/listHelper.ts)       |
 
 ## Invariants & failure modes
 

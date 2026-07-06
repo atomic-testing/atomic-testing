@@ -19,6 +19,7 @@ Perfect for component testing, business logic, and rapid development cycles.
 
 - **React Apps**: `@atomic-testing/react-18` or `@atomic-testing/react-19`
 - **Vue Apps**: `@atomic-testing/vue-3`
+- **Angular Apps**: `@atomic-testing/angular-20`, `-21` or `-22` (match your Angular major)
 - **Vanilla JS**: `@atomic-testing/dom-core`
 
 ### **E2E Testing (Slow, Integration-focused)**
@@ -58,6 +59,22 @@ pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-mui-v7
 ```
 
 **Perfect for**: Vue 3 applications with custom components or HTML-based UI libraries
+
+</TabItem>
+
+<TabItem value="angular-html" label="Angular + HTML">
+
+```bash
+# Angular 20 with standard HTML elements — pick the package matching your Angular major
+pnpm add @atomic-testing/angular-20 @atomic-testing/component-driver-html
+
+# Angular 21 / 22
+pnpm add @atomic-testing/angular-21 @atomic-testing/component-driver-html
+pnpm add @atomic-testing/angular-22 @atomic-testing/component-driver-html
+```
+
+**Perfect for**: Standalone-component Angular apps — works with both zone.js and
+zoneless change detection (`zone.js` is an optional peer; zoneless apps don't need it)
 
 </TabItem>
 
@@ -202,11 +219,18 @@ pnpm add @atomic-testing/component-driver-mui-v6
 
 <TabItem value="mui-v5" label="MUI v5">
 
+:::warning ⚠️ EOL — see ADR-005
+MUI 5 reached end of support on 2026-06-27. `component-driver-mui-v5` is frozen
+at `0.81.0`: it stays installable but receives no fixes, new drivers, or CI/e2e
+coverage. Migrate to `component-driver-mui-v6` or `-v7` instead. Rationale:
+[ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
+:::
+
 ```bash
 pnpm add @atomic-testing/component-driver-mui-v5
 ```
 
-**Supports**: Legacy MUI v5 components (consider upgrading)
+**Supports**: Legacy, frozen MUI v5 components — EOL, not recommended for new work
 
 </TabItem>
 </Tabs>
@@ -258,7 +282,7 @@ You can always add more packages later. HTML drivers work with any components.
     </div>
     <div className='card__body'>
       <p>Now that you know which packages to install, let's build a complete test together.</p>
-      <Link to='../getting-started-tutorial' className='button button--primary'>
+      <Link to='../tutorial' className='button button--primary'>
         Start Tutorial →
       </Link>
     </div>

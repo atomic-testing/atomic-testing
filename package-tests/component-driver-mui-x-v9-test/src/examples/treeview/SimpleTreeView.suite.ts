@@ -52,5 +52,14 @@ export const simpleTreeViewTestSuite: TestSuiteInfo<typeof simpleTreeViewExample
       // their removal would be environment-dependent.
       assertFalse(await engine().parts.tree.isExpanded('fruits'));
     });
+
+    test('selectItem selects a leaf and flips its selection state', async () => {
+      await engine().parts.tree.expandItem('fruits');
+      assertFalse(await engine().parts.tree.isSelected('apple'));
+      await engine().parts.tree.selectItem('apple');
+      assertTrue(await engine().parts.tree.isSelected('apple'));
+      // Selection is single by default, so a sibling stays unselected.
+      assertFalse(await engine().parts.tree.isSelected('banana'));
+    });
   },
 };

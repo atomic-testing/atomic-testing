@@ -57,6 +57,7 @@ jobs:
           git reset --hard
           git checkout -B main origin/main
           pnpm bumpVersion "$VERSION"
+          node scripts/generateChangelog.js "$VERSION"
           git add -A
           git diff --cached --quiet || git commit -m "chore: bump version to $VERSION [skip ci]"
           git push origin HEAD:main

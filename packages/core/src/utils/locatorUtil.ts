@@ -69,7 +69,7 @@ async function getEffectiveLocator(locator: PartLocator, interactor: Interactor)
  * Reduce a {@link PartLocator} to the single CSS selector the interactor runs
  * against the DOM. This is the one locator-resolution seam in the system, and it
  * is **CSS-only by design** for 1.0 — every locator must express itself as CSS
- * here (see [ADR-008](../../../../agent-docs/adr/008-css-dom-only-locator-boundary.md)).
+ * here (see [ADR-008](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/008-css-dom-only-locator-boundary.md)).
  */
 export async function toCssSelector(locator: PartLocator, interactor: Interactor): Promise<string> {
   const effectiveLocator = await getEffectiveLocator(locator, interactor);

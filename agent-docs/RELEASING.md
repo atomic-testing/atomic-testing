@@ -32,6 +32,42 @@ re-running after a partial publish resumes instead of failing.
 3. If some packages already published, idempotency covers the re-fire at the same
    version. If you prefer, bump to the next patch instead.
 
+## Changelog generation
+
+`CHANGELOG.md` is generated automatically, not hand-written. The final "Commit
+version updates" step of [`publish.yml`](../.github/workflows/publish.yml) runs
+[`scripts/generateChangelog.js`](../scripts/generateChangelog.js) right after
+`bumpVersion`, so the new `CHANGELOG.md` section lands in the same commit as
+the version bump.
+
+The script walks commit subjects since the previous release tag (the tag
+_before_ the one currently being published — see the comment in the script for
+why) and sorts them into sections by their `type` prefix:
+
+| Type           | Section          |
+| -------------- | ---------------- |
+| `feat`         | Features         |
+| `fix`          | Fixes            |
+| `perf`         | Performance      |
+| `refactor`     | Refactoring      |
+| `docs`         | Documentation    |
+| `build`        | Build & Tooling  |
+| `!` (any type) | Breaking Changes |
+
+`chore`, `style`, and `test` commits are intentionally excluded from every
+section — they're real history, just not release-notes material. See
+[`CONTRIBUTING.md`](../CONTRIBUTING.md) for the authoring-side convention
+(commit/PR title format) that this depends on.
+
+**Fixing a bad entry:**
+
+- Before it's committed: re-run `node scripts/generateChangelog.js <version> --since <tag>`
+  locally to regenerate the section, then hand-edit `CHANGELOG.md` before the
+  release finishes (or push a follow-up commit).
+- After it's committed: amend `CHANGELOG.md` directly in a normal follow-up commit —
+  there's no need to regenerate the whole file, since only the newest section
+  needs fixing.
+
 ## Rotate `CODEMOD_TOKEN` (before it expires, ~yearly)
 
 `CODEMOD_TOKEN` is the GitHub PAT used for checkout + the version commit-back.

@@ -1,0 +1,64 @@
+{
+  "name": "@atomic-testing/angular-core",
+  "version": "0.90.0",
+  "description": "Shared Angular adapter core for Atomic Testing: AngularInteractor plus the bootstrapApplication-based createTestEngine. Install the per-major package (@atomic-testing/angular-20/-21/-22) instead of depending on this directly.",
+  "keywords": [
+    "angular",
+    "integration",
+    "testing",
+    "unit"
+  ],
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/angular-core"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit",
+    "check:api": "api-extractor run"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/platform-browser": "^20.3.0",
+    "rxjs": "^7.8.0",
+    "zone.js": "^0.15.0"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=20.0.0 <23.0.0",
+    "@angular/compiler": ">=20.0.0 <23.0.0",
+    "@angular/core": ">=20.0.0 <23.0.0",
+    "@angular/platform-browser": ">=20.0.0 <23.0.0",
+    "zone.js": ">=0.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/compiler": {
+      "optional": true
+    },
+    "zone.js": {
+      "optional": true
+    }
+  }
+}

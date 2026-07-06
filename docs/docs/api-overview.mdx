@@ -8,6 +8,28 @@ import Tabs from '@theme/Tabs';
 
 # API overview
 
+This page is the hand-authored entry point into the generated API reference
+(the **API Documentation** section in the sidebar below this page, produced
+from the TSDoc comments in each package's source). Read this page first.
+
+## How to read the API reference
+
+The generated reference is organized **by package** — one section per
+`@atomic-testing/*` package, mirroring the `packages/` directory. Locators and
+framework adapters (React, Vue, Playwright) each get one section; the Material
+UI driver packages get one section **per MUI major version**
+(`component-driver-mui-v6`, `-v7`, `-v9`, and the MUI-X equivalents).
+
+Driver **behavior** is consistent across those MUI-version sections — the same
+driver names and methods exist in each, because they document the same
+component-driver API surface. What differs is the underlying MUI major version's
+DOM, which is why each major has its own package and its own generated section.
+In practice this means: **pick the section that matches the MUI major version
+your project has installed, and skip the rest** rather than reading every MUI
+version's pages. If you're not sure which major you're on, see the
+[Framework Guide](./framework-guide.mdx#-component-driver-libraries) for how to
+choose.
+
 ## Locator
 
 In a nutshell, locators represent a way to find element on a page or within a test element.
@@ -59,8 +81,15 @@ Package: [@atomic-testing/component-driver-html](https://github.com/atomic-testi
 
 ### [MUI V5](https://mui.com/material-ui/getting-started/overview/) components
 
+:::warning ⚠️ EOL — see ADR-005
+MUI 5 reached end of support on 2026-06-27. `component-driver-mui-v5` is frozen
+at `0.81.0`: it stays installable but receives no fixes, new drivers, or CI/e2e
+coverage. Migrate to `component-driver-mui-v6` or `-v7` instead. Rationale:
+[ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
+:::
+
 <details>
-  <summary>Component list</summary>
+  <summary>Component list (frozen, EOL — see warning above)</summary>
 
 Package: [@atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v5/src/components)
 
@@ -262,8 +291,17 @@ for the full list; the net-new drivers are:
 </details>
 ### [MUI X V5](https://mui.com/x/) components
 
+:::warning ⚠️ EOL — see ADR-005
+MUI-X 5 reached end of support on 2026-06-27. `component-driver-mui-x-v5` is
+frozen at `0.81.0`: it stays installable but receives no fixes, new drivers, or
+CI/e2e coverage. For DataGrid, migrate to `-x-v6`/`-x-v7`/`-x-v8`/`-x-v9`. Note
+that the date/time **picker** drivers ship only in this v5 package and were
+never carried forward to a supported major. Rationale:
+[ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
+:::
+
 <details>
-  <summary>Component list</summary>
+  <summary>Component list (frozen, EOL — see warning above)</summary>
 
 Package: [@atomic-testing/component-driver-mui-x-v5](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-x-v5/src)
 

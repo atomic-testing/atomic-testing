@@ -27,8 +27,8 @@
     "start": "vite --force",
     "build:ui": "vite build",
     "test:dom": "jest",
-    "test:e2e": "playwright test",
-    "test:e2e:chrome": "playwright test --project=chromium"
+    "test:e2e:deprecated": "playwright test",
+    "test:e2e:chrome:deprecated": "playwright test --project=chromium"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*",

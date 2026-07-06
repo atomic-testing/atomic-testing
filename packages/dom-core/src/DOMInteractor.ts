@@ -27,12 +27,20 @@ import {
   WaitUntilOption,
 } from '@atomic-testing/core';
 import { fireEvent } from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
+import defaultUserEvent from '@testing-library/user-event';
 
 import { FakeMouseEvent } from './fakeEvents';
+import { DOMInteractorOption, UserEventDispatcher } from './types';
 
 export class DOMInteractor implements Interactor {
-  constructor(protected readonly rootEl: HTMLElement = document.documentElement) {}
+  protected readonly userEvent: UserEventDispatcher;
+
+  constructor(
+    protected readonly rootEl: HTMLElement = document.documentElement,
+    option?: DOMInteractorOption
+  ) {
+    this.userEvent = option?.userEvent ?? defaultUserEvent;
+  }
   async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
@@ -89,7 +97,7 @@ export class DOMInteractor implements Interactor {
     const isSimpleEvent = option?.position == null;
     if (isSimpleEvent) {
       // Some MUI component does not work with fireEvent('click', ...)
-      await userEvent.click(el);
+      await this.userEvent.click(el);
     } else {
       const clickLocation = this.calculateMousePosition(el, option?.position);
       const evt = new FakeMouseEvent('click', {
@@ -115,7 +123,7 @@ export class DOMInteractor implements Interactor {
     if (el == null) {
       throw new ElementNotFoundError(locator, 'hover');
     }
-    await userEvent.hover(el);
+    await this.userEvent.hover(el);
   }
 
   /**
@@ -306,6 +314,40 @@ export class DOMInteractor implements Interactor {
   }
 
   /**
+   * Legacy numeric key codes for the named keys drivers press. Synthetic
+   * `KeyboardEvent`s carry `keyCode: 0` unless told otherwise, and several
+   * component libraries (Angular Material/CDK among them) still dispatch on
+   * `event.keyCode` rather than `event.key` — without this a synthetic
+   * `Escape`/`Enter` is silently ignored. Real browser input (Playwright)
+   * carries the code natively; this map restores parity for the DOM path.
+   */
+  private static readonly legacyKeyCodes: Readonly<Record<string, number>> = {
+    Backspace: 8,
+    Tab: 9,
+    Enter: 13,
+    Escape: 27,
+    ' ': 32,
+    PageUp: 33,
+    PageDown: 34,
+    End: 35,
+    Home: 36,
+    ArrowLeft: 37,
+    ArrowUp: 38,
+    ArrowRight: 39,
+    ArrowDown: 40,
+    Delete: 46,
+  };
+
+  private static legacyKeyCodeOf(key: string): number | undefined {
+    const named = DOMInteractor.legacyKeyCodes[key];
+    if (named != null) {
+      return named;
+    }
+    // Letters and digits: the legacy code is the uppercase character code.
+    return /^[a-zA-Z0-9]$/.test(key) ? key.toUpperCase().charCodeAt(0) : undefined;
+  }
+
+  /**
    * Dispatch a key press (`keydown` + `keyup`) on the element matched by the locator.
    *
    * The element is focused first so the key originates from the active element,
@@ -328,8 +370,12 @@ export class DOMInteractor implements Interactor {
     if ('focus' in el) {
       (el as HTMLElement).focus();
     }
+    // `keyCode`/`which` mirror `key` for handlers that still read the legacy
+    // numeric code (see legacyKeyCodes above).
+    const keyCode = DOMInteractor.legacyKeyCodeOf(key);
     const eventInit = {
       key,
+      ...(keyCode != null ? { keyCode, which: keyCode } : {}),
       ctrlKey: !!option?.ctrl,
       shiftKey: !!option?.shift,
       altKey: !!option?.alt,
@@ -378,7 +424,7 @@ export class DOMInteractor implements Interactor {
     if (el == null) {
       throw new ElementNotFoundError(locator, 'activate');
     }
-    await userEvent.click(el);
+    await this.userEvent.click(el);
   }
 
   /**
@@ -397,7 +443,7 @@ export class DOMInteractor implements Interactor {
     }
 
     if (!option?.append) {
-      await userEvent.clear(el);
+      await this.userEvent.clear(el);
     }
 
     // An empty value is a pure clear: `userEvent.clear()` above already emptied
@@ -422,7 +468,7 @@ export class DOMInteractor implements Interactor {
       }
     }
 
-    await userEvent.type(el, text);
+    await this.userEvent.type(el, text);
   }
 
   /**
@@ -459,7 +505,7 @@ export class DOMInteractor implements Interactor {
     if (el == null) {
       throw new ElementNotFoundError(locator, 'selectOptionValue');
     }
-    await userEvent.selectOptions(el, values);
+    await this.userEvent.selectOptions(el, values);
   }
 
   /**
@@ -491,7 +537,7 @@ export class DOMInteractor implements Interactor {
       const name = filePath.split(/[\\/]/).pop() || filePath;
       return new File([], name);
     });
-    await userEvent.upload(el as HTMLElement, fileObjects);
+    await this.userEvent.upload(el as HTMLElement, fileObjects);
   }
 
   /**
@@ -637,13 +683,33 @@ export class DOMInteractor implements Interactor {
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const queryRoot = this.escapesToDocumentRoot(locator) ? this.rootEl.ownerDocument : this.rootEl;
     if (isMultiple) {
-      const elList = this.rootEl.querySelectorAll<T>(cssLocator);
+      const elList = queryRoot.querySelectorAll<T>(cssLocator);
       const result: T[] = [];
       elList.forEach(el => result.push(el));
       return result;
     }
-    return this.rootEl.querySelector<T>(cssLocator) ?? undefined;
+    return queryRoot.querySelector<T>(cssLocator) ?? undefined;
+  }
+
+  /**
+   * A `'Root'`-relative locator (the portal escape — see the portals guide) is
+   * documented to search from the document, not from this interactor's root, so
+   * portalled content (dialogs, dropdowns rendered at `<body>`) stays reachable
+   * even when the interactor is scoped to a sub-tree such as a Storybook canvas.
+   * Mirrors `locatorUtil.getEffectiveLocator`'s slicing rule: the last `'Root'`
+   * locator wins unless it is `'linked'`, whose CSS still needs the scoped
+   * context.
+   */
+  private escapesToDocumentRoot(locator: PartLocator): boolean {
+    const list = locatorUtil.toChain(locator);
+    for (let i = list.length - 1; i >= 0; i--) {
+      if (list[i].relative === 'Root') {
+        return list[i].complexity !== 'linked';
+      }
+    }
+    return false;
   }
 
   async getInputValue(locator: PartLocator): Promise<Optional<string>> {

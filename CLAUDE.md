@@ -154,9 +154,13 @@ packages/
 ├── react-core/              # ReactInteractor (shared React logic)
 ├── react-18/, react-19/     # Version-specific createTestEngine
 ├── vue-3/                   # VueInteractor + createTestEngine
+├── angular-core/            # AngularInteractor + async createTestEngine (ADR-013)
+├── angular-20|21|22/        # Thin per-major Angular peer-range packages
 ├── playwright/              # PlaywrightInteractor
+├── storybook/               # StorybookInteractor + play helpers (Storybook 10)
 ├── component-driver-html/   # HTML element drivers
-└── component-driver-mui-*/  # Material-UI drivers
+├── component-driver-mui-*/  # Material-UI drivers
+└── component-driver-angular-material-*/ # Angular Material drivers (per major)
 
 package-tests/               # Test suites validating drivers
 ├── component-driver-*-test/ # *.dom.test.ts + *.e2e.test.ts
@@ -317,19 +321,22 @@ testRunner(testSuite, jestTestAdapter, {
 ```typescript
 // __tests__/MyComponent.e2e.test.ts
 import { testRunner } from '@atomic-testing/internal-test-runner';
-import { getTestRunnerInterface, playWrightTestFrameworkMapper } from '@atomic-testing/internal-test-runner-playwright-adapter';
+import {
+  getTestRunnerInterface,
+  playWrightTestFrameworkMapper,
+} from '@atomic-testing/internal-test-runner-playwright-adapter';
 
 testRunner(testSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
 ```
 
 #### Key Packages
 
-| Package | Purpose |
-| --- | --- |
-| `@atomic-testing/internal-test-runner` | `testRunner()`, `useTestEngine()` orchestrator |
-| `@atomic-testing/internal-test-runner-jest-adapter` | Jest adapter (`jestTestAdapter`) |
+| Package                                                   | Purpose                                                                                 |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `@atomic-testing/internal-test-runner`                    | `testRunner()`, `useTestEngine()` orchestrator                                          |
+| `@atomic-testing/internal-test-runner-jest-adapter`       | Jest adapter (`jestTestAdapter`)                                                        |
 | `@atomic-testing/internal-test-runner-playwright-adapter` | Playwright test-runner glue (`getTestRunnerInterface`, `playWrightTestFrameworkMapper`) |
-| `@atomic-testing/playwright` | Browser driver (`PlaywrightInteractor`, `createTestEngine`) |
+| `@atomic-testing/playwright`                              | Browser driver (`PlaywrightInteractor`, `createTestEngine`)                             |
 
 #### Available Assertions
 

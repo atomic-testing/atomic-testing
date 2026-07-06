@@ -36,7 +36,7 @@ export function createTestEngine<T extends ScenePart>(element: HTMLElement, part
 
 // @public (undocumented)
 export class DOMInteractor implements Interactor {
-    constructor(rootEl?: HTMLElement);
+    constructor(rootEl?: HTMLElement, option?: DOMInteractorOption);
     activate(locator: PartLocator): Promise<void>;
     blur(locator: PartLocator, _option?: Partial<BlurOption>): Promise<void>;
     // (undocumented)
@@ -107,9 +107,16 @@ export class DOMInteractor implements Interactor {
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
     // (undocumented)
+    protected readonly userEvent: UserEventDispatcher;
+    // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     // (undocumented)
     waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
+}
+
+// @public
+export interface DOMInteractorOption {
+    readonly userEvent?: UserEventDispatcher;
 }
 
 // @internal
@@ -119,6 +126,22 @@ export class FakeMouseEvent extends MouseEvent {
 
 // @public @deprecated (undocumented)
 export type IDomTestEngineOption = ITestEngineOption;
+
+// @public
+export interface UserEventDispatcher {
+    // (undocumented)
+    clear(element: Element): Promise<void>;
+    // (undocumented)
+    click(element: Element): Promise<void>;
+    // (undocumented)
+    hover(element: Element): Promise<void>;
+    // (undocumented)
+    selectOptions(element: Element, values: string[]): Promise<void>;
+    // (undocumented)
+    type(element: Element, text: string): Promise<void>;
+    // (undocumented)
+    upload(element: HTMLElement, files: File | File[]): Promise<void>;
+}
 
 // (No @packageDocumentation comment for this package)
 

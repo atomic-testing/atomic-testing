@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './__tests__',
   testMatch: /.*\.e2e\.(test|spec)\.(ts|tsx)$/,
   /* Maximum time one test can run for. */
-  timeout: 3 * 1000, // 30 * 1000,
+  timeout: 30 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.

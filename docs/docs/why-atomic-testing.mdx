@@ -48,6 +48,12 @@ expect(await testEngine.parts.error.isVisible()).toBe(false);
 
 _The nightmare scenario that Atomic Testing makes trivial_
 
+> **To be clear:** the pain below isn't React Testing Library, Vue Test Utils, or Playwright themselves — each is a
+> solid tool for its own environment, and Atomic Testing actually
+> [builds on top of RTL](../advanced-concepts/atomic-testing-vs-rtl) for DOM testing rather than replacing it. The
+> pain is calling each framework's API **directly, per framework, with no shared layer** — so switching frameworks
+> means rewriting every test from scratch.
+
 <Tabs>
 <TabItem value="before" label="😱 Traditional Approach">
 
@@ -187,8 +193,24 @@ await engine.parts.submit.click();
 
 ### **Month 3**: "Wait, this is actually easier..."
 
+Once your scene grows a multi-field form, compose a driver method for it — the same pattern
+[`LoginFormDriver.login()`](../tutorial#7-compose-a-driver-for-reuse) uses in the tutorial:
+
 ```typescript
-// Complex interactions become trivial
+import { ComponentDriver } from '@atomic-testing/core';
+
+// A driver method you write once — not a built-in API:
+class SignupFormDriver extends ComponentDriver<typeof parts> {
+  async fillAndSubmit(value: SignupValue): Promise<void> {
+    await this.parts.email.setValue(value.email);
+    await this.parts.password.setValue(value.password);
+    await this.parts.confirmPassword.setValue(value.confirmPassword);
+    await this.parts.agreeToTerms.setSelected(value.agreeToTerms);
+    await this.parts.submit.click();
+  }
+}
+
+// Your test stays declarative:
 await testEngine.parts.form.fillAndSubmit({
   email: 'user@example.com',
   password: 'secure123',

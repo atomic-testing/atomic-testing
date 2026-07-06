@@ -61,7 +61,7 @@ const config: Config = {
   projectName: 'atomic-testing', // Usually your repo name.
   deploymentBranch: 'gh-pages', // Branch that GitHub pages will deploy from.
 
-  onBrokenLinks: 'warn',
+  onBrokenLinks: 'throw',
 
   trailingSlash: true,
 
@@ -137,7 +137,7 @@ const config: Config = {
         },
         {
           type: 'doc',
-          docId: 'intro',
+          docId: 'concepts',
           position: 'left',
           label: 'Core Concepts',
         },
@@ -163,6 +163,10 @@ const config: Config = {
             {
               label: 'Getting started',
               to: '/docs/intro',
+            },
+            {
+              label: 'Why Atomic Testing?',
+              to: '/docs/why-atomic-testing',
             },
             {
               label: 'Concepts',
