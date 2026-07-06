@@ -12,6 +12,8 @@ import {
   ScenePart,
 } from '@atomic-testing/core';
 
+const defaultTransitionDuration = 250;
+
 export const parts = {
   // Neither `input[type=password]` nor a native `<button>` carries an explicit
   // `role` attribute (their ARIA roles are implicit HTML semantics), and Radix
@@ -75,9 +77,20 @@ export class PasswordToggleFieldDriver
     return (await this.parts.input.getAttribute('type')) === 'text';
   }
 
-  /** Click the toggle button, flipping visibility. */
+  /**
+   * Click the toggle button, then wait for visibility to flip. The click
+   * resolves before React commits the resulting re-render, so callers reading
+   * {@link isPasswordVisible} or {@link getToggleLabel} right after would
+   * otherwise race the stale pre-click state.
+   */
   async toggleVisibility(): Promise<void> {
-    return this.parts.toggle.click();
+    const wasVisible = await this.isPasswordVisible();
+    await this.parts.toggle.click();
+    await this.interactor.waitUntil({
+      probeFn: () => this.isPasswordVisible(),
+      terminateCondition: !wasVisible,
+      timeoutMs: defaultTransitionDuration,
+    });
   }
 
   /**
