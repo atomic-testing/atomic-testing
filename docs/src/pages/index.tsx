@@ -248,7 +248,7 @@ function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX
         <div className={styles.heroCopy}>
           <div className={styles.badge}>
             <span className={styles.badgeChip}>Pre-1.0</span>
-            Portable UI testing for React · Vue · Playwright · Angular
+            Portable UI testing for React · Vue · Angular · Playwright
           </div>
 
           <h1 className={styles.heroTitle}>
@@ -364,7 +364,7 @@ const composeSteps: ComposeStep[] = [
     eyebrow: 'Locator',
     eyebrowColor: '#5fe3c8',
     code: "byDataTestId('btn')",
-    text: 'Finds the element — by test id, role, text or CSS.',
+    text: 'Finds the element — by test id, role, attribute or CSS.',
     caption: '',
   },
   {
@@ -390,7 +390,7 @@ const composeSteps: ComposeStep[] = [
     eyebrow: 'Result',
     eyebrowColor: '#5fe3c8',
     text: '✓ Passing everywhere',
-    caption: 'React · Vue · Playwright · DOM.',
+    caption: 'React · Vue · Angular · Playwright.',
     variant: 'result',
   },
 ];
@@ -492,7 +492,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={`${siteConfig.title} — Write your UI tests once`}
-      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and the DOM.'>
+      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Angular and Playwright.'>
       <main>
         <HeroSection activeFramework={activeFramework} />
         <MagicSection active={activeFramework} onSelect={setActiveFramework} />

@@ -2,7 +2,7 @@ import { HTMLAnchorDriver, HTMLElementDriver } from '@atomic-testing/component-d
 import { ButtonDriver, TextFieldDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, ScenePart } from '@atomic-testing/core';
 
-const loginScenePart: ScenePart = {
+const loginScenePart = {
   username: {
     locator: byDataTestId('username'),
     driver: TextFieldDriver,

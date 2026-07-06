@@ -23,6 +23,10 @@ export class LoginFormDriver extends ComponentDriver<typeof parts> implements II
     super(locator, interactor, { ...option, parts });
   }
 
+  async getValue(): Promise<LoginCredential> {
+    return { username: (await this.parts.username.getValue()) ?? '' };
+  }
+
   async setValue(value: LoginCredential): Promise<boolean> {
     await this.parts.username.setValue(value.username);
     return true;
