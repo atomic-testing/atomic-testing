@@ -1,4 +1,4 @@
-import { GridAlignment } from '@mui/x-data-grid-pro';
+type GridAlignment = 'left' | 'right' | 'center';
 
 export const initialState = {
   columns: {

@@ -8,6 +8,31 @@ import { createTestEngine } from '@atomic-testing/playwright';
 import { expect, Page, test } from '@playwright/test';
 
 /**
+ * Stub out raw `.css`/`.less` requires for Node's plain CJS loader.
+ *
+ * Playwright's e2e tests run in plain Node (no bundler), but this repo's shared
+ * `*.suite.ts`/`*.examples.tsx` test-suite files (see CLAUDE.md, "Shared Test
+ * Pattern") get `require()`'d directly into that process. Some upstream CJS
+ * builds (e.g. `@mui/x-data-grid@8.6.0`'s `DataGrid/index.js`) `require()` a raw
+ * CSS file for its bundler-only side effect; a bundler (Vite, webpack) knows how
+ * to handle that, but Node's `require()` tries to parse the CSS as JavaScript and
+ * throws `SyntaxError: Unexpected token '.'`.
+ *
+ * Every e2e test file imports this adapter before importing the suite/examples
+ * that trigger the problematic transitive require (confirmed empirically), so
+ * installing the stub here — once, at module load — protects every e2e package
+ * with zero per-package config changes. This mirrors `jest.css.js`, which solves
+ * the identical problem for the DOM/Jest pipeline via `moduleNameMapper`.
+ */
+if (typeof require !== 'undefined' && require.extensions) {
+  const stubModule = (module: NodeModule): void => {
+    module.exports = {};
+  };
+  require.extensions['.css'] ??= stubModule;
+  require.extensions['.less'] ??= stubModule;
+}
+
+/**
  * Navigate the current Playwright page to the provided URL.
  *
  * @param url - Destination URL to load.
