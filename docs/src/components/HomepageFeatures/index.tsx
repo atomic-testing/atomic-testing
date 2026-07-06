@@ -34,7 +34,7 @@ const featureList: FeatureItem[] = [
     iconVariant: 'blue',
     title: 'Framework-agnostic drivers',
     description:
-      'Reuse component drivers across Material-UI, Bootstrap and custom components. Component library changes don’t break your tests.',
+      'Reuse component drivers across Material-UI, Radix, shadcn/ui and custom components. Component library changes don’t break your tests.',
   },
   {
     icon: '🛡️',

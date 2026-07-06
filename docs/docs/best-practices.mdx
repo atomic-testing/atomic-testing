@@ -26,15 +26,16 @@ a button is disabled—instead of asserting on generated HTML. This keeps
 tests resilient to implementation changes and lets drivers work across
 different environments.
 
-### 3. Avoid Direct React Testing Library Calls
+### 3. Avoid Direct `@testing-library/dom` Calls
 
-Atomic Testing Library builds on top of React Testing Library (RTL) for
-DOM interactions, but calling RTL utilities directly couples your tests
+Atomic Testing builds on top of `@testing-library/dom` (the same
+framework-agnostic core React Testing Library itself uses) for DOM
+interactions, but calling those utilities directly couples your tests
 to a specific environment. For a deeper discussion of how Atomic Testing
-relates to RTL, see [Atomic Testing vs React Testing Library](./advanced-concepts/atomic-testing-vs-rtl.mdx).
+relates to React Testing Library, see [Atomic Testing vs React Testing Library](./advanced-concepts/atomic-testing-vs-rtl.mdx).
 Prefer the methods exposed by component drivers and the `TestEngine` so
 your tests remain predictable and can be run in other environments such
-as Playwright (and other environments via a custom interactor).
+as Vue, Angular or Playwright.
 
 ### 4. Use `data-testid` for Key Elements
 
