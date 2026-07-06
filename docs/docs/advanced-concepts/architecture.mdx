@@ -52,13 +52,16 @@ scenes reuse smaller ones. Refer to the
 
 Interactors perform the low level actions requested by drivers. `DOMInteractor`
 works with `@testing-library` utilities for unit/DOM tests, and is extended by
-`ReactInteractor` (which wraps every interaction in React's `act()`) and
-`VueInteractor` (which calls Vue's `nextTick()` after every interaction) so
-state settles before the next assertion. `PlaywrightInteractor` targets a real
-browser for end-to-end scenarios instead. Because drivers talk only to the
-`Interactor` interface, the same driver code can operate in any of these
-environments. See the [Interactor](./interactor.mdx) guide for details on the
-full set of available interactors and on creating custom ones.
+`ReactInteractor` (which wraps every interaction in React's `act()`),
+`VueInteractor` (which calls Vue's `nextTick()`), `AngularInteractor` (which
+awaits `ApplicationRef.whenStable()`), and `StorybookInteractor` (which drives
+a real browser via `@storybook/addon-vitest` rather than jsdom) so state
+settles before the next assertion. `PlaywrightInteractor` targets a real
+browser for end-to-end scenarios directly, without extending `DOMInteractor`.
+Because drivers talk only to the `Interactor` interface, the same driver code
+can operate in any of these environments. See the [Interactor](./interactor.mdx)
+guide for details on the full set of available interactors and on creating
+custom ones.
 
 ## Putting it all together
 

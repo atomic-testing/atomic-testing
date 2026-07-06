@@ -496,8 +496,6 @@ pnpm add @atomic-testing/component-driver-mui-x-v9
 | DataGridPremiumDriver          | Driver for DataGrid / DataGridPro / DataGridPremium component    |
 | DataGridHeaderRowDriver        | Driver for header rows in DataGrid                               |
 | DataGridDataRowDriver          | Driver for data rows in DataGrid                                 |
-| DataGridFooterDriver           | Driver for the DataGrid footer (pagination)                      |
-| DataGridPaginationActionDriver | Driver for the footer next/previous pagination controls          |
 | DesktopDatePickerDriver        | Read-capable driver for DesktopDatePicker (v9 section field)     |
 | SimpleTreeViewDriver           | Driver for SimpleTreeView / RichTreeView (expand/collapse, read) |
 
@@ -942,7 +940,7 @@ each row below links into its generated API section for the full method list.
 | Package | Purpose |
 | --- | --- |
 | [@atomic-testing/core](./api/@atomic-testing/core/index.md) | Core abstractions every other package builds on: `ComponentDriver`, the `Interactor` interface, `partTypes`, and the locator builders. |
-| [@atomic-testing/dom-core](./api/@atomic-testing/dom-core/index.md) | `DOMInteractor` — the base DOM implementation that the React and Vue interactors extend. |
+| [@atomic-testing/dom-core](./api/@atomic-testing/dom-core/index.md) | `DOMInteractor` — the base DOM implementation extended by the React, Vue, Angular and Storybook interactors. |
 | [@atomic-testing/react-core](./api/@atomic-testing/react-core/index.md) | Shared `ReactInteractor` + `createTestEngine` implementation (wraps calls in `act()`); `react-18`/`react-19`/`react-legacy` re-export it pinned to a React peer range. |
 | [@atomic-testing/react-18](./api/@atomic-testing/react-18/index.md) | `createTestEngine` for React 18 — thin re-export of `react-core` (ADR-003). |
 | [@atomic-testing/react-19](./api/@atomic-testing/react-19/index.md) | `createTestEngine` for React 19 — thin re-export of `react-core` (ADR-003). |
