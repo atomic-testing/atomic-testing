@@ -92,9 +92,9 @@ const frameworks: Framework[] = [
 // Keyed to the active framework tab so the hero install command always matches
 // the code sample the reader is currently looking at.
 const FRAMEWORK_INSTALLS: Record<FrameworkId, string> = {
-  react: 'pnpm add @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html',
-  vue: 'pnpm add @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html',
-  playwright: 'pnpm add @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html',
+  react: 'pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html',
+  vue: 'pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html',
+  playwright: 'pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html',
 };
 
 type AnimationId = 'orbit' | 'compose';
