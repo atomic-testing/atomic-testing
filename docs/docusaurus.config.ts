@@ -171,11 +171,15 @@ const config: Config = {
           items: [
             {
               label: 'Getting started',
-              to: '/docs/intro',
+              to: '/docs/quick-start',
             },
             {
               label: 'Why Atomic Testing?',
               to: '/docs/why-atomic-testing',
+            },
+            {
+              label: 'Introduction',
+              to: '/docs/intro',
             },
             {
               label: 'Concepts',

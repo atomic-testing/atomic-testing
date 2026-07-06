@@ -100,6 +100,9 @@ pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component
 
 # vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
 pnpm add -D vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
+
+# the test runner itself
+pnpm add -D vitest jsdom
 ```
 
 :::info Before you run this
@@ -109,9 +112,15 @@ Vue tests run under [Vitest](https://vitest.dev) with the `jsdom` environment:
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  test: { environment: 'jsdom' },
+  test: { environment: 'jsdom', globals: true },
 });
 ```
+
+`globals: true` puts `describe`/`it`/`expect`/`beforeEach`/`afterEach` in scope without an
+explicit `import { ... } from 'vitest'` in every test file, matching Jest's default behavior
+so the example below runs as shown. Prefer explicit imports instead? Add
+`import { describe, it, expect, beforeEach, afterEach } from 'vitest';` to the test file and
+drop this flag.
 
 Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInteractor` calls Vue's own `nextTick()` internally. See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the Jest equivalent if you're testing React elsewhere in the same repo.
 :::
@@ -191,6 +200,9 @@ pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/comp
 
 # playwright's peer dependency — npm/yarn don't install peers automatically like pnpm can
 pnpm add -D @playwright/test
+
+# Playwright drives real browsers — install the binaries once per machine/CI image
+npx playwright install --with-deps
 ```
 
 :::info DOM tests vs. Playwright tests
