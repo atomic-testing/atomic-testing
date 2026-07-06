@@ -250,8 +250,8 @@ pnpm add @atomic-testing/component-driver-html
 ### **Start Simple**
 
 ```bash
-# If you're just getting started
-pnpm add @atomic-testing/react-18 @atomic-testing/component-driver-html
+# If you're just getting started — react-19 is the default; on React 18, swap in @atomic-testing/react-18
+pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-html
 ```
 
 You can always add more packages later. HTML drivers work with any components.
@@ -259,7 +259,7 @@ You can always add more packages later. HTML drivers work with any components.
 ### **Decision Tree**
 
 1. **What's your primary framework?**
-   - React → `@atomic-testing/react-18`
+   - React → `@atomic-testing/react-19` (on React 18, use `@atomic-testing/react-18` instead)
    - Vue → `@atomic-testing/vue-3`
    - Multiple/E2E → `@atomic-testing/playwright`
 
