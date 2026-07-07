@@ -1,4 +1,4 @@
-import { TextFieldDriver, ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
+import { TextFieldDriver, ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
 import {
   ComponentDriver,
   Interactor,
@@ -23,6 +23,13 @@ export interface LoginCredential {
 export class LoginFormDriver extends ComponentDriver<typeof parts> implements IInputDriver<LoginCredential> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, { ...option, parts });
+  }
+
+  async getValue(): Promise<LoginCredential> {
+    return {
+      username: (await this.parts.username.getValue()) ?? '',
+      password: (await this.parts.password.getValue()) ?? '',
+    };
   }
 
   async setValue(value: LoginCredential): Promise<boolean> {

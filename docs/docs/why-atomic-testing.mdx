@@ -11,6 +11,10 @@ import Tabs from '@theme/Tabs';
 
 # Why Atomic Testing?
 
+> Looking for the shorter version of this pitch — the problem, the solution, and the core principles in a few
+> paragraphs? See the [Introduction](./intro.mdx). This page goes deeper: concrete before/after scenarios, the ROI
+> case over time, and — just as important — when _not_ to reach for Atomic Testing.
+
 ## The Learning Investment vs. Long-term Payoff
 
 ### **Initial Setup** (One-time cost)
@@ -49,10 +53,12 @@ expect(await testEngine.parts.error.isVisible()).toBe(false);
 _The nightmare scenario that Atomic Testing makes trivial_
 
 > **To be clear:** the pain below isn't React Testing Library, Vue Test Utils, or Playwright themselves — each is a
-> solid tool for its own environment, and Atomic Testing actually
-> [builds on top of RTL](../advanced-concepts/atomic-testing-vs-rtl) for DOM testing rather than replacing it. The
-> pain is calling each framework's API **directly, per framework, with no shared layer** — so switching frameworks
-> means rewriting every test from scratch.
+> solid tool for its own environment, and for DOM testing Atomic Testing is a **sibling** of RTL, not a wrapper
+> around it — both layer on top of the same underlying `@testing-library/dom` /
+> `@testing-library/user-event` libraries (see
+> [Atomic Testing vs RTL](../advanced-concepts/atomic-testing-vs-rtl) for the full breakdown). The pain is calling
+> each framework's API **directly, per framework, with no shared layer** — so switching frameworks means rewriting
+> every test from scratch.
 
 <Tabs>
 <TabItem value="before" label="😱 Traditional Approach">
@@ -265,7 +271,7 @@ fireEvent.click(submitButton);
 - **Prototype/throwaway projects** - If you're never maintaining this code
 - **Single simple component** - If you're testing one button, traditional approaches are fine
 - **Team unwilling to learn** - The initial learning curve requires buy-in
-- **No component library** - If you're not using MUI/Bootstrap/etc, benefit is reduced
+- **No component library** - If you're not using MUI, Radix, shadcn/ui, etc, benefit is reduced
 
 ## **Getting Started Despite the Learning Curve**
 

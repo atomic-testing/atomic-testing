@@ -4,11 +4,49 @@ title: Atomic Testing vs React Testing Library
 sidebar_position: 4
 ---
 
-Atomic Testing is not a replacement for [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/). It builds on top of RTL to provide reusable **component drivers** and a `TestEngine`. This extra layer keeps your tests focused on behavior while remaining portable across environments.
+Atomic Testing is not a replacement for [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) (RTL) — but it isn't "built on top of" RTL either. The honest framing is **siblings, not a wrapper/wrapped pair**: both tools are layered on the same low-level, framework-agnostic libraries, and each adds its own layer on top for a different goal (see [intro](../intro.mdx) for the broader "why" behind that goal).
 
-## Complementary tools
+## What Atomic Testing actually depends on
 
-When running DOM-based tests, Atomic Testing delegates rendering and querying to RTL. The same drivers can also interact with Playwright or other end-to-end frameworks. Because interactions flow through drivers, you can reuse test code whether it runs in Jest or in a full browser.
+Atomic Testing's DOM layer, [`@atomic-testing/dom-core`](https://github.com/atomic-testing/atomic-testing/blob/main/packages/dom-core/package.json), depends on [`@testing-library/dom`](https://testing-library.com/docs/dom-testing-library/intro/) (queries, `fireEvent`) and [`@testing-library/user-event`](https://testing-library.com/docs/user-event/intro/) (realistic interactions) — the same two framework-agnostic libraries that RTL itself wraps for React. Atomic Testing's React adapter (`@atomic-testing/react-core`) does depend on `@testing-library/react`, but only for its `act()` helper, used to wrap renders so React's reactivity settles before each assertion — it does not use RTL's `render()`/`screen` query API. Rendering is done with framework-native APIs (React's own `createRoot`, Vue's own `createApp(...).mount()`, etc.), and every locator (`byDataTestId`, `byRole`, `byAriaLabel`, `byCssSelector`, ...) resolves to a single CSS selector run through `querySelector` in jsdom or `page.locator()` in Playwright, rather than RTL's accessible-role/name computation — see [ADR-008](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/008-css-dom-only-locator-boundary.md) for that boundary. `byRole('button')`, for instance, matches a literal `role="button"` attribute; it does not (yet) resolve the implicit role RTL's `getByRole` would infer from a bare `<button>` element.
+
+So: RTL wraps `@testing-library/dom` + `@testing-library/user-event` with React-specific `render()`/`screen` helpers. Atomic Testing wraps the same two underlying libraries with a portable **component driver** abstraction and a `TestEngine` instead. Neither is built on the other.
+
+## The real differentiator: portability, not dependencies
+
+RTL's query/interaction API only runs against React components rendered into jsdom (or a similar DOM environment). Atomic Testing's actual value is the **component driver** abstraction: a `ComponentDriver` (e.g. `HTMLButtonDriver`, `HTMLTextInputDriver`) exposes the same semantic methods — `click()`, `getValue()`/`setValue()`, `getText()`, `isVisible()` — no matter which `Interactor` resolves them underneath. `ReactInteractor` and `VueInteractor` back jsdom-based DOM tests, `PlaywrightInteractor` backs a real browser, and Angular has its own interactor family (`@atomic-testing/angular-core` plus the per-major `angular-20`/`angular-21`/`angular-22` packages). The same scene definition and the same test body run unmodified against React (`@atomic-testing/react-18` / `react-19`), Vue&nbsp;3, Angular, and Playwright.
+
+RTL itself has no equivalent story outside React — Vue Testing Library and Angular Testing Library are separate libraries with their own, non-interchangeable APIs, so a driver-based test suite has nothing to port to when a codebase mixes frameworks or moves from component tests to E2E.
+
+## Side-by-side
+
+Testing a button whose label changes to "Welcome!" after a click:
+
+```tsx title="React Testing Library"
+import { fireEvent, render, screen } from '@testing-library/react';
+
+render(<WelcomeButton name='Alice' />);
+
+const button = screen.getByTestId('welcome-btn');
+fireEvent.click(button);
+
+expect(button).toHaveTextContent('Welcome!');
+```
+
+```tsx title="Atomic Testing"
+import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
+import { byDataTestId } from '@atomic-testing/core';
+import { createTestEngine } from '@atomic-testing/react-19';
+
+const engine = createTestEngine(<WelcomeButton name='Alice' />, {
+  button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
+});
+
+await engine.parts.button.click();
+expect(await engine.parts.button.getText()).toBe('Welcome!');
+```
+
+Swap only the `createTestEngine` import (`@atomic-testing/vue-3`, `@atomic-testing/playwright`, ...) and this exact locator, driver, `click()`, and `getText()` call run unchanged against Vue or a real browser — see [Quick Start](../quick-start.mdx) for the full three-framework version of this same example.
 
 ## Why not just use RTL directly?
 

@@ -9,7 +9,6 @@ import React, { type JSX, type ReactNode, useCallback, useRef, useState } from '
 import styles from './index.module.css';
 
 const GITHUB_URL = 'https://github.com/atomic-testing/atomic-testing';
-const HERO_INSTALL = 'pnpm add @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html';
 const COPY_FEEDBACK_MS = 1600;
 
 const reactCode = `import { createTestEngine } from '@atomic-testing/react-19';
@@ -90,6 +89,14 @@ const frameworks: Framework[] = [
   { id: 'playwright', label: '🎭 Playwright', accent: '#6366f1', code: playCode },
 ];
 
+// Keyed to the active framework tab so the hero install command always matches
+// the code sample the reader is currently looking at.
+const FRAMEWORK_INSTALLS: Record<FrameworkId, string> = {
+  react: 'pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html',
+  vue: 'pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html',
+  playwright: 'pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html',
+};
+
 type AnimationId = 'orbit' | 'compose';
 
 function GitHubIcon({ size = 18 }: { size?: number }): JSX.Element {
@@ -116,16 +123,17 @@ function useCopy(): { copied: boolean; copy: (text: string) => void } {
   return { copied, copy };
 }
 
-function InstallBox(): JSX.Element {
+function InstallBox({ framework }: { framework: FrameworkId }): JSX.Element {
   const { copied, copy } = useCopy();
+  const installCommand = FRAMEWORK_INSTALLS[framework];
   return (
     <div className={styles.installBox}>
       <span className={styles.installPrompt}>$</span>
-      <code className={styles.installCmd}>{HERO_INSTALL}</code>
+      <code className={styles.installCmd}>{installCommand}</code>
       <button
         type='button'
         className={styles.installCopy}
-        onClick={() => copy(HERO_INSTALL)}
+        onClick={() => copy(installCommand)}
         aria-label='Copy install command'>
         {copied ? <span className={styles.copied}>✓ copied</span> : <span>copy</span>}
       </button>
@@ -230,7 +238,7 @@ function AnimationToggle({
   );
 }
 
-function HeroSection(): JSX.Element {
+function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX.Element {
   const [animation, setAnimation] = useState<AnimationId>('orbit');
   return (
     <section className={styles.hero}>
@@ -250,7 +258,8 @@ function HeroSection(): JSX.Element {
           </h1>
 
           <p className={styles.heroSubtitle}>
-            Atomic Testing composes tiny, reusable <strong>component drivers</strong> into portable test scenes — so the
+            Stop rewriting your test suite every time you switch UI frameworks or upgrade a component library. Atomic
+            Testing composes tiny, reusable <strong>component drivers</strong> into portable test scenes — so the
             same semantic test runs across frameworks, libraries, and environments. Learn once, test any UI.
           </p>
 
@@ -264,8 +273,11 @@ function HeroSection(): JSX.Element {
             </a>
           </div>
 
-          <InstallBox />
+          <InstallBox framework={activeFramework} />
 
+          <Link className={styles.heroWhyLink} to='/docs/quick-start'>
+            Full setup, incl. peer deps →
+          </Link>
           <Link className={styles.heroWhyLink} to='/docs/why-atomic-testing'>
             Why Atomic Testing — and when NOT to use it →
           </Link>
@@ -280,8 +292,13 @@ function HeroSection(): JSX.Element {
   );
 }
 
-function MagicSection(): JSX.Element {
-  const [active, setActive] = useState<FrameworkId>('react');
+function MagicSection({
+  active,
+  onSelect,
+}: {
+  active: FrameworkId;
+  onSelect: (id: FrameworkId) => void;
+}): JSX.Element {
   const { copied, copy } = useCopy();
   const activeFramework = frameworks.find(framework => framework.id === active) ?? frameworks[0];
 
@@ -309,7 +326,7 @@ function MagicSection(): JSX.Element {
               key={framework.id}
               className={clsx(styles.fwTab, active === framework.id && styles.fwTabActive)}
               style={active === framework.id ? { boxShadow: `inset 0 -2px 0 ${framework.accent}` } : undefined}
-              onClick={() => setActive(framework.id)}
+              onClick={() => onSelect(framework.id)}
               aria-pressed={active === framework.id}>
               {framework.label}
             </button>
@@ -350,7 +367,7 @@ const composeSteps: ComposeStep[] = [
     eyebrow: 'Locator',
     eyebrowColor: '#5fe3c8',
     code: "byDataTestId('btn')",
-    text: 'Finds the element — by test id, role, text or CSS.',
+    text: 'Finds the element — by test id, role, attribute or CSS.',
     caption: '',
   },
   {
@@ -376,7 +393,7 @@ const composeSteps: ComposeStep[] = [
     eyebrow: 'Result',
     eyebrowColor: '#5fe3c8',
     text: '✓ Passing everywhere',
-    caption: 'React · Vue · Playwright · DOM.',
+    caption: 'React · Vue · Playwright.',
     variant: 'result',
   },
 ];
@@ -391,8 +408,8 @@ function ComposableSection(): JSX.Element {
           <div className={clsx(styles.eyebrow, styles.eyebrowTeal)}>Composable by design</div>
           <h2 className={styles.bandTitle}>Small atoms. Infinite tests.</h2>
           <p className={styles.bandSubtitle}>
-            Each primitive is tiny and replaceable. Compose them like atoms into molecules — locators and drivers snap
-            into scenes, scenes into engines, engines into suites that outlive any framework.
+            Each primitive is tiny and replaceable: locators and drivers snap into scenes, scenes into engines,
+            engines into suites that outlive any framework.
           </p>
         </header>
         <div className={styles.bandRow}>
@@ -424,58 +441,6 @@ function ComposableSection(): JSX.Element {
   );
 }
 
-type HowStep = {
-  number: string;
-  color: string;
-  title: string;
-  description: ReactNode;
-};
-
-const howSteps: HowStep[] = [
-  { number: '01', color: '#2d6be3', title: 'ScenePart', description: 'Declare which components matter to the test.' },
-  {
-    number: '02',
-    color: '#14b8b0',
-    title: 'Locators',
-    description: (
-      <>
-        Find components with <code className={styles.howCode}>byDataTestId()</code> &amp; friends.
-      </>
-    ),
-  },
-  { number: '03', color: '#38bdf8', title: 'Drivers', description: 'Use semantic APIs instead of DOM manipulation.' },
-  {
-    number: '04',
-    color: '#2d6be3',
-    title: 'TestEngine',
-    description: 'Orchestrates everything together, in any runtime.',
-  },
-];
-
-function HowItWorksSection(): JSX.Element {
-  return (
-    <section className={styles.howBand}>
-      <div className={styles.howInner}>
-        <header className={styles.howHead}>
-          <h2 className={styles.howTitle}>What just happened?</h2>
-          <p className={styles.howSubtitle}>Four building blocks orchestrate every test.</p>
-        </header>
-        <div className={styles.howGrid}>
-          {howSteps.map(step => (
-            <div key={step.number} className={styles.howCard}>
-              <div className={styles.howNumber} style={{ color: step.color }}>
-                {step.number}
-              </div>
-              <div className={styles.howCardTitle}>{step.title}</div>
-              <p className={styles.howCardBody}>{step.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function TradeoffsSection(): JSX.Element {
   return (
     <section className={styles.tradeoffs}>
@@ -483,9 +448,13 @@ function TradeoffsSection(): JSX.Element {
         <div className={clsx(styles.eyebrow, styles.eyebrowBlue)}>Is it for you?</div>
         <h2 className={styles.tradeoffsTitle}>Honest tradeoffs</h2>
         <p className={styles.tradeoffsSubtitle}>
-          Atomic Testing adds a driver layer on top of RTL, Vue Test Utils and Playwright — that&apos;s a learning curve
+          Atomic Testing adds a driver layer on top of Testing Library and Playwright — that&apos;s a learning curve
           and a dependency, not a free lunch. It&apos;s a poor fit for a single throwaway component, a prototype
-          you&apos;ll never maintain, or a team unwilling to invest in the pattern up front.
+          you&apos;ll never maintain, or a team unwilling to invest in the pattern up front. Each driver call is a thin async
+          wrapper around the same Testing Library/Playwright call you&apos;d write by hand, so it adds a coordination
+          step rather than real work — and lock-in risk is low: every driver bottoms out in those same portable
+          primitives, so dropping the abstraction later means calling them directly, not rewriting your component
+          tree.
         </p>
         <div className={styles.tradeoffsLinks}>
           <Link className={styles.tradeoffsLink} to='/docs/why-atomic-testing'>
@@ -524,16 +493,18 @@ function FinalCtaSection(): JSX.Element {
 
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
+  // Shared with MagicSection so the hero install command always matches whichever
+  // framework tab the reader has selected.
+  const [activeFramework, setActiveFramework] = useState<FrameworkId>('react');
   return (
     <Layout
       title={`${siteConfig.title} — Write your UI tests once`}
-      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and the DOM.'>
+      description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and more.'>
       <main>
-        <HeroSection />
-        <MagicSection />
+        <HeroSection activeFramework={activeFramework} />
+        <MagicSection active={activeFramework} onSelect={setActiveFramework} />
         <ComposableSection />
         <HomepageFeatures />
-        <HowItWorksSection />
         <TradeoffsSection />
         <FinalCtaSection />
       </main>

@@ -1,6 +1,6 @@
 ---
 id: architecture
-sidebar_position: 3
+sidebar_position: 1
 ---
 
 import ArchitectureDiagram from '@site/src/components/ArchitectureDiagram';
@@ -35,6 +35,12 @@ from simpler ones. The engine instantiates drivers based on the `ScenePart`
 definition. Learn how to build your own drivers in
 [Build Component Driver](./build-component-driver.mdx).
 
+Two specializations extend `ComponentDriver` for shapes many UIs share:
+`ContainerDriver` for a component whose content is a caller-supplied scene
+(e.g. a dialog body), and `ListComponentDriver` for a repeated collection of
+items (e.g. a menu). See [Driver Types](../core-concepts.mdx#driver-types) in
+Core Concepts for both, with shipped examples.
+
 ## ScenePart
 
 `ScenePart` acts as a blueprint describing the parts a scene exposes&mdash;their
@@ -46,13 +52,16 @@ scenes reuse smaller ones. Refer to the
 
 Interactors perform the low level actions requested by drivers. `DOMInteractor`
 works with `@testing-library` utilities for unit/DOM tests, and is extended by
-`ReactInteractor` (which wraps every interaction in React's `act()`) and
-`VueInteractor` (which calls Vue's `nextTick()` after every interaction) so
-state settles before the next assertion. `PlaywrightInteractor` targets a real
-browser for end-to-end scenarios instead. Because drivers talk only to the
-`Interactor` interface, the same driver code can operate in any of these
-environments. See the [Interactor](./interactor.mdx) guide for details on the
-full set of available interactors and on creating custom ones.
+`ReactInteractor` (which wraps every interaction in React's `act()`),
+`VueInteractor` (which calls Vue's `nextTick()`), `AngularInteractor` (which
+awaits `ApplicationRef.whenStable()`), and `StorybookInteractor` (which drives
+a real browser via `@storybook/addon-vitest` rather than jsdom) so state
+settles before the next assertion. `PlaywrightInteractor` targets a real
+browser for end-to-end scenarios directly, without extending `DOMInteractor`.
+Because drivers talk only to the `Interactor` interface, the same driver code
+can operate in any of these environments. See the [Interactor](./interactor.mdx)
+guide for details on the full set of available interactors and on creating
+custom ones.
 
 ## Putting it all together
 

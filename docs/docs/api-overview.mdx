@@ -16,19 +16,22 @@ from the TSDoc comments in each package's source). Read this page first.
 
 The generated reference is organized **by package** — one section per
 `@atomic-testing/*` package, mirroring the `packages/` directory. Locators and
-framework adapters (React, Vue, Playwright) each get one section; the Material
-UI driver packages get one section **per MUI major version**
-(`component-driver-mui-v6`, `-v7`, `-v9`, and the MUI-X equivalents).
+framework/interactor packages (React, Vue, Angular, Playwright, Storybook) each
+get one section; the Material UI driver packages get one section **per MUI
+major version** (`component-driver-mui-v6`, `-v7`, `-v9`, and the MUI-X
+equivalents), and the Angular Material driver packages get one section **per
+Angular major** (`component-driver-angular-material-v20`, `-v21`, `-v22`) —
+same idea, different framework.
 
-Driver **behavior** is consistent across those MUI-version sections — the same
-driver names and methods exist in each, because they document the same
-component-driver API surface. What differs is the underlying MUI major version's
-DOM, which is why each major has its own package and its own generated section.
-In practice this means: **pick the section that matches the MUI major version
-your project has installed, and skip the rest** rather than reading every MUI
-version's pages. If you're not sure which major you're on, see the
-[Framework Guide](./framework-guide.mdx#-component-driver-libraries) for how to
-choose.
+Driver **behavior** is consistent across those per-major-version sections — the
+same driver names and methods exist in each, because they document the same
+component-driver API surface. What differs is the underlying library major
+version's DOM, which is why each major has its own package and its own
+generated section. In practice this means: **pick the section that matches the
+major version your project has installed, and skip the rest** rather than
+reading every version's pages. If you're not sure which major you're on, see
+the [Framework Guide](./framework-guide.mdx#-component-driver-libraries) for
+how to choose.
 
 ## Locator
 
@@ -41,6 +44,7 @@ In a nutshell, locators represent a way to find element on a page or within a te
 | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | [byDataTestId(dataTestId)](./api/@atomic-testing/core/functions/byDataTestId.md) | Locate by data-testid attribute.                                                                                       |
 | [byRole(role)](./api/@atomic-testing/core/functions/byRole.md)                   | Locate by the value of role attribute.                                                                                 |
+| [byAriaLabel(value)](./api/@atomic-testing/core/functions/byAriaLabel.md)        | Locate by the verbatim `aria-label` attribute — often composed with `byRole` to tell same-role siblings apart.         |
 | [byCssSelector(selector)](./api/@atomic-testing/core/functions/byCssSelector.md) | Locate by CSS selector.                                                                                                |
 | [byCssClass(className)](./api/@atomic-testing/core/functions/byCssClass.md)      | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily. |
 | [byAttribute(name, value)](./api/@atomic-testing/core/functions/byAttribute.md)  | Locate element by attribute                                                                                            |
@@ -124,23 +128,34 @@ pnpm add @atomic-testing/component-driver-mui-v5
 | AccordionDriver                  | Driver for Accordion component                        |
 | AlertDriver                      | Driver for Alert component                            |
 | AutoCompleteDriver               | Driver for Autocomplete component                     |
+| AvatarDriver                      | Driver for Avatar component                            |
+| AvatarGroupDriver                 | Driver for AvatarGroup component                       |
 | BadgeDriver                      | Driver for Badge component                            |
+| BottomNavigationDriver            | Driver for BottomNavigation component                  |
+| BottomNavigationActionDriver      | Driver for a single BottomNavigationAction             |
 | ButtonDriver                     | Driver for Button or any clickable component          |
 | CheckboxDriver                   | Driver for Checkbox component                         |
 | ChipDriver                       | Driver for Chip component                             |
 | DialogDriver                     | Driver for Dialog component                           |
+| DrawerDriver                      | Driver for Drawer (and SwipeableDrawer) component      |
 | FabDriver                        | Driver for Floating Action Button component           |
 | InputDriver                      | Driver for Input component and its variants           |
 | ListDriver                       | Driver for List component                             |
 | ListItemDriver                   | Driver for ListItem component                         |
 | MenuDriver                       | Driver for Menu component                             |
 | MenuItemDriver                   | Driver for MenuItem component                         |
+| PaginationDriver                  | Driver for Pagination component                        |
 | ProgressDriver                   | Driver for Progress component                         |
 | RatingDriver                     | Driver for Rating component                           |
 | SelectDriver                     | Driver for Select component                           |
 | SliderDriver                     | Driver for Slider component                           |
 | SnackbarDriver                   | Driver for Snackbar component                         |
+| SpeedDialDriver                   | Driver for SpeedDial component                         |
+| StepperDriver                     | Driver for Stepper component (steps and connectors)    |
 | SwitchDriver                     | Driver for Switch component                           |
+| TablePaginationDriver             | Driver for TablePagination component                   |
+| TabDriver                         | Driver for a single Tab                                |
+| TabsDriver                        | Driver for Tabs (located by role="tab" children)       |
 | TextFieldDriver                  | Driver for TextField component                        |
 | ToggleButtonDriver               | Driver for ToggleButton component                     |
 | ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                |
@@ -161,30 +176,38 @@ Test examples can be found in [the example folder under component-driver-mui-v6-
 | AccordionDriver                  | Driver for Accordion component                                                                   |
 | AlertDriver                      | Driver for Alert component                                                                       |
 | AutoCompleteDriver               | Driver for Autocomplete component (single selection only, multiple selection planned)            |
+| AvatarDriver                      | Driver for Avatar component                            |
+| AvatarGroupDriver                 | Driver for AvatarGroup component                       |
 | BadgeDriver                      | Driver for Badge component                                                                       |
+| BottomNavigationDriver            | Driver for BottomNavigation component                  |
+| BottomNavigationActionDriver      | Driver for a single BottomNavigationAction             |
 | ButtonDriver                     | Driver for Button or any clickable component                                                     |
 | CheckboxDriver                   | Driver for Checkbox component                                                                    |
 | ChipDriver                       | Driver for Chip component                                                                        |
 | DialogDriver                     | Driver for Dialog component                                                                      |
+| DrawerDriver                      | Driver for Drawer (and SwipeableDrawer) component      |
 | FabDriver                        | Driver for Floating Action Button component                                                      |
 | InputDriver                      | Driver for Input component and its variants                                                      |
 | ListDriver                       | Driver for List component                                                                        |
 | ListItemDriver                   | Driver for ListItem component                                                                    |
 | MenuDriver                       | Driver for Menu component                                                                        |
 | MenuItemDriver                   | Driver for MenuItem component                                                                    |
+| PaginationDriver                  | Driver for Pagination component                        |
 | ProgressDriver                   | Driver for Progress component                                                                    |
 | RatingDriver                     | Driver for Rating component                                                                      |
 | SelectDriver                     | Driver for Select component                                                                      |
 | SliderDriver                     | Driver for Slider component                                                                      |
 | SnackbarDriver                   | Driver for Snackbar component                                                                    |
+| SpeedDialDriver                   | Driver for SpeedDial component                         |
+| StepperDriver                     | Driver for Stepper component (steps and connectors)    |
 | SwitchDriver                     | Driver for Switch component                                                                      |
+| TablePaginationDriver             | Driver for TablePagination component                   |
+| TabDriver                         | Driver for a single Tab                                |
+| TabsDriver                        | Driver for Tabs (located by role="tab" children)       |
 | TextFieldDriver                  | Driver for TextField component, supports single-line, multiline and selection TextField variants |
 | ToggleButtonDriver               | Driver for ToggleButton component                                                                |
 | ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                                                           |
 | ExclusiveToggleButtonGroupDriver | Driver for ToggleButtonGroup with exclusive selection                                            |
-| DataGridProDriver                | Driver for DataGrid/DataGridPro component                                                        |
-| DataGridHeaderRowDriver          | Driver for header rows in DataGrid                                                               |
-| DataGridDataRowDriver            | Driver for data rows in DataGrid                                                                 |
 
 </details>
 ### [MUI V7](https://mui.com/material-ui/getting-started/overview/) components
@@ -223,23 +246,34 @@ pnpm add @atomic-testing/component-driver-mui-v7
 | AccordionDriver                  | Driver for Accordion component                        |
 | AlertDriver                      | Driver for Alert component                            |
 | AutoCompleteDriver               | Driver for Autocomplete component                     |
+| AvatarDriver                      | Driver for Avatar component                            |
+| AvatarGroupDriver                 | Driver for AvatarGroup component                       |
 | BadgeDriver                      | Driver for Badge component                            |
+| BottomNavigationDriver            | Driver for BottomNavigation component                  |
+| BottomNavigationActionDriver      | Driver for a single BottomNavigationAction             |
 | ButtonDriver                     | Driver for Button or any clickable component          |
 | CheckboxDriver                   | Driver for Checkbox component                         |
 | ChipDriver                       | Driver for Chip component                             |
 | DialogDriver                     | Driver for Dialog component                           |
+| DrawerDriver                      | Driver for Drawer (and SwipeableDrawer) component      |
 | FabDriver                        | Driver for Floating Action Button component           |
 | InputDriver                      | Driver for Input component and its variants           |
 | ListDriver                       | Driver for List component                             |
 | ListItemDriver                   | Driver for ListItem component                         |
 | MenuDriver                       | Driver for Menu component                             |
 | MenuItemDriver                   | Driver for MenuItem component                         |
+| PaginationDriver                  | Driver for Pagination component                        |
 | ProgressDriver                   | Driver for Progress component                         |
 | RatingDriver                     | Driver for Rating component                           |
 | SelectDriver                     | Driver for Select component                           |
 | SliderDriver                     | Driver for Slider component                           |
 | SnackbarDriver                   | Driver for Snackbar component                         |
+| SpeedDialDriver                   | Driver for SpeedDial component                         |
+| StepperDriver                     | Driver for Stepper component (steps and connectors)    |
 | SwitchDriver                     | Driver for Switch component                           |
+| TablePaginationDriver             | Driver for TablePagination component                   |
+| TabDriver                         | Driver for a single Tab                                |
+| TabsDriver                        | Driver for Tabs (located by role="tab" children)       |
 | TextFieldDriver                  | Driver for TextField component                        |
 | ToggleButtonDriver               | Driver for ToggleButton component                     |
 | ToggleButtonGroupDriver          | Driver for ToggleButtonGroup component                |
@@ -280,15 +314,18 @@ pnpm add @atomic-testing/component-driver-mui-v9
 </Tabs>
 
 The v9 package exposes the **same driver set as v7** (validated against MUI 9's DOM)
-plus three additional drivers. See the generated
+plus six additional drivers. See the generated
 [API reference](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-mui-v9/src/components)
 for the full list; the net-new drivers are:
 
-| Driver           | Description                                              |
-| ---------------- | -------------------------------------------------------- |
-| RadioGroupDriver | Driver for RadioGroup (with per-option `RadioDriver`)    |
-| TableDriver      | Driver for Table (rows/cells via `TableRowDriver`, sort) |
-| TooltipDriver    | Driver for Tooltip (hover-to-reveal title)               |
+| Driver           | Description                                       |
+| ---------------- | -------------------------------------------------- |
+| RadioDriver      | Driver for a single Radio (see RadioGroupDriver)   |
+| RadioGroupDriver | Driver for RadioGroup (with per-option RadioDriver) |
+| TableDriver      | Driver for Table (rows/cells, sort)                |
+| TableRowDriver   | Driver for a single Table row (see TableDriver)    |
+| TableCellDriver  | Driver for a single Table cell (see TableDriver)   |
+| TooltipDriver    | Driver for Tooltip (hover-to-reveal title)          |
 
 </details>
 ### [MUI X V5](https://mui.com/x/) components
@@ -299,8 +336,10 @@ frozen at `0.81.0`: it stays installable but receives no fixes, new drivers, or
 CI/e2e coverage. Its source and full history now live in
 [atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/component-driver-mui-v5).
 For DataGrid, migrate to `-x-v6`/`-x-v7`/`-x-v8`/`-x-v9`. Note
-that the date/time **picker** drivers ship only in this v5 package and were
-never carried forward to a supported major. Rationale:
+that v5's full date/time **picker** driver set (range, time, mobile and
+dialog variants) was not carried forward to v6/v7/v8; v9 reintroduced a
+single picker driver, `DesktopDatePickerDriver` (see below), but not the rest
+of v5's set. Rationale:
 [ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
 :::
 
@@ -500,9 +539,459 @@ pnpm add @atomic-testing/component-driver-mui-x-v9
 | DataGridPremiumDriver          | Driver for DataGrid / DataGridPro / DataGridPremium component    |
 | DataGridHeaderRowDriver        | Driver for header rows in DataGrid                               |
 | DataGridDataRowDriver          | Driver for data rows in DataGrid                                 |
-| DataGridFooterDriver           | Driver for the DataGrid footer (pagination)                      |
-| DataGridPaginationActionDriver | Driver for the footer next/previous pagination controls          |
 | DesktopDatePickerDriver        | Read-capable driver for DesktopDatePicker (v9 section field)     |
 | SimpleTreeViewDriver           | Driver for SimpleTreeView / RichTreeView (expand/collapse, read) |
 
 </details>
+
+### [Astryx](https://github.com/facebook/astryx) components
+
+<details>
+  <summary>Component list</summary>
+
+Package: [@atomic-testing/component-driver-astryx](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-astryx/src/components)
+
+Test examples can be found in [the example folder under component-driver-astryx-test package](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-astryx-test/src/examples)
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-astryx
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-astryx
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-astryx
+```
+
+</TabItem>
+</Tabs>
+
+| Driver | Description |
+| --- | --- |
+| AlertDialogDriver | Driver for AlertDialog component |
+| AppShellDriver | Driver for AppShell (page layout shell) component |
+| AstryxComboboxDriver | Shared base for the combobox family (Selector, MultiSelector, Typeahead, Tokenizer) |
+| AstryxFieldInputDriver | Shared base for single-control field inputs (TextInput, NumberInput, TimeInput, TextArea) |
+| AstryxMenuDriver | Shared base for the menu family (NavMenu, DropdownMenu, MoreMenu) |
+| AvatarDriver | Driver for Avatar component |
+| AvatarGroupDriver | Driver for AvatarGroup component |
+| BadgeDriver | Driver for Badge component |
+| BannerDriver | Driver for Banner component |
+| BlockquoteDriver | Driver for Blockquote component |
+| BreadcrumbItemDriver | Driver for a single Breadcrumbs item |
+| BreadcrumbsDriver | Driver for Breadcrumbs component |
+| ButtonDriver | Driver for Button or any clickable component |
+| ButtonGroupDriver | Driver for ButtonGroup component |
+| CalendarDriver | Driver for Calendar component |
+| CarouselDriver | Driver for Carousel component |
+| ChatComposerDriver | Driver for the ChatComposer (message input shell) |
+| ChatComposerInputDriver | Driver for the ChatComposer's text input |
+| ChatDictationButtonDriver | Driver for the ChatComposer's dictation (voice input) button |
+| ChatLayoutDriver | Driver for the ChatLayout (chat page shell) |
+| ChatMessageBubbleDriver | Driver for a chat message's bubble content container |
+| ChatMessageDriver | Driver for a single ChatMessage |
+| ChatMessageListDriver | Driver for the ChatMessageList (scrollable message list) |
+| ChatSendButtonDriver | Driver for the ChatComposer's send button |
+| ChatSystemMessageDriver | Driver for a ChatSystemMessage (system/status message) |
+| ChatToolCallsDriver | Driver for a chat message's tool/function call block |
+| CheckboxInputDriver | Driver for CheckboxInput component |
+| CheckboxListDriver | Driver for CheckboxList component |
+| CheckboxListItemDriver | Driver for a single CheckboxList row |
+| CitationDriver | Driver for the inline Citation component |
+| CodeBlockDriver | Driver for CodeBlock component |
+| CodeDriver | Driver for the inline Code component |
+| CollapsibleDriver | Driver for Collapsible component |
+| CommandPaletteDriver | Driver for CommandPalette component |
+| ContextMenuDriver | Driver for ContextMenu component |
+| DateInputDriver | Driver for DateInput component |
+| DateRangeInputDriver | Driver for DateRangeInput component |
+| DateTimeInputDriver | Driver for DateTimeInput component |
+| DialogDriver | Driver for Dialog component |
+| DividerDriver | Driver for Divider component |
+| DropdownMenuDriver | Driver for DropdownMenu component (also exports `MoreMenuDriver`) |
+| EmptyStateDriver | Driver for EmptyState component |
+| FieldDriver | Driver for Field (label/description/status wrapper) component |
+| FieldStatusDriver | Driver for a Field's status message |
+| FileInputDriver | Driver for FileInput component |
+| HeadingDriver | Driver for the semantic Heading component |
+| HoverCardDriver | Driver for HoverCard component |
+| IconButtonDriver | Driver for IconButton component |
+| InputGroupDriver | Driver for InputGroup component |
+| ItemDriver | Driver for the generic Item component |
+| LinkDriver | Driver for Link component |
+| ListDriver | Driver for List component |
+| ListItemDriver | Driver for a single List row |
+| MarkdownDriver | Driver for Markdown component |
+| MenuItemDriver | Driver for a single menu item (shared by the menu family) |
+| MetadataListDriver | Driver for MetadataList component |
+| MobileNavDriver | Driver for MobileNav component |
+| MultiSelectorDriver | Driver for MultiSelector (multi-select combobox) component |
+| NavIconDriver | Driver for NavIcon component |
+| NavMenuDriver | Driver for NavMenu component |
+| NumberInputDriver | Driver for NumberInput component |
+| OutlineDriver | Driver for Outline (table-of-contents) component |
+| OutlineItemDriver | Driver for a single Outline entry |
+| PaginationDriver | Driver for Pagination component |
+| PopoverDriver | Driver for Popover component |
+| PowerSearchDriver | Driver for PowerSearch component (best-effort v1) |
+| ProgressBarDriver | Driver for ProgressBar component |
+| RadioListDriver | Driver for RadioList component |
+| SegmentedControlDriver | Driver for SegmentedControl component |
+| SelectableCardDriver | Driver for SelectableCard component |
+| SelectorDriver | Driver for Selector (single-select combobox) component |
+| SideNavDriver | Driver for SideNav component |
+| SideNavItemDriver | Driver for a single SideNav item |
+| SliderDriver | Driver for Slider component (single-thumb) |
+| SpinnerDriver | Driver for Spinner component |
+| StatusDotDriver | Driver for StatusDot component |
+| SwitchDriver | Driver for Switch component |
+| TabDriver | Driver for a single Tab (within TabList) |
+| TabListDriver | Driver for TabList component |
+| TableDriver | Driver for Table component |
+| TextAreaDriver | Driver for TextArea component |
+| TextDriver | Driver for the semantic Text component |
+| TextInputDriver | Driver for TextInput component |
+| ThumbnailDriver | Driver for Thumbnail component |
+| TimeInputDriver | Driver for TimeInput component |
+| TimestampDriver | Driver for the semantic Timestamp component |
+| ToastDriver | Driver for Toast component |
+| ToggleButtonDriver | Driver for ToggleButton component |
+| ToggleButtonGroupDriver | Driver for ToggleButtonGroup component |
+| TokenDriver | Driver for Token (chip/tag) component |
+| TokenizerDriver | Driver for Tokenizer (multi-token input) component |
+| ToolbarDriver | Driver for Toolbar component |
+| TooltipDriver | Driver for Tooltip component |
+| TopNavDriver | Driver for TopNav component |
+| TopNavItemDriver | Driver for a single TopNav item |
+| TopNavMegaMenuDriver | Driver for a TopNav mega menu |
+| TopNavMenuDriver | Driver for a TopNav menu |
+| TreeListDriver | Driver for TreeList component |
+| TypeaheadDriver | Driver for Typeahead component |
+
+</details>
+
+### [Radix UI](https://www.radix-ui.com/primitives) components
+
+<details>
+  <summary>Component list</summary>
+
+Package: [@atomic-testing/component-driver-radix-v1](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-radix-v1/src/components)
+
+Test examples can be found in [the example folder under component-driver-radix-test package](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-radix-test/src/examples)
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-radix-v1
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-radix-v1
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-radix-v1
+```
+
+</TabItem>
+</Tabs>
+
+| Driver | Description |
+| --- | --- |
+| AccordionDriver | Driver for a single Accordion item |
+| AlertDialogDriver | Driver for AlertDialog (a modal that demands explicit confirmation) |
+| AspectRatioDriver | Driver for AspectRatio component |
+| AvatarDriver | Driver for Avatar component |
+| CheckboxDriver | Driver for Checkbox component |
+| CollapsibleDriver | Driver for Collapsible component |
+| ComboboxDriver | Driver for Combobox (the `cmdk`-powered command menu) |
+| ComboboxOptionDriver | Driver for a single Combobox option |
+| ContextMenuDriver | Driver for ContextMenu component |
+| DialogDriver | Driver for Dialog component |
+| DropdownMenuDriver | Driver for DropdownMenu component |
+| HoverCardDriver | Driver for HoverCard component |
+| LabelDriver | Driver for Label component |
+| MenubarDriver | Driver for the Menubar bar itself |
+| MenubarMenuDriver | Driver for one Menubar menu (trigger + content) |
+| MenuContentDriverBase | Shared item operations for the menu-content family (DropdownMenu, ContextMenu, Menubar, NavigationMenu) |
+| MenuItemDriver | Driver for a single labelled menu item |
+| NavigationMenuDriver | Driver for the NavigationMenu root |
+| NavigationMenuItemDriver | Driver for one expandable NavigationMenu item |
+| OneTimePasswordFieldDriver | Driver for OneTimePasswordField (OTP input) component |
+| PasswordToggleFieldDriver | Driver for PasswordToggleField component |
+| PopoverDriver | Driver for Popover component |
+| ProgressDriver | Driver for Progress component |
+| RadioGroupDriver | Driver for RadioGroup component |
+| RadioGroupItemDriver | Driver for a single RadioGroup item |
+| ScrollAreaDriver | Driver for ScrollArea component |
+| SelectDriver | Driver for Select component |
+| SeparatorDriver | Driver for Separator component |
+| SliderDriver | Driver for Slider component |
+| SwitchDriver | Driver for Switch component |
+| TabDriver | Driver for a single Tabs trigger |
+| TabsDriver | Driver for the Tabs root |
+| ToastDriver | Driver for a single Toast |
+| ToggleDriver | Driver for Toggle component |
+| ToggleGroupDriver | Driver for ToggleGroup component |
+| ToolbarDriver | Driver for Toolbar component |
+| TooltipDriver | Driver for Tooltip component |
+
+</details>
+
+### [shadcn/ui](https://ui.shadcn.com/) components
+
+`component-driver-shadcn-v1` is a **pure re-export** of `component-driver-radix-v1`:
+shadcn/ui components are styled Radix primitives, so their DOM — and therefore
+their drivers — is identical. It re-exports (rather than subclasses or copies)
+so that `instanceof` agrees across both package names, and it tracks
+`component-driver-radix-v1`'s major version in lockstep. Use whichever package
+name matches your dependency tree; the driver set is the one documented in the
+[Radix UI section](#radix-ui-components) above, unchanged.
+
+<details>
+  <summary>Install</summary>
+
+Package: [@atomic-testing/component-driver-shadcn-v1](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-shadcn-v1/src)
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-shadcn-v1
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-shadcn-v1
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-shadcn-v1
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+### [Angular Material](https://material.angular.dev/) components
+
+Angular Material driver behavior is consistent across the three sections below
+— same driver names and methods — because they document the same
+component-driver API surface targeting different Angular majors. Pick the
+section matching your installed Angular major and skip the rest.
+
+#### Angular Material V20
+
+<details>
+  <summary>Component list</summary>
+
+Package: [@atomic-testing/component-driver-angular-material-v20](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-angular-material-v20/src/components)
+
+Test examples can be found in [the example folder under component-driver-angular-material-v20-test package](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-angular-material-v20-test/src/examples)
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-angular-material-v20
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-angular-material-v20
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-angular-material-v20
+```
+
+</TabItem>
+</Tabs>
+
+| Driver | Description |
+| --- | --- |
+| AutocompleteDriver | Driver for the `MatAutocomplete` autocomplete |
+| ButtonDriver | Driver for the `MatButton` button or any clickable component |
+| CheckboxDriver | Driver for the `MatCheckbox` checkbox |
+| DialogDriver | Driver for a dialog opened through the `MatDialog` service |
+| InputDriver | Driver for a `MatInput` text field hosted in a `MatFormField` |
+| MenuDriver | Driver for the `MatMenu` menu |
+| MenuItemDriver | Driver for a single `MatMenu` item |
+| OptionDriver | Driver for a single `mat-option` inside an open select/autocomplete panel |
+| RadioButtonDriver | Driver for a single `MatRadioButton` |
+| RadioGroupDriver | Driver for the `MatRadioGroup` radio group |
+| SelectDriver | Driver for the `MatSelect` select |
+| SlideToggleDriver | Driver for the `MatSlideToggle` slide toggle |
+| SnackbarDriver | Driver for a snackbar opened through the `MatSnackBar` service |
+| TabDriver | Driver for a single `MatTab` label |
+| TableDriver | Driver for the `MatTable` table |
+| TableRowDriver | Driver for one data row of a `MatTable` |
+| TabsDriver | Driver for the `MatTabGroup` tab group |
+
+</details>
+
+#### Angular Material V21
+
+<details>
+  <summary>Component list</summary>
+
+Package: [@atomic-testing/component-driver-angular-material-v21](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-angular-material-v21/src/components)
+
+Test examples can be found in [the example folder under component-driver-angular-material-v21-test package](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-angular-material-v21-test/src/examples)
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-angular-material-v21
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-angular-material-v21
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-angular-material-v21
+```
+
+</TabItem>
+</Tabs>
+
+| Driver | Description |
+| --- | --- |
+| AutocompleteDriver | Driver for the `MatAutocomplete` autocomplete |
+| ButtonDriver | Driver for the `MatButton` button or any clickable component |
+| CheckboxDriver | Driver for the `MatCheckbox` checkbox |
+| DialogDriver | Driver for a dialog opened through the `MatDialog` service |
+| InputDriver | Driver for a `MatInput` text field hosted in a `MatFormField` |
+| MenuDriver | Driver for the `MatMenu` menu |
+| MenuItemDriver | Driver for a single `MatMenu` item |
+| OptionDriver | Driver for a single `mat-option` inside an open select/autocomplete panel |
+| RadioButtonDriver | Driver for a single `MatRadioButton` |
+| RadioGroupDriver | Driver for the `MatRadioGroup` radio group |
+| SelectDriver | Driver for the `MatSelect` select |
+| SlideToggleDriver | Driver for the `MatSlideToggle` slide toggle |
+| SnackbarDriver | Driver for a snackbar opened through the `MatSnackBar` service |
+| TabDriver | Driver for a single `MatTab` label |
+| TableDriver | Driver for the `MatTable` table |
+| TableRowDriver | Driver for one data row of a `MatTable` |
+| TabsDriver | Driver for the `MatTabGroup` tab group |
+
+</details>
+
+#### Angular Material V22
+
+<details>
+  <summary>Component list</summary>
+
+Package: [@atomic-testing/component-driver-angular-material-v22](https://github.com/atomic-testing/atomic-testing/tree/main/packages/component-driver-angular-material-v22/src/components)
+
+Test examples can be found in [the example folder under component-driver-angular-material-v22-test package](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-angular-material-v22-test/src/examples)
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install @atomic-testing/component-driver-angular-material-v22
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add @atomic-testing/component-driver-angular-material-v22
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @atomic-testing/component-driver-angular-material-v22
+```
+
+</TabItem>
+</Tabs>
+
+| Driver | Description |
+| --- | --- |
+| AutocompleteDriver | Driver for the `MatAutocomplete` autocomplete |
+| ButtonDriver | Driver for the `MatButton` button or any clickable component |
+| CheckboxDriver | Driver for the `MatCheckbox` checkbox |
+| DialogDriver | Driver for a dialog opened through the `MatDialog` service |
+| InputDriver | Driver for a `MatInput` text field hosted in a `MatFormField` |
+| MenuDriver | Driver for the `MatMenu` menu |
+| MenuItemDriver | Driver for a single `MatMenu` item |
+| OptionDriver | Driver for a single `mat-option` inside an open select/autocomplete panel |
+| RadioButtonDriver | Driver for a single `MatRadioButton` |
+| RadioGroupDriver | Driver for the `MatRadioGroup` radio group |
+| SelectDriver | Driver for the `MatSelect` select |
+| SlideToggleDriver | Driver for the `MatSlideToggle` slide toggle |
+| SnackbarDriver | Driver for a snackbar opened through the `MatSnackBar` service |
+| TabDriver | Driver for a single `MatTab` label |
+| TableDriver | Driver for the `MatTable` table |
+| TableRowDriver | Driver for one data row of a `MatTable` |
+| TabsDriver | Driver for the `MatTabGroup` tab group |
+
+</details>
+
+## Framework & Interactor Packages
+
+These packages are not component-driver libraries — they don't expose a table
+of per-component drivers. Instead each implements the `Interactor` (or, for
+`core`/`dom-core`, the abstractions the `Interactor` builds on) for one
+environment: creating the `TestEngine`, rendering/bootstrapping the component
+under test, and wrapping driver calls with the environment's reactivity model
+(React's `act()`, Vue's `nextTick()`, Angular's `bootstrapApplication`). See
+the [Framework Guide](./framework-guide.mdx) for help choosing between them;
+each row below links into its generated API section for the full method list.
+
+| Package | Purpose |
+| --- | --- |
+| [@atomic-testing/core](./api/@atomic-testing/core/index.md) | Core abstractions every other package builds on: `ComponentDriver`, the `Interactor` interface, `partTypes`, and the locator builders. |
+| [@atomic-testing/dom-core](./api/@atomic-testing/dom-core/index.md) | `DOMInteractor` — the base DOM implementation extended by the React, Vue, Angular and Storybook interactors. |
+| [@atomic-testing/react-core](./api/@atomic-testing/react-core/index.md) | Shared `ReactInteractor` + `createTestEngine` implementation (wraps calls in `act()`); `react-18`/`react-19`/`react-legacy` re-export it pinned to a React peer range. |
+| [@atomic-testing/react-18](./api/@atomic-testing/react-18/index.md) | `createTestEngine` for React 18 — thin re-export of `react-core` (ADR-003). |
+| [@atomic-testing/react-19](./api/@atomic-testing/react-19/index.md) | `createTestEngine` for React 19 — thin re-export of `react-core` (ADR-003). |
+| [@atomic-testing/react-legacy](./api/@atomic-testing/react-legacy/index.md) | Adapter for testing React 17 and earlier. |
+| [@atomic-testing/vue-3](./api/@atomic-testing/vue-3/index.md) | `VueInteractor` + `createTestEngine` (calls `nextTick()`) for Vue 3 apps. |
+| [@atomic-testing/angular-core](./api/@atomic-testing/angular-core/index.md) | `AngularInteractor` + the `bootstrapApplication`-based async `createTestEngine` (ADR-013); install the per-major package instead of depending on this directly. |
+| [@atomic-testing/angular-20](./api/@atomic-testing/angular-20/index.md) | `createTestEngine` for Angular 20 — thin re-export of `angular-core` pinned to the Angular 20 peer range. |
+| [@atomic-testing/angular-21](./api/@atomic-testing/angular-21/index.md) | `createTestEngine` for Angular 21 — thin re-export of `angular-core` pinned to the Angular 21 peer range. |
+| [@atomic-testing/angular-22](./api/@atomic-testing/angular-22/index.md) | `createTestEngine` for Angular 22 — thin re-export of `angular-core` pinned to the Angular 22 peer range. |
+| [@atomic-testing/playwright](./api/@atomic-testing/playwright/index.md) | `PlaywrightInteractor` — browser automation, used for E2E tests across all supported frameworks. |
+| [@atomic-testing/storybook](./api/@atomic-testing/storybook/index.md) | `StorybookInteractor` + play-function helpers for testing Storybook 10 stories. |

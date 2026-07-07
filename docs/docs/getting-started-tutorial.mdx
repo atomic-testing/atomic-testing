@@ -6,6 +6,7 @@ sidebar_position: 5
 
 import loginFormDriver from '!!raw-loader!./snippets/login-form-driver-html';
 import signupE2e from '!!raw-loader!./snippets/signup-form-e2e.spec';
+import jestConfigSnippet from '!!raw-loader!./snippets/jest.config.snippet';
 import CodeBlock from '@theme/CodeBlock';
 
 This tutorial builds one complete, runnable **Atomic Testing** test from scratch using the canonical stack — `@atomic-testing/react-19` + `@atomic-testing/component-driver-html` + Jest — the same stack introduced in [Quick Start](./quick-start.mdx). Component drivers work the same way in isolated unit tests or full browser tests, so everything you see here applies to both.
@@ -16,6 +17,10 @@ Once you have a green test, the tutorial shows how to wrap a component library l
 
 ```bash
 pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html
+
+# react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
+
 pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 ```
 
@@ -23,18 +28,13 @@ pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 
 ## 2. Configure Jest
 
-```js title="jest.config.js"
-/** @type {import('jest').Config} */
-module.exports = {
-  testEnvironment: 'jsdom',
-  transform: {
-    '^.+\\.tsx?$': ['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }],
-  },
-  // ReactInteractor wraps every interaction in React's act(); this flag stops
-  // React from logging spurious "not wrapped in act(...)" warnings.
-  globals: { IS_REACT_ACT_ENVIRONMENT: true },
-};
-```
+<CodeBlock language='js' title='jest.config.js'>{jestConfigSnippet}</CodeBlock>
+
+:::info CommonJS vs. ESM
+`jest.config.js` uses `module.exports`, Jest's CommonJS config format. If your `package.json` has
+`"type": "module"` (common with a Vite-scaffolded project), either rename the file to
+`jest.config.cjs`, or switch to `export default { ... }` in a `jest.config.mjs`.
+:::
 
 ## 3. Write the component under test
 
@@ -140,20 +140,29 @@ With the `login()` helper, tests stay declarative and don't depend on the form's
 Because drivers depend only on the `Interactor` abstraction, the exact same `loginFormScene` from step 4 works against a real browser page — you just create the engine with `@atomic-testing/playwright`'s `createTestEngine(page, ...)` instead of React's. As covered in the [Playwright notes on Quick Start](./quick-start.mdx), this requires an actual page served by your app (Playwright drives a real browser, not jsdom) — configure `webServer`/`baseURL` in `playwright.config.ts` to point at it:
 
 ```ts title="login.e2e.spec.ts"
+import { TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/playwright';
 import { test, expect } from '@playwright/test';
 
 import { loginFormScene } from './LoginForm.scene';
 
-test('enables submit once a username is entered', async ({ page }) => {
-  await page.goto('/login'); // a route your app actually serves
-  const engine = createTestEngine(page, loginFormScene);
+test.describe('LoginForm', () => {
+  let engine: TestEngine<typeof loginFormScene>;
 
-  expect(await engine.parts.submit.isDisabled()).toBe(true);
-  await engine.parts.username.setValue('ada');
-  expect(await engine.parts.submit.isDisabled()).toBe(false);
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login'); // a route your app actually serves
+    engine = createTestEngine(page, loginFormScene);
+  });
 
-  await engine.cleanUp();
+  test.afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  test('enables submit once a username is entered', async () => {
+    expect(await engine.parts.submit.isDisabled()).toBe(true);
+    await engine.parts.username.setValue('ada');
+    expect(await engine.parts.submit.isDisabled()).toBe(false);
+  });
 });
 ```
 
@@ -227,6 +236,10 @@ Some components contain Storybook stories with interaction tests:
 ```bash
 pnpm storybook
 ```
+
+To drive those stories with the same component drivers used here — inside
+Storybook's play functions and under `@storybook/addon-vitest` — see
+[Testing in Storybook](./guides/testing-in-storybook.md).
 
 ### Write an end-to-end test
 

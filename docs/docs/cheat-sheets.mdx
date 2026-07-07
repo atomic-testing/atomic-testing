@@ -64,7 +64,25 @@ export class LoggingInteractor extends DOMInteractor {
 }
 ```
 
-Pass this interactor when creating the test engine so clicks are logged.
+None of the `createTestEngine` factories (`@atomic-testing/react-18`/`react-19`,
+`vue-3`, `angular-20`/`-21`/`-22`, `playwright`, `dom-core`) accept a custom
+interactor — each hardcodes its own. To use `LoggingInteractor` instead,
+construct `TestEngine` (`packages/core/src/TestEngine.ts`) directly, the same
+way `@atomic-testing/dom-core`'s `createTestEngine` does internally, but with
+your interactor swapped in for `DOMInteractor`:
+
+```ts
+import { TestEngine } from '@atomic-testing/core';
+
+import { LoggingInteractor } from './LoggingInteractor';
+
+// `element` is whatever root node your component was already rendered into.
+const testEngine = new TestEngine([], new LoggingInteractor(element), { parts: partDefinitions });
+```
+
+See [The Interactor](./advanced-concepts/interactor.mdx#building-an-interactor)
+for the React/Vue equivalent if your interactor needs `act()`/`nextTick()`
+wrapping.
 
 ### 5. Clean up after each test
 

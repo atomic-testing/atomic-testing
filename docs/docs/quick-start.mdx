@@ -19,7 +19,10 @@ import Tabs from '@theme/Tabs';
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
+
+# react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
 ```
 
 On React 18 or React 17, swap in `@atomic-testing/react-18` or `@atomic-testing/react-legacy` — see the [Package Guide](./framework-guide.mdx) for the full matrix. Testing Material UI or another component library instead of plain HTML elements? See [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui).
@@ -34,7 +37,7 @@ This test needs a jsdom-based runner (Jest or Vitest) with `IS_REACT_ACT_ENVIRON
 import { useState } from 'react';
 
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/react-19';
 
 // Component to test
@@ -58,19 +61,33 @@ const welcomeScene = {
 };
 
 // Test
-it('should welcome the user when clicked', async () => {
-  const engine = createTestEngine(<WelcomeButton name='Alice' />, welcomeScene);
+describe('WelcomeButton', () => {
+  let engine: TestEngine<typeof welcomeScene>;
 
-  // Check initial state
-  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
-  expect(await engine.parts.button.getText()).toBe('Click me');
+  beforeEach(() => {
+    engine = createTestEngine(<WelcomeButton name='Alice' />, welcomeScene);
+  });
 
-  // Interact and verify
-  await engine.parts.button.click();
-  expect(await engine.parts.button.getText()).toBe('Welcome!');
+  afterEach(async () => {
+    await engine.cleanUp();
+  });
 
-  await engine.cleanUp();
+  it('should welcome the user when clicked', async () => {
+    // Check initial state
+    expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+    expect(await engine.parts.button.getText()).toBe('Click me');
+
+    // Interact and verify
+    await engine.parts.button.click();
+    expect(await engine.parts.button.getText()).toBe('Welcome!');
+  });
 });
+```
+
+Run it:
+
+```bash
+npx jest
 ```
 
 </TabItem>
@@ -79,7 +96,13 @@ it('should welcome the user when clicked', async () => {
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html
+
+# vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
+
+# the test runner itself
+pnpm add -D vitest jsdom
 ```
 
 :::info Before you run this
@@ -89,9 +112,15 @@ Vue tests run under [Vitest](https://vitest.dev) with the `jsdom` environment:
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  test: { environment: 'jsdom' },
+  test: { environment: 'jsdom', globals: true },
 });
 ```
+
+`globals: true` puts `describe`/`it`/`expect`/`beforeEach`/`afterEach` in scope without an
+explicit `import { ... } from 'vitest'` in every test file, matching Jest's default behavior
+so the example below runs as shown. Prefer explicit imports instead? Add
+`import { describe, it, expect, beforeEach, afterEach } from 'vitest';` to the test file and
+drop this flag.
 
 Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInteractor` calls Vue's own `nextTick()` internally. See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the Jest equivalent if you're testing React elsewhere in the same repo.
 :::
@@ -100,50 +129,65 @@ Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInt
 
 ```typescript
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/vue-3';
 import { ref } from 'vue';
 
-// Component to test (SFC-like)
-const WelcomeButton = {
-  props: {
-    name: { type: String, default: 'Alice' },
-  },
-  template: `
-    <div>
-      <h1 data-testid="greeting">Hello {{ name }}!</h1>
-      <button 
-        data-testid="welcome-btn" 
-        @click="handleClick"
-      >
-        {{ clicked ? 'Welcome!' : 'Click me' }}
-      </button>
-    </div>
-  `,
-  setup() {
-    const clicked = ref(false);
-    const handleClick = () => (clicked.value = true);
-    return { clicked, handleClick };
-  },
-};
+// Component to test (SFC-like). createTestEngine() doesn't forward props into
+// the rendered component, so — unlike React's <WelcomeButton name="Alice" /> —
+// parametrize via a closure instead of a Vue `props` schema.
+function makeWelcomeButton(name: string) {
+  return {
+    template: `
+      <div>
+        <h1 data-testid="greeting">Hello ${name}!</h1>
+        <button 
+          data-testid="welcome-btn" 
+          @click="handleClick"
+        >
+          {{ clicked ? 'Welcome!' : 'Click me' }}
+        </button>
+      </div>
+    `,
+    setup() {
+      const clicked = ref(false);
+      const handleClick = () => (clicked.value = true);
+      return { clicked, handleClick };
+    },
+  };
+}
 
-// Test setup (identical to React!)
+// Test setup (same shape as React!)
 const welcomeScene = {
   greeting: { locator: byDataTestId('greeting'), driver: HTMLElementDriver },
   button: { locator: byDataTestId('welcome-btn'), driver: HTMLButtonDriver },
 };
 
-// Test (identical to React!)
-it('should welcome the user when clicked', async () => {
-  const engine = createTestEngine(WelcomeButton, welcomeScene);
+// Test (same logic as React!)
+describe('WelcomeButton', () => {
+  let engine: TestEngine<typeof welcomeScene>;
 
-  // Same test logic as React version ✨
-  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
-  await engine.parts.button.click();
-  expect(await engine.parts.button.getText()).toBe('Welcome!');
+  beforeEach(() => {
+    engine = createTestEngine(makeWelcomeButton('Alice'), welcomeScene);
+  });
 
-  await engine.cleanUp();
+  afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  it('should welcome the user when clicked', async () => {
+    // Same test logic as React version ✨
+    expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+    await engine.parts.button.click();
+    expect(await engine.parts.button.getText()).toBe('Welcome!');
+  });
 });
+```
+
+Run it:
+
+```bash
+npx vitest run
 ```
 
 </TabItem>
@@ -152,7 +196,13 @@ it('should welcome the user when clicked', async () => {
 ## Installation
 
 ```bash
-pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html
+
+# playwright's peer dependency — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D @playwright/test
+
+# Playwright drives real browsers — install the binaries once per machine/CI image
+npx playwright install --with-deps
 ```
 
 :::info DOM tests vs. Playwright tests
@@ -179,7 +229,7 @@ export default defineConfig({
 
 ```typescript
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
-import { byDataTestId } from '@atomic-testing/core';
+import { byDataTestId, TestEngine } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/playwright';
 import { test, expect } from '@playwright/test';
 
@@ -192,20 +242,34 @@ const welcomeScene = {
 // Assumes a served page at "/welcome" that renders a WelcomeButton with
 // name="Alice" (see the caveat above) — this is illustrative, not copy-paste
 // runnable against an empty project.
-test('should welcome the user when clicked', async ({ page }) => {
-  // Navigate to your app (driven by baseURL from playwright.config.ts)
-  await page.goto('/welcome');
+test.describe('WelcomeButton', () => {
+  let engine: TestEngine<typeof welcomeScene>;
 
-  // Create test engine with same scene
-  const engine = createTestEngine(page, welcomeScene);
+  test.beforeEach(async ({ page }) => {
+    // Navigate to your app (driven by baseURL from playwright.config.ts)
+    await page.goto('/welcome');
 
-  // Same test logic as React/Vue versions ✨
-  expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
-  await engine.parts.button.click();
-  expect(await engine.parts.button.getText()).toBe('Welcome!');
+    // Create test engine with same scene
+    engine = createTestEngine(page, welcomeScene);
+  });
 
-  await engine.cleanUp();
+  test.afterEach(async () => {
+    await engine.cleanUp();
+  });
+
+  test('should welcome the user when clicked', async () => {
+    // Same test logic as React/Vue versions ✨
+    expect(await engine.parts.greeting.getText()).toBe('Hello Alice!');
+    await engine.parts.button.click();
+    expect(await engine.parts.button.getText()).toBe('Welcome!');
+  });
 });
+```
+
+Once your app is served at the configured `baseURL`, run it:
+
+```bash
+npx playwright test
 ```
 
 </TabItem>

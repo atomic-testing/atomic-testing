@@ -25,7 +25,7 @@ tests can run in React, Vue, Playwright, Cypress and more.
 ## Example
 
 ```tsx
-import { TextFieldDriver, ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
+import { TextFieldDriver, ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
 import { byDataTestId, ScenePart } from '@atomic-testing/core';
 import { createTestEngine } from '@atomic-testing/react-19';
 

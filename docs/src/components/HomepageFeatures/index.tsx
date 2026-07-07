@@ -16,7 +16,7 @@ const featureList: FeatureItem[] = [
     iconVariant: 'blue',
     title: 'Write once, test everywhere',
     description:
-      'The same test code works across React, Vue, Playwright and DOM testing. Learn once, test any UI framework.',
+      'The same driver and assertion code works across React, Vue and Playwright — plus Angular (async setup), Storybook, and plain DOM tests. Learn once, test any UI framework.',
   },
   {
     icon: '🎯',
@@ -34,7 +34,7 @@ const featureList: FeatureItem[] = [
     iconVariant: 'blue',
     title: 'Framework-agnostic drivers',
     description:
-      'Reuse component drivers across Material-UI, Bootstrap and custom components. Component library changes don’t break your tests.',
+      'Reuse component drivers across Material-UI, Radix, shadcn/ui and custom components. Component library changes don’t break your tests.',
   },
   {
     icon: '🛡️',
