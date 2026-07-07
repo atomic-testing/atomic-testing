@@ -34,7 +34,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
-    "@mui/system": "^9.0.0",
+    "@mui/system": "^9.2.0",
     "@mui/x-charts": "^9.7.0",
     "@mui/x-data-grid-generator": "^9.7.0",
     "@mui/x-data-grid-premium": "^9.7.0",
