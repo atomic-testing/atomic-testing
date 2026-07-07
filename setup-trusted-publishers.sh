@@ -16,7 +16,7 @@ REPO="atomic-testing/atomic-testing"
 WORKFLOW="publish.yml"            # filename only — must match the trigger workflow
 
 # Folders publish.sh does NOT publish — keep in sync with publish.sh
-EXCLUDE=(temp component-driver-mui-v5 component-driver-mui-x-v5)
+EXCLUDE=(temp)
 
 is_excluded() { local d="$1" e; for e in "${EXCLUDE[@]}"; do [[ "$d" == "$e" ]] && return 0; done; return 1; }
 

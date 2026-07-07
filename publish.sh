@@ -31,10 +31,6 @@ done
 declare -a exclude=(
   # add any others here...
   "temp"
-  # MUI 5 / MUI-X 5 reached end of support (2026-06-27); frozen, not republished.
-  # See agent-docs/adr/005-drop-mui-5-support.md
-  "component-driver-mui-v5"
-  "component-driver-mui-x-v5"
 )
 
 

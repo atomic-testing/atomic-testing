@@ -105,8 +105,8 @@ flowchart TD
     jest["…-jest-adapter"]
     vitest["…-vitest-adapter"]
     html["component-driver-html"]
-    mui["component-driver-mui-v5/6/7"]
-    muix["component-driver-mui-x-v5..v8"]
+    mui["component-driver-mui-v6/7"]
+    muix["component-driver-mui-x-v6..v8"]
 
     core --> domcore
     domcore --> reactcore
@@ -169,9 +169,9 @@ See [modules/test-runner.md](modules/test-runner.md) for the worked three-file e
 
 ## Key design decisions
 
-| Decision                                                   | Rationale                                                  | ADR                                                  |
-| ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| Semantic component-driver API over raw queries             | Tests read in domain terms; selectors live in one place    | [ADR-001](adr/001-component-driver-pattern.md)       |
-| `Interactor` abstraction                                   | One driver runs across DOM/React/Vue/Playwright            | [ADR-002](adr/002-interactor-abstraction.md)         |
-| Version-specific packages (mui-v5/6/7, react-18/19/legacy) | Isolate framework-major DOM/API differences from consumers | [ADR-003](adr/003-version-specific-packages.md)      |
-| Shared `*.suite.ts` + `TestFrameworkMapper`                | Author once, run in Jest/Vitest/Playwright                 | [ADR-004](adr/004-shared-three-file-test-pattern.md) |
+| Decision                                                 | Rationale                                                  | ADR                                                  |
+| -------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| Semantic component-driver API over raw queries           | Tests read in domain terms; selectors live in one place    | [ADR-001](adr/001-component-driver-pattern.md)       |
+| `Interactor` abstraction                                 | One driver runs across DOM/React/Vue/Playwright            | [ADR-002](adr/002-interactor-abstraction.md)         |
+| Version-specific packages (mui-v6/7, react-18/19/legacy) | Isolate framework-major DOM/API differences from consumers | [ADR-003](adr/003-version-specific-packages.md)      |
+| Shared `*.suite.ts` + `TestFrameworkMapper`              | Author once, run in Jest/Vitest/Playwright                 | [ADR-004](adr/004-shared-three-file-test-pattern.md) |

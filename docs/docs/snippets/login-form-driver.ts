@@ -1,4 +1,4 @@
-import { TextFieldDriver, ButtonDriver } from '@atomic-testing/component-driver-mui-v5';
+import { TextFieldDriver, ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 import {
   ComponentDriver,
   Interactor,

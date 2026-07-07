@@ -1,15 +1,14 @@
-# Module group: MUI-X component drivers (v5 / v6 / v7 / v8)
+# Module group: MUI-X component drivers (v6 / v7 / v8)
 
 Drivers for Material-UI X components (DataGrid, and Date/Time Pickers), one package per MUI-X major:
 
-| Package                                     | DataGrid | Date/Time pickers                                                                               |
-| ------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------- |
-| `@atomic-testing/component-driver-mui-x-v5` | ✅       | ✅ ([datepicker/](../../packages/component-driver-mui-x-v5/src/components/datepicker/index.ts)) |
-| `@atomic-testing/component-driver-mui-x-v6` | ✅       | —                                                                                               |
-| `@atomic-testing/component-driver-mui-x-v7` | ✅       | —                                                                                               |
-| `@atomic-testing/component-driver-mui-x-v8` | ✅       | —                                                                                               |
+| Package                                     | DataGrid | Date/Time pickers |
+| ------------------------------------------- | -------- | ----------------- |
+| `@atomic-testing/component-driver-mui-x-v6` | ✅       | —                 |
+| `@atomic-testing/component-driver-mui-x-v7` | ✅       | —                 |
+| `@atomic-testing/component-driver-mui-x-v8` | ✅       | —                 |
 
-> Only **v5** ships datepicker drivers; v6–v8 are DataGrid-only ([v5/index.ts](../../packages/component-driver-mui-x-v5/src/index.ts) re-exports both `datagrid` and `datepicker`; [v8/index.ts](../../packages/component-driver-mui-x-v8/src/index.ts) re-exports only `datagrid`). [inferred] datepicker drivers were not carried forward past v5.
+> MUI-X 5 reached end of support on 2026-06-27 ([ADR-005](../adr/005-drop-mui-5-support.md)); its source and full history now live in [atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/component-driver-mui-v5). It was the **only** major to ship datepicker drivers — v6–v8 are DataGrid-only — and that coverage was not carried forward, so this repo has no supported picker drivers.
 
 ## Public surface
 
@@ -20,7 +19,7 @@ DataGrid (all versions) — barrel `components/datagrid/index.ts`, e.g. [v8](../
 - `DataGridHeaderRowDriver` — the header row
 - `DataGridCellQuery` — cell-location query helper (by row + column index/field)
 
-Date/Time pickers (v5 only) — [datepicker/index.ts](../../packages/component-driver-mui-x-v5/src/components/datepicker/index.ts): `DateRangePickerDriver`, `DateTimePickerDriver`, `DesktopDatePickerDriver`, `MobileDatePickerDriver`, `MobileDatePickerDialogDriver`, `TimePickerDriver`, plus a `dateUtil` namespace and shared `types`.
+Date/Time pickers (v5 only, archived) — [datepicker/index.ts](https://github.com/atomic-testing/component-driver-mui-v5/blob/main/packages/component-driver-mui-x-v5/src/components/datepicker/index.ts): `DateRangePickerDriver`, `DateTimePickerDriver`, `DesktopDatePickerDriver`, `MobileDatePickerDriver`, `MobileDatePickerDialogDriver`, `TimePickerDriver`, plus a `dateUtil` namespace and shared `types`.
 
 ## Responsibilities
 
@@ -30,7 +29,7 @@ Date/Time pickers (v5 only) — [datepicker/index.ts](../../packages/component-d
 ## Non-goals
 
 - No grid data modeling — test data comes from the fixture package (below).
-- Pickers are v5-only; do not assume them in v6+.
+- No picker drivers in this repo — they were v5-only and moved with it; do not assume them in v6+.
 
 ## How it works
 
@@ -48,7 +47,7 @@ This is a workspace-private dev dependency, not a published consumer API.
 ## Invariants & failure modes
 
 - DataGrid is virtualized: only rendered rows are queryable; scroll/paginate before asserting off-screen rows.
-- Picker drivers exist only in v5 — referencing them from v6+ will not resolve.
+- Picker drivers exist only in the archived v5 package — referencing them from v6+ will not resolve.
 
 ## Extension points
 
@@ -58,6 +57,6 @@ This is a workspace-private dev dependency, not a published consumer API.
 ## Related files
 
 - [v8 datagrid barrel](../../packages/component-driver-mui-x-v8/src/components/datagrid/index.ts)
-- [v5 datepicker barrel](../../packages/component-driver-mui-x-v5/src/components/datepicker/index.ts)
+- [v5 datepicker barrel (archived)](https://github.com/atomic-testing/component-driver-mui-v5/blob/main/packages/component-driver-mui-x-v5/src/components/datepicker/index.ts)
 - [internal-mui-x-test-fixture](../../packages/internal-mui-x-test-fixture/src/index.ts)
 - [modules/component-driver-mui.md](component-driver-mui.md) — sibling MUI-core drivers; same version-split rationale ([ADR-003](../adr/003-version-specific-packages.md)).
