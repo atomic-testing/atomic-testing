@@ -1,14 +1,15 @@
-# Module group: MUI component drivers (v5 / v6 / v7)
+# Module group: MUI component drivers (v6 / v7)
 
 Drivers for Material-UI core components, one package per MUI major:
 
 | Package                                   | Targets | MUI peer           |
 | ----------------------------------------- | ------- | ------------------ |
-| `@atomic-testing/component-driver-mui-v5` | MUI v5  | `@mui/material@^5` |
 | `@atomic-testing/component-driver-mui-v6` | MUI v6  | `@mui/material@^6` |
 | `@atomic-testing/component-driver-mui-v7` | MUI v7  | `@mui/material@^7` |
 
-> The three packages are ~95% identical at the code level — same exports, same APIs. They diverge only where a MUI major changes DOM structure, roles, or class names. See [ADR-003](../adr/003-version-specific-packages.md). This doc uses **v7** as the reference; the catalog and patterns apply to v5/v6 too.
+> MUI 5 reached end of support on 2026-06-27 (see [ADR-005](../adr/005-drop-mui-5-support.md)); `component-driver-mui-v5`'s source and full history now live in [atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/component-driver-mui-v5).
+>
+> The two packages are ~95% identical at the code level — same exports, same APIs. They diverge only where a MUI major changes DOM structure, roles, or class names. See [ADR-003](../adr/003-version-specific-packages.md). This doc uses **v7** as the reference; the catalog and patterns apply to v6 too.
 
 Each mui package depends on `component-driver-html`, `core`, `dom-core`, and a React package (`mui-v7` → `react-18`) plus `@mui/material` and `@emotion/*` ([mui-v7/package.json#L25-L33](../../packages/component-driver-mui-v7/package.json#L25-L33)).
 
@@ -51,11 +52,11 @@ It iterates `byRole('menuitem')` with `listHelper.getListItemIterator(..., MenuI
 
 Handles both native `<select>` and MUI's custom dropdown via a four-part scene (`trigger`, `dropdown`, `input`, `nativeSelect`) ([SelectDriver.ts](../../packages/component-driver-mui-v7/src/components/SelectDriver.ts#L27-L223)). Notable: `trigger` uses `byRole('combobox')` with an inline comment that MUI changed the role from `button` to `combobox` at 5.12 — **this kind of selector difference is exactly why versions are split**. Methods: `getValue`, `setValue`, `selectByLabel`, `getSelectedLabel`, `openDropdown`/`closeDropdown`, `isNative`, `isDropdownOpen`, `isDisabled`.
 
-## Version differences (v5 → v6 → v7)
+## Version differences (v6 → v7)
 
 - **API-identical**: the exported driver set and public methods match across versions.
-- **What changes**: CSS class names (`.Mui*`), ARIA roles (the `combobox` example), occasional DOM nesting, and the `driverName` string (`MuiV5*`/`MuiV6*`/`MuiV7*`). [inferred] from sampling identical structure across versions and the role-change comment in `SelectDriver`.
-- **Practical rule**: when fixing a driver bug caused by a MUI change, fix it in the affected version package only; if it affects all, replicate across v5/v6/v7.
+- **What changes**: CSS class names (`.Mui*`), ARIA roles (the `combobox` example), occasional DOM nesting, and the `driverName` string (`MuiV6*`/`MuiV7*`). [inferred] from sampling identical structure across versions and the role-change comment in `SelectDriver`.
+- **Practical rule**: when fixing a driver bug caused by a MUI change, fix it in the affected version package only; if it affects all, replicate across v6/v7.
 
 ## Errors
 

@@ -29,7 +29,7 @@ Refer to the [React integration guide](https://atomic-testing.dev/) for examples
 ## Example
 
 If you use MUI/Material&nbsp;UI components, have a look at the
-[@atomic-testing/component-driver-mui-v5](https://www.npmjs.com/package/@atomic-testing/component-driver-mui-v5)
+[@atomic-testing/component-driver-mui-v7](https://www.npmjs.com/package/@atomic-testing/component-driver-mui-v7)
 package for a dedicated example.
 
 1. Install the core library and basic HTML drivers along with this React adapter:

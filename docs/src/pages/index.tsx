@@ -259,8 +259,8 @@ function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX
 
           <p className={styles.heroSubtitle}>
             Stop rewriting your test suite every time you switch UI frameworks or upgrade a component library. Atomic
-            Testing composes tiny, reusable <strong>component drivers</strong> into portable test scenes — so the
-            same semantic test runs across frameworks, libraries, and environments. Learn once, test any UI.
+            Testing composes tiny, reusable <strong>component drivers</strong> into portable test scenes — so the same
+            semantic test runs across frameworks, libraries, and environments. Learn once, test any UI.
           </p>
 
           <div className={styles.heroActions}>
@@ -292,13 +292,7 @@ function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX
   );
 }
 
-function MagicSection({
-  active,
-  onSelect,
-}: {
-  active: FrameworkId;
-  onSelect: (id: FrameworkId) => void;
-}): JSX.Element {
+function MagicSection({ active, onSelect }: { active: FrameworkId; onSelect: (id: FrameworkId) => void }): JSX.Element {
   const { copied, copy } = useCopy();
   const activeFramework = frameworks.find(framework => framework.id === active) ?? frameworks[0];
 
@@ -408,8 +402,8 @@ function ComposableSection(): JSX.Element {
           <div className={clsx(styles.eyebrow, styles.eyebrowTeal)}>Composable by design</div>
           <h2 className={styles.bandTitle}>Small atoms. Infinite tests.</h2>
           <p className={styles.bandSubtitle}>
-            Each primitive is tiny and replaceable: locators and drivers snap into scenes, scenes into engines,
-            engines into suites that outlive any framework.
+            Each primitive is tiny and replaceable: locators and drivers snap into scenes, scenes into engines, engines
+            into suites that outlive any framework.
           </p>
         </header>
         <div className={styles.bandRow}>
@@ -448,13 +442,12 @@ function TradeoffsSection(): JSX.Element {
         <div className={clsx(styles.eyebrow, styles.eyebrowBlue)}>Is it for you?</div>
         <h2 className={styles.tradeoffsTitle}>Honest tradeoffs</h2>
         <p className={styles.tradeoffsSubtitle}>
-          Atomic Testing adds a driver layer on top of Testing Library and Playwright — that&apos;s a learning curve
-          and a dependency, not a free lunch. It&apos;s a poor fit for a single throwaway component, a prototype
-          you&apos;ll never maintain, or a team unwilling to invest in the pattern up front. Each driver call is a thin async
+          Atomic Testing adds a driver layer on top of Testing Library and Playwright — that&apos;s a learning curve and
+          a dependency, not a free lunch. It&apos;s a poor fit for a single throwaway component, a prototype you&apos;ll
+          never maintain, or a team unwilling to invest in the pattern up front. Each driver call is a thin async
           wrapper around the same Testing Library/Playwright call you&apos;d write by hand, so it adds a coordination
           step rather than real work — and lock-in risk is low: every driver bottoms out in those same portable
-          primitives, so dropping the abstraction later means calling them directly, not rewriting your component
-          tree.
+          primitives, so dropping the abstraction later means calling them directly, not rewriting your component tree.
         </p>
         <div className={styles.tradeoffsLinks}>
           <Link className={styles.tradeoffsLink} to='/docs/why-atomic-testing'>

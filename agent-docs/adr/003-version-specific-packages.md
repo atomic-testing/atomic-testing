@@ -8,6 +8,10 @@ Accepted (describes the existing design).
 > `mui-v5` / `mui-x-v5` packages are frozen and deprecated in place. See
 > [ADR-005](005-drop-mui-5-support.md). Mentions of v5 below describe the
 > original design, not the currently supported set (v6/v7; v8 for MUI-X).
+>
+> **Update (2026-07-07):** `mui-v5` and `mui-x-v5` were extracted, with full
+> history, to [atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/component-driver-mui-v5)
+> and removed from this repo. See [ADR-014](014-extract-mui-5-to-separate-repo.md).
 
 > **Update (2026-07-03, #1014):** `react-18` and `react-19` are no longer
 > copies — `createTestEngine`/`createRenderedTestEngine` (and the deprecated

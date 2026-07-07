@@ -23,22 +23,6 @@ updates:
         versions: ['>=20.0.0']
 
   - package-ecosystem: 'npm'
-    directory: '/package-tests/component-driver-mui-v5-test'
-    schedule:
-      interval: 'weekly'
-    ignore:
-      - dependency-name: '@mui/*'
-        versions: ['>=6.0.0']
-      - dependency-name: 'react'
-        versions: ['>=19.0.0']
-      - dependency-name: 'react-dom'
-        versions: ['>=19.0.0']
-      - dependency-name: '@types/react'
-        versions: ['>=19.0.0']
-      - dependency-name: '@types/react-dom'
-        versions: ['>=19.0.0']
-
-  - package-ecosystem: 'npm'
     directory: '/package-tests/component-driver-mui-v6-test'
     schedule:
       interval: 'weekly'
@@ -61,24 +45,6 @@ updates:
     ignore:
       - dependency-name: '@mui/*'
         versions: ['>=8.0.0']
-      - dependency-name: 'react'
-        versions: ['>=19.0.0']
-      - dependency-name: 'react-dom'
-        versions: ['>=19.0.0']
-      - dependency-name: '@types/react'
-        versions: ['>=19.0.0']
-      - dependency-name: '@types/react-dom'
-        versions: ['>=19.0.0']
-
-  - package-ecosystem: 'npm'
-    directory: '/package-tests/component-driver-mui-x-v5-test'
-    schedule:
-      interval: 'weekly'
-    ignore:
-      - dependency-name: '@mui/*'
-        versions: ['>=6.0.0']
-      - dependency-name: '@mui/x-*'
-        versions: ['>=6.0.0']
       - dependency-name: 'react'
         versions: ['>=19.0.0']
       - dependency-name: 'react-dom'

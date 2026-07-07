@@ -4,6 +4,12 @@
 
 Accepted (2026-06-27).
 
+> **Update (2026-07-07):** the "frozen in place" repo location described below
+> changed — the packages were extracted, with full history, to a separate
+> repo. See [ADR-014](014-extract-mui-5-to-separate-repo.md). Everything else
+> here (npm deprecation status, `0.81.0` freeze, no fixes/new drivers) still
+> holds.
+
 ## Context
 
 [ADR-003](003-version-specific-packages.md) established one driver package per

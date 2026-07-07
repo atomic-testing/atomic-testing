@@ -71,7 +71,7 @@ E2E setup (from `CLAUDE.md`): in `package-tests/component-driver-html-test`, run
 - Driver classes end in `Driver`; `driverName` getter returns a stable id (`HTMLTextInput`, `MuiV7SelectDriver`, …).
 - Scene parts use `satisfies ScenePart` to preserve literal key types.
 - Each package's public API is its `src/index.ts` barrel — discover exports there, don't enumerate them in docs.
-- Version-mirrored packages (`mui-v5/6/7`, `react-18/19/legacy`) keep matching file/export names; differences are selectors/roles/`driverName` only ([ADR-003](adr/003-version-specific-packages.md)).
+- Version-mirrored packages (`mui-v6/7`, `react-18/19/legacy`) keep matching file/export names; differences are selectors/roles/`driverName` only ([ADR-003](adr/003-version-specific-packages.md)).
 - Locator-override hooks (`overriddenParentLocator`, `overrideLocatorRelativePosition`) must be pure (run before construction).
 
 ### Commit & PR titles

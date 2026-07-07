@@ -27,27 +27,9 @@
       }
     },
     {
-      "label": "MUIv5",
-      "type": "shell",
-      "command": "cd package-tests/component-driver-mui-v5-test && pnpm start",
-      "isBackground": true,
-      "icon": {
-        "id": "compass"
-      }
-    },
-    {
       "label": "MUIv6",
       "type": "shell",
       "command": "cd package-tests/component-driver-mui-v6-test && pnpm start",
-      "isBackground": true,
-      "icon": {
-        "id": "compass"
-      }
-    },
-    {
-      "label": "MUIXv5",
-      "type": "shell",
-      "command": "cd package-tests/component-driver-mui-x-v5-test && pnpm start",
       "isBackground": true,
       "icon": {
         "id": "compass"
