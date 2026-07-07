@@ -10,6 +10,10 @@ export const numberInputExampleScenePart = {
     locator: byDataTestId('qty-input'),
     driver: NumberInputDriver,
   },
+  priceInput: {
+    locator: byDataTestId('price-input'),
+    driver: NumberInputDriver,
+  },
 } satisfies ScenePart;
 
 export const numberInputExample: IExampleUnit<typeof numberInputExampleScenePart, JSX.Element> = {
@@ -50,6 +54,15 @@ export const numberInputExampleTestSuite: TestSuiteInfo<typeof numberInputExampl
       test(`setValue round-trips`, async () => {
         await engine().parts.qtyInput.setValue('8');
         assertEqual(await engine().parts.qtyInput.getValue(), '8');
+      });
+
+      // getDisabledMessage resolves the tooltip out of the composed aria-describedby.
+      test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
+        assertEqual(
+          await engine().parts.priceInput.getDisabledMessage(),
+          'Pricing is locked while the order is processing'
+        );
+        assertEqual(await engine().parts.qtyInput.getDisabledMessage(), undefined);
       });
     });
   },

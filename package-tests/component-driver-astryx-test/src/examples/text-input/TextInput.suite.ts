@@ -15,6 +15,10 @@ export const textInputExampleScenePart = {
     locator: byDataTestId('email-input'),
     driver: TextInputDriver,
   },
+  ownerInput: {
+    locator: byDataTestId('owner-input'),
+    driver: TextInputDriver,
+  },
 } satisfies ScenePart;
 
 export const textInputExample: IExampleUnit<typeof textInputExampleScenePart, JSX.Element> = {
@@ -71,6 +75,12 @@ export const textInputExampleTestSuite: TestSuiteInfo<typeof textInputExample.sc
       test(`getStatusMessage returns the validation message, undefined when none`, async () => {
         assertEqual(await engine().parts.emailInput.getStatusMessage(), 'Email is required');
         assertEqual(await engine().parts.nameInput.getStatusMessage(), undefined);
+      });
+
+      // getDisabledMessage resolves the tooltip out of the composed aria-describedby.
+      test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
+        assertEqual(await engine().parts.ownerInput.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.nameInput.getDisabledMessage(), undefined);
       });
     });
   },

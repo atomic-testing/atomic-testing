@@ -7,8 +7,9 @@ import { byAriaLabel, byCssSelector, ComponentDriver, listHelper, locatorUtil, O
  * Banner forwards `data-testid` onto its root, whose `role` is CONDITIONAL —
  * `"alert"` for error/warning, `"status"` for info/success — while the stable
  * severity lives in `data-status` on the inner header. The header shows the title
- * and optional description as consecutive `<p>`s; a dismiss button
- * (`aria-label="Dismiss"`) and, when the banner has collapsible content, an
+ * and optional description as consecutive `<div>`s (Astryx 0.1.2+ renders these as
+ * `<div>` rather than `<p>` so they can hold arbitrary ReactNode content); a dismiss
+ * button (`aria-label="Dismiss"`) and, when the banner has collapsible content, an
  * expand toggle (`aria-expanded`) appear in the header end.
  */
 export class BannerDriver extends ComponentDriver<{}> {
@@ -66,8 +67,18 @@ export class BannerDriver extends ComponentDriver<{}> {
     return locatorUtil.append(this.locator, byCssSelector('button[aria-expanded]'));
   }
 
+  /**
+   * The title/description are untagged `<div>`s with no distinguishing attribute,
+   * so they're reached structurally: the header's icon wrapper (`aria-hidden`) is
+   * always the first child, and the title/description container is always its next
+   * sibling — regardless of whether a trailing end-area (dismiss/expand buttons) is
+   * also rendered.
+   */
   private async headerParagraph(index: number): Promise<Optional<string>> {
-    const paragraphs = locatorUtil.append(this.locator, byCssSelector('[data-status] p'));
+    const paragraphs = locatorUtil.append(
+      this.locator,
+      byCssSelector('[data-status] > div[aria-hidden="true"] + div > div')
+    );
     const item = await listHelper.getListItemByIndex(this, paragraphs, index, HTMLElementDriver);
     if (item == null) {
       return undefined;

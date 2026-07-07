@@ -1,6 +1,7 @@
 import { byAriaLabel, byCssSelector, escapeUtil, locatorUtil, Optional } from '@atomic-testing/core';
 
 import { IndexedOptionListDriver } from '../internal/IndexedOptionListDriver';
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
 
 /** A filter chip is `<span class="astryx-token">`; the class is a stable semantic hook, not StyleX-hashed. */
 const TOKEN_SELECTOR = 'span.astryx-token';
@@ -49,6 +50,17 @@ export class PowerSearchDriver extends IndexedOptionListDriver {
   /** The current query text in the input. */
   async getQuery(): Promise<string> {
     return (await this.interactor.getInputValue(this.combobox)) ?? '';
+  }
+
+  /**
+   * The `disabledMessage` tooltip text. PowerSearch is a thin wrapper that
+   * forwards `isDisabled`/`disabledMessage` straight through to an internal
+   * Tokenizer, which wires `aria-describedby` onto its `role="combobox"` query
+   * input — not the `role="group"` root. `undefined` when the field isn't in
+   * that disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.combobox, 'aria-describedby', 'tooltip');
   }
 
   /** Type into the query input to search field/operator suggestions. */

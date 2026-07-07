@@ -10,6 +10,10 @@ export const radioListExampleScenePart = {
     locator: byDataTestId('prefs'),
     driver: RadioListDriver,
   },
+  lockedPrefs: {
+    locator: byDataTestId('locked-prefs'),
+    driver: RadioListDriver,
+  },
 } satisfies ScenePart;
 
 export const radioListExample: IExampleUnit<typeof radioListExampleScenePart, JSX.Element> = {
@@ -47,6 +51,17 @@ export const radioListExampleTestSuite: TestSuiteInfo<typeof radioListExample.sc
       test(`getLabel and isRequired read the group state`, async () => {
         assertEqual(await engine().parts.prefs.getLabel(), 'Notification preference');
         assertFalse(await engine().parts.prefs.isRequired());
+      });
+
+      // getDisabledMessage is a group-level concept: the tooltip's
+      // aria-describedby link composes onto the inner radiogroup, not any
+      // individual radio. undefined when the group isn't disabled with a message.
+      test(`getDisabledMessage returns the group's disabled-reason tooltip text`, async () => {
+        assertEqual(
+          await engine().parts.lockedPrefs.getDisabledMessage(),
+          'Preference is managed by your administrator'
+        );
+        assertEqual(await engine().parts.prefs.getDisabledMessage(), undefined);
       });
     });
   },

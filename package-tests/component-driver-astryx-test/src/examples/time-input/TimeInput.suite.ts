@@ -11,6 +11,10 @@ export const timeInputExampleScenePart = {
     locator: locatorUtil.append(byDataTestId('time-wrap'), byInputType('text')),
     driver: TimeInputDriver,
   },
+  locked: {
+    locator: locatorUtil.append(byDataTestId('locked-wrap'), byInputType('text')),
+    driver: TimeInputDriver,
+  },
 } satisfies ScenePart;
 
 export const timeInputExample: IExampleUnit<typeof timeInputExampleScenePart, JSX.Element> = {
@@ -33,6 +37,14 @@ export const timeInputExampleTestSuite: TestSuiteInfo<typeof timeInputExample.sc
       // getValue returns the formatted display string (12h by default), not ISO.
       test(`getValue returns the display string`, async () => {
         assertEqual(await engine().parts.timeInput.getValue(), '9:30 AM');
+      });
+
+      // getDisabledMessage (inherited from AstryxFieldInputDriver) resolves the
+      // disabled-reason tooltip through the input's composed aria-describedby;
+      // undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.timeInput.getDisabledMessage(), undefined);
       });
     });
   },

@@ -1,18 +1,23 @@
 import { HTMLFileInputDriver } from '@atomic-testing/component-driver-html';
-import { byCssSelector, Optional } from '@atomic-testing/core';
+import { byCssSelector, Optional, PartLocator } from '@atomic-testing/core';
 
-import { resolveLinkedLabelText } from '../internal/linkedLocators';
+import { resolveDescribedByRoleText, resolveLinkedLabelText } from '../internal/linkedLocators';
 
 /**
  * Driver for the Astryx FileInput (`@astryxdesign/core/FileInput`).
  *
  * Astryx forwards `data-testid` onto the **hidden native `<input type="file">`**,
- * not the visible `div[role="button"]` dropzone — which is convenient, because the
- * input is the element every meaningful read and the upload itself live on:
- * `accept`, `multiple`, `aria-required`, `aria-invalid`, `disabled`, and the
- * `aria-describedby` → status-message link are all attributes of the input, and
- * `setInputFiles` must target a real `<input type="file">`. The scene therefore
+ * not the visible `div[role="button"]` dropzone — which is convenient, because
+ * `accept`, `multiple`, and `disabled` (native HTML semantics the real file picker
+ * needs) plus `setInputFiles`'s target are all the input's. The scene therefore
  * anchors this driver on that input.
+ *
+ * Astryx 0.1.3 moved `aria-describedby`/`aria-required`/`aria-invalid` off the
+ * hidden, never-focused input onto the focusable `div[role="button"]` wrapper
+ * that describes the operable control (forms-6). Since this codebase's CSS
+ * locators have no parent axis, those three reads resolve the wrapper via `:has()`
+ * keyed on the input's own `id` (which Astryx always sets via `useId()`) rather
+ * than walking up from `this.locator`.
  *
  * It extends {@link HTMLFileInputDriver} to inherit `uploadFiles` (the
  * `setInputFiles` primitive — `userEvent.upload` in jsdom, `locator.setInputFiles`
@@ -32,14 +37,16 @@ export class FileInputDriver extends HTMLFileInputDriver {
     return this.interactor.hasAttribute(this.locator, 'multiple');
   }
 
-  /** Whether the field is required (`aria-required="true"`). */
+  /** Whether the field is required (`aria-required="true"` on the `role="button"` wrapper). */
   async isRequired(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.locator, 'aria-required')) === 'true';
+    const wrapper = await this.wrapperLocator();
+    return wrapper != null && (await this.interactor.getAttribute(wrapper, 'aria-required')) === 'true';
   }
 
-  /** Whether the field is in an error state (`aria-invalid="true"`, mirrored by the button's `data-status="error"`). */
+  /** Whether the field is in an error state (`aria-invalid="true"` on the `role="button"` wrapper). */
   async isInvalid(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.locator, 'aria-invalid')) === 'true';
+    const wrapper = await this.wrapperLocator();
+    return wrapper != null && (await this.interactor.getAttribute(wrapper, 'aria-invalid')) === 'true';
   }
 
   /** Whether the field is disabled (native `disabled` on the input). */
@@ -58,10 +65,11 @@ export class FileInputDriver extends HTMLFileInputDriver {
   }
 
   /**
-   * The validation message text, resolved through the input's `aria-describedby`
-   * → status element id link. `undefined` when the field carries no status.
+   * The validation message text, resolved through the `role="button"` wrapper's
+   * `aria-describedby` → status element id link. `undefined` when the field
+   * carries no status.
    *
-   * `aria-describedby` is an IDREF *list*: Astryx points the input at both its
+   * `aria-describedby` is an IDREF *list*: Astryx points the wrapper at both its
    * description and its status when both are present (`FileInput` joins
    * `descriptionID` + `statusMessageID`). The status is the `FieldStatus` element
    * carrying a `data-type` severity marker (the description is a plain element
@@ -70,7 +78,11 @@ export class FileInputDriver extends HTMLFileInputDriver {
    * mirrors {@link AstryxFieldInputDriver.getStatusMessage}.
    */
   async getStatusMessage(): Promise<Optional<string>> {
-    const describedBy = await this.interactor.getAttribute(this.locator, 'aria-describedby');
+    const wrapper = await this.wrapperLocator();
+    if (wrapper == null) {
+      return undefined;
+    }
+    const describedBy = await this.interactor.getAttribute(wrapper, 'aria-describedby');
     if (!describedBy) {
       return undefined;
     }
@@ -81,6 +93,35 @@ export class FileInputDriver extends HTMLFileInputDriver {
       }
     }
     return undefined;
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the `role="button"`
+   * wrapper's `aria-describedby` link — like `aria-required`/`aria-invalid`
+   * (see the class doc), the disabled-message tooltip describes the operable
+   * wrapper, not the hidden native input. `undefined` when the field isn't in
+   * that disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    const wrapper = await this.wrapperLocator();
+    if (wrapper == null) {
+      return undefined;
+    }
+    return resolveDescribedByRoleText(this.interactor, wrapper, 'aria-describedby', 'tooltip');
+  }
+
+  /**
+   * The focusable `div[role="button"]` wrapper around the hidden input, resolved
+   * from the document by the input's own `id` — the closest thing to a parent
+   * lookup this locator system supports. `null` when the input carries no `id`
+   * (shouldn't happen; Astryx always sets one via `useId()`).
+   */
+  private async wrapperLocator(): Promise<PartLocator | null> {
+    const inputId = await this.interactor.getAttribute(this.locator, 'id');
+    if (!inputId) {
+      return null;
+    }
+    return byCssSelector(`div[role="button"]:has(> input[id="${inputId}"])`, 'Root');
   }
 
   override get driverName(): string {

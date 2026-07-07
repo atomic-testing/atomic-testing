@@ -40,17 +40,36 @@ const PlainTokenizer = () => {
   );
 };
 
+const DisabledTokenizer = () => {
+  const [value] = useState<Item[]>([{ id: 'banana', label: 'Banana' }]);
+  return (
+    <Tokenizer<Item>
+      data-testid='disabled-tags'
+      label='Disabled'
+      searchSource={fruitSource}
+      value={value}
+      onChange={() => {}}
+      isDisabled
+      disabledMessage='Tags are locked while the review is in progress'
+    />
+  );
+};
+
 /**
  * Astryx Tokenizer scene.
  *
  * Tokenizer renders a `role="group"` root (self-emitting `data-testid`) holding the
  * token chips and the `role="combobox"` input. `tags` enables `hasClear`/`hasCreate`;
- * a second tokenizer verifies selector scoping.
+ * a second tokenizer verifies selector scoping. A third, disabled tokenizer carries a
+ * `disabledMessage`, exercising `getDisabledMessage`'s resolution through the inner
+ * combobox input's `aria-describedby` (Astryx wires the tooltip link there, not onto
+ * the `role="group"` root).
  */
 export const TokenizerExample = () => (
   <>
     <TagTokenizer />
     <PlainTokenizer />
+    <DisabledTokenizer />
   </>
 );
 

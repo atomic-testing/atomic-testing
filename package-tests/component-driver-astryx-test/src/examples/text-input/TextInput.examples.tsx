@@ -15,10 +15,16 @@ import React, { JSX, useState } from 'react';
  * description and an error status so `isRequired`/`isInvalid` have something to
  * read and `getStatusMessage` must resolve the status from a multi-id
  * `aria-describedby` (description id + status id), not just a single id.
+ *
+ * A third input is disabled with a `disabledMessage`, exercising
+ * `getDisabledMessage`'s resolution of the tooltip id out of that same
+ * multi-id `aria-describedby` list (Astryx composes the disabled-message
+ * tooltip alongside description/status ids).
  */
 export const TextInputExample = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [owner, setOwner] = useState('Alice');
 
   return (
     <div>
@@ -31,6 +37,14 @@ export const TextInputExample = () => {
         isRequired
         description='We never share it'
         status={{ type: 'error', message: 'Email is required' }}
+      />
+      <TextInput
+        label='Owner'
+        data-testid='owner-input'
+        value={owner}
+        onChange={v => setOwner(v)}
+        isDisabled
+        disabledMessage='You need the Editor role to change this'
       />
     </div>
   );

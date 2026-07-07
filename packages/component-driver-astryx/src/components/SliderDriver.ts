@@ -1,5 +1,7 @@
 import { byRole, ComponentDriver, IInputDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
+
 /**
  * Driver for the Astryx Slider (`@astryxdesign/core/Slider`), single-thumb scope.
  *
@@ -70,6 +72,29 @@ export class SliderDriver extends ComponentDriver<{}> implements IInputDriver<nu
   /** The slider's accessible name (`aria-label` on the thumb). */
   async getLabel(): Promise<Optional<string>> {
     return this.interactor.getAttribute(this.thumbLocator, 'aria-label');
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, shown when the slider is disabled with
+   * a reason. Resolved through the thumb's composed `aria-describedby` — the
+   * id list also carries the description/status-message ids, so this picks out
+   * whichever target has `role="tooltip"`.
+   *
+   * Gated on {@link isDisabled}: an enabled thumb's default value bubble
+   * (`valueDisplay="tooltip"`, Astryx's live-value preview) is a *second,
+   * unrelated* `role="tooltip"` layer linked through the same
+   * `aria-describedby`, so probing the DOM unconditionally would surface the
+   * current value instead of `undefined`. Astryx suppresses the value bubble
+   * only when a disabled-reason message is actually showing, so this can still
+   * misreport the value as the message on a slider that is disabled *without*
+   * a `disabledMessage` (upstream ambiguity — there is no way to tell the two
+   * `role="tooltip"` layers apart from the DOM alone).
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    if (!(await this.isDisabled())) {
+      return undefined;
+    }
+    return resolveDescribedByRoleText(this.interactor, this.thumbLocator, 'aria-describedby', 'tooltip');
   }
 
   private async readThumbNumber(attribute: string): Promise<number> {

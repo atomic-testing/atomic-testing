@@ -62,3 +62,35 @@ export async function resolveLinkedElementText(
   }
   return (await interactor.getText(target)) ?? undefined;
 }
+
+/**
+ * Resolve the text of the element linked through a whitespace-separated IDREF
+ * attribute (e.g. `aria-describedby`) whose target carries a specific `role`.
+ * Astryx composes `aria-describedby` from multiple ids (description, status
+ * message, disabled-message tooltip, …) rather than a single id, so unlike
+ * {@link resolveLinkedElementText} this splits the list and probes each id in
+ * order, returning the text of whichever target matches `role` — e.g. the
+ * `disabledMessage` tooltip (`useTooltip`, shared with {@link TooltipDriver})
+ * always renders with `role="tooltip"`, distinguishing it from the plain
+ * description/status-message targets in the same list. Re-roots at the
+ * document (`'Root'`) because these targets — like the Tooltip/HoverCard
+ * layers — render outside the control's subtree.
+ */
+export async function resolveDescribedByRoleText(
+  interactor: Interactor,
+  controlLocator: PartLocator,
+  idRefAttribute: string,
+  role: string
+): Promise<Optional<string>> {
+  const ids = await interactor.getAttribute(controlLocator, idRefAttribute);
+  if (!ids) {
+    return undefined;
+  }
+  for (const id of ids.split(/\s+/).filter(Boolean)) {
+    const target = byAttribute('id', id, 'Root');
+    if ((await interactor.exists(target)) && (await interactor.getAttribute(target, 'role')) === role) {
+      return (await interactor.getText(target)) ?? undefined;
+    }
+  }
+  return undefined;
+}

@@ -1,16 +1,18 @@
-import { byCssSelector, Optional, PartLocator } from '@atomic-testing/core';
+import { byCssSelector, PartLocator } from '@atomic-testing/core';
 
 import { AstryxMenuDriver } from './AstryxMenuDriver';
 
 /**
  * Driver for the Astryx ContextMenu (`@astryxdesign/core/ContextMenu`).
  *
- * The scene anchors this driver on the **trigger** `<div>`, which carries only
- * `aria-haspopup="menu"` (Astryx forwards `data-testid` here). Unlike Popover, the
- * trigger has **no `aria-expanded` and no `aria-controls`** — the only way to open
- * the menu is a `contextmenu`/right-click event, and the `role="menu"` layer is a
- * `popover` rendered as a sibling at the document root with no id link back to the
- * trigger. So:
+ * The scene anchors this driver on the **trigger** `<div>` (Astryx forwards
+ * `data-testid` here). Unlike Popover, the trigger has **no `aria-haspopup`, no
+ * `aria-expanded`, and no `aria-controls`** — Astryx 0.1.3 removed the trigger's
+ * `aria-haspopup="menu"` (it sat on a role-less, non-focusable wrapper, where it
+ * conveyed nothing to assistive tech), leaving no popup-type ARIA to read at all.
+ * The only way to open the menu is a `contextmenu`/right-click event, and the
+ * `role="menu"` layer is a `popover` rendered as a sibling at the document root
+ * with no id link back to the trigger. So:
  *
  * - {@link open} uses the `contextMenu` interactor primitive (the dedicated
  *   right-click event — the menu has no controlled-open prop to flip).
@@ -43,11 +45,6 @@ export class ContextMenuDriver extends AstryxMenuDriver {
    */
   protected override resolveMenuLocator(): Promise<PartLocator | null> {
     return Promise.resolve(byCssSelector('[role="menu"]', 'Root'));
-  }
-
-  /** The trigger's popup type (`aria-haspopup`, always `"menu"`). */
-  async getHasPopup(): Promise<Optional<string>> {
-    return this.interactor.getAttribute(this.locator, 'aria-haspopup');
   }
 
   override get driverName(): string {

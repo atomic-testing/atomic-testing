@@ -37,16 +37,32 @@ const PermsMulti = () => {
   );
 };
 
+const LockedMulti = () => (
+  <MultiSelector
+    data-testid='locked'
+    label='Columns'
+    value={['name']}
+    onChange={() => {}}
+    options={[{ value: 'name', label: 'Name' }]}
+    isDisabled
+    disabledMessage='Select a table first'
+  />
+);
+
 /**
  * Astryx MultiSelector scene.
  *
  * The `fruits` selector (no "select all") gives a clean option list and a clear
- * control; `perms` enables "select all" to exercise {@link selectAll}.
+ * control; `perms` enables "select all" to exercise {@link selectAll}. The
+ * `locked` instance is disabled with a `disabledMessage`, so its trigger
+ * `<button>` renders a `role="tooltip"` layer reached through the composed
+ * `aria-describedby`.
  */
 export const MultiSelectorExample = () => (
   <>
     <FruitsMulti />
     <PermsMulti />
+    <LockedMulti />
   </>
 );
 

@@ -1,5 +1,6 @@
-import { byCssSelector, locatorUtil, PartLocator } from '@atomic-testing/core';
+import { byCssSelector, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
 import { AstryxComboboxDriver } from './AstryxComboboxDriver';
 
 /**
@@ -45,6 +46,15 @@ export class TypeaheadDriver extends AstryxComboboxDriver {
   async getResultLabels(): Promise<readonly string[]> {
     await this.waitForOptions();
     return this.optionLabels();
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the search input's (the
+   * `role="combobox"` control) `aria-describedby` link. `undefined` when the
+   * typeahead isn't in that disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.combobox, 'aria-describedby', 'tooltip');
   }
 
   /**

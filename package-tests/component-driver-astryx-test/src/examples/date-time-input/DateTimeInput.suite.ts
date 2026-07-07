@@ -15,6 +15,10 @@ export const dateTimeInputExampleScenePart = {
     locator: byDataTestId('reminder'),
     driver: DateTimeInputDriver,
   },
+  locked: {
+    locator: byDataTestId('locked'),
+    driver: DateTimeInputDriver,
+  },
 } satisfies ScenePart;
 
 export const dateTimeInputExample: IExampleUnit<typeof dateTimeInputExampleScenePart, JSX.Element> = {
@@ -51,6 +55,14 @@ export const dateTimeInputExampleTestSuite: TestSuiteInfo<typeof dateTimeInputEx
         assertEqual(await engine().parts.reminder.getDateValue(), 'March 3, 2024');
         await engine().parts.meeting.open();
         assertTrue(await engine().parts.meeting.isExpanded());
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the date
+      // field's composed aria-describedby (the time field carries no such link);
+      // undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.reminder.getDisabledMessage(), undefined);
       });
     });
   },

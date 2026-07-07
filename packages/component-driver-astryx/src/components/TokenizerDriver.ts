@@ -1,5 +1,6 @@
-import { byAriaLabel, byCssSelector, childListHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
+import { byAriaLabel, byCssSelector, childListHelper, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
 import { AstryxComboboxDriver } from './AstryxComboboxDriver';
 
 /** Astryx renders each chip as `<span class="astryx-token">`; the class is a stable semantic hook, not StyleX-hashed. */
@@ -53,6 +54,17 @@ export class TokenizerDriver extends AstryxComboboxDriver {
   /** The current query text in the input. */
   async getQuery(): Promise<string> {
     return (await this.interactor.getInputValue(this.combobox)) ?? '';
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the query input's (the
+   * `role="combobox"` control) `aria-describedby` link — Astryx wires
+   * `disabledMessage`'s `aria-describedby` onto that inner input, not the
+   * `role="group"` root. `undefined` when the field isn't in that
+   * disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.combobox, 'aria-describedby', 'tooltip');
   }
 
   /** Type a query into the input, triggering a search. */

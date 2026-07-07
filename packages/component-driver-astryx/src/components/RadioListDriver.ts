@@ -1,5 +1,7 @@
 import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
-import { byChecked, byInputType, byRole, byValue, locatorUtil, Optional } from '@atomic-testing/core';
+import { byChecked, byCssSelector, byInputType, byRole, byValue, locatorUtil, Optional } from '@atomic-testing/core';
+
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
 
 /**
  * Driver for the Astryx RadioList (`@astryxdesign/core/RadioList`).
@@ -75,19 +77,40 @@ export class RadioListDriver extends HTMLRadioButtonGroupDriver {
   /**
    * The group's accessible name.
    *
-   * Read from the inner radiogroup's `aria-label` (which Astryx sets to the group
-   * label) rather than the `<label>` element — the root also contains each item's
-   * own `<label>`, so a `label` match is ambiguous (Playwright rejects it).
+   * The radiogroup names itself via `aria-labelledby` pointing at the field
+   * label's `id` (not a `label` match on the root — the root also contains each
+   * item's own `<label>`, so that would be ambiguous, and Playwright rejects it).
+   * The referenced label re-roots from the document by that `id`, so it resolves
+   * regardless of where Astryx places it in the tree.
    */
   async getLabel(): Promise<Optional<string>> {
     const group = locatorUtil.append(this.locator, byRole('radiogroup'));
-    return this.interactor.getAttribute(group, 'aria-label');
+    const labelId = await this.interactor.getAttribute(group, 'aria-labelledby');
+    if (!labelId) {
+      return undefined;
+    }
+    const label = byCssSelector(`[id="${labelId}"]`, 'Root');
+    return (await this.interactor.getText(label)) ?? undefined;
   }
 
   /** Whether the group is required (`aria-required` on the inner radiogroup). */
   async isRequired(): Promise<boolean> {
     const group = locatorUtil.append(this.locator, byRole('radiogroup'));
     return (await this.interactor.getAttribute(group, 'aria-required')) === 'true';
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, shown when the whole group is disabled
+   * with a reason. `disabledMessage` is a group-level prop (individual radios
+   * have no reason of their own), and the tooltip's `aria-describedby` link is
+   * composed onto the inner `role="radiogroup"` div alongside the
+   * description/status-message ids — this picks out whichever target has
+   * `role="tooltip"`. `undefined` when the group has no disabled-reason
+   * tooltip.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    const group = locatorUtil.append(this.locator, byRole('radiogroup'));
+    return resolveDescribedByRoleText(this.interactor, group, 'aria-describedby', 'tooltip');
   }
 
   override get driverName(): string {

@@ -15,6 +15,10 @@ export const powerSearchExampleScenePart = {
     locator: byDataTestId('empty-search'),
     driver: PowerSearchDriver,
   },
+  disabled: {
+    locator: byDataTestId('disabled-search'),
+    driver: PowerSearchDriver,
+  },
 } satisfies ScenePart;
 
 export const powerSearchExample: IExampleUnit<typeof powerSearchExampleScenePart, JSX.Element> = {
@@ -64,6 +68,15 @@ export const powerSearchExampleTestSuite: TestSuiteInfo<typeof powerSearchExampl
         if (skipInteractionOnWebkit(test, browser())) return;
         assertFalse(await engine().parts.search.editFilter('Nope'));
         assertTrue(await engine().parts.search.editFilter('Priority: is'));
+      });
+
+      // getDisabledMessage resolves through the combobox input's aria-describedby.
+      test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
+        assertEqual(
+          await engine().parts.disabled.getDisabledMessage(),
+          'Filters are locked while the saved view is shared'
+        );
+        assertEqual(await engine().parts.search.getDisabledMessage(), undefined);
       });
     });
   },

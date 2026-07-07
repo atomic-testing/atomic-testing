@@ -14,6 +14,10 @@ export const switchControlExampleScenePart = {
     locator: locatorUtil.append(byDataTestId('dark-wrap'), byRole('switch')),
     driver: SwitchDriver,
   },
+  orgWide: {
+    locator: locatorUtil.append(byDataTestId('orgwide-wrap'), byRole('switch')),
+    driver: SwitchDriver,
+  },
 } satisfies ScenePart;
 
 export const switchControlExample: IExampleUnit<typeof switchControlExampleScenePart, JSX.Element> = {
@@ -48,6 +52,14 @@ export const switchControlExampleTestSuite: TestSuiteInfo<typeof switchControlEx
       test(`getLabel and isDisabled read the switch state`, async () => {
         assertEqual(await engine().parts.notifications.getLabel(), 'Notifications');
         assertFalse(await engine().parts.notifications.isDisabled());
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // composed aria-describedby; undefined when the switch isn't disabled
+      // with a message.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.orgWide.getDisabledMessage(), 'Notifications are turned off org-wide');
+        assertEqual(await engine().parts.notifications.getDisabledMessage(), undefined);
       });
     });
   },

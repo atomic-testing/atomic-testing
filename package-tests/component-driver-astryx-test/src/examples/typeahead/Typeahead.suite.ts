@@ -15,6 +15,10 @@ export const typeaheadExampleScenePart = {
     locator: byDataTestId('city-search'),
     driver: TypeaheadDriver,
   },
+  locked: {
+    locator: byDataTestId('locked-search'),
+    driver: TypeaheadDriver,
+  },
 } satisfies ScenePart;
 
 export const typeaheadExample: IExampleUnit<typeof typeaheadExampleScenePart, JSX.Element> = {
@@ -58,6 +62,13 @@ export const typeaheadExampleTestSuite: TestSuiteInfo<typeof typeaheadExample.sc
         const labels = await engine().parts.city.getResultLabels();
         assertTrue(labels.includes('Prague'));
         assertFalse(labels.includes('Paris'));
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // search input's composed aria-describedby; undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.fruit.getDisabledMessage(), undefined);
       });
     });
   },

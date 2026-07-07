@@ -15,6 +15,10 @@ export const tokenizerExampleScenePart = {
     locator: byDataTestId('plain-tags'),
     driver: TokenizerDriver,
   },
+  disabled: {
+    locator: byDataTestId('disabled-tags'),
+    driver: TokenizerDriver,
+  },
 } satisfies ScenePart;
 
 export const tokenizerExample: IExampleUnit<typeof tokenizerExampleScenePart, JSX.Element> = {
@@ -67,6 +71,15 @@ export const tokenizerExampleTestSuite: TestSuiteInfo<typeof tokenizerExample.sc
         if (skipInteractionOnWebkit(test, browser())) return;
         assertTrue(await engine().parts.tags.clearAll());
         assertEqual(await engine().parts.tags.getTokenCount(), 0);
+      });
+
+      // getDisabledMessage resolves through the combobox input's aria-describedby.
+      test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
+        assertEqual(
+          await engine().parts.disabled.getDisabledMessage(),
+          'Tags are locked while the review is in progress'
+        );
+        assertEqual(await engine().parts.tags.getDisabledMessage(), undefined);
       });
     });
   },
