@@ -37,6 +37,15 @@ function heading(level, text) {
   return `${'#'.repeat(level)} ${text}`;
 }
 
+function appendToGroup(byGroup, groupTitle, child) {
+  const existing = byGroup.get(groupTitle);
+  if (existing) {
+    existing.push(child);
+  } else {
+    byGroup.set(groupTitle, [child]);
+  }
+}
+
 function renderPartitionedGroups(model, options, originalGroups) {
   const md = [];
   const inheritedByGroup = new Map();
@@ -48,7 +57,9 @@ function renderPartitionedGroups(model, options, originalGroups) {
   // pages (outputFileStrategy: 'members') -- that branch handles index-listing
   // logic unrelated to inherited/protected partitioning, and this repo doesn't
   // use that router mode anyway.
-  const hasOwnDocumentGroups = groups.some(group => group.children.every(child => this.router.hasOwnDocument(child)));
+  const hasOwnDocumentGroups = groups.some(
+    group => group.children.length > 0 && group.children.every(child => this.router.hasOwnDocument(child))
+  );
   if (hasOwnDocumentGroups) {
     return originalGroups(model, options);
   }
@@ -62,9 +73,9 @@ function renderPartitionedGroups(model, options, originalGroups) {
       if (bucket === 'own') {
         own.push(child);
       } else if (bucket === 'protected') {
-        protectedByGroup.set(group.title, [...(protectedByGroup.get(group.title) ?? []), child]);
+        appendToGroup(protectedByGroup, group.title, child);
       } else {
-        inheritedByGroup.set(group.title, [...(inheritedByGroup.get(group.title) ?? []), child]);
+        appendToGroup(inheritedByGroup, group.title, child);
       }
     }
 
