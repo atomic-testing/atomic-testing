@@ -77,7 +77,7 @@ export class BannerDriver extends ComponentDriver<{}> {
   private async headerParagraph(index: number): Promise<Optional<string>> {
     const paragraphs = locatorUtil.append(
       this.locator,
-      byCssSelector('[data-status] > div[aria-hidden="true"] + div > div'),
+      byCssSelector('[data-status] > div[aria-hidden="true"] + div > div')
     );
     const item = await listHelper.getListItemByIndex(this, paragraphs, index, HTMLElementDriver);
     if (item == null) {

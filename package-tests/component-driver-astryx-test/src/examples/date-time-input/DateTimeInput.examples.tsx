@@ -13,17 +13,32 @@ const ReminderInput = () => {
   return <DateTimeInput data-testid='reminder' label='Reminder' value={value} onChange={setValue} />;
 };
 
+const LockedInput = () => (
+  <DateTimeInput
+    data-testid='locked'
+    label='Meeting time'
+    value={undefined}
+    onChange={() => {}}
+    isDisabled
+    disabledMessage='You need the Editor role to change this'
+  />
+);
+
 /**
  * Astryx DateTimeInput scene.
  *
  * DateTimeInput self-emits `data-testid` and pairs a date `<input role="combobox">`
  * (with a calendar popover) and a time `<input aria-label="Time">`. `meeting` is
- * pre-filled; `reminder` starts empty.
+ * pre-filled; `reminder` starts empty. `locked` is disabled with a
+ * `disabledMessage`: Astryx wires its `aria-describedby` onto the date field only,
+ * so its `role="tooltip"` layer is reached through that field's composed
+ * `aria-describedby`.
  */
 export const DateTimeInputExample = () => (
   <>
     <MeetingInput />
     <ReminderInput />
+    <LockedInput />
   </>
 );
 

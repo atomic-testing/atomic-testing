@@ -8,6 +8,8 @@ import {
   PartLocator,
 } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
+
 /**
  * Driver for the Astryx SegmentedControl (`@astryxdesign/core/SegmentedControl`).
  *
@@ -78,6 +80,17 @@ export class SegmentedControlDriver extends ComponentDriver<{}> implements IInpu
   /** The accessible name of the group (`aria-label` on the radiogroup root). */
   async getLabel(): Promise<Optional<string>> {
     return this.interactor.getAttribute(this.locator, 'aria-label');
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, shown when the whole control is
+   * disabled with a reason. Resolved through the root radiogroup's
+   * `aria-describedby` (SegmentedControl composes no other id onto it, but the
+   * shared resolver still confirms the target has `role="tooltip"`).
+   * `undefined` when the control has no disabled-reason tooltip.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.locator, 'aria-describedby', 'tooltip');
   }
 
   get driverName(): string {

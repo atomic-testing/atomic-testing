@@ -15,6 +15,10 @@ export const segmentedControlExampleScenePart = {
     locator: locatorUtil.append(byRole('radiogroup'), byAriaLabel('Density', 'Same')),
     driver: SegmentedControlDriver,
   },
+  lockedView: {
+    locator: locatorUtil.append(byRole('radiogroup'), byAriaLabel('Locked view', 'Same')),
+    driver: SegmentedControlDriver,
+  },
 } satisfies ScenePart;
 
 export const segmentedControlExample: IExampleUnit<typeof segmentedControlExampleScenePart, JSX.Element> = {
@@ -70,6 +74,15 @@ export const segmentedControlExampleTestSuite: TestSuiteInfo<typeof segmentedCon
         await engine().parts.view.setValue('grid');
         assertEqual(await engine().parts.view.getValue(), 'grid');
         assertEqual(await engine().parts.density.getValue(), 'comfortable');
+      });
+
+      // getDisabledMessage is a whole-group concept: the tooltip's
+      // aria-describedby link composes onto the root radiogroup, distinct from a
+      // per-segment isDisabled (no message). undefined when the group isn't
+      // disabled with a message.
+      test(`getDisabledMessage returns the group's disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.lockedView.getDisabledMessage(), 'View mode is fixed for this workspace');
+        assertEqual(await engine().parts.view.getDisabledMessage(), undefined);
       });
     });
   },

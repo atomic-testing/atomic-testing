@@ -16,6 +16,12 @@ import { DateInputDriver } from './DateInputDriver';
  * `timeLabel` prop), so it's no longer a stable match value. Since the widget only
  * ever renders these two `<input>`s, the time field is instead reached as
  * whichever one is NOT the date combobox.
+ *
+ * `disabledMessage` renders a single tooltip for the whole control, but Astryx
+ * wires its `aria-describedby` link onto the date field only — the time
+ * `<input>` carries no `aria-describedby` at all. {@link getDisabledMessage},
+ * inherited from {@link DateInputDriver}, already resolves through the date
+ * field and needs no override here.
  */
 export class DateTimeInputDriver extends DateInputDriver {
   private get timeInput(): PartLocator {

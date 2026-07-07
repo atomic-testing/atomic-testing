@@ -1,5 +1,7 @@
 import { byCssSelector, byRole, ComponentDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
+
 /**
  * Driver for the Astryx DateInput (`@astryxdesign/core/DateInput`).
  *
@@ -40,6 +42,16 @@ export class DateInputDriver extends ComponentDriver {
   /** Whether the input is invalid (`aria-invalid="true"`). */
   async isInvalid(): Promise<boolean> {
     return (await this.interactor.getAttribute(this.input, 'aria-invalid')) === 'true';
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the input's composed
+   * `aria-describedby` — the id list also carries the description/status-message
+   * ids, so this picks out whichever target has `role="tooltip"`. `undefined`
+   * when the input has no disabled-reason tooltip.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.input, 'aria-describedby', 'tooltip');
   }
 
   /**

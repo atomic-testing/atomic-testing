@@ -15,6 +15,10 @@ export const dateRangeInputExampleScenePart = {
     locator: byDataTestId('budget'),
     driver: DateRangeInputDriver,
   },
+  locked: {
+    locator: byDataTestId('locked'),
+    driver: DateRangeInputDriver,
+  },
 } satisfies ScenePart;
 
 export const dateRangeInputExample: IExampleUnit<typeof dateRangeInputExampleScenePart, JSX.Element> = {
@@ -72,6 +76,13 @@ export const dateRangeInputExampleTestSuite: TestSuiteInfo<typeof dateRangeInput
         await engine().parts.report.selectPreset('Last 7 days');
         assertTrue(await engine().parts.report.clear());
         assertEqual(await engine().parts.report.getDisplayText(), 'Select date range');
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // trigger's composed aria-describedby; undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.report.getDisabledMessage(), undefined);
       });
     });
   },

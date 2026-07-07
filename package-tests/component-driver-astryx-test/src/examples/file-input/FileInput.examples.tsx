@@ -11,8 +11,12 @@ import React, { JSX } from 'react';
  * `aria-required`, `aria-invalid`, `disabled`, and the `aria-describedby` status link
  * all live — so the scene anchors there.
  *
- * Three instances cover the readable surface: a basic single-file input, a required
- * multi-file dropzone, and a disabled input carrying an error `status`.
+ * Four instances cover the readable surface: a basic single-file input, a required
+ * multi-file dropzone, a disabled input carrying an error `status`, and a disabled
+ * input carrying a `disabledMessage`. The last exercises `getDisabledMessage`,
+ * which — unlike the other reads above — resolves through the focusable
+ * `div[role="button"]` wrapper's `aria-describedby`, not the hidden input's (Astryx
+ * 0.1.3 moved that link onto the wrapper).
  */
 export const FileInputExample = () => (
   <div>
@@ -33,6 +37,14 @@ export const FileInputExample = () => (
       value={null}
       onChange={() => {}}
       data-testid='fi-error'
+    />
+    <FileInput
+      label='Contract'
+      isDisabled
+      disabledMessage='Uploads are locked until your profile is verified'
+      value={null}
+      onChange={() => {}}
+      data-testid='fi-disabled-message'
     />
   </div>
 );

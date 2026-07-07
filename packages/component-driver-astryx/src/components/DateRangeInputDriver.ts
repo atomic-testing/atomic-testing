@@ -1,5 +1,7 @@
 import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
+
 /**
  * Driver for the Astryx DateRangeInput (`@astryxdesign/core/DateRangeInput`).
  *
@@ -32,6 +34,16 @@ export class DateRangeInputDriver extends ComponentDriver {
   /** Whether the popover is open — read from the trigger's `aria-expanded`. */
   async isExpanded(): Promise<boolean> {
     return (await this.interactor.getAttribute(this.trigger, 'aria-expanded')) === 'true';
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the trigger's composed
+   * `aria-describedby` — the id list also carries the description/status-message
+   * ids, so this picks out whichever target has `role="tooltip"`. `undefined`
+   * when the trigger has no disabled-reason tooltip.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.trigger, 'aria-describedby', 'tooltip');
   }
 
   /**

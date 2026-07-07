@@ -15,6 +15,10 @@ export const dateInputExampleScenePart = {
     locator: byDataTestId('deadline'),
     driver: DateInputDriver,
   },
+  locked: {
+    locator: byDataTestId('locked'),
+    driver: DateInputDriver,
+  },
 } satisfies ScenePart;
 
 export const dateInputExample: IExampleUnit<typeof dateInputExampleScenePart, JSX.Element> = {
@@ -60,6 +64,13 @@ export const dateInputExampleTestSuite: TestSuiteInfo<typeof dateInputExample.sc
         assertTrue(await engine().parts.birthday.clear());
         assertEqual(await engine().parts.birthday.getValue(), undefined);
         assertFalse(await engine().parts.deadline.clear());
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // input's composed aria-describedby; undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.deadline.getDisabledMessage(), undefined);
       });
     });
   },

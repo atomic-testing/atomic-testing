@@ -57,6 +57,21 @@ const EmptyBar = () => {
   );
 };
 
+const DisabledBar = () => {
+  const [filters] = useState<Filter[]>([]);
+  return (
+    <PowerSearch
+      data-testid='disabled-search'
+      label='Disabled filters'
+      config={config}
+      filters={filters as never}
+      onChange={() => {}}
+      isDisabled
+      disabledMessage='Filters are locked while the saved view is shared'
+    />
+  );
+};
+
 /**
  * Astryx PowerSearch scene.
  *
@@ -64,12 +79,17 @@ const EmptyBar = () => {
  * `data-testid`); filter chips are `span.astryx-token` keyed by their
  * field/operator label, with a `role="combobox"` query input and a trailing
  * "N results" count. The pre-populated and empty bars verify enumeration, removal,
- * and scoping.
+ * and scoping. A third, disabled bar carries a `disabledMessage`, exercising
+ * `getDisabledMessage`'s resolution through the inner combobox input's
+ * `aria-describedby` — PowerSearch forwards `disabledMessage` straight through to
+ * its internal Tokenizer, which wires the tooltip link there, not onto the
+ * `role="group"` root.
  */
 export const PowerSearchExample = () => (
   <>
     <FilterBar />
     <EmptyBar />
+    <DisabledBar />
   </>
 );
 

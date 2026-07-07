@@ -1,5 +1,6 @@
 import { Optional } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
 import { AstryxComboboxDriver } from './AstryxComboboxDriver';
 
 /**
@@ -32,6 +33,17 @@ export class SelectorDriver extends AstryxComboboxDriver {
   async isOptionSelected(label: string): Promise<boolean> {
     await this.open();
     return this.isOptionLabelSelected(label);
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the trigger's (the
+   * `role="combobox"` control) `aria-describedby` link — Astryx wires
+   * `disabledMessage`'s `aria-describedby` onto that inner `<button>`, not the
+   * root `<div>`. `undefined` when the selector isn't in that
+   * disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.combobox, 'aria-describedby', 'tooltip');
   }
 
   /**

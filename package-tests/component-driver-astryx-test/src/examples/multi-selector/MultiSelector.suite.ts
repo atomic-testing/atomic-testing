@@ -15,6 +15,10 @@ export const multiSelectorExampleScenePart = {
     locator: byDataTestId('perms'),
     driver: MultiSelectorDriver,
   },
+  locked: {
+    locator: byDataTestId('locked'),
+    driver: MultiSelectorDriver,
+  },
 } satisfies ScenePart;
 
 export const multiSelectorExample: IExampleUnit<typeof multiSelectorExampleScenePart, JSX.Element> = {
@@ -65,6 +69,13 @@ export const multiSelectorExampleTestSuite: TestSuiteInfo<typeof multiSelectorEx
         assertTrue(await engine().parts.perms.selectAll());
         assertTrue(await engine().parts.perms.isOptionSelected('Read'));
         assertTrue(await engine().parts.perms.isOptionSelected('Write'));
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // trigger's composed aria-describedby; undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'Select a table first');
+        assertEqual(await engine().parts.fruits.getDisabledMessage(), undefined);
       });
     });
   },

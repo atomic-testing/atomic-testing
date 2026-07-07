@@ -18,6 +18,10 @@ export const fileInputExampleScenePart = {
     locator: byDataTestId('fi-error'),
     driver: FileInputDriver,
   },
+  fiDisabledMessage: {
+    locator: byDataTestId('fi-disabled-message'),
+    driver: FileInputDriver,
+  },
 } satisfies ScenePart;
 
 export const fileInputExample: IExampleUnit<typeof fileInputExampleScenePart, JSX.Element> = {
@@ -61,6 +65,15 @@ export const fileInputExampleTestSuite: TestSuiteInfo<typeof fileInputExample.sc
         assertFalse(await engine().parts.fiBasic.isMultiple());
         assertFalse(await engine().parts.fiBasic.isRequired());
         assertFalse(await engine().parts.fiBasic.isDisabled());
+      });
+
+      // getDisabledMessage resolves through the role="button" wrapper's aria-describedby.
+      test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
+        assertEqual(
+          await engine().parts.fiDisabledMessage.getDisabledMessage(),
+          'Uploads are locked until your profile is verified'
+        );
+        assertEqual(await engine().parts.fiBasic.getDisabledMessage(), undefined);
       });
     });
   },

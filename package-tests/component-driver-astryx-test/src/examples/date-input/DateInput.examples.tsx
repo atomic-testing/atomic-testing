@@ -13,17 +13,31 @@ const DeadlineInput = () => {
   return <DateInput data-testid='deadline' label='Deadline' value={value} onChange={setValue} />;
 };
 
+const LockedInput = () => (
+  <DateInput
+    data-testid='locked'
+    label='Event date'
+    value={undefined}
+    onChange={() => {}}
+    isDisabled
+    disabledMessage='You need the Editor role to change this'
+  />
+);
+
 /**
  * Astryx DateInput scene.
  *
  * DateInput self-emits `data-testid`; the editable control is an
  * `<input role="combobox">` (value = display string) with an "Open calendar"
  * toggle. `birthday` is pre-filled with a clear control; `deadline` starts empty.
+ * `locked` is disabled with a `disabledMessage`, so its `<input>` renders a
+ * `role="tooltip"` layer reached through the composed `aria-describedby`.
  */
 export const DateInputExample = () => (
   <>
     <BirthdayInput />
     <DeadlineInput />
+    <LockedInput />
   </>
 );
 

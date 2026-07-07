@@ -10,6 +10,10 @@ export const textAreaExampleScenePart = {
     locator: byDataTestId('desc-area'),
     driver: TextAreaDriver,
   },
+  notesArea: {
+    locator: byDataTestId('notes-area'),
+    driver: TextAreaDriver,
+  },
 } satisfies ScenePart;
 
 export const textAreaExample: IExampleUnit<typeof textAreaExampleScenePart, JSX.Element> = {
@@ -45,6 +49,12 @@ export const textAreaExampleTestSuite: TestSuiteInfo<typeof textAreaExample.scen
       // getRows reads the rows attribute.
       test(`getRows returns the visible row count`, async () => {
         assertEqual(await engine().parts.descArea.getRows(), 4);
+      });
+
+      // getDisabledMessage resolves the tooltip out of the composed aria-describedby.
+      test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
+        assertEqual(await engine().parts.notesArea.getDisabledMessage(), 'Notes are locked after submission');
+        assertEqual(await engine().parts.descArea.getDisabledMessage(), undefined);
       });
     });
   },

@@ -8,7 +8,10 @@ import React, { JSX, useState } from 'react';
  * The accessible control is the native `<input type="checkbox">`; the root is a
  * plain `<div>` and Astryx does NOT forward `data-testid`, so each instance is
  * wrapped in a testid'd container and the scene scopes to the inner checkbox. The
- * "All" instance is rendered indeterminate (`aria-checked="mixed"`).
+ * "All" instance is rendered indeterminate (`aria-checked="mixed"`). The
+ * "Locked" instance is disabled with a `disabledMessage`, so its native
+ * `<input>` renders a `role="tooltip"` layer reached through the composed
+ * `aria-describedby`.
  */
 export const CheckboxInputExample = () => {
   const [accept, setAccept] = useState(true);
@@ -24,6 +27,15 @@ export const CheckboxInputExample = () => {
       </div>
       <div data-testid='all-wrap'>
         <CheckboxInput label='All' value='indeterminate' onChange={() => {}} />
+      </div>
+      <div data-testid='locked-wrap'>
+        <CheckboxInput
+          label='Locked'
+          value={false}
+          onChange={() => {}}
+          isDisabled
+          disabledMessage='Managed by your administrator'
+        />
       </div>
     </div>
   );

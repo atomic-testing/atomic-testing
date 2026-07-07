@@ -1,6 +1,8 @@
 import { HTMLRadioButtonGroupDriver } from '@atomic-testing/component-driver-html';
 import { byChecked, byCssSelector, byInputType, byRole, byValue, locatorUtil, Optional } from '@atomic-testing/core';
 
+import { resolveDescribedByRoleText } from '../internal/linkedLocators';
+
 /**
  * Driver for the Astryx RadioList (`@astryxdesign/core/RadioList`).
  *
@@ -95,6 +97,20 @@ export class RadioListDriver extends HTMLRadioButtonGroupDriver {
   async isRequired(): Promise<boolean> {
     const group = locatorUtil.append(this.locator, byRole('radiogroup'));
     return (await this.interactor.getAttribute(group, 'aria-required')) === 'true';
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, shown when the whole group is disabled
+   * with a reason. `disabledMessage` is a group-level prop (individual radios
+   * have no reason of their own), and the tooltip's `aria-describedby` link is
+   * composed onto the inner `role="radiogroup"` div alongside the
+   * description/status-message ids — this picks out whichever target has
+   * `role="tooltip"`. `undefined` when the group has no disabled-reason
+   * tooltip.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    const group = locatorUtil.append(this.locator, byRole('radiogroup'));
+    return resolveDescribedByRoleText(this.interactor, group, 'aria-describedby', 'tooltip');
   }
 
   override get driverName(): string {

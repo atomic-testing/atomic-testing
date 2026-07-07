@@ -1,7 +1,7 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
 import { byCssSelector, Optional } from '@atomic-testing/core';
 
-import { resolveLinkedLabelText } from '../internal/linkedLocators';
+import { resolveDescribedByRoleText, resolveLinkedLabelText } from '../internal/linkedLocators';
 
 /**
  * Shared base for Astryx single-control field inputs (TextInput, NumberInput,
@@ -80,5 +80,16 @@ export abstract class AstryxFieldInputDriver extends HTMLTextInputDriver {
       }
     }
     return undefined;
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the control's
+   * `aria-describedby` link to the `role="tooltip"` layer that
+   * `isDisabled` + `disabledMessage` renders (the same `useTooltip` primitive as
+   * the standalone Tooltip). `undefined` when the field isn't in that
+   * disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.locator, 'aria-describedby', 'tooltip');
   }
 }

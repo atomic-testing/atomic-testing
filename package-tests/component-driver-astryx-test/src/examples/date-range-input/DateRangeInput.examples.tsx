@@ -36,18 +36,32 @@ const BudgetRange = () => {
   );
 };
 
+const LockedRange = () => (
+  <DateRangeInput
+    data-testid='locked'
+    label='Reporting period'
+    value={null}
+    onChange={() => {}}
+    isDisabled
+    disabledMessage='You need the Editor role to change this'
+  />
+);
+
 /**
  * Astryx DateRangeInput scene.
  *
  * DateRangeInput self-emits `data-testid`; the trigger is a
  * `<button aria-haspopup="dialog">` whose text is the display range and whose
  * `aria-controls` (when open) points at the popover holding preset options and a
- * range calendar. Two range inputs verify selector scoping.
+ * range calendar. Two range inputs verify selector scoping. `locked` is disabled
+ * with a `disabledMessage`, so its trigger `<button>` renders a `role="tooltip"`
+ * layer reached through the composed `aria-describedby`.
  */
 export const DateRangeInputExample = () => (
   <>
     <ReportRange />
     <BudgetRange />
+    <LockedRange />
   </>
 );
 

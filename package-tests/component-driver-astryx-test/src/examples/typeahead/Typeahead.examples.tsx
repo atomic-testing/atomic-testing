@@ -44,17 +44,32 @@ const CityTypeahead = () => {
   );
 };
 
+const LockedTypeahead = () => (
+  <Typeahead<Item>
+    data-testid='locked-search'
+    label='Assignee'
+    searchSource={fruitSource}
+    value={null}
+    onChange={() => {}}
+    isDisabled
+    disabledMessage='You need the Editor role to change this'
+  />
+);
+
 /**
  * Astryx Typeahead scene.
  *
  * Typeahead self-emits `data-testid` on the root `<div>`; the `role="combobox"` is
  * the `<input>`, linked to the async results `role="listbox"`. Two typeaheads
- * verify selector scoping.
+ * verify selector scoping. The "locked" instance is disabled with a
+ * `disabledMessage`, so its `<input>` renders a `role="tooltip"` layer reached
+ * through the composed `aria-describedby`.
  */
 export const TypeaheadExample = () => (
   <>
     <FruitTypeahead />
     <CityTypeahead />
+    <LockedTypeahead />
   </>
 );
 

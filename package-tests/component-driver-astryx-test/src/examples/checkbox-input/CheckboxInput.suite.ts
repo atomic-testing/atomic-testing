@@ -18,6 +18,10 @@ export const checkboxInputExampleScenePart = {
     locator: locatorUtil.append(byDataTestId('all-wrap'), byInputType('checkbox')),
     driver: CheckboxInputDriver,
   },
+  locked: {
+    locator: locatorUtil.append(byDataTestId('locked-wrap'), byInputType('checkbox')),
+    driver: CheckboxInputDriver,
+  },
 } satisfies ScenePart;
 
 export const checkboxInputExample: IExampleUnit<typeof checkboxInputExampleScenePart, JSX.Element> = {
@@ -56,6 +60,14 @@ export const checkboxInputExampleTestSuite: TestSuiteInfo<typeof checkboxInputEx
       test(`getLabel returns the checkbox label`, async () => {
         assertEqual(await engine().parts.accept.getLabel(), 'Accept terms');
         assertEqual(await engine().parts.subscribe.getLabel(), 'Subscribe');
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // composed aria-describedby; undefined when the checkbox isn't disabled
+      // with a message.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'Managed by your administrator');
+        assertEqual(await engine().parts.accept.getDisabledMessage(), undefined);
       });
     });
   },

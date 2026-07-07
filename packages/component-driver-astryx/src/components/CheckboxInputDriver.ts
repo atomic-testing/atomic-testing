@@ -1,7 +1,7 @@
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import { byCssSelector, locatorUtil, Optional } from '@atomic-testing/core';
 
-import { resolveLinkedLabelText } from '../internal/linkedLocators';
+import { resolveDescribedByRoleText, resolveLinkedLabelText } from '../internal/linkedLocators';
 
 /**
  * Driver for the Astryx CheckboxInput (`@astryxdesign/core/CheckboxInput`).
@@ -35,6 +35,17 @@ export class CheckboxInputDriver extends HTMLCheckboxDriver {
   /** The checkbox's visible label, resolved via the `<label for>`↔`id` link. */
   async getLabel(): Promise<Optional<string>> {
     return resolveLinkedLabelText(this.interactor, this.locator);
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, shown when the checkbox is disabled
+   * with a reason. Resolved through the native `<input>`'s composed
+   * `aria-describedby` — the id list also carries the description/status-message
+   * ids, so this picks out whichever target has `role="tooltip"`. `undefined`
+   * when the checkbox has no disabled-reason tooltip.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    return resolveDescribedByRoleText(this.interactor, this.locator, 'aria-describedby', 'tooltip');
   }
 
   override get driverName(): string {

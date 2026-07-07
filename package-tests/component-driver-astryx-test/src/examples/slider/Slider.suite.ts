@@ -10,6 +10,10 @@ export const sliderExampleScenePart = {
     locator: byDataTestId('volume-slider'),
     driver: SliderDriver,
   },
+  locked: {
+    locator: byDataTestId('locked-slider'),
+    driver: SliderDriver,
+  },
 } satisfies ScenePart;
 
 export const sliderExample: IExampleUnit<typeof sliderExampleScenePart, JSX.Element> = {
@@ -35,6 +39,14 @@ export const sliderExampleTestSuite: TestSuiteInfo<typeof sliderExample.scene> =
       test(`getLabel and isDisabled read the slider state`, async () => {
         assertEqual(await engine().parts.volume.getLabel(), 'Volume');
         assertFalse(await engine().parts.volume.isDisabled());
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // thumb's composed aria-describedby; undefined when the slider isn't
+      // disabled with a message.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'Volume is locked while sharing your screen');
+        assertEqual(await engine().parts.volume.getDisabledMessage(), undefined);
       });
 
       // setValue drives the value by keyboard (Arrow stepping).

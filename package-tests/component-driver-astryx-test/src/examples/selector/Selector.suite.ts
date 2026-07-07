@@ -15,6 +15,10 @@ export const selectorExampleScenePart = {
     locator: byDataTestId('size'),
     driver: SelectorDriver,
   },
+  locked: {
+    locator: byDataTestId('locked'),
+    driver: SelectorDriver,
+  },
 } satisfies ScenePart;
 
 export const selectorExample: IExampleUnit<typeof selectorExampleScenePart, JSX.Element> = {
@@ -60,6 +64,13 @@ export const selectorExampleTestSuite: TestSuiteInfo<typeof selectorExample.scen
         assertFalse(await engine().parts.fruit.selectByLabel('Nope'));
         assertTrue(await engine().parts.fruit.selectByLabel('Apple'));
         assertEqual(await engine().parts.fruit.getSelectedLabel(), 'Apple');
+      });
+
+      // getDisabledMessage resolves the disabled-reason tooltip through the
+      // trigger's composed aria-describedby; undefined when not in that state.
+      test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
+        assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
+        assertEqual(await engine().parts.fruit.getDisabledMessage(), undefined);
       });
     });
   },

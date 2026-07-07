@@ -10,6 +10,10 @@ export const checkboxListExampleScenePart = {
     locator: byDataTestId('notifs'),
     driver: CheckboxListDriver,
   },
+  lockedNotifs: {
+    locator: byDataTestId('locked-notifs'),
+    driver: CheckboxListDriver,
+  },
 } satisfies ScenePart;
 
 export const checkboxListExample: IExampleUnit<typeof checkboxListExampleScenePart, JSX.Element> = {
@@ -47,6 +51,17 @@ export const checkboxListExampleTestSuite: TestSuiteInfo<typeof checkboxListExam
       test(`uncheckItemByLabel unchecks a row`, async () => {
         assertTrue(await engine().parts.notifs.uncheckItemByLabel('Email'));
         assertFalse(await engine().parts.notifs.isItemChecked('Email'));
+      });
+
+      // getDisabledMessage is a group-level concept: the tooltip's
+      // aria-describedby link composes onto the inner role="group" div, not any
+      // individual row. undefined when the group isn't disabled with a message.
+      test(`getDisabledMessage returns the group's disabled-reason tooltip text`, async () => {
+        assertEqual(
+          await engine().parts.lockedNotifs.getDisabledMessage(),
+          'Notifications are managed by your administrator'
+        );
+        assertEqual(await engine().parts.notifs.getDisabledMessage(), undefined);
       });
     });
   },

@@ -1,7 +1,7 @@
 import { HTMLFileInputDriver } from '@atomic-testing/component-driver-html';
 import { byCssSelector, Optional, PartLocator } from '@atomic-testing/core';
 
-import { resolveLinkedLabelText } from '../internal/linkedLocators';
+import { resolveDescribedByRoleText, resolveLinkedLabelText } from '../internal/linkedLocators';
 
 /**
  * Driver for the Astryx FileInput (`@astryxdesign/core/FileInput`).
@@ -93,6 +93,21 @@ export class FileInputDriver extends HTMLFileInputDriver {
       }
     }
     return undefined;
+  }
+
+  /**
+   * The `disabledMessage` tooltip text, resolved via the `role="button"`
+   * wrapper's `aria-describedby` link — like `aria-required`/`aria-invalid`
+   * (see the class doc), the disabled-message tooltip describes the operable
+   * wrapper, not the hidden native input. `undefined` when the field isn't in
+   * that disabled-with-message state.
+   */
+  async getDisabledMessage(): Promise<Optional<string>> {
+    const wrapper = await this.wrapperLocator();
+    if (wrapper == null) {
+      return undefined;
+    }
+    return resolveDescribedByRoleText(this.interactor, wrapper, 'aria-describedby', 'tooltip');
   }
 
   /**
