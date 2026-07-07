@@ -121,13 +121,13 @@ reorder, FAQ recategorized, navbar/footer "front door" conflict).
 rubric's severity rule applied literally (any open `high`/`critical` caps a criterion below B,
 regardless of the audit's own holistic letter):
 
-| Criterion                          | Open `critical`/`high` (5th audit) | Fixed after, unverified by a 6th audit |
-| ----------------------------------- | :---------------------------------: | --------------------------------------- |
-| 1. Technical accuracy & drift      | 1 high (stale MUI tables), 1 medium | ✅ both fixed in `7d197f9`               |
-| 2. Walkthrough / build a unit test | 1 **critical**, 1 high              | ✅ both fixed in `8d23d54`               |
-| 3. Architecture clarity            | 0 (3 medium, 1 low only)            | already clear                           |
-| 4. Homepage / elevator pitch       | 1 high (Angular absent from live demo) | ❌ **not fixed** — see below          |
-| 5. Information architecture        | 1 high (navbar/footer disagree)     | ✅ fixed in `8d23d54`                    |
+| Criterion                          |   Open `critical`/`high` (5th audit)   | Fixed after, unverified by a 6th audit |
+| ---------------------------------- | :------------------------------------: | -------------------------------------- |
+| 1. Technical accuracy & drift      |  1 high (stale MUI tables), 1 medium   | ✅ both fixed in `7d197f9`             |
+| 2. Walkthrough / build a unit test |         1 **critical**, 1 high         | ✅ both fixed in `8d23d54`             |
+| 3. Architecture clarity            |        0 (3 medium, 1 low only)        | already clear                          |
+| 4. Homepage / elevator pitch       | 1 high (Angular absent from live demo) | ❌ **not fixed** — see below           |
+| 5. Information architecture        |    1 high (navbar/footer disagree)     | ✅ fixed in `8d23d54`                  |
 
 **Homepage (#942) is the one known gap against the B+ goal.** Across 3 separate audit passes, the
 homepage's Angular positioning oscillated between two failure modes: claiming Angular parity the

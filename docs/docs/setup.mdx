@@ -21,7 +21,9 @@ Atomic Testing renders your component through your framework's real reconciler (
 pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
 ```
 
-<CodeBlock language='js' title='jest.config.js'>{jestConfigSnippet}</CodeBlock>
+<CodeBlock language='js' title='jest.config.js'>
+  {jestConfigSnippet}
+</CodeBlock>
 
 :::info CommonJS vs. ESM
 `jest.config.js` uses `module.exports`, Jest's CommonJS config format. If your `package.json` has
