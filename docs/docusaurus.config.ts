@@ -97,6 +97,12 @@ const config: Config = {
         entryPointStrategy: 'packages',
         tsconfig: '../tsconfig.json',
         sidebar: {},
+        // Partition each class/interface page's members into own / inherited /
+        // protected sections (see typedoc/partition-members-plugin.mjs). Absolute
+        // path because TypeDoc resolves relative plugin specifiers from its own
+        // node_modules location, not from here.
+        plugin: [path.join(__dirname, 'typedoc', 'partition-members-plugin.mjs')],
+        theme: 'markdown-partitioned',
       },
     ],
   ],
