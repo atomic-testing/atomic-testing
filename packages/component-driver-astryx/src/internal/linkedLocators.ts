@@ -64,7 +64,7 @@ export async function resolveLinkedElementText(
 }
 
 /**
- * Resolve the text of the element linked through a space-separated IDREF
+ * Resolve the text of the element linked through a whitespace-separated IDREF
  * attribute (e.g. `aria-describedby`) whose target carries a specific `role`.
  * Astryx composes `aria-describedby` from multiple ids (description, status
  * message, disabled-message tooltip, …) rather than a single id, so unlike
@@ -86,7 +86,7 @@ export async function resolveDescribedByRoleText(
   if (!ids) {
     return undefined;
   }
-  for (const id of ids.split(' ').filter(Boolean)) {
+  for (const id of ids.split(/\s+/).filter(Boolean)) {
     const target = byAttribute('id', id, 'Root');
     if ((await interactor.exists(target)) && (await interactor.getAttribute(target, 'role')) === role) {
       return (await interactor.getText(target)) ?? undefined;

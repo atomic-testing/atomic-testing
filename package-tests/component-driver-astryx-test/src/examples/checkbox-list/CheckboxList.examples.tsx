@@ -6,8 +6,10 @@ import React, { JSX, useState } from 'react';
  * Astryx CheckboxList scene.
  *
  * CheckboxList self-emits `data-testid` on its outer `<div>`; inside is a
- * `<ul role="list">` of `<li aria-checked>` rows. The per-item value is a React
- * key (not emitted to the DOM), so rows are addressed by their visible label.
+ * `<ul role="list">` of `<li role="listitem">` rows. Astryx 0.1.3 dropped the
+ * row's `aria-checked` (invalid on `role="listitem"`) — checked state is
+ * conveyed solely by the inner checkbox. The per-item value is a React key (not
+ * emitted to the DOM), so rows are addressed by their visible label.
  *
  * The second group is disabled with a group-level `disabledMessage`: the
  * tooltip's `aria-describedby` link composes onto the inner `role="group"`
