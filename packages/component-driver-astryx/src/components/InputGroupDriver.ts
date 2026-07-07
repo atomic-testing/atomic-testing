@@ -5,15 +5,24 @@ import { byCssSelector, ComponentDriver, listHelper, locatorUtil, Optional } fro
  * Driver for the Astryx InputGroup (`@astryxdesign/core/InputGroup`).
  *
  * InputGroup self-emits `data-testid` on its inner `role="group"` div (anchored
- * by the scene), which also carries the accessible name (`aria-label`). The group
- * holds prefix/suffix addons (`InputGroupText` → plain `<div>`) alongside the
- * input wrapper (`<div data-pressable-container>`); addons are the non-wrapper
- * child divs.
+ * by the scene), which carries the accessible name via `aria-labelledby` pointing
+ * at the field label's `id`. The group holds prefix/suffix addons
+ * (`InputGroupText` → plain `<div>`) alongside the input wrapper
+ * (`<div data-pressable-container>`); addons are the non-wrapper child divs.
  */
 export class InputGroupDriver extends ComponentDriver<{}> {
-  /** The group's accessible name (`aria-label`). */
+  /**
+   * The group's accessible name — resolved from `aria-labelledby`, re-rooting
+   * from the document by the referenced `id` since the field label isn't
+   * necessarily a descendant of the group root.
+   */
   async getLabel(): Promise<Optional<string>> {
-    return this.interactor.getAttribute(this.locator, 'aria-label');
+    const labelId = await this.interactor.getAttribute(this.locator, 'aria-labelledby');
+    if (!labelId) {
+      return undefined;
+    }
+    const label = byCssSelector(`[id="${labelId}"]`, 'Root');
+    return (await this.interactor.getText(label)) ?? undefined;
   }
 
   /** Texts of the prefix/suffix addons, in DOM order. */

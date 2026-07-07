@@ -27,8 +27,8 @@
     "test:e2e:chrome": "playwright test --project=chromium"
   },
   "dependencies": {
-    "@astryxdesign/core": "^0.1.1",
-    "@astryxdesign/theme-neutral": "^0.1.1",
+    "@astryxdesign/core": "^0.1.3",
+    "@astryxdesign/theme-neutral": "^0.1.3",
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/internal-react-example": "workspace:*",
     "react": "^19.2.3",

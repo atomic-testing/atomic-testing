@@ -17,8 +17,8 @@ export type TableSortDirection = 'ascending' | 'descending';
  * checkbox column from the synthetic `data-column-key="__xds_selection"` — never
  * from StyleX-hashed classes.
  *
- * `@astryxdesign/core@0.1.1` renders the **full** table (no virtualization), so
- * every row reads faithfully in jsdom as well as the browser; row indices below are
+ * `@astryxdesign/core` renders the **full** table (no virtualization), so every
+ * row reads faithfully in jsdom as well as the browser; row indices below are
  * zero-based and exclude the header.
  */
 export class TableDriver extends ComponentDriver {
@@ -114,9 +114,14 @@ export class TableDriver extends ComponentDriver {
     return (await this.interactor.isChecked(this.selectAllCheckbox)) && !(await this.isSelectionIndeterminate());
   }
 
-  /** Whether the selection is partial — the header checkbox reports `aria-checked="mixed"`. */
+  /**
+   * Whether the selection is partial — the header checkbox matches
+   * `:indeterminate`. Astryx 0.1.3 dropped the redundant `aria-checked="mixed"` it
+   * used to set alongside the native `.indeterminate` DOM property (which isn't
+   * reflected as an HTML attribute), so this reads the CSS pseudo-class instead.
+   */
   async isSelectionIndeterminate(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.selectAllCheckbox, 'aria-checked')) === 'mixed';
+    return this.interactor.exists(locatorUtil.append(this.selectAllCheckbox, byCssSelector(':indeterminate', 'Same')));
   }
 
   /** Toggle the select-all checkbox in the header. */

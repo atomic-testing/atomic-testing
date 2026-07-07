@@ -7,8 +7,11 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  * native-popover dialog. The scene anchors on the root `<div>` (self-emitting
  * `data-testid`); the trigger is a `<button aria-haspopup="dialog">` whose text is
  * the display string and which links — only while open — to the popover via
- * `aria-controls`. The popover `[role="dialog"]` holds a `[role="listbox"]` of
- * preset `[role="option"]` buttons and a range Calendar of `[data-date]` cells.
+ * `aria-controls`. The popover `[role="dialog"]` holds a labeled `[role="group"]`
+ * of preset `<button>`s (Astryx 0.1.3 dropped the `listbox`/`option` roles, which
+ * misrepresented the actual Tab-between-buttons interaction; the active preset is
+ * now marked `aria-current` rather than `aria-selected`) and a range Calendar of
+ * `[data-date]` cells.
  *
  * The popover renders in jsdom once React opens it (reachable via `aria-controls`),
  * so open/preset/range-pick are exercised in jsdom and the browser alike; its true
@@ -93,7 +96,7 @@ export class DateRangeInputDriver extends ComponentDriver {
     return labels;
   }
 
-  /** The label of the active preset (`aria-selected="true"`), or `undefined` when none is. Opens the popover. */
+  /** The label of the active preset (`aria-current="true"`), or `undefined` when none is. Opens the popover. */
   async getSelectedPreset(): Promise<Optional<string>> {
     await this.open();
     const popoverId = await this.popoverId();
@@ -105,7 +108,7 @@ export class DateRangeInputDriver extends ComponentDriver {
       if (!(await this.interactor.exists(option))) {
         break;
       }
-      if ((await this.interactor.getAttribute(option, 'aria-selected')) === 'true') {
+      if ((await this.interactor.getAttribute(option, 'aria-current')) === 'true') {
         return (await this.interactor.getText(option))?.trim();
       }
     }

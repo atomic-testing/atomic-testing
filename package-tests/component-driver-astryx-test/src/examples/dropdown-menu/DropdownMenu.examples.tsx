@@ -9,7 +9,9 @@ import React, { JSX, useState } from 'react';
  * `aria-haspopup`/`aria-expanded`/`aria-controls`; the menu panel renders as a
  * sibling linked by `aria-controls`. A visible marker records the last selected
  * item so a selection can be observed without inspecting the (native-popover)
- * panel visibility. `hasAutoFocus` is disabled to keep jsdom focus quiet.
+ * panel visibility. Astryx 0.1.3 removed `hasAutoFocus` (it was only an escape
+ * hatch for documentation previews) — menus now always focus their first item on
+ * open, which is harmless under jsdom.
  */
 export const DropdownMenuExample = () => {
   const [last, setLast] = useState('none');
@@ -17,7 +19,6 @@ export const DropdownMenuExample = () => {
     <div>
       <DropdownMenu
         data-testid='dropdown'
-        hasAutoFocus={false}
         button={{ label: 'Actions' }}
         items={[
           { label: 'Edit', onClick: () => setLast('Edit') },

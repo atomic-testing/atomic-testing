@@ -4,13 +4,15 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  * Driver for the Astryx ProgressBar (`@astryxdesign/core/ProgressBar`).
  *
  * The root `<div>` carries `data-testid` and `data-variant` but is itself
- * ROLELESS — the ARIA semantics live on an inner track `<div>` whose `role`
- * SWITCHES with mode: `role="meter"` for a determinate bar (with
- * `aria-valuenow`/`min`/`max`/`text`) and `role="progressbar"` for an
- * indeterminate one (with NO `aria-value*`). The driver therefore reads the
- * value attributes off the track and treats their absence (the `progressbar`
- * role) as indeterminate. The label is the header `<span id>`; the variant is the
- * root's `data-variant`.
+ * ROLELESS — the ARIA semantics live on an inner track `<div>` with
+ * `role="progressbar"` in BOTH modes (Astryx 0.1.3 dropped the determinate
+ * bar's `role="meter"` — a progress bar conveys task completion and should be
+ * announced on update, which `meter`'s static-gauge semantics don't convey).
+ * The two modes are now distinguished only by the presence of
+ * `aria-valuenow`/`min`/`max`/`text`, which a determinate bar carries and an
+ * indeterminate one omits. The driver reads the value attributes off the track
+ * and treats their absence as indeterminate. The label is the header
+ * `<span id>`; the variant is the root's `data-variant`.
  */
 export class ProgressBarDriver extends ComponentDriver<{}> {
   /**
@@ -63,12 +65,12 @@ export class ProgressBarDriver extends ComponentDriver<{}> {
   }
 
   /**
-   * Whether the bar is indeterminate. Indeterminate bars render the track with
-   * `role="progressbar"` (and no `aria-valuenow`); determinate bars use
-   * `role="meter"`.
+   * Whether the bar is indeterminate. Both modes render `role="progressbar"`, so
+   * this is read off the presence of `aria-valuenow` instead — indeterminate bars
+   * omit it, determinate bars always carry it.
    */
   async isIndeterminate(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.track, 'role')) === 'progressbar';
+    return (await this.getValueNow()) == null;
   }
 
   override get driverName(): string {

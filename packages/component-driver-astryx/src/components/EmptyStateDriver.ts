@@ -5,11 +5,14 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  *
  * EmptyState renders a `<div role="status">` (the live-region root, where
  * `data-testid` is forwarded) wrapping a heading (`<h1>`–`<h6>`, defaulting to
- * `<h3>`), a `<p>` description, and — when `actions` are supplied — a trailing
+ * `<h3>`), a description, and — when `actions` are supplied — a trailing
  * actions `<div>` holding the action `<button>`s. The scene anchors on the root
  * and reaches the heading/description/action by their native tags rather than by
  * StyleX-hashed classes. The heading level is read off whichever `h*` tag exists,
- * since the rendered level varies with the `headingLevel` prop.
+ * since the rendered level varies with the `headingLevel` prop. The description is
+ * an untagged `<div>` (Astryx 0.1.2+ renders it as `<div>` rather than `<p>` so it
+ * can hold arbitrary ReactNode content), reached as the heading's immediate next
+ * sibling rather than by tag name.
  */
 export class EmptyStateDriver extends ComponentDriver<{}> {
   /**
@@ -21,8 +24,14 @@ export class EmptyStateDriver extends ComponentDriver<{}> {
     return locatorUtil.append(this.locator, byCssSelector(`h${level}`));
   }
 
-  private get description(): PartLocator {
-    return locatorUtil.append(this.locator, byCssSelector('p'));
+  /**
+   * The description, the heading's immediate next sibling `<div>`. Probed one
+   * level at a time (like {@link headingAt}) rather than via an `h1 + div, …`
+   * selector list — a comma list would leave the later alternatives unscoped,
+   * matching another EmptyState's description on the page.
+   */
+  private descriptionAfter(level: number): PartLocator {
+    return locatorUtil.append(this.locator, byCssSelector(`h${level} + div`));
   }
 
   private get action(): PartLocator {
@@ -42,10 +51,13 @@ export class EmptyStateDriver extends ComponentDriver<{}> {
 
   /** The description paragraph text, or `undefined` when no description is rendered. */
   async getDescription(): Promise<Optional<string>> {
-    if (!(await this.interactor.exists(this.description))) {
-      return undefined;
+    for (let level = 1; level <= 6; level++) {
+      const description = this.descriptionAfter(level);
+      if (await this.interactor.exists(description)) {
+        return (await this.interactor.getText(description)) ?? undefined;
+      }
     }
-    return (await this.interactor.getText(this.description)) ?? undefined;
+    return undefined;
   }
 
   /**

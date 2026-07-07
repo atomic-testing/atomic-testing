@@ -1,5 +1,5 @@
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
-import { Optional } from '@atomic-testing/core';
+import { byCssSelector, locatorUtil, Optional } from '@atomic-testing/core';
 
 import { resolveLinkedLabelText } from '../internal/linkedLocators';
 
@@ -9,9 +9,12 @@ import { resolveLinkedLabelText } from '../internal/linkedLocators';
  * The accessible control is the native `<input type="checkbox">` (its implicit
  * role is `checkbox`); the root is a plain styling `<div>` and Astryx does NOT
  * forward `data-testid`, so the scene anchors the `<input>` itself (e.g. scoped
- * `byInputType('checkbox')`). Checked/disabled come from {@link HTMLCheckboxDriver};
- * the indeterminate state is reported as `aria-checked="mixed"`, and the label is
- * resolved through the `<label for>`↔`id` link.
+ * `byInputType('checkbox')`). Checked/disabled come from {@link HTMLCheckboxDriver}.
+ * Astryx 0.1.3 dropped the redundant `aria-checked="mixed"` it used to set for the
+ * indeterminate state — only the native `.indeterminate` DOM property is set now
+ * (it isn't reflected as an HTML attribute), so this driver reads it via the
+ * `:indeterminate` CSS pseudo-class instead. The label is resolved through the
+ * `<label for>`↔`id` link.
  */
 export class CheckboxInputDriver extends HTMLCheckboxDriver {
   /** Whether the checkbox is checked. Alias of {@link isSelected}. */
@@ -19,9 +22,9 @@ export class CheckboxInputDriver extends HTMLCheckboxDriver {
     return this.isSelected();
   }
 
-  /** Whether the checkbox is indeterminate (`aria-checked="mixed"`). */
+  /** Whether the checkbox is indeterminate (matches `:indeterminate`). */
   async isIndeterminate(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.locator, 'aria-checked')) === 'mixed';
+    return this.interactor.exists(locatorUtil.append(this.locator, byCssSelector(':indeterminate', 'Same')));
   }
 
   /** Toggle the checked state. */

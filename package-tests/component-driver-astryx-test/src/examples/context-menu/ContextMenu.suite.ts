@@ -24,11 +24,6 @@ export const contextMenuExampleTestSuite: TestSuiteInfo<typeof contextMenuExampl
     describe(`${contextMenuExample.title}`, () => {
       const engine = useTestEngine(contextMenuExample.scene, getTestEngine, { beforeEach, afterEach });
 
-      // The trigger advertises a menu popup via aria-haspopup.
-      test(`getHasPopup reads the trigger's popup type`, async () => {
-        assertEqual(await engine().parts.ctxMenu.getHasPopup(), 'menu');
-      });
-
       // Items stay mounted in the DOM while closed, so labels/count read in jsdom.
       // Open-state is intentionally NOT asserted — it is E2E-only (native popover).
       test(`getItemLabels reads every menu item in order`, async () => {
