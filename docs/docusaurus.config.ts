@@ -54,7 +54,11 @@ function sidebarWidthInitPlugin() {
               '(function(){try{',
               "var w=localStorage.getItem('docSidebarWidth');",
               'if(w){var n=parseInt(w,10);',
-              "if(n>=200&&n<=480){document.documentElement.style.setProperty('--doc-sidebar-width',n+'px');}}",
+              // Clamp (not range-check) so an out-of-range stored value is still
+              // applied pre-paint, matching DocSidebarResizer.clampWidth() — a
+              // range-check would skip it and let the component reintroduce a flash.
+              'if(!isNaN(n)){n=Math.max(200,Math.min(480,n));',
+              "document.documentElement.style.setProperty('--doc-sidebar-width',n+'px');}}",
               '}catch(e){}})();',
             ].join(''),
           },

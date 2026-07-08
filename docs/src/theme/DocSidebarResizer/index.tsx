@@ -136,16 +136,24 @@ export default function DocSidebarResizer(): ReactNode {
         if (handle != null) handle.style.left = `${originLeft + width}px`;
       };
 
-      const onUp = (): void => {
+      // Single cleanup for every way a drag can end — a normal pointerup, a
+      // pointercancel (touch interrupted / OS gesture), or the window losing
+      // focus mid-drag — so the page can never get stuck in the global resizing
+      // state with a leaked pointermove listener.
+      const finish = (): void => {
         window.removeEventListener('pointermove', onMove);
-        window.removeEventListener('pointerup', onUp);
+        window.removeEventListener('pointerup', finish);
+        window.removeEventListener('pointercancel', finish);
+        window.removeEventListener('blur', finish);
         document.documentElement.classList.remove(RESIZING_CLASS);
         handle?.classList.remove(styles.dragging);
         commit(widthRef.current);
       };
 
       window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
+      window.addEventListener('pointerup', finish);
+      window.addEventListener('pointercancel', finish);
+      window.addEventListener('blur', finish);
     },
     [commit]
   );
