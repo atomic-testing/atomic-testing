@@ -55,6 +55,7 @@ const mutatingPrimitives: ReadonlyArray<readonly [string, Invocation]> = [
 const readPrimitives: ReadonlyArray<readonly [string, Invocation]> = [
   ['getText', i => i.getText(byDataTestId('box'))],
   ['exists', i => i.exists(byDataTestId('box'))],
+  ['getElementCount', i => i.getElementCount(byDataTestId('box'))],
   ['getAttribute', i => i.getAttribute(byDataTestId('box'), 'data-testid')],
   ['isVisible', i => i.isVisible(byDataTestId('box'))],
 ];

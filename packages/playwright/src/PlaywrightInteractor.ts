@@ -522,6 +522,16 @@ export class PlaywrightInteractor implements Interactor {
     return count > 0;
   }
 
+  /**
+   * Count every element matching the locator via Playwright's native
+   * `Locator.count()` — one round-trip, in contrast to the index-by-index
+   * `exists()` probing this primitive replaces in the list helpers.
+   */
+  async getElementCount(locator: PartLocator): Promise<number> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    return this.page.locator(cssLocator).count();
+  }
+
   async isChecked(locator: PartLocator): Promise<boolean> {
     const el = await this.firstMatch(locator);
     if (el == null) {

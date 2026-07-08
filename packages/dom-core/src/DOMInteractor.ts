@@ -766,6 +766,17 @@ export class DOMInteractor implements Interactor {
     return Promise.resolve(el != null);
   }
 
+  /**
+   * Count every element matching the locator — the length of the multi-match
+   * query. Reuses the {@link getElement} multiple-overload rather than a second
+   * `querySelectorAll` path, so the document-root (`:root`) escape is honored in
+   * exactly one place. A read: it does NOT route through {@link runInteraction}.
+   */
+  async getElementCount(locator: PartLocator): Promise<number> {
+    const elements = await this.getElement(locator, true);
+    return elements.length;
+  }
+
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: true): Promise<readonly T[]>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;

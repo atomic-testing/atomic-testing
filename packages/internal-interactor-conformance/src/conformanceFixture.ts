@@ -42,6 +42,17 @@ export const conformanceFixtureHtml = `
     <div style="opacity: 0">
       <span data-testid="hidden-by-ancestor-opacity">hidden via ancestor opacity:0</span>
     </div>
+
+    <!-- Element count: three matching items plus a same-tag non-item sibling.
+         getElementCount must count by locator match (3), not by tag among
+         siblings (which would be 4) — the miscount #1054 fixes on the count side
+         of the list helpers. -->
+    <ul data-testid="count-list">
+      <li data-testid="count-item">one</li>
+      <li data-testid="count-item">two</li>
+      <li data-testid="count-item">three</li>
+      <li data-testid="count-other">not a counted item</li>
+    </ul>
   </main>
 `;
 

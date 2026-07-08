@@ -145,6 +145,25 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
       });
     });
 
+    // Element count (#1054): getElementCount counts by locator match, not by tag
+    // position among siblings. The fixture list holds three matching items plus a
+    // same-tag (`<li>`) non-item sibling, so a tag-based count would answer 4 —
+    // this locks the "counts by match, not tag" behavior identically under jsdom
+    // and a real browser (where it resolves to Playwright's `locator.count()`).
+    describe('element count', () => {
+      test('counts every element matching the locator, ignoring same-tag non-items', async () => {
+        assertEqual(await interactor().getElementCount(byDataTestId('count-item')), 3);
+      });
+
+      test('a locator matching a single element counts 1', async () => {
+        assertEqual(await interactor().getElementCount(byDataTestId('count-list')), 1);
+      });
+
+      test('a locator matching nothing counts 0', async () => {
+        assertEqual(await interactor().getElementCount(absent), 0);
+      });
+    });
+
     // Error-class conformance (ADR-010): interactor-level failures share one
     // catchable hierarchy across every environment.
     describe('error hierarchy', () => {

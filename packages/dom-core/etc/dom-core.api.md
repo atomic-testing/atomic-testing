@@ -62,6 +62,7 @@ export class DOMInteractor implements Interactor {
     getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Promise<Optional<T>>;
     // (undocumented)
     getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
+    getElementCount(locator: PartLocator): Promise<number>;
     // (undocumented)
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
     // (undocumented)

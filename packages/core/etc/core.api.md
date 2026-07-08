@@ -341,6 +341,7 @@ export interface Interactor {
     // (undocumented)
     getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
     getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
+    getElementCount(locator: PartLocator): Promise<number>;
     // (undocumented)
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
     getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
