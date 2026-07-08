@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-primevue-v4",
-  "version": "0.95.0",
+  "version": "0.96.0",
   "description": "Component driver for PrimeVue 4 components (Vue 3)",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "primevue": "^4.0.0",
-    "vue": "^3.5.0"
+    "vue": "^3.5.39"
   },
   "peerDependencies": {
     "primevue": "^4.0.0",

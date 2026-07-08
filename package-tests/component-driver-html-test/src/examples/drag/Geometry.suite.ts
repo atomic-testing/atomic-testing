@@ -28,7 +28,7 @@ export const geometryExampleTestSuite: TestSuiteInfo<typeof geometryExample.scen
 
       // Cross-engine: the rect is structurally valid in both engines.
       test(`getBoundingRect returns a numeric x/y/width/height shape`, async () => {
-        const r = await engine().parts.dragBox.getBoundingRect();
+        const r = await engine().interactor.getBoundingRect(engine().parts.dragBox.locator);
         assertEqual(typeof r.width, 'number');
         assertEqual(typeof r.height, 'number');
         assertEqual(typeof r.x, 'number');
@@ -38,7 +38,7 @@ export const geometryExampleTestSuite: TestSuiteInfo<typeof geometryExample.scen
       // jsdom-only: no layout engine, so getBoundingClientRect is all zeros.
       if (!hasLayout) {
         test(`getBoundingRect returns a zero-rect under jsdom`, async () => {
-          const r = await engine().parts.dragBox.getBoundingRect();
+          const r = await engine().interactor.getBoundingRect(engine().parts.dragBox.locator);
           assertEqual(r.width, 0);
           assertEqual(r.height, 0);
         });
@@ -47,7 +47,7 @@ export const geometryExampleTestSuite: TestSuiteInfo<typeof geometryExample.scen
       // E2E-only: a real layout engine reports the box's actual 120x60-ish size.
       if (hasLayout) {
         test(`getBoundingRect returns the box's real dimensions`, async () => {
-          const r = await engine().parts.dragBox.getBoundingRect();
+          const r = await engine().interactor.getBoundingRect(engine().parts.dragBox.locator);
           assertTrue(r.width > 0 && r.height > 0);
         });
       }

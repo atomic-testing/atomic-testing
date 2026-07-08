@@ -1,4 +1,4 @@
-import { ITestEngineOption, ScenePart, TestEngine } from '@atomic-testing/core';
+import { ScenePart, TestEngine } from '@atomic-testing/core';
 
 import { DOMInteractor } from './DOMInteractor';
 
@@ -6,15 +6,9 @@ import { DOMInteractor } from './DOMInteractor';
  * Create test engine for DOM testing
  * @param element The element to test, if not sure, use document.body
  * @param partDefinitions The scene part definitions
- * @param _option Reserved for future use; accepted for entry-point symmetry with
- *   the other adapters and currently ignored.
  * @returns The test engine
  */
-export function createTestEngine<T extends ScenePart>(
-  element: HTMLElement,
-  partDefinitions: T,
-  _option?: ITestEngineOption
-): TestEngine<T> {
+export function createTestEngine<T extends ScenePart>(element: HTMLElement, partDefinitions: T): TestEngine<T> {
   const cleanup = () => Promise.resolve();
   return new TestEngine(
     [],

@@ -37,12 +37,12 @@ export const activateExampleTestSuite: TestSuiteInfo<typeof activateExample.scen
       });
 
       test(`Activating the first hidden radio selects it`, async () => {
-        await engine().parts.first.activate();
+        await engine().interactor.activate(engine().parts.first.locator);
         assertEqual(await engine().parts.detail.getText(), 'first');
       });
 
       test(`Activating targets the specific radio, not a sibling`, async () => {
-        await engine().parts.second.activate();
+        await engine().interactor.activate(engine().parts.second.locator);
         assertEqual(await engine().parts.detail.getText(), 'second');
       });
     });

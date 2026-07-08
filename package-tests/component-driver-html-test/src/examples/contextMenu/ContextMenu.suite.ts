@@ -38,7 +38,7 @@ export const contextMenuExampleTestSuite: TestSuiteInfo<typeof contextMenuExampl
       });
 
       test(`contextMenu fires the contextmenu event and reveals the menu`, async () => {
-        await engine().parts.contextTarget.contextMenu();
+        await engine().interactor.contextMenu(engine().parts.contextTarget.locator);
         // Poll the count for e2e robustness: the browser right-click and the
         // React re-render it triggers are asynchronous.
         const count = await engine().parts.contextCount.waitUntil({
