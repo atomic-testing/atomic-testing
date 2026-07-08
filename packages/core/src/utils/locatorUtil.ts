@@ -1,4 +1,5 @@
 import { Optional } from '../dataTypes';
+import { LocatorResolutionError } from '../errors/LocatorResolutionError';
 import { Interactor } from '../interactor/Interactor';
 import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
@@ -93,15 +94,14 @@ async function getLinkedCssLocator(
   const matchTargetValue = await getLinkedCssLocatorMatchingTargetValue(locator, context, interactor);
 
   if (matchTargetValue == null) {
-    // TODO: Produce more descriptive error to help with troubleshooting
-    throw new Error('Match target not found for LinkedCssLocator');
+    throw new LocatorResolutionError(locator, 'match target of LinkedCssLocator not found');
   }
 
   let resolvedLocator: CssLocator;
   if (locator.valueExtract.type === 'attribute') {
     resolvedLocator = byAttribute(locator.valueExtract.attributeName, matchTargetValue, locator.relative);
   } else {
-    throw new Error(`Cannot handle valueExtract method type ${locator.valueExtract.type}`);
+    throw new LocatorResolutionError(locator, `unsupported valueExtract type "${locator.valueExtract.type}"`);
   }
   return resolvedLocator;
 }
@@ -116,7 +116,10 @@ export async function getLinkedCssLocatorMatchingTargetValue(
     return await interactor.getAttribute(entireLocator, locator.matchingTargetValueExtract.attributeName);
   }
 
-  throw new Error(`Cannot handle valueExtract method type ${locator.matchingTargetValueExtract.type}`);
+  throw new LocatorResolutionError(
+    locator,
+    `unsupported matchingTargetValueExtract type "${locator.matchingTargetValueExtract.type}"`
+  );
 }
 
 function getLocatorStatement(locator: CssLocator): string {

@@ -507,6 +507,14 @@ export namespace listHelper {
 // @public
 export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same';
 
+// @public
+export class LocatorResolutionError extends InteractorErrorBase {
+    constructor(locator: PartLocator, reason: string);
+}
+
+// @public (undocumented)
+export const LocatorResolutionErrorId = "LocatorResolutionError";
+
 // @public (undocumented)
 export type LocatorType = 'css';
 
