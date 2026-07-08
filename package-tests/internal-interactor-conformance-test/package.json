@@ -1,0 +1,26 @@
+{
+  "name": "@atomic-testing/internal-interactor-conformance-test",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Runs the interactor conformance suite (TCK) under Jest (DOMInteractor) and Playwright (PlaywrightInteractor)",
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git"
+  },
+  "scripts": {
+    "test:dom": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
+  },
+  "devDependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "@atomic-testing/dom-core": "workspace:*",
+    "@atomic-testing/internal-interactor-conformance": "workspace:*",
+    "@atomic-testing/internal-test-runner": "workspace:*",
+    "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
+    "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
+    "@atomic-testing/playwright": "workspace:*"
+  }
+}

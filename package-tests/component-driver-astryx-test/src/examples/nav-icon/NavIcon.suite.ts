@@ -27,7 +27,7 @@ export const navIconExampleTestSuite: TestSuiteInfo<typeof navIconExample.scene>
       // NavIcon is display-only: it exists and renders the supplied icon markup.
       test(`renders the icon and is present`, async () => {
         assertTrue(await engine().parts.basic.exists());
-        assertTrue((await engine().parts.basic.innerHTML()).includes('★'));
+        assertTrue((await engine().interactor.innerHTML(engine().parts.basic.locator)).includes('★'));
       });
     });
   },
