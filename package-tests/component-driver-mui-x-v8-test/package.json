@@ -34,14 +34,14 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.11",
-    "@mui/x-data-grid-generator": "^8.5.2",
+    "@mui/x-data-grid-generator": "^7.29.13",
     "@mui/x-data-grid-pro": "^8.5.2",
     "@mui/x-date-pickers": "^8.5.2",
     "@mui/x-date-pickers-pro": "^8.5.2",
     "exceljs": "^4.3.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.7.1"
+    "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
