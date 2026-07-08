@@ -126,6 +126,25 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
       });
     });
 
+    // Ancestor visibility (#1053): isVisible must walk the ancestor chain, not
+    // inspect the target element alone. display:none / opacity:0 are not
+    // inherited, so a descendant of a hidden ancestor keeps its own non-hidden
+    // computed values — the divergence a black-box TCK exists to catch, since it
+    // reproduces identically under jsdom and a real browser.
+    describe('ancestor visibility', () => {
+      test('a plain element with no hidden ancestor is visible', async () => {
+        assertTrue(await interactor().isVisible(byDataTestId('visible-target')));
+      });
+
+      test('an element inside a display:none ancestor is not visible', async () => {
+        assertFalse(await interactor().isVisible(byDataTestId('hidden-by-ancestor-display')));
+      });
+
+      test('an element inside an opacity:0 ancestor is not visible', async () => {
+        assertFalse(await interactor().isVisible(byDataTestId('hidden-by-ancestor-opacity')));
+      });
+    });
+
     // Error-class conformance (ADR-010): interactor-level failures share one
     // catchable hierarchy across every environment.
     describe('error hierarchy', () => {

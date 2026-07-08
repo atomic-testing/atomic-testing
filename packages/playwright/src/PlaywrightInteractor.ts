@@ -23,6 +23,7 @@ import {
   Point,
   PressKeyOption,
   timingUtil,
+  visibilityUtil,
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
@@ -295,16 +296,12 @@ export class PlaywrightInteractor implements Interactor {
         await this.page.locator(cssLocator).clear();
       }
 
-      // If it is a date, time or datetime-local input, validate the date format
+      // Enforce the shared date/time/datetime-local format policy (#1053). The
+      // helper treats an empty value as a valid clear, so — unlike the previous
+      // inline block — clearing a date input via `fill('')` no longer throws,
+      // matching DOMInteractor.
       const type = (await this.getAttribute(locator, 'type')) ?? '';
-      if (dateUtil.isHtmlDateInputType(type)) {
-        const result = dateUtil.validateHtmlDateInput(type, text);
-        if (!result.valid) {
-          throw new Error(
-            `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
-          );
-        }
-      }
+      dateUtil.assertValidHtmlDateInputValue(type, text);
       await this.page.locator(cssLocator).fill(text);
     });
   }
@@ -542,8 +539,15 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {
+    // Honor `aria-readonly` for symmetry with `isRequired`'s `aria-required`
+    // check (#1053): the native `readonly` attribute only exists on native form
+    // controls, whereas composite/custom widgets expose read-only state through
+    // ARIA. Mirrors DOMInteractor.isReadonly so both environments agree.
     const readonly = await this.getAttribute(locator, 'readonly');
-    return readonly != null;
+    if (readonly != null) {
+      return true;
+    }
+    return (await this.getAttribute(locator, 'aria-readonly')) === 'true';
   }
 
   async isRequired(locator: PartLocator): Promise<boolean> {
@@ -559,43 +563,34 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async isVisible(locator: PartLocator): Promise<boolean> {
-    const exists = await this.exists(locator);
-    if (!exists) {
+    const el = await this.firstMatch(locator);
+    if (el == null) {
       return false;
     }
-
-    async function checkCssVisibility(
-      prop: CssProperty,
-      invisibleValue: string,
-      interactor: PlaywrightInteractor
-    ): Promise<boolean> {
-      try {
-        const value = await interactor.getStyleValue(locator, prop);
-        return value !== invisibleValue;
-      } catch (e) {
-        // Element may disappear or detached while being checked because of animation
-        // when it happens, an error is thrown.  In this case, if indeed the element
-        // is not visible, we return false.  Otherwise, we re-throw the error.
-        if ((await interactor.exists(locator)) === false) {
-          return false;
-        }
-        throw e;
+    try {
+      // ONE in-browser evaluate that walks the ancestor chain (#1053): collapses
+      // the former three `getStyleValue` round-trips into a single call and
+      // closes the ancestor-visibility hole (a child of a `display: none` /
+      // `opacity: 0` ancestor was wrongly reported visible). `isElementVisibleByStyle`
+      // is a self-contained pure function referencing only DOM globals, so
+      // Playwright can serialize it into the page; its default `getStyle`
+      // resolves the browser's `getComputedStyle` there.
+      //
+      // The cast bridges a type-only gap: Playwright types a no-arg page function
+      // as single-parameter, but the predicate declares a second `getStyle`
+      // parameter (defaulted). At runtime Playwright invokes it with just the
+      // element, so the default supplies the browser accessor — call-compatible.
+      const isVisibleInPage = visibilityUtil.isElementVisibleByStyle as (el: SVGElement | HTMLElement) => boolean;
+      return await el.evaluate(isVisibleInPage);
+    } catch (e) {
+      // The element may detach mid-check (e.g. an exit animation), which makes
+      // `evaluate` throw. If it is genuinely gone it is not visible; otherwise the
+      // failure is real — rethrow. Preserves the pre-#1053 detached/animation guard.
+      if ((await this.exists(locator)) === false) {
+        return false;
       }
+      throw e;
     }
-
-    if ((await checkCssVisibility('opacity', '0', this)) === false) {
-      return false;
-    }
-
-    if ((await checkCssVisibility('visibility', 'hidden', this)) === false) {
-      return false;
-    }
-
-    if ((await checkCssVisibility('display', 'none', this)) === false) {
-      return false;
-    }
-
-    return true;
   }
 
   async hasCssClass(locator: PartLocator, className: string): Promise<boolean> {

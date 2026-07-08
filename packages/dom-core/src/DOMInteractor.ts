@@ -23,6 +23,7 @@ import {
   Point,
   PressKeyOption,
   timingUtil,
+  visibilityUtil,
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
@@ -523,25 +524,19 @@ export class DOMInteractor implements Interactor {
       }
 
       // An empty value is a pure clear: `userEvent.clear()` above already emptied
-      // the field, there is no text to type or date format to validate, and
-      // `userEvent.type` rejects `''` ("Expected key descriptor"). Return early —
-      // this also keeps clearing a date/time input from tripping the date-format
-      // validation below, and matches PlaywrightInteractor's `clear()` + `fill('')`.
+      // the field and `userEvent.type` rejects `''` ("Expected key descriptor"),
+      // so there is nothing left to type. Return early on the mechanism grounds
+      // that `userEvent.type` cannot take `''`; the shared date-format policy
+      // (`dateUtil.assertValidHtmlDateInputValue`) likewise treats `''` as a valid
+      // clear, keeping this in lockstep with PlaywrightInteractor's `clear()` +
+      // `fill('')`.
       if (text === '') {
         return;
       }
 
-      // If it is a date, time or datetime-local input, validate the date format
+      // Enforce the shared date/time/datetime-local format policy (#1053).
       if (el.tagName === 'INPUT') {
-        const type = el.getAttribute('type') ?? '';
-        if (dateUtil.isHtmlDateInputType(type)) {
-          const result = dateUtil.validateHtmlDateInput(type, text);
-          if (!result.valid) {
-            throw new Error(
-              `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
-            );
-          }
-        }
+        dateUtil.assertValidHtmlDateInputValue(el.getAttribute('type') ?? '', text);
       }
 
       await this.userEvent.type(el, text);
@@ -891,7 +886,15 @@ export class DOMInteractor implements Interactor {
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {
-    return this.hasAttribute(locator, 'readonly');
+    // Honor `aria-readonly` for symmetry with `isRequired`'s `aria-required`
+    // check (#1053): the native `readonly` attribute only exists on native form
+    // controls, whereas composite/custom widgets (comboboxes, grids,
+    // contenteditable regions) expose read-only state through ARIA. The two
+    // capability probes now read both the native and ARIA signals.
+    if (await this.hasAttribute(locator, 'readonly')) {
+      return true;
+    }
+    return (await this.getAttribute(locator, 'aria-readonly')) === 'true';
   }
 
   async isRequired(locator: PartLocator): Promise<boolean> {
@@ -911,27 +914,15 @@ export class DOMInteractor implements Interactor {
   }
 
   async isVisible(locator: PartLocator): Promise<boolean> {
-    const exists = await this.exists(locator);
-    if (!exists) {
+    const el = await this.getElement(locator);
+    if (el == null) {
       return false;
     }
-
-    const opacity = await this.getStyleValue(locator, 'opacity');
-    if (opacity === '0') {
-      return false;
-    }
-
-    const visibility = await this.getStyleValue(locator, 'visibility');
-    if (visibility === 'hidden') {
-      return false;
-    }
-
-    const display = await this.getStyleValue(locator, 'display');
-    if (display === 'none') {
-      return false;
-    }
-
-    return true;
+    // Apply the shared visibility policy (#1053): walk the ancestor chain so a
+    // child of a `display: none` / `opacity: 0` ancestor is reported hidden, not
+    // visible. `visibility` is inherited and handled on the element alone inside
+    // the predicate.
+    return visibilityUtil.isElementVisibleByStyle(el, target => window.getComputedStyle(target as HTMLElement));
   }
 
   async hasCssClass(locator: PartLocator, className: string): Promise<boolean> {

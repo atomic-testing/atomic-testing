@@ -1,4 +1,5 @@
 import {
+  assertValidHtmlDateInputValue,
   isHtmlInputDateFormat,
   isHtmlInputDateTimeFormat,
   isHtmlInputTimeFormat,
@@ -60,5 +61,36 @@ describe('validateHtmlDateInput', () => {
 
   test('should throw an error for unsupported type', () => {
     expect(() => validateHtmlDateInput('month', '2021-01')).toThrowError('Unsupported date type: month');
+  });
+});
+
+describe('assertValidHtmlDateInputValue', () => {
+  test.each([
+    ['date', '2021-01-01'],
+    ['datetime-local', '2021-01-01T15:30'],
+    ['time', '15:30'],
+  ])('accepts a well-formed %s value', (type, value) => {
+    expect(() => assertValidHtmlDateInputValue(type, value)).not.toThrow();
+  });
+
+  test.each([
+    ['date', 'not-a-date'],
+    ['time', '99:99'],
+    ['datetime-local', '2021-01-01'],
+  ])('throws for a malformed %s value', (type, value) => {
+    expect(() => assertValidHtmlDateInputValue(type, value)).toThrowError(`Invalid date format for type: ${type}`);
+  });
+
+  // The empty-string carve-out is the #1053 drift fix: clearing a date input
+  // (`enterText('')`) must be a no-op for validation, so both interactors agree.
+  test.each(['date', 'time', 'datetime-local', 'text'])('accepts an empty value for a %s input (pure clear)', type => {
+    expect(() => assertValidHtmlDateInputValue(type, '')).not.toThrow();
+  });
+
+  test.each([
+    ['text', 'anything'],
+    ['number', '42'],
+  ])('ignores non-date input types (%s)', (type, value) => {
+    expect(() => assertValidHtmlDateInputValue(type, value)).not.toThrow();
   });
 });

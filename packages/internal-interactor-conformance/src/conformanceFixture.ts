@@ -30,6 +30,18 @@ export const conformanceFixtureHtml = `
     <select data-testid="valueless-select">
       <option selected>Apple</option>
     </select>
+
+    <!-- Visibility: an element is visible only when it AND every ancestor are
+         displayed and non-transparent. display:none / opacity:0 are NOT
+         inherited, so a descendant keeps its OWN non-hidden computed values —
+         isVisible must walk ancestors (the hole #1053 closes). -->
+    <div data-testid="visible-target">visible</div>
+    <div style="display: none">
+      <span data-testid="hidden-by-ancestor-display">hidden via ancestor display:none</span>
+    </div>
+    <div style="opacity: 0">
+      <span data-testid="hidden-by-ancestor-opacity">hidden via ancestor opacity:0</span>
+    </div>
   </main>
 `;
 

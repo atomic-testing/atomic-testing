@@ -103,3 +103,36 @@ export function validateHtmlDateInput(type: string, input: string): DateValidati
     example: descriptor.example,
   };
 }
+
+/**
+ * Guard the `enterText` path: throw a descriptive error when `value` is being
+ * entered into a date/time/datetime-local input in the wrong format.
+ *
+ * WHY it lives here (#1053): this is environment-agnostic policy — the SAME rule
+ * applies whether text is typed via `userEvent` (jsdom) or `fill` (Playwright).
+ * Both `DOMInteractor.enterText` and `PlaywrightInteractor.enterText` used to
+ * inline this validate-and-throw block, which had drifted: only the DOM leg
+ * short-circuited the empty string, so `enterText('')` on a date input threw
+ * "Invalid date format" in Playwright but cleared the field in jsdom. Hoisting
+ * the policy here — including the empty-string carve-out — makes both adapters
+ * behave identically on the same input.
+ *
+ * An empty `value` is a pure clear (there is nothing to validate) and a
+ * non-date `type` is not our concern, so both are accepted as no-ops.
+ *
+ * @param type - The input's `type` attribute (e.g. `'date'`, `'text'`).
+ * @param value - The text about to be entered.
+ * @throws {Error} If `type` is a date input type and `value` is a non-empty,
+ *   badly-formatted string.
+ */
+export function assertValidHtmlDateInputValue(type: string, value: string): void {
+  if (value === '' || !isHtmlDateInputType(type)) {
+    return;
+  }
+  const result = validateHtmlDateInput(type, value);
+  if (!result.valid) {
+    throw new Error(
+      `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
+    );
+  }
+}
