@@ -31,7 +31,7 @@
     "@atomic-testing/internal-react-example": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "react": "^19.2.3",
+    "react": "^19.2.7",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.18.1"
   },
@@ -41,7 +41,7 @@
     "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
     "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
     "@atomic-testing/react-19": "workspace:*",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3"
   },
   "browserslist": {
