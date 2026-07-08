@@ -311,9 +311,11 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   /**
    * Wait until the component is attached and becomes visible to the DOM.
-   * @param timeoutMs The number of milliseconds to wait before timing out
+   * @param timeoutMs The number of milliseconds to wait before timing out. Defaults
+   *   to {@link defaultWaitForOption}.timeoutMs so this wait shares a single
+   *   flake-tolerance source with {@link waitUntilComponentState} (#1057).
    */
-  async waitUntilVisible(timeoutMs: number = 10000): Promise<void> {
+  async waitUntilVisible(timeoutMs: number = defaultWaitForOption.timeoutMs): Promise<void> {
     return this.waitUntilComponentState({
       condition: 'visible',
       timeoutMs,

@@ -188,9 +188,9 @@ export class PlaywrightInteractor implements Interactor {
    *
    * The gesture is a single uninterrupted `move → down → move → up` sequence
    * computed from the element's center. It deliberately does NOT reuse
-   * {@link mouseMove}/{@link mouseDown} — `mouseMove` resets the pointer with
-   * `page.mouse.move(0, 0)` after hovering, which would corrupt the drag path
-   * (see ADR 0001, option 5). The center comes from {@link getBoundingRect},
+   * {@link mouseMove}/{@link mouseDown} — those are discrete hover-then-act
+   * helpers that cannot compose one continuous pointer path (see ADR 0001,
+   * option 5). The center comes from {@link getBoundingRect},
    * which throws `ElementNotFoundError` when the element has no box, so this
    * shares that "element not found" contract instead of re-deriving the box +
    * guard here.
@@ -353,10 +353,11 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
-    await this.runMutation(locator, 'mouseMove', async () => {
-      await this.hover(locator, { position: option?.position });
-      await this.page.mouse.move(0, 0);
-    });
+    // Leave the pointer over the target (hovered) instead of relocating it to the
+    // viewport origin, so hover-dependent state the caller just established survives.
+    // Mirrors DOMInteractor.mouseMove, which dispatches a mousemove at the element
+    // and never moves a persistent pointer (#1057).
+    await this.runMutation(locator, 'mouseMove', () => this.hover(locator, { position: option?.position }));
   }
 
   async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
