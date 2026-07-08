@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/vue-3",
-  "version": "0.95.0",
+  "version": "0.96.0",
   "description": "The @atomic-testing/vue-3 package is a Vue 3 test adapter that extends Atomic Testing's component driver pattern to Vue applications. It enables testing Vue components using the same high-level semantic APIs used across React, Playwright, and DOM environments.",
   "keywords": [
     "integration",
@@ -42,7 +42,7 @@
     "@vue/compiler-sfc": "^3.5.0"
   },
   "devDependencies": {
-    "vue": "^3.5.0"
+    "vue": "^3.5.39"
   },
   "peerDependencies": {
     "@testing-library/dom": ">=10.4.0",

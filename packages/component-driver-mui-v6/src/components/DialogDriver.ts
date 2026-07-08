@@ -68,8 +68,11 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
     // drive the full press/release/click sequence on the container's empty corner
     // (the click target must be the container, not the centered paper).
     const cornerClick = { position: { x: 5, y: 5 } } as const;
-    await this.parts.dialogContainer.mouseDown(cornerClick);
-    await this.parts.dialogContainer.mouseUp(cornerClick);
+    // Raw press/release primitives are protected on ComponentDriver (#1045), so
+    // drive them through the interactor against the child's resolved locator.
+    const containerLocator = this.parts.dialogContainer.locator;
+    await this.interactor.mouseDown(containerLocator, cornerClick);
+    await this.interactor.mouseUp(containerLocator, cornerClick);
     await this.parts.dialogContainer.click(cornerClick);
     return this.waitForClose(timeoutMs);
   }
