@@ -1,5 +1,5 @@
 import { PartLocator } from '../locators';
-import { getLocatorInfoForErrorLog } from '../utils/locatorUtil';
+import { getLocatorInfoForErrorLog } from '../utils/getLocatorInfoForErrorLog';
 import { ErrorBase } from './ErrorBase';
 
 export const ItemNotFoundErrorId = 'ItemNotFoundError';

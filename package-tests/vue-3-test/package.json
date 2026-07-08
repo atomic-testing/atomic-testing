@@ -33,6 +33,6 @@
     "@vue/compiler-dom": "^3.5.26",
     "@vue/server-renderer": "^3.5.17",
     "storybook": "^8.6.15",
-    "vue": "^3.5.0"
+    "vue": "^3.5.39"
   }
 }
