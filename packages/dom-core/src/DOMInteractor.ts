@@ -409,7 +409,9 @@ export class DOMInteractor implements Interactor {
     if (holdsFocus) {
       // Printable keys are typed as-is (doubling `{`/`[` so user-event's
       // descriptor syntax never engages); named keys become `{Key}` descriptors.
-      const descriptor = key.length === 1 ? key.replace(/[{[]/, '$&$&') : `{${key}}`;
+      // The global flag is defensive — `key.length === 1` means at most one char
+      // here — and keeps the escape consistent with `typeText`'s.
+      const descriptor = key.length === 1 ? key.replace(/[{[]/g, '$&$&') : `{${key}}`;
       let chord = descriptor;
       if (option?.shift) {
         chord = `{Shift>}${chord}{/Shift}`;
