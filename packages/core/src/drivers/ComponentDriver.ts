@@ -175,31 +175,38 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     return this.interactor.hover(this.locator, option);
   }
 
-  async mouseMove(option?: Partial<MouseMoveOption>): Promise<void> {
+  // Low-level pointer/keyboard primitives below are `protected` for the 1.0
+  // freeze. They are inherited by every driver and by the engine root (where
+  // most are meaningless — see #1048), so exposing them publicly would freeze a
+  // large uniform surface that is breaking to narrow later but safe to widen
+  // (ADR-015). Concrete drivers compose them internally to build semantic
+  // actions; the raw gestures stay out of the public API. See #1045.
+
+  protected async mouseMove(option?: Partial<MouseMoveOption>): Promise<void> {
     return this.interactor.mouseMove(this.locator, option);
   }
 
-  async mouseDown(option?: Partial<MouseDownOption>): Promise<void> {
+  protected async mouseDown(option?: Partial<MouseDownOption>): Promise<void> {
     return this.interactor.mouseDown(this.locator, option);
   }
 
-  async mouseUp(option?: Partial<MouseUpOption>): Promise<void> {
+  protected async mouseUp(option?: Partial<MouseUpOption>): Promise<void> {
     return this.interactor.mouseUp(this.locator, option);
   }
 
-  async mouseOver(option?: Partial<HoverOption>): Promise<void> {
+  protected async mouseOver(option?: Partial<HoverOption>): Promise<void> {
     return this.interactor.mouseOver(this.locator, option);
   }
 
-  async mouseOut(option?: Partial<MouseOutOption>): Promise<void> {
+  protected async mouseOut(option?: Partial<MouseOutOption>): Promise<void> {
     return this.interactor.mouseOut(this.locator, option);
   }
 
-  async mouseEnter(option?: Partial<MouseEnterOption>): Promise<void> {
+  protected async mouseEnter(option?: Partial<MouseEnterOption>): Promise<void> {
     return this.interactor.mouseEnter(this.locator, option);
   }
 
-  async mouseLeave(option?: Partial<MouseLeaveOption>): Promise<void> {
+  protected async mouseLeave(option?: Partial<MouseLeaveOption>): Promise<void> {
     return this.interactor.mouseLeave(this.locator, option);
   }
 
@@ -219,14 +226,14 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   /**
    * Dispatch a right-click / `contextmenu` event on the component. See {@link Interactor.contextMenu}.
    */
-  async contextMenu(): Promise<void> {
+  protected async contextMenu(): Promise<void> {
     return this.interactor.contextMenu(this.locator);
   }
 
   /**
    * Activate the component without relying on pointer geometry. See {@link Interactor.activate}.
    */
-  async activate(): Promise<void> {
+  protected async activate(): Promise<void> {
     return this.interactor.activate(this.locator);
   }
 
@@ -248,7 +255,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    *
    * @param delta Pixel offset to scroll by
    */
-  async scrollBy(delta: Point): Promise<void> {
+  protected async scrollBy(delta: Point): Promise<void> {
     return this.interactor.scrollBy(this.locator, delta);
   }
 
@@ -262,7 +269,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    *
    * @param target Another driver whose root element is the drop target
    */
-  async dragTo(target: ComponentDriver<any>): Promise<void> {
+  protected async dragTo(target: ComponentDriver<any>): Promise<void> {
     return this.interactor.dragTo(this.locator, target.locator);
   }
 
@@ -276,7 +283,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    *
    * @param delta Pixel offset to drag by
    */
-  async drag(delta: Point): Promise<void> {
+  protected async drag(delta: Point): Promise<void> {
     return this.interactor.drag(this.locator, delta);
   }
 
@@ -286,7 +293,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * jsdom has no layout engine, so every coordinate and dimension is `0` there;
    * real geometry is E2E-only.
    */
-  getBoundingRect(): Promise<BoundingRect> {
+  protected getBoundingRect(): Promise<BoundingRect> {
     return this.interactor.getBoundingRect(this.locator);
   }
 
@@ -336,7 +343,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * Get the inner HTML of the component
    * @returns The inner HTML of the component
    */
-  innerHTML(): Promise<string> {
+  protected innerHTML(): Promise<string> {
     return this.interactor.innerHTML(this.locator);
   }
 

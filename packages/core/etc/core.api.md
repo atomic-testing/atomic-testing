@@ -77,13 +77,13 @@ export namespace collectionUtil {
 // @public
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<T>>);
-    activate(): Promise<void>;
+    protected activate(): Promise<void>;
     // (undocumented)
     click(option?: Partial<ClickOption>): Promise<void>;
     readonly commutableOption: IComponentDriverOption<T>;
-    contextMenu(): Promise<void>;
-    drag(delta: Point): Promise<void>;
-    dragTo(target: ComponentDriver<any>): Promise<void>;
+    protected contextMenu(): Promise<void>;
+    protected drag(delta: Point): Promise<void>;
+    protected dragTo(target: ComponentDriver<any>): Promise<void>;
     // (undocumented)
     abstract get driverName(): string;
     protected enforcePartExistence(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<void>;
@@ -92,36 +92,36 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     focus(option?: Partial<FocusOption>): Promise<void>;
     // (undocumented)
     getAttribute(attributeName: string): Promise<Optional<string>>;
-    getBoundingRect(): Promise<BoundingRect>;
+    protected getBoundingRect(): Promise<BoundingRect>;
     protected getMissingPartNames(partName: PartName<T> | ReadonlyArray<PartName<T>>): Promise<readonly PartName<T>[]>;
     getText(): Promise<Optional<string>>;
     // (undocumented)
     hover(option?: Partial<HoverOption>): Promise<void>;
-    innerHTML(): Promise<string>;
+    protected innerHTML(): Promise<string>;
     // (undocumented)
     readonly interactor: Interactor;
     isVisible(): Promise<boolean>;
     get locator(): PartLocator;
     // (undocumented)
-    mouseDown(option?: Partial<MouseDownOption>): Promise<void>;
+    protected mouseDown(option?: Partial<MouseDownOption>): Promise<void>;
     // (undocumented)
-    mouseEnter(option?: Partial<MouseEnterOption>): Promise<void>;
+    protected mouseEnter(option?: Partial<MouseEnterOption>): Promise<void>;
     // (undocumented)
-    mouseLeave(option?: Partial<MouseLeaveOption>): Promise<void>;
+    protected mouseLeave(option?: Partial<MouseLeaveOption>): Promise<void>;
     // (undocumented)
-    mouseMove(option?: Partial<MouseMoveOption>): Promise<void>;
+    protected mouseMove(option?: Partial<MouseMoveOption>): Promise<void>;
     // (undocumented)
-    mouseOut(option?: Partial<MouseOutOption>): Promise<void>;
+    protected mouseOut(option?: Partial<MouseOutOption>): Promise<void>;
     // (undocumented)
-    mouseOver(option?: Partial<HoverOption>): Promise<void>;
+    protected mouseOver(option?: Partial<HoverOption>): Promise<void>;
     // (undocumented)
-    mouseUp(option?: Partial<MouseUpOption>): Promise<void>;
+    protected mouseUp(option?: Partial<MouseUpOption>): Promise<void>;
     static overriddenParentLocator(): Optional<PartLocator>;
     static overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
     get parts(): ScenePartDriver<T>;
     pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void>;
     runtimeCssSelector(): Promise<string>;
-    scrollBy(delta: Point): Promise<void>;
+    protected scrollBy(delta: Point): Promise<void>;
     scrollIntoView(): Promise<void>;
     // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
