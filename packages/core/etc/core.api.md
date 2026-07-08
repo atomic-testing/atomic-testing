@@ -523,7 +523,7 @@ export const LocatorTypeLookup: Record<string, LocatorType>;
 
 // @public (undocumented)
 export namespace locatorUtil {
-    export { OverrideLocatorRelativePositionOption, append, defaultOverrideLocatorRelativePositionOption, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, isChain, overrideLocatorRelativePosition, toChain, toCssSelector };
+    export { OverrideLocatorRelativePositionOption, append, defaultOverrideLocatorRelativePositionOption, documentRootSelector, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, isChain, overrideLocatorRelativePosition, toChain, toCssSelector };
 }
 
 // @public (undocumented)

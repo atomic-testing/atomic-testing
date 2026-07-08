@@ -7,6 +7,15 @@ import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import type { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
 import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
 
+/**
+ * The portable document-root selector an empty locator chain reduces to. `<html>`
+ * in the DOM, matched by both `document.querySelector(':root')` (jsdom) and
+ * `page.locator(':root')` (Chromium). Used so the engine-root locator (`[]`, in
+ * the DOM/Playwright adapters) resolves to a real element instead of `''`, which
+ * throws a CSS parse error in every engine. See #1048.
+ */
+export const documentRootSelector = ':root';
+
 export function isChain(locator: PartLocator): locator is CssLocatorChain {
   return Array.isArray(locator);
 }
@@ -83,7 +92,12 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
     statements.push(separator + statement);
   }
 
-  return Promise.resolve(statements.join('').trim());
+  const selector = statements.join('').trim();
+  // An empty locator chain (the engine root, which the DOM/Playwright adapters
+  // mount at `[]`) reduces to `''`. Running `''` as a selector throws a
+  // SyntaxError, crashing every engine-level read/mutation, so fall back to the
+  // portable document-root selector. See #1048.
+  return Promise.resolve(selector === '' ? documentRootSelector : selector);
 }
 
 async function getLinkedCssLocator(
