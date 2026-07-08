@@ -95,7 +95,9 @@ export class SliderDriver extends ComponentDriver<typeof parts> implements IInpu
    * resolves without throwing under jsdom, exercising the event wiring only.
    */
   async dragBy(delta: Point): Promise<void> {
-    return this.parts.thumb.drag(delta);
+    // drag is protected on ComponentDriver (#1045); reach the child thumb's
+    // gesture through the interactor and the child's resolved locator.
+    return this.interactor.drag(this.parts.thumb.locator, delta);
   }
 
   /** Whether the slider is disabled (`data-disabled` presence on the root). */

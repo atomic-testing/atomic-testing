@@ -4,6 +4,12 @@ on:
   pull_request:
     paths:
       - 'docs/**'
+      # The API docs are generated from package source TSDoc (TypeDoc), so a
+      # source-only change can break the docs build. Verify it on those PRs too,
+      # not just docs/** edits — otherwise the break only surfaces post-merge on
+      # deploy (see the bare-<input> MDX failure that motivated this).
+      - 'packages/**'
+      - '.github/workflows/doc-ci.yml'
 
 jobs:
   deploy:

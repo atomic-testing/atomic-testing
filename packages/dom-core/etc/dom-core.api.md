@@ -32,7 +32,7 @@ import { WaitUntilOption } from '@atomic-testing/core';
 export const createDomTestEngine: typeof createTestEngine;
 
 // @public
-export function createTestEngine<T extends ScenePart>(element: HTMLElement, partDefinitions: T, _option?: ITestEngineOption): TestEngine<T>;
+export function createTestEngine<T extends ScenePart>(element: HTMLElement, partDefinitions: T): TestEngine<T>;
 
 // @public (undocumented)
 export class DOMInteractor implements Interactor {
