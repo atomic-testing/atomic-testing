@@ -39,6 +39,35 @@ const atomicCodeTheme: PrismTheme = {
 // gate narrative docs against silently un-flagging an excluded package.
 const EXCLUDED_FROM_DOCS = new Set([]);
 
+// Applies a reader's persisted sidebar width BEFORE first paint so the sidebar
+// doesn't flash from the stock 300px to the saved value after hydration. The
+// clamp range must match DocSidebarResizer's MIN/MAX (see src/theme/DocSidebarResizer).
+function sidebarWidthInitPlugin() {
+  return {
+    name: 'sidebar-width-init',
+    injectHtmlTags() {
+      return {
+        headTags: [
+          {
+            tagName: 'script',
+            innerHTML: [
+              '(function(){try{',
+              "var w=localStorage.getItem('docSidebarWidth');",
+              'if(w){var n=parseInt(w,10);',
+              // Clamp (not range-check) so an out-of-range stored value is still
+              // applied pre-paint, matching DocSidebarResizer.clampWidth() — a
+              // range-check would skip it and let the component reintroduce a flash.
+              'if(!isNaN(n)){n=Math.max(200,Math.min(480,n));',
+              "document.documentElement.style.setProperty('--doc-sidebar-width',n+'px');}}",
+              '}catch(e){}})();',
+            ].join(''),
+          },
+        ],
+      };
+    },
+  };
+}
+
 function getPackageNames() {
   const baseDir = path.join(__dirname, '../packages');
   const packageNames = fs.readdirSync(baseDir).filter(name => {
@@ -102,6 +131,12 @@ const config: Config = {
         entryPointStrategy: 'packages',
         tsconfig: '../tsconfig.json',
         sidebar: {},
+        // Emit each package directly under api/ (e.g. api/core) instead of
+        // nesting it under an api/@atomic-testing/ scope directory. This drops
+        // the redundant "@atomic-testing" grouping layer from the API sidebar
+        // while each package keeps its full "@atomic-testing/…" label (derived
+        // from the generated index page title). See sidebars.ts → API Reference.
+        excludeScopesInPaths: true,
         // Partition each class/interface page's members into own / inherited /
         // protected sections (see typedoc/partition-members-plugin.mjs). Absolute
         // path because TypeDoc resolves relative plugin specifiers from its own
@@ -110,6 +145,7 @@ const config: Config = {
         theme: 'markdown-partitioned',
       },
     ],
+    sidebarWidthInitPlugin,
   ],
 
   presets: [
