@@ -40,7 +40,7 @@ export const scrollExampleTestSuite: TestSuiteInfo<typeof scrollExample.scene> =
       });
 
       test(`scrollBy resolves and the container still exists`, async () => {
-        await engine().parts.scrollContainer.scrollBy({ x: 0, y: 300 });
+        await engine().interactor.scrollBy(engine().parts.scrollContainer.locator, { x: 0, y: 300 });
         assertEqual(await engine().parts.scrollContainer.exists(), true);
       });
 
@@ -59,7 +59,7 @@ export const scrollExampleTestSuite: TestSuiteInfo<typeof scrollExample.scene> =
         });
 
         test(`scrollBy reveals the target`, async () => {
-          await engine().parts.scrollContainer.scrollBy({ x: 0, y: 1000 });
+          await engine().interactor.scrollBy(engine().parts.scrollContainer.locator, { x: 0, y: 1000 });
           const v = await engine().parts.targetVisibility.waitUntil({
             probeFn: () => engine().parts.targetVisibility.getText(),
             terminateCondition: 'true',

@@ -1,7 +1,6 @@
 import {
   BlurOption,
   BoundingRect,
-  byCssSelector,
   ClickOption,
   CssProperty,
   dateUtil,
@@ -27,7 +26,7 @@ import {
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
 /**
  * Implementation of the {@link Interactor} interface using Playwright.
@@ -66,6 +65,32 @@ export class PlaywrightInteractor implements Interactor {
       }
       throw e;
     }
+  }
+
+  /**
+   * Resolve a locator for the READ path, returning the first matching element or
+   * `undefined` when nothing matches.
+   *
+   * This is the read counterpart to {@link runMutation}, aligning reads with
+   * `DOMInteractor` (jsdom is the contract — see ADR-006, #1047):
+   *
+   * - **Missing element:** a `count()` check answers instantly with `undefined`
+   *   instead of Playwright auto-waiting out the action timeout and throwing
+   *   `TimeoutError`. Callers translate `undefined` into the same
+   *   `undefined`/`false` a `querySelector` miss yields in the DOM.
+   * - **Multiple matches:** `.first()` mirrors `querySelector`'s first-match
+   *   semantics, avoiding Playwright's strict-mode violation.
+   *
+   * @param locator - Locator to resolve
+   * @returns The first matching {@link Locator}, or `undefined` if none match
+   */
+  private async firstMatch(locator: PartLocator): Promise<Optional<Locator>> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const elLocator = this.page.locator(cssLocator);
+    if ((await elLocator.count()) === 0) {
+      return undefined;
+    }
+    return elLocator.first();
   }
 
   /**
@@ -185,14 +210,25 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   /**
-   * Get the value of an `<input>` element.
+   * Get the value of an `<input>` or `<textarea>` element.
+   *
+   * Mirrors `DOMInteractor`: a missing element, or one that is neither `<input>`
+   * nor `<textarea>`, yields `undefined` rather than Playwright's auto-wait
+   * timeout or its "Node is not an <input>" throw (#1047).
    *
    * @param locator - Locator pointing to the input element.
-   * @returns The current value of the input or `undefined` if not present.
+   * @returns The current value of the input, or `undefined` if not applicable.
    */
   async getInputValue(locator: PartLocator): Promise<Optional<string>> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    return this.page.locator(cssLocator).inputValue();
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
+    }
+    const nodeName = await el.evaluate(node => node.nodeName);
+    if (nodeName !== 'INPUT' && nodeName !== 'TEXTAREA') {
+      return undefined;
+    }
+    return el.inputValue();
   }
 
   /**
@@ -202,38 +238,47 @@ export class PlaywrightInteractor implements Interactor {
    * @returns Array of selected option values or `undefined` when no option is selected.
    */
   async getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>> {
-    const optionLocator: PartLocator = byCssSelector('option:checked');
-    const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
-    const cssLocator = await locatorUtil.toCssSelector(selectedOptionLocator, this);
-    const allOptions = await this.page.locator(cssLocator).all();
-    const values: string[] = [];
-    for (const option of allOptions) {
-      const value = await option.getAttribute('value');
-      if (value != null) {
-        values.push(value);
-      }
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
     }
-    return values;
+    const nodeName = await el.evaluate(node => node.nodeName);
+    if (nodeName !== 'SELECT') {
+      // Mirror DOMInteractor: a missing or non-`<select>` element yields
+      // `undefined`, not `[]` — otherwise callers read an absent select as
+      // "present but with no selection" (#1047).
+      return undefined;
+    }
+    // Read the `value` IDL property, not the `value` attribute: per the HTML
+    // spec the property falls back to the option's text when no value attribute
+    // is present, matching DOMInteractor's `option.value`. Reading the attribute
+    // silently dropped value-less selected options (#1047).
+    return el.evaluate(node =>
+      Array.from(node.querySelectorAll<HTMLOptionElement>('option:checked')).map(option => option.value)
+    );
   }
 
   async getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>> {
-    const optionLocator: PartLocator = byCssSelector('option:checked');
-    const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
-    const cssLocator = await locatorUtil.toCssSelector(selectedOptionLocator, this);
-    const allOptions = await this.page.locator(cssLocator).all();
-    const labels: string[] = [];
-    for (const option of allOptions) {
-      const label = await option.textContent();
-      if (label != null) {
-        labels.push(label);
-      }
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
     }
-    return labels;
+    const nodeName = await el.evaluate(node => node.nodeName);
+    if (nodeName !== 'SELECT') {
+      return undefined;
+    }
+    // Read the `text` IDL property, matching DOMInteractor's `option.text`
+    // (whitespace-collapsed, spec-defined) rather than raw `textContent` (#1047).
+    return el.evaluate(node =>
+      Array.from(node.querySelectorAll<HTMLOptionElement>('option:checked')).map(option => option.text)
+    );
   }
 
   async getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const elLocator = this.page.locator(cssLocator);
+    const elLocator = await this.firstMatch(locator);
+    if (elLocator == null) {
+      return undefined;
+    }
     const value = await elLocator.evaluate((element, prop) => {
       // Indexed access, not getPropertyValue: CssProperty is the camelCase
       // keyof CSSStyleDeclaration (e.g. 'pointerEvents'), which
@@ -422,26 +467,34 @@ export class PlaywrightInteractor implements Interactor {
     name: string,
     isMultiple?: boolean
   ): Promise<Optional<string> | readonly string[]> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const elLocator = this.page.locator(cssLocator);
     if (isMultiple) {
-      const locators = await elLocator.all();
+      const cssLocator = await locatorUtil.toCssSelector(locator, this);
+      const locators = await this.page.locator(cssLocator).all();
       const values: string[] = [];
-      for (const locator of locators) {
-        const value = await locator.getAttribute(name);
+      for (const matched of locators) {
+        const value = await matched.getAttribute(name);
         if (value != null) {
           values.push(value);
         }
       }
       return values;
     }
-    const value = await elLocator.getAttribute(name);
+    // Single-element read: mirror DOMInteractor — a missing element yields
+    // `undefined` (no auto-wait) and multiple matches resolve to the first (#1047).
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
+    }
+    const value = await el.getAttribute(name);
     return value ?? undefined;
   }
 
   async getText(locator: PartLocator): Promise<Optional<string>> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const text = await this.page.locator(cssLocator).textContent();
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
+    }
+    const text = await el.textContent();
     return text ?? undefined;
   }
 
@@ -472,15 +525,19 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const checked = await this.page.locator(cssLocator).isChecked();
-    return checked;
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return false;
+    }
+    return el.isChecked();
   }
 
   async isDisabled(locator: PartLocator): Promise<boolean> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const isDisabled = await this.page.locator(cssLocator).isDisabled();
-    return isDisabled;
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return false;
+    }
+    return el.isDisabled();
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {

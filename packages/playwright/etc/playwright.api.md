@@ -12,7 +12,6 @@ import { EnterTextOption } from '@atomic-testing/core';
 import { FocusOption } from '@atomic-testing/core';
 import { HoverOption } from '@atomic-testing/core';
 import { Interactor } from '@atomic-testing/core';
-import { ITestEngineOption } from '@atomic-testing/core';
 import { MouseDownOption } from '@atomic-testing/core';
 import { MouseEnterOption } from '@atomic-testing/core';
 import { MouseLeaveOption } from '@atomic-testing/core';
@@ -30,7 +29,7 @@ import { WaitForOption } from '@atomic-testing/core';
 import { WaitUntilOption } from '@atomic-testing/core';
 
 // @public
-export function createTestEngine<T extends ScenePart>(page: Page, partDefinitions: T, _option?: ITestEngineOption): TestEngine<T>;
+export function createTestEngine<T extends ScenePart>(page: Page, partDefinitions: T): TestEngine<T>;
 
 // @public
 export class PlaywrightInteractor implements Interactor {
