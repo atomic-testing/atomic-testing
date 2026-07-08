@@ -39,10 +39,12 @@ async function captureError(run: () => Promise<unknown>): Promise<Error | undefi
  * jsdom-conforming behavior of the four `PlaywrightInteractor` read-path defects
  * fixed in #1047, plus error-hierarchy conformance (ADR-010).
  *
- * NOT covered — future work: mechanically verifying that every mutating
- * primitive routes through a single `runInteraction` template-method seam. That
- * seam does not exist yet (unfiled epic row 8); once it lands the suite should
- * assert the routing directly.
+ * NOT covered here — the `runInteraction` template-method seam (#1052) is now
+ * mechanically verified white-box in
+ * `packages/dom-core/__tests__/runInteractionRouting.dom.test.ts`, which asserts
+ * every mutating primitive routes through the seam exactly once (and reads do
+ * not). That routing is invisible to this black-box TCK, so it lives there
+ * rather than here.
  */
 export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePart> = {
   title: 'Interactor conformance (TCK)',

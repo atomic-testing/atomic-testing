@@ -1,151 +1,17 @@
-import {
-  BlurOption,
-  ClickOption,
-  defaultWaitForOption,
-  EnterTextOption,
-  FocusOption,
-  HoverOption,
-  MouseDownOption,
-  MouseEnterOption,
-  MouseLeaveOption,
-  MouseMoveOption,
-  MouseOutOption,
-  MouseUpOption,
-  PartLocator,
-  Point,
-  PressKeyOption,
-  WaitForOption,
-  WaitUntilOption,
-} from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { nextTick } from 'vue';
 
 export class VueInteractor extends DOMInteractor {
-  private async flush() {
+  /**
+   * Flush Vue reactivity after every mutating interaction (and both wait
+   * conditions) by awaiting `nextTick()`. This is the single seam
+   * `DOMInteractor` routes all mutations through (see
+   * {@link DOMInteractor.runInteraction}), so a new primitive added to the base
+   * settles Vue's DOM automatically — no per-method override to forget.
+   */
+  protected override async runInteraction<T>(interaction: () => Promise<T>): Promise<T> {
+    const result = await interaction();
     await nextTick();
-  }
-
-  override async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void> {
-    await super.enterText(locator, text, option);
-    await this.flush();
-  }
-
-  override async setRangeValue(locator: PartLocator, value: number): Promise<void> {
-    await super.setRangeValue(locator, value);
-    await this.flush();
-  }
-
-  override async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
-    await super.click(locator, option);
-    await this.flush();
-  }
-
-  override async hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
-    await super.hover(locator, option);
-    await this.flush();
-  }
-
-  override async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
-    await super.mouseMove(locator, option);
-    await this.flush();
-  }
-
-  override async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
-    await super.mouseDown(locator, option);
-    await this.flush();
-  }
-
-  override async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
-    await super.mouseUp(locator, option);
-    await this.flush();
-  }
-
-  override async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
-    await super.mouseOver(locator, option);
-    await this.flush();
-  }
-
-  override async mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void> {
-    await super.mouseOut(locator, option);
-    await this.flush();
-  }
-
-  override async mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void> {
-    await super.mouseEnter(locator, option);
-    await this.flush();
-  }
-
-  override async mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void> {
-    await super.mouseLeave(locator, option);
-    await this.flush();
-  }
-
-  override async focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void> {
-    await super.focus(locator, option);
-    await this.flush();
-  }
-
-  override async blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void> {
-    await super.blur(locator, option);
-    await this.flush();
-  }
-
-  override async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
-    await super.pressKey(locator, key, option);
-    await this.flush();
-  }
-
-  override async contextMenu(locator: PartLocator): Promise<void> {
-    await super.contextMenu(locator);
-    await this.flush();
-  }
-
-  override async activate(locator: PartLocator): Promise<void> {
-    await super.activate(locator);
-    await this.flush();
-  }
-
-  override async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
-    await super.selectOptionValue(locator, values);
-    await this.flush();
-  }
-
-  override async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
-    await super.setInputFiles(locator, files);
-    await this.flush();
-  }
-
-  override async scrollIntoView(locator: PartLocator): Promise<void> {
-    await super.scrollIntoView(locator);
-    await this.flush();
-  }
-
-  override async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
-    await super.scrollBy(locator, delta);
-    await this.flush();
-  }
-
-  override async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
-    await super.dragTo(source, target);
-    await this.flush();
-  }
-
-  override async drag(locator: PartLocator, delta: Point): Promise<void> {
-    await super.drag(locator, delta);
-    await this.flush();
-  }
-
-  override async waitUntilComponentState(
-    locator: PartLocator,
-    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
-  ): Promise<void> {
-    await super.waitUntilComponentState(locator, option);
-    await this.flush();
-  }
-
-  override async waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
-    const result = await super.waitUntil(option);
-    await this.flush();
     return result;
   }
 }

@@ -27,7 +27,8 @@
   "scripts": {
     "build": "tsdown",
     "check:type": "tsgo --noEmit",
-    "check:api": "api-extractor run"
+    "check:api": "api-extractor run",
+    "test:dom": "jest"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*"

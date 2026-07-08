@@ -101,6 +101,7 @@ export class DOMInteractor implements Interactor {
     pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void>;
     // (undocumented)
     protected readonly rootEl: HTMLElement;
+    protected runInteraction<T>(fn: () => Promise<T>): Promise<T>;
     scrollBy(locator: PartLocator, delta: Point): Promise<void>;
     scrollIntoView(locator: PartLocator): Promise<void>;
     selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
