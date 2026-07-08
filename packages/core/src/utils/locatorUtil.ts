@@ -1,10 +1,20 @@
 import { Optional } from '../dataTypes';
+import { LocatorResolutionError } from '../errors/LocatorResolutionError';
 import { Interactor } from '../interactor/Interactor';
 import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import type { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
 import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
+
+/**
+ * The portable document-root selector an empty locator chain reduces to. `<html>`
+ * in the DOM, matched by both `document.querySelector(':root')` (jsdom) and
+ * `page.locator(':root')` (Chromium). Used so the engine-root locator (`[]`, in
+ * the DOM/Playwright adapters) resolves to a real element instead of `''`, which
+ * throws a CSS parse error in every engine. See #1048.
+ */
+export const documentRootSelector = ':root';
 
 export function isChain(locator: PartLocator): locator is CssLocatorChain {
   return Array.isArray(locator);
@@ -82,7 +92,12 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
     statements.push(separator + statement);
   }
 
-  return Promise.resolve(statements.join('').trim());
+  const selector = statements.join('').trim();
+  // An empty locator chain (the engine root, which the DOM/Playwright adapters
+  // mount at `[]`) reduces to `''`. Running `''` as a selector throws a
+  // SyntaxError, crashing every engine-level read/mutation, so fall back to the
+  // portable document-root selector. See #1048.
+  return Promise.resolve(selector === '' ? documentRootSelector : selector);
 }
 
 async function getLinkedCssLocator(
@@ -93,15 +108,14 @@ async function getLinkedCssLocator(
   const matchTargetValue = await getLinkedCssLocatorMatchingTargetValue(locator, context, interactor);
 
   if (matchTargetValue == null) {
-    // TODO: Produce more descriptive error to help with troubleshooting
-    throw new Error('Match target not found for LinkedCssLocator');
+    throw new LocatorResolutionError(locator, 'match target of LinkedCssLocator not found');
   }
 
   let resolvedLocator: CssLocator;
   if (locator.valueExtract.type === 'attribute') {
     resolvedLocator = byAttribute(locator.valueExtract.attributeName, matchTargetValue, locator.relative);
   } else {
-    throw new Error(`Cannot handle valueExtract method type ${locator.valueExtract.type}`);
+    throw new LocatorResolutionError(locator, `unsupported valueExtract type "${locator.valueExtract.type}"`);
   }
   return resolvedLocator;
 }
@@ -116,7 +130,10 @@ export async function getLinkedCssLocatorMatchingTargetValue(
     return await interactor.getAttribute(entireLocator, locator.matchingTargetValueExtract.attributeName);
   }
 
-  throw new Error(`Cannot handle valueExtract method type ${locator.matchingTargetValueExtract.type}`);
+  throw new LocatorResolutionError(
+    locator,
+    `unsupported matchingTargetValueExtract type "${locator.matchingTargetValueExtract.type}"`
+  );
 }
 
 function getLocatorStatement(locator: CssLocator): string {
@@ -163,20 +180,8 @@ export function overrideLocatorRelativePosition(
   });
 }
 
-/**
- * Display a rough description of the locators for error logging
- * this is an estimate, not a precise description with the absence of interactor
- * locators such as LinkedCssLocator would not be interpreted correctly
- * @param locator
- * @returns
- */
-export function getLocatorInfoForErrorLog(locator: PartLocator): string {
-  const locators = Array.isArray(locator) ? locator : [locator];
-
-  const selectors: string[] = [];
-  for (const loc of locators) {
-    selectors.push(loc.selector);
-  }
-
-  return selectors.join(', ');
-}
+// Re-exported from a leaf module so the interactor errors can build their
+// `locatorDescription` from it without importing `locatorUtil` (which throws
+// LocatorResolutionError) — breaking a `locatorUtil ↔ error` import cycle while
+// keeping `locatorUtil.getLocatorInfoForErrorLog` on the public surface.
+export { getLocatorInfoForErrorLog } from './getLocatorInfoForErrorLog';

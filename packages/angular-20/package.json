@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/angular-20",
-  "version": "0.95.0",
+  "version": "0.96.0",
   "description": "Angular 20 test adapter for Atomic Testing: bootstrap standalone components with Angular's real bootstrap API and test them through the component driver pattern. Thin re-export of @atomic-testing/angular-core pinned to the Angular 20 peer range.",
   "keywords": [
     "angular",

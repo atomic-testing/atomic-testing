@@ -710,7 +710,13 @@ export class DOMInteractor implements Interactor {
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const queryRoot = this.escapesToDocumentRoot(locator) ? this.rootEl.ownerDocument : this.rootEl;
+    // The engine-root locator (`[]`) resolves to `:root`, which matches `<html>` —
+    // an ancestor of `rootEl`, so `rootEl.querySelector(':root')` finds nothing.
+    // Query from the document in that case, matching `document.querySelector(':root')`
+    // and Playwright's `page.locator(':root')`. See #1048.
+    const escapesToDocumentRoot =
+      cssLocator === locatorUtil.documentRootSelector || this.escapesToDocumentRoot(locator);
+    const queryRoot = escapesToDocumentRoot ? this.rootEl.ownerDocument : this.rootEl;
     if (isMultiple) {
       const elList = queryRoot.querySelectorAll<T>(cssLocator);
       const result: T[] = [];

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/react-core",
-  "version": "0.95.0",
+  "version": "0.96.0",
   "description": "Shared utilities for Atomic Testing React adapters",
   "keywords": [
     "react",
@@ -35,7 +35,7 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/dom-core": "workspace:*",
-    "@testing-library/react": "^16.3.0"
+    "@testing-library/react": "^16.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

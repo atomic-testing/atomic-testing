@@ -104,7 +104,9 @@ export class SliderDriver
    * resolves without throwing under jsdom, exercising the event wiring only.
    */
   async dragBy(delta: Point): Promise<void> {
-    return this.parts.handle.drag(delta);
+    // drag is protected on ComponentDriver (#1045); reach the child handle's
+    // gesture through the interactor and the child's resolved locator.
+    return this.interactor.drag(this.parts.handle.locator, delta);
   }
 
   /** Whether the slider is disabled (`p-disabled` state class on the root — see class doc). */

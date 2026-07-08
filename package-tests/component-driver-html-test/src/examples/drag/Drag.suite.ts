@@ -49,7 +49,7 @@ export const dragExampleTestSuite: TestSuiteInfo<typeof dragExample.scene> = {
       // box) so the target stays topmost at release in a real browser. Positional
       // outcome is not asserted here.
       test(`dragTo drops onto the target`, async () => {
-        await engine().parts.dragSource.dragTo(engine().parts.dropTarget);
+        await engine().interactor.dragTo(engine().parts.dragSource.locator, engine().parts.dropTarget.locator);
         const status = await engine().parts.dropStatus.waitUntil({
           probeFn: () => engine().parts.dropStatus.getText(),
           terminateCondition: 'dropped',
@@ -62,7 +62,7 @@ export const dragExampleTestSuite: TestSuiteInfo<typeof dragExample.scene> = {
       // This proves the event wiring, not the coordinates.
       test(`drag fires the mousedown interaction`, async () => {
         assertEqual(await engine().parts.dragInteractions.getText(), '0');
-        await engine().parts.dragBox.drag({ x: 40, y: 20 });
+        await engine().interactor.drag(engine().parts.dragBox.locator, { x: 40, y: 20 });
         const count = await engine().parts.dragInteractions.waitUntil({
           probeFn: () => engine().parts.dragInteractions.getText(),
           terminateCondition: '1',
@@ -75,7 +75,7 @@ export const dragExampleTestSuite: TestSuiteInfo<typeof dragExample.scene> = {
       // movement is browser-only — assert the offset reaches roughly the delta.
       if (hasLayout) {
         test(`drag moves the box by the delta`, async () => {
-          await engine().parts.dragBox.drag({ x: 40, y: 20 });
+          await engine().interactor.drag(engine().parts.dragBox.locator, { x: 40, y: 20 });
           const position = await engine().parts.dragPosition.waitUntil({
             probeFn: () => engine().parts.dragPosition.getText(),
             terminateCondition: text => text != null && text !== '0,0',
