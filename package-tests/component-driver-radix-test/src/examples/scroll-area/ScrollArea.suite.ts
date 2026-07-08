@@ -45,7 +45,7 @@ export const scrollAreaExampleTestSuite: TestSuiteInfo<typeof scrollAreaExample.
       // still exists, exercising the event wiring; jsdom has no layout engine so
       // the resulting scroll offset is not asserted here.
       test(`scrollBy on the viewport resolves without throwing`, async () => {
-        await engine().parts.scrollArea.parts.viewport.scrollBy({ x: 0, y: 200 });
+        await engine().interactor.scrollBy(engine().parts.scrollArea.parts.viewport.locator, { x: 0, y: 200 });
         assertEqual(await engine().parts.scrollArea.parts.viewport.exists(), true);
       });
 
@@ -54,9 +54,9 @@ export const scrollAreaExampleTestSuite: TestSuiteInfo<typeof scrollAreaExample.
       // viewport). A row's page-relative y position moves up by ~the scroll delta.
       if (hasLayout) {
         test(`scrollBy moves row geometry by roughly the delta`, async () => {
-          const before = await engine().parts.row.getBoundingRect();
-          await engine().parts.scrollArea.parts.viewport.scrollBy({ x: 0, y: 200 });
-          const after = await engine().parts.row.getBoundingRect();
+          const before = await engine().interactor.getBoundingRect(engine().parts.row.locator);
+          await engine().interactor.scrollBy(engine().parts.scrollArea.parts.viewport.locator, { x: 0, y: 200 });
+          const after = await engine().interactor.getBoundingRect(engine().parts.row.locator);
           assertTrue(Math.abs(before.y - after.y - 200) < 5);
         });
       }

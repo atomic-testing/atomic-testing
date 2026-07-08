@@ -38,7 +38,7 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
       const engine = useTestEngine(mouseLocationMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
       test('Mousemove on somewhere in the target should display the correct coordinates', async () => {
-        await engine().parts.target.mouseMove({
+        await engine().interactor.mouseMove(engine().parts.target.locator, {
           position: {
             x: 20,
             y: 15,
@@ -56,13 +56,13 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
       });
 
       test('Mousedown on somewhere in the target should display the correct coordinates', async () => {
-        await engine().parts.target.mouseMove({
+        await engine().interactor.mouseMove(engine().parts.target.locator, {
           position: {
             x: 20,
             y: 15,
           },
         });
-        await engine().parts.target.mouseDown({
+        await engine().interactor.mouseDown(engine().parts.target.locator, {
           position: {
             x: 12,
             y: 16,
@@ -80,19 +80,19 @@ export const mouseLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof mouse
       });
 
       test('MouseUp on somewhere in the target should display the correct coordinates', async () => {
-        await engine().parts.target.mouseMove({
+        await engine().interactor.mouseMove(engine().parts.target.locator, {
           position: {
             x: 20,
             y: 15,
           },
         });
-        await engine().parts.target.mouseDown({
+        await engine().interactor.mouseDown(engine().parts.target.locator, {
           position: {
             x: 12,
             y: 16,
           },
         });
-        await engine().parts.target.mouseUp({
+        await engine().interactor.mouseUp(engine().parts.target.locator, {
           position: {
             x: 11,
             y: 15,
