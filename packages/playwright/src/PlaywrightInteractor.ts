@@ -1,7 +1,6 @@
 import {
   BlurOption,
   BoundingRect,
-  byCssSelector,
   ClickOption,
   CssProperty,
   dateUtil,
@@ -239,35 +238,40 @@ export class PlaywrightInteractor implements Interactor {
    * @returns Array of selected option values or `undefined` when no option is selected.
    */
   async getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>> {
-    const optionLocator: PartLocator = byCssSelector('option:checked');
-    const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
-    const cssLocator = await locatorUtil.toCssSelector(selectedOptionLocator, this);
-    const allOptions = await this.page.locator(cssLocator).all();
-    const values: string[] = [];
-    for (const option of allOptions) {
-      // Read the `value` IDL property, not the `value` attribute: per the HTML
-      // spec the property falls back to the option's text when no value attribute
-      // is present, matching DOMInteractor's `option.value`. Reading the attribute
-      // silently dropped value-less selected options (#1047).
-      const value = await option.evaluate(node => (node as HTMLOptionElement).value);
-      values.push(value);
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
     }
-    return values;
+    const nodeName = await el.evaluate(node => node.nodeName);
+    if (nodeName !== 'SELECT') {
+      // Mirror DOMInteractor: a missing or non-`<select>` element yields
+      // `undefined`, not `[]` — otherwise callers read an absent select as
+      // "present but with no selection" (#1047).
+      return undefined;
+    }
+    // Read the `value` IDL property, not the `value` attribute: per the HTML
+    // spec the property falls back to the option's text when no value attribute
+    // is present, matching DOMInteractor's `option.value`. Reading the attribute
+    // silently dropped value-less selected options (#1047).
+    return el.evaluate(node =>
+      Array.from(node.querySelectorAll<HTMLOptionElement>('option:checked')).map(option => option.value)
+    );
   }
 
   async getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>> {
-    const optionLocator: PartLocator = byCssSelector('option:checked');
-    const selectedOptionLocator = locatorUtil.append(locator, optionLocator);
-    const cssLocator = await locatorUtil.toCssSelector(selectedOptionLocator, this);
-    const allOptions = await this.page.locator(cssLocator).all();
-    const labels: string[] = [];
-    for (const option of allOptions) {
-      // Read the `text` IDL property, matching DOMInteractor's `option.text`
-      // (whitespace-collapsed, spec-defined) rather than raw `textContent` (#1047).
-      const label = await option.evaluate(node => (node as HTMLOptionElement).text);
-      labels.push(label);
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return undefined;
     }
-    return labels;
+    const nodeName = await el.evaluate(node => node.nodeName);
+    if (nodeName !== 'SELECT') {
+      return undefined;
+    }
+    // Read the `text` IDL property, matching DOMInteractor's `option.text`
+    // (whitespace-collapsed, spec-defined) rather than raw `textContent` (#1047).
+    return el.evaluate(node =>
+      Array.from(node.querySelectorAll<HTMLOptionElement>('option:checked')).map(option => option.text)
+    );
   }
 
   async getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>> {

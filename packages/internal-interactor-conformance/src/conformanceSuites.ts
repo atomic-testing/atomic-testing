@@ -111,6 +111,17 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
       test('getSelectLabels returns the option text', async () => {
         assertEqual(await interactor().getSelectLabels(select), ['Apple']);
       });
+
+      test('getSelectValues / getSelectLabels return undefined for a missing element', async () => {
+        assertEqual(await interactor().getSelectValues(absent), undefined);
+        assertEqual(await interactor().getSelectLabels(absent), undefined);
+      });
+
+      test('getSelectValues / getSelectLabels return undefined for a non-<select> element', async () => {
+        const notSelect = byDataTestId('not-input');
+        assertEqual(await interactor().getSelectValues(notSelect), undefined);
+        assertEqual(await interactor().getSelectLabels(notSelect), undefined);
+      });
     });
 
     // Error-class conformance (ADR-010): interactor-level failures share one
