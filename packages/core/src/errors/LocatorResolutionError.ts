@@ -1,5 +1,5 @@
 import { PartLocator } from '../locators';
-import { getLocatorInfoForErrorLog } from '../utils/locatorUtil';
+import { getLocatorInfoForErrorLog } from '../utils/getLocatorInfoForErrorLog';
 import { InteractorErrorBase } from './InteractorErrorBase';
 
 export const LocatorResolutionErrorId = 'LocatorResolutionError';
