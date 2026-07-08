@@ -14,6 +14,7 @@
  *   3. Globals (body, scrollbars, selection, headings)
  *   4. Navbar
  *   5. Sidebar
+ *  5b. Resizable sidebar + fluid content
  *   6. Doc content (markdown / article)
  *   7. Table of contents (right rail)
  *   8. Admonitions
@@ -405,6 +406,28 @@ h1 {
 
 .menu__list-item-collapsible:hover .menu__link--active {
   background: transparent;
+}
+
+/* ============================================================
+ * 5b. Resizable sidebar + fluid content (desktop ≥ 997px)
+ * ============================================================ */
+/* The sidebar width is driven by --doc-sidebar-width (Docusaurus' stock 300px).
+ * src/theme/DocSidebarResizer adds a drag handle that rewrites that variable and
+ * persists it (re-applied before first paint by the sidebar-width-init plugin in
+ * docusaurus.config.ts). Here the article area is allowed to consume the space
+ * the sidebar frees — instead of Infima's fixed .container cap — while prose keeps
+ * a comfortable reading measure. The selector is scoped to the doc layout via the
+ * stable `theme-doc-sidebar-container` class, so non-doc pages are untouched. */
+@media (min-width: 997px) {
+  .theme-doc-sidebar-container ~ main > .container {
+    max-width: 1500px; /* up from --ifm-container-width (1140px) */
+  }
+
+  .theme-doc-sidebar-container ~ main .theme-doc-markdown,
+  .theme-doc-sidebar-container ~ main .theme-doc-breadcrumbs,
+  .theme-doc-sidebar-container ~ main .pagination-nav {
+    max-width: 1100px; /* readable cap: content grows up to here, then stops */
+  }
 }
 
 /* ============================================================
