@@ -1,6 +1,6 @@
 import { byAttribute, ScenePart, TestEngine } from '@atomic-testing/core';
 import { render } from '@testing-library/vue';
-import { App, Component, createApp, defineComponent } from 'vue';
+import { Component, createApp, defineComponent } from 'vue';
 
 import { VueSFCLikeComponent, VueTestEngineOption } from './types';
 import { VueInteractor } from './VueInteractor';
@@ -16,6 +16,22 @@ function isSFCLikeObject(component: any): component is VueSFCLikeComponent {
   return (
     component && typeof component === 'object' && 'template' in component && typeof component.template === 'string'
   );
+}
+
+/**
+ * Detect the single Vue-Test-Utils quirk the manual-mount fallback exists for:
+ * `@testing-library/vue`'s `render` delegates to `@vue/test-utils`' `mount`,
+ * which is a peer dependency not present in every environment (it is absent from
+ * this workspace). When it is missing, `render` throws
+ * `TypeError: ...mount... is not a function`.
+ *
+ * Only that quirk warrants the fallback; every other error from `render` is a
+ * genuine failure in the component under test and must propagate with its
+ * original stack rather than be masked by the fallback's different cleanup
+ * semantics (#1049).
+ */
+function isVueTestUtilsMountUnavailable(error: unknown): boolean {
+  return error instanceof TypeError && error.message.includes('mount') && error.message.includes('is not a function');
 }
 
 function createComponentFromSFCLike(sfcObj: VueSFCLikeComponent): Component {
@@ -57,9 +73,6 @@ export function createTestEngine<T extends ScenePart>(
   const rootId = getNextRootElementId();
   container.setAttribute(rootElementAttributeName, rootId);
 
-  let unmount: () => void;
-  let app: App;
-
   // Create component from SFC-like object if needed
   const compiledComponent = isSFCLikeObject(component)
     ? createComponentFromSFCLike(component)
@@ -67,6 +80,7 @@ export function createTestEngine<T extends ScenePart>(
 
   const plugins = option?.plugins ?? [];
 
+  let unmount: () => void;
   try {
     const renderResult = render(compiledComponent, {
       container,
@@ -83,9 +97,15 @@ export function createTestEngine<T extends ScenePart>(
       },
     });
     unmount = renderResult.unmount;
-  } catch (_error) {
-    // Fallback to manual Vue app creation if render fails
-    app = createApp(compiledComponent);
+  } catch (error) {
+    // Narrowly scoped fallback: only the missing-`@vue/test-utils` quirk (see
+    // isVueTestUtilsMountUnavailable) is handled by mounting the app directly.
+    // Any other error is a real render failure and is rethrown so its stack
+    // surfaces instead of being swallowed (#1049).
+    if (!isVueTestUtilsMountUnavailable(error)) {
+      throw error;
+    }
+    const app = createApp(compiledComponent);
     for (const plugin of plugins) {
       if (Array.isArray(plugin)) {
         const [pluginInstance, ...pluginOptions] = plugin;
@@ -95,11 +115,7 @@ export function createTestEngine<T extends ScenePart>(
       }
     }
     app.mount(container);
-    unmount = () => {
-      if (app) {
-        app.unmount();
-      }
-    };
+    unmount = () => app.unmount();
   }
 
   const cleanup = () => {

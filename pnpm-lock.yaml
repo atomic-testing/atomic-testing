@@ -1059,6 +1059,30 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.17)
 
+  package-tests/internal-interactor-conformance-test:
+    devDependencies:
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@atomic-testing/dom-core':
+        specifier: workspace:*
+        version: link:../../packages/dom-core
+      '@atomic-testing/internal-interactor-conformance':
+        specifier: workspace:*
+        version: link:../../packages/internal-interactor-conformance
+      '@atomic-testing/internal-test-runner':
+        specifier: workspace:*
+        version: link:../../packages/internal-test-runner
+      '@atomic-testing/internal-test-runner-jest-adapter':
+        specifier: workspace:*
+        version: link:../../packages/internal-test-runner-jest-adapter
+      '@atomic-testing/internal-test-runner-playwright-adapter':
+        specifier: workspace:*
+        version: link:../../packages/internal-test-runner-playwright-adapter
+      '@atomic-testing/playwright':
+        specifier: workspace:*
+        version: link:../../packages/playwright
+
   package-tests/storybook-test:
     devDependencies:
       '@atomic-testing/component-driver-html':
@@ -1621,6 +1645,15 @@ importers:
       '@testing-library/user-event':
         specifier: '>=14.0.0'
         version: 14.6.1(@testing-library/dom@10.4.1)
+
+  packages/internal-interactor-conformance:
+    dependencies:
+      '@atomic-testing/core':
+        specifier: workspace:*
+        version: link:../core
+      '@atomic-testing/internal-test-runner':
+        specifier: workspace:*
+        version: link:../internal-test-runner
 
   packages/internal-mui-x-test-fixture: {}
 
