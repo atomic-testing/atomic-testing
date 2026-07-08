@@ -214,7 +214,7 @@ export class PlaywrightInteractor implements Interactor {
    *
    * Mirrors `DOMInteractor`: a missing element, or one that is neither `<input>`
    * nor `<textarea>`, yields `undefined` rather than Playwright's auto-wait
-   * timeout or its "Node is not an <input>" throw (#1047).
+   * timeout or its `Node is not an <input>` throw (#1047).
    *
    * @param locator - Locator pointing to the input element.
    * @returns The current value of the input, or `undefined` if not applicable.
