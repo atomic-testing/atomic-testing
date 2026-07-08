@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@atomic-testing/internal-test-runner": "workspace:*",
-    "@jest/globals": "^29.7.0"
+    "@jest/globals": "^30.4.1"
   },
   "peerDependencies": {
     "jest": ">= 26.0.0"
