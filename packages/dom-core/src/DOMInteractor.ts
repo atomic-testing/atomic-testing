@@ -56,21 +56,24 @@ function deriveKeyCode(key: string): string {
 }
 
 /**
- * Whether a key press on this element needs `beforeinput`/`input` fidelity —
- * true for a text-editing context (an `<input>`/`<textarea>` or a
- * `contenteditable` host). Only editing targets commit changes from input
- * events (e.g. the MUI X picker section field clearing on `Backspace`); a
- * command target (a `role="combobox"`, dialog, chip, menu) reacts to plain
- * `keydown`, so it must keep the direct `fireEvent` dispatch that keyboard-driven
- * drivers rely on — routing those through `userEvent.keyboard` (which delivers
- * to `document.activeElement`) regressed the Angular Material `MatSelect`
- * open-on-`Enter` contract. jsdom leaves `isContentEditable` `undefined`, so the
- * `contenteditable` attribute is consulted directly rather than the property.
+ * Whether a key press on this element needs `beforeinput`/`input` fidelity — true
+ * only for a `contenteditable` host. Such a host commits edits from input events
+ * that a bare `keydown`/`keyup` never produces (the MUI X picker section field
+ * clears on `Backspace` this way, see #903), so it must go through
+ * `userEvent.keyboard`.
+ *
+ * Everything else — including `<input>`/`<textarea>` — keeps the direct
+ * `fireEvent.keyDown` dispatch on the element, which is what keyboard-driven
+ * drivers rely on and matches the pre-existing behavior. `userEvent.keyboard`
+ * delivers to `document.activeElement` and regressed command-key contracts on
+ * both non-editable and editable targets: Angular Material `MatSelect`
+ * (open on `Enter`) and `MatAutocomplete` (close on `Escape`, whose target is a
+ * text `<input>`). Text fields do their actual editing through
+ * {@link DOMInteractor.enterText}/{@link DOMInteractor.typeText}, not `pressKey`,
+ * so excluding them here loses nothing. jsdom leaves `isContentEditable`
+ * `undefined`, so the attribute is consulted directly rather than the property.
  */
 function needsInputEventFidelity(el: Element): boolean {
-  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-    return true;
-  }
   if ((el as HTMLElement).isContentEditable === true) {
     return true;
   }
