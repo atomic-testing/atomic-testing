@@ -80,11 +80,13 @@ export interface Interactor {
    * event so components that key off `KeyboardEvent.key` are exercised — e.g.
    * Dialog dismissal on `Escape` or Chip deletion on `Backspace`/`Delete`. The
    * element is focused first so the event originates from the active element,
-   * matching a real key press. When the element holds focus the press carries
-   * full editing fidelity (`keydown` → `beforeinput`/`input` on editable
-   * targets → `keyup`), so editing keys such as `Backspace` also reach
-   * components that commit changes from input events (e.g. the MUI X picker
-   * section field). No pointer event is involved, so behaviours unreachable by
+   * matching a real key press. On a focused **text-editing** target (an
+   * `<input>`/`<textarea>` or a `contenteditable` host) the press additionally
+   * carries `beforeinput`/`input` fidelity, so editing keys such as `Backspace`
+   * reach components that commit changes from input events (e.g. the MUI X
+   * picker section field, see #903); on a command target (combobox, dialog,
+   * menu) it stays a plain `keydown`/`keyup` so keyboard handlers fire as they
+   * expect. No pointer event is involved, so behaviours unreachable by
    * {@link click} (geometry or not) become testable.
    *
    * Cross-engine caveat: with `shift` and a PRINTABLE key the engines disagree on

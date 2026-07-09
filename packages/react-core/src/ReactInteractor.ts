@@ -69,9 +69,11 @@ export class ReactInteractor extends DOMInteractor {
   }
 
   override async typeText(locator: PartLocator, text: string): Promise<void> {
-    await act(async () => {
-      await super.typeText(locator, text);
-    });
+    // typeText dispatches through `userEvent.keyboard` (DOMInteractor.typeText),
+    // so it must go through runUserEvent — like enterText/click — or the
+    // asyncWrapper's `IS_REACT_ACT_ENVIRONMENT=false` toggle resurfaces the
+    // act-environment warnings runUserEvent exists to suppress.
+    await this.runUserEvent(() => super.typeText(locator, text));
   }
 
   override async setRangeValue(locator: PartLocator, value: number): Promise<void> {
@@ -143,9 +145,11 @@ export class ReactInteractor extends DOMInteractor {
   }
 
   override async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
-    await act(async () => {
-      await super.pressKey(locator, key, option);
-    });
+    // pressKey now dispatches through `userEvent.keyboard` whenever the target
+    // holds focus (DOMInteractor.pressKey's editing-fidelity path), so it is
+    // user-event-backed like typeText and must use runUserEvent for the same
+    // reason. The non-focused fireEvent fallback is unaffected by the wrapper.
+    await this.runUserEvent(() => super.pressKey(locator, key, option));
   }
 
   override async contextMenu(locator: PartLocator): Promise<void> {

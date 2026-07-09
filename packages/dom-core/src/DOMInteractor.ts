@@ -55,6 +55,29 @@ function deriveKeyCode(key: string): string {
   return key;
 }
 
+/**
+ * Whether a key press on this element needs `beforeinput`/`input` fidelity —
+ * true for a text-editing context (an `<input>`/`<textarea>` or a
+ * `contenteditable` host). Only editing targets commit changes from input
+ * events (e.g. the MUI X picker section field clearing on `Backspace`); a
+ * command target (a `role="combobox"`, dialog, chip, menu) reacts to plain
+ * `keydown`, so it must keep the direct `fireEvent` dispatch that keyboard-driven
+ * drivers rely on — routing those through `userEvent.keyboard` (which delivers
+ * to `document.activeElement`) regressed the Angular Material `MatSelect`
+ * open-on-`Enter` contract. jsdom leaves `isContentEditable` `undefined`, so the
+ * `contenteditable` attribute is consulted directly rather than the property.
+ */
+function needsInputEventFidelity(el: Element): boolean {
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+    return true;
+  }
+  if ((el as HTMLElement).isContentEditable === true) {
+    return true;
+  }
+  const contentEditable = el.getAttribute('contenteditable');
+  return contentEditable === '' || contentEditable === 'true';
+}
+
 export class DOMInteractor implements Interactor {
   protected readonly userEvent: UserEventDispatcher;
 
@@ -397,16 +420,19 @@ export class DOMInteractor implements Interactor {
       (el as HTMLElement).focus();
     }
 
-    // When the element genuinely holds focus, dispatch through
-    // `userEvent.keyboard` so the press carries full editing fidelity —
-    // keydown → beforeinput/input (for editing keys on editable targets) →
-    // keyup — matching Playwright's `locator.press()`. A bare keydown/keyup
-    // pair reaches `KeyboardEvent.key` handlers but is invisible to components
-    // that commit edits from input events (e.g. the MUI X picker section field
-    // clearing on Backspace, see #903).
+    // For a focused text-editing target, dispatch through `userEvent.keyboard`
+    // so the press carries full editing fidelity — keydown → beforeinput/input →
+    // keyup — matching Playwright's `locator.press()`. A bare keydown/keyup pair
+    // reaches `KeyboardEvent.key` handlers but is invisible to components that
+    // commit edits from input events (e.g. the MUI X picker section field
+    // clearing on Backspace, see #903). This is gated to editing targets
+    // ({@link needsInputEventFidelity}): command targets (combobox, dialog,
+    // chip) must keep the direct `fireEvent` dispatch their keyboard handlers
+    // rely on — `userEvent.keyboard` delivers to `document.activeElement`, which
+    // broke the Angular Material `MatSelect` open-on-Enter path.
     const activeElement = el.ownerDocument?.activeElement;
     const holdsFocus = el === activeElement || (activeElement != null && el.contains(activeElement));
-    if (holdsFocus) {
+    if (holdsFocus && needsInputEventFidelity(el)) {
       // Printable keys are typed as-is (doubling `{`/`[` so user-event's
       // descriptor syntax never engages); named keys become `{Key}` descriptors.
       // The global flag is defensive — `key.length === 1` means at most one char
