@@ -1,14 +1,19 @@
+import { interactorUtil, PartLocator, timingUtil, WaitForOption, WaitUntilOption } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from '@testing-library/react';
 
 export class ReactInteractor extends DOMInteractor {
   /**
-   * Flush React by running every mutating interaction (and both wait
-   * conditions) inside `act` while holding the `IS_REACT_ACT_ENVIRONMENT`
-   * global at `true` for its whole duration. This is the single seam
-   * `DOMInteractor` routes all mutations through (see
-   * {@link DOMInteractor.runInteraction}), so a new primitive added to the base
-   * is flushed here automatically — no per-method override to forget.
+   * Flush React by running every mutating interaction inside `act` while holding
+   * the `IS_REACT_ACT_ENVIRONMENT` global at `true` for its whole duration. This
+   * is the single seam `DOMInteractor` routes all mutations through (see
+   * {@link DOMInteractor.runInteraction}), so a new mutating primitive added to
+   * the base is flushed here automatically — no per-method override to forget.
+   *
+   * The two wait conditions are the deliberate exception: they override the base
+   * to flush per-probe instead of routing through this whole-interaction wrapper
+   * (see {@link waitUntil}), because one `act` around a whole poll loop starves
+   * the very timer-driven commits the loop is waiting for.
    *
    * `@testing-library/react`'s `asyncWrapper` (installed into
    * `@testing-library/dom`'s config, which `user-event` consults) temporarily
@@ -53,4 +58,43 @@ export class ReactInteractor extends DOMInteractor {
       }
     }
   }
+
+  //#region wait conditions
+  /**
+   * Flush pending React work with a fresh `act()` around EACH probe, instead of
+   * one `act()` around the whole wait loop.
+   *
+   * The base routes both wait conditions through {@link DOMInteractor.runInteraction}
+   * (#1052), which for React would wrap the ENTIRE probe loop in a single `act()`.
+   * That starves any commit a real timer schedules DURING the wait — MUI X's
+   * debounced filter `setState`, or a dialog exit transition's unmount timer: the
+   * update is queued onto the surrounding act, but that one act only unwinds when
+   * the loop ends (at timeout), so every probe reads stale DOM and the wait times
+   * out even though the condition has really been met.
+   *
+   * Wrapping each probe in its own `act()` flushes the pending commit right before
+   * every read, so the wait resolves as soon as the condition truly holds. Probes
+   * are reads (no `user-event`), so the `IS_REACT_ACT_ENVIRONMENT` pin that
+   * {@link runInteraction} needs for the mutation path is unnecessary here — a plain
+   * per-probe `act` suffices. This deliberately does NOT delegate to the base wait
+   * (which re-imposes the whole-loop `act`); it drives `timingUtil.waitUntil`
+   * directly with the per-probe wrapper.
+   */
+  override waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
+    return timingUtil.waitUntil({
+      ...option,
+      probeFn: () => act(async () => await option.probeFn()),
+    });
+  }
+
+  /**
+   * Component-state waits flush per-probe for the same reason as {@link waitUntil}.
+   * `interactorWaitUtil` polls through this interactor's {@link waitUntil}, so
+   * delegating to it reuses the per-probe flushing and bypasses the base's
+   * whole-loop `runInteraction` wrapping.
+   */
+  override waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void> {
+    return interactorUtil.interactorWaitUtil(locator, this, option);
+  }
+  //#endregion
 }

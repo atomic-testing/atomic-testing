@@ -6,9 +6,12 @@
 
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { ITestEngineOption } from '@atomic-testing/core';
+import { PartLocator } from '@atomic-testing/core';
 import { ReactNode } from 'react';
 import { ScenePart } from '@atomic-testing/core';
 import { TestEngine } from '@atomic-testing/core';
+import { WaitForOption } from '@atomic-testing/core';
+import { WaitUntilOption } from '@atomic-testing/core';
 
 // @public
 export function createRenderedTestEngine<T extends ScenePart>(rootElement: HTMLElement, partDefinitions: T, _option?: Readonly<Partial<IReactTestEngineOption>>): TestEngine<T>;
@@ -22,6 +25,8 @@ export type IReactTestEngineOption = ITestEngineOption;
 // @public (undocumented)
 export class ReactInteractor extends DOMInteractor {
     protected runInteraction<T>(interaction: () => Promise<T>): Promise<T>;
+    waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
+    waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
 // (No @packageDocumentation comment for this package)
