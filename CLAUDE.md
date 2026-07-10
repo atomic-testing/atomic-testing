@@ -74,6 +74,32 @@ trusting any dom/e2e result. (`tsgo` also reads the stale `.d.ts`, so cross-pack
 typecheck errors that name newly-added exports usually just mean "rebuild," not a
 real bug.)
 
+**Shared-primitive blast radius (re-verify consumers, not just what you touched):**
+a change to a method on `Interactor` / `DOMInteractor` — or any base every driver
+inherits — changes behavior for **every** consumer, not the driver that motivated it.
+A picker-motivated tweak to `pressKey` (routing focused presses through
+`userEvent.keyboard` for input-event fidelity) silently broke Angular Material
+`MatSelect` (open-on-`Enter`) and `MatAutocomplete` (close-on-`Escape`), because
+`userEvent.keyboard` delivers to `document.activeElement` where those handlers expect
+a direct `fireEvent.keyDown`. Before trusting such a change:
+
+- **Grep every call site** across `packages/` and reason about each — the caller you
+  are _not_ looking at is the one that breaks. Prefer to **gate the new behavior to
+  exactly the case that needs it** (a condition on the target, an opt-in option) over
+  changing the default path for existing callers.
+- **Run the full suites of the affected consumer packages**, not just the one you
+  edited. A name-filtered run (`jest Foo`, `vitest run Foo`) verifies a _subset_ — a
+  `MatAutocomplete` break sat in the same package whose `Select` suite was green.
+  **Per-major variants** (`-v20`/`-v21`/`-v22`, `-x-v6/7/8/9`) are **separate CI jobs**;
+  verifying one is not verifying the rest.
+- Angular Material suites are **browser-mode** and runnable locally —
+  `CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium npx vitest run` — so there's no excuse
+  for letting CI be the first place they run.
+- When a **rebase auto-merges an interactor override** onto an evolved base, a clean
+  merge can still be stale-patterned (a `typeText` override kept plain `act()` after
+  main moved to `runUserEvent`); reconcile overrides against their current sibling
+  methods.
+
 ### Running E2E Tests
 
 E2E tests require the dev server (rebuild the driver packages first — see the
