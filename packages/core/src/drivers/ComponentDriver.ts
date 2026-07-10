@@ -16,7 +16,14 @@ import {
   PressKeyOption,
 } from '../interactor';
 import type { LocatorRelativePosition, PartLocator } from '../locators';
-import { IComponentDriver, IComponentDriverOption, PartName, ScenePart, ScenePartDriver } from '../partTypes';
+import {
+  CommutableComponentDriverOption,
+  IComponentDriver,
+  IComponentDriverOption,
+  PartName,
+  ScenePart,
+  ScenePartDriver,
+} from '../partTypes';
 import { WaitUntilOption } from '../utils/timingUtil';
 import { getPartFromDefinition } from './driverUtil';
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
@@ -29,12 +36,13 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   private readonly _parts: ScenePartDriver<T>;
 
   /**
-   * Option passed to the constructor includes both universal options which can be shared across
-   * all component driver tree, and component specific options which are only applicable to the component.
-   *
-   * Commutable option is the option that can be shared across all component driver tree.
+   * The component-agnostic slice of the constructor option that is safe to share
+   * across the whole driver tree — everything the constructor received EXCEPT the
+   * component-specific `parts`, which each driver owns for itself. Parent drivers
+   * pass this straight to the constructors of children they create dynamically
+   * (see the list helpers). See {@link CommutableComponentDriverOption}.
    */
-  public readonly commutableOption: IComponentDriverOption<T>;
+  public readonly commutableOption: CommutableComponentDriverOption;
 
   /**
    * @param locator Locator for the root of this component.
@@ -48,7 +56,9 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * `Partial<IComponentDriverOption<typeof parts>>` signature does NOT satisfy
    * `ScenePartDefinition['driver']` (constructor parameters are checked
    * contravariantly), so a driver written that way could not be placed in a
-   * parent `ScenePart`. See the type-level fixture in
+   * parent `ScenePart`. Lock a composite driver against this rule in one line with
+   * {@link AssertScenePlaceableDriver}; the rule itself is regression-tested
+   * centrally in `core/src/drivers/__type-tests__` and demonstrated in
    * `@atomic-testing/component-driver-html`.
    */
   constructor(
@@ -58,10 +68,11 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   ) {
     this._locator = locator;
     this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});
-    this.commutableOption = {
-      ...option,
-      parts: {} as T,
-    };
+    // Strip the component-specific `parts` so the shared slice never leaks a
+    // parent's parts to its children — honestly, without the old `parts: {} as T`
+    // cast lie.
+    const { parts: _parts, ...commutable } = option ?? {};
+    this.commutableOption = commutable;
   }
 
   /**

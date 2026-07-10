@@ -111,9 +111,52 @@ export type ScenePartDriver<T extends ScenePart> = {
   [partName in keyof T]: InstanceType<T[partName]['driver']>;
 };
 
+/**
+ * The driver-constructor shape a composite driver must present to be placeable in
+ * a parent {@link ScenePart}: the `driver` field of {@link ComponentPartDefinition}.
+ *
+ * Exposed so a package can lock its composite drivers against the contravariant
+ * authoring rule documented on {@link ComponentDriver} without copying a full
+ * type-test fixture — see {@link AssertScenePlaceableDriver}.
+ */
+export type ScenePlaceableDriverCtor = ComponentPartDefinition<ScenePart>['driver'];
+
+/**
+ * Compile-time lock for the composite-driver authoring rule. Resolves to `Ctor`
+ * when it satisfies {@link ScenePlaceableDriverCtor} and errors at the type
+ * argument otherwise, so a package turns the rule into a build error in one line:
+ *
+ * ```ts
+ * // MyCompositeDriver must stay scene-placeable
+ * type _Lock = AssertScenePlaceableDriver<typeof MyCompositeDriver>;
+ * ```
+ *
+ * Because constructor parameters are checked contravariantly, a driver whose
+ * option parameter is typed the "natural" `Partial<IComponentDriverOption<typeof
+ * parts>>` way fails this assertion — exactly the trap the rule guards against
+ * (see {@link ComponentDriver}). This is the reusable form of the type-test that
+ * `@atomic-testing/component-driver-html` ships as precedent.
+ */
+export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = Ctor;
+
 export interface IComponentDriverOption<T extends ScenePart = {}> {
   parts: T;
 }
+
+/**
+ * The shared, component-agnostic slice of an {@link IComponentDriverOption} that
+ * flows unchanged down the driver tree — every field EXCEPT the component-specific
+ * `parts`. A parent driver hands this to the constructors of the children it
+ * creates dynamically (the list helpers, `ComponentDriver.commutableOption`), so
+ * it deliberately carries no `parts`: each child owns its own.
+ *
+ * Today {@link IComponentDriverOption} has only `parts`, so this resolves to an
+ * empty object — which is exactly the honest shape, and why
+ * `ComponentDriver.commutableOption` no longer fakes a `parts: {} as T` payload.
+ * It is the single home for future universal options (mirroring
+ * {@link ITestEngineOption}'s intent), which it will pick up automatically.
+ */
+export type CommutableComponentDriverOption = Omit<IComponentDriverOption, 'parts'>;
 
 /**
  * Shared base option for the framework adapters' `createTestEngine` entry points.

@@ -4,6 +4,9 @@
 
 ```ts
 
+// @public
+export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = Ctor;
+
 // @public (undocumented)
 export interface BlurOption {}
 
@@ -75,12 +78,15 @@ export namespace collectionUtil {
 }
 
 // @public
+export type CommutableComponentDriverOption = Omit<IComponentDriverOption, 'parts'>;
+
+// @public
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<T>>);
     protected activate(): Promise<void>;
     // (undocumented)
     click(option?: Partial<ClickOption>): Promise<void>;
-    readonly commutableOption: IComponentDriverOption<T>;
+    readonly commutableOption: CommutableComponentDriverOption;
     protected contextMenu(): Promise<void>;
     protected drag(delta: Point): Promise<void>;
     protected dragTo(target: ComponentDriver<any>): Promise<void>;
@@ -223,6 +229,42 @@ export class ElementNotFoundError extends InteractorErrorBase {
 // @public (undocumented)
 export const ElementNotFoundErrorId = "ElementNotFoundError";
 
+// @public
+export interface ElementQueries {
+    // (undocumented)
+    exists(locator: PartLocator): Promise<boolean>;
+    // (undocumented)
+    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+    // (undocumented)
+    getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
+    // (undocumented)
+    getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
+    getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
+    getElementCount(locator: PartLocator): Promise<number>;
+    // (undocumented)
+    getInputValue(locator: PartLocator): Promise<Optional<string>>;
+    getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
+    getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>>;
+    getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>>;
+    // (undocumented)
+    getText(locator: PartLocator): Promise<Optional<string>>;
+    // (undocumented)
+    hasAttribute(locator: PartLocator, name: string): Promise<boolean>;
+    // (undocumented)
+    hasCssClass(locator: PartLocator, className: string): Promise<boolean>;
+    innerHTML(locator: PartLocator): Promise<string>;
+    // (undocumented)
+    isChecked(locator: PartLocator): Promise<boolean>;
+    // (undocumented)
+    isDisabled(locator: PartLocator): Promise<boolean>;
+    isError(locator: PartLocator): Promise<boolean>;
+    // (undocumented)
+    isReadonly(locator: PartLocator): Promise<boolean>;
+    isRequired(locator: PartLocator): Promise<boolean>;
+    // (undocumented)
+    isVisible(locator: PartLocator): Promise<boolean>;
+}
+
 // @public (undocumented)
 export interface EnterTextOption {
     append: boolean;
@@ -242,8 +284,24 @@ export namespace escapeUtil {
     export { escapeCssClassName, escapeName, escapeValue };
 }
 
+// @public
+export interface FocusActions {
+    blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
+    // (undocumented)
+    focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void>;
+}
+
 // @public (undocumented)
 export interface FocusOption {}
+
+// @public
+export interface FormActions {
+    enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void>;
+    selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
+    setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
+    setRangeValue(locator: PartLocator, value: number): Promise<void>;
+    typeText(locator: PartLocator, text: string): Promise<void>;
+}
 
 // @public (undocumented)
 export interface HoverOption extends MouseOption {}
@@ -323,72 +381,7 @@ export interface IMouseInteractableDriver {
 }
 
 // @public
-export interface Interactor {
-    activate(locator: PartLocator): Promise<void>;
-    blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
-    click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
-    contextMenu(locator: PartLocator): Promise<void>;
-    drag(locator: PartLocator, delta: Point): Promise<void>;
-    dragTo(source: PartLocator, target: PartLocator): Promise<void>;
-    enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void>;
-    // (undocumented)
-    exists(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
-    focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void>;
-    // (undocumented)
-    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
-    // (undocumented)
-    getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
-    // (undocumented)
-    getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
-    getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
-    getElementCount(locator: PartLocator): Promise<number>;
-    // (undocumented)
-    getInputValue(locator: PartLocator): Promise<Optional<string>>;
-    getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
-    getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>>;
-    getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>>;
-    // (undocumented)
-    getText(locator: PartLocator): Promise<Optional<string>>;
-    // (undocumented)
-    hasAttribute(locator: PartLocator, name: string): Promise<boolean>;
-    // (undocumented)
-    hasCssClass(locator: PartLocator, className: string): Promise<boolean>;
-    hover(locator: PartLocator, option?: HoverOption): Promise<void>;
-    innerHTML(locator: PartLocator): Promise<string>;
-    // (undocumented)
-    isChecked(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
-    isDisabled(locator: PartLocator): Promise<boolean>;
-    isError(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
-    isReadonly(locator: PartLocator): Promise<boolean>;
-    isRequired(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
-    isVisible(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
-    mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void>;
-    // (undocumented)
-    mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void>;
-    // (undocumented)
-    mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void>;
-    mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void>;
-    // (undocumented)
-    mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void>;
-    // (undocumented)
-    mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void>;
-    // (undocumented)
-    mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void>;
-    pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void>;
-    scrollBy(locator: PartLocator, delta: Point): Promise<void>;
-    scrollIntoView(locator: PartLocator): Promise<void>;
-    selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
-    setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
-    setRangeValue(locator: PartLocator, value: number): Promise<void>;
-    typeText(locator: PartLocator, text: string): Promise<void>;
-    waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
-    waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
-}
+export interface Interactor extends PointerActions, KeyboardActions, FocusActions, FormActions, ScrollActions, ElementQueries, Waiter {}
 
 // @public
 export class InteractorErrorBase extends Error {
@@ -451,6 +444,11 @@ export interface IValidatableDriver {
     isError(): Promise<boolean>;
 }
 
+// @public
+export interface KeyboardActions {
+    pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void>;
+}
+
 // @public (undocumented)
 export class LinkedCssLocator extends CssLocator {
     // Warning: (ae-forgotten-export) The symbol "LinkedCssLocatorInitializer" needs to be exported by the entry point index.d.mts
@@ -508,7 +506,7 @@ export namespace listHelper {
 }
 
 // @public
-export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same';
+export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same' | 'Child';
 
 // @public
 export class LocatorResolutionError extends InteractorErrorBase {
@@ -585,6 +583,29 @@ export interface Point {
 }
 
 // @public
+export interface PointerActions {
+    activate(locator: PartLocator): Promise<void>;
+    click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
+    contextMenu(locator: PartLocator): Promise<void>;
+    drag(locator: PartLocator, delta: Point): Promise<void>;
+    dragTo(source: PartLocator, target: PartLocator): Promise<void>;
+    hover(locator: PartLocator, option?: HoverOption): Promise<void>;
+    // (undocumented)
+    mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void>;
+    // (undocumented)
+    mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void>;
+    // (undocumented)
+    mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void>;
+    mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void>;
+    // (undocumented)
+    mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void>;
+    // (undocumented)
+    mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void>;
+    // (undocumented)
+    mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void>;
+}
+
+// @public
 export interface PressKeyOption {
     alt?: boolean;
     ctrl?: boolean;
@@ -600,6 +621,15 @@ export type ScenePartDefinition = ComponentPartDefinition<ScenePart> | Container
 
 // @public (undocumented)
 export type ScenePartDriver<T extends ScenePart> = { [partName in keyof T]: InstanceType<T[partName]['driver']> };
+
+// @public
+export type ScenePlaceableDriverCtor = ComponentPartDefinition<ScenePart>['driver'];
+
+// @public
+export interface ScrollActions {
+    scrollBy(locator: PartLocator, delta: Point): Promise<void>;
+    scrollIntoView(locator: PartLocator): Promise<void>;
+}
 
 // @public
 export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
@@ -618,6 +648,12 @@ export namespace timingUtil {
 // @public (undocumented)
 export namespace visibilityUtil {
     export { isElementVisibleByStyle };
+}
+
+// @public
+export interface Waiter {
+    waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
+    waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
 // @public (undocumented)
