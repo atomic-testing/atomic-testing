@@ -23,6 +23,7 @@ import { rangeInputUIExample } from './examples/rangeInput/RangeInput.examples';
 import { scrollUIExample } from './examples/scroll/Scroll.examples';
 import { multipleSelectUIExample } from './examples/select/MultipleSelect.examples';
 import { singleSelectUIExample } from './examples/select/SingleSelect.examples';
+import { typeTextUIExample } from './examples/typeText/TypeText.examples';
 
 export const tocs: ExampleToc[] = [
   {
@@ -63,6 +64,11 @@ export const tocs: ExampleToc[] = [
     label: 'Keyboard Event',
     path: '/keyboard-event',
     ui: <ExampleList examples={[keyboardEventUIExample]} />,
+  },
+  {
+    label: 'Type Text',
+    path: '/type-text',
+    ui: <ExampleList examples={[typeTextUIExample]} />,
   },
   {
     label: 'By Role',

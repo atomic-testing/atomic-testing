@@ -133,6 +133,12 @@ selector, not the full chain.
   sliders) do you touch the `Interactor` interface — then you must implement it in
   **every** interactor (DOM/React/Vue/Playwright) and prove it via the HTML driver
   - `component-driver-html-test`. This is the expensive path; avoid if a locator works.
+- **Changing an existing primitive's behavior is riskier than adding one** — it
+  silently re-routes every driver that already calls it, not just the one you're
+  motivated by (a picker-motivated `pressKey` tweak broke Angular Material
+  `MatSelect`/`MatAutocomplete`). Grep all call sites, **gate the new behavior to the
+  specific case that needs it** rather than changing the default path, and add the
+  affected consumer packages to Phase 5.
 
 ## Phase 4 — Tests (shared suite, runs in both worlds)
 
@@ -144,6 +150,14 @@ with no label → `undefined`). The suite feeds both `.dom.test.ts` and `.e2e.te
 automatically — no per-adapter edits.
 
 ## Phase 5 — Verify (the non-negotiable part)
+
+**If you changed a shared `Interactor`/`DOMInteractor` primitive** (not just added a
+driver method), verification is not just this package: run the **full** suites — never
+a name-filtered subset (`vitest run Foo` skips the sibling `Bar` suite in the same
+package) — of **every** consumer package, **each per-major variant** (`-v20/21/22`,
+`-x-v6/7/8/9` are separate CI jobs), including the browser-mode Angular Material suites
+(`CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium npx vitest run`). "Green in the package
+I edited" is not "green in CI."
 
 **DOM (jsdom) — rebuild first.** Jest resolves workspace deps from **built
 `dist/`** (`jest.config.base.js` `moduleNameMapper` → `dist/index.cjs`), so source

@@ -126,8 +126,10 @@ lives in this repo at `package-tests/storybook-test`.
 ## Limitations
 
 - Driver interactions backed by raw event dispatch rather than `userEvent` —
-  positional clicks, `pressKey`, mouse-move sequences, `drag`/`dragTo` — still
-  work, but are not recorded in the Interactions panel.
+  positional clicks, mouse-move sequences, `drag`/`dragTo`, and `pressKey`
+  against a target that cannot hold focus — still work, but are not recorded
+  in the Interactions panel. (`pressKey` on a focusable target and `typeText`
+  dispatch through `userEvent`, so they are recorded.)
 - Running stories in **jsdom** via `composeStories()` is a different
   environment (it sets `IS_REACT_ACT_ENVIRONMENT`, so the act-free design does
   not transfer) and is not covered by this package. Use the framework adapters

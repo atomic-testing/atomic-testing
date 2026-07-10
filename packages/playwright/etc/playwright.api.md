@@ -108,6 +108,7 @@ export class PlaywrightInteractor implements Interactor {
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     // (undocumented)
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
+    typeText(locator: PartLocator, text: string): Promise<void>;
     // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     // (undocumented)

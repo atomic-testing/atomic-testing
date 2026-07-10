@@ -75,6 +75,11 @@ export class StorybookInteractor extends DOMInteractor {
     await this.settle();
   }
 
+  override async typeText(locator: PartLocator, text: string): Promise<void> {
+    await super.typeText(locator, text);
+    await this.settle();
+  }
+
   override async setRangeValue(locator: PartLocator, value: number): Promise<void> {
     await super.setRangeValue(locator, value);
     await this.settle();

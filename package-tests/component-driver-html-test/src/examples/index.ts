@@ -13,5 +13,6 @@ export * from './radioButtonGroup';
 export * from './rangeInput';
 export * from './scroll';
 export * from './select';
+export * from './typeText';
 export * from './anchor';
 export * from './byRole';

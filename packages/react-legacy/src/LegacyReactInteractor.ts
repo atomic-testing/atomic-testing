@@ -1,7 +1,6 @@
 import {
   BlurOption,
   ClickOption,
-  defaultWaitForOption,
   EnterTextOption,
   FocusOption,
   HoverOption,
@@ -14,7 +13,6 @@ import {
   PartLocator,
   Point,
   PressKeyOption,
-  WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
@@ -36,6 +34,12 @@ export class LegacyReactInteractor extends DOMInteractor {
   override async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void> {
     await act(async () => {
       await super.enterText(locator, text, option);
+    });
+  }
+
+  override async typeText(locator: PartLocator, text: string): Promise<void> {
+    await act(async () => {
+      await super.typeText(locator, text);
     });
   }
 
@@ -166,24 +170,29 @@ export class LegacyReactInteractor extends DOMInteractor {
   }
 
   //#region wait condition
-  override async waitUntilComponentState(
-    locator: PartLocator,
-    option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
-  ): Promise<void> {
-    await act(async () => {
-      await super.waitUntilComponentState(locator, option);
-    });
-  }
-
+  // Waits poll DOM state that often only changes when a React commit flushes —
+  // e.g. an exit transition's timer unmounting a dialog. Wrapping the WHOLE
+  // wait in one `act()` starves those commits: the timer fires during the
+  // wait, but its state update only flushes when the act unwinds, so every
+  // probe reads stale DOM until the timeout. Wrapping each PROBE in `act()`
+  // instead flushes pending work right before every read, so the wait
+  // resolves as soon as the condition really holds.
+  // (`waitUntilComponentState` needs no override: it polls through this
+  // interactor's `waitUntil`.)
   override async waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
-    // The React ≤17 `act` async overload resolves to `undefined`, not the
-    // callback's value (unlike React 18's act), so capture the result via a
-    // closure instead of returning it through `act`.
-    let result!: T;
-    await act(async () => {
-      result = await super.waitUntil(option);
+    return await super.waitUntil({
+      ...option,
+      probeFn: async () => {
+        // The React ≤17 `act` async overload resolves to `undefined`, not the
+        // callback's value (unlike React 18's act), so capture the probe value
+        // via a closure instead of returning it through `act`.
+        let probed!: T;
+        await act(async () => {
+          probed = await option.probeFn();
+        });
+        return probed;
+      },
     });
-    return result;
   }
   //#endregion
 }

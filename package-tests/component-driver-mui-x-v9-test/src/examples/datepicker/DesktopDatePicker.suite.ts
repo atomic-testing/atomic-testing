@@ -48,10 +48,29 @@ export const desktopDatePickerTestSuite: TestSuiteInfo<typeof desktopDatePickerE
       assertEqual(second?.getDate(), 15);
     });
 
-    test('setValue selects a day in the currently shown month', async () => {
-      // Default value is June 2026, so the popup opens on the target month directly.
+    test('setValue types the date into the section field', async () => {
       await engine().parts.picker.setValue(new Date(2026, 5, 30));
       assertEqual(await engine().parts.picker.getValueText(), '06/30/2026');
+    });
+
+    // Typing replaces the whole value, so no month paging is involved even across years.
+    test('setValue types a date in a different year', async () => {
+      await engine().parts.picker.setValue(new Date(2025, 11, 25));
+      assertEqual(await engine().parts.picker.getValueText(), '12/25/2025');
+    });
+
+    test('setValue(null) clears the field', async () => {
+      await engine().parts.picker.setValue(null);
+      assertEqual(await engine().parts.picker.getValueText(), undefined);
+      assertEqual(await engine().parts.picker.getValue(), null);
+      // The other picker is untouched.
+      assertEqual(await engine().parts.secondPicker.getValueText(), '01/15/2020');
+    });
+
+    test('setValue after clearing re-enters a value', async () => {
+      await engine().parts.picker.setValue(null);
+      await engine().parts.picker.setValue(new Date(2026, 0, 15));
+      assertEqual(await engine().parts.picker.getValueText(), '01/15/2026');
     });
 
     test('pickDate pages forward across months', async () => {

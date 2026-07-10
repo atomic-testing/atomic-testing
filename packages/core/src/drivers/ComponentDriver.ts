@@ -224,6 +224,15 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
+   * Type text into the component as real per-character keystrokes, inserting at
+   * the current caret without clearing. See {@link Interactor.typeText}.
+   * @param text The literal text to type, one keystroke per character
+   */
+  async typeText(text: string): Promise<void> {
+    return this.interactor.typeText(this.locator, text);
+  }
+
+  /**
    * Dispatch a right-click / `contextmenu` event on the component. See {@link Interactor.contextMenu}.
    */
   protected async contextMenu(): Promise<void> {

@@ -83,6 +83,8 @@ export class AngularInteractor extends DOMInteractor {
     // (undocumented)
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
     // (undocumented)
+    typeText(locator: PartLocator, text: string): Promise<void>;
+    // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     // (undocumented)
     waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
