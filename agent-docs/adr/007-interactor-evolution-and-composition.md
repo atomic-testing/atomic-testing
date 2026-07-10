@@ -99,6 +99,24 @@ The seam an external adapter must satisfy is "extends `DOMInteractor` (or
 implements the optional-member convention)". The conformance suite that exercises
 it is tracked separately (#972); this ADR documents the seam it targets.
 
+### 4. Express `Interactor` as capability facets (#1055)
+
+`Interactor` is composed from narrower capability facets — `PointerActions`,
+`KeyboardActions`, `FocusActions`, `FormActions`, `ScrollActions`,
+`ElementQueries`, `Waiter` — with `Interactor extends` all of them (see the facet
+types in `core/src/interactor/Interactor.ts`). This is a **structural** refactor,
+not a contract change: TypeScript is structurally typed, so every value that
+satisfied the flat `Interactor` still does, and the recomposed interface exposes
+the identical member set. It is therefore non-breaking under the same reasoning as
+Decision 1.
+
+Facets give this ADR's evolution story a type-level home: a driver can depend on
+just the surface it uses (ISP), and the "partial-capability environment" the
+capability-detection convention (Decision 1, points 2–3) anticipates now has an
+actual type to express "supports forms but not drag gestures". New members are
+still added per Decision 1's priority order — landing them on the relevant facet,
+which `Interactor` re-exposes automatically.
+
 ## Consequences
 
 - ✅ A documented, non-breaking growth path for the `Interactor` contract, with a

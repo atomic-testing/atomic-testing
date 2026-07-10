@@ -7,6 +7,9 @@
  * - `'Same'` — the same element as the parent (compound onto it, no combinator).
  * - `'Child'` — a direct child of the parent (CSS child combinator, `>`), so a
  *   nested descendant with the same selector is not matched. Expressible through
- *   the locator model rather than only via a raw `byCssSelector` escape hatch.
+ *   the locator model rather than only via a raw `byCssSelector` escape hatch. The
+ *   combinator is emitted for you, so the selector fragment must NOT itself start
+ *   with `>` (pass `byCssSelector('.item', 'Child')`, not
+ *   `byCssSelector('> .item', 'Child')`, which would double the combinator).
  */
 export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same' | 'Child';
