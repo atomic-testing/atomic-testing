@@ -6,6 +6,7 @@ import path from 'path';
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import type { PrismTheme } from 'prism-react-renderer';
+
 import { getDocPackageNames } from './scripts/docPackages.mjs';
 
 // Custom Prism theme: code blocks are always dark navy with the design's token colors,

@@ -23,6 +23,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { EXCLUDED_FROM_DOCS, getDocPackageNames } from './docPackages.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

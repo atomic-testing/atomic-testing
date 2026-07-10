@@ -9,6 +9,7 @@
  Create as many sidebars as you want.
  */
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+
 import { getBucketedDocPackages } from './scripts/docPackages.mjs';
 
 // See docs/scripts/docPackages.mjs for the framework/driver classification
