@@ -1,7 +1,7 @@
 import { Interactor } from '../../interactor/Interactor';
 import { byCssSelector } from '../../locators/byCssSelector';
 import { byDataTestId } from '../../locators/byDataTestId';
-import { documentRootSelector, toCssSelector } from '../locatorUtil';
+import { append, documentRootSelector, overrideLocatorRelativePosition, toCssSelector } from '../locatorUtil';
 
 // toCssSelector only consults the interactor to resolve LinkedCssLocators; the
 // plain-CSS chains exercised here never touch it, so a bare stub is enough.
@@ -49,5 +49,29 @@ describe('toCssSelector', () => {
     // statement must stay bare rather than produce an invalid `> .child`.
     const chain = [byCssSelector('.child', 'Child')];
     expect(await toCssSelector(chain, stubInteractor)).toBe('.child');
+  });
+
+  test('emits the child combinator after a Root-sliced prefix (#1058)', async () => {
+    // getEffectiveLocator slices at the Root, which becomes the bare head; the
+    // following Child must still combine against it.
+    const chain = [byCssSelector('.ignored'), byCssSelector('.root', 'Root'), byCssSelector('.child', 'Child')];
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.root > .child');
+  });
+
+  test('emits the child combinator after a Same-level compound (#1058)', async () => {
+    const chain = [byCssSelector('.a'), byCssSelector('.b', 'Same'), byCssSelector('.c', 'Child')];
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.a.b > .c');
+  });
+
+  test('carries a Child position applied via overrideLocatorRelativePosition (#1058)', async () => {
+    const child = overrideLocatorRelativePosition(byCssSelector('.child'), 'Child');
+    const chain = append(byCssSelector('.parent'), child);
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child');
+  });
+
+  test('preserves a Child position through CssLocator.and() (#1058)', async () => {
+    const child = byCssSelector('.child', 'Child').and(byCssSelector('.active'));
+    const chain = append(byCssSelector('.parent'), child);
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child.active');
   });
 });
