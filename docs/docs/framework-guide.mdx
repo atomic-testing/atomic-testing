@@ -184,6 +184,19 @@ pnpm add @atomic-testing/playwright
 
 ## 🧩 Component Driver Libraries
 
+Each driver-package section in the [generated API reference](/docs/api/component-drivers) covers one
+UI library. Where a library ships several supported majors — Material UI
+(`component-driver-mui-v6`, `-v7`, `-v9`, plus the MUI-X equivalents) and
+Angular Material (`component-driver-angular-material-v20`, `-v21`, `-v22`) —
+each major gets its **own package and its own generated section**, because
+each major's DOM differs enough that a driver written against one won't
+reliably match another.
+
+The **driver set itself is consistent across those sections** — same driver
+names, same methods — since they all document the same component-driver API
+surface. In practice: install and read the section matching the major version
+you have installed, and skip the rest.
+
 ### **Material-UI Drivers**
 
 <Tabs>
