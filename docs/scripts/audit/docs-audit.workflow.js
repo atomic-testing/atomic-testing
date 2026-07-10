@@ -24,7 +24,7 @@ const FILE_INVENTORY = `
 Hand-authored narrative docs (under ${DOCS}/docs):
   intro.mdx (id=intro), quick-start.mdx, framework-guide.mdx, why-atomic-testing.mdx,
   getting-started-tutorial.mdx (id=tutorial), core-concepts.mdx (id=concepts), setup.mdx,
-  best-practices.mdx, cheat-sheets.mdx, faq.mdx, api-overview.mdx,
+  best-practices.mdx, cheat-sheets.mdx, faq.mdx,
   advanced-concepts/architecture.mdx, advanced-concepts/interactor.mdx,
   advanced-concepts/build-component-driver.mdx, advanced-concepts/atomic-testing-vs-rtl.mdx,
   guides/portal-and-overlays.md
@@ -217,7 +217,7 @@ Report findings + strengths + grade.`,
 DIMENSION 5 — TECHNICAL ACCURACY & DRIFT (do the docs match the real, current code?).
 This is the most important dimension — be exhaustive and literal.
 Steps:
-1. Extract EVERY code snippet / API name / import path / function signature that appears in: the homepage (${DOCS}/src/pages/index.tsx, HomepageFeatures), quick-start.mdx, getting-started-tutorial.mdx, setup.mdx, core-concepts.mdx, framework-guide.mdx, build-component-driver.mdx, interactor.mdx, cheat-sheets.mdx, best-practices.mdx, api-overview.mdx, and the snippets/ files.
+1. Extract EVERY code snippet / API name / import path / function signature that appears in: the homepage (${DOCS}/src/pages/index.tsx, HomepageFeatures), quick-start.mdx, getting-started-tutorial.mdx, setup.mdx, core-concepts.mdx, framework-guide.mdx, build-component-driver.mdx, interactor.mdx, cheat-sheets.mdx, best-practices.mdx, and the snippets/ files.
 2. Verify each against the ACTUAL exports/signatures in the source packages. Critical checks (read the real source to confirm):
    - Does 'HTMLComponentDriver' exist in ${PKGS}/component-driver-html/src? (The homepage hero imports it. The TypeDoc class list shows HTMLElementDriver, HTMLButtonDriver, HTMLTextInputDriver... but NOT HTMLComponentDriver.) Confirm by reading the package index/exports.
    - Does the hero install command 'pnpm add @atomic-testing/core @atomic-testing/react-19' include everything the hero code imports (it also imports from @atomic-testing/component-driver-html)? Flag missing install dep.

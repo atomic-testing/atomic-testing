@@ -4,18 +4,18 @@
 // WHY: docusaurus.config.ts excludes frozen/EOL packages (MUI 5 / MUI-X 5, see
 // ADR-005) from the generated API reference, because they're no longer built and
 // TypeDoc can't resolve their cross-package types. The hand-authored narrative
-// docs (api-overview.mdx, framework-guide.mdx) are not generated, so nothing
-// stops them from silently presenting an excluded package as an ordinary,
-// first-class option — which is exactly what happened before #943. This script
-// makes that drift fail CI instead of shipping to readers.
+// docs (framework-guide.mdx) are not generated, so nothing stops them from
+// silently presenting an excluded package as an ordinary, first-class option —
+// which is exactly what happened before #943. This script makes that drift fail
+// CI instead of shipping to readers.
 //
 // WHAT it checks:
-//   For every package excluded from the generated API reference (read the same
-//   way docusaurus.config.ts's getPackageNames()/EXCLUDED_FROM_DOCS do), every
-//   markdown section of api-overview.mdx / framework-guide.mdx that mentions the
-//   package must also carry an EOL marker ("EOL" or "ADR-005") in that same
-//   section. A mention with no nearby EOL marker means the package reads as a
-//   normal, supported option, which is the bug this gate exists to catch.
+//   For every package excluded from the generated API reference (read from
+//   docPackages.mjs, the same source docusaurus.config.ts and sidebars.ts use),
+//   every markdown section of framework-guide.mdx that mentions the package
+//   must also carry an EOL marker ("EOL" or "ADR-005") in that same section. A
+//   mention with no nearby EOL marker means the package reads as a normal,
+//   supported option, which is the bug this gate exists to catch.
 //
 // Run from anywhere: `node docs/scripts/check-doc-driver-sync.mjs`
 // Exit code 0 = clean, 1 = an excluded package is presented without an EOL marker.
@@ -23,37 +23,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { EXCLUDED_FROM_DOCS, getDocPackageNames } from './docPackages.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..', '..');
 const docsRoot = path.join(repoRoot, 'docs');
-const packagesRoot = path.join(repoRoot, 'packages');
-const configFile = path.join(docsRoot, 'docusaurus.config.ts');
-
-// ---------- read the excluded-package set straight from docusaurus.config.ts ----------
-// Parsing the live config (instead of re-declaring the set here) keeps this script
-// and the API-reference build from drifting out of sync with each other.
-function readExcludedPackageNames() {
-  const configSrc = fs.readFileSync(configFile, 'utf8');
-  const match = configSrc.match(/EXCLUDED_FROM_DOCS\s*=\s*new Set\(\s*\[([\s\S]*?)]\s*\)/);
-  if (!match) {
-    throw new Error(
-      `Could not find EXCLUDED_FROM_DOCS in ${path.relative(repoRoot, configFile)} — has it been renamed?`
-    );
-  }
-  return [...match[1].matchAll(/['"]([^'"]+)['"]/g)].map(m => m[1]);
-}
-
-// Mirrors docusaurus.config.ts's getPackageNames(): every directory under
-// packages/ except internal-* helpers and the excluded (EOL) set.
-function readRealPackageNames() {
-  const excluded = new Set(readExcludedPackageNames());
-  return fs
-    .readdirSync(packagesRoot, { withFileTypes: true })
-    .filter(entry => entry.isDirectory() && !entry.name.startsWith('internal-'))
-    .map(entry => entry.name)
-    .filter(name => !excluded.has(name));
-}
 
 // ---------- section-scoped scan of the narrative docs ----------
 // A "section" is the text between one `###` heading and the next (or EOF) — the
@@ -72,7 +46,7 @@ function splitIntoSections(text) {
 
 const EOL_MARKER_RE = /\bEOL\b|ADR-005/;
 
-const CHECKED_DOCS = ['api-overview.mdx', 'framework-guide.mdx'];
+const CHECKED_DOCS = ['framework-guide.mdx'];
 
 function findUnflaggedMentions(excludedPackages) {
   const problems = [];
@@ -99,8 +73,8 @@ function findUnflaggedMentions(excludedPackages) {
 }
 
 // ---------- main ----------
-const excludedPackages = readExcludedPackageNames();
-const realPackageNames = readRealPackageNames();
+const excludedPackages = [...EXCLUDED_FROM_DOCS];
+const realPackageNames = getDocPackageNames();
 
 if (excludedPackages.length === 0) {
   console.log('doc-driver-sync: no excluded packages configured — nothing to check.');

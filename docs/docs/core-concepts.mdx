@@ -29,7 +29,7 @@ At the heart of Atomic Testing are component drivers. They define how to program
 A growing number of component drivers are available for popular UI frameworks like [Material UI](https://mui.com). Each component driver offers a set of methods for interacting with the component. When using TypeScript for writing tests, auto-completion can help discover available methods.
 
 :::info
-Refer to the [API Reference](./api-overview.mdx#component-drivers) for a list of available component drivers.
+Refer to the [Component Driver APIs reference](/docs/api/component-drivers) for a list of available component drivers.
 :::
 
 ### Driver Types
@@ -48,7 +48,27 @@ Every driver extends `ComponentDriver<T>`, but two specializations exist for sha
 
 ## Locator
 
-Locators help find components on a page, using various [locator strategies](./api-overview.mdx#locator) such as `byDataTestId` and `byRole`.
+Locators help find components on a page, using various locator strategies such as `byDataTestId` and `byRole`.
+
+<details>
+  <summary>Available locators</summary>
+
+| Locator                                                           | Description                                                                                                            |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| [byDataTestId(dataTestId)](/docs/api/core/functions/byDataTestId) | Locate by data-testid attribute.                                                                                       |
+| [byRole(role)](/docs/api/core/functions/byRole)                   | Locate by the value of role attribute.                                                                                 |
+| [byAriaLabel(value)](/docs/api/core/functions/byAriaLabel)        | Locate by the verbatim `aria-label` attribute — often composed with `byRole` to tell same-role siblings apart.         |
+| [byCssSelector(selector)](/docs/api/core/functions/byCssSelector) | Locate by CSS selector.                                                                                                |
+| [byCssClass(className)](/docs/api/core/functions/byCssClass)      | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily. |
+| [byAttribute(name, value)](/docs/api/core/functions/byAttribute)  | Locate element by attribute                                                                                            |
+| [byTagName(tagName)](/docs/api/core/functions/byTagName)          | Locate by HTML tag name (not recommended).                                                                             |
+| [byValue(value)](/docs/api/core/functions/byValue)                | Locate by the value of value attribute                                                                                 |
+| [byInputType(type)](/docs/api/core/functions/byInputType)         | Locate by input element by its type, such as text, radio, checkbox etc.                                                |
+| [byName(name)](/docs/api/core/functions/byName)                   | Locate by the value of name attribute.                                                                                 |
+| [byLinkedElement()](/docs/api/core/functions/byLinkedElement)     | (Experimental) Locate an element by matching attributes from another element                                          |
+| [byChecked(checked)](/docs/api/core/functions/byChecked)          | Locate checkbox which is checked, usually it can be chained with checkbox locator                                     |
+
+</details>
 
 :::tip
 The use of the data-testid attribute is recommended for locating components on a page. Refer to [Best Practices](./best-practices.mdx#4-use-data-testid-for-key-elements) for more details. Use the `byDataTestId(value)` API as the recommended approach for building locators.

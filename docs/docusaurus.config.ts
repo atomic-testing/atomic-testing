@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 
 // @ts-check
@@ -7,6 +6,7 @@ import path from 'path';
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import type { PrismTheme } from 'prism-react-renderer';
+import { getDocPackageNames } from './scripts/docPackages.mjs';
 
 // Custom Prism theme: code blocks are always dark navy with the design's token colors,
 // in both light and dark site themes. Colors mirror the design tokenizer palette.
@@ -28,16 +28,6 @@ const atomicCodeTheme: PrismTheme = {
     { types: ['namespace'], style: { opacity: '0.7' } },
   ],
 };
-
-// Packages excluded from the generated API reference — e.g. a frozen/EOL
-// package still in packages/ but no longer built, so TypeDoc can't resolve
-// its cross-package types (see ADR-005 for the MUI 5 precedent). Currently
-// empty: MUI 5 / MUI-X 5 were fully extracted to a separate repo (ADR-014)
-// rather than frozen in place, so there's nothing to exclude right now.
-// Kept as a named export (not deleted) because
-// docs/scripts/check-doc-driver-sync.mjs parses this constant by name to
-// gate narrative docs against silently un-flagging an excluded package.
-const EXCLUDED_FROM_DOCS = new Set([]);
 
 // Applies a reader's persisted sidebar width BEFORE first paint so the sidebar
 // doesn't flash from the stock 300px to the saved value after hydration. The
@@ -68,16 +58,8 @@ function sidebarWidthInitPlugin() {
   };
 }
 
-function getPackageNames() {
-  const baseDir = path.join(__dirname, '../packages');
-  const packageNames = fs.readdirSync(baseDir).filter(name => {
-    if (name.startsWith('internal-') || EXCLUDED_FROM_DOCS.has(name)) {
-      return false;
-    }
-    const fullPath = path.join(baseDir, name);
-    return fs.statSync(fullPath).isDirectory();
-  });
-  return packageNames.map(name => `../packages/${name}`);
+function getPackageEntryPoints() {
+  return getDocPackageNames().map(name => `../packages/${name}`);
 }
 
 const config: Config = {
@@ -127,10 +109,15 @@ const config: Config = {
 
       // Plugin / TypeDoc options
       {
-        entryPoints: [...getPackageNames()],
+        entryPoints: [...getPackageEntryPoints()],
         entryPointStrategy: 'packages',
         tsconfig: '../tsconfig.json',
         sidebar: {},
+        // Hide @internal-tagged exports (driver-package implementation details
+        // like default option objects and ScenePart wiring constants) from the
+        // generated reference — the tag alone does nothing without this flag.
+        // Does NOT strip them from compiled output; docs-only, reversible.
+        excludeInternal: true,
         // Emit each package directly under api/ (e.g. api/core) instead of
         // nesting it under an api/@atomic-testing/ scope directory. This drops
         // the redundant "@atomic-testing" grouping layer from the API sidebar
@@ -198,8 +185,11 @@ const config: Config = {
           label: 'Core Concepts',
         },
         {
-          type: 'doc',
-          docId: 'api-overview',
+          // Points at the API Reference category's generated index (see
+          // sidebars.ts) rather than a docId: the category has no single
+          // hand-authored landing doc, so a plain path avoids depending on
+          // Docusaurus's internal id scheme for generated-index pages.
+          to: '/docs/api/',
           position: 'left',
           label: 'API',
         },
@@ -233,8 +223,8 @@ const config: Config = {
               to: '/docs/concepts',
             },
             {
-              label: 'API overview',
-              to: '/docs/api-overview',
+              label: 'API reference',
+              to: '/docs/api/',
             },
             {
               label: 'Best practices',
