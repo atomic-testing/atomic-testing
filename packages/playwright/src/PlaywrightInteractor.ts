@@ -306,6 +306,26 @@ export class PlaywrightInteractor implements Interactor {
     });
   }
 
+  /**
+   * Type text into the element as real per-character keystrokes.
+   *
+   * `pressSequentially` focuses the element and dispatches a trusted
+   * keydown/keypress/input/keyup sequence per character — the keystroke path
+   * that `enterText`'s `fill()` (a direct value replacement) never exercises,
+   * and the only one keystroke-driven editors such as the MUI X picker section
+   * field respond to. No pointer event and no clearing, mirroring the DOM
+   * implementation's focus + keyboard dispatch. Playwright types the text
+   * literally, so no escaping is needed here.
+   *
+   * @param locator - Locator used to find the target element
+   * @param text - The literal text to type, one keystroke per character
+   * @throws {ElementNotFoundError} If the element is not found
+   */
+  async typeText(locator: PartLocator, text: string): Promise<void> {
+    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    await this.runMutation(locator, 'typeText', () => this.page.locator(cssLocator).pressSequentially(text));
+  }
+
   async setRangeValue(locator: PartLocator, value: number): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     // Playwright's `fill` rejects `<input type="range">` (it is not a fillable

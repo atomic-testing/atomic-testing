@@ -37,6 +37,7 @@ type Invocation = (interactor: CountingInteractor) => Promise<unknown>;
 // Mutating primitives: each routes through `runInteraction` EXACTLY once.
 const mutatingPrimitives: ReadonlyArray<readonly [string, Invocation]> = [
   ['enterText', i => i.enterText(byDataTestId('text'), 'hello')],
+  ['typeText', i => i.typeText(byDataTestId('text'), 'hello')],
   ['setRangeValue', i => i.setRangeValue(byDataTestId('range'), 5)],
   ['click', i => i.click(byDataTestId('box'))],
   ['hover', i => i.hover(byDataTestId('box'))],
@@ -150,8 +151,8 @@ describe('DOMInteractor runInteraction routing', () => {
     expect(unclassified).toEqual([]);
   });
 
-  it('covers all 22 mutating primitives and both wait conditions', () => {
-    expect(mutatingPrimitives).toHaveLength(22);
+  it('covers all 23 mutating primitives and both wait conditions', () => {
+    expect(mutatingPrimitives).toHaveLength(23);
     expect(waitConditions).toHaveLength(2);
   });
 

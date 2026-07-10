@@ -58,7 +58,14 @@ Post-1.0 `Interactor` growth therefore follows this priority order:
    _mutating_ primitive must route its body through the `runInteraction` seam
    (#1052) so the framework flush an adapter installs by overriding that one
    method covers the addition automatically — the reason `ReactInteractor` /
-   `VueInteractor` no longer mirror each primitive by hand.
+   `VueInteractor` no longer mirror each primitive by hand. **Caveat:** that
+   auto-coverage reaches only adapters that install their flush _by overriding
+   `runInteraction`_ (today `ReactInteractor` and `VueInteractor`). First-party
+   adapters that still flush via per-method overrides — `LegacyReactInteractor`
+   (`act`), `AngularInteractor` (`whenStable()`), `StorybookInteractor`
+   (`settle()`) — do **not** settle a newly-routed primitive automatically; each
+   must add a matching per-method override for it, or migrate its flush onto the
+   seam. Routing through `runInteraction` alone does not settle them.
 2. **If no sensible default exists, add an _optional_ interface member**
    (`method?(...): ...`) and document the capability-detection convention
    (`if (interactor.method) { … }`). Optional members never break even bare

@@ -1,0 +1,82 @@
+/**
+ * Drag handle for the resizable doc sidebar (see ./index.tsx).
+ *
+ * The element is position:fixed and pinned to the sidebar's right edge via an
+ * inline `left`. It spans from just under the navbar to the viewport bottom,
+ * mirroring the sticky sidebar it divides. Only a thin line shows at rest; it
+ * thickens and picks up the brand color on hover / keyboard focus / drag.
+ */
+.handle {
+  position: fixed;
+  top: var(--ifm-navbar-height, 62px);
+  bottom: 0;
+  width: 12px;
+  /* Center the 12px hit area on the 1px border between sidebar and content. */
+  margin-left: -6px;
+  z-index: 5; /* above content, below the fixed navbar (~200) */
+  cursor: col-resize;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The visible divider line. */
+.handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 1px;
+  background: var(--ifm-toc-border-color, var(--at-border, #e6ebf2));
+  transition:
+    width 0.15s ease,
+    left 0.15s ease,
+    background 0.15s ease;
+}
+
+.handle:hover::before,
+.handle:focus-visible::before,
+.handle.dragging::before {
+  left: 5px;
+  width: 3px;
+  background: var(--ifm-color-primary, #2d6be3);
+}
+
+/* A short grip in the vertical center, revealed on interaction. */
+.handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 6px;
+  height: 30px;
+  transform: translateY(-50%);
+  border-radius: 3px;
+  background: var(--ifm-color-primary, #2d6be3);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.handle:hover::after,
+.handle:focus-visible::after,
+.handle.dragging::after {
+  opacity: 1;
+}
+
+.handle:focus-visible {
+  outline: none;
+}
+
+/* While dragging, suppress text selection and force the resize cursor globally
+ * (the class is toggled on <html> by index.tsx). */
+:global(html.at-sidebar-resizing) {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handle::before,
+  .handle::after {
+    transition: none;
+  }
+}

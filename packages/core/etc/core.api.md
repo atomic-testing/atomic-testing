@@ -123,6 +123,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     runtimeCssSelector(): Promise<string>;
     protected scrollBy(delta: Point): Promise<void>;
     scrollIntoView(): Promise<void>;
+    typeText(text: string): Promise<void>;
     // (undocumented)
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     waitUntilComponentState(option?: Partial<Readonly<WaitForOption>>): Promise<void>;
@@ -384,6 +385,7 @@ export interface Interactor {
     selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
     setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
     setRangeValue(locator: PartLocator, value: number): Promise<void>;
+    typeText(locator: PartLocator, text: string): Promise<void>;
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }

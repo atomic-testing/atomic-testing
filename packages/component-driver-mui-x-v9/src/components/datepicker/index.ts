@@ -1,4 +1,10 @@
 export * as dateUtil from './dateUtil';
+export * from './DateRangePickerDriver';
+export * from './DateTimePickerDriver';
 export * from './DesktopDatePickerDriver';
 export * from './DesktopDatePickerDriverBase';
+export * from './MobileDatePickerDialogDriver';
+export * from './MobileDatePickerDriver';
+export * from './PickerFieldDriverBase';
+export * from './TimePickerDriver';
 export * from './types';
