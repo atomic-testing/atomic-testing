@@ -85,10 +85,12 @@ export async function toCssSelector(locator: PartLocator, interactor: Interactor
   const effectiveLocator = await getEffectiveLocator(locator, interactor);
   const statements: string[] = [];
   for (let i = 0; i < effectiveLocator.length; i++) {
-    let statement = '';
     const loc = effectiveLocator[i];
-    statement = getLocatorStatement(loc);
-    const separator = loc.relative === 'Same' ? '' : ' ';
+    const statement = getLocatorStatement(loc);
+    // The first statement has no left operand, so it takes no leading combinator
+    // (a leading ' ' was always trimmed away; forcing '' here additionally keeps
+    // a `Child`-positioned head from emitting an invalid leading `>`).
+    const separator = i === 0 ? '' : getRelativeSeparator(loc.relative);
     statements.push(separator + statement);
   }
 
@@ -138,6 +140,25 @@ export async function getLinkedCssLocatorMatchingTargetValue(
 
 function getLocatorStatement(locator: CssLocator): string {
   return locator.selector;
+}
+
+/**
+ * The CSS combinator that joins a statement to the one before it, per the
+ * statement's {@link LocatorRelativePosition}:
+ * - `'Same'` — no combinator, so the selectors compound onto one element.
+ * - `'Child'` — the child combinator (` > `), matching only a direct child.
+ * - everything else (`'Descendant'`/`'Root'`) — the descendant combinator (a
+ *   single space).
+ */
+function getRelativeSeparator(relative: LocatorRelativePosition): string {
+  switch (relative) {
+    case 'Same':
+      return '';
+    case 'Child':
+      return ' > ';
+    default:
+      return ' ';
+  }
 }
 
 export interface OverrideLocatorRelativePositionOption {

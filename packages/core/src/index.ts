@@ -7,6 +7,8 @@ export * from './geometry';
 export * from './interactor';
 export * from './locators/';
 export type {
+  AssertScenePlaceableDriver,
+  CommutableComponentDriverOption,
   ComponentDriverCtor,
   ComponentPartDefinition,
   ContainerPartDefinition,
@@ -20,6 +22,7 @@ export type {
   ScenePart,
   ScenePartDefinition,
   ScenePartDriver,
+  ScenePlaceableDriverCtor,
 } from './partTypes';
 export * as collectionUtil from './utils/collectionUtil';
 export * as dateUtil from './utils/dateUtil';

@@ -15,8 +15,11 @@
  * `index.ts` imports it). If the contract regresses, `pnpm check:type` fails here.
  *
  * @see ComponentDriver — the constructor whose authoring rule this locks in.
+ * @see AssertScenePlaceableDriver — the reusable one-line lock a package can use
+ *   instead of copying this whole fixture.
  */
 import {
+  AssertScenePlaceableDriver,
   byDataTestId,
   ComponentDriver,
   IComponentDriverOption,
@@ -45,6 +48,13 @@ export class CompositeFixtureDriver extends ComponentDriver<typeof innerParts> {
     return 'CompositeFixtureDriver';
   }
 }
+
+/**
+ * Positive lock, reusable form: the one-line {@link AssertScenePlaceableDriver}
+ * lock a package can drop in for its own composite drivers instead of a full
+ * placement fixture. Must type-check.
+ */
+export type _CompositePlaceable = AssertScenePlaceableDriver<typeof CompositeFixtureDriver>;
 
 /**
  * Positive lock: a non-empty-parts driver must remain placeable in a scene.

@@ -28,4 +28,26 @@ describe('toCssSelector', () => {
     const chain = [byCssSelector('.parent'), byCssSelector('.self', 'Same')];
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent.self');
   });
+
+  test('joins a Child-level locator with the child combinator (#1058)', async () => {
+    const chain = [byCssSelector('.parent'), byCssSelector('.child', 'Child')];
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child');
+  });
+
+  test('mixes descendant, child, and same combinators in one chain (#1058)', async () => {
+    const chain = [
+      byCssSelector('.list'),
+      byCssSelector('.row', 'Child'),
+      byCssSelector('.active', 'Same'),
+      byCssSelector('.icon'),
+    ];
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.list > .row.active .icon');
+  });
+
+  test('does not emit a leading child combinator when a Child locator heads the chain (#1058)', async () => {
+    // A child combinator has no left operand at the head of a selector; the head
+    // statement must stay bare rather than produce an invalid `> .child`.
+    const chain = [byCssSelector('.child', 'Child')];
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.child');
+  });
 });
