@@ -56,6 +56,7 @@ export class PlaywrightInteractor implements Interactor {
     // (undocumented)
     getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
     getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
+    getElementCount(locator: PartLocator): Promise<number>;
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
     // (undocumented)
     getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;

@@ -28,8 +28,8 @@ answer:
 | Interactor              | Relationship      | Why                                                               |
 | ----------------------- | ----------------- | ----------------------------------------------------------------- |
 | `DOMInteractor`         | `implements`      | The jsdom base every other DOM-family adapter extends.            |
-| `ReactInteractor`       | `extends DOM`     | Wraps mutations in `act()`.                                       |
-| `VueInteractor`         | `extends DOM`     | Awaits `nextTick()`.                                              |
+| `ReactInteractor`       | `extends DOM`     | Wraps mutations in `act()` via the `runInteraction` seam (#1052). |
+| `VueInteractor`         | `extends DOM`     | Awaits `nextTick()` via the `runInteraction` seam (#1052).        |
 | `LegacyReactInteractor` | `extends DOM`     | React 16/17 `act` via `react-dom/test-utils`.                     |
 | `PlaywrightInteractor`  | `implements` bare | Browser backing shares **no** implementation with the jsdom base. |
 
@@ -54,7 +54,18 @@ Post-1.0 `Interactor` growth therefore follows this priority order:
 
 1. **Add to `DOMInteractor` with a working default.** Extenders inherit it;
    first-party bare implementers (`PlaywrightInteractor`) are updated in the same
-   release. Non-breaking for the blessed path and for external extenders.
+   release. Non-breaking for the blessed path and for external extenders. A new
+   _mutating_ primitive must route its body through the `runInteraction` seam
+   (#1052) so the framework flush an adapter installs by overriding that one
+   method covers the addition automatically — the reason `ReactInteractor` /
+   `VueInteractor` no longer mirror each primitive by hand. **Caveat:** that
+   auto-coverage reaches only adapters that install their flush _by overriding
+   `runInteraction`_ (today `ReactInteractor` and `VueInteractor`). First-party
+   adapters that still flush via per-method overrides — `LegacyReactInteractor`
+   (`act`), `AngularInteractor` (`whenStable()`), `StorybookInteractor`
+   (`settle()`) — do **not** settle a newly-routed primitive automatically; each
+   must add a matching per-method override for it, or migrate its flush onto the
+   seam. Routing through `runInteraction` alone does not settle them.
 2. **If no sensible default exists, add an _optional_ interface member**
    (`method?(...): ...`) and document the capability-detection convention
    (`if (interactor.method) { … }`). Optional members never break even bare

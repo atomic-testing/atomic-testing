@@ -51,8 +51,8 @@ This is eager and synchronous: the entire driver tree exists after `createTestEn
 flowchart TD
     I["interface Interactor"]
     DOM["DOMInteractor<br/>(@testing-library/dom + user-event + FakeMouseEvent)"]
-    React["ReactInteractor<br/>wraps each method in act()"]
-    Vue["VueInteractor<br/>awaits nextTick() after each method"]
+    React["ReactInteractor<br/>wraps interactions in act() via runInteraction"]
+    Vue["VueInteractor<br/>awaits nextTick() via runInteraction"]
     Ng["AngularInteractor<br/>awaits ApplicationRef.whenStable() after each method"]
     PW["PlaywrightInteractor<br/>page.locator(css).&lt;action&gt;()"]
     I -. implements .-> DOM
@@ -63,8 +63,8 @@ flowchart TD
 ```
 
 - **`DOMInteractor`** implements `Interactor` over `@testing-library/dom`'s `fireEvent`, `@testing-library/user-event`, and a `FakeMouseEvent` polyfill (testing-library drops `pageX/pageY`). `getElement` runs `rootEl.querySelector(All)` on the resolved selector ([DOMInteractor.ts#L32-L391](../packages/dom-core/src/DOMInteractor.ts#L32-L391)).
-- **`ReactInteractor extends DOMInteractor`** and `override`s every interactive method to wrap `super.*` in `act(async () => …)`, flushing React state updates ([ReactInteractor.ts](../packages/react-core/src/ReactInteractor.ts#L22-L127)).
-- **`VueInteractor extends DOMInteractor`** and `override`s each method to call `super.*` then `await nextTick()`, flushing Vue reactivity ([VueInteractor.ts](../packages/vue-3/src/VueInteractor.ts#L22-L114)).
+- **`ReactInteractor extends DOMInteractor`** and overrides the single `runInteraction` seam (which every mutating primitive routes through) to wrap the interaction in `act(async () => …)`, flushing React state updates ([ReactInteractor.ts](../packages/react-core/src/ReactInteractor.ts#L4)).
+- **`VueInteractor extends DOMInteractor`** and overrides the same `runInteraction` seam to run the interaction then `await nextTick()`, flushing Vue reactivity ([VueInteractor.ts](../packages/vue-3/src/VueInteractor.ts#L4)).
 - **`AngularInteractor extends DOMInteractor`** and `override`s each method to call `super.*` then settle on the bootstrapped app's `ApplicationRef.whenStable()` (bounded by a timeout; correct under both zone.js and zoneless change detection). Stability is per-app, so the reference is injected at construction — see [AngularInteractor.ts](../packages/angular-core/src/AngularInteractor.ts) and [ADR-013](adr/013-angular-shared-core-thin-packages.md).
 - **`PlaywrightInteractor implements Interactor` directly** — it does **not** extend `DOMInteractor`. Every method resolves the locator to CSS and calls `page.locator(css).<action>()`; Playwright handles waiting/retrying natively, so there is no `act()`/`nextTick()` ([PlaywrightInteractor.ts](../packages/playwright/src/PlaywrightInteractor.ts#L31-L324)). See [ADR-002](adr/002-interactor-abstraction.md).
 

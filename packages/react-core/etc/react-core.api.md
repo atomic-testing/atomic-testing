@@ -4,25 +4,13 @@
 
 ```ts
 
-import { BlurOption } from '@atomic-testing/core';
-import { ClickOption } from '@atomic-testing/core';
 import { DOMInteractor } from '@atomic-testing/dom-core';
-import { EnterTextOption } from '@atomic-testing/core';
-import { FocusOption } from '@atomic-testing/core';
-import { HoverOption } from '@atomic-testing/core';
 import { ITestEngineOption } from '@atomic-testing/core';
-import { MouseDownOption } from '@atomic-testing/core';
-import { MouseEnterOption } from '@atomic-testing/core';
-import { MouseLeaveOption } from '@atomic-testing/core';
-import { MouseMoveOption } from '@atomic-testing/core';
-import { MouseOutOption } from '@atomic-testing/core';
-import { MouseUpOption } from '@atomic-testing/core';
 import { PartLocator } from '@atomic-testing/core';
-import { Point } from '@atomic-testing/core';
-import { PressKeyOption } from '@atomic-testing/core';
 import { ReactNode } from 'react';
 import { ScenePart } from '@atomic-testing/core';
 import { TestEngine } from '@atomic-testing/core';
+import { WaitForOption } from '@atomic-testing/core';
 import { WaitUntilOption } from '@atomic-testing/core';
 
 // @public
@@ -36,54 +24,9 @@ export type IReactTestEngineOption = ITestEngineOption;
 
 // @public (undocumented)
 export class ReactInteractor extends DOMInteractor {
-    // (undocumented)
-    activate(locator: PartLocator): Promise<void>;
-    // (undocumented)
-    blur(locator: PartLocator, option?: Partial<BlurOption>): Promise<void>;
-    // (undocumented)
-    click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void>;
-    // (undocumented)
-    contextMenu(locator: PartLocator): Promise<void>;
-    // (undocumented)
-    drag(locator: PartLocator, delta: Point): Promise<void>;
-    // (undocumented)
-    dragTo(source: PartLocator, target: PartLocator): Promise<void>;
-    // (undocumented)
-    enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption>): Promise<void>;
-    // (undocumented)
-    focus(locator: PartLocator, option?: Partial<FocusOption>): Promise<void>;
-    // (undocumented)
-    hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void>;
-    // (undocumented)
-    mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void>;
-    // (undocumented)
-    mouseEnter(locator: PartLocator, option?: Partial<MouseEnterOption>): Promise<void>;
-    // (undocumented)
-    mouseLeave(locator: PartLocator, option?: Partial<MouseLeaveOption>): Promise<void>;
-    // (undocumented)
-    mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void>;
-    // (undocumented)
-    mouseOut(locator: PartLocator, option?: Partial<MouseOutOption>): Promise<void>;
-    // (undocumented)
-    mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void>;
-    // (undocumented)
-    mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void>;
-    // (undocumented)
-    pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void>;
-    // (undocumented)
-    scrollBy(locator: PartLocator, delta: Point): Promise<void>;
-    // (undocumented)
-    scrollIntoView(locator: PartLocator): Promise<void>;
-    // (undocumented)
-    selectOptionValue(locator: PartLocator, values: string[]): Promise<void>;
-    // (undocumented)
-    setInputFiles(locator: PartLocator, files: string | string[]): Promise<void>;
-    // (undocumented)
-    setRangeValue(locator: PartLocator, value: number): Promise<void>;
-    // (undocumented)
-    typeText(locator: PartLocator, text: string): Promise<void>;
-    // (undocumented)
+    protected runInteraction<T>(interaction: () => Promise<T>): Promise<T>;
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
+    waitUntilComponentState(locator: PartLocator, option?: Partial<Readonly<WaitForOption>>): Promise<void>;
 }
 
 // (No @packageDocumentation comment for this package)

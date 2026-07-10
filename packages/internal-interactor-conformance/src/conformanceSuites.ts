@@ -39,10 +39,12 @@ async function captureError(run: () => Promise<unknown>): Promise<Error | undefi
  * jsdom-conforming behavior of the four `PlaywrightInteractor` read-path defects
  * fixed in #1047, plus error-hierarchy conformance (ADR-010).
  *
- * NOT covered — future work: mechanically verifying that every mutating
- * primitive routes through a single `runInteraction` template-method seam. That
- * seam does not exist yet (unfiled epic row 8); once it lands the suite should
- * assert the routing directly.
+ * NOT covered here — the `runInteraction` template-method seam (#1052) is now
+ * mechanically verified white-box in
+ * `packages/dom-core/__tests__/runInteractionRouting.dom.test.ts`, which asserts
+ * every mutating primitive routes through the seam exactly once (and reads do
+ * not). That routing is invisible to this black-box TCK, so it lives there
+ * rather than here.
  */
 export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePart> = {
   title: 'Interactor conformance (TCK)',
@@ -121,6 +123,44 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
         const notSelect = byDataTestId('not-input');
         assertEqual(await interactor().getSelectValues(notSelect), undefined);
         assertEqual(await interactor().getSelectLabels(notSelect), undefined);
+      });
+    });
+
+    // Ancestor visibility (#1053): isVisible must walk the ancestor chain, not
+    // inspect the target element alone. display:none / opacity:0 are not
+    // inherited, so a descendant of a hidden ancestor keeps its own non-hidden
+    // computed values — the divergence a black-box TCK exists to catch, since it
+    // reproduces identically under jsdom and a real browser.
+    describe('ancestor visibility', () => {
+      test('a plain element with no hidden ancestor is visible', async () => {
+        assertTrue(await interactor().isVisible(byDataTestId('visible-target')));
+      });
+
+      test('an element inside a display:none ancestor is not visible', async () => {
+        assertFalse(await interactor().isVisible(byDataTestId('hidden-by-ancestor-display')));
+      });
+
+      test('an element inside an opacity:0 ancestor is not visible', async () => {
+        assertFalse(await interactor().isVisible(byDataTestId('hidden-by-ancestor-opacity')));
+      });
+    });
+
+    // Element count (#1054): getElementCount counts by locator match, not by tag
+    // position among siblings. The fixture list holds three matching items plus a
+    // same-tag (`<li>`) non-item sibling, so a tag-based count would answer 4 —
+    // this locks the "counts by match, not tag" behavior identically under jsdom
+    // and a real browser (where it resolves to Playwright's `locator.count()`).
+    describe('element count', () => {
+      test('counts every element matching the locator, ignoring same-tag non-items', async () => {
+        assertEqual(await interactor().getElementCount(byDataTestId('count-item')), 3);
+      });
+
+      test('a locator matching a single element counts 1', async () => {
+        assertEqual(await interactor().getElementCount(byDataTestId('count-list')), 1);
+      });
+
+      test('a locator matching nothing counts 0', async () => {
+        assertEqual(await interactor().getElementCount(absent), 0);
       });
     });
 

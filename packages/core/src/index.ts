@@ -35,3 +35,4 @@ export * as escapeUtil from './utils/escapeUtil';
 export * as locatorUtil from './utils/locatorUtil';
 export * as timingUtil from './utils/timingUtil';
 export * as interactorUtil from './utils/interactorUtil';
+export * as visibilityUtil from './utils/visibilityUtil';

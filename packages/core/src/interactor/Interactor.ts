@@ -336,6 +336,23 @@ export interface Interactor {
   getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
 
   exists(locator: PartLocator): Promise<boolean>;
+
+  /**
+   * Count every element matching the locator.
+   *
+   * Where {@link exists} is a presence check that stops at the first match, this
+   * resolves the locator to its full match set and returns the cardinality — the
+   * multi-match counterpart the list helpers use to size a collection in one
+   * round-trip instead of probing index by index. A locator matching nothing
+   * yields `0`.
+   *
+   * Homogeneous-match semantics: the count is by locator match, not by tag
+   * position. A sibling that shares an item's tag but does not satisfy the
+   * locator is not counted — the opposite of `:nth-of-type`, which counts by tag
+   * among all siblings. This is what lets the count side of a list stay correct
+   * when the items are interleaved with a same-tag non-item (a header/divider).
+   */
+  getElementCount(locator: PartLocator): Promise<number>;
   isChecked(locator: PartLocator): Promise<boolean>;
   isDisabled(locator: PartLocator): Promise<boolean>;
   isReadonly(locator: PartLocator): Promise<boolean>;

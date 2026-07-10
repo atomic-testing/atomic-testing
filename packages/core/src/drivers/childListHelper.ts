@@ -14,6 +14,11 @@ function matchingChildAt(container: PartLocator, childSelector: string, position
   return append(container, byCssSelector(`> ${childSelector}:nth-child(${position})`));
 }
 
+/** Locator for every direct child of `container` matching `childSelector`. */
+function matchingChildren(container: PartLocator, childSelector: string): PartLocator {
+  return append(container, byCssSelector(`> ${childSelector}`));
+}
+
 /**
  * Yield a driver for each descendant of `container` that matches `childSelector`,
  * addressed positionally by `:nth-child`.
@@ -60,10 +65,18 @@ export async function* iterateMatchingChildren<ItemT extends ComponentDriver>(
 }
 
 /**
- * Count a container's descendants matching `childSelector`, walking positions via
- * {@link Interactor.exists} (see {@link iterateMatchingChildren} for why a
- * `getAttribute`-based count is not portable, and for the `groupSelector`
- * recursion that reaches items nested inside wrappers).
+ * Count a container's descendants matching `childSelector` (see
+ * {@link iterateMatchingChildren} for the `groupSelector` recursion that reaches
+ * items nested inside wrappers).
+ *
+ * The flat case (no `groupSelector`) is a single {@link Interactor.getElementCount}
+ * on `> childSelector` — one round-trip instead of the O(children) `exists()`
+ * position-walk, and count-equivalent to it: the child-combinator + `childSelector`
+ * filter counts exactly the direct children the walk would, still skipping
+ * non-matching same-tag siblings. The recursive case must descend into
+ * `groupSelector` wrappers, which no single query expresses, so it keeps walking
+ * positions via {@link Interactor.exists} (see {@link iterateMatchingChildren} for
+ * why a `getAttribute`-based count is not portable).
  */
 export async function countMatchingChildren(
   interactor: Interactor,
@@ -71,11 +84,15 @@ export async function countMatchingChildren(
   childSelector: string,
   groupSelector?: string
 ): Promise<number> {
+  if (groupSelector == null) {
+    return interactor.getElementCount(matchingChildren(container, childSelector));
+  }
+
   let count = 0;
   for (let position = 1; await interactor.exists(anyChildAt(container, position)); position++) {
     if (await interactor.exists(matchingChildAt(container, childSelector, position))) {
       count++;
-    } else if (groupSelector != null) {
+    } else {
       const groupLocator = matchingChildAt(container, groupSelector, position);
       if (await interactor.exists(groupLocator)) {
         count += await countMatchingChildren(interactor, groupLocator, childSelector, groupSelector);

@@ -23,6 +23,7 @@ import {
   Point,
   PressKeyOption,
   timingUtil,
+  visibilityUtil,
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
@@ -90,6 +91,26 @@ export class DOMInteractor implements Interactor {
   ) {
     this.userEvent = option?.userEvent ?? defaultUserEvent;
   }
+
+  /**
+   * Template-method seam every mutating primitive (and both wait conditions)
+   * routes through. The base runs the interaction verbatim; framework adapters
+   * override it to flush their reactivity around the whole interaction —
+   * `ReactInteractor` wraps it in `act(...)`, `VueInteractor` awaits
+   * `nextTick()`. Because every mutation funnels through this one method, a new
+   * mutating primitive added to this base is flushed by every adapter
+   * automatically — closing the silent gap that the previous per-method
+   * overrides left open, where an un-mirrored primitive was inherited unwrapped
+   * (#1052).
+   *
+   * Reads (`getText`, `getAttribute`, `exists`, …) deliberately do NOT route
+   * through here: they observe state without mutating it, so there is nothing to
+   * flush.
+   */
+  protected runInteraction<T>(fn: () => Promise<T>): Promise<T> {
+    return fn();
+  }
+
   async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
   async getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
@@ -138,25 +159,27 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'click');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'click');
+      }
 
-    const isSimpleEvent = option?.position == null;
-    if (isSimpleEvent) {
-      // Some MUI component does not work with fireEvent('click', ...)
-      await this.userEvent.click(el);
-    } else {
-      const clickLocation = this.calculateMousePosition(el, option?.position);
-      const evt = new FakeMouseEvent('click', {
-        bubbles: true,
-        clientX: clickLocation.x,
-        clientY: clickLocation.y,
-      });
+      const isSimpleEvent = option?.position == null;
+      if (isSimpleEvent) {
+        // Some MUI component does not work with fireEvent('click', ...)
+        await this.userEvent.click(el);
+      } else {
+        const clickLocation = this.calculateMousePosition(el, option?.position);
+        const evt = new FakeMouseEvent('click', {
+          bubbles: true,
+          clientX: clickLocation.x,
+          clientY: clickLocation.y,
+        });
 
-      fireEvent(el, evt);
-    }
+        fireEvent(el, evt);
+      }
+    });
   }
 
   /**
@@ -168,11 +191,13 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async hover(locator: PartLocator, _option?: HoverOption): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'hover');
-    }
-    await this.userEvent.hover(el);
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'hover');
+      }
+      await this.userEvent.hover(el);
+    });
   }
 
   /**
@@ -184,19 +209,21 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseMove');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseMove');
+      }
 
-    const moveLocation = this.calculateMousePosition(el, option?.position);
-    const evt = new FakeMouseEvent('mousemove', {
-      bubbles: true,
-      clientX: moveLocation.x,
-      clientY: moveLocation.y,
+      const moveLocation = this.calculateMousePosition(el, option?.position);
+      const evt = new FakeMouseEvent('mousemove', {
+        bubbles: true,
+        clientX: moveLocation.x,
+        clientY: moveLocation.y,
+      });
+
+      fireEvent(el, evt);
     });
-
-    fireEvent(el, evt);
   }
 
   /**
@@ -208,19 +235,21 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseDown(locator: PartLocator, option?: Partial<MouseDownOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseDown');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseDown');
+      }
 
-    const mouseLocation = this.calculateMousePosition(el, option?.position);
-    const evt = new FakeMouseEvent('mousedown', {
-      bubbles: true,
-      clientX: mouseLocation.x,
-      clientY: mouseLocation.y,
+      const mouseLocation = this.calculateMousePosition(el, option?.position);
+      const evt = new FakeMouseEvent('mousedown', {
+        bubbles: true,
+        clientX: mouseLocation.x,
+        clientY: mouseLocation.y,
+      });
+
+      fireEvent(el, evt);
     });
-
-    fireEvent(el, evt);
   }
 
   /**
@@ -232,19 +261,21 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseUp');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseUp');
+      }
 
-    const mouseLocation = this.calculateMousePosition(el, option?.position);
-    const evt = new FakeMouseEvent('mouseup', {
-      bubbles: true,
-      clientX: mouseLocation.x,
-      clientY: mouseLocation.y,
+      const mouseLocation = this.calculateMousePosition(el, option?.position);
+      const evt = new FakeMouseEvent('mouseup', {
+        bubbles: true,
+        clientX: mouseLocation.x,
+        clientY: mouseLocation.y,
+      });
+
+      fireEvent(el, evt);
     });
-
-    fireEvent(el, evt);
   }
 
   /**
@@ -256,19 +287,21 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseOver(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseOver');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseOver');
+      }
 
-    const moveLocation = this.calculateMousePosition(el, option?.position);
-    const evt = new FakeMouseEvent('mouseover', {
-      bubbles: true,
-      clientX: moveLocation.x,
-      clientY: moveLocation.y,
+      const moveLocation = this.calculateMousePosition(el, option?.position);
+      const evt = new FakeMouseEvent('mouseover', {
+        bubbles: true,
+        clientX: moveLocation.x,
+        clientY: moveLocation.y,
+      });
+
+      fireEvent(el, evt);
     });
-
-    fireEvent(el, evt);
   }
 
   /**
@@ -280,12 +313,14 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseOut');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseOut');
+      }
 
-    fireEvent.mouseOut(el);
+      fireEvent.mouseOut(el);
+    });
   }
 
   /**
@@ -297,14 +332,16 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseEnter(locator: PartLocator, _option?: Partial<MouseEnterOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseEnter');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseEnter');
+      }
 
-    // mouseOver would trigger mouseEnter event
-    // hover fireEvent.mouseEnter does not
-    fireEvent.mouseOver(el);
+      // mouseOver would trigger mouseEnter event
+      // hover fireEvent.mouseEnter does not
+      fireEvent.mouseOver(el);
+    });
   }
 
   /**
@@ -316,12 +353,14 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'mouseLeave');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'mouseLeave');
+      }
 
-    fireEvent.mouseOut(el);
+      fireEvent.mouseOut(el);
+    });
   }
 
   /**
@@ -333,14 +372,16 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'focus');
-    }
-    if ('focus' in el === false) {
-      return;
-    }
-    (el as HTMLInputElement).focus();
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'focus');
+      }
+      if ('focus' in el === false) {
+        return;
+      }
+      (el as HTMLInputElement).focus();
+    });
   }
 
   /**
@@ -352,14 +393,16 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async blur(locator: PartLocator, _option?: Partial<BlurOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'blur');
-    }
-    if ('blur' in el === false) {
-      return;
-    }
-    (el as HTMLInputElement).blur();
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'blur');
+      }
+      if ('blur' in el === false) {
+        return;
+      }
+      (el as HTMLInputElement).blur();
+    });
   }
 
   /**
@@ -415,72 +458,74 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'pressKey');
-    }
-    if ('focus' in el) {
-      (el as HTMLElement).focus();
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'pressKey');
+      }
+      if ('focus' in el) {
+        (el as HTMLElement).focus();
+      }
 
-    // For a focused text-editing target, dispatch through `userEvent.keyboard`
-    // so the press carries full editing fidelity — keydown → beforeinput/input →
-    // keyup — matching Playwright's `locator.press()`. A bare keydown/keyup pair
-    // reaches `KeyboardEvent.key` handlers but is invisible to components that
-    // commit edits from input events (e.g. the MUI X picker section field
-    // clearing on Backspace, see #903). This is gated to editing targets
-    // ({@link needsInputEventFidelity}): command targets (combobox, dialog,
-    // chip) must keep the direct `fireEvent` dispatch their keyboard handlers
-    // rely on — `userEvent.keyboard` delivers to `document.activeElement`, which
-    // broke the Angular Material `MatSelect` open-on-Enter path.
-    const activeElement = el.ownerDocument?.activeElement;
-    const holdsFocus = el === activeElement || (activeElement != null && el.contains(activeElement));
-    if (holdsFocus && needsInputEventFidelity(el)) {
-      // Printable keys are typed as-is (doubling `{`/`[` so user-event's
-      // descriptor syntax never engages); named keys become `{Key}` descriptors.
-      // The global flag is defensive — `key.length === 1` means at most one char
-      // here — and keeps the escape consistent with `typeText`'s.
-      const descriptor = key.length === 1 ? key.replace(/[{[]/g, '$&$&') : `{${key}}`;
-      let chord = descriptor;
-      if (option?.shift) {
-        chord = `{Shift>}${chord}{/Shift}`;
+      // For a focused text-editing target, dispatch through `userEvent.keyboard`
+      // so the press carries full editing fidelity — keydown → beforeinput/input →
+      // keyup — matching Playwright's `locator.press()`. A bare keydown/keyup pair
+      // reaches `KeyboardEvent.key` handlers but is invisible to components that
+      // commit edits from input events (e.g. the MUI X picker section field
+      // clearing on Backspace, see #903). This is gated to editing targets
+      // ({@link needsInputEventFidelity}): command targets (combobox, dialog,
+      // chip) must keep the direct `fireEvent` dispatch their keyboard handlers
+      // rely on — `userEvent.keyboard` delivers to `document.activeElement`, which
+      // broke the Angular Material `MatSelect` open-on-Enter path.
+      const activeElement = el.ownerDocument?.activeElement;
+      const holdsFocus = el === activeElement || (activeElement != null && el.contains(activeElement));
+      if (holdsFocus && needsInputEventFidelity(el)) {
+        // Printable keys are typed as-is (doubling `{`/`[` so user-event's
+        // descriptor syntax never engages); named keys become `{Key}` descriptors.
+        // The global flag is defensive — `key.length === 1` means at most one char
+        // here — and keeps the escape consistent with `typeText`'s.
+        const descriptor = key.length === 1 ? key.replace(/[{[]/g, '$&$&') : `{${key}}`;
+        let chord = descriptor;
+        if (option?.shift) {
+          chord = `{Shift>}${chord}{/Shift}`;
+        }
+        if (option?.alt) {
+          chord = `{Alt>}${chord}{/Alt}`;
+        }
+        if (option?.ctrl) {
+          chord = `{Control>}${chord}{/Control}`;
+        }
+        if (option?.meta) {
+          chord = `{Meta>}${chord}{/Meta}`;
+        }
+        try {
+          await this.userEvent.keyboard(chord);
+          return;
+        } catch {
+          // user-event rejects keys outside its keyboard map while parsing,
+          // before dispatching anything — fall through to the bare key events so
+          // exotic keys still reach KeyboardEvent.key handlers as before.
+        }
       }
-      if (option?.alt) {
-        chord = `{Alt>}${chord}{/Alt}`;
-      }
-      if (option?.ctrl) {
-        chord = `{Control>}${chord}{/Control}`;
-      }
-      if (option?.meta) {
-        chord = `{Meta>}${chord}{/Meta}`;
-      }
-      try {
-        await this.userEvent.keyboard(chord);
-        return;
-      } catch {
-        // user-event rejects keys outside its keyboard map while parsing,
-        // before dispatching anything — fall through to the bare key events so
-        // exotic keys still reach KeyboardEvent.key handlers as before.
-      }
-    }
 
-    // Non-focusable target (or a key user-event cannot type): dispatch the key
-    // events directly on the element, as a real key press cannot originate
-    // from it anyway.
-    // `keyCode`/`which` mirror `key` for handlers that still read the legacy
-    // numeric code (see legacyKeyCodes above).
-    const keyCode = DOMInteractor.legacyKeyCodeOf(key);
-    const eventInit = {
-      key,
-      code: deriveKeyCode(key),
-      ...(keyCode != null ? { keyCode, which: keyCode } : {}),
-      ctrlKey: !!option?.ctrl,
-      shiftKey: !!option?.shift,
-      altKey: !!option?.alt,
-      metaKey: !!option?.meta,
-    };
-    fireEvent.keyDown(el, eventInit);
-    fireEvent.keyUp(el, eventInit);
+      // Non-focusable target (or a key user-event cannot type): dispatch the key
+      // events directly on the element, as a real key press cannot originate
+      // from it anyway.
+      // `keyCode`/`which` mirror `key` for handlers that still read the legacy
+      // numeric code (see legacyKeyCodes above).
+      const keyCode = DOMInteractor.legacyKeyCodeOf(key);
+      const eventInit = {
+        key,
+        code: deriveKeyCode(key),
+        ...(keyCode != null ? { keyCode, which: keyCode } : {}),
+        ctrlKey: !!option?.ctrl,
+        shiftKey: !!option?.shift,
+        altKey: !!option?.alt,
+        metaKey: !!option?.meta,
+      };
+      fireEvent.keyDown(el, eventInit);
+      fireEvent.keyUp(el, eventInit);
+    });
   }
 
   /**
@@ -496,14 +541,16 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async contextMenu(locator: PartLocator): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'contextMenu');
-    }
-    if ('focus' in el) {
-      (el as HTMLElement).focus();
-    }
-    fireEvent.contextMenu(el);
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'contextMenu');
+      }
+      if ('focus' in el) {
+        (el as HTMLElement).focus();
+      }
+      fireEvent.contextMenu(el);
+    });
   }
 
   /**
@@ -518,11 +565,13 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async activate(locator: PartLocator): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'activate');
-    }
-    await this.userEvent.click(el);
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'activate');
+      }
+      await this.userEvent.click(el);
+    });
   }
 
   /**
@@ -535,38 +584,34 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async enterText(locator: PartLocator, text: string, option?: Partial<EnterTextOption> | undefined): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'enterText');
-    }
-
-    if (!option?.append) {
-      await this.userEvent.clear(el);
-    }
-
-    // An empty value is a pure clear: `userEvent.clear()` above already emptied
-    // the field, there is no text to type or date format to validate, and
-    // `userEvent.type` rejects `''` ("Expected key descriptor"). Return early —
-    // this also keeps clearing a date/time input from tripping the date-format
-    // validation below, and matches PlaywrightInteractor's `clear()` + `fill('')`.
-    if (text === '') {
-      return;
-    }
-
-    // If it is a date, time or datetime-local input, validate the date format
-    if (el.tagName === 'INPUT') {
-      const type = el.getAttribute('type') ?? '';
-      if (dateUtil.isHtmlDateInputType(type)) {
-        const result = dateUtil.validateHtmlDateInput(type, text);
-        if (!result.valid) {
-          throw new Error(
-            `Invalid date format for type: ${type}, expected format: ${result.format}, example: ${result.example}`
-          );
-        }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'enterText');
       }
-    }
 
-    await this.userEvent.type(el, text);
+      if (!option?.append) {
+        await this.userEvent.clear(el);
+      }
+
+      // An empty value is a pure clear: `userEvent.clear()` above already emptied
+      // the field and `userEvent.type` rejects `''` ("Expected key descriptor"),
+      // so there is nothing left to type. Return early on the mechanism grounds
+      // that `userEvent.type` cannot take `''`; the shared date-format policy
+      // (`dateUtil.assertValidHtmlDateInputValue`) likewise treats `''` as a valid
+      // clear, keeping this in lockstep with PlaywrightInteractor's `clear()` +
+      // `fill('')`.
+      if (text === '') {
+        return;
+      }
+
+      // Enforce the shared date/time/datetime-local format policy (#1053).
+      if (el.tagName === 'INPUT') {
+        dateUtil.assertValidHtmlDateInputValue(el.getAttribute('type') ?? '', text);
+      }
+
+      await this.userEvent.type(el, text);
+    });
   }
 
   /**
@@ -585,35 +630,37 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async typeText(locator: PartLocator, text: string): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'typeText');
-    }
-    if ('focus' in el) {
-      (el as HTMLElement).focus();
-    }
-    // A real browser places a caret inside a contenteditable host on focus;
-    // jsdom does not, and userEvent.keyboard inserts at the document selection
-    // — so without a caret the keystrokes would land nowhere. Collapse a
-    // selection to the end of the host's content (matching userEvent.type's
-    // append behavior) unless the caret is already inside it.
-    if (el.hasAttribute('contenteditable')) {
-      const selection = el.ownerDocument.getSelection();
-      if (selection != null && (selection.anchorNode == null || !el.contains(selection.anchorNode))) {
-        const range = el.ownerDocument.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'typeText');
       }
-    }
-    // userEvent.keyboard('') throws ("Expected key descriptor"), so an empty
-    // text is focus-only — the same outcome pressSequentially('') produces.
-    if (text === '') {
-      return;
-    }
-    const literalText = text.replace(/[{[]/g, '$&$&');
-    await this.userEvent.keyboard(literalText);
+      if ('focus' in el) {
+        (el as HTMLElement).focus();
+      }
+      // A real browser places a caret inside a contenteditable host on focus;
+      // jsdom does not, and userEvent.keyboard inserts at the document selection
+      // — so without a caret the keystrokes would land nowhere. Collapse a
+      // selection to the end of the host's content (matching userEvent.type's
+      // append behavior) unless the caret is already inside it.
+      if (el.hasAttribute('contenteditable')) {
+        const selection = el.ownerDocument.getSelection();
+        if (selection != null && (selection.anchorNode == null || !el.contains(selection.anchorNode))) {
+          const range = el.ownerDocument.createRange();
+          range.selectNodeContents(el);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+      // userEvent.keyboard('') throws ("Expected key descriptor"), so an empty
+      // text is focus-only — the same outcome pressSequentially('') produces.
+      if (text === '') {
+        return;
+      }
+      const literalText = text.replace(/[{[]/g, '$&$&');
+      await this.userEvent.keyboard(literalText);
+    });
   }
 
   /**
@@ -630,11 +677,13 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async setRangeValue(locator: PartLocator, value: number): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'setRangeValue');
-    }
-    fireEvent.change(el, { target: { value: String(value) } });
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'setRangeValue');
+      }
+      fireEvent.change(el, { target: { value: String(value) } });
+    });
   }
 
   /**
@@ -646,11 +695,13 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'selectOptionValue');
-    }
-    await this.userEvent.selectOptions(el, values);
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'selectOptionValue');
+      }
+      await this.userEvent.selectOptions(el, values);
+    });
   }
 
   /**
@@ -670,19 +721,21 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'setInputFiles');
-    }
-    const paths = Array.isArray(files) ? files : [files];
-    const fileObjects = paths.map(filePath => {
-      // `||` (not `??`): split().pop() yields '' (not undefined) for a
-      // trailing-separator path, and an empty File name is useless — fall back
-      // to the full path in that case.
-      const name = filePath.split(/[\\/]/).pop() || filePath;
-      return new File([], name);
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'setInputFiles');
+      }
+      const paths = Array.isArray(files) ? files : [files];
+      const fileObjects = paths.map(filePath => {
+        // `||` (not `??`): split().pop() yields '' (not undefined) for a
+        // trailing-separator path, and an empty File name is useless — fall back
+        // to the full path in that case.
+        const name = filePath.split(/[\\/]/).pop() || filePath;
+        return new File([], name);
+      });
+      await this.userEvent.upload(el as HTMLElement, fileObjects);
     });
-    await this.userEvent.upload(el as HTMLElement, fileObjects);
   }
 
   /**
@@ -698,13 +751,15 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async scrollIntoView(locator: PartLocator): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'scrollIntoView');
-    }
-    if (typeof (el as HTMLElement).scrollIntoView === 'function') {
-      (el as HTMLElement).scrollIntoView();
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'scrollIntoView');
+      }
+      if (typeof (el as HTMLElement).scrollIntoView === 'function') {
+        (el as HTMLElement).scrollIntoView();
+      }
+    });
   }
 
   /**
@@ -721,13 +776,15 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'scrollBy');
-    }
-    if (typeof (el as HTMLElement).scrollBy === 'function') {
-      (el as HTMLElement).scrollBy(delta.x, delta.y);
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'scrollBy');
+      }
+      if (typeof (el as HTMLElement).scrollBy === 'function') {
+        (el as HTMLElement).scrollBy(delta.x, delta.y);
+      }
+    });
   }
 
   /**
@@ -757,21 +814,23 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If either element is not found
    */
   async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
-    const sourceEl = await this.getElement(source);
-    if (sourceEl == null) {
-      throw new ElementNotFoundError(source, 'dragTo');
-    }
-    const targetEl = await this.getElement(target);
-    if (targetEl == null) {
-      throw new ElementNotFoundError(target, 'dragTo');
-    }
+    return this.runInteraction(async () => {
+      const sourceEl = await this.getElement(source);
+      if (sourceEl == null) {
+        throw new ElementNotFoundError(source, 'dragTo');
+      }
+      const targetEl = await this.getElement(target);
+      if (targetEl == null) {
+        throw new ElementNotFoundError(target, 'dragTo');
+      }
 
-    const sourcePoint = this.calculateMousePosition(sourceEl);
-    const targetPoint = this.calculateMousePosition(targetEl);
+      const sourcePoint = this.calculateMousePosition(sourceEl);
+      const targetPoint = this.calculateMousePosition(targetEl);
 
-    this.dispatchMouse(sourceEl, 'mousedown', sourcePoint);
-    this.dispatchMouse(targetEl, 'mousemove', targetPoint);
-    this.dispatchMouse(targetEl, 'mouseup', targetPoint);
+      this.dispatchMouse(sourceEl, 'mousedown', sourcePoint);
+      this.dispatchMouse(targetEl, 'mousemove', targetPoint);
+      this.dispatchMouse(targetEl, 'mouseup', targetPoint);
+    });
   }
 
   /**
@@ -792,17 +851,19 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async drag(locator: PartLocator, delta: Point): Promise<void> {
-    const el = await this.getElement(locator);
-    if (el == null) {
-      throw new ElementNotFoundError(locator, 'drag');
-    }
+    return this.runInteraction(async () => {
+      const el = await this.getElement(locator);
+      if (el == null) {
+        throw new ElementNotFoundError(locator, 'drag');
+      }
 
-    const start = this.calculateMousePosition(el);
-    const end: Point = { x: start.x + delta.x, y: start.y + delta.y };
+      const start = this.calculateMousePosition(el);
+      const end: Point = { x: start.x + delta.x, y: start.y + delta.y };
 
-    this.dispatchMouse(el, 'mousedown', start);
-    this.dispatchMouse(el, 'mousemove', end);
-    this.dispatchMouse(el, 'mouseup', end);
+      this.dispatchMouse(el, 'mousedown', start);
+      this.dispatchMouse(el, 'mousemove', end);
+      this.dispatchMouse(el, 'mouseup', end);
+    });
   }
 
   //#region wait conditions
@@ -810,17 +871,30 @@ export class DOMInteractor implements Interactor {
     locator: PartLocator,
     option: Partial<Readonly<WaitForOption>> = defaultWaitForOption
   ): Promise<void> {
-    return interactorUtil.interactorWaitUtil(locator, this, option);
+    // Routed through the seam so a framework adapter's flush wraps the ENTIRE
+    // probe loop in one pass (React's single surrounding `act`), not each probe.
+    return this.runInteraction(() => interactorUtil.interactorWaitUtil(locator, this, option));
   }
 
   waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
-    return timingUtil.waitUntil(option);
+    return this.runInteraction(() => timingUtil.waitUntil(option));
   }
   //#endregion
 
   async exists(locator: PartLocator): Promise<boolean> {
     const el = await this.getElement(locator);
     return Promise.resolve(el != null);
+  }
+
+  /**
+   * Count every element matching the locator — the length of the multi-match
+   * query. Reuses the {@link getElement} multiple-overload rather than a second
+   * `querySelectorAll` path, so the document-root (`:root`) escape is honored in
+   * exactly one place. A read: it does NOT route through {@link runInteraction}.
+   */
+  async getElementCount(locator: PartLocator): Promise<number> {
+    const elements = await this.getElement(locator, true);
+    return elements.length;
   }
 
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: true): Promise<readonly T[]>;
@@ -943,7 +1017,15 @@ export class DOMInteractor implements Interactor {
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {
-    return this.hasAttribute(locator, 'readonly');
+    // Honor `aria-readonly` for symmetry with `isRequired`'s `aria-required`
+    // check (#1053): the native `readonly` attribute only exists on native form
+    // controls, whereas composite/custom widgets (comboboxes, grids,
+    // contenteditable regions) expose read-only state through ARIA. The two
+    // capability probes now read both the native and ARIA signals.
+    if (await this.hasAttribute(locator, 'readonly')) {
+      return true;
+    }
+    return (await this.getAttribute(locator, 'aria-readonly')) === 'true';
   }
 
   async isRequired(locator: PartLocator): Promise<boolean> {
@@ -963,27 +1045,15 @@ export class DOMInteractor implements Interactor {
   }
 
   async isVisible(locator: PartLocator): Promise<boolean> {
-    const exists = await this.exists(locator);
-    if (!exists) {
+    const el = await this.getElement(locator);
+    if (el == null) {
       return false;
     }
-
-    const opacity = await this.getStyleValue(locator, 'opacity');
-    if (opacity === '0') {
-      return false;
-    }
-
-    const visibility = await this.getStyleValue(locator, 'visibility');
-    if (visibility === 'hidden') {
-      return false;
-    }
-
-    const display = await this.getStyleValue(locator, 'display');
-    if (display === 'none') {
-      return false;
-    }
-
-    return true;
+    // Apply the shared visibility policy (#1053): walk the ancestor chain so a
+    // child of a `display: none` / `opacity: 0` ancestor is reported hidden, not
+    // visible. `visibility` is inherited and handled on the element alone inside
+    // the predicate.
+    return visibilityUtil.isElementVisibleByStyle(el, target => window.getComputedStyle(target as HTMLElement));
   }
 
   async hasCssClass(locator: PartLocator, className: string): Promise<boolean> {

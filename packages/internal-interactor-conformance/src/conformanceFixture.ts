@@ -30,6 +30,29 @@ export const conformanceFixtureHtml = `
     <select data-testid="valueless-select">
       <option selected>Apple</option>
     </select>
+
+    <!-- Visibility: an element is visible only when it AND every ancestor are
+         displayed and non-transparent. display:none / opacity:0 are NOT
+         inherited, so a descendant keeps its OWN non-hidden computed values —
+         isVisible must walk ancestors (the hole #1053 closes). -->
+    <div data-testid="visible-target">visible</div>
+    <div style="display: none">
+      <span data-testid="hidden-by-ancestor-display">hidden via ancestor display:none</span>
+    </div>
+    <div style="opacity: 0">
+      <span data-testid="hidden-by-ancestor-opacity">hidden via ancestor opacity:0</span>
+    </div>
+
+    <!-- Element count: three matching items plus a same-tag non-item sibling.
+         getElementCount must count by locator match (3), not by tag among
+         siblings (which would be 4) — the miscount #1054 fixes on the count side
+         of the list helpers. -->
+    <ul data-testid="count-list">
+      <li data-testid="count-item">one</li>
+      <li data-testid="count-item">two</li>
+      <li data-testid="count-item">three</li>
+      <li data-testid="count-other">not a counted item</li>
+    </ul>
   </main>
 `;
 

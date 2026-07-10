@@ -37,21 +37,22 @@ Render a component into the DOM (or wrap a pre-rendered one) and inject an inter
 
 ### ReactInteractor
 
-Extends `DOMInteractor` and `override`s every interactive method to wrap the `super` call in `act()` from `@testing-library/react`, so React state updates are flushed before the method resolves ([ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts)):
+Extends `DOMInteractor` and overrides the single `runInteraction` seam that every mutating primitive (and both wait conditions) routes through, wrapping the interaction in `act()` from `@testing-library/react` so React state updates flush before the method resolves ([ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts)):
 
 ```ts
-override async click(locator, option?) {
-  await act(async () => { await super.click(locator, option); });
+protected override async runInteraction<T>(interaction: () => Promise<T>): Promise<T> {
+  // ...pin IS_REACT_ACT_ENVIRONMENT = true, then restore in finally
+  return await act(async () => interaction());
 }
 ```
 
-The `user-event`-backed methods (`click`, `hover`, `activate`, `enterText`, `selectOptionValue`, `setInputFiles`) additionally pin the `IS_REACT_ACT_ENVIRONMENT` global to `true` for the duration of the call (`runUserEvent` — see its doc comment): `@testing-library/react`'s `asyncWrapper` temporarily disables the act environment around async `user-event` calls, which is only correct when `user-event` is _not_ already act-managed; nested inside this interactor's `act()` it would otherwise make react-dom log `The current testing environment is not configured to support act(...)` for every update — enough log volume on update-heavy trees (Radix) to kill CI jest runs.
+Because every mutation funnels through this one method, a new mutating primitive added to `DOMInteractor` is flushed automatically — no per-method override to forget. For the whole interaction it pins the `IS_REACT_ACT_ENVIRONMENT` global to `true` (see the `runInteraction` doc comment): `@testing-library/react`'s `asyncWrapper` temporarily disables the act environment around async `user-event` calls, which is only correct when `user-event` is _not_ already act-managed; nested inside this interactor's `act()` it would otherwise make react-dom log `The current testing environment is not configured to support act(...)` for every update — enough log volume on update-heavy trees (Radix) to kill CI jest runs. Pinning is inert for the synthetic `fireEvent`-based primitives (they never trip the asyncWrapper) and correct for the `user-event`-backed ones, so unifying every mutation onto the one seam is safe.
 
 `clone()` returns `new ReactInteractor(this.rootEl)`.
 
 ### VueInteractor
 
-Extends `DOMInteractor` and `override`s each method to call `super.*` then `await this.flush()`, where `flush` awaits Vue's `nextTick()` ([VueInteractor.ts#L22-L114](../../packages/vue-3/src/VueInteractor.ts#L22-L114)). The flush happens **after** the action (vs React wrapping the action).
+Extends `DOMInteractor` and overrides the same `runInteraction` seam every mutation routes through, running the interaction then `await nextTick()` ([VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts)). The flush happens **after** the action (vs React wrapping the action), and a new mutating primitive on the base settles Vue's DOM automatically.
 
 ### AngularInteractor
 

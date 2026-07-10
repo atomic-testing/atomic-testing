@@ -13,8 +13,8 @@ The same component drivers should run in multiple environments — jsdom (Jest),
 Define a single `Interactor` interface ([Interactor.ts](../../packages/core/src/interactor/Interactor.ts#L26)) covering all low-level operations (mutative, read-only, debug). Drivers depend only on this interface and pass a `PartLocator`; they never touch the environment. Each environment provides an implementation:
 
 - `DOMInteractor implements Interactor` — testing-library/user-event over jsdom ([DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts#L32)).
-- `ReactInteractor extends DOMInteractor` — wraps each action in `act()` ([ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L22)).
-- `VueInteractor extends DOMInteractor` — awaits `nextTick()` after each action ([VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L22)).
+- `ReactInteractor extends DOMInteractor` — wraps each action in `act()` through the `runInteraction` seam ([ReactInteractor.ts](../../packages/react-core/src/ReactInteractor.ts#L4)).
+- `VueInteractor extends DOMInteractor` — awaits `nextTick()` after each action through the `runInteraction` seam ([VueInteractor.ts](../../packages/vue-3/src/VueInteractor.ts#L4)).
 - `PlaywrightInteractor implements Interactor` **directly** (not a `DOMInteractor` subclass) — uses Playwright's auto-waiting locator API ([PlaywrightInteractor.ts](../../packages/playwright/src/PlaywrightInteractor.ts#L31)).
 
 The right implementation is injected by the environment's `createTestEngine`.

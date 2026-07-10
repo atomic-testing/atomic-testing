@@ -188,7 +188,7 @@ export type CssProperty = Exclude<keyof CSSStyleDeclaration, 'parentRule' | 'len
 
 // @public (undocumented)
 export namespace dateUtil {
-    export { DateValidationFailureResult, DateValidationResult, DateValidationSuccessResult, HtmlInputDateType, IDateValidationDescriptor, htmlInputDateTypes, isHtmlDateInputType, isHtmlInputDateFormat, isHtmlInputDateTimeFormat, isHtmlInputTimeFormat, validateHtmlDateInput };
+    export { DateValidationFailureResult, DateValidationResult, DateValidationSuccessResult, HtmlInputDateType, IDateValidationDescriptor, assertValidHtmlDateInputValue, htmlInputDateTypes, isHtmlDateInputType, isHtmlInputDateFormat, isHtmlInputDateTimeFormat, isHtmlInputTimeFormat, validateHtmlDateInput };
 }
 
 // @public (undocumented)
@@ -342,6 +342,7 @@ export interface Interactor {
     // (undocumented)
     getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
     getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
+    getElementCount(locator: PartLocator): Promise<number>;
     // (undocumented)
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
     getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
@@ -612,6 +613,11 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
 // @public (undocumented)
 export namespace timingUtil {
     export { WaitUntilOption, wait, waitUntil };
+}
+
+// @public (undocumented)
+export namespace visibilityUtil {
+    export { isElementVisibleByStyle };
 }
 
 // @public (undocumented)
