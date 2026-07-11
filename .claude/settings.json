@@ -1,4 +1,14 @@
 {
+  "sandbox": {
+    "network": {
+      "allowedDomains": [
+        "registry.npmjs.org",
+        "npm.jsr.io",
+        "github.com",
+        "*.github.com"
+      ]
+    }
+  },
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
