@@ -58,6 +58,12 @@ pnpm run build                  # Build package with tsdown
 cd docs && pnpm build           # Build documentation (test before doc PRs)
 ```
 
+> `docs/` is a standalone project outside the pnpm workspace, so it needs its own
+> install — `pnpm run setup` runs both installs (monorepo + `docs/`) in one command.
+> The docs API reference also needs the workspace packages built first, so the full
+> docs dev loop is `pnpm run setup` then `pnpm run docs:dev` (builds packages, starts
+> docs on :3333).
+
 > The documentation site's build (Docusaurus + TypeDoc-generated API reference) and local verification are documented in [`docs/CLAUDE.md`](docs/CLAUDE.md).
 
 > **Toolchain note:** Type-_checking_ uses `tsgo` (TypeScript 7 beta / native port, `@typescript/native-preview`). Builds, `.d.ts` emit (tsdown), and TypeDoc still use the classic TypeScript compiler (`typescript@^6.0`) because the native preview has no programmatic API yet. Linting is oxlint (replaced ESLint); formatting is oxfmt (replaced Prettier + `@trivago/prettier-plugin-sort-imports`).
