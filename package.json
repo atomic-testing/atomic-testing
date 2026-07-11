@@ -10,6 +10,8 @@
   },
   "scripts": {
     "build:packages": "./publish.sh --build-only",
+    "setup": "pnpm install && pnpm -C docs install --ignore-workspace",
+    "docs:dev": "pnpm build:packages && pnpm -C docs start",
     "check:type": "pnpm -r check:type",
     "check:api": "pnpm -r check:api",
     "check:lint": "oxlint --fix",

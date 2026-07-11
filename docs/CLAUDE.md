@@ -102,6 +102,11 @@ API reference comes out **empty** (which then cascades into broken-link failures
 [`doc-ci.yml`](../.github/workflows/doc-ci.yml): `./publish.sh --build-only` (build every
 package) → `pnpm install .` in `docs/` → `pnpm build`. Reproduce that order locally.
 
+From a fresh checkout, the simplest path is the root `package.json` scripts: `pnpm run
+setup` installs both the monorepo and this standalone project, then `pnpm run docs:dev`
+builds the packages and starts the dev server. The manual two-step order below remains
+useful for offline/standalone installs of `docs/` alone.
+
 `docs/` is **not part of the pnpm workspace** (`pnpm-workspace.yaml` covers only
 `packages/*` and `package-tests/*`); it has its own [`pnpm-lock.yaml`](pnpm-lock.yaml)
 and installs standalone. Per [`README.md`](README.md), install from `docs/` with
