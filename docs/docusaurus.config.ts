@@ -115,7 +115,7 @@ function sortByKindOrder(cats: any[], order: string[]): any[] {
 // package category. Interior differs by bucket (docPackages.classifyPackage):
 //   - driver:    supporting kinds as collapsed subcategories, then driver classes flat
 //   - framework: every kind (Classes included) grouped into its own subcategory
-function shapeApiPackage(name: string, items: any[], docs: any[]): any {
+function shapeApiPackage(name: string, items: any[], docs: any[]): any | null {
   const docsById = new Map((docs ?? []).map(d => [d.id, d]));
   const labelOf = (it: any): string => {
     const meta = docsById.get(it.id);
@@ -156,6 +156,14 @@ function shapeApiPackage(name: string, items: any[], docs: any[]): any {
       items: clean(cat.items),
     }));
     inner = [...sortByKindOrder(groups, FRAMEWORK_KIND_ORDER), ...extraDocs];
+  }
+
+  // A package that generated nothing (e.g. its dist isn't built, so TypeDoc
+  // resolved no exports) has no index and no kinds. Emitting a category with
+  // neither items nor a link makes Docusaurus throw and take down the whole
+  // dev server; drop it instead — it reappears once the package is built.
+  if (!indexItem && inner.length === 0) {
+    return null;
   }
 
   return {
@@ -263,7 +271,8 @@ const config: Config = {
             const dirName = (args as { item?: { dirName?: string } }).item?.dirName;
             const name = typeof dirName === 'string' ? dirName.match(/^api\/(.+)$/)?.[1] : undefined;
             if (name) {
-              return [shapeApiPackage(name, items, (args as { docs?: any[] }).docs ?? [])];
+              const shaped = shapeApiPackage(name, items, (args as { docs?: any[] }).docs ?? []);
+              return shaped ? [shaped] : [];
             }
             return items;
           },
