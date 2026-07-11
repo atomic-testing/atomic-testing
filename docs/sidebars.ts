@@ -83,11 +83,21 @@ const sidebars = {
       type: 'category',
       label: '📖 API Reference',
       collapsed: true,
-      // No custom `link` here: TypeDoc's entryPointStrategy:'packages' already
-      // emits a project-level docs/api/index.md (the repo README) that claims
-      // the /docs/api/ route natively — a generated-index at the same slug
-      // collides with it ("Duplicate routes found"). That native page is what
-      // navbar/footer "API" links point at.
+      // Slug is /api-reference, NOT /api: TypeDoc's entryPointStrategy:'packages'
+      // always writes its own project-level docs/api/index.md (a flat "here are
+      // all 28 packages" list — readme:'none' in docusaurus.config.ts only
+      // suppresses prepending the repo README to it, it still exists), so a
+      // generated-index at /api collides with it ("Duplicate routes found").
+      // Using a different slug avoids the collision entirely; navbar/footer
+      // "API" links point at this richer, framework/driver-split page instead
+      // of TypeDoc's flat one.
+      link: {
+        type: 'generated-index',
+        title: 'API Reference',
+        description:
+          'Generated API documentation for every @atomic-testing/* package, split by framework/interactor wiring vs. component driver vocabulary.',
+        slug: '/api-reference',
+      },
       items: [
         {
           type: 'category',
