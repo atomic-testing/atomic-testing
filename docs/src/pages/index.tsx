@@ -474,7 +474,7 @@ function FinalCtaSection(): JSX.Element {
             <Link className={styles.ctaPrimary} to='/docs/quick-start'>
               Read the Quick Start →
             </Link>
-            <Link className={styles.ctaSecondary} to='/docs/api-overview'>
+            <Link className={styles.ctaSecondary} to='/docs/api-reference/'>
               Browse the API
             </Link>
           </div>
