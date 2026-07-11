@@ -69,8 +69,7 @@ downstream.
 `docs/docs/api/` is produced by TypeDoc at build/start and is **gitignored** (the
 repo-root [`.gitignore`](../.gitignore) entry `docs/docs/api`). There is no source file
 for it in the repo — which is why `editUrl` in `docusaurus.config.ts` returns
-`undefined` for `api/` paths, suppressing the "Edit this page" link that would otherwise
-404. **Never hand-edit anything under `docs/docs/api/`**; it is regenerated on every
+`undefined` for `api/` paths, suppressing the "Edit this page" link that would otherwise 404. **Never hand-edit anything under `docs/docs/api/`**; it is regenerated on every
 build and your edit is lost. Change the generating symbol instead (the package source,
 the plugin options, or the partition theme).
 

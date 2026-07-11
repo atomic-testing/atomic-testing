@@ -88,7 +88,15 @@ const KIND_DISPLAY: Record<string, string> = {
 // Deterministic display order for kind subcategories. Framework packages lead
 // with Classes (the Interactor/engine you came for); driver packages flatten
 // Classes out entirely, so only the tail applies there.
-const FRAMEWORK_KIND_ORDER = ['Classes', 'Functions', 'Interfaces', 'Type Aliases', 'Variables', 'Enumerations', 'Namespaces'];
+const FRAMEWORK_KIND_ORDER = [
+  'Classes',
+  'Functions',
+  'Interfaces',
+  'Type Aliases',
+  'Variables',
+  'Enumerations',
+  'Namespaces',
+];
 const DRIVER_NONCLASS_ORDER = ['Interfaces', 'Type Aliases', 'Variables', 'Functions', 'Enumerations', 'Namespaces'];
 
 const kindDisplay = (label: unknown): string | null =>
@@ -144,7 +152,12 @@ function shapeApiPackage(name: string, items: any[], docs: any[]): any | null {
       if (kindDisplay(cat.label) === 'Classes') {
         classDocs = clean(cat.items); // flatten driver classes to direct children
       } else {
-        nonClass.push({ ...cat, label: kindDisplay(cat.label) ?? cleanLabel(String(cat.label)), collapsed: true, items: clean(cat.items) });
+        nonClass.push({
+          ...cat,
+          label: kindDisplay(cat.label) ?? cleanLabel(String(cat.label)),
+          collapsed: true,
+          items: clean(cat.items),
+        });
       }
     }
     inner = [...sortByKindOrder(nonClass, DRIVER_NONCLASS_ORDER), ...classDocs, ...extraDocs];
