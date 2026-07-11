@@ -2,13 +2,15 @@
   "sandbox": {
     "network": {
       "allowedDomains": ["registry.npmjs.org", "npm.jsr.io", "github.com", "*.github.com"]
-    }
+    },
+    "excludedCommands": ["gh"]
   },
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
       "WebSearch",
       "Bash(pnpm install:*)",
+      "Bash(gh:*)",
       "Bash(pnpm --version:*)",
       "Bash(pnpm -C projects/core tsc:*)",
       "Bash(pnpm tsc:*)",
