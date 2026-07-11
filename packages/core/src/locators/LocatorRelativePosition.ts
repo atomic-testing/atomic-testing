@@ -3,7 +3,8 @@
  *
  * - `'Root'` — resolve from the document root, ignoring the parent context.
  * - `'Descendant'` — anywhere beneath the parent (CSS descendant combinator,
- *   a space). The default for every builder.
+ *   a space). The default for most builders (`byChecked` is the exception — it
+ *   defaults to `'Same'` so it composes onto the input it matches).
  * - `'Same'` — the same element as the parent (compound onto it, no combinator).
  * - `'Child'` — a direct child of the parent (CSS child combinator, `>`), so a
  *   nested descendant with the same selector is not matched. Expressible through
