@@ -14,7 +14,7 @@
 > 2. **[Topic]** — [Question]
 > 3. **[Topic]** — [Open-ended question]
 
-**Keep docs in sync** — If you change code that a doc describes, update the doc. Each package has its own Documentation Freshness Rules — consult the relevant package's `CLAUDE.md`. And mind the **altitude** when you do: name the concept and point to the canonical symbol — don't transcribe type shapes or constants the code already owns.
+**Keep docs in sync** — If you change code that a doc describes, update the doc. Each package has its own Documentation Freshness Rules — consult the relevant package's `CLAUDE.md` (the docs site's own build and freshness rules live in [`docs/CLAUDE.md`](docs/CLAUDE.md)). And mind the **altitude** when you do: name the concept and point to the canonical symbol — don't transcribe type shapes or constants the code already owns.
 
 ### Engineering stance
 
@@ -57,6 +57,8 @@ pnpm test:e2e                   # Playwright tests (requires dev server running)
 pnpm run build                  # Build package with tsdown
 cd docs && pnpm build           # Build documentation (test before doc PRs)
 ```
+
+> The documentation site's build (Docusaurus + TypeDoc-generated API reference) and local verification are documented in [`docs/CLAUDE.md`](docs/CLAUDE.md).
 
 > **Toolchain note:** Type-_checking_ uses `tsgo` (TypeScript 7 beta / native port, `@typescript/native-preview`). Builds, `.d.ts` emit (tsdown), and TypeDoc still use the classic TypeScript compiler (`typescript@^6.0`) because the native preview has no programmatic API yet. Linting is oxlint (replaced ESLint); formatting is oxfmt (replaced Prettier + `@trivago/prettier-plugin-sort-imports`).
 

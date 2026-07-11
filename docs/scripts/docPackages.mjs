@@ -32,7 +32,7 @@ export function getDocPackageNames() {
     .readdirSync(packagesRoot, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
     .map(entry => entry.name)
-    .filter(name => !name.startsWith('internal-') && !EXCLUDED_FROM_DOCS.has(name))
+    .filter(name => !name.startsWith('.') && !name.startsWith('internal-') && !EXCLUDED_FROM_DOCS.has(name))
     .sort();
 }
 
