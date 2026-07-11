@@ -1,12 +1,7 @@
 {
   "sandbox": {
     "network": {
-      "allowedDomains": [
-        "registry.npmjs.org",
-        "npm.jsr.io",
-        "github.com",
-        "*.github.com"
-      ]
+      "allowedDomains": ["registry.npmjs.org", "npm.jsr.io", "github.com", "*.github.com"]
     }
   },
   "permissions": {
