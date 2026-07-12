@@ -22,7 +22,7 @@ export interface SelectionDraft {
   packageManager: PackageManagerId;
 }
 
-export type MissingField = 'framework' | 'framework-major' | 'runner' | 'design-system';
+export type MissingField = 'framework' | 'framework-major' | 'runner';
 
 /** Seed a draft from detection, with flags taking precedence over detected values. */
 export function buildDraft(detect: DetectResult, flags: SelectionFlags): SelectionDraft {
@@ -62,7 +62,6 @@ export const FLAG_FOR: Record<MissingField, string> = {
   framework: '--framework <react|vue|angular>',
   'framework-major': '--framework-major <number>',
   runner: '--runner <jest|vitest|vitest-browser|playwright>',
-  'design-system': '--design-system <html|mui|...>',
 };
 
 /** Convert a complete draft into a {@link RecipeSelection}. Throws if incomplete. */

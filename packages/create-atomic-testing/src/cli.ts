@@ -8,12 +8,13 @@ import { applyPlan } from './apply/applyPlan';
 import { ATOMIC_VERSION } from './constants';
 import { detect } from './detect';
 import { mergedDeps } from './detect/deps';
-import { addCommands } from './install/packageManager';
+import { addCommands, PACKAGE_MANAGER_IDS } from './install/packageManager';
 import { runInstall } from './install/runInstall';
 import { readProject } from './io/readProject';
 import { buildDraft, FLAG_FOR, missingFields, toSelection } from './plan/resolveSelection';
 import type { SelectionFlags } from './plan/resolveSelection';
 import { promptInstall, promptProceed, runInteractive } from './prompt/interactive';
+import { DESIGN_SYSTEMS, FRAMEWORKS, RUNNERS } from './registry';
 import { resolveRecipe } from './registry/resolveRecipe';
 import type { DependencySpec, DesignSystemId, FrameworkId, PackageManagerId, RecipePlan, RunnerId } from './types';
 import { RecipeResolutionError } from './types';
@@ -21,19 +22,11 @@ import { RecipeResolutionError } from './types';
 /** Documented exit codes (the `E_*` → code contract). */
 const EXIT = { ok: 0, cancelled: 1, usage: 2, ambiguous: 3, unsupported: 4, writeFailed: 5 } as const;
 
-const FRAMEWORKS: readonly FrameworkId[] = ['react', 'vue', 'angular', 'none'];
-const RUNNERS: readonly RunnerId[] = ['jest', 'vitest', 'vitest-browser', 'playwright'];
-const DESIGN_SYSTEMS: readonly DesignSystemId[] = [
-  'html',
-  'mui',
-  'mui-x',
-  'angular-material',
-  'primevue',
-  'radix',
-  'shadcn',
-  'astryx',
-];
-const PACKAGE_MANAGERS: readonly PackageManagerId[] = ['npm', 'pnpm', 'yarn', 'bun'];
+// Valid flag values derive from the registries — add a framework/runner/design
+// system there and its `--flag` validates automatically, no second list to edit.
+const FRAMEWORK_IDS = Object.keys(FRAMEWORKS) as FrameworkId[];
+const RUNNER_IDS = Object.keys(RUNNERS) as RunnerId[];
+const DESIGN_SYSTEM_IDS = Object.keys(DESIGN_SYSTEMS) as DesignSystemId[];
 
 class UsageError extends Error {}
 
@@ -98,11 +91,11 @@ function flagsFromArgs(values: Record<string, unknown>): SelectionFlags {
     throw new UsageError(`--framework-major must be an integer, got "${majorRaw}".`);
   }
   return {
-    framework: oneOf(values.framework as string | undefined, FRAMEWORKS, '--framework'),
+    framework: oneOf(values.framework as string | undefined, FRAMEWORK_IDS, '--framework'),
     frameworkMajor: major,
-    runner: oneOf(values.runner as string | undefined, RUNNERS, '--runner'),
-    designSystem: oneOf(values['design-system'] as string | undefined, DESIGN_SYSTEMS, '--design-system'),
-    packageManager: oneOf(values['package-manager'] as string | undefined, PACKAGE_MANAGERS, '--package-manager'),
+    runner: oneOf(values.runner as string | undefined, RUNNER_IDS, '--runner'),
+    designSystem: oneOf(values['design-system'] as string | undefined, DESIGN_SYSTEM_IDS, '--design-system'),
+    packageManager: oneOf(values['package-manager'] as string | undefined, PACKAGE_MANAGER_IDS, '--package-manager'),
     typescript: values.typescript === true ? true : values['no-typescript'] === true ? false : undefined,
   };
 }
@@ -167,7 +160,7 @@ async function main(argv: string[]): Promise<number> {
 
   const detection = detect(snapshot);
   for (const diag of detection.diagnostics) {
-    const paint = diag.level === 'error' ? pc.red : diag.level === 'warn' ? pc.yellow : pc.dim;
+    const paint = diag.level === 'error' ? pc.red : pc.yellow;
     console.warn(paint(`${diag.level === 'error' ? '✖' : '!'} ${diag.message}`));
   }
 

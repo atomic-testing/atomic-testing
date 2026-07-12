@@ -10,8 +10,8 @@ export interface GenerationContext {
   readonly framework: FrameworkPlugin;
   readonly runner: RunnerPlugin;
   readonly designSystem: DesignSystemPlugin;
-  /** Extensions chosen from TypeScript + framework, e.g. `{ component: 'tsx' }`. */
-  readonly ext: { readonly component: string; readonly test: string; readonly config: string };
+  /** File extension for the emitted test/component, from TypeScript + framework (e.g. `tsx`). */
+  readonly ext: { readonly test: string };
 }
 
 /**
@@ -44,6 +44,21 @@ export interface FrameworkPlugin {
   exampleEngine(
     ctx: GenerationContext
   ): { readonly imports: readonly string[]; readonly engineExpr: string; readonly isAsync: boolean } | null;
+
+  // ── Runner-config contributions ─────────────────────────────────────────
+  // A framework owns the facts a runner needs about it, so the runner plugins
+  // stay generic (no `ctx.framework.id === '...'` branching). All optional;
+  // absent means "nothing special for this runner".
+  /** SWC transform value for the jest config (defaults to `'@swc/jest'`). */
+  readonly jestTransform?: string;
+  /** jest `globals` this framework requires (e.g. React's act environment). */
+  readonly jestGlobals?: Readonly<Record<string, unknown>>;
+  /** jest `testEnvironmentOptions` this framework requires (e.g. Vue's export conditions). */
+  readonly jestEnvironmentOptions?: Readonly<Record<string, unknown>>;
+  /** Vitest (jsdom) Vite plugin contribution, if any. */
+  readonly vitePlugin?: { readonly importLine: string; readonly pluginExpr: string; readonly dep: DependencySpec };
+  /** Vitest browser-mode extras (a setup file + a config note), if any. */
+  readonly vitestBrowserSetup?: { readonly setupFile: FileOp; readonly note: string };
 }
 
 /**
@@ -77,6 +92,13 @@ export interface DesignSystemPlugin {
   readonly compatibleFrameworks: readonly FrameworkId[];
   /** Short `@atomic-testing/*` driver name, or null when the HTML driver suffices. */
   driverPackage(major: number | null): string | null;
+  /**
+   * The major to use when the project's design-system version can't be resolved.
+   * Angular Material tracks the framework major (lockstep); React design systems
+   * return their own latest. Keeps `resolveRecipe` from assuming the framework
+   * major stands in for every design system's own version line.
+   */
+  defaultMajor(frameworkMajor: number): number;
   deps(ctx: GenerationContext): readonly DependencySpec[];
   /** Shown in the generated example, pointing users at the DS-specific drivers. */
   readonly usageNote?: string;

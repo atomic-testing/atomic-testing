@@ -3,7 +3,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 
 import type { PackageJsonLike, RecipePlan } from '../types';
 
-export type FileOutcome = 'written' | 'skipped-identical' | 'wrote-example' | 'conflict-skipped';
+export type FileOutcome = 'written' | 'skipped-identical' | 'wrote-example';
 
 export interface ApplyFileResult {
   readonly path: string;
@@ -28,8 +28,8 @@ class PathEscapeError extends Error {
   }
 }
 
-/** Resolve `rel` under `root`, refusing any path that escapes the target root. */
-function resolveInside(root: string, rel: string): string {
+/** Resolve `rel` under `root` (with `realRoot` = `realpathSync(root)`), refusing escapes. */
+function resolveInside(root: string, realRoot: string, rel: string): string {
   const abs = resolve(root, rel);
   const rl = relative(root, abs);
   if (rl === '' || rl.startsWith('..') || resolve(root, rl) !== abs) {
@@ -43,7 +43,6 @@ function resolveInside(root: string, rel: string): string {
   }
   let ancestor = dirname(abs);
   while (!existsSync(ancestor) && dirname(ancestor) !== ancestor) ancestor = dirname(ancestor);
-  const realRoot = realpathSync(root);
   const realAncestor = realpathSync(ancestor);
   const rr = relative(realRoot, realAncestor);
   if (rr !== '' && (rr.startsWith('..') || resolve(realRoot, rr) !== realAncestor)) {
@@ -70,9 +69,10 @@ function write(dest: string, contents: string, dryRun: boolean): void {
 export function applyPlan(plan: RecipePlan, root: string, options: ApplyOptions = {}): ApplyResult {
   const dryRun = options.dryRun === true;
   const files: ApplyFileResult[] = [];
+  const realRoot = realpathSync(root); // constant for the run; resolved once
 
   for (const op of plan.files) {
-    const dest = resolveInside(root, op.path);
+    const dest = resolveInside(root, realRoot, op.path);
 
     if (!existsSync(dest)) {
       write(dest, op.contents, dryRun);
@@ -87,7 +87,7 @@ export function applyPlan(plan: RecipePlan, root: string, options: ApplyOptions 
 
     // File exists and differs — never clobber. Write a sibling example instead.
     const examplePath = `${op.path}.atomic-example`;
-    const exDest = resolveInside(root, examplePath);
+    const exDest = resolveInside(root, realRoot, examplePath);
     if (existsSync(exDest) && readFileSync(exDest, 'utf8') === op.contents) {
       files.push({ path: examplePath, outcome: 'skipped-identical' });
       continue;

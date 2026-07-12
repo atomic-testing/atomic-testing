@@ -5,14 +5,8 @@ import { toSelection } from '../plan/resolveSelection';
 import { offeredRunners } from '../registry/compatibility';
 import { designSystemsForFramework } from '../registry/designSystems';
 import { getFramework } from '../registry/frameworks';
+import { getRunner } from '../registry/runners';
 import type { DesignSystemId, FrameworkId, PackageManagerId, RecipeSelection, RunnerId } from '../types';
-
-const RUNNER_LABEL: Record<RunnerId, string> = {
-  jest: 'Jest (jsdom)',
-  vitest: 'Vitest (jsdom)',
-  'vitest-browser': 'Vitest (browser mode)',
-  playwright: 'Playwright (e2e)',
-};
 
 const CANCELLED = Symbol('cancelled');
 
@@ -32,11 +26,10 @@ export async function runInteractive(draft: SelectionDraft): Promise<RecipeSelec
     const chosen = unwrap(
       await select<UIFramework>({
         message: 'Which UI framework does this project use?',
-        options: [
-          { value: 'react', label: 'React' },
-          { value: 'vue', label: 'Vue 3' },
-          { value: 'angular', label: 'Angular' },
-        ],
+        options: (['react', 'vue', 'angular'] as UIFramework[]).map(id => ({
+          value: id,
+          label: getFramework(id).displayName,
+        })),
         initialValue: 'react',
       })
     );
@@ -51,7 +44,7 @@ export async function runInteractive(draft: SelectionDraft): Promise<RecipeSelec
       ? draft.frameworkMajor
       : undefined;
   if (frameworkMajor == null) {
-    const majors = getFramework(framework).supportedMajors.filter(m => (framework === 'react' ? m >= 17 : true));
+    const majors = getFramework(framework).supportedMajors;
     const chosen = unwrap(
       await select({
         message: `Which ${framework} major version?`,
@@ -79,7 +72,7 @@ export async function runInteractive(draft: SelectionDraft): Promise<RecipeSelec
       message: 'Which test runner?',
       options: runnerChoices.map(r => ({
         value: r.runner,
-        label: `${RUNNER_LABEL[r.runner]}${r.tier === 'experimental' ? '  (experimental)' : ''}`,
+        label: `${getRunner(r.runner).displayName}${r.tier === 'experimental' ? '  (experimental)' : ''}`,
       })),
       initialValue: (runnerChoices.some(r => r.runner === draft.runner)
         ? draft.runner

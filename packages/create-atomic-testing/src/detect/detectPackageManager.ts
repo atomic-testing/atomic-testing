@@ -1,3 +1,4 @@
+import { PACKAGE_MANAGER_IDS } from '../install/packageManager';
 import type { AmbiguityKind, PackageManagerId, ProjectSnapshot } from '../types';
 
 export interface PackageManagerDetection {
@@ -5,7 +6,7 @@ export interface PackageManagerDetection {
   readonly ambiguities: readonly AmbiguityKind[];
 }
 
-const LOCKFILE_TO_PM: ReadonlyArray<readonly [string, PackageManagerId]> = [
+export const LOCKFILE_TO_PM: ReadonlyArray<readonly [string, PackageManagerId]> = [
   ['pnpm-lock.yaml', 'pnpm'],
   ['yarn.lock', 'yarn'],
   ['bun.lock', 'bun'],
@@ -17,19 +18,14 @@ const LOCKFILE_TO_PM: ReadonlyArray<readonly [string, PackageManagerId]> = [
 /** Deterministic precedence used to break ties when several signals disagree. */
 const PRECEDENCE: readonly PackageManagerId[] = ['pnpm', 'yarn', 'bun', 'npm'];
 
-function fromUserAgent(userAgent: string | undefined): PackageManagerId | null {
-  if (!userAgent) return null;
-  const name = userAgent.split('/')[0]?.toLowerCase();
-  if (name === 'pnpm' || name === 'yarn' || name === 'bun' || name === 'npm') return name;
-  return null;
+/** Parse a package-manager id from a `<name><sep>…` string (user-agent `/`, field `@`). */
+function parsePmName(raw: string | undefined, sep: string): PackageManagerId | null {
+  const name = raw?.split(sep)[0]?.toLowerCase();
+  return name && (PACKAGE_MANAGER_IDS as readonly string[]).includes(name) ? (name as PackageManagerId) : null;
 }
 
-function fromPackageManagerField(field: string | undefined): PackageManagerId | null {
-  if (!field) return null;
-  const name = field.split('@')[0]?.toLowerCase();
-  if (name === 'pnpm' || name === 'yarn' || name === 'bun' || name === 'npm') return name;
-  return null;
-}
+const fromUserAgent = (userAgent: string | undefined): PackageManagerId | null => parsePmName(userAgent, '/');
+const fromPackageManagerField = (field: string | undefined): PackageManagerId | null => parsePmName(field, '@');
 
 /**
  * Resolve the package manager. Precedence: lockfile → `packageManager` field →

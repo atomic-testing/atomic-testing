@@ -7,6 +7,9 @@ const ADD_PREFIX: Record<PackageManagerId, { prod: string; dev: string }> = {
   bun: { prod: 'bun add', dev: 'bun add -d' },
 };
 
+/** Canonical package-manager id list — the single source used for validation. */
+export const PACKAGE_MANAGER_IDS = Object.keys(ADD_PREFIX) as PackageManagerId[];
+
 const EXEC_PREFIX: Record<PackageManagerId, string> = {
   npm: 'npx',
   pnpm: 'pnpm exec',
