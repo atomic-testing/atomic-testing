@@ -15,18 +15,18 @@ runner and a browser. Lift the `ScenePart` and test logic straight out of one.
 
 ## One reference fixture per stack
 
-| Design system | Framework | Runner(s) | Reference fixture |
-| ------------- | --------- | --------- | ----------------- |
-| HTML (framework-agnostic) | React 19 | Jest (DOM) + Playwright (E2E) | [`component-driver-html-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-html-test) |
-| Material UI | React 19 | Jest (DOM) + Playwright (E2E) | [`component-driver-mui-v9-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-mui-v9-test) |
-| MUI X | React 19 | Jest (DOM) + Playwright (E2E) | [`component-driver-mui-x-v9-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-mui-x-v9-test) |
-| Radix / shadcn | React 19 | Jest (DOM) + Playwright (E2E) | [`component-driver-radix-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-radix-test) |
-| Astryx | React 19 | Jest (DOM) + Playwright (E2E) | [`component-driver-astryx-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-astryx-test) |
-| HTML | Vue 3 | Jest (DOM) | [`vue-3-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/vue-3-test) |
-| PrimeVue | Vue 3 | Jest (DOM) + Playwright (E2E) | [`component-driver-primevue-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-primevue-test) |
-| Angular Material | Angular 22 | Vitest (browser) + Playwright (E2E) | [`component-driver-angular-material-v22-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-angular-material-v22-test) |
-| HTML | Angular 22 | Vitest (browser) | [`angular-22-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/angular-22-test) |
-| Any (in stories) | Storybook 10 | Vitest (browser) | [`storybook-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/storybook-test) |
+| Design system             | Framework    | Runner(s)                           | Reference fixture                                                                                                                                                   |
+| ------------------------- | ------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HTML (framework-agnostic) | React 19     | Jest (DOM) + Playwright (E2E)       | [`component-driver-html-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-html-test)                                 |
+| Material UI               | React 19     | Jest (DOM) + Playwright (E2E)       | [`component-driver-mui-v9-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-mui-v9-test)                             |
+| MUI X                     | React 19     | Jest (DOM) + Playwright (E2E)       | [`component-driver-mui-x-v9-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-mui-x-v9-test)                         |
+| Radix / shadcn            | React 19     | Jest (DOM) + Playwright (E2E)       | [`component-driver-radix-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-radix-test)                               |
+| Astryx                    | React 19     | Jest (DOM) + Playwright (E2E)       | [`component-driver-astryx-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-astryx-test)                             |
+| HTML                      | Vue 3        | Jest (DOM)                          | [`vue-3-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/vue-3-test)                                                                 |
+| PrimeVue                  | Vue 3        | Jest (DOM) + Playwright (E2E)       | [`component-driver-primevue-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-primevue-test)                         |
+| Angular Material          | Angular 22   | Vitest (browser) + Playwright (E2E) | [`component-driver-angular-material-v22-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-angular-material-v22-test) |
+| HTML                      | Angular 22   | Vitest (browser)                    | [`angular-22-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/angular-22-test)                                                       |
+| Any (in stories)          | Storybook 10 | Vitest (browser)                    | [`storybook-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/storybook-test)                                                         |
 
 Each design system usually ships a fixture per supported major (for example
 `component-driver-mui-v6`/`v7`/`v9` and `angular-material`/`angular` `v20`/`v21`/`v22`);

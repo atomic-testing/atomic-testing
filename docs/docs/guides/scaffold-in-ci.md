@@ -45,21 +45,21 @@ of what the target project happens to look like.
 
 ## Flag reference
 
-| Flag | Values | Effect |
-| ---- | ------ | ------ |
-| `--framework` | `react` \| `vue` \| `angular` | Override framework detection |
-| `--framework-major` | integer | Override the detected major version |
-| `--runner` | `jest` \| `vitest` \| `vitest-browser` \| `playwright` | Choose the test runner |
-| `--design-system` | `html` \| `mui` \| `mui-x` \| `angular-material` \| `primevue` \| `radix` \| `shadcn` \| `astryx` | Choose the driver package |
-| `--package-manager` | `npm` \| `pnpm` \| `yarn` \| `bun` | Override lockfile-based detection |
-| `--typescript` / `--no-typescript` | — | Force TypeScript on/off (default: detect) |
-| `--dir <path>` | path | Target project directory (default: cwd) |
-| `-y`, `--yes` | — | Accept detected values without prompting |
-| `--ci` | — | Non-interactive (implied when not a TTY) |
-| `--dry-run` | — | Print the plan; write nothing |
-| `--install` / `--no-install` | — | Force install / skip install (default: ask) |
-| `-h`, `--help` | — | Print usage |
-| `-v`, `--version` | — | Print version |
+| Flag                               | Values                                                                                            | Effect                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `--framework`                      | `react` \| `vue` \| `angular`                                                                     | Override framework detection                |
+| `--framework-major`                | integer                                                                                           | Override the detected major version         |
+| `--runner`                         | `jest` \| `vitest` \| `vitest-browser` \| `playwright`                                            | Choose the test runner                      |
+| `--design-system`                  | `html` \| `mui` \| `mui-x` \| `angular-material` \| `primevue` \| `radix` \| `shadcn` \| `astryx` | Choose the driver package                   |
+| `--package-manager`                | `npm` \| `pnpm` \| `yarn` \| `bun`                                                                | Override lockfile-based detection           |
+| `--typescript` / `--no-typescript` | —                                                                                                 | Force TypeScript on/off (default: detect)   |
+| `--dir <path>`                     | path                                                                                              | Target project directory (default: cwd)     |
+| `-y`, `--yes`                      | —                                                                                                 | Accept detected values without prompting    |
+| `--ci`                             | —                                                                                                 | Non-interactive (implied when not a TTY)    |
+| `--dry-run`                        | —                                                                                                 | Print the plan; write nothing               |
+| `--install` / `--no-install`       | —                                                                                                 | Force install / skip install (default: ask) |
+| `-h`, `--help`                     | —                                                                                                 | Print usage                                 |
+| `-v`, `--version`                  | —                                                                                                 | Print version                               |
 
 Which framework × runner combinations are actually offered — and which are
 `verified` versus `experimental` — is spelled out in
@@ -71,14 +71,14 @@ refused with a message and exit code `4`, never scaffolded into a broken project
 
 Every run ends on one of these codes — script your pipeline against them:
 
-| Code | Meaning |
-| ---- | ------- |
-| `0` | Success (including a completed `--dry-run`) |
-| `1` | Cancelled, or the install command failed |
-| `2` | Usage error (bad flag value, missing `package.json`) |
-| `3` | Needs a flag — a required field was ambiguous while non-interactive |
-| `4` | Unsupported combination (impossible, unregistered, or disabled) |
-| `5` | Write failed |
+| Code | Meaning                                                             |
+| ---- | ------------------------------------------------------------------- |
+| `0`  | Success (including a completed `--dry-run`)                         |
+| `1`  | Cancelled, or the install command failed                            |
+| `2`  | Usage error (bad flag value, missing `package.json`)                |
+| `3`  | Needs a flag — a required field was ambiguous while non-interactive |
+| `4`  | Unsupported combination (impossible, unregistered, or disabled)     |
+| `5`  | Write failed                                                        |
 
 Code `3` is the one you will hit first in CI: it means detection came up short
 and there is no TTY to ask. The message names the exact flags to add.

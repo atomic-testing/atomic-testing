@@ -1,7 +1,6 @@
+import matrixData from '@site/src/generated/supportMatrix.json';
 import clsx from 'clsx';
 import React, { type JSX } from 'react';
-
-import matrixData from '@site/src/generated/supportMatrix.json';
 
 import styles from './index.module.css';
 
@@ -108,9 +107,7 @@ export default function SupportMatrix(): JSX.Element {
               <tr key={framework.id}>
                 <th scope='row' className={styles.rowHead}>
                   <span className={styles.frameworkName}>{framework.displayName}</span>
-                  {framework.majors.length > 0 && (
-                    <span className={styles.majors}>v{framework.majors.join(', ')}</span>
-                  )}
+                  {framework.majors.length > 0 && <span className={styles.majors}>v{framework.majors.join(', ')}</span>}
                 </th>
                 {matrix.runners.map(runner => (
                   <td key={runner.id}>
@@ -154,7 +151,8 @@ export default function SupportMatrix(): JSX.Element {
             {matrix.designSystems.map(group => (
               <tr key={group.framework}>
                 <th scope='row' className={styles.rowHead}>
-                  {matrix.frameworks.find(framework => framework.id === group.framework)?.displayName ?? group.framework}
+                  {matrix.frameworks.find(framework => framework.id === group.framework)?.displayName ??
+                    group.framework}
                 </th>
                 <td>
                   <span className={styles.systems}>

@@ -33,6 +33,8 @@ pnpm add -D jest jest-environment-jsdom @swc/jest @swc/core @types/jest
 The `.cjs` extension keeps this `module.exports` config as CommonJS even when your `package.json` has `"type": "module"`, sidestepping the rename trap. (This is why the scaffolder emits `jest.config.cjs`.)
 :::
 
+Testing Vue? The `IS_REACT_ACT_ENVIRONMENT` global and the JSX transform above are React-specific — use the [Vue Jest config](#vue-jest-with-export-conditions) below instead.
+
 ```json title="package.json"
 {
   "scripts": {
@@ -69,9 +71,27 @@ export default defineConfig({
 </TabItem>
 </Tabs>
 
-:::tip Testing Vue instead?
-Skip the `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` and doesn't need it. The `jsdom` environment is still required. See the Vue notes on the [Quick Start](./quick-start.mdx) page.
-:::
+### Vue: Jest with export conditions
+
+Vue 3 + Jest is a **verified** stack. Install the Jest runner as in the Jest tab above, then use this config — it drops the React `IS_REACT_ACT_ENVIRONMENT` global (`VueInteractor` calls Vue's own `nextTick()`) and adds `testEnvironmentOptions.customExportConditions`, without which jsdom resolves the wrong Vue build and `@testing-library/vue` throws at load:
+
+```js title="jest.config.cjs"
+/** @type {import('jest').Config} */
+module.exports = {
+  testEnvironment: 'jsdom',
+  // Resolve Vue's Node export condition, or @testing-library/vue loads a build
+  // that throws under jsdom.
+  testEnvironmentOptions: {
+    customExportConditions: ['node', 'node-addons'],
+  },
+  transform: {
+    '^.+\\.(t|j)sx?$': '@swc/jest',
+  },
+  testMatch: ['**/*.test.@(ts|tsx|js|jsx)'],
+};
+```
+
+This is exactly what `create atomic-testing` emits for Vue&nbsp;+&nbsp;Jest. For the package list, see the Vue tab in [Manual Installation](./manual-installation.mdx).
 
 ### Angular: Vitest browser mode
 
