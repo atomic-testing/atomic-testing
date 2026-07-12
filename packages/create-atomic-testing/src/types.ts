@@ -27,7 +27,7 @@ export type SupportTier = 'verified' | 'experimental';
 export interface DependencySpec {
   readonly name: string;
   readonly range: string;
-  /** Installed under devDependencies. Defaults to true for the testing stack. */
+  /** `true` installs under devDependencies; omitted means a regular (prod) dependency. */
   readonly dev?: boolean;
   /** Optional peer — installed only when already present or explicitly asked. */
   readonly optional?: boolean;
