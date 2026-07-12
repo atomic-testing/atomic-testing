@@ -3,6 +3,8 @@
 Component drivers for standard HTML elements.
 Use these drivers to interact with the DOM when writing Atomic Testing scenes.
 
+> **Fastest start:** `npm create atomic-testing@latest` scaffolds a working test setup, HTML drivers included.
+
 ## Installation
 
 ```bash

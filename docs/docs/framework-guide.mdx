@@ -11,6 +11,10 @@ import Tabs from '@theme/Tabs';
 
 # Which Packages Do I Need?
 
+:::tip Let the scaffolder pick for you
+The fastest way to get exactly the right packages is [`create atomic-testing`](./quick-start.mdx) — it detects your framework, runner, and design system and installs the matching packages for you. This page is for hand-picking packages yourself or understanding what the scaffolder would choose; the [Framework and Runner Support](./support-matrix.mdx) matrix lists which combinations are verified vs. experimental.
+:::
+
 ## 🤔 Choose Your Testing Strategy
 
 ### **DOM Testing (Fast, Unit-focused)**
@@ -197,7 +201,13 @@ names, same methods — since they all document the same component-driver API
 surface. In practice: install and read the section matching the major version
 you have installed, and skip the rest.
 
+Each entry below notes its framework binding and its [support tier](./support-matrix.mdx) —
+**verified** (a green fixture proves it in this repo) or **experimental** (composed
+best-effort, no proving fixture yet).
+
 ### **Material-UI Drivers**
+
+_React · verified._ Match the package major to the MUI Core major you have installed.
 
 <Tabs>
 <TabItem value="mui-v9" label="MUI v9 (Latest)">
@@ -231,7 +241,126 @@ pnpm add @atomic-testing/component-driver-mui-v6
 </TabItem>
 </Tabs>
 
+### **MUI X Drivers**
+
+_React · verified._ Drivers for the MUI X data components (Data Grid and friends),
+shipped separately from MUI Core because their DOM is its own surface. Match the
+package major to your `@mui/x-*` major.
+
+<Tabs>
+<TabItem value="mui-x-v9" label="MUI X v9 (Latest)">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-x-v9
+```
+
+</TabItem>
+
+<TabItem value="mui-x-v8" label="MUI X v8">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-x-v8
+```
+
+</TabItem>
+
+<TabItem value="mui-x-v7" label="MUI X v7">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-x-v7
+```
+
+</TabItem>
+
+<TabItem value="mui-x-v6" label="MUI X v6">
+
+```bash
+pnpm add @atomic-testing/component-driver-mui-x-v6
+```
+
+</TabItem>
+</Tabs>
+
+**Supports**: MUI X Data Grid components (unlike MUI Core, MUI X ships a v8 driver)
+
+### **Radix UI Drivers**
+
+_React · verified._
+
+```bash
+pnpm add @atomic-testing/component-driver-radix-v1
+```
+
+**Supports**: Radix UI primitives (`radix-ui` v1) — the headless, unstyled React
+components many design systems build on top of
+
+### **shadcn/ui Drivers**
+
+_React · verified._
+
+```bash
+pnpm add @atomic-testing/component-driver-shadcn-v1
+```
+
+**Supports**: shadcn/ui components — a re-export of the Radix UI v1 drivers, since
+shadcn/ui is built on Radix primitives
+
+### **Astryx Drivers**
+
+_React · verified._
+
+```bash
+pnpm add @atomic-testing/component-driver-astryx
+```
+
+**Supports**: the Astryx design system (`@astryxdesign/core`)
+
+### **PrimeVue Drivers**
+
+_Vue 3 · verified._
+
+```bash
+pnpm add @atomic-testing/component-driver-primevue-v4
+```
+
+**Supports**: PrimeVue 4 components (Button, Select, DataTable, Dialog, and more)
+
+### **Angular Material Drivers**
+
+_Angular · experimental._ Match the package major to your Angular Material major;
+these run under Vitest browser mode (see the [support matrix](./support-matrix.mdx)).
+
+<Tabs>
+<TabItem value="ng-mat-v22" label="Angular Material v22">
+
+```bash
+pnpm add @atomic-testing/component-driver-angular-material-v22
+```
+
+</TabItem>
+
+<TabItem value="ng-mat-v21" label="Angular Material v21">
+
+```bash
+pnpm add @atomic-testing/component-driver-angular-material-v21
+```
+
+</TabItem>
+
+<TabItem value="ng-mat-v20" label="Angular Material v20">
+
+```bash
+pnpm add @atomic-testing/component-driver-angular-material-v20
+```
+
+</TabItem>
+</Tabs>
+
+**Supports**: Angular Material components (Autocomplete, Select, Dialog, Menu, and more)
+
 ### **HTML Drivers**
+
+_React & Vue 3 · verified; Angular · experimental._
 
 ```bash
 pnpm add @atomic-testing/component-driver-html

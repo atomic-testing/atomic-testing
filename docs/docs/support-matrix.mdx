@@ -1,0 +1,55 @@
+---
+id: support-matrix
+title: Framework and Runner Support
+sidebar_label: Framework and Runner Support
+sidebar_position: 4
+---
+
+import SupportMatrix from '@site/src/components/SupportMatrix';
+
+# Framework and Runner Support
+
+Atomic Testing runs across React, Vue and Angular, under several test runners, with a
+range of design systems. This page is the single place to check whether your stack is
+supported — and how strongly.
+
+<SupportMatrix />
+
+:::info Generated, not hand-maintained
+The tables above are generated from the same compatibility data that powers
+[`create atomic-testing`](./quick-start.mdx). They can't drift from what the scaffolder
+actually offers: if a combination isn't here, the CLI won't emit it either.
+:::
+
+## Verified vs experimental
+
+Every offered combination carries a support tier:
+
+- **Verified** — backed by a green fixture in this monorepo that proves the recipe works
+  end-to-end. Today that's **React + Jest** and **Vue 3 + Jest**, together with their
+  design-system drivers.
+- **Experimental** — composed best-effort, with no proving fixture yet. Everything on
+  **Vitest**, **Angular**, or **Playwright** falls here. The scaffolder **prints a
+  warning before writing** an experimental recipe so you know you're on a
+  less-travelled path.
+
+The generated example always drives a real state change through the framework-agnostic
+[HTML driver](./manual-installation.mdx), so the example test is green regardless of tier
+— experimental means the surrounding config is unproven, not that the test won't pass.
+
+## Refused combinations
+
+Some cells are **disabled** or simply **not offered**, and the CLI refuses them with a
+clear message rather than emitting config that can't work:
+
+- **Angular + Jest** and **Angular + jsdom Vitest** are registered but disabled — Angular
+  runs under **Vitest browser mode** in Atomic Testing. Hover the disabled badge for the
+  exact reason.
+- **Vanilla / no framework** is refused outright: no per-framework `TestEngine` ships for
+  plain DOM yet, so pick React, Vue or Angular.
+
+## Next step
+
+Ready to scaffold? Head to the [Quick Start](./quick-start.mdx) — `create atomic-testing`
+detects your framework, runner and design system, then writes a runner config and a
+runnable example test for you.

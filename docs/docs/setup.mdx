@@ -10,6 +10,10 @@ import jestConfigSnippet from '!!raw-loader!./snippets/jest.config.snippet';
 
 # Setup
 
+:::tip Prefer to scaffold?
+[`create atomic-testing`](./quick-start.mdx) detects your runner and writes this config — plus a runnable example test — for you. Reach for this page when you're hand-configuring a runner or want to understand what the scaffolder emits.
+:::
+
 ## Configure your test runner
 
 Atomic Testing renders your component through your framework's real reconciler (React's `act()`, Vue's `nextTick()`), so before writing any test you need a runner that gives you a DOM to render into and compiles TSX. The configs below are the same ones used by this repo's own test suites (see [`package-tests/component-driver-html-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-html-test)).
@@ -18,17 +22,15 @@ Atomic Testing renders your component through your framework's real reconciler (
 <TabItem value="jest" label="Jest">
 
 ```bash
-pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
+pnpm add -D jest jest-environment-jsdom @swc/jest @swc/core @types/jest
 ```
 
-<CodeBlock language='js' title='jest.config.js'>
+<CodeBlock language='js' title='jest.config.cjs'>
   {jestConfigSnippet}
 </CodeBlock>
 
-:::info CommonJS vs. ESM
-`jest.config.js` uses `module.exports`, Jest's CommonJS config format. If your `package.json` has
-`"type": "module"`, either rename the file to `jest.config.cjs`, or switch to `export default { ... }`
-in a `jest.config.mjs` (Jest resolves either alongside an ESM `package.json`).
+:::info CommonJS config
+The `.cjs` extension keeps this `module.exports` config as CommonJS even when your `package.json` has `"type": "module"`, sidestepping the rename trap. (This is why the scaffolder emits `jest.config.cjs`.)
 :::
 
 ```json title="package.json"
@@ -69,6 +71,41 @@ export default defineConfig({
 
 :::tip Testing Vue instead?
 Skip the `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` and doesn't need it. The `jsdom` environment is still required. See the Vue notes on the [Quick Start](./quick-start.mdx) page.
+:::
+
+### Angular: Vitest browser mode
+
+Angular has no jsdom/Jest path — its `createTestEngine` bootstraps a standalone component, which needs a real browser. The supported runner is **Vitest browser mode** driving Chromium through Playwright. This path is **experimental**: the scaffolder composes it best-effort and prints a warning before writing.
+
+```bash
+pnpm add -D vitest @vitest/browser-playwright playwright
+```
+
+```ts title="vitest.config.ts"
+import { playwright } from '@vitest/browser-playwright';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    globals: true,
+    setupFiles: ['./vitest.setup.ts'],
+    browser: {
+      enabled: true,
+      provider: playwright(),
+      instances: [{ browser: 'chromium' }],
+    },
+  },
+});
+```
+
+```ts title="vitest.setup.ts"
+// Angular needs the JIT compiler and zone.js bootstrapped before any component renders.
+import '@angular/compiler';
+import 'zone.js';
+```
+
+:::warning Vite Angular plugin required
+Browser-mode Vitest still needs a Vite Angular plugin (e.g. `@analogjs/vite-plugin-angular`) added to `plugins` to compile your components — the config above is a starting point.
 :::
 
 ## Write your first test

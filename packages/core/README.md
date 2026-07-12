@@ -7,6 +7,10 @@ Core utilities that power the entire Atomic Testing ecosystem. The package
 defines the primitives used to model scenes, locate elements and interact with
 components across different test environments.
 
+> **Fastest start:** run `npm create atomic-testing@latest` to scaffold a working
+> test setup — runner config, an example component, its `ScenePart` and a passing
+> test — into an existing project.
+
 Atomic Testing is designed to offer a consistent way to interact with
 third-party or first-party components across DOM and end-to-end tests. The core
 focuses on **reusability**, **composability**, and **adaptability** so the same

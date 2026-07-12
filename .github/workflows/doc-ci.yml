@@ -32,6 +32,14 @@ jobs:
       - name: Build packages
         run: ./publish.sh --build-only
 
+      # Runs after the build so create-atomic-testing's dist exists: the check
+      # regenerates the Framework × Runner matrix from the CLI compatibility
+      # registry and fails if the committed docs/src/generated/supportMatrix.json
+      # is stale — keeping the published matrix in lockstep with what the
+      # scaffolder actually offers.
+      - name: Check support matrix is in sync with the CLI compatibility registry
+        run: node docs/scripts/check-support-matrix-sync.mjs
+
       - name: Install documentation dependencies
         run: pnpm install .
         working-directory: ./docs

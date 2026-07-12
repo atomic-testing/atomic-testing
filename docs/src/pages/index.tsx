@@ -89,13 +89,18 @@ const frameworks: Framework[] = [
   { id: 'playwright', label: '🎭 Playwright', accent: '#6366f1', code: playCode },
 ];
 
-// Keyed to the active framework tab so the hero install command always matches
-// the code sample the reader is currently looking at.
-const FRAMEWORK_INSTALLS: Record<FrameworkId, string> = {
-  react: 'pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html',
-  vue: 'pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html',
-  playwright: 'pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html',
+type PackageManagerId = 'npm' | 'pnpm' | 'yarn';
+
+// The scaffolder detects framework, runner, package manager, and design system on
+// its own, so the hero one-liner varies only by which package manager runs it —
+// each row is the same `create atomic-testing` invocation in that manager's syntax.
+const SCAFFOLD_COMMANDS: Record<PackageManagerId, string> = {
+  npm: 'npm create atomic-testing@latest',
+  pnpm: 'pnpm create atomic-testing',
+  yarn: 'yarn create atomic-testing',
 };
+
+const packageManagers: PackageManagerId[] = ['npm', 'pnpm', 'yarn'];
 
 type AnimationId = 'orbit' | 'compose';
 
@@ -123,20 +128,39 @@ function useCopy(): { copied: boolean; copy: (text: string) => void } {
   return { copied, copy };
 }
 
-function InstallBox({ framework }: { framework: FrameworkId }): JSX.Element {
+// The hero's primary action: the one-liner that scaffolds Atomic Testing into an
+// existing project. The tabs switch package-manager syntax only — the CLI detects
+// framework, runner, and design system itself, so nothing here varies by framework.
+function ScaffoldBox(): JSX.Element {
   const { copied, copy } = useCopy();
-  const installCommand = FRAMEWORK_INSTALLS[framework];
+  const [manager, setManager] = useState<PackageManagerId>('npm');
+  const command = SCAFFOLD_COMMANDS[manager];
   return (
-    <div className={styles.installBox}>
-      <span className={styles.installPrompt}>$</span>
-      <code className={styles.installCmd}>{installCommand}</code>
-      <button
-        type='button'
-        className={styles.installCopy}
-        onClick={() => copy(installCommand)}
-        aria-label='Copy install command'>
-        {copied ? <span className={styles.copied}>✓ copied</span> : <span>copy</span>}
-      </button>
+    <div style={{ maxWidth: 540 }}>
+      <div role='tablist' aria-label='Package manager' style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
+        {packageManagers.map(id => (
+          <button
+            type='button'
+            role='tab'
+            key={id}
+            aria-selected={manager === id}
+            className={clsx(styles.animTab, manager === id && styles.animTabActive)}
+            onClick={() => setManager(id)}>
+            {id}
+          </button>
+        ))}
+      </div>
+      <div className={styles.installBox} style={{ marginTop: 0 }}>
+        <span className={styles.installPrompt}>$</span>
+        <code className={styles.installCmd}>{command}</code>
+        <button
+          type='button'
+          className={styles.installCopy}
+          onClick={() => copy(command)}
+          aria-label='Copy scaffold command'>
+          {copied ? <span className={styles.copied}>✓ copied</span> : <span>copy</span>}
+        </button>
+      </div>
     </div>
   );
 }
@@ -238,7 +262,7 @@ function AnimationToggle({
   );
 }
 
-function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX.Element {
+function HeroSection(): JSX.Element {
   const [animation, setAnimation] = useState<AnimationId>('orbit');
   return (
     <section className={styles.hero}>
@@ -273,10 +297,12 @@ function HeroSection({ activeFramework }: { activeFramework: FrameworkId }): JSX
             </a>
           </div>
 
-          <InstallBox framework={activeFramework} />
+          <div style={{ marginTop: 26 }}>
+            <ScaffoldBox />
+          </div>
 
-          <Link className={styles.heroWhyLink} to='/docs/quick-start'>
-            Full setup, incl. peer deps →
+          <Link className={styles.heroWhyLink} to='/docs/manual-installation'>
+            Prefer to wire it up by hand? Manual install →
           </Link>
           <Link className={styles.heroWhyLink} to='/docs/why-atomic-testing'>
             Why Atomic Testing — and when NOT to use it →
@@ -457,6 +483,9 @@ function TradeoffsSection(): JSX.Element {
             How it compares to React Testing Library →
           </Link>
         </div>
+        <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center' }}>
+          <ScaffoldBox />
+        </div>
       </div>
     </section>
   );
@@ -486,15 +515,15 @@ function FinalCtaSection(): JSX.Element {
 
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
-  // Shared with MagicSection so the hero install command always matches whichever
-  // framework tab the reader has selected.
+  // Drives the "One test. Every framework." tabs in MagicSection; the hero
+  // scaffold one-liner is framework-agnostic (the CLI detects the framework).
   const [activeFramework, setActiveFramework] = useState<FrameworkId>('react');
   return (
     <Layout
       title={`${siteConfig.title} — Write your UI tests once`}
       description='Portable UI testing library. Compose reusable component drivers into test scenes that run across React, Vue, Playwright and more.'>
       <main>
-        <HeroSection activeFramework={activeFramework} />
+        <HeroSection />
         <MagicSection active={activeFramework} onSelect={setActiveFramework} />
         <ComposableSection />
         <HomepageFeatures />

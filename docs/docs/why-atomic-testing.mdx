@@ -273,6 +273,38 @@ fireEvent.click(submitButton);
 - **Team unwilling to learn** - The initial learning curve requires buy-in
 - **No component library** - If you're not using MUI, Radix, shadcn/ui, etc, benefit is reduced
 
+### **✅ None of those? You're a fit — scaffold it in one command**
+
+If the trade-offs above land on the "worth it" side for you, you don't have to wire anything up by hand. Run the
+scaffolder from inside your existing project and it detects your framework, runner, and design system, then writes a
+runnable example test for you:
+
+<Tabs groupId="pkg-manager">
+<TabItem value="npm" label="npm">
+
+```bash
+npm create atomic-testing@latest
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm create atomic-testing
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn create atomic-testing
+```
+
+</TabItem>
+</Tabs>
+
+See the [Quick Start](./quick-start.mdx) for exactly what it detects and writes.
+
 ## **Getting Started Despite the Learning Curve**
 
 ### **Start Small**

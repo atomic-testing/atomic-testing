@@ -1,0 +1,67 @@
+---
+id: manual-installation
+title: Manual Installation
+sidebar_label: Manual Installation
+sidebar_position: 2
+---
+
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+
+# Manual Installation
+
+:::tip Let the CLI do it
+[`create atomic-testing`](./quick-start.mdx) installs every package below, writes a matching runner config, and drops a green example test — all in one command. Reach for this page when you'd rather wire it up by hand, or want to understand exactly what the scaffolder adds.
+:::
+
+Pick the tab for your setup. Each installs `@atomic-testing/core`, the framework-agnostic HTML drivers, and the `createTestEngine` package for your environment, followed by that environment's peer dependencies. Once the packages are in place, head to [Configure your test runner](./setup.mdx#configure-your-test-runner) for the runner config, then the [Step-by-Step Tutorial](./getting-started-tutorial.mdx) to write your first test.
+
+The examples use `pnpm`; substitute `npm install --save-dev` or `yarn add --dev`. Anything on Vitest, Angular, or Playwright is [**experimental**](./support-matrix.mdx) — the verified stacks are React + Jest and Vue 3 + Jest.
+
+<Tabs>
+<TabItem value="react" label="⚛️ React">
+
+```bash
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
+
+# react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
+```
+
+On React 18 or React 17, swap in `@atomic-testing/react-18` or `@atomic-testing/react-legacy` — see the [Package Guide](./framework-guide.mdx) for the full matrix. Testing Material UI or another component library instead of plain HTML elements? See [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui).
+
+React tests need a jsdom-based runner (Jest or Vitest) with `IS_REACT_ACT_ENVIRONMENT` set — see [Configure your test runner](./setup.mdx#configure-your-test-runner).
+
+</TabItem>
+<TabItem value="vue" label="💚 Vue 3">
+
+```bash
+pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html
+
+# vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
+
+# the test runner — Jest is the verified default the CLI picks for Vue;
+# Vitest (shown here) is the experimental alternative
+pnpm add -D vitest jsdom
+```
+
+Vue tests run under a jsdom-based runner with no `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` internally. The **verified** Vue path is Jest (the runner `create atomic-testing` selects); the Vitest setup shown here is the experimental alternative. See [Configure your test runner](./setup.mdx#configure-your-test-runner).
+
+</TabItem>
+<TabItem value="playwright" label="🎭 Playwright">
+
+```bash
+pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html
+
+# playwright's peer dependency — npm/yarn don't install peers automatically like pnpm can
+pnpm add -D @playwright/test
+
+# Playwright drives real browsers — install the binaries once per machine/CI image
+npx playwright install --with-deps
+```
+
+Unlike the jsdom-based runners, Playwright drives a **real browser against a page your app serves** — point it at that server with `webServer`/`baseURL` in `playwright.config.ts`. See the Playwright notes on [Quick Start](./quick-start.mdx) for the config.
+
+</TabItem>
+</Tabs>

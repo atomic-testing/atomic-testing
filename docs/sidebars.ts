@@ -26,11 +26,13 @@ const sidebars = {
       label: '🚀 Getting Started',
       collapsed: false,
       items: [
-        'quick-start', // NEW: Choose your framework + 5-minute example
-        'setup', // EXISTING: Runner config + step-by-step setup (must precede tutorial)
-        'framework-guide', // NEW: React vs Vue vs Playwright decision guide
-        'tutorial', // EXISTING: Detailed tutorial
-        'why-atomic-testing', // NEW: Long-term value demonstration — after the hands-on path, not interrupting it
+        'why-atomic-testing', // Leads the journey: the "why" frames every choice the scaffolder and setup pages make
+        'quick-start', // `create atomic-testing` one-liner + 5-minute example
+        'manual-installation', // Escape hatch from the scaffolder: wire the packages up by hand
+        'support-matrix', // Which framework × runner × design-system combos are verified vs. experimental
+        'setup', // Runner config + step-by-step setup (must precede tutorial)
+        'tutorial', // Detailed tutorial
+        'framework-guide', // React vs Vue vs Playwright decision guide
       ],
     },
 

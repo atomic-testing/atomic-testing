@@ -72,32 +72,31 @@ notes:
 > (rewritten for the v9 `PickersSectionList` field DOM); writing a value and the
 > other picker variants are tracked as follow-ups.
 
-## Getting Started
+## Add Atomic Testing to your project
 
-1. Install Node.js (v22.12 or newer) and [pnpm](https://pnpm.io/) (v10 or newer).
-2. Install the dependencies:
+The fastest way in is the scaffolder. Run it inside your existing project — it
+detects your framework, runner, package manager, and design system, then writes a
+runner config, an example component with its ScenePart, and a passing test:
 
-   ```bash
-   pnpm install
-   ```
+```bash
+npm create atomic-testing@latest
+# or
+pnpm create atomic-testing
+# or
+yarn create atomic-testing
+```
 
-3. Add the packages you need to your project. A minimal setup might include the
-   core and React packages:
+Full guides, the support matrix, and examples are in the
+[documentation](https://atomic-testing.dev/).
 
-   ```bash
-   pnpm add @atomic-testing/core @atomic-testing/react-18
-   ```
+Prefer to install manually? Add the packages you need — a minimal React setup:
 
-   Additional component drivers can be installed in the same way, for example:
+```bash
+pnpm add @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html
+```
 
-   ```bash
-   pnpm add @atomic-testing/component-driver-html
-   ```
-
-4. Define your scene parts, create a test engine using the adapter for your
-   framework, and write tests that interact with the scene.
-
-For detailed guides and examples, see the [online documentation](https://atomic-testing.dev/).
+Then define your scene parts and create a test engine for your framework; the
+manual installation guide in the docs has the full walkthrough.
 
 ## Architecture & design decisions
 
@@ -110,7 +109,18 @@ for the full list.
 See [`ROADMAP.md`](https://github.com/atomic-testing/atomic-testing/blob/main/ROADMAP.md)
 for a summary of what's currently being worked on.
 
-## Contributing
+## Contributing and local development
+
+These steps are for working **on** Atomic Testing (this monorepo), not for using
+it in your own project — for that, see
+[Add Atomic Testing to your project](#add-atomic-testing-to-your-project) above.
+
+1. Install Node.js (v22.12 or newer) and [pnpm](https://pnpm.io/) (v10 or newer).
+2. Install the dependencies:
+
+   ```bash
+   pnpm install
+   ```
 
 Pull requests are welcome. Before submitting, run:
 

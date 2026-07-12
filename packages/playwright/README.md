@@ -5,6 +5,8 @@
 
 This package connects Atomic Testing with [Playwright](https://playwright.dev) so you can write cross-framework UI tests.
 
+> **Fastest start:** `npm create atomic-testing@latest` scaffolds a working test setup for you.
+
 ## Installation
 
 ```bash

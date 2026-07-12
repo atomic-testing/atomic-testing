@@ -11,27 +11,76 @@ import Tabs from '@theme/Tabs';
 
 # Quick Start
 
-**Choose your framework and get testing in 5 minutes:**
+**Scaffold Atomic Testing into your project with one command:**
+
+<Tabs groupId="pkg-manager">
+<TabItem value="npm" label="npm">
+
+```bash
+npm create atomic-testing@latest
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm create atomic-testing
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn create atomic-testing
+```
+
+</TabItem>
+</Tabs>
+
+Run it from inside an existing project — it scaffolds Atomic Testing into your app, it doesn't create the app. `create atomic-testing`:
+
+1. **Detects** your framework and major version, test runner, package manager, TypeScript, and design system from `package.json`, lockfiles, and config files.
+2. **Prompts** for anything it couldn't detect confidently — interactively in a terminal, or automatically (non-interactive) in CI.
+3. **Resolves a recipe** for your framework × runner × design system, and refuses impossible or unsupported combinations with a clear message.
+4. **Writes** a standalone runner config plus an example component, `ScenePart`, and a passing test under `atomic-testing-example/`, and adds a `test` script to `package.json`.
+5. **Installs** the dependencies after asking — or, with `--no-install`, prints the exact per-package-manager commands so you can run them yourself.
+
+When it finishes you have a green example test in `atomic-testing-example/`, and the CLI prints the exact command to run it. Combinations outside the verified set (React + Jest, Vue 3 + Jest) are marked **experimental** — the CLI warns before writing one.
+
+:::tip Three quick detours
+
+- **Prefer to wire it up by hand?** → [Manual Installation](./manual-installation.mdx)
+- **Is my stack supported?** → [Framework and Runner Support](./support-matrix.mdx)
+- **Just need the runner config?** → [Configure your test runner](./setup.mdx#configure-your-test-runner)
+
+:::
+
+## What the CLI writes
+
+For the canonical React + Jest stack, the scaffolder drops:
+
+```text
+your-project/
+├─ jest.config.cjs                # standalone runner config (.cjs sidesteps the ESM rename trap)
+├─ package.json                   # gains a "test" script
+└─ atomic-testing-example/
+   ├─ ExampleComponent.tsx        # a sample component to replace with your own
+   ├─ scenePart.ts                # maps a named part to a locator + driver
+   └─ ExampleComponent.test.tsx   # a passing test
+```
+
+The generated test drives a **real state change** through the framework-agnostic HTML driver — `HTMLTextInputDriver.setValue()` then reads it back with `getValue()` — so on any **in-process runner** (Jest, Vitest, or Vitest browser mode) it passes on the first run, whatever framework you picked. Those stacks differ only in the details: Vue and Angular emit a `.ts` component, Vitest emits `vitest.config.ts`, and the example test filename follows the runner. **Playwright is the exception** — it drives a real browser against your running app, so the scaffolder emits `playwright.config.ts` plus a placeholder `*.e2e` starter test (no example component or scene part) that you point at your dev server; it turns green once your app serves the page, not out of the box.
+
+## Write it yourself
+
+Prefer to author the test by hand — or just want to see what a richer one looks like? The example below is the same scene and test logic across **React, Vue, and Playwright**. It's the code the sections that follow unpack.
 
 <Tabs>
 <TabItem value="react" label="⚛️ React">
 
-## Installation
-
-```bash
-pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
-
-# react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
-pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
-```
-
-On React 18 or React 17, swap in `@atomic-testing/react-18` or `@atomic-testing/react-legacy` — see the [Package Guide](./framework-guide.mdx) for the full matrix. Testing Material UI or another component library instead of plain HTML elements? See [Testing a component library](./getting-started-tutorial.mdx#testing-a-component-library-eg-mui).
-
 :::info Before you run this
-This test needs a jsdom-based runner (Jest or Vitest) with `IS_REACT_ACT_ENVIRONMENT` set. See [Configure your test runner](./setup.mdx#configure-your-test-runner) — one-time setup, applies to every example on this page.
+This test needs a jsdom-based runner (Jest or Vitest) with `IS_REACT_ACT_ENVIRONMENT` set. See [Configure your test runner](./setup.mdx#configure-your-test-runner) — one-time setup, applies to every example on this page. Installing the packages by hand? See [Manual Installation](./manual-installation.mdx).
 :::
-
-## Your First Test
 
 ```tsx
 import { useState } from 'react';
@@ -93,39 +142,9 @@ npx jest
 </TabItem>
 <TabItem value="vue" label="💚 Vue 3">
 
-## Installation
-
-```bash
-pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component-driver-html
-
-# vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
-pnpm add -D vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
-
-# the test runner itself
-pnpm add -D vitest jsdom
-```
-
 :::info Before you run this
-Vue tests run under [Vitest](https://vitest.dev) with the `jsdom` environment:
-
-```ts title="vitest.config.ts"
-import { defineConfig } from 'vitest/config';
-
-export default defineConfig({
-  test: { environment: 'jsdom', globals: true },
-});
-```
-
-`globals: true` puts `describe`/`it`/`expect`/`beforeEach`/`afterEach` in scope without an
-explicit `import { ... } from 'vitest'` in every test file, matching Jest's default behavior
-so the example below runs as shown. Prefer explicit imports instead? Add
-`import { describe, it, expect, beforeEach, afterEach } from 'vitest';` to the test file and
-drop this flag.
-
-Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInteractor` calls Vue's own `nextTick()` internally. See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the Jest equivalent if you're testing React elsewhere in the same repo.
+Vue tests run under a jsdom-based runner (Jest or [Vitest](https://vitest.dev)). Unlike the React setup, no `IS_REACT_ACT_ENVIRONMENT` flag is needed — `VueInteractor` calls Vue's own `nextTick()` internally. See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the config, and [Manual Installation](./manual-installation.mdx) for the packages.
 :::
-
-## Your First Test
 
 ```typescript
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
@@ -193,20 +212,8 @@ npx vitest run
 </TabItem>
 <TabItem value="playwright" label="🎭 Playwright">
 
-## Installation
-
-```bash
-pnpm add -D @atomic-testing/core @atomic-testing/playwright @atomic-testing/component-driver-html
-
-# playwright's peer dependency — npm/yarn don't install peers automatically like pnpm can
-pnpm add -D @playwright/test
-
-# Playwright drives real browsers — install the binaries once per machine/CI image
-npx playwright install --with-deps
-```
-
 :::info DOM tests vs. Playwright tests
-The React and Vue tabs above render components directly into an in-memory jsdom document — nothing is served over HTTP. Playwright is different: `page.goto('/welcome')` drives a **real browser against a page your app actually serves**. The snippet below is illustrative — it only turns green once you have an app running that serves a `/welcome` route rendering the equivalent of the `WelcomeButton` component from the React tab (same `data-testid`s). Point Playwright at that server with `webServer`/`baseURL` in `playwright.config.ts`:
+The React and Vue tabs render components directly into an in-memory jsdom document — nothing is served over HTTP. Playwright is different: `page.goto('/welcome')` drives a **real browser against a page your app actually serves**. The snippet below is illustrative — it only turns green once you have an app running that serves a `/welcome` route rendering the equivalent of the `WelcomeButton` component from the React tab (same `data-testid`s). Point Playwright at that server with `webServer`/`baseURL` in `playwright.config.ts`:
 
 ```ts title="playwright.config.ts"
 import { defineConfig } from '@playwright/test';
@@ -223,9 +230,8 @@ export default defineConfig({
 });
 ```
 
+Installing the packages by hand? See [Manual Installation](./manual-installation.mdx).
 :::
-
-## Your First Test
 
 ```typescript
 import { HTMLButtonDriver, HTMLElementDriver } from '@atomic-testing/component-driver-html';
@@ -323,5 +329,6 @@ Notice how the test logic is **identical across frameworks**:
 ## 🤔 Questions?
 
 **"This seems like extra setup..."** → See [Why Atomic Testing?](./why-atomic-testing.mdx) for long-term benefits
+**"How do I install without the CLI?"** → See [Manual Installation](./manual-installation.mdx)
 **"How do I test complex forms?"** → Check out the [Step-by-Step Tutorial](./getting-started-tutorial.mdx)
 **"What about my existing tests?"** → We're working on a migration guide!

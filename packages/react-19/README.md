@@ -3,6 +3,9 @@
 Adapter for integrating [Atomic Testing](https://atomic-testing.dev) with [React 19](https://react.dev).
 It maps React components to the core scene part APIs.
 
+> **Fastest start:** run `npm create atomic-testing@latest` to scaffold a working
+> React test setup for you, instead of wiring the steps below by hand.
+
 ## The problem
 
 Writing maintainable tests for UIs built with third–party component libraries

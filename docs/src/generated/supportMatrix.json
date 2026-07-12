@@ -1,0 +1,170 @@
+{
+  "generatedFrom": "create-atomic-testing",
+  "frameworks": [
+    {
+      "id": "react",
+      "displayName": "React",
+      "majors": [
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "id": "vue",
+      "displayName": "Vue 3",
+      "majors": [
+        3
+      ]
+    },
+    {
+      "id": "angular",
+      "displayName": "Angular",
+      "majors": [
+        20,
+        21,
+        22
+      ]
+    }
+  ],
+  "runners": [
+    {
+      "id": "jest",
+      "displayName": "Jest (jsdom)"
+    },
+    {
+      "id": "vitest",
+      "displayName": "Vitest (jsdom)"
+    },
+    {
+      "id": "vitest-browser",
+      "displayName": "Vitest (browser mode + Playwright)"
+    },
+    {
+      "id": "playwright",
+      "displayName": "Playwright (e2e, real browser)"
+    }
+  ],
+  "cells": [
+    {
+      "framework": "react",
+      "runner": "jest",
+      "tier": "verified"
+    },
+    {
+      "framework": "react",
+      "runner": "vitest",
+      "tier": "experimental"
+    },
+    {
+      "framework": "react",
+      "runner": "vitest-browser",
+      "tier": "experimental"
+    },
+    {
+      "framework": "react",
+      "runner": "playwright",
+      "tier": "experimental"
+    },
+    {
+      "framework": "vue",
+      "runner": "jest",
+      "tier": "verified"
+    },
+    {
+      "framework": "vue",
+      "runner": "vitest",
+      "tier": "experimental"
+    },
+    {
+      "framework": "vue",
+      "runner": "vitest-browser",
+      "tier": "unavailable"
+    },
+    {
+      "framework": "vue",
+      "runner": "playwright",
+      "tier": "experimental"
+    },
+    {
+      "framework": "angular",
+      "runner": "jest",
+      "tier": "disabled",
+      "note": "Angular + Jest is not supported yet (Angular runs under Vitest browser mode in atomic-testing). This combination is registered to show how a new recipe plugs in — enable it in registry/compatibility.ts once a fixture proves it."
+    },
+    {
+      "framework": "angular",
+      "runner": "vitest",
+      "tier": "disabled",
+      "note": "Angular under jsdom Vitest is not supported; use the Vitest browser-mode recipe instead."
+    },
+    {
+      "framework": "angular",
+      "runner": "vitest-browser",
+      "tier": "experimental"
+    },
+    {
+      "framework": "angular",
+      "runner": "playwright",
+      "tier": "experimental"
+    }
+  ],
+  "designSystems": [
+    {
+      "framework": "react",
+      "systems": [
+        {
+          "id": "html",
+          "displayName": "Plain HTML elements"
+        },
+        {
+          "id": "mui",
+          "displayName": "Material UI (MUI)"
+        },
+        {
+          "id": "mui-x",
+          "displayName": "MUI X"
+        },
+        {
+          "id": "radix",
+          "displayName": "Radix UI"
+        },
+        {
+          "id": "shadcn",
+          "displayName": "shadcn/ui"
+        },
+        {
+          "id": "astryx",
+          "displayName": "Astryx"
+        }
+      ]
+    },
+    {
+      "framework": "vue",
+      "systems": [
+        {
+          "id": "html",
+          "displayName": "Plain HTML elements"
+        },
+        {
+          "id": "primevue",
+          "displayName": "PrimeVue"
+        }
+      ]
+    },
+    {
+      "framework": "angular",
+      "systems": [
+        {
+          "id": "html",
+          "displayName": "Plain HTML elements"
+        },
+        {
+          "id": "angular-material",
+          "displayName": "Angular Material"
+        }
+      ]
+    }
+  ]
+}
