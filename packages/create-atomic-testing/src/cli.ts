@@ -7,6 +7,7 @@ import pc from 'picocolors';
 import { applyPlan } from './apply/applyPlan';
 import { ATOMIC_VERSION } from './constants';
 import { detect } from './detect';
+import { mergedDeps } from './detect/deps';
 import { addCommands } from './install/packageManager';
 import { runInstall } from './install/runInstall';
 import { readProject } from './io/readProject';
@@ -166,11 +167,14 @@ async function main(argv: string[]): Promise<number> {
 
   const detection = detect(snapshot);
   for (const diag of detection.diagnostics) {
-    if (diag.level === 'error') console.warn(pc.yellow(`! ${diag.message}`));
+    const paint = diag.level === 'error' ? pc.red : diag.level === 'warn' ? pc.yellow : pc.dim;
+    console.warn(paint(`${diag.level === 'error' ? '✖' : '!'} ${diag.message}`));
   }
 
   const ci = values.ci === true || process.env.CI != null;
-  const interactive = Boolean(process.stdout.isTTY) && !ci && values.yes !== true;
+  // Gate on BOTH streams: Clack reads stdin, so a TTY stdout with piped stdin
+  // must NOT enter interactive mode (the first prompt would hang forever).
+  const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY) && !ci && values.yes !== true;
 
   const draft = buildDraft(detection, flags);
 
@@ -198,6 +202,11 @@ async function main(argv: string[]): Promise<number> {
     }
     throw error;
   }
+
+  // Optional peers (e.g. radix's cmdk) are installed only when the project
+  // already uses them — matching the DependencySpec.optional contract.
+  const projectDeps = mergedDeps(snapshot.packageJson);
+  plan = { ...plan, dependencies: plan.dependencies.filter(d => d.optional !== true || projectDeps[d.name] != null) };
 
   printSummary(plan);
 

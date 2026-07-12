@@ -127,4 +127,50 @@ describe('generated file contents', () => {
     )!;
     expect(test.contents).toContain('await createTestEngine');
   });
+
+  it('adds customExportConditions to the Vue Jest config', () => {
+    const cfg = resolveRecipe(sel({ framework: 'vue', frameworkMajor: 3 })).files.find(
+      f => f.path === 'jest.config.cjs'
+    )!;
+    expect(cfg.contents).toContain('customExportConditions');
+  });
+
+  it('uses playwright() (not the string) for vitest-browser and emits an Angular setup file', () => {
+    const plan = resolveRecipe(sel({ framework: 'angular', frameworkMajor: 22, runner: 'vitest-browser' }));
+    const cfg = plan.files.find(f => f.kind === 'runner-config')!;
+    expect(cfg.contents).toContain('provider: playwright()');
+    expect(cfg.contents).not.toContain("provider: 'playwright'");
+    expect(plan.files.find(f => f.path.endsWith('vitest.setup.ts'))?.contents).toContain("import '@angular/compiler'");
+  });
+});
+
+describe('recipe dependency-major consistency (review regressions)', () => {
+  it('keeps the angular-material driver and its deps on the same major when the DS major is unresolved', () => {
+    const plan = resolveRecipe(
+      sel({
+        framework: 'angular',
+        frameworkMajor: 21,
+        runner: 'vitest-browser',
+        designSystem: 'angular-material',
+        designSystemMajor: null,
+      })
+    );
+    const names = plan.dependencies.map(d => d.name);
+    expect(names).toContain('@atomic-testing/component-driver-angular-material-v21');
+    expect(names).not.toContain('@atomic-testing/component-driver-angular-material-v22');
+    expect(plan.dependencies.find(d => d.name === '@angular/material')?.range).toBe('^21.0.0');
+  });
+
+  it('emits a mui-x data-grid major that matches the driver, with no conflicting @mui/material pin', () => {
+    const plan = resolveRecipe(sel({ frameworkMajor: 19, designSystem: 'mui-x', designSystemMajor: null }));
+    const names = plan.dependencies.map(d => d.name);
+    expect(names).toContain('@atomic-testing/component-driver-mui-x-v9');
+    expect(plan.dependencies.find(d => d.name === '@mui/x-data-grid')?.range).toBe('^9.0.0');
+    expect(names).not.toContain('@mui/material'); // supplied transitively by the driver at the right major
+  });
+
+  it('marks radix cmdk as an optional dependency', () => {
+    const plan = resolveRecipe(sel({ designSystem: 'radix' }));
+    expect(plan.dependencies.find(d => d.name === 'cmdk')?.optional).toBe(true);
+  });
 });

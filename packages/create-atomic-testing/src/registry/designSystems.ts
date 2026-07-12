@@ -8,6 +8,10 @@ const muiMajor = (major: number | null): number => {
   return 9;
 };
 
+// MUI X drivers exist for v6/v7/v8/v9; anything else falls back to the latest.
+const muiXMajor = (major: number | null): number =>
+  major === 6 || major === 7 || major === 8 || major === 9 ? major : 9;
+
 const emotion: DependencySpec[] = [THIRD_PARTY.emotionReact, THIRD_PARTY.emotionStyled];
 
 const html: DesignSystemPlugin = {
@@ -42,12 +46,13 @@ const muiX: DesignSystemPlugin = {
   displayName: 'MUI X',
   compatibleFrameworks: ['react'],
   driverPackage(major) {
-    const m = major === 6 || major === 7 || major === 8 || major === 9 ? major : 9;
-    return `component-driver-mui-x-v${m}`;
+    return `component-driver-mui-x-v${muiXMajor(major)}`;
   },
   deps(ctx) {
-    const m = ctx.selection.designSystemMajor ?? 9;
-    return [{ name: '@mui/x-data-grid', range: `^${m}.0.0` }, { name: '@mui/material', range: '^7.0.0' }, ...emotion];
+    const m = muiXMajor(ctx.selection.designSystemMajor);
+    // @mui/material comes transitively from the driver at the matching major, so
+    // we don't pin it directly — a mismatched direct pin would fight the driver.
+    return [{ name: '@mui/x-data-grid', range: `^${m}.0.0` }, ...emotion];
   },
   usageNote: 'Your MUI X drivers are installed. Point the scene part at the MUI X drivers to test MUI X components.',
 };

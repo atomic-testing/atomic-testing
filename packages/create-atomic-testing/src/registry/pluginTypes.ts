@@ -57,6 +57,8 @@ export interface RunnerPlugin {
   readonly harness: 'unit' | 'playwright';
   deps(ctx: GenerationContext): readonly DependencySpec[];
   configFile(ctx: GenerationContext): FileOp;
+  /** Extra files beyond the config (e.g. a test setup file). Optional. */
+  extraFiles?(ctx: GenerationContext): readonly FileOp[];
   scripts(ctx: GenerationContext): Readonly<Record<string, string>>;
   nextSteps(ctx: GenerationContext): readonly string[];
   /** Example test file basename (without directory), e.g. `Example.test.tsx`. */

@@ -31,12 +31,15 @@ export function buildDraft(detect: DetectResult, flags: SelectionFlags): Selecti
     flags.runner ??
     detect.runner ??
     (framework && framework !== 'none' ? getFramework(framework).defaultRunner : undefined);
+  const designSystem = flags.designSystem ?? detect.designSystem?.id ?? 'html';
   return {
     framework,
     frameworkMajor: flags.frameworkMajor ?? detect.framework?.major ?? undefined,
     runner,
-    designSystem: flags.designSystem ?? detect.designSystem?.id ?? 'html',
-    designSystemMajor: detect.designSystem?.major ?? null,
+    designSystem,
+    // The detected major belongs to the detected design system; if a flag picked
+    // a different one, drop it so resolveRecipe derives a safe default.
+    designSystemMajor: designSystem === detect.designSystem?.id ? (detect.designSystem?.major ?? null) : null,
     typescript: flags.typescript ?? detect.typescript,
     packageManager: flags.packageManager ?? detect.packageManager,
   };

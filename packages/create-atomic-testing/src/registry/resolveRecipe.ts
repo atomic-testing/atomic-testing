@@ -58,8 +58,17 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
     );
   }
 
-  const ctx = buildContext(selection);
-  const driver = designSystem.driverPackage(selection.designSystemMajor);
+  // One effective design-system major, used for BOTH the driver package and its
+  // deps, so an unresolved major can never make the two disagree (e.g. an
+  // Angular-21 project emitting the v22 Material driver). Falling back to the
+  // framework major is harmless for React design systems: their clamps map any
+  // React major onto the same latest driver.
+  const effectiveSelection: RecipeSelection = {
+    ...selection,
+    designSystemMajor: selection.designSystemMajor ?? selection.frameworkMajor,
+  };
+  const ctx = buildContext(effectiveSelection);
+  const driver = designSystem.driverPackage(effectiveSelection.designSystemMajor);
 
   const common: DependencySpec[] = [atomicDep('core'), atomicDep('component-driver-html')];
   if (driver) common.push(atomicDep(driver));
