@@ -15,27 +15,31 @@ Once you have a green test, the tutorial shows how to wrap a component library l
 
 ## 1. Install dependencies
 
+:::tip Fast path
+[`create atomic-testing`](./quick-start.mdx) installs these packages and writes the Jest config for you in one command. This tutorial does it by hand so you understand each piece — reach for the CLI when you want the setup done automatically.
+:::
+
 ```bash
 pnpm add -D @atomic-testing/core @atomic-testing/react-19 @atomic-testing/component-driver-html
 
 # react-19's peer dependencies — npm/yarn don't install peers automatically like pnpm can
 pnpm add -D react react-dom @testing-library/dom @testing-library/react @testing-library/user-event
 
-pnpm add -D jest jest-environment-jsdom @swc/jest @types/jest
+pnpm add -D jest jest-environment-jsdom @swc/jest @swc/core @types/jest
 ```
 
 (Already have a runner configured? Skip to [step 2](#2-configure-jest). See [Configure your test runner](./setup.mdx#configure-your-test-runner) for the Vitest equivalent.)
 
 ## 2. Configure Jest
 
-<CodeBlock language='js' title='jest.config.js'>
+<CodeBlock language='js' title='jest.config.cjs'>
   {jestConfigSnippet}
 </CodeBlock>
 
-:::info CommonJS vs. ESM
-`jest.config.js` uses `module.exports`, Jest's CommonJS config format. If your `package.json` has
-`"type": "module"` (common with a Vite-scaffolded project), either rename the file to
-`jest.config.cjs`, or switch to `export default { ... }` in a `jest.config.mjs`.
+:::info CommonJS config
+The `.cjs` extension keeps this `module.exports` config as CommonJS even when your `package.json` has
+`"type": "module"` (common with a Vite-scaffolded project), sidestepping the rename trap. This is why
+`create atomic-testing` emits `jest.config.cjs`.
 :::
 
 ## 3. Write the component under test

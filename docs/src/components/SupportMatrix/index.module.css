@@ -1,0 +1,144 @@
+/**
+ * SupportMatrix — consumes the global --at-* token contract from src/css/custom.css
+ * so it tracks light/dark theme like the rest of the site. Verified reuses the tip
+ * (green) tokens, which are already theme-aware; the amber (experimental) and grey
+ * (disabled) badges define perceptual colors here with a [data-theme='dark'] override.
+ */
+
+.root {
+  margin: 24px 0 32px;
+}
+
+/* Narrow viewports scroll the table on its own axis; the page never scrolls sideways. */
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+
+.caption {
+  caption-side: top;
+  text-align: left;
+  font-family: var(--at-font-display);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--at-text);
+  padding-bottom: 10px;
+}
+
+.table th,
+.table td {
+  border: 1px solid var(--at-border);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table thead th {
+  background: var(--at-bg-alt);
+  color: var(--at-text-strong);
+  font-family: var(--at-font-display);
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.corner {
+  white-space: nowrap;
+}
+
+.rowHead {
+  background: var(--at-bg-alt);
+  white-space: nowrap;
+}
+
+.frameworkName {
+  display: block;
+  font-family: var(--at-font-display);
+  font-weight: 600;
+  color: var(--at-text);
+}
+
+.majors {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--at-font-mono);
+  font-size: 12px;
+  color: var(--at-text-faint);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.verified {
+  background: var(--at-tip-bg);
+  border-color: var(--at-tip-border);
+  color: var(--at-tip-ink);
+}
+
+.experimental {
+  background: #fdf3e3;
+  border-color: #f2d79b;
+  color: #97640a;
+}
+
+.disabled {
+  background: var(--at-code-chip-bg);
+  border-color: var(--at-border);
+  color: var(--at-text-faint);
+  cursor: help;
+}
+
+.unavailable {
+  color: var(--at-text-faint);
+  font-weight: 600;
+}
+
+[data-theme='dark'] .experimental {
+  background: #2c2109;
+  border-color: #5b4514;
+  color: #e6b24a;
+}
+
+.legend {
+  list-style: none;
+  margin: 14px 0 26px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 13.5px;
+  color: var(--at-text-muted);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.systems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.systemChip {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 6px;
+  background: var(--at-code-chip-bg);
+  color: var(--at-code-chip-ink);
+  font-family: var(--at-font-mono);
+  font-size: 12.5px;
+}

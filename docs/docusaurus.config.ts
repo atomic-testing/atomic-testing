@@ -332,6 +332,13 @@ const config: Config = {
           label: 'Core Concepts',
         },
         {
+          // Surfaces the scaffolder's verified/experimental support tiers — the
+          // one page a reader checks before running `create atomic-testing`.
+          to: '/docs/support-matrix',
+          position: 'left',
+          label: 'Support matrix',
+        },
+        {
           // Points at the API Reference category's generated index (see
           // sidebars.ts) rather than a docId: the category has no single
           // hand-authored landing doc, so a plain path avoids depending on
@@ -355,6 +362,10 @@ const config: Config = {
           items: [
             {
               label: 'Getting started',
+              to: '/docs/quick-start',
+            },
+            {
+              label: 'Scaffold with the CLI',
               to: '/docs/quick-start',
             },
             {
