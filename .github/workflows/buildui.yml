@@ -355,6 +355,34 @@ jobs:
         run: pnpm test:dom
         working-directory: ./packages/dom-core
 
+  # create-atomic-testing scaffolder — pure-logic unit tests (detect / recipes /
+  # generate / apply) plus the recipe-catalog sync-check (REC-SYNC-*), which
+  # fails if any package a recipe emits does not exist or its version / peer
+  # range drifts from the real workspace. Self-contained (no `needs: build`):
+  # the sync-check builds only this package, the unit tests import from src.
+  create-atomic-testing-test:
+    name: Test create-atomic-testing scaffolder
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Build scaffolder
+        run: pnpm --filter create-atomic-testing build
+
+      - name: Recipe-catalog sync-check
+        run: pnpm --filter create-atomic-testing check:recipes
+
+      - name: Run unit tests
+        run: pnpm test:dom
+        working-directory: ./packages/create-atomic-testing
+
   # Example test (separate since it has different setup)
   example-mui-signup-form-test:
     name: Test example MUI signup form

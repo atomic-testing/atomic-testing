@@ -227,6 +227,12 @@
       "rules": {
         "no-unused-vars": "off"
       }
+    },
+    {
+      "files": ["packages/create-atomic-testing/src/cli.ts"],
+      "rules": {
+        "no-console": "off"
+      }
     }
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "exclude": ["node_modules", "dist", "build", "__tests__"],
+  "include": ["./src"],
+  "compilerOptions": {
+    "outDir": "./build",
+    "composite": true,
+    "types": ["node"]
+  }
+}

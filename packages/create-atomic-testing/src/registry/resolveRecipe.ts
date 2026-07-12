@@ -1,0 +1,101 @@
+import { atomicDep } from '../constants';
+import { generateFiles } from '../generate/generateFiles';
+import type { DependencySpec, RecipePlan, RecipeSelection } from '../types';
+import { RecipeResolutionError } from '../types';
+import { resolveCompatibility } from './compatibility';
+import { getDesignSystem } from './designSystems';
+import { getFramework } from './frameworks';
+import type { GenerationContext } from './pluginTypes';
+import { getRunner } from './runners';
+
+/** Merge dependency specs by name; a prod requirement wins over a dev one. */
+function dedupe(deps: readonly DependencySpec[]): DependencySpec[] {
+  const byName = new Map<string, DependencySpec>();
+  for (const dep of deps) {
+    const existing = byName.get(dep.name);
+    if (!existing) {
+      byName.set(dep.name, dep);
+      continue;
+    }
+    // If either occurrence is a prod dep, the merged one is prod.
+    byName.set(dep.name, { ...existing, dev: existing.dev !== false && dep.dev !== false ? true : false });
+  }
+  return [...byName.values()];
+}
+
+function buildContext(selection: RecipeSelection): GenerationContext {
+  const framework = getFramework(selection.framework);
+  const runner = getRunner(selection.runner);
+  const designSystem = getDesignSystem(selection.designSystem);
+  const jsx = selection.framework === 'react';
+  return {
+    selection,
+    framework,
+    runner,
+    designSystem,
+    ext: { component: jsx ? 'tsx' : 'ts', test: jsx ? 'tsx' : 'ts', config: 'ts' },
+  };
+}
+
+/**
+ * Compose the three plugins for a selection into a ready-to-apply plan. Pure —
+ * no filesystem access. Throws {@link RecipeResolutionError} for combinations
+ * that are impossible, unregistered or disabled.
+ */
+export function resolveRecipe(selection: RecipeSelection): RecipePlan {
+  const compat = resolveCompatibility(selection.framework, selection.runner, selection.designSystem);
+  if (!compat.allowed) {
+    throw new RecipeResolutionError(compat.code ?? 'E_COMBO', compat.message ?? 'Unsupported combination.');
+  }
+
+  const framework = getFramework(selection.framework);
+  const designSystem = getDesignSystem(selection.designSystem);
+  const engine = framework.enginePackage(selection.frameworkMajor);
+  if (selection.runner !== 'playwright' && !engine) {
+    throw new RecipeResolutionError(
+      'E_UNSUPPORTED_MAJOR',
+      `${framework.displayName} ${selection.frameworkMajor}.x has no atomic-testing engine package.`
+    );
+  }
+
+  const ctx = buildContext(selection);
+  const driver = designSystem.driverPackage(selection.designSystemMajor);
+
+  const common: DependencySpec[] = [atomicDep('core'), atomicDep('component-driver-html')];
+  if (driver) common.push(atomicDep(driver));
+
+  const deps =
+    ctx.runner.harness === 'playwright'
+      ? [...common, atomicDep('playwright'), ...designSystem.deps(ctx), ...ctx.runner.deps(ctx)]
+      : [
+          ...common,
+          atomicDep(engine as string),
+          ...framework.runtimeDeps(selection.frameworkMajor),
+          ...designSystem.deps(ctx),
+          ...ctx.runner.deps(ctx),
+        ];
+
+  const warnings: string[] = [];
+  if (compat.tier === 'experimental') {
+    warnings.push(
+      `This is an EXPERIMENTAL recipe: it is composed best-effort and is not proven by a green fixture. ${compat.note ?? ''}`.trim()
+    );
+  }
+  if (!selection.typescript) {
+    warnings.push(
+      'Your project does not look like TypeScript, but the generated files are TypeScript. Add TypeScript, or convert the sample files to JS.'
+    );
+  }
+  if (designSystem.usageNote) warnings.push(designSystem.usageNote);
+
+  return {
+    id: `${selection.framework}-${selection.frameworkMajor}+${selection.runner}+${selection.designSystem}`,
+    selection,
+    tier: compat.tier,
+    dependencies: dedupe(deps),
+    files: generateFiles(ctx),
+    packageJsonPatch: { scripts: ctx.runner.scripts(ctx) },
+    warnings,
+    nextSteps: [...ctx.runner.nextSteps(ctx), 'Replace the sample component in atomic-testing-example/ with your own.'],
+  };
+}
