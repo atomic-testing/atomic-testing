@@ -1,6 +1,6 @@
 {
   "name": "create-atomic-testing",
-  "version": "0.96.0",
+  "version": "0.97.0",
   "description": "Scaffold Atomic Testing into an existing project — detects your framework, runner and package manager and writes a working, green example test.",
   "keywords": [
     "atomic-testing",

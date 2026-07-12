@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-mui-x-test-fixture",
-  "version": "0.96.0",
+  "version": "0.97.0",
   "private": true,
   "license": "MIT",
   "author": "Tianzhen Lin <tangent@usa.net>",

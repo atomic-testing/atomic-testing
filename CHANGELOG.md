@@ -1,5 +1,62 @@
 # Changelog
 
+## [0.97.0] - 2026-07-12
+
+### Features
+
+- **create-atomic-testing:** add Storybook-style onboarding scaffolder CLI
+- **mui-x-v9:** picker/DataGrid/chart drivers on a new typeText keystroke primitive ([#903](https://github.com/atomic-testing/atomic-testing/issues/903), [#904](https://github.com/atomic-testing/atomic-testing/issues/904)) ([#1085](https://github.com/atomic-testing/atomic-testing/issues/1085))
+
+### Fixes
+
+- **create-atomic-testing:** address PR review comments
+- **create-atomic-testing:** resolve correctness issues from adversarial review
+- **repo:** drop toolchain devDep bumps that broke the API-freeze gate
+- **interactor:** correct cross-environment isVisible & mouseMove, add getElementCount, unify React/Vue flushing ([#1084](https://github.com/atomic-testing/atomic-testing/issues/1084))
+- **docs:** unbreak the API docs build broken by a bare HTML tag in TSDoc ([#1083](https://github.com/atomic-testing/atomic-testing/issues/1083))
+
+### Refactoring
+
+- **create-atomic-testing:** apply /simplify cleanup pass
+- **core:** facet Interactor, pay down type debt, add Child locator position
+
+### Documentation
+
+- **docs:** skip API packages that generated no docs
+- **docs:** reorganize API reference sidebar by package; document build
+- **core:** correct the 'Descendant' default-builder note
+- **core:** record facet split in ADR-007 and [#1058](https://github.com/atomic-testing/atomic-testing/issues/1058) reshape deferral; harden Child tests
+- **docs:** flatten TypeDoc kind-groups in sidebar, fix API nav landing page ([#1091](https://github.com/atomic-testing/atomic-testing/issues/1091))
+- **docs:** restructure API reference by framework vs. component driver ([#1088](https://github.com/atomic-testing/atomic-testing/issues/1088)) ([#1089](https://github.com/atomic-testing/atomic-testing/issues/1089))
+- remove EOL MUI v5 and MUI-X v5 documentation ([#1087](https://github.com/atomic-testing/atomic-testing/issues/1087))
+- add resizable sidebar with fluid content layout ([#1086](https://github.com/atomic-testing/atomic-testing/issues/1086))
+
+### Build & Tooling
+
+- **deps:** bump react-dom and @types/react-dom in /package-tests/component-driver-html-test ([#1061](https://github.com/atomic-testing/atomic-testing/issues/1061))
+- **deps:** bump @mui/x-data-grid-generator from 6.20.5 to 7.29.13 in /package-tests/component-driver-mui-x-v8-test ([#1062](https://github.com/atomic-testing/atomic-testing/issues/1062))
+- **deps:** bump react-router-dom from 7.18.0 to 7.18.1 in /package-tests/component-driver-mui-v6-test ([#1063](https://github.com/atomic-testing/atomic-testing/issues/1063))
+- **deps:** bump react-router-dom from 7.18.0 to 7.18.1 in /package-tests/component-driver-mui-x-v7-test ([#1064](https://github.com/atomic-testing/atomic-testing/issues/1064))
+- **deps:** bump @mui/icons-material from 5.17.1 to 7.3.11 in /package-tests/component-driver-mui-v7-test ([#1065](https://github.com/atomic-testing/atomic-testing/issues/1065))
+- **deps:** bump react-router-dom from 7.18.0 to 7.18.1 in /package-tests/component-driver-mui-x-v8-test ([#1066](https://github.com/atomic-testing/atomic-testing/issues/1066))
+- **deps:** bump react and @types/react in /package-tests/component-driver-html-test ([#1067](https://github.com/atomic-testing/atomic-testing/issues/1067))
+- **deps:** bump react-router-dom from 7.18.0 to 7.18.1 in /package-tests/component-driver-mui-v7-test ([#1068](https://github.com/atomic-testing/atomic-testing/issues/1068))
+- **deps:** bump react-dom and @types/react-dom in /package-tests/component-driver-mui-x-v7-test ([#1069](https://github.com/atomic-testing/atomic-testing/issues/1069))
+- **deps:** bump react-router-dom from 7.18.0 to 7.18.1 in /package-tests/component-driver-mui-x-v6-test ([#1070](https://github.com/atomic-testing/atomic-testing/issues/1070))
+- **deps:** bump react-router-dom from 7.18.0 to 7.18.1 in /package-tests/component-driver-html-test ([#1071](https://github.com/atomic-testing/atomic-testing/issues/1071))
+- **deps:** bump @mui/material from 5.17.1 to 7.3.11 in /package-tests/component-driver-mui-v7-test ([#1072](https://github.com/atomic-testing/atomic-testing/issues/1072))
+- **deps:** bump react and @types/react in /package-tests/component-driver-mui-x-v7-test ([#1073](https://github.com/atomic-testing/atomic-testing/issues/1073))
+- **deps:** bump react-dom and @types/react-dom in /package-tests/component-driver-mui-x-v8-test ([#1074](https://github.com/atomic-testing/atomic-testing/issues/1074))
+- **deps:** bump react and @types/react in /package-tests/component-driver-mui-x-v8-test ([#1075](https://github.com/atomic-testing/atomic-testing/issues/1075))
+- **deps:** bump @mui/material from 5.17.1 to 7.3.11 in /package-tests/component-driver-mui-x-v8-test ([#1076](https://github.com/atomic-testing/atomic-testing/issues/1076))
+- **deps:** bump vue from 3.5.17 to 3.5.39 ([#1077](https://github.com/atomic-testing/atomic-testing/issues/1077))
+- **deps:** bump @testing-library/react from 16.3.0 to 16.3.2 ([#1080](https://github.com/atomic-testing/atomic-testing/issues/1080))
+
+### Other
+
+- Relax Claude sandbox running inside Claude Desktop
+- Update lint and format
+
 ## [0.96.0] - 2026-07-08
 
 ### Breaking Changes

@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-test-runner-jest-adapter",
-  "version": "0.96.0",
+  "version": "0.97.0",
   "private": true,
   "description": "Jest adapter for atomic-testing",
   "keywords": [],
