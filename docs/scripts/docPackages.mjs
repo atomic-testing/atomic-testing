@@ -20,10 +20,13 @@ const packagesRoot = path.resolve(__dirname, '..', '..', 'packages');
 
 // Packages excluded from the generated API reference — e.g. a frozen/EOL
 // package still in packages/ but no longer built, so TypeDoc can't resolve
-// its cross-package types (see ADR-005 for the MUI 5 precedent). Currently
-// empty: MUI 5 / MUI-X 5 were fully extracted to a separate repo (ADR-014)
-// rather than frozen in place, so there's nothing to exclude right now.
-export const EXCLUDED_FROM_DOCS = new Set([]);
+// its cross-package types (see ADR-005 for the MUI 5 precedent), or a package
+// that is not a consumer-facing library at all.
+export const EXCLUDED_FROM_DOCS = new Set([
+  // A scaffolder CLI (bin), not a library consumers import — its programmatic
+  // exports are implementation detail, so it stays out of the API reference.
+  'create-atomic-testing',
+]);
 
 // Every package directory under packages/ that's part of the generated API
 // reference: real packages minus internal-* helpers minus EXCLUDED_FROM_DOCS.

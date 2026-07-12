@@ -1,0 +1,56 @@
+{
+  "name": "create-atomic-testing",
+  "version": "0.96.0",
+  "description": "Scaffold Atomic Testing into an existing project — detects your framework, runner and package manager and writes a working, green example test.",
+  "keywords": [
+    "atomic-testing",
+    "cli",
+    "component-driver",
+    "create",
+    "scaffold",
+    "testing"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/create-atomic-testing"
+  },
+  "bin": {
+    "create-atomic-testing": "dist/cli.mjs"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsgo --noEmit",
+    "check:recipes": "node scripts/check-recipe-sync.mjs",
+    "test:dom": "jest"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "picocolors": "^1.1.1",
+    "semver": "^7.7.2"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.7.0"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

@@ -1,0 +1,10 @@
+export { detect } from './detect';
+export { detectDesignSystem } from './detectDesignSystem';
+export { detectMonorepo, detectTypeScript } from './detectEnvironment';
+export { detectFramework } from './detectFramework';
+export type { FrameworkDetection } from './detectFramework';
+export { detectPackageManager } from './detectPackageManager';
+export type { PackageManagerDetection } from './detectPackageManager';
+export { detectRunner } from './detectRunner';
+export { resolveMajor } from './semverMajor';
+export type { MajorResolution } from './semverMajor';
