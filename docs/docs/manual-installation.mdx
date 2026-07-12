@@ -41,12 +41,11 @@ pnpm add -D @atomic-testing/core @atomic-testing/vue-3 @atomic-testing/component
 # vue-3's peer dependencies — npm/yarn don't install peers automatically like pnpm can
 pnpm add -D vue @testing-library/vue @testing-library/dom @vue/compiler-sfc @testing-library/user-event
 
-# the test runner — Jest is the verified default the CLI picks for Vue;
-# Vitest (shown here) is the experimental alternative
-pnpm add -D vitest jsdom
+# the test runner — Jest is the verified path the CLI picks for Vue
+pnpm add -D jest jest-environment-jsdom @swc/jest @swc/core @types/jest
 ```
 
-Vue tests run under a jsdom-based runner with no `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` internally. The **verified** Vue path is Jest (the runner `create atomic-testing` selects); the Vitest setup shown here is the experimental alternative. See [Configure your test runner](./setup.mdx#configure-your-test-runner).
+Vue tests run under a jsdom-based runner with no `IS_REACT_ACT_ENVIRONMENT` flag — `VueInteractor` calls Vue's own `nextTick()` internally. The Vue Jest config needs one Vue-specific setting (`customExportConditions`) — see [Vue: Jest with export conditions](./setup.mdx#vue-jest-with-export-conditions). Prefer Vitest? It works too, but is [experimental](./support-matrix.mdx): `pnpm add -D vitest jsdom`.
 
 </TabItem>
 <TabItem value="playwright" label="🎭 Playwright">
