@@ -5,6 +5,12 @@ import type { FrameworkPlugin } from './pluginTypes';
 /** Symbol name used for the generated example component across all frameworks. */
 const COMPONENT = 'ExampleComponent';
 
+/** The two import lines every framework's example test needs (engine + component). */
+const engineImports = (engine: string): string[] => [
+  `import { createTestEngine } from '@atomic-testing/${engine}';`,
+  `import { ${COMPONENT} } from './${COMPONENT}';`,
+];
+
 const reactRuntime = (major: number): DependencySpec[] => {
   if (major >= 19) {
     return [
@@ -52,6 +58,11 @@ const reactFramework: FrameworkPlugin = {
     return null;
   },
   runtimeDeps: reactRuntime,
+  // SWC's automatic JSX runtime for .tsx, and IS_REACT_ACT_ENVIRONMENT so the
+  // ReactInteractor's act()-wrapped updates flush. These are React facts, owned
+  // here rather than special-cased inside the jest runner.
+  jestTransform: `['@swc/jest', { jsc: { transform: { react: { runtime: 'automatic' } } } }]`,
+  jestGlobals: { IS_REACT_ACT_ENVIRONMENT: true },
   exampleComponent() {
     return {
       fileName: `${COMPONENT}.tsx`,
@@ -71,10 +82,7 @@ export function ${COMPONENT}() {
   exampleEngine(ctx) {
     const engine = ctx.framework.enginePackage(ctx.selection.frameworkMajor);
     return {
-      imports: [
-        `import { createTestEngine } from '@atomic-testing/${engine}';`,
-        `import { ${COMPONENT} } from './${COMPONENT}';`,
-      ],
+      imports: engineImports(engine as string),
       engineExpr: `createTestEngine(<${COMPONENT} />, scenePart)`,
       isAsync: false,
     };
@@ -91,6 +99,14 @@ const vueFramework: FrameworkPlugin = {
   },
   runtimeDeps() {
     return [THIRD_PARTY.vue, THIRD_PARTY.vueCompilerSfc, THIRD_PARTY.tlVue, THIRD_PARTY.tlDom, THIRD_PARTY.tlUserEvent];
+  },
+  // Vue's jsdom leg must resolve the Node export condition, or @testing-library/
+  // vue pulls a build that throws at load. jsdom-mode Vitest needs the Vue plugin.
+  jestEnvironmentOptions: { customExportConditions: ['node', 'node-addons'] },
+  vitePlugin: {
+    importLine: `import vue from '@vitejs/plugin-vue';`,
+    pluginExpr: 'vue()',
+    dep: THIRD_PARTY.vitePluginVue,
   },
   exampleComponent() {
     return {
@@ -113,10 +129,7 @@ export const ${COMPONENT} = defineComponent({
   exampleEngine(ctx) {
     const engine = ctx.framework.enginePackage(ctx.selection.frameworkMajor);
     return {
-      imports: [
-        `import { createTestEngine } from '@atomic-testing/${engine}';`,
-        `import { ${COMPONENT} } from './${COMPONENT}';`,
-      ],
+      imports: engineImports(engine as string),
       engineExpr: `createTestEngine(${COMPONENT}, scenePart)`,
       isAsync: false,
     };
@@ -146,6 +159,16 @@ const angularFramework: FrameworkPlugin = {
     return major >= 20 && major <= 22 ? `angular-${major}` : null;
   },
   runtimeDeps: angularRuntime,
+  // Angular browser-mode needs zone.js + the JIT compiler bootstrapped in a
+  // setup file; that fact lives here, not special-cased in the vitest runner.
+  vitestBrowserSetup: {
+    setupFile: {
+      path: 'atomic-testing-example/vitest.setup.ts',
+      kind: 'setup',
+      contents: `// Angular browser-mode test setup.\nimport '@angular/compiler';\nimport 'zone.js';\n`,
+    },
+    note: `// Angular browser-mode ALSO needs a Vite Angular plugin (e.g. @analogjs/vite-plugin-angular)\n// added to \`plugins\` to compile components — this config is a starting point.`,
+  },
   exampleComponent() {
     return {
       fileName: `${COMPONENT}.ts`,
@@ -165,10 +188,7 @@ export class ${COMPONENT} {}
   exampleEngine(ctx) {
     const engine = ctx.framework.enginePackage(ctx.selection.frameworkMajor);
     return {
-      imports: [
-        `import { createTestEngine } from '@atomic-testing/${engine}';`,
-        `import { ${COMPONENT} } from './${COMPONENT}';`,
-      ],
+      imports: engineImports(engine as string),
       // Angular's createTestEngine is async (bootstraps a standalone component).
       engineExpr: `await createTestEngine(${COMPONENT}, scenePart)`,
       isAsync: true,

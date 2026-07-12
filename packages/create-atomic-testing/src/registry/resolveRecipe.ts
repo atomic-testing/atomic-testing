@@ -18,22 +18,18 @@ function dedupe(deps: readonly DependencySpec[]): DependencySpec[] {
       continue;
     }
     // If either occurrence is a prod dep, the merged one is prod.
-    byName.set(dep.name, { ...existing, dev: existing.dev !== false && dep.dev !== false ? true : false });
+    byName.set(dep.name, { ...existing, dev: existing.dev !== false && dep.dev !== false });
   }
   return [...byName.values()];
 }
 
 function buildContext(selection: RecipeSelection): GenerationContext {
-  const framework = getFramework(selection.framework);
-  const runner = getRunner(selection.runner);
-  const designSystem = getDesignSystem(selection.designSystem);
-  const jsx = selection.framework === 'react';
   return {
     selection,
-    framework,
-    runner,
-    designSystem,
-    ext: { component: jsx ? 'tsx' : 'ts', test: jsx ? 'tsx' : 'ts', config: 'ts' },
+    framework: getFramework(selection.framework),
+    runner: getRunner(selection.runner),
+    designSystem: getDesignSystem(selection.designSystem),
+    ext: { test: selection.framework === 'react' ? 'tsx' : 'ts' },
   };
 }
 
@@ -60,12 +56,12 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
 
   // One effective design-system major, used for BOTH the driver package and its
   // deps, so an unresolved major can never make the two disagree (e.g. an
-  // Angular-21 project emitting the v22 Material driver). Falling back to the
-  // framework major is harmless for React design systems: their clamps map any
-  // React major onto the same latest driver.
+  // Angular-21 project emitting the v22 Material driver). Each design system
+  // owns its own fallback via defaultMajor (Angular Material tracks the Angular
+  // major; React design systems return their own latest).
   const effectiveSelection: RecipeSelection = {
     ...selection,
-    designSystemMajor: selection.designSystemMajor ?? selection.frameworkMajor,
+    designSystemMajor: selection.designSystemMajor ?? designSystem.defaultMajor(selection.frameworkMajor),
   };
   const ctx = buildContext(effectiveSelection);
   const driver = designSystem.driverPackage(effectiveSelection.designSystemMajor);
@@ -73,16 +69,13 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
   const common: DependencySpec[] = [atomicDep('core'), atomicDep('component-driver-html')];
   if (driver) common.push(atomicDep(driver));
 
-  const deps =
+  // Playwright drives a real browser, so it needs the playwright package instead
+  // of an in-process framework engine + testing-library runtime.
+  const engineDeps =
     ctx.runner.harness === 'playwright'
-      ? [...common, atomicDep('playwright'), ...designSystem.deps(ctx), ...ctx.runner.deps(ctx)]
-      : [
-          ...common,
-          atomicDep(engine as string),
-          ...framework.runtimeDeps(selection.frameworkMajor),
-          ...designSystem.deps(ctx),
-          ...ctx.runner.deps(ctx),
-        ];
+      ? [atomicDep('playwright')]
+      : [atomicDep(engine as string), ...framework.runtimeDeps(selection.frameworkMajor)];
+  const deps = [...common, ...engineDeps, ...designSystem.deps(ctx), ...ctx.runner.deps(ctx)];
 
   const warnings: string[] = [];
   if (compat.tier === 'experimental') {

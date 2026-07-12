@@ -90,7 +90,7 @@ export interface ProjectSnapshot {
 export type AmbiguityKind = 'framework' | 'framework-major' | 'design-system-major' | 'package-manager';
 
 export interface Diagnostic {
-  readonly level: 'info' | 'warn' | 'error';
+  readonly level: 'warn' | 'error';
   readonly code: string;
   readonly message: string;
 }

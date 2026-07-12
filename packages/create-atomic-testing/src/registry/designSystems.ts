@@ -2,15 +2,17 @@ import { THIRD_PARTY } from '../constants';
 import type { DependencySpec, DesignSystemId } from '../types';
 import type { DesignSystemPlugin, GenerationContext } from './pluginTypes';
 
-const muiMajor = (major: number | null): number => {
-  // MUI ships drivers for v6/v7/v9 (there is no component-driver-mui-v8).
-  if (major === 6 || major === 7 || major === 9) return major;
-  return 9;
-};
+/** Snap a major to the driver's supported set, falling back to the latest. */
+const clampMajor = (supported: readonly number[], major: number | null, fallback: number): number =>
+  major != null && supported.includes(major) ? major : fallback;
 
-// MUI X drivers exist for v6/v7/v8/v9; anything else falls back to the latest.
-const muiXMajor = (major: number | null): number =>
-  major === 6 || major === 7 || major === 8 || major === 9 ? major : 9;
+// Supported driver majors per design system (no component-driver-mui-v8 exists).
+const MUI_MAJORS = [6, 7, 9];
+const MUI_X_MAJORS = [6, 7, 8, 9];
+const NG_MATERIAL_MAJORS = [20, 21, 22];
+
+const muiMajor = (major: number | null): number => clampMajor(MUI_MAJORS, major, 9);
+const muiXMajor = (major: number | null): number => clampMajor(MUI_X_MAJORS, major, 9);
 
 const emotion: DependencySpec[] = [THIRD_PARTY.emotionReact, THIRD_PARTY.emotionStyled];
 
@@ -21,6 +23,7 @@ const html: DesignSystemPlugin = {
   driverPackage() {
     return null; // component-driver-html is always installed by the resolver
   },
+  defaultMajor: frameworkMajor => frameworkMajor,
   deps() {
     return [];
   },
@@ -33,6 +36,7 @@ const mui: DesignSystemPlugin = {
   driverPackage(major) {
     return `component-driver-mui-v${muiMajor(major)}`;
   },
+  defaultMajor: () => 9,
   deps(ctx) {
     const m = muiMajor(ctx.selection.designSystemMajor);
     return [{ name: '@mui/material', range: `^${m}.0.0` }, ...emotion];
@@ -48,6 +52,7 @@ const muiX: DesignSystemPlugin = {
   driverPackage(major) {
     return `component-driver-mui-x-v${muiXMajor(major)}`;
   },
+  defaultMajor: () => 9,
   deps(ctx) {
     const m = muiXMajor(ctx.selection.designSystemMajor);
     // @mui/material comes transitively from the driver at the matching major, so
@@ -62,9 +67,9 @@ const angularMaterial: DesignSystemPlugin = {
   displayName: 'Angular Material',
   compatibleFrameworks: ['angular'],
   driverPackage(major) {
-    const m = major === 20 || major === 21 || major === 22 ? major : 22;
-    return `component-driver-angular-material-v${m}`;
+    return `component-driver-angular-material-v${clampMajor(NG_MATERIAL_MAJORS, major, 22)}`;
   },
+  defaultMajor: frameworkMajor => frameworkMajor, // Angular Material tracks the Angular major
   deps(ctx) {
     const m = ctx.selection.designSystemMajor ?? ctx.selection.frameworkMajor;
     return [
@@ -84,6 +89,7 @@ const primevue: DesignSystemPlugin = {
   driverPackage() {
     return 'component-driver-primevue-v4';
   },
+  defaultMajor: () => 4,
   deps() {
     return [THIRD_PARTY.primevue, THIRD_PARTY.primeuixThemes];
   },
@@ -97,6 +103,7 @@ const radix: DesignSystemPlugin = {
   driverPackage() {
     return 'component-driver-radix-v1';
   },
+  defaultMajor: () => 1,
   deps() {
     return [THIRD_PARTY.radixUi, THIRD_PARTY.cmdk];
   },
@@ -110,6 +117,7 @@ const shadcn: DesignSystemPlugin = {
   driverPackage() {
     return 'component-driver-shadcn-v1';
   },
+  defaultMajor: () => 1,
   deps() {
     // A shadcn project vendors its own Radix components — nothing extra to add.
     return [];
@@ -124,6 +132,7 @@ const astryx: DesignSystemPlugin = {
   driverPackage() {
     return 'component-driver-astryx';
   },
+  defaultMajor: () => 1,
   deps() {
     return [THIRD_PARTY.astryxCore];
   },

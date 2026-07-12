@@ -1,5 +1,6 @@
 import type { DesignSystemId, FrameworkId, RunnerId, SupportTier } from '../types';
 import { getDesignSystem } from './designSystems';
+import { RUNNERS } from './runners';
 
 /**
  * ───────────────────────────────────────────────────────────────────────────
@@ -145,8 +146,7 @@ export function offeredRunners(
   framework: FrameworkId,
   designSystem: DesignSystemId
 ): Array<{ runner: RunnerId; tier: SupportTier }> {
-  const runners: RunnerId[] = ['jest', 'vitest', 'vitest-browser', 'playwright'];
-  return runners
+  return (Object.keys(RUNNERS) as RunnerId[])
     .map(runner => ({ runner, compat: resolveCompatibility(framework, runner, designSystem) }))
     .filter(x => x.compat.allowed)
     .map(x => ({ runner: x.runner, tier: x.compat.tier }));

@@ -1,9 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { LOCKFILE_TO_PM } from '../detect/detectPackageManager';
 import type { PackageJsonLike, ProjectSnapshot } from '../types';
 
-const LOCKFILES = ['pnpm-lock.yaml', 'yarn.lock', 'bun.lock', 'bun.lockb', 'package-lock.json', 'npm-shrinkwrap.json'];
+// Derived from the one lockfile→manager table so the two can't drift.
+const LOCKFILES = LOCKFILE_TO_PM.map(([file]) => file);
 const CONFIG_FILES = [
   'jest.config.js',
   'jest.config.cjs',
