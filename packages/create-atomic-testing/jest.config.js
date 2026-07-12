@@ -12,7 +12,7 @@ module.exports = {
   transform: {
     '^.+\\.ts$': '@swc/jest',
   },
-  testRegex: '(/__tests__/.*.(test|spec)).(jsx?|tsx?)$',
+  testRegex: '(/__tests__/.*\\.(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   verbose: true,
   testTimeout: 30000,

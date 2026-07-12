@@ -92,7 +92,9 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
 
   return {
     id: `${selection.framework}-${selection.frameworkMajor}+${selection.runner}+${selection.designSystem}`,
-    selection,
+    // Report the effective selection (with the resolved design-system major) so
+    // plan.selection matches the files/deps actually generated from it.
+    selection: effectiveSelection,
     tier: compat.tier,
     dependencies: dedupe(deps),
     files: generateFiles(ctx),
