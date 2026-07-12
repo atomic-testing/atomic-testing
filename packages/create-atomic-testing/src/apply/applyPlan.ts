@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 
 import type { PackageJsonLike, RecipePlan } from '../types';
@@ -32,7 +32,21 @@ class PathEscapeError extends Error {
 function resolveInside(root: string, rel: string): string {
   const abs = resolve(root, rel);
   const rl = relative(root, abs);
-  if (rl.startsWith('..') || resolve(root, rl) !== abs || rl === '') {
+  if (rl === '' || rl.startsWith('..') || resolve(root, rl) !== abs) {
+    throw new PathEscapeError(rel);
+  }
+  // Refuse to write through an existing symlink at the destination, and
+  // re-assert containment against the realpath of the deepest existing
+  // ancestor — so a symlinked parent directory can't redirect the write out.
+  if (existsSync(abs) && lstatSync(abs).isSymbolicLink()) {
+    throw new PathEscapeError(rel);
+  }
+  let ancestor = dirname(abs);
+  while (!existsSync(ancestor) && dirname(ancestor) !== ancestor) ancestor = dirname(ancestor);
+  const realRoot = realpathSync(root);
+  const realAncestor = realpathSync(ancestor);
+  const rr = relative(realRoot, realAncestor);
+  if (rr !== '' && (rr.startsWith('..') || resolve(realRoot, rr) !== realAncestor)) {
     throw new PathEscapeError(rel);
   }
   return abs;
@@ -97,9 +111,8 @@ function mergeScripts(
   if (Object.keys(scripts).length === 0) return { scriptsAdded, scriptsConflicted };
 
   const pkgPath = join(root, 'package.json');
-  const pkg: PackageJsonLike = existsSync(pkgPath)
-    ? (JSON.parse(readFileSync(pkgPath, 'utf8')) as PackageJsonLike)
-    : {};
+  const raw = existsSync(pkgPath) ? readFileSync(pkgPath, 'utf8') : '';
+  const pkg: PackageJsonLike = raw ? (JSON.parse(raw) as PackageJsonLike) : {};
   const existing = { ...(pkg.scripts ?? {}) };
   let changed = false;
 
@@ -115,7 +128,12 @@ function mergeScripts(
 
   if (changed && !dryRun) {
     pkg.scripts = existing;
-    writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, 'utf8');
+    // Preserve the file's own indentation and trailing-newline convention so we
+    // don't reformat the whole manifest just to add a script.
+    const indentMatch = raw.match(/\n([ \t]+)"/);
+    const indent: string | number = indentMatch ? indentMatch[1] : 2;
+    const trailingNewline = raw === '' || raw.endsWith('\n');
+    writeFileSync(pkgPath, `${JSON.stringify(pkg, null, indent)}${trailingNewline ? '\n' : ''}`, 'utf8');
   }
   return { scriptsAdded, scriptsConflicted };
 }

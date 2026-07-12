@@ -44,7 +44,12 @@ export async function runInteractive(draft: SelectionDraft): Promise<RecipeSelec
     framework = chosen;
   }
 
-  let frameworkMajor = draft.frameworkMajor;
+  // Only honor a carried-over major if it is valid for the chosen framework —
+  // otherwise an out-of-range major would slip past the prompt into resolveRecipe.
+  let frameworkMajor =
+    draft.frameworkMajor != null && getFramework(framework).supportedMajors.includes(draft.frameworkMajor)
+      ? draft.frameworkMajor
+      : undefined;
   if (frameworkMajor == null) {
     const majors = getFramework(framework).supportedMajors.filter(m => (framework === 'react' ? m >= 17 : true));
     const chosen = unwrap(
@@ -97,7 +102,9 @@ export async function runInteractive(draft: SelectionDraft): Promise<RecipeSelec
     frameworkMajor,
     runner,
     designSystem,
-    designSystemMajor: draft.designSystemMajor,
+    // The detected major only applies if the user kept the detected design
+    // system; if they switched, drop it (resolveRecipe derives a safe default).
+    designSystemMajor: designSystem === draft.designSystem ? draft.designSystemMajor : null,
     typescript: draft.typescript,
     packageManager,
   });

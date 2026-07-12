@@ -97,6 +97,7 @@ export function generateFiles(ctx: GenerationContext): FileOp[] {
 
   return [
     config,
+    ...(ctx.runner.extraFiles?.(ctx) ?? []),
     { path: `${EXAMPLE_DIR}/${component.fileName}`, kind: 'example-component', contents: component.source },
     scenePartFile(ctx),
     unitTestFile(ctx),

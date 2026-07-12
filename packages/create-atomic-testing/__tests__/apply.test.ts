@@ -68,6 +68,16 @@ describe('applyPlan', () => {
     expect(JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).scripts.test).toBe('mocha');
   });
 
+  it('preserves the existing package.json indentation when adding a script', () => {
+    writeFileSync(
+      join(root, 'package.json'),
+      '{\n    "name": "demo",\n    "scripts": {\n        "build": "tsc"\n    }\n}\n'
+    );
+    applyPlan(resolveRecipe(selection), root);
+    const raw = readFileSync(join(root, 'package.json'), 'utf8');
+    expect(raw).toContain('\n        "test": "jest"'); // 4-space base indent kept (8 inside scripts), not reformatted to 2
+  });
+
   it('refuses to write outside the target root', () => {
     const evil: RecipePlan = {
       ...resolveRecipe(selection),
