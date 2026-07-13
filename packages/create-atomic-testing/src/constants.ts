@@ -9,8 +9,13 @@
 
 import type { DependencySpec } from './types';
 
+// NOTE: this must track the workspace version in lockstep. The release "bump
+// version" step updates every package.json but not this literal, and if that
+// commit carries [skip ci] the REC-SYNC-04 guard below never runs to catch the
+// drift — which is exactly how 0.97.0 shipped with this left at 0.96.0. Deriving
+// it from package.json (so it can't drift) is tracked as a follow-up.
 /** The `@atomic-testing/*` line this build of the scaffolder targets. */
-export const ATOMIC_VERSION = '0.96.0';
+export const ATOMIC_VERSION = '0.97.0';
 
 /** The range emitted for every `@atomic-testing/*` dependency. */
 export const ATOMIC_RANGE = `^${ATOMIC_VERSION}`;
