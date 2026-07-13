@@ -93,3 +93,6 @@ docs/docs/api
 
 .claude/settings.local.json
 temp/
+
+# Golden-fixture harness working backups (scripts/skills/snapshot-fixture.mjs)
+scripts/skills/.fixtures/
