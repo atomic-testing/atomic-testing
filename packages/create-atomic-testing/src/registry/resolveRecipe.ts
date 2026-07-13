@@ -62,6 +62,9 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
   const effectiveSelection: RecipeSelection = {
     ...selection,
     designSystemMajor: selection.designSystemMajor ?? designSystem.defaultMajor(selection.frameworkMajor),
+    // Normalize the default-on agents flag to a concrete boolean, so generation
+    // (and any untyped programmatic caller that omitted it) sees one source.
+    agents: selection.agents ?? true,
   };
   const ctx = buildContext(effectiveSelection);
   const driver = designSystem.driverPackage(effectiveSelection.designSystemMajor);

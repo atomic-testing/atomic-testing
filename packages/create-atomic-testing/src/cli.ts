@@ -51,6 +51,8 @@ ${pc.bold('Options')}
   --design-system <html|mui|mui-x|angular-material|primevue|radix|shadcn|astryx|fluent>
   --package-manager <npm|pnpm|yarn|bun>
   --typescript / --no-typescript    Force TypeScript on/off (default: detect)
+  --agents / --no-agents            Emit the Claude Code testing skills + a
+                                    CLAUDE.md guide (default: on)
   --dir <path>                      Target directory (default: cwd)
   -y, --yes                         Accept detected values, do not prompt
   --ci                              Non-interactive (implied when not a TTY)
@@ -72,6 +74,8 @@ function parse(argv: string[]) {
       'package-manager': { type: 'string' },
       typescript: { type: 'boolean' },
       'no-typescript': { type: 'boolean' },
+      agents: { type: 'boolean' },
+      'no-agents': { type: 'boolean' },
       dir: { type: 'string' },
       yes: { type: 'boolean', short: 'y' },
       ci: { type: 'boolean' },
@@ -97,6 +101,7 @@ function flagsFromArgs(values: Record<string, unknown>): SelectionFlags {
     designSystem: oneOf(values['design-system'] as string | undefined, DESIGN_SYSTEM_IDS, '--design-system'),
     packageManager: oneOf(values['package-manager'] as string | undefined, PACKAGE_MANAGER_IDS, '--package-manager'),
     typescript: values.typescript === true ? true : values['no-typescript'] === true ? false : undefined,
+    agents: values.agents === true ? true : values['no-agents'] === true ? false : undefined,
   };
 }
 

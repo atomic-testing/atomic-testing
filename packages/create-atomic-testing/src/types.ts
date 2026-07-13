@@ -53,7 +53,14 @@ export interface FileOp {
   readonly kind: FileKind;
 }
 
-export type FileKind = 'runner-config' | 'scene-part' | 'example-test' | 'example-component' | 'setup';
+export type FileKind =
+  | 'runner-config'
+  | 'scene-part'
+  | 'example-test'
+  | 'example-component'
+  | 'setup'
+  | 'skill-file'
+  | 'agent-config';
 
 /** An additive patch to the target `package.json`. Never a wholesale replacement. */
 export interface PackageJsonPatch {
@@ -140,6 +147,12 @@ export interface RecipeSelection {
   readonly designSystemMajor: number | null;
   readonly typescript: boolean;
   readonly packageManager: PackageManagerId;
+  /**
+   * Emit the Claude Code testing skills (`.claude/skills/*`) and a project-root
+   * CLAUDE.md guide into the scaffolded project. Default-on; `--no-agents` opts
+   * out. Kept on the selection because it is a user choice that shapes generation.
+   */
+  readonly agents: boolean;
 }
 
 /**

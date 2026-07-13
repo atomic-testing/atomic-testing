@@ -1,6 +1,7 @@
 import { EXAMPLE_COMPONENT_NAME } from '../registry/frameworks';
 import type { GenerationContext } from '../registry/pluginTypes';
 import type { FileOp } from '../types';
+import { skillFileOps } from './skillFiles';
 
 /** Directory (relative to target root) the sample files are written into. */
 export const EXAMPLE_DIR = 'atomic-testing-example';
@@ -87,7 +88,7 @@ export function generateFiles(ctx: GenerationContext): FileOp[] {
   const config = ctx.runner.configFile(ctx);
 
   if (ctx.runner.harness === 'playwright') {
-    return [config, playwrightTestFile(ctx)];
+    return [config, playwrightTestFile(ctx), ...skillFileOps(ctx)];
   }
 
   const component = ctx.framework.exampleComponent(ctx);
@@ -101,5 +102,6 @@ export function generateFiles(ctx: GenerationContext): FileOp[] {
     { path: `${EXAMPLE_DIR}/${component.fileName}`, kind: 'example-component', contents: component.source },
     scenePartFile(ctx),
     unitTestFile(ctx),
+    ...skillFileOps(ctx),
   ];
 }

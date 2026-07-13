@@ -19,6 +19,7 @@
     "**/jest.setup.js",
     "**/node_modules/**",
     "**/*/jest.config.cjs",
+    "**/skillContent.generated.ts",
     "typedocs/"
   ],
   "rules": {
