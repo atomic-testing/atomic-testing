@@ -35,6 +35,9 @@ Drivers abstract away the DOM details of complex components. Instead of manipula
 For example, the signup form in the example project is implemented with a `CredentialFormDriver` that wraps four MUI text fields and a navigation component. Tests only call `setValue()` and `next()` on this driver, keeping the assertions focused on behavior rather than DOM markup.
 
 By composing multiple drivers you can model entire workflows with minimal test code.
+For the wider question of _how many_ drivers a page should decompose into — and
+how to avoid a single god driver — see
+[Decomposing driver trees](../guides/decomposing-driver-trees.md).
 
 ## Example: composing a login form driver
 
