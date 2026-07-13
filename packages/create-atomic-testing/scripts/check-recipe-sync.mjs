@@ -124,5 +124,5 @@ if (errors.length > 0) {
 }
 
 process.stdout.write(
-  `[recipe-sync] OK — ${referenced.size} @atomic-testing packages referenced, all in sync at ${ATOMIC_VERSION}.\n`,
+  `[recipe-sync] OK — ${referenced.size} @atomic-testing packages referenced, all in sync at ${ATOMIC_VERSION}.\n`
 );
