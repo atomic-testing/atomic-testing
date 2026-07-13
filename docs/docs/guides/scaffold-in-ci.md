@@ -50,7 +50,7 @@ of what the target project happens to look like.
 | `--framework`                      | `react` \| `vue` \| `angular`                                                                     | Override framework detection                |
 | `--framework-major`                | integer                                                                                           | Override the detected major version         |
 | `--runner`                         | `jest` \| `vitest` \| `vitest-browser` \| `playwright`                                            | Choose the test runner                      |
-| `--design-system`                  | `html` \| `mui` \| `mui-x` \| `angular-material` \| `primevue` \| `radix` \| `shadcn` \| `astryx` | Choose the driver package                   |
+| `--design-system`                  | `html` \| `mui` \| `mui-x` \| `angular-material` \| `primevue` \| `radix` \| `shadcn` \| `astryx` \| `fluent` | Choose the driver package                   |
 | `--package-manager`                | `npm` \| `pnpm` \| `yarn` \| `bun`                                                                | Override lockfile-based detection           |
 | `--typescript` / `--no-typescript` | —                                                                                                 | Force TypeScript on/off (default: detect)   |
 | `--dir <path>`                     | path                                                                                              | Target project directory (default: cwd)     |

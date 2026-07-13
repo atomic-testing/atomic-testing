@@ -1,0 +1,5 @@
+/* Fluent UI ships its own component styles via Griffel; only the app frame needs sizing. */
+html,
+body {
+  height: 100%;
+}

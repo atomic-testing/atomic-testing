@@ -12,7 +12,7 @@ It does not create your app — it adds testing to a project you already have (o
 
 ## What it does
 
-1. **Detects** your environment from `package.json` + lockfiles + config files: framework & major (React 16/17/18/19, Vue 3, Angular 20/21/22), runner (Jest / Vitest / Vitest browser mode / Playwright), package manager (npm / pnpm / yarn / bun), TypeScript, and design system (HTML, MUI, MUI X, Angular Material, PrimeVue, Radix, shadcn, Astryx).
+1. **Detects** your environment from `package.json` + lockfiles + config files: framework & major (React 16/17/18/19, Vue 3, Angular 20/21/22), runner (Jest / Vitest / Vitest browser mode / Playwright), package manager (npm / pnpm / yarn / bun), TypeScript, and design system (HTML, MUI, MUI X, Angular Material, PrimeVue, Radix, shadcn, Astryx, Fluent UI v9).
 2. **Prompts** for anything it could not confidently detect (interactive on a TTY; non-interactive in CI).
 3. **Resolves a recipe** — the exact package set + config + example for your `(framework × runner × design system)` — and refuses combinations that are impossible or not yet supported, with a clear message.
 4. **Writes** a standalone runner config, an example component, a `ScenePart`, and a passing test under `atomic-testing-example/`, and adds a `test` script.
@@ -25,7 +25,7 @@ It does not create your app — it adds testing to a project you already have (o
 | `--framework <react\|vue\|angular>`                                                     | Override framework detection              |
 | `--framework-major <number>`                                                            | Override the framework major              |
 | `--runner <jest\|vitest\|vitest-browser\|playwright>`                                   | Pick the runner                           |
-| `--design-system <html\|mui\|mui-x\|angular-material\|primevue\|radix\|shadcn\|astryx>` | Pick the design system                    |
+| `--design-system <html\|mui\|mui-x\|angular-material\|primevue\|radix\|shadcn\|astryx\|fluent>` | Pick the design system                    |
 | `--package-manager <npm\|pnpm\|yarn\|bun>`                                              | Force a package manager                   |
 | `--typescript` / `--no-typescript`                                                      | Force TypeScript on/off (default: detect) |
 | `--dir <path>`                                                                          | Target directory (default: cwd)           |

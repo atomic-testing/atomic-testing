@@ -67,6 +67,13 @@ describe('resolveRecipe', () => {
     );
   });
 
+  it('adds the Fluent v9 driver + runtime for React + Fluent', () => {
+    const plan = resolveRecipe(sel({ designSystem: 'fluent' }));
+    expect(names(plan)).toEqual(
+      expect.arrayContaining(['@atomic-testing/component-driver-fluent-v9', '@fluentui/react-components'])
+    );
+  });
+
   it('uses the Vue engine + PrimeVue driver for Vue + PrimeVue', () => {
     const plan = resolveRecipe(sel({ framework: 'vue', frameworkMajor: 3, designSystem: 'primevue' }));
     expect(plan.tier).toBe('verified');

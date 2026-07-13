@@ -26,6 +26,7 @@ export function detectDesignSystem(snapshot: ProjectSnapshot): DetectedDesignSys
     ['angular-material', '@angular/material'],
     ['primevue', 'primevue'],
     ['astryx', '@astryxdesign/core'],
+    ['fluent', '@fluentui/react-components'],
   ];
   for (const [id, marker] of checks) {
     if (deps[marker] != null) return { id, major: majorOf(marker) };
