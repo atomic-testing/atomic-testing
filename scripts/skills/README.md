@@ -20,14 +20,33 @@ driver), which is documented as a manual eval step rather than half-automated.
 | `antiPattern.mjs`            | Detects whether `example-mui-signup-form` grew a wizard page object (an **inverted** check).     | library                       |
 | `snapshot-fixture.mjs`       | Strip / restore a golden driver for the eval workflow below.                                     | run directly                  |
 | `fixtureStrip.mjs`           | Pure consumer-un-wiring transforms used by the snapshot tool.                                    | library                       |
-
-The `skillClaims.mjs` / `check-skill-sync.mjs` / `skillEmbed.mjs` /
-`gen-skill-content.mjs` scripts (the `check:skill-sync` claim-drift gate and the
-scaffolder's embedded skill copy) land alongside these and are documented where
-they are wired.
+| `skillClaims.mjs`            | Pure: the canonical core symbols + design-system families the skills claim, and source lookups.  | library                       |
+| `check-skill-sync.mjs`       | Cross-checks every skill claim against real source, and the embedded skill copy against source.  | `pnpm check:skill-sync`       |
+| `skillEmbed.mjs`             | Pure render of the four SKILL.md files into the scaffolder's embedded copy.                      | library                       |
+| `gen-skill-content.mjs`      | Regenerate `create-atomic-testing`'s embedded skill module from `.claude/skills/`.               | `pnpm gen:skill-content`      |
 
 Unit tests (`*.test.mjs`) run with Node's built-in runner: `pnpm test:skills`
 (`node --test`). No extra dependency.
+
+## The skill-sync gate
+
+`check-skill-sync.mjs` (`SKILL-SYNC-*`) is the claim-drift gate for the skills,
+modelled on `packages/create-atomic-testing/scripts/check-recipe-sync.mjs`. It
+fails loudly when a concrete claim in a SKILL.md has drifted from the library:
+
+- a core driver class/method the skills name (`ComponentDriver`,
+  `ContainerDriver`, `ListComponentDriver`, `AssertScenePlaceableDriver`,
+  `commutableOption`, `waitUntilComponentState`, `waitUntil`) no longer exists in
+  `packages/core/src` — or the canonical list names one no skill references;
+- a shipped `component-driver-*` family is unaccounted-for, or the config names a
+  family with no package, or a family the skills should reference dropped out of
+  the prose (`DESIGN_SYSTEM_FAMILIES` in `skillClaims.mjs` is the three-way bridge
+  between real packages, config, and prose);
+- the scaffolder's embedded skill copy has drifted from `.claude/skills/`.
+
+It lives at the repo root (not in `create-atomic-testing/`) because its inputs are
+repo-root — `.claude/skills/`, `packages/core/src`, and the whole
+`packages/component-driver-*` listing — and it never reads that package's `dist`.
 
 ## The structural analyzer
 

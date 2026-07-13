@@ -385,6 +385,19 @@ jobs:
       - name: Scaffolder-coverage check
         run: pnpm --filter create-atomic-testing check:coverage
 
+      # Skill governance (SKILL-SYNC-*): the four .claude/skills/*/SKILL.md ship
+      # through the scaffolder, so their claim-drift gate, the embedded-copy
+      # freshness check, and the golden-fixture structural harness run here. All
+      # dependency-free (node --test / plain Node), reading repo-root source.
+      - name: Skill-sync check
+        run: pnpm check:skill-sync
+
+      - name: Golden-fixture structural check
+        run: pnpm check:golden-fixtures
+
+      - name: Skill harness unit tests
+        run: pnpm test:skills
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing
