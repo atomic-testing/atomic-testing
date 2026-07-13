@@ -18,6 +18,7 @@
     "check:style": "oxfmt --ignore-path .gitignore --ignore-path .oxfmtignore",
     "check:driver-structure": "node scripts/skills/check-driver-structure.mjs",
     "check:golden-fixtures": "node scripts/skills/check-golden-fixtures.mjs",
+    "gen:skill-content": "node scripts/skills/gen-skill-content.mjs",
     "test:skills": "node --test scripts/skills/*.test.mjs",
     "typedoc": "typedoc --out typedocs",
     "bumpVersion": "node scripts/bumpVersion.js",

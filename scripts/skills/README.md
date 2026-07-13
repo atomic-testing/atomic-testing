@@ -13,8 +13,8 @@ driver), which is documented as a manual eval step rather than half-automated.
 ## Scripts
 
 | Script                       | What it does                                                                                     | Wired as                      |
-| ---------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------- |
-| `driverStructure.mjs`        | Pure analyzer: driver-file source → structural findings (errors + advisory warnings).           | library                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------- |
+| `driverStructure.mjs`        | Pure analyzer: driver-file source → structural findings (errors + advisory warnings).            | library                       |
 | `check-driver-structure.mjs` | CLI over the analyzer. No args → scans the golden example drivers. `--page` for a page scene.    | `pnpm check:driver-structure` |
 | `check-golden-fixtures.mjs`  | Asserts the golden fixtures stay structurally clean **and** the signup anti-pattern still holds. | `pnpm check:golden-fixtures`  |
 | `antiPattern.mjs`            | Detects whether `example-mui-signup-form` grew a wizard page object (an **inverted** check).     | library                       |

@@ -14,6 +14,7 @@ const selection: RecipeSelection = {
   designSystemMajor: null,
   typescript: true,
   packageManager: 'pnpm',
+  agents: true,
 };
 
 let root: string;
@@ -76,6 +77,27 @@ describe('applyPlan', () => {
     applyPlan(resolveRecipe(selection), root);
     const raw = readFileSync(join(root, 'package.json'), 'utf8');
     expect(raw).toContain('\n        "test": "jest"'); // 4-space base indent kept (8 inside scripts), not reformatted to 2
+  });
+
+  it('writes the skill files and a CLAUDE.md guide into the project', () => {
+    applyPlan(resolveRecipe(selection), root);
+    expect(existsSync(join(root, '.claude/skills/scaffold-test-driver/SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude/skills/sync-test-driver/SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'CLAUDE.md'))).toBe(true);
+  });
+
+  it('never clobbers an existing CLAUDE.md — writes a .atomic-example sibling', () => {
+    writeFileSync(join(root, 'CLAUDE.md'), '# my project notes\n');
+    const result = applyPlan(resolveRecipe(selection), root);
+    expect(readFileSync(join(root, 'CLAUDE.md'), 'utf8')).toBe('# my project notes\n');
+    expect(existsSync(join(root, 'CLAUDE.md.atomic-example'))).toBe(true);
+    expect(result.files.some(f => f.path === 'CLAUDE.md.atomic-example' && f.outcome === 'wrote-example')).toBe(true);
+  });
+
+  it('omits skills and CLAUDE.md when agents are disabled', () => {
+    applyPlan(resolveRecipe({ ...selection, agents: false }), root);
+    expect(existsSync(join(root, '.claude'))).toBe(false);
+    expect(existsSync(join(root, 'CLAUDE.md'))).toBe(false);
   });
 
   it('refuses to write outside the target root', () => {

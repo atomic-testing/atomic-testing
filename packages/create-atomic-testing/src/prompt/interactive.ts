@@ -100,6 +100,9 @@ export async function runInteractive(draft: SelectionDraft): Promise<RecipeSelec
     designSystemMajor: designSystem === draft.designSystem ? draft.designSystemMajor : null,
     typescript: draft.typescript,
     packageManager,
+    // Agents default on and are only opted out via the `--no-agents` flag, so the
+    // interactive flow carries the draft's value rather than adding a prompt.
+    agents: draft.agents,
   });
 }
 

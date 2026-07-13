@@ -9,6 +9,8 @@ export interface SelectionFlags {
   designSystem?: DesignSystemId;
   typescript?: boolean;
   packageManager?: PackageManagerId;
+  /** `--no-agents` sets this false; omitted keeps the default-on behavior. */
+  agents?: boolean;
 }
 
 /** A selection in progress — required axes may be undefined until resolved. */
@@ -20,6 +22,7 @@ export interface SelectionDraft {
   designSystemMajor: number | null;
   typescript: boolean;
   packageManager: PackageManagerId;
+  agents: boolean;
 }
 
 export type MissingField = 'framework' | 'framework-major' | 'runner';
@@ -42,6 +45,9 @@ export function buildDraft(detect: DetectResult, flags: SelectionFlags): Selecti
     designSystemMajor: designSystem === detect.designSystem?.id ? (detect.designSystem?.major ?? null) : null,
     typescript: flags.typescript ?? detect.typescript,
     packageManager: flags.packageManager ?? detect.packageManager,
+    // The agent skills are general-purpose; there is nothing to detect, so they
+    // default on and are only turned off by an explicit `--no-agents` flag.
+    agents: flags.agents ?? true,
   };
 }
 
@@ -77,5 +83,6 @@ export function toSelection(draft: SelectionDraft): RecipeSelection {
     designSystemMajor: draft.designSystemMajor,
     typescript: draft.typescript,
     packageManager: draft.packageManager,
+    agents: draft.agents,
   };
 }
