@@ -1,21 +1,22 @@
 /**
- * Single source of truth for the versions the scaffolder emits.
+ * Single source of truth for the third-party ranges the scaffolder emits, plus
+ * the `@atomic-testing/*` version line (derived from this package's own version).
  *
  * The recipe catalog references these constants rather than hard-coding ranges
- * per recipe, so a workspace version bump or a peer-range change is a one-line
- * edit here — and `scripts/check-recipe-sync.mjs` fails CI if any value here
- * drifts from the real per-package manifests (REC-SYNC-*).
+ * per recipe, so a peer-range change is a one-line edit here — and
+ * `scripts/check-recipe-sync.mjs` fails CI if any value here drifts from the real
+ * per-package manifests (REC-SYNC-*). The `@atomic-testing/*` version is NOT
+ * hand-maintained: it is read from this package's `package.json`, which the
+ * release process bumps in lockstep across every `@atomic-testing/*` package, so
+ * it can never go stale (as a hard-coded literal did when the 0.97.0 bump updated
+ * the manifests but not the constant, and the `[skip ci]` bump hid it).
  */
 
+import pkg from '../package.json';
 import type { DependencySpec } from './types';
 
-// NOTE: this must track the workspace version in lockstep. The release "bump
-// version" step updates every package.json but not this literal, and if that
-// commit carries [skip ci] the REC-SYNC-04 guard below never runs to catch the
-// drift — which is exactly how 0.97.0 shipped with this left at 0.96.0. Deriving
-// it from package.json (so it can't drift) is tracked as a follow-up.
 /** The `@atomic-testing/*` line this build of the scaffolder targets. */
-export const ATOMIC_VERSION = '0.97.0';
+export const ATOMIC_VERSION: string = pkg.version;
 
 /** The range emitted for every `@atomic-testing/*` dependency. */
 export const ATOMIC_RANGE = `^${ATOMIC_VERSION}`;

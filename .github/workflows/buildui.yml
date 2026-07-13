@@ -358,8 +358,11 @@ jobs:
   # create-atomic-testing scaffolder — pure-logic unit tests (detect / recipes /
   # generate / apply) plus the recipe-catalog sync-check (REC-SYNC-*), which
   # fails if any package a recipe emits does not exist or its version / peer
-  # range drifts from the real workspace. Self-contained (no `needs: build`):
-  # the sync-check builds only this package, the unit tests import from src.
+  # range drifts from the real workspace, and the coverage check (COV-*), which
+  # fails if a shipped component-driver package is not registered in the
+  # scaffolder registry (and so would be silently missing from the CLI and the
+  # generated support matrix). Self-contained (no `needs: build`): the checks
+  # build only this package, the unit tests import from src.
   create-atomic-testing-test:
     name: Test create-atomic-testing scaffolder
     runs-on: ubuntu-latest
@@ -378,6 +381,9 @@ jobs:
 
       - name: Recipe-catalog sync-check
         run: pnpm --filter create-atomic-testing check:recipes
+
+      - name: Scaffolder-coverage check
+        run: pnpm --filter create-atomic-testing check:coverage
 
       - name: Run unit tests
         run: pnpm test:dom

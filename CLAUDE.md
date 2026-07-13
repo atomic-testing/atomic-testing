@@ -242,6 +242,8 @@ export class MyDriver extends ComponentDriver<{}> implements IInputDriver<string
 }
 ```
 
+> **Shipping a new component-driver _package_ (a new design system) or a framework engine?** Register it with the scaffolder so `create atomic-testing` offers it and it shows up in the generated **Framework & Runner Support** matrix (that matrix is derived from the same registry): add or extend a plugin in `packages/create-atomic-testing/src/registry/` (`designSystems.ts` / `frameworks.ts`) plus a `compatibility.ts` row. The `check:coverage` (COV-\*) CI gate fails if a shipped `component-driver-*` package isn't registered. Details: [`packages/create-atomic-testing/CLAUDE.md`](packages/create-atomic-testing/CLAUDE.md).
+
 ## Testing Pattern
 
 ### Simple DOM-Only Test
