@@ -14,11 +14,12 @@ import {
   skillMentionsKeyword,
   skillMentionsSymbol,
 } from './skillClaims.mjs';
+import { SKILL_IDS } from './skillEmbed.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const skillsDir = resolve(repoRoot, '.claude/skills');
 const coreBlob = readSourceBlob(resolve(repoRoot, 'packages/core/src'));
-const { blob: skillBlob } = readSkillTexts(skillsDir);
+const { blob: skillBlob } = readSkillTexts(skillsDir, SKILL_IDS);
 const real = realDesignSystemFamilies(resolve(repoRoot, 'packages'));
 
 test('every canonical core symbol resolves against the real core source', () => {

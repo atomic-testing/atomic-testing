@@ -24,7 +24,7 @@ import {
   skillMentionsKeyword,
   skillMentionsSymbol,
 } from './skillClaims.mjs';
-import { GENERATED_MODULE_REL, renderSkillContentModule } from './skillEmbed.mjs';
+import { GENERATED_MODULE_REL, renderSkillContentModule, SKILL_IDS } from './skillEmbed.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const skillsDir = resolve(repoRoot, '.claude/skills');
@@ -40,7 +40,10 @@ function main() {
   }
 
   const errors = [];
-  const { blob: skillBlob } = readSkillTexts(skillsDir);
+  // Only the four distributed skills — not every directory under .claude/skills/
+  // (e.g. the contributor-only backfill-driver-feature) — so 02/05 can't pass by
+  // a symbol/keyword surviving in a skill this gate isn't actually about.
+  const { blob: skillBlob } = readSkillTexts(skillsDir, SKILL_IDS);
   const coreBlob = readSourceBlob(coreSrc);
 
   // 01 / 02 — core symbols exist in source, and the canonical list stays honest.
@@ -98,9 +101,10 @@ function main() {
     process.exit(1);
   }
 
+  const familyWord = real.size === 1 ? 'family' : 'families';
   process.stdout.write(
     `[skill-sync] OK — ${CANONICAL_CORE_SYMBOLS.length} core symbol(s) resolve, ` +
-      `${real.size} design-system famil(y|ies) accounted for, embedded skills in sync.\n`
+      `${real.size} design-system ${familyWord} accounted for, embedded skills in sync.\n`
   );
 }
 

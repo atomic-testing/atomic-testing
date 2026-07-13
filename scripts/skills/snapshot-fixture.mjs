@@ -35,7 +35,11 @@ function backupDir(name) {
 }
 
 function isStripped(name) {
-  return existsSync(join(backupDir(name), 'driver.golden')) || existsSync(join(backupDir(name), 'consumer.golden'));
+  // Require BOTH backup files, not either — strip() writes them sequentially
+  // (line 65-66), so a run interrupted between the two copies would otherwise
+  // report "stripped" on a half-written backup, and restore()'s unconditional
+  // cpSync of the missing file would throw instead of failing informatively.
+  return existsSync(join(backupDir(name), 'driver.golden')) && existsSync(join(backupDir(name), 'consumer.golden'));
 }
 
 function requireFixture(name) {
