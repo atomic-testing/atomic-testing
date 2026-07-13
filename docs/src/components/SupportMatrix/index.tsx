@@ -68,8 +68,9 @@ const systemsFor = (framework: string): readonly DesignSystemEntry[] =>
   matrix.designSystems.find(group => group.framework === framework)?.systems ?? [];
 
 function TierBadge({ cell }: { cell: MatrixCell | undefined }): JSX.Element {
-  // An unregistered combination has no cell; a disabled one carries a note. Both read
-  // as "not something you'd pick", so an em dash covers unavailable and no-cell alike.
+  // The generator emits a cell for every framework×runner pair (unregistered combos
+  // get tier "unavailable"), so the missing-cell branch is only defensive against
+  // malformed data; an "unavailable" tier and a missing cell both render as an em dash.
   if (!cell || cell.tier === 'unavailable') {
     return (
       <span className={styles.unavailable} aria-label='Not offered'>

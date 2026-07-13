@@ -33,9 +33,11 @@ Every offered combination carries a support tier:
   warning before writing** an experimental recipe so you know you're on a
   less-travelled path.
 
-The generated example always drives a real state change through the framework-agnostic
-[HTML driver](./manual-installation.mdx), so the example test is green regardless of tier
-— experimental means the surrounding config is unproven, not that the test won't pass.
+On the in-process runners (Jest, Vitest, Vitest browser mode) the generated example always
+drives a real state change through the framework-agnostic [HTML driver](./manual-installation.mdx),
+so the example test is green regardless of tier — experimental means the surrounding config is
+unproven, not that the test won't pass. The Playwright recipe is the exception: it scaffolds a
+placeholder `*.e2e` starter test that only turns green once your app serves the page.
 
 ## Refused combinations
 

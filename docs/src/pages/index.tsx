@@ -137,13 +137,15 @@ function ScaffoldBox(): JSX.Element {
   const command = SCAFFOLD_COMMANDS[manager];
   return (
     <div style={{ maxWidth: 540 }}>
-      <div role='tablist' aria-label='Package manager' style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
+      {/* A pressed-button group, not tabs: this only swaps the command string, and
+          real tab semantics (roving tabindex, arrow-key nav, tabpanels) would be
+          misleading here. aria-pressed conveys the toggle state correctly. */}
+      <div role='group' aria-label='Package manager' style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
         {packageManagers.map(id => (
           <button
             type='button'
-            role='tab'
             key={id}
-            aria-selected={manager === id}
+            aria-pressed={manager === id}
             className={clsx(styles.animTab, manager === id && styles.animTabActive)}
             onClick={() => setManager(id)}>
             {id}
