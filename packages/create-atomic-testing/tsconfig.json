@@ -1,7 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "exclude": ["node_modules", "dist", "build", "__tests__"],
-  "include": ["./src"],
+  // package.json is listed so src/constants.ts can import its `version` — the
+  // scaffolder's own version is the single source for the emitted @atomic-testing
+  // range (see constants.ts). It only affects tsc's (unused) emit: check:type runs
+  // --noEmit and the published dist is produced by tsdown, not tsc.
+  "include": ["./src", "./package.json"],
   "compilerOptions": {
     "outDir": "./build",
     "composite": true,
