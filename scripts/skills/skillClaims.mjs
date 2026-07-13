@@ -47,16 +47,18 @@ export const DESIGN_SYSTEM_FAMILIES = {
   astryx: null,
 };
 
-/** Read the four SKILL.md bodies as one searchable blob plus per-file map. */
-export function readSkillTexts(skillsDir) {
+/**
+ * Read the given skills' SKILL.md bodies as one searchable blob plus per-file map.
+ * Takes an explicit `skillIds` list (callers pass skillEmbed.mjs's `SKILL_IDS`)
+ * rather than globbing every directory under `skillsDir` — `.claude/skills/` also
+ * holds contributor-only skills (e.g. backfill-driver-feature) that aren't part of
+ * what's distributed, and letting their prose satisfy a claim would let the four
+ * distributed skills drift without the gate noticing.
+ */
+export function readSkillTexts(skillsDir, skillIds) {
   const byId = {};
-  for (const id of readdirSync(skillsDir)) {
-    const file = join(skillsDir, id, 'SKILL.md');
-    try {
-      byId[id] = readFileSync(file, 'utf8');
-    } catch {
-      // not a skill directory
-    }
+  for (const id of skillIds) {
+    byId[id] = readFileSync(join(skillsDir, id, 'SKILL.md'), 'utf8');
   }
   return { byId, blob: Object.values(byId).join('\n') };
 }
