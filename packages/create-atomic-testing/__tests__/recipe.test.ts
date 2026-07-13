@@ -12,6 +12,7 @@ function sel(overrides: Partial<RecipeSelection> = {}): RecipeSelection {
     designSystemMajor: null,
     typescript: true,
     packageManager: 'pnpm',
+    agents: true,
     ...overrides,
   };
 }
@@ -172,5 +173,46 @@ describe('recipe dependency-major consistency (review regressions)', () => {
   it('marks radix cmdk as an optional dependency', () => {
     const plan = resolveRecipe(sel({ designSystem: 'radix' }));
     expect(plan.dependencies.find(d => d.name === 'cmdk')?.optional).toBe(true);
+  });
+});
+
+describe('agent skills wiring', () => {
+  const skillPaths = (plan: ReturnType<typeof resolveRecipe>): string[] =>
+    plan.files.filter(f => f.kind === 'skill-file').map(f => f.path);
+
+  it('emits all four skills and a CLAUDE.md guide by default', () => {
+    const plan = resolveRecipe(sel());
+    expect(skillPaths(plan)).toEqual([
+      '.claude/skills/scaffold-test-driver/SKILL.md',
+      '.claude/skills/author-component-tests/SKILL.md',
+      '.claude/skills/diagnose-test-failure/SKILL.md',
+      '.claude/skills/sync-test-driver/SKILL.md',
+    ]);
+    expect(plan.files.some(f => f.kind === 'agent-config' && f.path === 'CLAUDE.md')).toBe(true);
+  });
+
+  it('omits every skill + agent-config file with --no-agents', () => {
+    const plan = resolveRecipe(sel({ agents: false }));
+    expect(plan.files.some(f => f.kind === 'skill-file' || f.kind === 'agent-config')).toBe(false);
+  });
+
+  it('embeds the real skill body verbatim (the six-rule algorithm)', () => {
+    const scaffold = resolveRecipe(sel()).files.find(f => f.path.endsWith('scaffold-test-driver/SKILL.md'))!;
+    expect(scaffold.contents).toContain('six-rule algorithm');
+    expect(scaffold.contents).toContain('AssertScenePlaceableDriver');
+  });
+
+  it('adapts the CLAUDE.md to the detected engine, runner and driver package', () => {
+    const claude = resolveRecipe(sel({ frameworkMajor: 19, designSystem: 'mui', designSystemMajor: 9 })).files.find(
+      f => f.kind === 'agent-config'
+    )!;
+    expect(claude.contents).toContain('@atomic-testing/react-19');
+    expect(claude.contents).toContain('@atomic-testing/component-driver-mui-v9');
+  });
+
+  it('emits the skills for the Playwright harness too, pointing at the playwright engine', () => {
+    const plan = resolveRecipe(sel({ runner: 'playwright' }));
+    expect(plan.files.filter(f => f.kind === 'skill-file')).toHaveLength(4);
+    expect(plan.files.find(f => f.kind === 'agent-config')!.contents).toContain('@atomic-testing/playwright');
   });
 });
