@@ -93,6 +93,18 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
   }
   if (designSystem.usageNote) warnings.push(designSystem.usageNote);
 
+  const nextSteps = [
+    ...ctx.runner.nextSteps(ctx),
+    'Replace the sample component in atomic-testing-example/ with your own.',
+  ];
+  // Point agents-on users at the skills the CLI just wrote — --no-agents users get no
+  // mention of a feature they explicitly opted out of.
+  if (effectiveSelection.agents) {
+    nextSteps.push(
+      'Using Claude Code? `.claude/skills/` and `CLAUDE.md` are ready to help write and maintain tests — see https://atomic-testing.dev/docs/guides/decomposing-driver-trees to learn how.'
+    );
+  }
+
   return {
     id: `${selection.framework}-${selection.frameworkMajor}+${selection.runner}+${selection.designSystem}`,
     // Report the effective selection (with the resolved design-system major) so
@@ -103,6 +115,6 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
     files: generateFiles(ctx),
     packageJsonPatch: { scripts: ctx.runner.scripts(ctx) },
     warnings,
-    nextSteps: [...ctx.runner.nextSteps(ctx), 'Replace the sample component in atomic-testing-example/ with your own.'],
+    nextSteps,
   };
 }

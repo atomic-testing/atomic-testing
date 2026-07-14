@@ -37,16 +37,7 @@ Great for user flows, cross-browser testing, and production-like scenarios.
 <Tabs>
 <TabItem value="react-mui" label="React + Material-UI">
 
-```bash
-# Most popular combination
-pnpm add @atomic-testing/react-18 @atomic-testing/component-driver-mui-v9
-
-# If you're using React 19
-pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-mui-v9
-
-# If you're still on React 17
-pnpm add @atomic-testing/react-legacy @atomic-testing/component-driver-mui-v6
-```
+Install the React packages from [Manual Installation](./manual-installation.mdx), then add the Material-UI driver matching your MUI major from [Material-UI Drivers](#material-ui-drivers) below (most apps want `@atomic-testing/component-driver-mui-v9` on React 18/19, or `-mui-v6` on React 17).
 
 **Perfect for**: Modern React apps with Material-UI components
 
@@ -54,15 +45,9 @@ pnpm add @atomic-testing/react-legacy @atomic-testing/component-driver-mui-v6
 
 <TabItem value="vue-html" label="Vue 3 + HTML">
 
-```bash
-# Vue 3 with standard HTML elements
-pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
+See the Vue 3 install command in [Manual Installation](./manual-installation.mdx).
 
-# Vue 3 with Material-UI (if using Vuetify/similar)
-pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-mui-v9
-```
-
-**Perfect for**: Vue 3 applications with custom components or HTML-based UI libraries
+**Perfect for**: Vue 3 applications with custom components or HTML-based UI libraries. (There is currently no `@atomic-testing/component-driver-*` package for Vuetify — if you're on PrimeVue instead, see [PrimeVue Drivers](#primevue-drivers) below.)
 
 </TabItem>
 
@@ -70,11 +55,11 @@ pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-mui-v9
 
 ```bash
 # Angular 20 with standard HTML elements — pick the package matching your Angular major
-pnpm add @atomic-testing/angular-20 @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/angular-20
 
 # Angular 21 / 22
-pnpm add @atomic-testing/angular-21 @atomic-testing/component-driver-html
-pnpm add @atomic-testing/angular-22 @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/angular-21
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/angular-22
 ```
 
 **Perfect for**: Standalone-component Angular apps — works with both zone.js and
@@ -84,18 +69,7 @@ zoneless change detection (`zone.js` is an optional peer; zoneless apps don't ne
 
 <TabItem value="e2e-any" label="E2E Testing (Any Framework)">
 
-```bash
-# E2E testing with Material-UI components
-pnpm add @atomic-testing/playwright @atomic-testing/component-driver-mui-v9
-
-# E2E testing with HTML elements
-pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
-
-# E2E testing with multiple component libraries
-pnpm add @atomic-testing/playwright \
-  @atomic-testing/component-driver-mui-v9 \
-  @atomic-testing/component-driver-html
-```
+Install the Playwright packages from [Manual Installation](./manual-installation.mdx), then add whichever component-driver package(s) match your UI from [Component Driver Libraries](#-component-driver-libraries) below — mix in as many as you need (e.g. Material-UI and HTML together).
 
 **Perfect for**: Cross-browser testing, user journey validation, production testing
 
@@ -103,13 +77,7 @@ pnpm add @atomic-testing/playwright \
 
 <TabItem value="fullstack" label="Full-Stack Testing">
 
-```bash
-# Cover all bases: DOM + E2E
-pnpm add @atomic-testing/react-18 \
-  @atomic-testing/playwright \
-  @atomic-testing/component-driver-mui-v9 \
-  @atomic-testing/component-driver-html
-```
+Combine the React and Playwright install commands from [Manual Installation](./manual-installation.mdx), then add your component-driver package(s) from [Component Driver Libraries](#-component-driver-libraries) below.
 
 **Perfect for**: Comprehensive testing strategy with fast DOM tests + thorough E2E coverage
 
@@ -124,9 +92,7 @@ pnpm add @atomic-testing/react-18 \
 
 <TabItem value="react-19" label="React 19">
 
-```bash
-pnpm add @atomic-testing/react-19
-```
+See the React install command in [Manual Installation](./manual-installation.mdx).
 
 - ✅ **Latest React features**
 - ✅ **Performance improvements**
@@ -136,9 +102,7 @@ pnpm add @atomic-testing/react-19
 
 <TabItem value="react-18" label="React 18">
 
-```bash
-pnpm add @atomic-testing/react-18
-```
+See the React install command in [Manual Installation](./manual-installation.mdx) — swap in `@atomic-testing/react-18`.
 
 - ✅ **React 18 concurrent features**
 - ✅ **Automatic batching support**
@@ -149,9 +113,7 @@ pnpm add @atomic-testing/react-18
 
 <TabItem value="react-legacy" label="React 17">
 
-```bash
-pnpm add @atomic-testing/react-legacy
-```
+See the React install command in [Manual Installation](./manual-installation.mdx) — swap in `@atomic-testing/react-legacy`.
 
 - ✅ **Legacy React support**
 - ✅ **Gradual migration path**
@@ -161,9 +123,7 @@ pnpm add @atomic-testing/react-legacy
 
 <TabItem value="vue-3" label="Vue 3">
 
-```bash
-pnpm add @atomic-testing/vue-3
-```
+See the Vue 3 install command in [Manual Installation](./manual-installation.mdx).
 
 - ✅ **Automatic reactivity handling** with `nextTick()`
 - ✅ **SFC-like component support** for easy testing
@@ -174,9 +134,7 @@ pnpm add @atomic-testing/vue-3
 
 <TabItem value="playwright" label="Playwright">
 
-```bash
-pnpm add @atomic-testing/playwright
-```
+See the Playwright install command in [Manual Installation](./manual-installation.mdx).
 
 - ✅ **Cross-browser testing** (Chrome, Firefox, Safari)
 - ✅ **Mobile testing** with device emulation
@@ -376,7 +334,7 @@ pnpm add @atomic-testing/component-driver-html
 
 ```bash
 # If you're just getting started — react-19 is the default; on React 18, swap in @atomic-testing/react-18
-pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-html
+pnpm add -D @atomic-testing/core @atomic-testing/component-driver-html @atomic-testing/react-19
 ```
 
 You can always add more packages later. HTML drivers work with any components.

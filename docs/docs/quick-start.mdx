@@ -42,7 +42,7 @@ Run it from inside an existing project — it scaffolds Atomic Testing into your
 1. **Detects** your framework and major version, test runner, package manager, TypeScript, and design system from `package.json`, lockfiles, and config files.
 2. **Prompts** for anything it couldn't detect confidently — interactively in a terminal, or automatically (non-interactive) in CI.
 3. **Resolves a recipe** for your framework × runner × design system, and refuses impossible or unsupported combinations with a clear message.
-4. **Writes** a standalone runner config plus an example component, `ScenePart`, and a passing test under `atomic-testing-example/`, and adds a `test` script to `package.json`.
+4. **Writes** a standalone runner config plus an example component, `ScenePart`, and a passing test under `atomic-testing-example/`, and adds a `test` script to `package.json`. By default it also writes four Claude Code skills under `.claude/skills/` and a root `CLAUDE.md` guide adapted to your detected stack (skip both with `--no-agents`).
 5. **Installs** the dependencies after asking — or, with `--no-install`, prints the exact per-package-manager commands so you can run them yourself.
 
 When it finishes you have a green example test in `atomic-testing-example/`, and the CLI prints the exact command to run it. Combinations outside the verified set (React + Jest, Vue 3 + Jest) are marked **experimental** — the CLI warns before writing one.
@@ -61,6 +61,13 @@ For the canonical React + Jest stack, the scaffolder drops:
 
 ```text
 your-project/
+├─ .claude/
+│  └─ skills/
+│     ├─ scaffold-test-driver/SKILL.md
+│     ├─ author-component-tests/SKILL.md
+│     ├─ diagnose-test-failure/SKILL.md
+│     └─ sync-test-driver/SKILL.md
+├─ CLAUDE.md                      # guide adapted to your detected framework, runner, and driver package
 ├─ jest.config.cjs                # standalone runner config (.cjs sidesteps the ESM rename trap)
 ├─ package.json                   # gains a "test" script
 └─ atomic-testing-example/
@@ -68,6 +75,8 @@ your-project/
    ├─ scenePart.ts                # maps a named part to a locator + driver
    └─ ExampleComponent.test.tsx   # a passing test
 ```
+
+The skills and `CLAUDE.md` are on by default; pass `--no-agents` to skip them.
 
 The generated test drives a **real state change** through the framework-agnostic HTML driver — `HTMLTextInputDriver.setValue()` then reads it back with `getValue()` — so on any **in-process runner** (Jest, Vitest, or Vitest browser mode) it passes on the first run, whatever framework you picked. Those stacks differ only in the details: Vue and Angular emit a `.ts` component, Vitest emits `vitest.config.ts`, and the example test filename follows the runner. **Playwright is the exception** — it drives a real browser against your running app, so the scaffolder emits `playwright.config.ts` plus a placeholder `*.e2e` starter test (no example component or scene part) that you point at your dev server; it turns green once your app serves the page, not out of the box.
 

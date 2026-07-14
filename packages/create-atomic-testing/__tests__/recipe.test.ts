@@ -223,3 +223,17 @@ describe('agent skills wiring', () => {
     expect(plan.files.find(f => f.kind === 'agent-config')!.contents).toContain('@atomic-testing/playwright');
   });
 });
+
+describe('nextSteps skills pointer', () => {
+  it('points agents-on users at the skills docs', () => {
+    const plan = resolveRecipe(sel({ agents: true }));
+    expect(plan.nextSteps.some(step => step.includes('.claude/skills/') && step.includes('atomic-testing.dev'))).toBe(
+      true
+    );
+  });
+
+  it('omits the skills pointer entirely with --no-agents', () => {
+    const plan = resolveRecipe(sel({ agents: false }));
+    expect(plan.nextSteps.some(step => step.includes('.claude/skills/'))).toBe(false);
+  });
+});
