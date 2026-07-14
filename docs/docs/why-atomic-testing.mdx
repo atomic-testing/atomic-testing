@@ -2,7 +2,6 @@
 id: why-atomic-testing
 title: Why Atomic Testing?
 sidebar_label: Why Atomic Testing?
-sidebar_position: 3
 ---
 
 import Link from '@docusaurus/Link';
@@ -11,16 +10,27 @@ import Tabs from '@theme/Tabs';
 
 # Why Atomic Testing?
 
-> Looking for the shorter version of this pitch — the problem, the solution, and the core principles in a few
-> paragraphs? See the [Introduction](./intro.mdx). This page goes deeper: concrete before/after scenarios, the ROI
-> case over time, and — just as important — when _not_ to reach for Atomic Testing.
+## The problem
 
-## The Learning Investment vs. Long-term Payoff
+Testing a UI built on third-party component libraries — Material UI, Radix, PrimeVue — is hard to keep maintainable. Each component's markup is an implementation detail, so tests that reach into it break every time the component changes or the library upgrades. And each framework and test runner has its own interaction API, so the same intent (`fill this field`, `click submit`) is written differently in React, Vue, Angular, and Playwright, with nothing shared between them.
 
-### **Initial Setup** (One-time cost)
+## The solution
+
+Atomic Testing gives you one consistent way to interact with components across every testing environment. You describe the components you care about once, as a **ScenePart**, and drive them through **component drivers** that expose semantic actions (`click()`, `setValue()`, `getText()`) instead of DOM manipulation. The same scene and the same test body then run under React, Vue, Angular, Storybook play functions, and Playwright — because only the `Interactor` underneath changes, not your test.
+
+Three principles guide the design:
+
+- **Reusability** — a standard, reusable way to interact with any component.
+- **Composability** — compose small drivers into larger ones to model complex components and flows.
+- **Adaptability** — the same test logic runs across DOM tests (React, Vue, Angular, vanilla JS), Storybook, and end-to-end (Playwright).
+
+The rest of this page makes the case concretely: the scenarios where that portability pays off, the trade-offs over time, and — just as important — when _not_ to reach for Atomic Testing.
+
+## What it looks like
+
+There's some setup: you declare the parts of a scene once.
 
 ```typescript
-// Yes, there's initial setup...
 const loginScene = {
   email: { locator: byDataTestId('email'), driver: TextFieldDriver },
   password: { locator: byDataTestId('password'), driver: TextFieldDriver },
@@ -29,39 +39,29 @@ const loginScene = {
 } satisfies ScenePart;
 ```
 
-### **But Then Everything Becomes Simple**
+After that, tests read as intent, and the same body works in every environment:
 
 ```typescript
-// Tests become incredibly readable
 await testEngine.parts.email.setValue('user@example.com');
 await testEngine.parts.password.setValue('secure123');
 await testEngine.parts.submit.click();
 
 expect(await testEngine.parts.error.isVisible()).toBe(false);
 
-// And they work everywhere:
-// ✅ React DOM tests
-// ✅ Vue DOM tests
-// ✅ Playwright E2E tests
-// ✅ Future framework migrations
+// The same test runs under React DOM, Vue DOM, and Playwright E2E —
+// and transfers unchanged when you migrate frameworks.
 ```
 
-## **Real-world Scenarios Where Atomic Testing Shines**
+## Where it pays off
 
-### **🔄 Framework Migration**
+### Framework migration
 
-_The nightmare scenario that Atomic Testing makes trivial_
+Without a shared layer, switching frameworks means rewriting every test, because each framework's API is called directly.
 
-> **To be clear:** the pain below isn't React Testing Library, Vue Test Utils, or Playwright themselves — each is a
-> solid tool for its own environment, and for DOM testing Atomic Testing is a **sibling** of RTL, not a wrapper
-> around it — both layer on top of the same underlying `@testing-library/dom` /
-> `@testing-library/user-event` libraries (see
-> [Atomic Testing vs RTL](../advanced-concepts/atomic-testing-vs-rtl) for the full breakdown). The pain is calling
-> each framework's API **directly, per framework, with no shared layer** — so switching frameworks means rewriting
-> every test from scratch.
+> To be clear: the pain below isn't React Testing Library, Vue Test Utils, or Playwright — each is a solid tool for its own environment. For DOM testing, Atomic Testing is a **sibling** of RTL, not a wrapper around it: both build on the same `@testing-library/dom` / `@testing-library/user-event` libraries (see [Atomic Testing vs RTL](../advanced-concepts/atomic-testing-vs-rtl) for the full breakdown). The pain is calling each framework's API directly, per framework, with no shared layer.
 
 <Tabs>
-<TabItem value="before" label="😱 Traditional Approach">
+<TabItem value="before" label="Per-framework (no shared layer)">
 
 ```typescript
 // React Testing Library
@@ -70,137 +70,98 @@ const submitButton = screen.getByRole('button', { name: /submit/i });
 fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
 fireEvent.click(submitButton);
 
-// Vue Test Utils (completely different!)
+// Vue Test Utils (different API)
 const wrapper = mount(LoginForm);
-const emailInput = wrapper.find('[data-testid="email"]');
-const submitButton = wrapper.find('[data-testid="submit"]');
-await emailInput.setValue('user@example.com');
-await submitButton.trigger('click');
+await wrapper.find('[data-testid="email"]').setValue('user@example.com');
+await wrapper.find('[data-testid="submit"]').trigger('click');
 
-// Playwright (different again!)
+// Playwright (different again)
 await page.locator('[data-testid="email"]').fill('user@example.com');
 await page.locator('[data-testid="submit"]').click();
 ```
 
-**Result**: Complete test rewrite for every framework change 😭
+Changing framework means rewriting every test.
 
 </TabItem>
 
-<TabItem value="after" label="✨ Atomic Testing Approach">
+<TabItem value="after" label="Atomic Testing">
 
 ```typescript
 // Define once
 const loginScene = {
   email: { locator: byDataTestId('email'), driver: TextFieldDriver },
-  submit: { locator: byDataTestId('submit'), driver: ButtonDriver }
+  submit: { locator: byDataTestId('submit'), driver: ButtonDriver },
 };
 
-// Works everywhere with identical code:
-
-// React
+// Only the engine creation differs per environment:
 const reactEngine = createTestEngine(<LoginForm />, loginScene);
-
-// Vue
 const vueEngine = createTestEngine(LoginFormVue, loginScene);
-
-// Playwright
 const e2eEngine = createTestEngine(page, loginScene);
 
-// Same test logic for all! ✨
+// The test body is identical everywhere:
 await testEngine.parts.email.setValue('user@example.com');
 await testEngine.parts.submit.click();
 ```
 
-**Result**: Zero test rewrite. Just change the engine creation! 🎉
+Changing framework means changing the engine creation. The test logic is untouched.
 
 </TabItem>
 </Tabs>
 
-### **📚 Component Library Updates**
+### Component library upgrades
 
-_When Material-UI releases breaking changes_
+A design-system major upgrade often changes the markup and class names your tests asserted on. With drivers, those details live in the driver package, so an upgrade is an import change rather than a sweep across hundreds of tests.
 
 <Tabs>
-<TabItem value="traditional" label="😱 Traditional Approach">
+<TabItem value="traditional" label="Asserting on markup">
 
 ```typescript
-// Material-UI v5 → v6 upgrade breaks everything
-// Before v6:
-const button = screen.getByRole('button');
+// Before a MUI major upgrade:
 expect(button).toHaveClass('MuiButton-containedPrimary');
 
-// After v6: Classes changed!
+// After: the classes changed, and every test asserting them breaks.
 expect(button).toHaveClass('MuiButton-contained MuiButton-colorPrimary');
-
-// Hundreds of tests need manual updates 😭
 ```
 
 </TabItem>
 
-<TabItem value="atomic" label="✨ Atomic Testing Approach">
+<TabItem value="atomic" label="Using drivers">
 
 ```typescript
-// Material-UI v6 → v7 upgrade? Change one import:
-
-// Before
-import { ButtonDriver } from '@atomic-testing/component-driver-mui-v6';
-
-// After
+// Upgrading MUI v6 → v7 drivers is one import:
 import { ButtonDriver } from '@atomic-testing/component-driver-mui-v7';
 
-// All test logic unchanged! ✨
+// Test logic is unchanged:
 await testEngine.parts.submit.click();
 expect(await testEngine.parts.submit.isDisabled()).toBe(false);
 ```
 
-**Result**: One import change vs. hundreds of test updates 🚀
-
 </TabItem>
 </Tabs>
 
-### **🧪 Multi-Environment Testing**
+### One test body, fast and thorough
 
-_Same logic, different speeds_
+The same test logic can run as a fast jsdom test during development and as a full browser test before deploy — you write it once and choose the engine.
 
 ```typescript
-// Define your test logic once
 async function validatePaymentFlow(testEngine) {
   await testEngine.parts.creditCard.setValue('4111111111111111');
   await testEngine.parts.expiryDate.setValue('12/25');
   await testEngine.parts.cvv.setValue('123');
   await testEngine.parts.submit.click();
-
   expect(await testEngine.parts.successMessage.isVisible()).toBe(true);
 }
 
-// Run fast during development (DOM test - 100ms)
-const domEngine = createTestEngine(<PaymentForm />, paymentScene);
-await validatePaymentFlow(domEngine);
+// Fast DOM test during development:
+await validatePaymentFlow(createTestEngine(<PaymentForm />, paymentScene));
 
-// Run comprehensive before deploy (E2E test - 2 seconds)
-const e2eEngine = createTestEngine(page, paymentScene);
-await validatePaymentFlow(e2eEngine); // Same function! ✨
+// Same function, real browser before deploy:
+await validatePaymentFlow(createTestEngine(page, paymentScene));
 ```
 
-## **Developer Experience Over Time**
+## The trade-off over time
 
-### **Week 1**: "This seems like extra work..."
-
-```typescript
-// Traditional approach (seems simpler)
-const button = screen.getByRole('button', { name: /submit/i });
-fireEvent.click(button);
-
-// vs Atomic Testing (more setup)
-const scene = { submit: { locator: byDataTestId('submit'), driver: ButtonDriver }};
-const engine = createTestEngine(<Form />, scene);
-await engine.parts.submit.click();
-```
-
-### **Month 3**: "Wait, this is actually easier..."
-
-Once your scene grows a multi-field form, compose a driver method for it — the same pattern
-[`LoginFormDriver.login()`](../tutorial#7-compose-a-driver-for-reuse) uses in the tutorial:
+The up-front cost is the scene definition and learning the driver API. The payoff grows as the suite does. Once a scene has a multi-field form, you can compose a driver method for it — the same pattern [`LoginFormDriver.login()`](../tutorial#7-compose-a-driver-for-reuse) uses in the tutorial — so tests stay declarative even as flows grow:
 
 ```typescript
 import { ComponentDriver } from '@atomic-testing/core';
@@ -216,130 +177,47 @@ class SignupFormDriver extends ComponentDriver<typeof parts> {
   }
 }
 
-// Your test stays declarative:
+// The test stays a single declarative call:
 await testEngine.parts.form.fillAndSubmit({
   email: 'user@example.com',
   password: 'secure123',
   confirmPassword: 'secure123',
   agreeToTerms: true,
 });
-
-// vs traditional approach
-const emailInput = screen.getByLabelText(/email/i);
-const passwordInput = screen.getByLabelText(/^password$/i);
-const confirmInput = screen.getByLabelText(/confirm password/i);
-const checkbox = screen.getByRole('checkbox', { name: /agree to terms/i });
-const submitButton = screen.getByRole('button', { name: /submit/i });
-
-fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
-fireEvent.change(passwordInput, { target: { value: 'secure123' } });
-fireEvent.change(confirmInput, { target: { value: 'secure123' } });
-fireEvent.click(checkbox);
-fireEvent.click(submitButton);
 ```
 
-### **Year 1**: "I can't imagine testing any other way"
+The same amount of behavior driven through raw framework queries takes a query-and-fire block per field, repeated in every test that touches the form.
 
-- ✅ **Tests survive major refactors** - Component internals change, tests don't break
-- ✅ **New team members understand tests immediately** - High-level semantic APIs
-- ✅ **E2E and unit tests share patterns** - Same mental model everywhere
-- ✅ **Component library upgrades don't break tests** - Driver updates handle breaking changes
-- ✅ **Framework migrations become feasible** - Test logic transfers completely
+| Situation             | Traditional per-framework testing         | Atomic Testing                       |
+| --------------------- | ----------------------------------------- | ------------------------------------ |
+| Framework migration   | Rewrite the tests                         | Change the engine creation           |
+| Library major upgrade | Update markup assertions across the suite | Update the driver package version    |
+| DOM + E2E coverage    | Duplicate the logic per runner            | Share one test body across runners   |
+| Refactoring internals | Tests break on markup changes             | Tests assert behavior, not markup    |
+| Onboarding            | Learn DOM and E2E patterns separately     | One driver API across environments   |
 
-## **The ROI Calculation**
+## When _not_ to use Atomic Testing
 
-### **Traditional Testing**
+The benefits scale with maintenance and reuse, so the payoff is smaller when those are absent:
 
-- ❌ **Framework migration**: 100% test rewrite
-- ❌ **Library upgrades**: Manual updates to hundreds of tests
-- ❌ **New team members**: Learn different patterns for DOM vs E2E
-- ❌ **Refactoring**: Tests break when implementation changes
-- ❌ **Multi-environment**: Duplicate test logic across DOM/E2E
+- **Prototype or throwaway code** you won't maintain.
+- **A single simple element** — testing one button directly is fine.
+- **No component library and no reuse** — if there's nothing to share a driver across, the abstraction earns less.
+- **A team not ready to adopt a shared pattern** — drivers need buy-in to pay off.
 
-### **Atomic Testing**
+## Getting started
 
-- ✅ **Framework migration**: Change engine creation only
-- ✅ **Library upgrades**: Update driver package version
-- ✅ **New team members**: Learn once, test everywhere
-- ✅ **Refactoring**: Tests focus on behavior, not implementation
-- ✅ **Multi-environment**: Share test logic across environments
+If the trade-offs land on the "worth it" side, you don't have to wire anything up by hand. [`create atomic-testing`](./quick-start.mdx) detects your framework, runner, and design system and writes a runnable example test for you — see the [Quick Start](./quick-start.mdx) for the one-liner and exactly what it generates.
 
-## **When NOT to Use Atomic Testing**
-
-**Be honest with yourself:**
-
-- **Prototype/throwaway projects** - If you're never maintaining this code
-- **Single simple component** - If you're testing one button, traditional approaches are fine
-- **Team unwilling to learn** - The initial learning curve requires buy-in
-- **No component library** - If you're not using MUI, Radix, shadcn/ui, etc, benefit is reduced
-
-### **✅ None of those? You're a fit — scaffold it in one command**
-
-If the trade-offs above land on the "worth it" side for you, you don't have to wire anything up by hand. Run the
-scaffolder from inside your existing project and it detects your framework, runner, and design system, then writes a
-runnable example test for you:
-
-<Tabs groupId="pkg-manager">
-<TabItem value="npm" label="npm">
-
-```bash
-npm create atomic-testing@latest
-```
-
-</TabItem>
-<TabItem value="pnpm" label="pnpm">
-
-```bash
-pnpm create atomic-testing
-```
-
-</TabItem>
-<TabItem value="yarn" label="yarn">
-
-```bash
-yarn create atomic-testing
-```
-
-</TabItem>
-</Tabs>
-
-See the [Quick Start](./quick-start.mdx) for exactly what it detects and writes.
-
-## **Getting Started Despite the Learning Curve**
-
-### **Start Small**
-
-```typescript
-// Don't try to convert everything at once
-// Start with one complex component that you test frequently
-const checkoutScene = {
-  submit: { locator: byDataTestId('checkout-submit'), driver: ButtonDriver },
-};
-```
-
-### **Gradual Adoption**
-
-1. **Week 1**: Use Atomic Testing for new tests only
-2. **Month 1**: Convert your most frequently changed tests
-3. **Month 3**: Migrate tests that break often during refactors
-4. **Month 6**: Full adoption for new features
-
-### **Measure the Impact**
-
-- **Time saved** during component library upgrades
-- **Reduced friction** when adding E2E coverage
-- **Faster onboarding** for new team members
-- **Fewer test failures** during refactoring
-
-The initial investment pays compound interest over time. The question isn't whether to adopt Atomic Testing—it's whether you can afford not to.
+Adopt it gradually: use it for new tests first, then convert the tests that break most often during refactors and library upgrades. You don't need to migrate an existing suite to benefit.
 
 <div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
   <div className='card'>
     <div className='card__header'>
-      <h3>🚀 Ready to Start?</h3>
+      <h3>Ready to start?</h3>
     </div>
     <div className='card__body'>
-      <p>Convinced? Let's build your first test and see the benefits firsthand.</p>
+      <p>Build your first test and see the pattern firsthand.</p>
       <Link to='../tutorial' className='button button--primary'>
         Start Tutorial →
       </Link>
@@ -348,10 +226,10 @@ The initial investment pays compound interest over time. The question isn't whet
 
   <div className='card'>
     <div className='card__header'>
-      <h3>🤔 Still Have Questions?</h3>
+      <h3>Still have questions?</h3>
     </div>
     <div className='card__body'>
-      <p>Check our FAQ for common concerns and detailed comparisons.</p>
+      <p>The FAQ covers common concerns and comparisons.</p>
       <Link to='../faq' className='button button--secondary'>
         Read FAQ →
       </Link>

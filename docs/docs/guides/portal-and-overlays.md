@@ -1,7 +1,7 @@
 ---
 id: portal-and-overlays
 sidebar_label: Portals & overlays
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Testing portals & overlays
@@ -59,7 +59,7 @@ the overlay's interior scene the same way as any other component.
   `<body>` children), but with **no shared wrapper element at all** — not even
   MUI's `role="presentation"` div. Follow the recipe verbatim; per-primitive
   re-root anchors are catalogued in the
-  [Radix driver coverage matrix](./radix-driver-coverage.md#portals-how-radix-differs-from-mui-and-astryx).
+  [Radix driver coverage matrix](../driver-coverage/radix-driver-coverage.md#portals-how-radix-differs-from-mui-and-astryx).
 - **Astryx** — most overlays render **in-tree**, using the native HTML Popover
   API instead of a portal at all — see the jsdom limitation below.
 
