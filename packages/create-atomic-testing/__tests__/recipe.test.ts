@@ -68,6 +68,13 @@ describe('resolveRecipe', () => {
     );
   });
 
+  it('adds the Fluent v9 driver + runtime for React + Fluent', () => {
+    const plan = resolveRecipe(sel({ designSystem: 'fluent' }));
+    expect(names(plan)).toEqual(
+      expect.arrayContaining(['@atomic-testing/component-driver-fluent-v9', '@fluentui/react-components'])
+    );
+  });
+
   it('uses the Vue engine + PrimeVue driver for Vue + PrimeVue', () => {
     const plan = resolveRecipe(sel({ framework: 'vue', frameworkMajor: 3, designSystem: 'primevue' }));
     expect(plan.tier).toBe('verified');
@@ -214,5 +221,19 @@ describe('agent skills wiring', () => {
     const plan = resolveRecipe(sel({ runner: 'playwright' }));
     expect(plan.files.filter(f => f.kind === 'skill-file')).toHaveLength(4);
     expect(plan.files.find(f => f.kind === 'agent-config')!.contents).toContain('@atomic-testing/playwright');
+  });
+});
+
+describe('nextSteps skills pointer', () => {
+  it('points agents-on users at the skills docs', () => {
+    const plan = resolveRecipe(sel({ agents: true }));
+    expect(plan.nextSteps.some(step => step.includes('.claude/skills/') && step.includes('atomic-testing.dev'))).toBe(
+      true
+    );
+  });
+
+  it('omits the skills pointer entirely with --no-agents', () => {
+    const plan = resolveRecipe(sel({ agents: false }));
+    expect(plan.nextSteps.some(step => step.includes('.claude/skills/'))).toBe(false);
   });
 });

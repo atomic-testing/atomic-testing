@@ -2,13 +2,15 @@
 # lockfile, isolated from the monorepo's root workspace — it is intentionally not a member
 # of that one). The excludes opt the pinned, recently-published versions past a
 # minimum-release-age supply-chain gate; they are a no-op where no such gate is configured.
+packages:
+  - '.'
 minimumReleaseAgeExclude:
   - '@astryxdesign/core@0.1.2'
   - '@astryxdesign/theme-neutral@0.1.2'
-  - '@atomic-testing/component-driver-astryx@0.89.0'
-  - '@atomic-testing/component-driver-html@0.89.0'
-  - '@atomic-testing/core@0.89.0'
-  - '@atomic-testing/dom-core@0.89.0'
-  - '@atomic-testing/playwright@0.89.0'
-  - '@atomic-testing/react-19@0.89.0'
-  - '@atomic-testing/react-core@0.89.0'
+  - '@atomic-testing/component-driver-astryx@0.97.0'
+  - '@atomic-testing/component-driver-html@0.97.0'
+  - '@atomic-testing/core@0.97.0'
+  - '@atomic-testing/dom-core@0.97.0'
+  - '@atomic-testing/playwright@0.97.0'
+  - '@atomic-testing/react-19@0.97.0'
+  - '@atomic-testing/react-core@0.97.0'

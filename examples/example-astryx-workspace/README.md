@@ -70,7 +70,7 @@ difference is how the engine is built:
 ## Stack
 
 `react@^19.2` · `react-router-dom@^7` · `@astryxdesign/core@^0.1.2` +
-`@astryxdesign/theme-neutral@^0.1` · `@atomic-testing/{core,dom-core,react-19,playwright,component-driver-html,component-driver-astryx}@^0.89.0`
+`@astryxdesign/theme-neutral@^0.1` · `@atomic-testing/{core,dom-core,react-19,playwright,component-driver-html,component-driver-astryx}@^0.97.0`
 · `vite` · `vitest@^4` · `@playwright/test@^1.61`.
 
 > The Astryx driver surface used here is gap-free — every action these scenarios need is a shipped

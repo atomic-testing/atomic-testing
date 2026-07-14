@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build:packages": "./publish.sh --build-only",
-    "setup": "pnpm install && pnpm -C docs install --ignore-workspace",
+    "setup": "pnpm install && pnpm -C docs install --ignore-workspace && pnpm run setup:examples",
+    "setup:examples": "node scripts/setupExamples.js",
     "docs:dev": "pnpm build:packages && pnpm -C docs start",
     "check:type": "pnpm -r check:type",
     "check:api": "pnpm -r check:api",

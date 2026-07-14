@@ -1,211 +1,74 @@
 ---
 id: framework-guide
-title: Framework Guide
-sidebar_label: Which Packages?
-sidebar_position: 2
+title: Package Guide
+sidebar_label: Package Guide
 ---
 
 import Link from '@docusaurus/Link';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
-# Which Packages Do I Need?
+# Package Guide
 
 :::tip Let the scaffolder pick for you
 The fastest way to get exactly the right packages is [`create atomic-testing`](./quick-start.mdx) — it detects your framework, runner, and design system and installs the matching packages for you. This page is for hand-picking packages yourself or understanding what the scaffolder would choose; the [Framework and Runner Support](./support-matrix.mdx) matrix lists which combinations are verified vs. experimental.
 :::
 
-## 🤔 Choose Your Testing Strategy
+Every setup needs three things: a **framework/runner package** (the `createTestEngine` for your environment), the **core package**, and at least one **component-driver package** (the vocabulary for the components you interact with). Pick one from each group below.
 
-### **DOM Testing (Fast, Unit-focused)**
+## Choose your packages
 
-Perfect for component testing, business logic, and rapid development cycles.
+| You have…                    | Install this framework package                                           |
+| ---------------------------- | ------------------------------------------------------------------------ |
+| React 19                     | `@atomic-testing/react-19`                                               |
+| React 18                     | `@atomic-testing/react-18`                                               |
+| React 17                     | `@atomic-testing/react-legacy`                                           |
+| Vue 3                        | `@atomic-testing/vue-3`                                                  |
+| Angular 20 / 21 / 22         | `@atomic-testing/angular-20`, `-21`, or `-22` (match your Angular major) |
+| Any framework, in the browser | `@atomic-testing/playwright` (E2E) — pairs with any of the above         |
 
-- **React Apps**: `@atomic-testing/react-18` or `@atomic-testing/react-19`
-- **Vue Apps**: `@atomic-testing/vue-3`
-- **Angular Apps**: `@atomic-testing/angular-20`, `-21` or `-22` (match your Angular major)
-- **Vanilla JS**: `@atomic-testing/dom-core`
+Then add the driver package for your UI library from [Component driver libraries](#component-driver-libraries) below. If you don't use a design system, `@atomic-testing/component-driver-html` covers standard HTML elements and works with any framework.
 
-### **E2E Testing (Slow, Integration-focused)**
+**DOM vs. E2E** is a runner choice, not an either/or: the framework packages run fast jsdom tests (Jest/Vitest), and `@atomic-testing/playwright` runs the same scene against a real browser. Most projects start with DOM tests and add Playwright for critical user journeys — the [tutorial](./getting-started-tutorial.mdx#8-same-scene-now-in-playwright-e2e) shows one scene reused across both.
 
-Great for user flows, cross-browser testing, and production-like scenarios.
+For the exact `install` commands per framework (including peer dependencies), see [Manual Installation](./manual-installation.mdx); to have it done for you, run [`create atomic-testing`](./quick-start.mdx).
 
-- **Any Framework**: `@atomic-testing/playwright`
-
-## 📦 Common Package Combinations
-
-<Tabs>
-<TabItem value="react-mui" label="React + Material-UI">
-
-```bash
-# Most popular combination
-pnpm add @atomic-testing/react-18 @atomic-testing/component-driver-mui-v9
-
-# If you're using React 19
-pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-mui-v9
-
-# If you're still on React 17
-pnpm add @atomic-testing/react-legacy @atomic-testing/component-driver-mui-v6
-```
-
-**Perfect for**: Modern React apps with Material-UI components
-
-</TabItem>
-
-<TabItem value="vue-html" label="Vue 3 + HTML">
-
-```bash
-# Vue 3 with standard HTML elements
-pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-html
-
-# Vue 3 with Material-UI (if using Vuetify/similar)
-pnpm add @atomic-testing/vue-3 @atomic-testing/component-driver-mui-v9
-```
-
-**Perfect for**: Vue 3 applications with custom components or HTML-based UI libraries
-
-</TabItem>
-
-<TabItem value="angular-html" label="Angular + HTML">
-
-```bash
-# Angular 20 with standard HTML elements — pick the package matching your Angular major
-pnpm add @atomic-testing/angular-20 @atomic-testing/component-driver-html
-
-# Angular 21 / 22
-pnpm add @atomic-testing/angular-21 @atomic-testing/component-driver-html
-pnpm add @atomic-testing/angular-22 @atomic-testing/component-driver-html
-```
-
-**Perfect for**: Standalone-component Angular apps — works with both zone.js and
-zoneless change detection (`zone.js` is an optional peer; zoneless apps don't need it)
-
-</TabItem>
-
-<TabItem value="e2e-any" label="E2E Testing (Any Framework)">
-
-```bash
-# E2E testing with Material-UI components
-pnpm add @atomic-testing/playwright @atomic-testing/component-driver-mui-v9
-
-# E2E testing with HTML elements
-pnpm add @atomic-testing/playwright @atomic-testing/component-driver-html
-
-# E2E testing with multiple component libraries
-pnpm add @atomic-testing/playwright \
-  @atomic-testing/component-driver-mui-v9 \
-  @atomic-testing/component-driver-html
-```
-
-**Perfect for**: Cross-browser testing, user journey validation, production testing
-
-</TabItem>
-
-<TabItem value="fullstack" label="Full-Stack Testing">
-
-```bash
-# Cover all bases: DOM + E2E
-pnpm add @atomic-testing/react-18 \
-  @atomic-testing/playwright \
-  @atomic-testing/component-driver-mui-v9 \
-  @atomic-testing/component-driver-html
-```
-
-**Perfect for**: Comprehensive testing strategy with fast DOM tests + thorough E2E coverage
-
-</TabItem>
-</Tabs>
-
-## 🎯 Framework-Specific Details
-
-### **Framework Integration**
+## Framework & runner notes
 
 <Tabs>
 
-<TabItem value="react-19" label="React 19">
+<TabItem value="react" label="React">
 
-```bash
-pnpm add @atomic-testing/react-19
-```
-
-- ✅ **Latest React features**
-- ✅ **Performance improvements**
-- ✅ **Future-proof for React ecosystem**
-
-</TabItem>
-
-<TabItem value="react-18" label="React 18">
-
-```bash
-pnpm add @atomic-testing/react-18
-```
-
-- ✅ **React 18 concurrent features**
-- ✅ **Automatic batching support**
-- ✅ **Strict mode compatibility**
-- ✅ **Modern React patterns**
-
-</TabItem>
-
-<TabItem value="react-legacy" label="React 17">
-
-```bash
-pnpm add @atomic-testing/react-legacy
-```
-
-- ✅ **Legacy React support**
-- ✅ **Gradual migration path**
-- ⚠️ **Consider upgrading to React 18+**
+`react-19`, `react-18`, and `react-legacy` (React 17) share an identical API — only the peer React version differs. On React 17, plan to upgrade: it's supported for gradual migration, not new work.
 
 </TabItem>
 
 <TabItem value="vue-3" label="Vue 3">
 
-```bash
-pnpm add @atomic-testing/vue-3
-```
+`VueInteractor` calls Vue's own `nextTick()` after each interaction, so reactive state settles before your next assertion — no `act()`-style flag to configure. Works with Composition-API and SFC-like components.
 
-- ✅ **Automatic reactivity handling** with `nextTick()`
-- ✅ **SFC-like component support** for easy testing
-- ✅ **Vue Testing Library integration**
-- ✅ **Composition API compatibility**
+</TabItem>
+
+<TabItem value="angular" label="Angular">
+
+`@atomic-testing/angular-20`/`-21`/`-22` bootstrap a standalone component and await `ApplicationRef.whenStable()` after each interaction. They work under both zone.js and zoneless change detection (`zone.js` is an optional peer). Angular runs under **Vitest browser mode** — see the [support matrix](./support-matrix.mdx).
 
 </TabItem>
 
 <TabItem value="playwright" label="Playwright">
 
-```bash
-pnpm add @atomic-testing/playwright
-```
-
-- ✅ **Cross-browser testing** (Chrome, Firefox, Safari)
-- ✅ **Mobile testing** with device emulation
-- ✅ **Screenshot and video recording**
-- ✅ **Network interception** and mocking
+`@atomic-testing/playwright` drives a real browser (Chromium, Firefox, WebKit), so it covers cross-browser behavior, geometry, and anything jsdom can't model. It needs a page your app actually serves — point it at your dev server with `webServer`/`baseURL` in `playwright.config.ts`.
 
 </TabItem>
 </Tabs>
 
-## 🧩 Component Driver Libraries
+## Component driver libraries
 
-Each driver-package section in the [generated API reference](/docs/api/component-drivers) covers one
-UI library. Where a library ships several supported majors — Material UI
-(`component-driver-mui-v6`, `-v7`, `-v9`, plus the MUI-X equivalents) and
-Angular Material (`component-driver-angular-material-v20`, `-v21`, `-v22`) —
-each major gets its **own package and its own generated section**, because
-each major's DOM differs enough that a driver written against one won't
-reliably match another.
+Each driver package covers one UI library. Where a library ships several supported majors — Material UI (`component-driver-mui-v6`, `-v7`, `-v9`, plus the MUI-X equivalents) and Angular Material (`component-driver-angular-material-v20`, `-v21`, `-v22`) — **each major gets its own package**, because each major's DOM differs enough that a driver written against one won't reliably match another. The driver set itself (names, methods) is consistent across those majors. In practice: install and read the section matching the major you have, and skip the rest.
 
-The **driver set itself is consistent across those sections** — same driver
-names, same methods — since they all document the same component-driver API
-surface. In practice: install and read the section matching the major version
-you have installed, and skip the rest.
+Each entry notes its framework binding and [support tier](./support-matrix.mdx) — **verified** (a green fixture proves it in this repo) or **experimental** (composed best-effort, no proving fixture yet). See the [generated API reference](/docs/api/component-drivers) for the full class and method list of any package.
 
-Each entry below notes its framework binding and its [support tier](./support-matrix.mdx) —
-**verified** (a green fixture proves it in this repo) or **experimental** (composed
-best-effort, no proving fixture yet).
-
-### **Material-UI Drivers**
+### Material UI
 
 _React · verified._ Match the package major to the MUI Core major you have installed.
 
@@ -216,7 +79,7 @@ _React · verified._ Match the package major to the MUI Core major you have inst
 pnpm add @atomic-testing/component-driver-mui-v9
 ```
 
-**Supports**: the full v7 driver set plus RadioGroup, Table, and Tooltip drivers (MUI Core has no v8; v9 succeeds v7)
+The full v7 driver set plus RadioGroup, Table, and Tooltip drivers. (MUI Core has no v8; v9 succeeds v7.)
 
 </TabItem>
 
@@ -226,7 +89,7 @@ pnpm add @atomic-testing/component-driver-mui-v9
 pnpm add @atomic-testing/component-driver-mui-v7
 ```
 
-**Supports**: Core MUI v7 components with stable APIs
+Core MUI v7 components with stable APIs.
 
 </TabItem>
 
@@ -236,16 +99,14 @@ pnpm add @atomic-testing/component-driver-mui-v7
 pnpm add @atomic-testing/component-driver-mui-v6
 ```
 
-**Supports**: Core MUI v6 components with stable APIs
+Core MUI v6 components with stable APIs.
 
 </TabItem>
 </Tabs>
 
-### **MUI X Drivers**
+### MUI X
 
-_React · verified._ Drivers for the MUI X data components (Data Grid and friends),
-shipped separately from MUI Core because their DOM is its own surface. Match the
-package major to your `@mui/x-*` major.
+_React · verified._ Drivers for the MUI X data components (Data Grid and friends), shipped separately from MUI Core because their DOM is its own surface. Match the package major to your `@mui/x-*` major.
 
 <Tabs>
 <TabItem value="mui-x-v9" label="MUI X v9 (Latest)">
@@ -281,9 +142,9 @@ pnpm add @atomic-testing/component-driver-mui-x-v6
 </TabItem>
 </Tabs>
 
-**Supports**: MUI X Data Grid components (unlike MUI Core, MUI X ships a v8 driver)
+Covers MUI X Data Grid components. Unlike MUI Core, MUI X does ship a v8 driver.
 
-### **Radix UI Drivers**
+### Radix UI
 
 _React · verified._
 
@@ -291,10 +152,9 @@ _React · verified._
 pnpm add @atomic-testing/component-driver-radix-v1
 ```
 
-**Supports**: Radix UI primitives (`radix-ui` v1) — the headless, unstyled React
-components many design systems build on top of
+Radix UI primitives (`radix-ui` v1) — the headless, unstyled React components many design systems build on. See the [Radix / shadcn coverage matrix](./driver-coverage/radix-driver-coverage.md).
 
-### **shadcn/ui Drivers**
+### shadcn/ui
 
 _React · verified._
 
@@ -302,10 +162,9 @@ _React · verified._
 pnpm add @atomic-testing/component-driver-shadcn-v1
 ```
 
-**Supports**: shadcn/ui components — a re-export of the Radix UI v1 drivers, since
-shadcn/ui is built on Radix primitives
+A re-export of the Radix UI v1 drivers, since shadcn/ui is built on Radix primitives.
 
-### **Astryx Drivers**
+### Astryx
 
 _React · verified._
 
@@ -313,9 +172,9 @@ _React · verified._
 pnpm add @atomic-testing/component-driver-astryx
 ```
 
-**Supports**: the Astryx design system (`@astryxdesign/core`)
+The Astryx design system (`@astryxdesign/core`). See the [Astryx coverage matrix](./driver-coverage/astryx-driver-coverage.md).
 
-### **PrimeVue Drivers**
+### PrimeVue
 
 _Vue 3 · verified._
 
@@ -323,12 +182,11 @@ _Vue 3 · verified._
 pnpm add @atomic-testing/component-driver-primevue-v4
 ```
 
-**Supports**: PrimeVue 4 components (Button, Select, DataTable, Dialog, and more)
+PrimeVue 4 components (Button, Select, DataTable, Dialog, and more).
 
-### **Angular Material Drivers**
+### Angular Material
 
-_Angular · experimental._ Match the package major to your Angular Material major;
-these run under Vitest browser mode (see the [support matrix](./support-matrix.mdx)).
+_Angular · experimental._ Match the package major to your Angular Material major; these run under Vitest browser mode (see the [support matrix](./support-matrix.mdx)).
 
 <Tabs>
 <TabItem value="ng-mat-v22" label="Angular Material v22">
@@ -356,9 +214,9 @@ pnpm add @atomic-testing/component-driver-angular-material-v20
 </TabItem>
 </Tabs>
 
-**Supports**: Angular Material components (Autocomplete, Select, Dialog, Menu, and more)
+Covers Angular Material components (Autocomplete, Select, Dialog, Menu, and more).
 
-### **HTML Drivers**
+### HTML
 
 _React & Vue 3 · verified; Angular · experimental._
 
@@ -366,57 +224,25 @@ _React & Vue 3 · verified; Angular · experimental._
 pnpm add @atomic-testing/component-driver-html
 ```
 
-**Supports**: Standard HTML elements (button, input, select, etc.)
+Standard HTML elements (button, input, select, and so on). The right choice for custom components, HTML-based UI libraries, or when you need basic element interaction — and the safe default when no driver package exists for your design system.
 
-**Perfect for**: Custom components, HTML-based UI libraries, or when you need basic element interaction
+## Tips
 
-## 🤷 Not Sure Which to Choose?
+- **Start with HTML drivers and DOM tests** — they're faster to run and debug, and work with any components. Add a design-system driver package when you need library-specific behavior.
+- **Mix driver packages freely** — HTML and MUI drivers can coexist in one scene.
+- **Add Playwright gradually** — reuse the same scenes you already wrote for DOM tests against critical user journeys.
+- **Upgrade drivers incrementally** — moving from `-v6` to `-v7` drivers is one import change, not a test rewrite.
 
-### **Start Simple**
-
-```bash
-# If you're just getting started — react-19 is the default; on React 18, swap in @atomic-testing/react-18
-pnpm add @atomic-testing/react-19 @atomic-testing/component-driver-html
-```
-
-You can always add more packages later. HTML drivers work with any components.
-
-### **Decision Tree**
-
-1. **What's your primary framework?**
-   - React → `@atomic-testing/react-19` (on React 18, use `@atomic-testing/react-18` instead)
-   - Vue → `@atomic-testing/vue-3`
-   - Multiple/E2E → `@atomic-testing/playwright`
-
-2. **What UI library do you use?**
-   - Material-UI → `@atomic-testing/component-driver-mui-v9`
-   - Custom/HTML → `@atomic-testing/component-driver-html`
-   - Bootstrap/Other → Start with HTML drivers, build custom as needed
-
-3. **What's your testing strategy?**
-   - Fast unit tests → DOM testing packages
-   - Integration tests → Add Playwright
-   - Both → Install both!
-
-## 🚀 Ready to Start?
-
-<div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyItems: '' }}>
+<div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
   <div className='card'>
     <div className='card__header'>
-      <h3>🏗️ Build Your First Test</h3>
+      <h3>Build your first test</h3>
     </div>
     <div className='card__body'>
-      <p>Now that you know which packages to install, let's build a complete test together.</p>
+      <p>Now that you know which packages to install, build a complete test end to end.</p>
       <Link to='../tutorial' className='button button--primary'>
         Start Tutorial →
       </Link>
     </div>
   </div>
 </div>
-
-## 💡 Pro Tips
-
-- **Start with DOM testing** - It's faster and easier to debug
-- **Add E2E tests gradually** - Focus on critical user journeys
-- **Mix component drivers** - Use HTML + MUI drivers in the same project
-- **Upgrade incrementally** - You can migrate from v6 to v7 drivers over time

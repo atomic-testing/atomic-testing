@@ -2,23 +2,24 @@
 id: support-matrix
 title: Framework and Runner Support
 sidebar_label: Framework and Runner Support
-sidebar_position: 4
 ---
 
 import SupportMatrix from '@site/src/components/SupportMatrix';
 
 # Framework and Runner Support
 
-Atomic Testing runs across React, Vue and Angular, under several test runners, with a
-range of design systems. This page is the single place to check whether your stack is
-supported — and how strongly.
+Atomic Testing is an **atomic table**: every runtime, runner and design-system driver is
+one small npm package sharing the same contract. This page is the single place to check
+whether your stack is in the table today — and how strongly each combination is supported.
 
 <SupportMatrix />
 
 :::info Generated, not hand-maintained
-The tables above are generated from the same compatibility data that powers
-[`create atomic-testing`](./quick-start.mdx). They can't drift from what the scaffolder
-actually offers: if a combination isn't here, the CLI won't emit it either.
+The tier matrix is generated from the same compatibility data that powers
+[`create atomic-testing`](./quick-start.mdx), so it can't drift from what the scaffolder
+actually offers: if a combination isn't there, the CLI won't emit it either. The **dashed
+tiles and `your PR →` cells are deliberate gaps** — Svelte, Cypress and a Vue/Angular
+Storybook recipe aren't built yet. Each is a driver or recipe away, not a fork.
 :::
 
 ## Verified vs experimental
@@ -32,6 +33,9 @@ Every offered combination carries a support tier:
   **Vitest**, **Angular**, or **Playwright** falls here. The scaffolder **prints a
   warning before writing** an experimental recipe so you know you're on a
   less-travelled path.
+- **Waiting for a PR** — a dashed `your PR →` cell (or an unclaimed tile) is a slot left
+  open on purpose: the combination isn't wired up yet, but the atomic contract means it's
+  a driver or recipe away, not a rewrite.
 
 On the in-process runners (Jest, Vitest, Vitest browser mode) the generated example always
 drives a real state change through the framework-agnostic [HTML driver](./manual-installation.mdx),
@@ -39,10 +43,18 @@ so the example test is green regardless of tier — experimental means the surro
 unproven, not that the test won't pass. The Playwright recipe is the exception: it scaffolds a
 placeholder `*.e2e` starter test that only turns green once your app serves the page.
 
+## The Storybook column
+
+The **Storybook** column is the `@atomic-testing/storybook` package, which runs portable
+stories under **Vitest browser mode** (`@storybook/addon-vitest`) with no framework
+`act()`/`nextTick()` wrapping. It isn't one of the runners `create atomic-testing`
+scaffolds, so it sits outside the generated matrix: React has a proven path today, while
+Vue and Angular are open for a contribution.
+
 ## Refused combinations
 
-Some cells are **disabled** or simply **not offered**, and the CLI refuses them with a
-clear message rather than emitting config that can't work:
+Some cells are **disabled** or simply **waiting for a PR**, and the CLI refuses the
+disabled ones with a clear message rather than emitting config that can't work:
 
 - **Angular + Jest** and **Angular + jsdom Vitest** are registered but disabled — Angular
   runs under **Vitest browser mode** in Atomic Testing. Hover the disabled badge for the

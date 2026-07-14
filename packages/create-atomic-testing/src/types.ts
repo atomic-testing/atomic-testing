@@ -12,7 +12,16 @@ export type FrameworkId = 'react' | 'vue' | 'angular' | 'none';
 
 export type RunnerId = 'jest' | 'vitest' | 'vitest-browser' | 'playwright';
 
-export type DesignSystemId = 'html' | 'mui' | 'mui-x' | 'angular-material' | 'primevue' | 'radix' | 'shadcn' | 'astryx';
+export type DesignSystemId =
+  | 'html'
+  | 'mui'
+  | 'mui-x'
+  | 'angular-material'
+  | 'primevue'
+  | 'radix'
+  | 'shadcn'
+  | 'astryx'
+  | 'fluent';
 
 export type PackageManagerId = 'npm' | 'pnpm' | 'yarn' | 'bun';
 

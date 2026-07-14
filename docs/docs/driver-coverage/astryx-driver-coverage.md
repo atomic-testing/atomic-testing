@@ -1,7 +1,7 @@
 ---
 id: astryx-driver-coverage
 sidebar_label: Astryx driver coverage
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # Astryx driver coverage matrix
@@ -107,7 +107,7 @@ inline.
 Buttons, inputs, toggles, selection controls, overlays/menus, selectors,
 date/time pickers, lists, tables and trees (Waves 1–3) are fully covered with
 DOM + E2E. See the package's `src/index.ts` for the complete export list; overlay
-open/close behavior follows the [Portals & overlays](./portal-and-overlays.md) recipe.
+open/close behavior follows the [Portals & overlays](../guides/portal-and-overlays.md) recipe.
 
 ## Out of scope (no driver)
 

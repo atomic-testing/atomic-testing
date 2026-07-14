@@ -1,7 +1,7 @@
 ---
 id: radix-driver-coverage
 sidebar_label: Radix / shadcn driver coverage
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Radix / shadcn driver coverage matrix
@@ -58,7 +58,7 @@ closer to MUI's behavior than Astryx's, but not identical:
 - **Astryx** renders most overlays **in-tree** using the native HTML Popover
   API (`showPopover()`/`:popover-open`), not a portal.
 
-The [portal re-root recipe](./portal-and-overlays.md) still applies verbatim —
+The [portal re-root recipe](../guides/portal-and-overlays.md) still applies verbatim —
 copy the shape from the Material UI drivers, exactly as the guide says — but
 per-primitive re-root anchors differ enough from MUI's own DOM that they're
 worth cataloguing:
