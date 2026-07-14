@@ -20,19 +20,20 @@ It does not create your app — it adds testing to a project you already have (o
 
 ## Options
 
-| Flag                                                                                    | Purpose                                   |
-| --------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `--framework <react\|vue\|angular>`                                                     | Override framework detection              |
-| `--framework-major <number>`                                                            | Override the framework major              |
-| `--runner <jest\|vitest\|vitest-browser\|playwright>`                                   | Pick the runner                           |
-| `--design-system <html\|mui\|mui-x\|angular-material\|primevue\|radix\|shadcn\|astryx>` | Pick the design system                    |
-| `--package-manager <npm\|pnpm\|yarn\|bun>`                                              | Force a package manager                   |
-| `--typescript` / `--no-typescript`                                                      | Force TypeScript on/off (default: detect) |
-| `--dir <path>`                                                                          | Target directory (default: cwd)           |
-| `-y, --yes`                                                                             | Accept detected values without prompting  |
-| `--ci`                                                                                  | Non-interactive (implied when not a TTY)  |
-| `--dry-run`                                                                             | Show what would happen; write nothing     |
-| `--install` / `--no-install`                                                            | Force / skip install (default: ask)       |
+| Flag                                                                                    | Purpose                                                               |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `--framework <react\|vue\|angular>`                                                     | Override framework detection                                          |
+| `--framework-major <number>`                                                            | Override the framework major                                          |
+| `--runner <jest\|vitest\|vitest-browser\|playwright>`                                   | Pick the runner                                                       |
+| `--design-system <html\|mui\|mui-x\|angular-material\|primevue\|radix\|shadcn\|astryx>` | Pick the design system                                                |
+| `--package-manager <npm\|pnpm\|yarn\|bun>`                                              | Force a package manager                                               |
+| `--typescript` / `--no-typescript`                                                      | Force TypeScript on/off (default: detect)                             |
+| `--agents` / `--no-agents`                                                              | Emit the Claude Code testing skills + a CLAUDE.md guide (default: on) |
+| `--dir <path>`                                                                          | Target directory (default: cwd)                                       |
+| `-y, --yes`                                                                             | Accept detected values without prompting                              |
+| `--ci`                                                                                  | Non-interactive (implied when not a TTY)                              |
+| `--dry-run`                                                                             | Show what would happen; write nothing                                 |
+| `--install` / `--no-install`                                                            | Force / skip install (default: ask)                                   |
 
 Exit codes: `0` ok · `1` cancelled / install failed · `2` usage · `3` needs a flag (ambiguous, non-interactive) · `4` unsupported combination · `5` write failed.
 
