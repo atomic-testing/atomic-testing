@@ -1,6 +1,5 @@
 ---
 id: faq
-sidebar_position: 7
 ---
 
 # FAQ
@@ -41,7 +40,7 @@ No. The library works with popular tools such as Jest, Vitest and Playwright. Ch
 
 ### What is the difference between "verified" and "experimental" support?
 
-A **verified** framework-runner-design-system combination is backed by a green fixture in this repo, so the scaffolder writes it with confidence (React + Jest and Vue 3 + Jest, plus their design systems). An **experimental** combination is composed best-effort with no proving fixture yet — anything on Vitest, Angular, or Playwright — and `create atomic-testing` prints a warning before writing one. On the in-process runners (Jest, Vitest, Vitest browser mode) the generated example still passes either way, because it drives a real state change through the framework-agnostic HTML driver; the Playwright recipe is the exception — it scaffolds a placeholder `*.e2e` starter test that only turns green once your app is being served. The [Framework and Runner Support](./support-matrix.mdx) page lists every combination and its tier.
+A **verified** framework-runner-design-system combination is backed by a green fixture in this repo, so the scaffolder writes it with confidence (React + Jest and Vue 3 + Jest, plus their design systems). An **experimental** combination is composed best-effort with no proving fixture yet — anything on Vitest, Angular, or Playwright — and `create atomic-testing` prints a warning before writing one. The [Framework and Runner Support](./support-matrix.mdx) page has the full explanation and lists every combination and its tier.
 
 ### Why does Angular run under Vitest browser mode?
 

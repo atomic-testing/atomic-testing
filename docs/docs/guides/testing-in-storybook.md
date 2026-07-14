@@ -1,7 +1,7 @@
 ---
 id: testing-in-storybook
 sidebar_label: Testing in Storybook
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Testing in Storybook
