@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.98.0] - 2026-07-14
+
+### Features
+
+- **fluent-v9:** add Fluent UI v9 driver package, test infra, and Wave 1 drivers ([#1116](https://github.com/atomic-testing/atomic-testing/issues/1116))
+- **create-atomic-testing:** point --agents users at skills docs in CLI output
+- **skills:** check:skill-sync gate against library drift
+- **create-atomic-testing:** scaffold the testing skills into new projects
+- **skills:** golden-fixture regression harness for driver decomposition
+- **skills:** add adopter-facing testing-lifecycle skill family
+- **create-atomic-testing:** guard against version + registry drift
+
+### Fixes
+
+- **skills:** address Copilot review comments on [#1115](https://github.com/atomic-testing/atomic-testing/issues/1115)
+- **create-atomic-testing:** sync ATOMIC_VERSION to 0.97.0; address PR review
+
+### Documentation
+
+- **quick-start:** document the skill + CLAUDE.md scaffolding output
+- **create-atomic-testing:** document the --agents/--no-agents flag
+- **framework-guide:** fix wrong Vuetify/MUI recommendation, dedupe install commands
+- **guides:** add "Decomposing driver trees" decomposition guide
+- make the Vue + Jest verified path turnkey; oxfmt pass
+- CLI-first onboarding around create-atomic-testing (RFC [#1095](https://github.com/atomic-testing/atomic-testing/issues/1095))
+
 ## [0.97.0] - 2026-07-12
 
 ### Features

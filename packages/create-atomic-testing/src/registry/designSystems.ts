@@ -139,6 +139,21 @@ const astryx: DesignSystemPlugin = {
   usageNote: 'Your Astryx drivers are installed. Use them in the scene part to test Astryx components.',
 };
 
+const fluent: DesignSystemPlugin = {
+  id: 'fluent',
+  displayName: 'Fluent UI v9 (Fluent 2)',
+  compatibleFrameworks: ['react'],
+  driverPackage() {
+    return 'component-driver-fluent-v9';
+  },
+  defaultMajor: () => 9,
+  deps() {
+    return [THIRD_PARTY.fluentReactComponents];
+  },
+  usageNote:
+    'Your Fluent UI drivers are installed. Swap the HTML driver in scenePart for the Fluent-specific drivers (e.g. ButtonDriver) to test Fluent UI v9 components directly.',
+};
+
 export const DESIGN_SYSTEMS: Readonly<Record<DesignSystemId, DesignSystemPlugin>> = {
   html,
   mui,
@@ -148,6 +163,7 @@ export const DESIGN_SYSTEMS: Readonly<Record<DesignSystemId, DesignSystemPlugin>
   radix,
   shadcn,
   astryx,
+  fluent,
 };
 
 export function getDesignSystem(id: DesignSystemId): DesignSystemPlugin {
