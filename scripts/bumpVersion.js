@@ -17,6 +17,24 @@ function adjustFolderPackageJson(dir, version) {
   fs.writeFileSync(fileName, newContent);
 }
 
+// examples/* apps are standalone pnpm workspaces pinned to PUBLISHED @atomic-testing/*
+// versions (not workspace:*), so a release must float them forward too or they silently
+// freeze on the version that was current when the example was created. Only the
+// @atomic-testing/* specifiers are rewritten — the example app's own "version" field
+// (its unpublished 0.0.0) is left untouched.
+function adjustExampleFolderPackageJson(dir, version) {
+  const fileName = path.join(dir, 'package.json');
+  if (!fs.existsSync(fileName)) {
+    return;
+  }
+  const fileContent = fs.readFileSync(fileName).toString();
+  const newContent = fileContent.replace(
+    /("@atomic-testing\/[a-zA-Z0-9_-]+":\s*"\^?)\d+\.\d+\.\d+(")/g,
+    `$1${version}$2`
+  );
+  fs.writeFileSync(fileName, newContent);
+}
+
 function bumpVersion(dir, version) {
   const sanitizedVersion = version.trim();
   if (sanitizedVersion.length < 1) {
@@ -36,6 +54,16 @@ function bumpVersion(dir, version) {
     const childPath = path.join(dir, child);
     if (isFolder(childPath)) {
       adjustFolderPackageJson(childPath, sanitizedVersion);
+    }
+  }
+
+  const examplesDir = path.join(dir, 'examples');
+  if (fs.existsSync(examplesDir)) {
+    for (const child of fs.readdirSync(examplesDir)) {
+      const childPath = path.join(examplesDir, child);
+      if (isFolder(childPath)) {
+        adjustExampleFolderPackageJson(childPath, sanitizedVersion);
+      }
     }
   }
 }

@@ -106,7 +106,7 @@ The Select is **label-based** (`selectByLabel`, `getSelectedLabel`) because Radi
 ## Stack
 
 `react@^19.2` · `radix-ui@^1.6` · shadcn CLI output (Tailwind v4, `lucide-react`) ·
-`@atomic-testing/{core,dom-core,react-19,playwright,component-driver-html,component-driver-shadcn-v1}@^0.92.0`
+`@atomic-testing/{core,dom-core,react-19,playwright,component-driver-html,component-driver-shadcn-v1}@^0.97.0`
 · `vite` · `vitest@^4` · `@playwright/test@^1.61`.
 
 > The shadcn driver surface used here is gap-free — every action these scenarios need is a

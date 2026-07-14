@@ -81,7 +81,7 @@ This scenario needs to _set_ a date picker and _select_ a tree item — capabili
 - `DesktopDatePickerDriver.setValue(date)` / `pickDate('yyyy-mm-dd')` — operates the calendar popup (open → page to the month → click the day), the one write path that behaves identically in jsdom and in real browsers.
 - `SimpleTreeViewDriver.selectItem(itemId)` — clicks the item's content row to select it.
 
-Because this example consumes those methods, it depends on `@atomic-testing/*@^0.90.0`.
+Because this example consumes those methods, it depends on `@atomic-testing/*@^0.97.0`.
 
 ### Community vs. premium DataGrid
 
@@ -91,4 +91,4 @@ The example uses the **community** `@mui/x-data-grid` (no license watermark). Th
 
 This example is a **standalone pnpm workspace** (its own `pnpm-lock.yaml`, intentionally not a member of the monorepo's root workspace), mirroring a real consumer install.
 
-It pins `@atomic-testing/*@^0.90.0`, resolved straight from the npm registry.
+It pins `@atomic-testing/*@^0.97.0`, resolved straight from the npm registry.

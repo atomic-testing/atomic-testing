@@ -58,11 +58,14 @@ pnpm run build                  # Build package with tsdown
 cd docs && pnpm build           # Build documentation (test before doc PRs)
 ```
 
-> `docs/` is a standalone project outside the pnpm workspace, so it needs its own
-> install — `pnpm run setup` runs both installs (monorepo + `docs/`) in one command.
-> The docs API reference also needs the workspace packages built first, so the full
-> docs dev loop is `pnpm run setup` then `pnpm run docs:dev` (builds packages, starts
-> docs on :3333).
+> `docs/` and every `examples/*` app are standalone projects outside the pnpm workspace
+> (each `examples/*` app has its own `pnpm-workspace.yaml`, marking it as its own
+> workspace root with its own lockfile, and pins `@atomic-testing/*` at published npm
+> versions rather than `workspace:*`), so they each need their own install —
+> `pnpm run setup` runs all of it (monorepo + `docs/` + every `examples/*` app) in one
+> command. The docs API reference also needs the workspace packages built first, so the
+> full docs dev loop is `pnpm run setup` then `pnpm run docs:dev` (builds packages,
+> starts docs on :3333).
 
 > The documentation site's build (Docusaurus + TypeDoc-generated API reference) and local verification are documented in [`docs/CLAUDE.md`](docs/CLAUDE.md).
 
