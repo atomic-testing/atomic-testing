@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-fluent-v9",
-  "version": "0.97.0",
+  "version": "0.98.0",
   "description": "Component driver for Fluent UI v9 (\"Fluent 2\") React components (@fluentui/react-components)",
   "repository": {
     "type": "git",
