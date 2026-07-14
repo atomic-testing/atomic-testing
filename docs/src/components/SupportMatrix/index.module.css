@@ -1,144 +1,509 @@
 /**
- * SupportMatrix — consumes the global --at-* token contract from src/css/custom.css
- * so it tracks light/dark theme like the rest of the site. Verified reuses the tip
- * (green) tokens, which are already theme-aware; the amber (experimental) and grey
- * (disabled) badges define perceptual colors here with a [data-theme='dark'] override.
+ * SupportMatrix — the "Coverage Explorations / 3a" design: an inventory ("The Atomic
+ * Table") stacked over an honesty matrix ("Tiers, not promises"). Colours ride the
+ * global --at-* token contract from src/css/custom.css so both halves track light/dark
+ * like the rest of the site; the design's fixed cream/blue palette is expressed as
+ * token-derived accents rather than hard-coded hexes. The one exception is the amber
+ * "experimental" scale, which has no site token and is defined here with a dark override
+ * (mirroring the pre-existing SupportMatrix amber).
  */
 
 .root {
-  margin: 24px 0 32px;
+  margin: 28px 0 36px;
+  border: 1px solid var(--at-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--at-bg);
 }
 
-/* Narrow viewports scroll the table on its own axis; the page never scrolls sideways. */
+.section {
+  padding: 44px 40px 40px;
+}
+
+.inventory {
+  background: var(--at-bg-alt);
+}
+
+.tiers {
+  background: var(--at-bg);
+  border-top: 1px solid var(--at-border);
+}
+
+/* ── Section headers ─────────────────────────────────────────────────────────── */
+
+.sectionHead {
+  max-width: 640px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: var(--at-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.eyebrowGreen {
+  color: var(--at-tip-ink);
+}
+
+.eyebrowBlue {
+  color: var(--at-code-chip-ink);
+}
+
+.title {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 4.5vw, 38px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 10px 0 0;
+  color: var(--at-text-strong);
+}
+
+.lede {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--at-text-muted);
+  margin: 12px 0 0;
+}
+
+.code {
+  font-family: var(--at-font-mono);
+  font-size: 0.86em;
+  background: var(--at-code-chip-bg);
+  color: var(--at-code-chip-ink);
+  padding: 1px 7px;
+  border-radius: 5px;
+}
+
+/* ── The Atomic Table (inventory tiles) ──────────────────────────────────────── */
+
+.group {
+  margin-bottom: 20px;
+  /* Per-group accents drive tile border-top, mark and icon colour. */
+  --sm-accent: var(--at-code-chip-ink);
+  --sm-ink: var(--at-code-chip-ink);
+}
+
+.group-runtimes {
+  --sm-accent: #2d6be3;
+  --sm-ink: #2d6be3;
+}
+
+.group-runners {
+  --sm-accent: #6366f1;
+  --sm-ink: #6366f1;
+}
+
+.group-drivers {
+  --sm-accent: #14b8b0;
+  --sm-ink: var(--at-tip-ink);
+}
+
+[data-theme='dark'] .group-runtimes {
+  --sm-accent: #5b8cf0;
+  --sm-ink: #7ea8f7;
+}
+
+[data-theme='dark'] .group-runners {
+  --sm-accent: #8f92f6;
+  --sm-ink: #a5a8f8;
+}
+
+[data-theme='dark'] .group-drivers {
+  --sm-accent: #2dd4c4;
+  --sm-ink: #4fe3c8;
+}
+
+.groupLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.groupLabelText {
+  font-family: var(--at-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sm-accent);
+}
+
+.rule {
+  flex: 1;
+  border-top: 1px solid var(--at-border);
+}
+
+.tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.tile {
+  position: relative;
+  width: 106px;
+  min-height: 106px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: var(--at-bg);
+  border: 1px solid var(--at-border);
+  border-top: 3px solid var(--sm-accent);
+  padding: 10px 11px 11px;
+}
+
+.tileGlyph {
+  position: absolute;
+  top: 8px;
+  left: 11px;
+  width: 14px;
+  height: 14px;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--sm-ink);
+  opacity: 0.85;
+}
+
+.tileIcon {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.tileMark {
+  display: block;
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1;
+  margin-top: 18px;
+  color: var(--sm-ink);
+}
+
+.tileLabel {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--at-text);
+}
+
+.tileSub {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--at-font-mono);
+  font-size: 9px;
+  color: var(--at-text-faint);
+}
+
+.tileUnclaimed {
+  background: transparent;
+  border: 1.5px dashed var(--at-border);
+}
+
+.tileUnclaimed .tileMark {
+  color: var(--at-text-faint);
+}
+
+.tileUnclaimed .tileLabel {
+  color: var(--at-text-muted);
+}
+
+.tileUnclaimed .tileGlyph {
+  color: var(--at-text-faint);
+  opacity: 0.7;
+}
+
+/* ── Inventory banner ────────────────────────────────────────────────────────── */
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 26px 0 0;
+  text-align: center;
+}
+
+.bannerChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--at-tip-bg);
+  border: 1px solid var(--at-tip-border);
+  color: var(--at-tip-ink);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.bannerText {
+  font-size: 14px;
+  color: var(--at-text-muted);
+}
+
+/* ── Tiers matrix ────────────────────────────────────────────────────────────── */
+
 .scroll {
   overflow-x: auto;
 }
 
-.table {
+.matrix {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 14.5px;
+  /* Below this the doc column can't hold four "Experimental" badges, so .scroll shows a
+   * horizontal scrollbar (full content, scrolled) instead of clipping cell text. */
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 9px;
+  table-layout: fixed;
 }
 
-.caption {
-  caption-side: top;
-  text-align: left;
-  font-family: var(--at-font-display);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--at-text);
-  padding-bottom: 10px;
+.matrixCorner {
+  width: 150px;
+  border: 0;
+  background: transparent;
+  padding: 0;
 }
 
-.table th,
-.table td {
-  border: 1px solid var(--at-border);
-  padding: 10px 12px;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.table thead th {
-  background: var(--at-bg-alt);
-  color: var(--at-text-strong);
-  font-family: var(--at-font-display);
-  font-weight: 600;
-  font-size: 13.5px;
-}
-
-.corner {
+.colHead {
+  font-family: var(--at-font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--at-text-muted);
+  text-align: center;
+  padding: 4px 0;
   white-space: nowrap;
 }
 
 .rowHead {
-  background: var(--at-bg-alt);
-  white-space: nowrap;
+  width: 150px;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 700;
 }
 
-.frameworkName {
-  display: block;
+.rowHeadInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   font-family: var(--at-font-display);
-  font-weight: 600;
-  color: var(--at-text);
+  font-size: 16px;
+  color: var(--at-text-strong);
 }
 
-.majors {
-  display: block;
-  margin-top: 2px;
-  font-family: var(--at-font-mono);
-  font-size: 12px;
-  color: var(--at-text-faint);
+.rowIcon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  opacity: 0.9;
+  color: var(--at-text-muted);
 }
 
-.badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
+.row-react .rowIcon {
+  color: #2d6be3;
+}
+
+.row-vue .rowIcon {
+  color: #14b8b0;
+}
+
+.row-angular .rowIcon {
+  color: #6366f1;
+}
+
+.cell {
+  border-radius: 11px;
+  vertical-align: middle;
+  text-align: center;
+  padding: 6px 8px;
   border: 1px solid transparent;
-  font-size: 12.5px;
+}
+
+.cellInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 44px;
+}
+
+.cellBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
+}
+
+.cellDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.cellSub {
+  font-family: var(--at-font-mono);
+  font-size: 9px;
+  color: var(--at-text-faint);
 }
 
 .verified {
   background: var(--at-tip-bg);
   border-color: var(--at-tip-border);
+}
+
+.verified .cellBadge {
   color: var(--at-tip-ink);
 }
 
+.verified .cellDot {
+  background: #10b981;
+}
+
 .experimental {
-  background: #fdf3e3;
-  border-color: #f2d79b;
-  color: #97640a;
+  background: #fdf6ec;
+  border-color: #f0dfc0;
 }
 
-.disabled {
-  background: var(--at-code-chip-bg);
-  border-color: var(--at-border);
-  color: var(--at-text-faint);
-  cursor: help;
+.experimental .cellBadge {
+  color: #b45309;
 }
 
-.unavailable {
-  color: var(--at-text-faint);
-  font-weight: 600;
+.experimental .cellDot {
+  background: #f59e0b;
 }
 
 [data-theme='dark'] .experimental {
   background: #2c2109;
   border-color: #5b4514;
+}
+
+[data-theme='dark'] .experimental .cellBadge {
   color: #e6b24a;
 }
 
+.cellDisabled {
+  background: var(--at-code-chip-bg);
+  border-color: var(--at-border);
+  cursor: help;
+}
+
+.cellDisabled .cellBadge {
+  color: var(--at-text-faint);
+}
+
+.cellSymbol {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.cellContribute {
+  border: 1.5px dashed var(--at-border);
+}
+
+.contribute {
+  font-family: var(--at-font-mono);
+  font-size: 10.5px;
+  color: var(--at-text-faint);
+}
+
+/* ── Legend ──────────────────────────────────────────────────────────────────── */
+
 .legend {
   list-style: none;
-  margin: 14px 0 26px;
+  margin: 20px 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 18px;
-  font-size: 13.5px;
+  justify-content: center;
+  gap: 10px 22px;
+  font-size: 12.5px;
   color: var(--at-text-muted);
 }
 
 .legend li {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.systems {
-  display: flex;
-  flex-wrap: wrap;
   gap: 6px;
 }
 
-.systemChip {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 6px;
-  background: var(--at-code-chip-bg);
-  color: var(--at-code-chip-ink);
-  font-family: var(--at-font-mono);
-  font-size: 12.5px;
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotVerified {
+  background: #10b981;
+}
+
+.dotExperimental {
+  background: #f59e0b;
+}
+
+.legendSymbol {
+  color: var(--at-text-faint);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.legendDash {
+  width: 12px;
+  height: 8px;
+  border: 1.5px dashed var(--at-border);
+  border-radius: 3px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Gentle affordance on the unclaimed/contribute slots; static for reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .tileUnclaimed,
+  .cellContribute {
+    animation: sm-dashpulse 3.4s ease-in-out infinite;
+  }
+}
+
+@keyframes sm-dashpulse {
+  0%,
+  100% {
+    border-color: var(--at-border);
+  }
+  50% {
+    border-color: var(--at-text-faint);
+  }
+}
+
+/* Narrow viewports: center the section text and let tiles fill the row. */
+@media (max-width: 600px) {
+  .section {
+    padding: 32px 20px 28px;
+  }
+
+  .tiles {
+    justify-content: center;
+  }
 }
