@@ -117,7 +117,7 @@ describe('detectDesignSystem', () => {
     });
   });
 
-  it('detects MUI-X, MUI, PrimeVue, Radix, Astryx', () => {
+  it('detects MUI-X, MUI, PrimeVue, Radix, Astryx, Fluent', () => {
     expect(detectDesignSystem(snapshot({ packageJson: { dependencies: { '@mui/x-data-grid': '^7.0.0' } } }))?.id).toBe(
       'mui-x'
     );
@@ -132,6 +132,9 @@ describe('detectDesignSystem', () => {
     expect(
       detectDesignSystem(snapshot({ packageJson: { dependencies: { '@astryxdesign/core': '^0.1.3' } } }))?.id
     ).toBe('astryx');
+    expect(
+      detectDesignSystem(snapshot({ packageJson: { dependencies: { '@fluentui/react-components': '^9.0.0' } } }))?.id
+    ).toBe('fluent');
   });
 
   it('returns null when there is no design system', () => {

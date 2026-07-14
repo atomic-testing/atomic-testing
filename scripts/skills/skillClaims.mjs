@@ -45,6 +45,7 @@ export const DESIGN_SYSTEM_FAMILIES = {
   radix: 'radix',
   'mui-x': null,
   astryx: null,
+  fluent: null,
 };
 
 /**

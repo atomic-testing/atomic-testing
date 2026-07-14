@@ -48,7 +48,7 @@ ${pc.bold('Options')}
   --framework <react|vue|angular>   Override framework detection
   --framework-major <number>        Override the framework major version
   --runner <jest|vitest|vitest-browser|playwright>
-  --design-system <html|mui|mui-x|angular-material|primevue|radix|shadcn|astryx>
+  --design-system <html|mui|mui-x|angular-material|primevue|radix|shadcn|astryx|fluent>
   --package-manager <npm|pnpm|yarn|bun>
   --typescript / --no-typescript    Force TypeScript on/off (default: detect)
   --agents / --no-agents            Emit the Claude Code testing skills + a

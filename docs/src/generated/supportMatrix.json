@@ -137,6 +137,10 @@
         {
           "id": "astryx",
           "displayName": "Astryx"
+        },
+        {
+          "id": "fluent",
+          "displayName": "Fluent UI v9 (Fluent 2)"
         }
       ]
     },
