@@ -157,6 +157,8 @@ jobs:
             directory: 'component-driver-radix-test'
           - name: 'PrimeVue components'
             directory: 'component-driver-primevue-test'
+          - name: 'Fluent v9 components'
+            directory: 'component-driver-fluent-v9-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
