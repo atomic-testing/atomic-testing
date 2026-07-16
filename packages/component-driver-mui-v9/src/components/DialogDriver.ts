@@ -93,9 +93,11 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   /**
-   * Wait for dialog to close
+   * Wait for dialog to close. Polls for up to `timeoutMs`, then allows a further
+   * `closeGraceMs` grace period for a real transition timer that's merely running
+   * late before giving up (see the fallback below).
    * @param timeoutMs
-   * @returns true open has performed successfully
+   * @returns true once the dialog has closed, within `timeoutMs` plus the grace period.
    */
   async waitForClose(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
     const isOpened = await this.interactor.waitUntil({

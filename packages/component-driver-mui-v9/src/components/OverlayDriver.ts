@@ -62,8 +62,10 @@ export abstract class OverlayDriver<ContentT extends ScenePart, T extends SceneP
   }
 
   /**
-   * Wait until the overlay is closed.
-   * @returns true once closed within the timeout.
+   * Wait until the overlay is closed. Polls for up to `timeoutMs`, then allows a
+   * further `closeGraceMs` grace period for a real transition timer that's merely
+   * running late before giving up (see the fallback below).
+   * @returns true once closed, within `timeoutMs` plus the grace period.
    */
   async waitForClose(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
     const result = await this.interactor.waitUntil({
