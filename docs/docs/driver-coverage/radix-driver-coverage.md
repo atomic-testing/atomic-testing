@@ -74,7 +74,7 @@ worth cataloguing:
 
 NavigationMenu, Toast, and Toolbar render **in-tree**, no portal at all.
 
-## Coverage — Wave 0 (foundation) and Wave 1 (pain-first flagship)
+## Coverage — foundational primitives & flagship overlays
 
 | Component    | Driver               | E2E-only behavior                                                                                                                                                                |
 | ------------ | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -84,7 +84,7 @@ NavigationMenu, Toast, and Toolbar render **in-tree**, no portal at all.
 | DropdownMenu | `DropdownMenuDriver` | a `ContainerDriver`, so scenes can declare custom `content` parts for `CheckboxItem`/`RadioGroup`/submenu content                                                                |
 | Popover      | `PopoverDriver`      | trigger-anchored via `aria-controls` → `byLinkedElement` (its content shares `role="dialog"` with modal `Dialog`, so a static re-root would collide)                             |
 
-## Coverage — Wave 2 (foundation controls)
+## Coverage — in-tree controls
 
 All in-tree — no portals.
 
@@ -103,7 +103,7 @@ All in-tree — no portals.
 | Collapsible | `CollapsibleDriver`                         | —                                                                                                                   |
 | Accordion   | `AccordionDriver`                           | —                                                                                                                   |
 
-## Coverage — Wave 3 (remaining overlays & menus)
+## Coverage — overlays & menus
 
 | Component      | Driver                                              | E2E-only behavior                                                                                                                                                                                 |
 | -------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -116,7 +116,7 @@ All in-tree — no portals.
 | Toast          | `ToastDriver`                                       | timer-driven auto-dismissal is untested by the suite (real-time behavior); click paths (`Action`/`Close`) are covered                                                                             |
 | Toolbar        | `ToolbarDriver`                                     | —                                                                                                                                                                                                 |
 
-## Coverage — Wave 4 (interaction-heavy)
+## Coverage — interaction-heavy primitives
 
 | Component            | Driver                       | E2E-only behavior                                                                                                                                                                         |
 | -------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -125,7 +125,7 @@ All in-tree — no portals.
 | PasswordToggleField  | `PasswordToggleFieldDriver`  | — (`PasswordToggleField.Root` renders no DOM node of its own — a pure context provider — so the scene must supply an explicit wrapping element for the driver's root locator)             |
 | OneTimePasswordField | `OneTimePasswordFieldDriver` | — (`setValue` types one character per box rather than using Radix's paste-into-first-box autofill path — no portable `Interactor` primitive for `ClipboardEvent`)                         |
 
-## Coverage — Wave 5 (best-effort v1: Combobox)
+## Coverage — best-effort v1: Combobox
 
 Radix ships no Combobox primitive. `ComboboxDriver` targets the canonical
 shadcn/ui **composition** — a Radix `Popover` hosting a
