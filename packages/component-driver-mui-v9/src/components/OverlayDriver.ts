@@ -2,6 +2,7 @@ import { byCssClass, ContainerDriver, locatorUtil, PartLocator, ScenePart } from
 
 const backdropLocator = byCssClass('MuiBackdrop-root');
 const defaultTransitionDuration = 250;
+const closeGraceMs = 150;
 
 /**
  * Shared base for MUI portal-rendered overlays (Drawer today; Dialog, Menu,
@@ -74,9 +75,18 @@ export abstract class OverlayDriver<ContentT extends ScenePart, T extends SceneP
       return true;
     }
     // Under React's act() the close transition can commit only when the polling
-    // act block exits (seen with MUI v5 in jsdom), so the loop above observes the
-    // overlay as still open. A final fresh read reflects the now-committed state.
-    return !(await this.isOpen());
+    // act block exits (seen with MUI v5 in jsdom), so the loop above can still
+    // observe the overlay as open even though the real exit-transition timer is
+    // merely running late (e.g. a contended CI runner) rather than genuinely
+    // stuck. A short, act()-wrapped grace-period recheck gives that timer real
+    // wall-clock time to fire before giving up, instead of a single unwaited
+    // snapshot racing the same timer with zero margin.
+    const settled = await this.interactor.waitUntil({
+      probeFn: () => this.isOpen(),
+      terminateCondition: false,
+      timeoutMs: closeGraceMs,
+    });
+    return settled === false;
   }
 
   /**
