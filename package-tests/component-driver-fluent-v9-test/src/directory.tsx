@@ -5,18 +5,25 @@ import { JSX } from 'react';
 import { buttonUIExample } from './examples/button/Button.examples';
 import { checkboxUIExample } from './examples/checkbox/Checkbox.examples';
 import { compoundButtonUIExample } from './examples/compound-button/CompoundButton.examples';
+import { dialogUIExample } from './examples/dialog/Dialog.examples';
 import { dividerUIExample } from './examples/divider/Divider.examples';
+import { drawerUIExample } from './examples/drawer/Drawer.examples';
 import { fieldUIExample } from './examples/field/Field.examples';
 import { imageUIExample } from './examples/image/Image.examples';
 import { inputUIExample } from './examples/input/Input.examples';
 import { labelUIExample } from './examples/label/Label.examples';
 import { linkUIExample } from './examples/link/Link.examples';
+import { menuUIExample } from './examples/menu/Menu.examples';
+import { popoverUIExample } from './examples/popover/Popover.examples';
 import { radioUIExample } from './examples/radio/Radio.examples';
 import { selectUIExample } from './examples/select/Select.examples';
 import { switchUIExample } from './examples/switch/Switch.examples';
+import { teachingPopoverUIExample } from './examples/teaching-popover/TeachingPopover.examples';
 import { textUIExample } from './examples/text/Text.examples';
 import { textareaUIExample } from './examples/textarea/Textarea.examples';
+import { toastUIExample } from './examples/toast/Toast.examples';
 import { toggleButtonUIExample } from './examples/toggle-button/ToggleButton.examples';
+import { tooltipUIExample } from './examples/tooltip/Tooltip.examples';
 
 const toc = (label: string, path: string, example: IExampleUIUnit<JSX.Element>): ExampleToc => ({
   label,
@@ -38,6 +45,13 @@ export const tocs: ExampleToc[] = [
   toc('Field', '/field', fieldUIExample),
   toc('Link', '/link', linkUIExample),
   toc('Divider', '/divider', dividerUIExample),
+  toc('Dialog', '/dialog', dialogUIExample),
+  toc('Popover', '/popover', popoverUIExample),
+  toc('Drawer', '/drawer', drawerUIExample),
+  toc('Menu', '/menu', menuUIExample),
+  toc('Tooltip', '/tooltip', tooltipUIExample),
+  toc('Toast', '/toast', toastUIExample),
+  toc('TeachingPopover', '/teaching-popover', teachingPopoverUIExample),
   toc('Image', '/image', imageUIExample),
   toc('Text', '/text', textUIExample),
 ];

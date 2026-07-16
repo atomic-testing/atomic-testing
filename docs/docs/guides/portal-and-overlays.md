@@ -62,6 +62,16 @@ the overlay's interior scene the same way as any other component.
   [Radix driver coverage matrix](../driver-coverage/radix-driver-coverage.md#portals-how-radix-differs-from-mui-and-astryx).
 - **Astryx** — most overlays render **in-tree**, using the native HTML Popover
   API instead of a portal at all — see the jsdom limitation below.
+- **Fluent UI v9** — portals like MUI (a cloned `FluentProvider` mounted on
+  `document.body`, Fluent's own `mountNode` default), with per-primitive
+  structural classes (`fui-DialogSurface`, `fui-PopoverSurface`, …) as the
+  re-root anchor instead of a shared wrapper role — `role="dialog"` alone is
+  worn by `Dialog`, `OverlayDrawer`, **and** `TeachingPopover` simultaneously,
+  so those classes are the more specific choice. `Menu` re-roots via a
+  trigger↔content id link (`byLinkedElement`) instead of a static class, the
+  same reason Radix's stacked primitives do (see below). `InlineDrawer` is the
+  one Fluent overlay that renders in-tree, no portal at all. Full recipe:
+  `packages/component-driver-fluent-v9/README.md`.
 
 ## Stacked portals
 
@@ -77,6 +87,15 @@ This is an **ergonomics refinement of the locator strategy, not a new
 `Interactor` method** — it is expressed entirely with the existing re-root hooks
 and locators. Reach for it only when a test genuinely drives more than one
 simultaneous overlay; a single overlay needs nothing beyond the recipe above.
+
+**`Escape` dismisses the topmost stacked overlay, not a specific targeted
+one** — verified against real Chromium for Fluent's `Dialog`/`Popover`/`Menu`/
+`OverlayDrawer`: with two overlays open, pressing `Escape` always closes the
+most-recently-opened one, regardless of which overlay's locator the key event
+is dispatched on (dismiss handling is typically a global, stack-ordered
+listener, not per-element). A driver's `closeByEscape()` should be called on
+the LAST-opened instance when driving a stacked scenario — this is a real
+framework behavior to design tests around, not a driver bug to fix.
 
 ## Limitation: the native HTML Popover API under jsdom
 
