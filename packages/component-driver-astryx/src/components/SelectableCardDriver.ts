@@ -44,12 +44,24 @@ export class SelectableCardDriver extends ComponentDriver<typeof parts> implemen
    * Clicks the visible card surface (`this.locator`) — the real user affordance —
    * rather than the visually-hidden inner checkbox, which Playwright refuses to
    * click (not actionable). The card's click handler flips the checkbox.
+   *
+   * No-ops on a disabled card rather than clicking it regardless: under
+   * jsdom, `userEvent.click` already silently skips a disabled native
+   * `<input>` (and the card surface click handler follows suit), but
+   * `PlaywrightInteractor.click`'s actionability check instead retries "is
+   * enabled" until the click's own timeout — indistinguishable from a hang
+   * for a control that can never become enabled. Checking {@link isDisabled}
+   * first keeps the no-op behavior identical across every `Interactor`.
    */
   async setSelected(selected: boolean): Promise<void> {
     await this.enforcePartExistence('input');
-    if ((await this.isSelected()) !== selected) {
-      await this.interactor.click(this.locator);
+    if ((await this.isSelected()) === selected) {
+      return;
     }
+    if (await this.isDisabled()) {
+      return;
+    }
+    await this.interactor.click(this.locator);
   }
 
   /** Flip the card's selection by clicking the card surface. */

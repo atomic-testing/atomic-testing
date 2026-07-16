@@ -40,10 +40,23 @@ export class CheckboxDriver
     return this.interactor.isChecked(this.inputLocator);
   }
 
+  /**
+   * No-ops on a disabled checkbox rather than clicking it regardless: under
+   * jsdom, `userEvent.click` already silently skips a disabled native
+   * `<input>`, but `PlaywrightInteractor.click`'s actionability check instead
+   * retries "is enabled" until the click's own timeout — indistinguishable
+   * from a hang for a control that can never become enabled. Checking
+   * {@link isDisabled} first keeps the no-op behavior identical across every
+   * `Interactor`.
+   */
   async setSelected(selected: boolean): Promise<void> {
-    if ((await this.isSelected()) !== selected) {
-      await this.interactor.click(this.inputLocator);
+    if ((await this.isSelected()) === selected) {
+      return;
     }
+    if (await this.isDisabled()) {
+      return;
+    }
+    await this.interactor.click(this.inputLocator);
   }
 
   /** The native input's `value` attribute (array-value mode), or `null` in `binary` mode. */
