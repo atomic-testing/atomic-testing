@@ -43,16 +43,28 @@ export class SlideToggleDriver
    * with Angular's change detection, so the new state is probed (bounded)
    * rather than assumed — a straight follow-up read can beat the update under
    * load.
+   *
+   * No-ops on a disabled toggle rather than clicking it regardless: under
+   * jsdom, `userEvent.click` already silently skips a disabled native
+   * `<button>`, but `PlaywrightInteractor.click`'s actionability check instead
+   * retries "is enabled" until the click's own timeout — indistinguishable
+   * from a hang for a control that can never become enabled. Checking
+   * {@link isDisabled} first keeps the no-op behavior identical across every
+   * `Interactor`.
    */
   async setSelected(selected: boolean): Promise<void> {
-    if ((await this.isSelected()) !== selected) {
-      await this.interactor.click(this.switchLocator);
-      await this.interactor.waitUntil({
-        probeFn: () => this.isSelected(),
-        terminateCondition: selected,
-        timeoutMs: 1000,
-      });
+    if ((await this.isSelected()) === selected) {
+      return;
     }
+    if (await this.isDisabled()) {
+      return;
+    }
+    await this.interactor.click(this.switchLocator);
+    await this.interactor.waitUntil({
+      probeFn: () => this.isSelected(),
+      terminateCondition: selected,
+      timeoutMs: 1000,
+    });
   }
 
   /**
