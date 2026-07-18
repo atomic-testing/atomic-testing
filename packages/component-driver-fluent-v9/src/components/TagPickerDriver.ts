@@ -170,7 +170,12 @@ export class TagPickerDriver
     }
   }
 
-  /** The number of options in the open list; `0` while closed (see class doc). */
+  /**
+   * The number of options in the list — opens it first if not already open
+   * (see class doc); `0` only if the listbox still can't be resolved after
+   * that best-effort open (e.g. a disabled or otherwise non-cooperating
+   * picker), not merely because the picker started closed.
+   */
   async getOptionCount(): Promise<number> {
     await this.open();
     try {
@@ -180,7 +185,12 @@ export class TagPickerDriver
     }
   }
 
-  /** The visible labels of every option in the open list, in DOM order; `[]` while closed. */
+  /**
+   * The visible labels of every option in the list, in DOM order — opens it
+   * first if not already open (see class doc); `[]` only if the listbox
+   * still can't be resolved after that best-effort open, not merely because
+   * the picker started closed.
+   */
   async getOptionLabels(): Promise<string[]> {
     const labels: string[] = [];
     for await (const option of this.iterateOptions()) {
@@ -192,7 +202,12 @@ export class TagPickerDriver
     return labels;
   }
 
-  /** The option whose visible label matches `label`, or `null` when absent (or while closed). */
+  /**
+   * The option whose visible label matches `label` — opens the list first if
+   * not already open (see class doc); `null` when no option matches, or when
+   * the listbox still can't be resolved after that best-effort open, not
+   * merely because the picker started closed.
+   */
   async getOptionByLabel(label: string): Promise<TagPickerOptionDriver | null> {
     for await (const option of this.iterateOptions()) {
       if ((await option.getLabel()) === label) {

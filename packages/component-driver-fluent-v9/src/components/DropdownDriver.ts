@@ -28,10 +28,12 @@ const optionSelector = '[role="option"]';
  * same shape as `MenuButtonDriver`. The `Option` children only exist in the
  * DOM once the dropdown has actually been opened: they portal into a cloned
  * `FluentProvider` on `document.body` (the same recipe every Wave 2 overlay
- * uses), so every method that reads the option list — {@link getOptionCount},
- * {@link getOptionLabels}, {@link getOptionByLabel}, {@link selectByLabel} —
- * requires the dropdown to already be {@link open} (mirrors `MenuDriver`'s
- * item-reading methods, which make the same assumption about `MenuList`).
+ * uses). Every method that reads the option list — {@link getOptionCount},
+ * {@link getOptionLabels}, {@link getOptionByLabel} — guards the listbox
+ * resolution and simply returns the empty result (`0`/`[]`/`null`) while the
+ * dropdown is closed, rather than requiring a prior {@link open} call; only
+ * {@link selectByLabel} throws when closed, since no option can ever match
+ * with nothing mounted to search.
  *
  * **`isOpen` reads `aria-expanded`, not listbox existence**: verified against
  * rendered DOM — Fluent keeps the portalled listbox MOUNTED after closing
