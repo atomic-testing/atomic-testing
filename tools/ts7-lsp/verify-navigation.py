@@ -30,8 +30,10 @@ def _frame(obj):
 
 class LspClient:
     def __init__(self, cmd):
+        # stderr is intentionally discarded: nothing reads it, and an undrained PIPE
+        # would deadlock the child once tsgo writes past the ~64KB pipe buffer.
         self.proc = subprocess.Popen(cmd, cwd=REPO, stdin=subprocess.PIPE,
-                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                     stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         self._buf = b""
         self._messages = []
         self._lock = threading.Lock()
@@ -130,7 +132,10 @@ def _definition(client, rel, symbol, id_, timeout=40):
 
 
 def main():
-    cmd = sys.argv[1:] if len(sys.argv) > 1 else ["node_modules/.bin/tsgo", "--lsp", "-stdio"]
+    args = sys.argv[1:]
+    if args[:1] == ["--"]:  # allow the documented `... -- <binary> <args>` passthrough
+        args = args[1:]
+    cmd = args if args else ["node_modules/.bin/tsgo", "--lsp", "-stdio"]
     client = LspClient(cmd)
     init = client.request(1, "initialize", {
         "processId": os.getpid(), "rootUri": _uri("."),
