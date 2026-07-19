@@ -37,7 +37,7 @@ bash /Users/tangent.lin/.claude/skills/doc-gen/repo-tree.sh /Users/tangent.lin/D
 
 ## Build / test / run
 
-From `CLAUDE.md` (toolchain: pnpm ≥10, Node ≥22.12; type-check via `tsgo`, lint via oxlint, format via oxfmt):
+From `CLAUDE.md` (toolchain: pnpm ≥10, Node ≥22.12; type-check via `tsc` (TS 7 native), lint via oxlint, format via oxfmt):
 
 | Action           | Command                                    |
 | ---------------- | ------------------------------------------ |

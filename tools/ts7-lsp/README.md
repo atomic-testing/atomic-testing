@@ -1,36 +1,46 @@
-# TypeScript 7 native (tsgo) LSP for Claude Code
+# TypeScript 7 native (tsc) LSP for Claude Code
 
 Gives Claude Code real code intelligence on this monorepo — go-to-definition,
 find-references, find-implementations, and live diagnostics — backed by the **same
-engine the repo's `check:type` gate already uses** (`tsgo`, the Go-native TypeScript 7
-compiler shipped as the `@typescript/native-preview` devDependency).
+engine the repo's `check:type` gate already uses** (`tsc`, the Go-native TypeScript 7
+compiler, installed as the `@typescript/native` alias of `typescript@7`).
 
 This is a self-contained, repo-local Claude Code plugin plus the scripts to enable it
 in a Claude Code Cloud VM session.
 
-## Why tsgo, and not `typescript-language-server`
+## Which `tsc` this uses (the coexistence setup)
+
+This repo runs TypeScript 7 and 6 side by side, following the official coexistence recipe:
+
+| Binary / import | Resolves to | Used for |
+| --- | --- | --- |
+| `tsc` | `@typescript/native` (`npm:typescript@^7.0.2`) | typecheck (`tsc --noEmit`) **and this LSP** |
+| `tsc6` | `@typescript/typescript6` (aliased as `typescript`) | classic CLI, if needed |
+| `import 'typescript'` | `@typescript/typescript6` (classic Strada API) | build/`.d.ts` (tsdown), TypeDoc, api-extractor |
+
+So `pnpm exec tsc --lsp --stdio` runs the **TS 7 native** language server — the same
+engine as CI's `tsc --noEmit`, so navigation and diagnostics match the typecheck. (This
+replaced the earlier unstable `@typescript/native-preview`/`tsgo` dev snapshot.)
+
+## Why not `typescript-language-server`
 
 The official `typescript-lsp` plugin drives `typescript-language-server`, which sits on
-TypeScript's classic JS "Strada" language-service API. **TypeScript 7 / tsgo does not
-expose that API** — it speaks LSP natively through its own code path. So the stock
-plugin can only give you navigation on _classic_ TypeScript, a different engine than the
-`tsgo --noEmit` typecheck that actually gates CI here. This plugin points Claude Code
-straight at `tsgo --lsp` instead, so navigation and diagnostics match CI.
-
-> The invocation is `tsgo --lsp --stdio`. Note the binary is **`tsgo`**, not `tsc` — even
-> though `tsgo --help` self-identifies as _"tsc: The TypeScript Compiler."_ In this repo
-> `pnpm exec tsc` resolves to classic TypeScript 6, which has no `--lsp` mode.
+TypeScript's classic JS "Strada" language-service API. **TypeScript 7 native does not
+expose that API** — it speaks LSP natively through its own code path. So the stock plugin
+can only give you navigation on _classic_ TypeScript, a different engine than the
+`tsc --noEmit` typecheck that gates CI here. This plugin points Claude Code straight at
+`tsc --lsp` instead, so navigation and diagnostics match CI.
 
 ## What's here
 
 | File | Purpose |
 | --- | --- |
-| `ts7-lsp-plugin/.lsp.json` | The LSP server config — runs `pnpm exec tsgo --lsp --stdio`. |
+| `ts7-lsp-plugin/.lsp.json` | The LSP server config — runs `pnpm exec tsc --lsp --stdio`. |
 | `ts7-lsp-plugin/.claude-plugin/plugin.json` | Plugin manifest. |
 | `.claude-plugin/marketplace.json` | Local marketplace descriptor (`atomic-testing-ts7`). |
 | `enable.sh` | Idempotent install-if-missing. Shared by the setup script and the hook. |
 | `setup-script.example.sh` | Body to paste into the environment setup script (preferred path). |
-| `verify-navigation.py` | Reproducible acceptance test — drives `tsgo --lsp` and reports resolution. |
+| `verify-navigation.py` | Reproducible acceptance test — drives `tsc --lsp` and reports resolution. |
 
 ## Enabling it in a Cloud VM
 
@@ -56,8 +66,8 @@ environment's life.
   "native binary can't do LSP" reports were against ≤2.1.15.)
 - **Workspace trust.** Claude Code starts LSP servers only after the workspace is trusted
   — accept the trust prompt in the interactive session.
-- **`tsgo` present.** It ships via `pnpm install` (`@typescript/native-preview`).
-  `enable.sh` warns if `pnpm exec tsgo` isn't resolvable.
+- **`tsc` (TS 7) present.** It ships via `pnpm install` (`@typescript/native`).
+  `enable.sh` warns if `pnpm exec tsc` isn't resolvable.
 - **Built `dist` for cross-package navigation** — see below.
 
 ### Acceptance test
@@ -91,7 +101,7 @@ package's `exports` map points at `dist/`. Two consequences:
 **Upgrade path (deliberately a separate change):** a `tsconfig` `paths` mapping
 (`@atomic-testing/*` → `packages/*/src/index.ts`) makes cross-package go-to-definition
 land in real source, verified via `verify-navigation.py`. It is **not** bundled into this
-enablement because it also feeds `tsgo --noEmit`, changing `check:type` resolution across
+enablement because it also feeds `tsc --noEmit`, changing `check:type` resolution across
 every package and per-major variant — that needs its own full typecheck validation. Note
 for whoever picks it up: TypeScript 7 **removed `baseUrl`** and requires relative path
 targets (`./packages/*/src/index.ts`), so the mapping must be written in the TS7-compliant
@@ -103,6 +113,6 @@ form.
 | --- | --- |
 | No LSP tool in the session | Workspace not trusted, or plugin installed this session (run `/reload-plugins` or restart). |
 | Server silently absent | Claude Code < 2.1.205 skipping the restart fields — upgrade, or drop those two fields. |
-| `Executable not found` | `pnpm install` hasn't run; `tsgo` isn't resolvable. |
+| `Executable not found` | `pnpm install` hasn't run; `tsc` isn't resolvable. |
 | Cross-package jumps go nowhere | `dist` not built — `pnpm --filter @atomic-testing/core build`. |
 | LSP works on native binary? | Yes, verified at 2.1.211. Older (≤2.1.15) native builds had a gap. |

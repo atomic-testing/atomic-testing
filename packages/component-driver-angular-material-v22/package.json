@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check:type": "tsgo --noEmit"
+    "check:type": "tsc --noEmit"
   },
   "dependencies": {
     "@angular/cdk": "^22.0.0",

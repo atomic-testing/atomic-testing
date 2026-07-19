@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check:type": "tsgo --noEmit",
+    "check:type": "tsc --noEmit",
     "check:recipes": "node scripts/check-recipe-sync.mjs",
     "check:coverage": "node scripts/check-scaffolder-coverage.mjs",
     "test:dom": "jest"

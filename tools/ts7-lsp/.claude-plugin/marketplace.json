@@ -1,12 +1,12 @@
 {
   "name": "atomic-testing-ts7",
-  "description": "Local marketplace: TypeScript 7 native (tsgo) LSP for the atomic-testing monorepo.",
+  "description": "Local marketplace: TypeScript 7 native (tsc) LSP for the atomic-testing monorepo.",
   "owner": { "name": "atomic-testing" },
   "plugins": [
     {
       "name": "typescript-lsp-native",
       "source": "./ts7-lsp-plugin",
-      "description": "TypeScript 7 native LSP — runs `pnpm exec tsgo --lsp --stdio` (the Go-native tsgo language server) over stdio, spawned per-project by Claude. Gives go-to-definition, find-references, implementations, and live diagnostics on the same engine the repo's check:type gate already uses.",
+      "description": "TypeScript 7 native LSP — runs `pnpm exec tsc --lsp --stdio` (the Go-native TS 7 language server, installed as @typescript/native) over stdio, spawned per-project by Claude. Gives go-to-definition, find-references, implementations, and live diagnostics on the same engine the repo's check:type gate already uses.",
       "version": "1.0.0",
       "author": { "name": "atomic-testing" }
     }

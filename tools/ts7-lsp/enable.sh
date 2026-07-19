@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Idempotently enable the TypeScript 7 native (tsgo) LSP plugin for Claude Code.
+# Idempotently enable the TypeScript 7 native (tsc) LSP plugin for Claude Code.
 #
 # Safe to run from either:
 #   - an environment setup script (PREFERRED — runs pre-launch, so LSP is live from
@@ -30,10 +30,11 @@ if [ -n "$ver" ] && [ "$(printf '%s\n%s\n' "$MIN_CC_VERSION" "$ver" | sort -V | 
   log "WARN: this build skip the LSP server entirely. Remove those two fields, or upgrade Claude Code."
 fi
 
-# The plugin only wires up the connection — it does not bundle the server. tsgo ships
-# as the @typescript/native-preview devDependency, so `pnpm install` must have run.
-if ! pnpm -C "$REPO" exec tsgo --version >/dev/null 2>&1; then
-  log "WARN: 'pnpm exec tsgo' not resolvable in $REPO — run 'pnpm install' first (provides tsgo)."
+# The plugin only wires up the connection — it does not bundle the server. The TS 7
+# native compiler (tsc) is installed as `@typescript/native` (npm:typescript@^7.0.2),
+# which exposes the `tsc` binary, so `pnpm install` must have run.
+if ! pnpm -C "$REPO" exec tsc --version >/dev/null 2>&1; then
+  log "WARN: 'pnpm exec tsc' not resolvable in $REPO — run 'pnpm install' first (provides tsc)."
 fi
 
 if claude plugin list 2>/dev/null | grep -q "typescript-lsp-native"; then

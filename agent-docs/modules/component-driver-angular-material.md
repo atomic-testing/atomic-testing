@@ -18,7 +18,7 @@ Mirrors `component-driver-mui-v7`:
   based (mui precedent: `@mui/material` is a dependency never imported).
 - `@atomic-testing/core`, `dom-core`, `component-driver-html`, and the
   matching `@atomic-testing/angular-2x` adapter are `workspace:*` deps.
-- tsdown build, `check:type` via tsgo, standard exports map.
+- tsdown build, `check:type` via tsc (TS 7 native), standard exports map.
 
 ## Drivers
 

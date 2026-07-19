@@ -1,7 +1,7 @@
 {
   "typescript": {
     "command": "pnpm",
-    "args": ["exec", "tsgo", "--lsp", "--stdio"],
+    "args": ["exec", "tsc", "--lsp", "--stdio"],
     "extensionToLanguage": {
       ".ts": "typescript",
       ".tsx": "typescriptreact",

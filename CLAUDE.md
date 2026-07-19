@@ -49,7 +49,7 @@ The local SCM may be **Git, Sapling (`sl`), or any git-compatible system** — t
 
 ```bash
 pnpm install                    # Install dependencies (Node.js >=22.12, pnpm >=10)
-pnpm run check:type             # Type check all packages with tsgo (TypeScript 7 native preview)
+pnpm run check:type             # Type check all packages with tsc (TypeScript 7 native)
 pnpm run check:lint             # oxlint with auto-fix (config: .oxlintrc.json)
 pnpm run check:style            # Format with oxfmt (JS/TS/JSX/JSON only; .md/.mdx/.css/.yaml left as-is)
 pnpm test:dom                   # Jest tests (in package directory)
@@ -69,7 +69,7 @@ cd docs && pnpm build           # Build documentation (test before doc PRs)
 
 > The documentation site's build (Docusaurus + TypeDoc-generated API reference) and local verification are documented in [`docs/CLAUDE.md`](docs/CLAUDE.md).
 
-> **Toolchain note:** Type-_checking_ uses `tsgo` (TypeScript 7 beta / native port, `@typescript/native-preview`). Builds, `.d.ts` emit (tsdown), and TypeDoc still use the classic TypeScript compiler (`typescript@^6.0`) because the native preview has no programmatic API yet. Linting is oxlint (replaced ESLint); formatting is oxfmt (replaced Prettier + `@trivago/prettier-plugin-sort-imports`).
+> **Toolchain note:** TypeScript 7 and 6 run side by side via the official coexistence recipe (npm aliases). The stable TS 7 native compiler is installed as `@typescript/native` (`npm:typescript@^7.0.2`) and provides the `tsc` binary — used for type-_checking_ (`tsc --noEmit`) **and** the LSP (`tsc --lsp`). Builds, `.d.ts` emit (tsdown), TypeDoc, and api-extractor still need the classic "Strada" programmatic API, which TS 7 native doesn't expose yet — so `typescript` is aliased to `@typescript/typescript6` (classic API, CLI `tsc6`), which those tools import. This replaced the earlier unstable `@typescript/native-preview` (`tsgo`) dev snapshot; a `.pnpmfile.cjs` keeps it from being re-pulled as `rolldown-plugin-dts`'s optional peer. Linting is oxlint (replaced ESLint); formatting is oxfmt (replaced Prettier + `@trivago/prettier-plugin-sort-imports`).
 
 **Build before you test (stale-`dist` trap):** every test runner resolves
 `@atomic-testing/*` imports to that package's built **`dist`**, never its `src` —
@@ -81,7 +81,7 @@ import it, until you `pnpm run build` that package **and every changed dependenc
 real trap when verifying a fix: e.g. an out-of-date `core` kept a `childListHelper`
 enumeration that stopped at the first non-matching child, truncating list counts so
 a green test was meaningless. Rebuild the touched packages (and `core`) before
-trusting any dom/e2e result. (`tsgo` also reads the stale `.d.ts`, so cross-package
+trusting any dom/e2e result. (`tsc` also reads the stale `.d.ts`, so cross-package
 typecheck errors that name newly-added exports usually just mean "rebuild," not a
 real bug.)
 
@@ -131,12 +131,13 @@ pnpm test:e2e:chrome            # Run Chrome only (faster iteration)
 - Click coordinates can have sub-pixel offsets (~0.6px) - use tolerance-based comparisons
 - Always test all browsers before merging (`pnpm test:e2e`)
 
-## Code intelligence (tsgo LSP)
+## Code intelligence (tsc LSP)
 
-Claude Code can drive **`tsgo --lsp`** (the TypeScript 7 native language server this repo
-already typechecks with) for go-to-definition, find-references, and live diagnostics —
-navigation backed by the same engine as `check:type`, not the classic
-`typescript-language-server` (which can't bind to tsgo). The repo-local plugin, the Cloud
+Claude Code can drive **`tsc --lsp`** (the TypeScript 7 native language server this repo
+already typechecks with — `tsc` is `@typescript/native`; see the Toolchain note) for
+go-to-definition, find-references, and live diagnostics — navigation backed by the same
+engine as `check:type`, not the classic `typescript-language-server` (which can't bind to
+the TS 7 native compiler). The repo-local plugin, the Cloud
 VM enablement (setup script / SessionStart hook, both idempotent via `enable.sh`), the
 reproducible acceptance test, and the cross-package-navigation limitation live in
 [`tools/ts7-lsp/README.md`](tools/ts7-lsp/README.md). Two load-bearing facts from there:

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SessionStart hook: ensure the TypeScript 7 native (tsgo) LSP plugin is installed.
+# SessionStart hook: ensure the TypeScript 7 native (tsc) LSP plugin is installed.
 #
 # The PREFERRED enablement path is the environment setup script (see
 # tools/ts7-lsp/setup-script.example.sh) — it runs pre-launch, so the LSP is live
@@ -18,7 +18,7 @@ if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
   bash "${CLAUDE_PROJECT_DIR:-.}/tools/ts7-lsp/enable.sh" || true
 else
   if command -v claude >/dev/null 2>&1 && ! claude plugin list 2>/dev/null | grep -q "typescript-lsp-native"; then
-    printf '[ts7-lsp] Not installed. To enable tsgo LSP locally: bash tools/ts7-lsp/enable.sh\n'
+    printf '[ts7-lsp] Not installed. To enable the TS 7 (tsc) LSP locally: bash tools/ts7-lsp/enable.sh\n'
   fi
 fi
 exit 0

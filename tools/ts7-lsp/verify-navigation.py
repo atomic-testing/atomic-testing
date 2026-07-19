@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Reproducible acceptance test for the TypeScript 7 native (tsgo) LSP.
+"""Reproducible acceptance test for the TypeScript 7 native (tsc) LSP.
 
-Drives `pnpm exec tsgo --lsp --stdio` directly (no Claude Code involved) and asserts
+Drives `pnpm exec tsc --lsp --stdio` directly (no Claude Code involved) and asserts
 that go-to-definition resolves for a within-package relative import and a cross-package
 `@atomic-testing/*` import. Prints, for each, whether the definition landed in `src`,
 built `dist`, or `node_modules` — the signal behind the "Cross-package navigation"
@@ -9,11 +9,11 @@ section of README.md.
 
 Usage:
     python3 tools/ts7-lsp/verify-navigation.py
-    python3 tools/ts7-lsp/verify-navigation.py -- node_modules/.bin/tsgo --lsp -stdio
+    python3 tools/ts7-lsp/verify-navigation.py -- node_modules/.bin/tsc --lsp --stdio
 
 Notes:
   * A conformant LSP client MUST answer server->client requests (registerCapability,
-    workspace/configuration); tsgo stalls project load otherwise. This client does.
+    workspace/configuration); tsc stalls project load otherwise. This client does.
   * Cross-package resolution requires the imported package's `dist` to be built
     (its package.json `exports` point at dist). Build core first:
         pnpm --filter @atomic-testing/core build
@@ -31,7 +31,7 @@ def _frame(obj):
 class LspClient:
     def __init__(self, cmd):
         # stderr is intentionally discarded: nothing reads it, and an undrained PIPE
-        # would deadlock the child once tsgo writes past the ~64KB pipe buffer.
+        # would deadlock the child once tsc writes past the ~64KB pipe buffer.
         self.proc = subprocess.Popen(cmd, cwd=REPO, stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         self._buf = b""
@@ -58,7 +58,7 @@ class LspClient:
                     continue
                 with self._lock:
                     self._messages.append(parsed)
-                # Answer server->client requests, or tsgo never finishes loading.
+                # Answer server->client requests, or tsc never finishes loading.
                 if parsed.get("method") and "id" in parsed:
                     if parsed["method"] == "workspace/configuration":
                         count = len(parsed.get("params", {}).get("items", []))
@@ -135,7 +135,7 @@ def main():
     args = sys.argv[1:]
     if args[:1] == ["--"]:  # allow the documented `... -- <binary> <args>` passthrough
         args = args[1:]
-    cmd = args if args else ["node_modules/.bin/tsgo", "--lsp", "-stdio"]
+    cmd = args if args else ["node_modules/.bin/tsc", "--lsp", "--stdio"]
     client = LspClient(cmd)
     init = client.request(1, "initialize", {
         "processId": os.getpid(), "rootUri": _uri("."),
@@ -143,7 +143,7 @@ def main():
         "capabilities": {"workspace": {"configuration": True},
                          "textDocument": {"definition": {"linkSupport": True}}}}, timeout=20)
     if not init or "result" not in init:
-        print("FAIL: tsgo did not answer initialize"); client.close(); sys.exit(1)
+        print("FAIL: tsc did not answer initialize"); client.close(); sys.exit(1)
     client.notify("initialized", {})
 
     checks = [
