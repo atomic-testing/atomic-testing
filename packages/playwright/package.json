@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check:type": "tsgo --noEmit",
+    "check:type": "tsc --noEmit",
     "check:api": "api-extractor run"
   },
   "dependencies": {

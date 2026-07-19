@@ -1,0 +1,21 @@
+{
+  "typescript": {
+    "command": "pnpm",
+    "args": ["exec", "tsc", "--lsp", "--stdio"],
+    "extensionToLanguage": {
+      ".ts": "typescript",
+      ".tsx": "typescriptreact",
+      ".mts": "typescript",
+      ".cts": "typescript",
+      ".js": "javascript",
+      ".jsx": "javascriptreact",
+      ".mjs": "javascript",
+      ".cjs": "javascript"
+    },
+    "transport": "stdio",
+    "startupTimeout": 60000,
+    "shutdownTimeout": 15000,
+    "restartOnCrash": true,
+    "maxRestarts": 3
+  }
+}

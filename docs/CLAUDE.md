@@ -14,11 +14,12 @@ wraps TypeDoc + `typedoc-plugin-markdown`) at build/start time. Config lives in
 [`docusaurus.config.ts`](docusaurus.config.ts); dependencies and scripts in
 [`package.json`](package.json).
 
-**Toolchain divergence from the repo:** the root build type-_checks_ with `tsgo`
-(TypeScript 7 preview), but TypeDoc here runs on the **classic `typescript@^6`
-compiler** (pinned in `package.json` alongside `typedoc`), because TypeDoc has no
-tsgo backend. So the API reference is only as current as what classic `tsc` reads
-from the package sources.
+**Toolchain divergence from the repo:** the root type-_checks_ with `tsc`
+(TypeScript 7 native, installed as `@typescript/native`), but TypeDoc here runs on the
+**classic TypeScript 6 API** — the repo aliases `typescript` to `@typescript/typescript6`
+precisely so TypeDoc and other Strada-API tools keep working, since TS 7 native has no
+programmatic compiler API yet. So the API reference is only as current as what the classic
+compiler reads from the package sources.
 
 ## How the API reference is generated & assembled
 

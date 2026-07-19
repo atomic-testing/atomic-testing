@@ -21,7 +21,7 @@ what's expected before you open a pull request.
 Before submitting a pull request, run:
 
 ```bash
-pnpm run check:type             # Type check all packages with tsgo
+pnpm run check:type             # Type check all packages with tsc (TS 7 native)
 pnpm run check:lint             # oxlint with auto-fix
 pnpm run check:style            # Format with oxfmt
 pnpm test:dom                   # Jest tests (run from the package directory)

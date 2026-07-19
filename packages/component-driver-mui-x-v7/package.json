@@ -35,7 +35,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "check:type": "tsgo --noEmit"
+    "check:type": "tsc --noEmit"
   },
   "dependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",

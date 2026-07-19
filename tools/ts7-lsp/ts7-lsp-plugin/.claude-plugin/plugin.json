@@ -1,0 +1,6 @@
+{
+  "name": "typescript-lsp-native",
+  "description": "TypeScript 7 native LSP (tsc --lsp over stdio, the Go-native language server) for the atomic-testing monorepo.",
+  "version": "1.0.0",
+  "author": { "name": "atomic-testing" }
+}

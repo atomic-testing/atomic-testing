@@ -200,13 +200,13 @@ locators all hitting the 30s wall ≠ a locator bug — it's a dead app.
 ## Phase 6 — Static checks & close-out
 
 ```bash
-cd packages/component-driver-<lib> && npx tsgo --noEmit          # typecheck (some pkgs lack the script)
+cd packages/component-driver-<lib> && npx tsc --noEmit           # typecheck (some pkgs lack the script)
 npx oxfmt --list-different <changed files>                       # format (empty = clean)
 npx oxlint <changed dirs>                                        # lint (exit 0 = clean)
 ```
 
 Definition of done: jsdom suite green **after a build**; e2e green on
-chromium+firefox+webkit; `tsgo`/`oxfmt`/`oxlint` clean; probe deleted; JSDoc
+chromium+firefox+webkit; `tsc`/`oxfmt`/`oxlint` clean; probe deleted; JSDoc
 written; any harness fixes (ports, dedupe, missing `check:type` script) called out
 to the user since this repo isn't under git here. Cross-version parity (v5/v6/v7
 often share a gap) is a deliberate scope call — note it, don't auto-expand.
