@@ -70,7 +70,7 @@ export const THIRD_PARTY = {
   swcCore: { name: '@swc/core', range: '^1.7.0', dev: true },
   typesJest: { name: '@types/jest', range: '^30.0.0', dev: true },
   vitest: { name: 'vitest', range: '^4.1.9', dev: true },
-  jsdom: { name: 'jsdom', range: '^25.0.0', dev: true },
+  jsdom: { name: 'jsdom', range: '^29.0.0', dev: true },
   vitestBrowserPlaywright: { name: '@vitest/browser-playwright', range: '^4.1.9', dev: true },
   playwright: { name: 'playwright', range: '^1.61.1', dev: true },
   playwrightTest: { name: '@playwright/test', range: '^1.61.1', dev: true },
