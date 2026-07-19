@@ -32,7 +32,7 @@ No. You can adopt Atomic Testing gradually and keep legacy tests in place. New t
 
 ### What benefits does Atomic Testing provide to my team?
 
-Component drivers encapsulate how to interact with the UI so tests remain focused on intent rather than implementation details. This leads to easier maintenance and helps reduce flaky tests across projects.
+Three concrete ones. **Upgrade churn is contained**: a component library's DOM details live in the driver package, so a major upgrade becomes a driver-import swap instead of a sweep across every test that asserted on markup. **One testing vocabulary across DOM and E2E**: the same `ScenePart` and test body run under Jest/Vitest and Playwright, so test logic is written once and shared between runners rather than duplicated per environment. **Onboarding shrinks to a single semantic API** (`click()`, `setValue()`, `getText()`) instead of a per-framework query-and-fire dialect. The full case, with before/after code, is on [Why Atomic Testing?](./why-atomic-testing.mdx); the rollout mechanics are in [Adoption & rollout](./evaluate/adoption-rollout.mdx).
 
 ### Does adopting Atomic Testing require a specific test runner?
 
@@ -53,3 +53,7 @@ Implement a driver that exposes the actions and assertions relevant to your comp
 ### Can I contribute drivers back to Atomic Testing?
 
 Yes. Contributions are welcome. Feel free to open an issue or pull request to discuss adding official support for your component set.
+
+### Who maintains Atomic Testing — is it safe to depend on?
+
+The honest answer: the project has a single primary maintainer, and that is a real risk you should weigh, not one we hide. It's mitigated by machinery rather than promises — a published versioning and EOL policy, architecture decision records for every load-bearing choice, and CI gates that fail when docs and code drift apart. [Governance & risk](./evaluate/governance.mdx) lays out both the risk and the mitigations so you can judge for yourself.

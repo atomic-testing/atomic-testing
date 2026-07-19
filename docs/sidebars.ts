@@ -18,8 +18,9 @@ import { getBucketedDocPackages } from './scripts/docPackages.mjs';
 const { driver: driverPackages, framework: frameworkPackages } = getBucketedDocPackages();
 
 const sidebars = {
-  // Sidebar structure follows the reader's journey: get started → pick packages
-  // → learn the concepts → apply recipes → go deep → reference.
+  // Sidebar structure follows the reader's journey: get started → evaluate (the
+  // decision-maker's evidence track) → pick packages → learn the concepts →
+  // apply recipes → go deep → reference.
   tutorialSidebar: [
     // GETTING STARTED — the linear path only. Package-selection and the support
     // matrix are decision aids, not sequential steps, so they live in their own
@@ -33,6 +34,31 @@ const sidebars = {
         'quick-start', // `create atomic-testing` one-liner + 5-minute example
         'setup', // Runner config + step-by-step setup (must precede tutorial)
         'tutorial', // Detailed tutorial
+      ],
+    },
+
+    // EVALUATING — evidence pages for the people deciding whether a team adopts
+    // (managers, staff/platform owners, directors), not the IC already trying it.
+    // Kept out of Getting Started so the linear path stays linear: these are
+    // diligence reading, not sequential steps.
+    {
+      type: 'category',
+      label: '🔍 Evaluating Atomic Testing',
+      collapsed: true,
+      link: {
+        type: 'generated-index',
+        title: 'Evaluating Atomic Testing',
+        description:
+          'Evidence for the people deciding whether a team adopts: proof of portability, the API stability and EOL policy, runnable example apps, a rollout playbook, agent-native testing skills, and governance & risk.',
+        slug: '/evaluate',
+      },
+      items: [
+        'evaluate/proof-of-portability', // The cross-runtime conformance evidence behind "write once, run anywhere"
+        'evaluate/api-stability', // Versioning, deprecation & EOL policy — what pre-1.0 means here
+        'evaluate/example-apps', // Runnable example apps to inspect before committing
+        'evaluate/adoption-rollout', // Incremental rollout playbook for teams and orgs
+        'evaluate/testing-with-ai-agents', // Agent-native skills that write and maintain driver tests
+        'evaluate/governance', // Maintainership, risk disclosure, and how change is managed
       ],
     },
 

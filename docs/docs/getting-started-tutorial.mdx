@@ -214,6 +214,10 @@ const engine = createTestEngineForComponent(<CredentialForm />, parts);
 
 The rest of this section tours [example-mui-signup-form](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form), a larger multi-step signup form in the monorepo's [examples](https://github.com/atomic-testing/atomic-testing/tree/main/examples) folder, built with the `createTestEngineForComponent` wrapper from the previous section. You may also run it live in [Codesandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) without installing anything locally.
 
+:::info A teaching app, deliberately kept per-step
+This app tests each wizard step in isolation with its own driver and its own one-part scene — that keeps every step readable on its own, which is what a tutorial needs. It's also why the [decomposing driver trees](./guides/decomposing-driver-trees.md) guide uses it as the named counter-example for driver composition: it has no page-object driver tying the steps into a flow. For a production-shaped suite composed behind a single page object, see the ticket-console app in [Example apps](./evaluate/example-apps.mdx).
+:::
+
 ### Install and run it
 
 From the repository root:

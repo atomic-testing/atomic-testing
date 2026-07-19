@@ -326,6 +326,14 @@ const config: Config = {
           label: 'Getting Started',
         },
         {
+          // The evaluator track's generated index (see the "Evaluating Atomic
+          // Testing" category in sidebars.ts) — evidence pages for the people
+          // deciding whether a team adopts, not the IC already trying it.
+          to: '/docs/evaluate',
+          position: 'left',
+          label: 'Why adopt',
+        },
+        {
           type: 'doc',
           docId: 'concepts',
           position: 'left',
@@ -367,6 +375,10 @@ const config: Config = {
             {
               label: 'Why Atomic Testing?',
               to: '/docs/why-atomic-testing',
+            },
+            {
+              label: 'Evaluating Atomic Testing',
+              to: '/docs/evaluate',
             },
             {
               label: 'Package Guide',
