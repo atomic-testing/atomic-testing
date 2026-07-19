@@ -60,7 +60,7 @@ export class TabListDriver<ItemT extends TabDriver = TabDriver> extends ListComp
   /** The visible label of every tab, in DOM order. */
   async getTabLabels(): Promise<string[]> {
     const labels: string[] = [];
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       const text = await tab.getText();
       labels.push(text?.trim() ?? '');
     }
@@ -75,7 +75,7 @@ export class TabListDriver<ItemT extends TabDriver = TabDriver> extends ListComp
   /** Zero-based index of the selected tab, or `-1` when no tab is selected. */
   async getSelectedIndex(): Promise<number> {
     let index = 0;
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
         return index;
       }
@@ -86,7 +86,7 @@ export class TabListDriver<ItemT extends TabDriver = TabDriver> extends ListComp
 
   /** Label of the selected tab, or `null` when no tab is selected. */
   async getSelectedLabel(): Promise<Nullable<string>> {
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
         return (await tab.getText())?.trim() ?? null;
       }
@@ -96,7 +96,7 @@ export class TabListDriver<ItemT extends TabDriver = TabDriver> extends ListComp
 
   /** The `value` of the selected tab (see {@link TabDriver.getValue}), or `null` when no tab is selected. */
   async getSelectedValue(): Promise<Nullable<string>> {
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
         return (await tab.getValue()) ?? null;
       }
@@ -136,7 +136,7 @@ export class TabListDriver<ItemT extends TabDriver = TabDriver> extends ListComp
    * @returns `false` when no tab matches.
    */
   async selectByValue(value: string): Promise<boolean> {
-    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), TabDriver)) {
+    for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if ((await tab.getValue()) === value) {
         await tab.click();
         return true;

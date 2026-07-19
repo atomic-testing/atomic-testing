@@ -54,7 +54,7 @@ export class AccordionDriver<
   /** The summary/header label of every item, in DOM order. */
   async getItemSummaries(): Promise<string[]> {
     const summaries: string[] = [];
-    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), AccordionItemDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       summaries.push((await item.getSummary()) ?? '');
     }
     return summaries;
@@ -64,7 +64,7 @@ export class AccordionDriver<
   async getExpandedIndexes(): Promise<number[]> {
     const expanded: number[] = [];
     let index = 0;
-    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), AccordionItemDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await item.isExpanded()) {
         expanded.push(index);
       }

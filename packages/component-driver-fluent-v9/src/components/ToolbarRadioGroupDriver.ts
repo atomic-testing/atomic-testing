@@ -58,7 +58,7 @@ export class ToolbarRadioGroupDriver<
   /** The visible label of every option, in DOM order. */
   async getOptionLabels(): Promise<string[]> {
     const labels: string[] = [];
-    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), ToolbarRadioButtonDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       labels.push((await item.getText())?.trim() ?? '');
     }
     return labels;
@@ -66,7 +66,7 @@ export class ToolbarRadioGroupDriver<
 
   /** Label of the selected option, or `null` when none is selected. */
   async getSelectedLabel(): Promise<Nullable<string>> {
-    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), ToolbarRadioButtonDriver)) {
+    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await item.isSelected()) {
         return (await item.getText())?.trim() ?? null;
       }

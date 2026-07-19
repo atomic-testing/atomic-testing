@@ -60,11 +60,24 @@ export class TabDriver extends HTMLButtonDriver {
     return this.interactor.getAttribute(this.locator, 'value');
   }
 
-  /** Activate this tab by clicking it, unless it is already selected (a selected tab cannot be toggled off). */
+  /**
+   * Activate this tab by clicking it, unless it is already selected (a
+   * selected tab cannot be toggled off). No-ops on a disabled tab rather
+   * than clicking it regardless: under jsdom, `userEvent.click` already
+   * silently skips a disabled native `<button>`, but
+   * `PlaywrightInteractor.click`'s actionability check instead retries "is
+   * enabled" until the click's own timeout — indistinguishable from a hang
+   * for a tab that can never become enabled (same contract as
+   * `RadioDriver.setSelected`/`AccordionItemDriver.click`).
+   */
   async select(): Promise<void> {
-    if (!(await this.isSelected())) {
-      await this.interactor.click(this.locator);
+    if (await this.isSelected()) {
+      return;
     }
+    if (await this.isDisabled()) {
+      return;
+    }
+    await this.interactor.click(this.locator);
   }
 
   override get driverName(): string {
