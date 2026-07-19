@@ -43,6 +43,8 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 | [012](adr/012-remove-dead-clone-wait-from-interactor.md) | Remove dead `clone()` / `wait()` from the `Interactor` contract.           |
 | [013](adr/013-angular-shared-core-thin-packages.md)      | Angular 20–22 support via a shared core and thin per-major packages.       |
 | [014](adr/014-extract-mui-5-to-separate-repo.md)         | Extract MUI 5 / MUI-X 5 to a separate repo, with full history.             |
+| [015](adr/015-component-driver-protected-primitives.md)  | Narrow `ComponentDriver`'s raw low-level primitives to `protected`.        |
+| [016](adr/016-defer-paths-src-cross-package-navigation.md) | Defer `paths→src` LSP source navigation; keep cross-package on built `.d.ts`. |
 
 ## Fresh repo tree
 

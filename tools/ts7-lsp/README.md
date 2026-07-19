@@ -98,14 +98,17 @@ package's `exports` map points at `dist/`. Two consequences:
   (rolldown), which emits JS sourcemaps but no declaration maps — so `declarationMap: true`
   in `tsconfig` is a no-op here.
 
-**Upgrade path (deliberately a separate change):** a `tsconfig` `paths` mapping
-(`@atomic-testing/*` → `packages/*/src/index.ts`) makes cross-package go-to-definition
-land in real source, verified via `verify-navigation.py`. It is **not** bundled into this
-enablement because it also feeds `tsc --noEmit`, changing `check:type` resolution across
-every package and per-major variant — that needs its own full typecheck validation. Note
-for whoever picks it up: TypeScript 7 **removed `baseUrl`** and requires relative path
-targets (`./packages/*/src/index.ts`), so the mapping must be written in the TS7-compliant
-form.
+**Upgrade path (deferred):** a `tsconfig` `paths` mapping
+(`@atomic-testing/*` → `./packages/*/src/index.ts`) makes cross-package go-to-definition
+land in real source (verified via `verify-navigation.py`), but it **can't be scoped to
+the LSP** — the same config feeds `tsc --noEmit`, so it forces `check:type` to compile
+cross-package source and collides with the composite/declaration/`rootDir` emit model.
+The full decision, the empirical evidence, and the concrete options for a future fix
+(split configs, dismantling the emit model, declaration maps, project `references`) are
+recorded in
+[ADR-016](../../agent-docs/adr/016-defer-paths-src-cross-package-navigation.md). Note
+for whoever revisits it: TypeScript 7 **removed `baseUrl`** and requires relative path
+targets, so any `paths` mapping must use the TS7-compliant form above.
 
 ## Troubleshooting
 

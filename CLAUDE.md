@@ -143,7 +143,10 @@ reproducible acceptance test, and the cross-package-navigation limitation live i
 [`tools/ts7-lsp/README.md`](tools/ts7-lsp/README.md). Two load-bearing facts from there:
 cross-package jumps need `dist` **built** (the same stale-`dist` trap above), and
 `declarationMap` is a **no-op** for upgrading them (tsdown's bundler emits no declaration
-maps) — the source-navigation upgrade is a `paths→src` mapping tracked as separate work.
+maps). Cross-package **go-to-definition** resolves into the bundled `.d.ts` rather than
+source; the `paths→src` fix and why it was **deferred** (it can't be scoped away from
+`check:type`), plus the concrete options for a future revisit, are recorded in
+[ADR-016](agent-docs/adr/016-defer-paths-src-cross-package-navigation.md).
 
 ## Architecture
 
