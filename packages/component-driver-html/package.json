@@ -34,8 +34,7 @@
   "scripts": {
     "build": "tsdown",
     "check:type": "tsc --noEmit",
-    "check:api": "api-extractor run",
-    "test": "jest"
+    "check:api": "api-extractor run"
   },
   "dependencies": {
     "@atomic-testing/core": "workspace:*"

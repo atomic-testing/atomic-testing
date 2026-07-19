@@ -64,13 +64,13 @@ export const THIRD_PARTY = {
   rxjs: { name: 'rxjs', range: '^7.8.0' },
 
   // Runners
-  jest: { name: 'jest', range: '^29.7.0', dev: true },
-  jestEnvJsdom: { name: 'jest-environment-jsdom', range: '^29.7.0', dev: true },
-  swcJest: { name: '@swc/jest', range: '^0.2.37', dev: true },
+  jest: { name: 'jest', range: '^30.0.0', dev: true },
+  jestEnvJsdom: { name: 'jest-environment-jsdom', range: '^30.0.0', dev: true },
+  swcJest: { name: '@swc/jest', range: '^0.2.39', dev: true },
   swcCore: { name: '@swc/core', range: '^1.7.0', dev: true },
-  typesJest: { name: '@types/jest', range: '^29.5.0', dev: true },
+  typesJest: { name: '@types/jest', range: '^30.0.0', dev: true },
   vitest: { name: 'vitest', range: '^4.1.9', dev: true },
-  jsdom: { name: 'jsdom', range: '^25.0.0', dev: true },
+  jsdom: { name: 'jsdom', range: '^29.0.0', dev: true },
   vitestBrowserPlaywright: { name: '@vitest/browser-playwright', range: '^4.1.9', dev: true },
   playwright: { name: 'playwright', range: '^1.61.1', dev: true },
   playwrightTest: { name: '@playwright/test', range: '^1.61.1', dev: true },

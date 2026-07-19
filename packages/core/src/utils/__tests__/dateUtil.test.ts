@@ -60,7 +60,7 @@ describe('validateHtmlDateInput', () => {
   });
 
   test('should throw an error for unsupported type', () => {
-    expect(() => validateHtmlDateInput('month', '2021-01')).toThrowError('Unsupported date type: month');
+    expect(() => validateHtmlDateInput('month', '2021-01')).toThrow('Unsupported date type: month');
   });
 });
 
@@ -78,7 +78,7 @@ describe('assertValidHtmlDateInputValue', () => {
     ['time', '99:99'],
     ['datetime-local', '2021-01-01'],
   ])('throws for a malformed %s value', (type, value) => {
-    expect(() => assertValidHtmlDateInputValue(type, value)).toThrowError(`Invalid date format for type: ${type}`);
+    expect(() => assertValidHtmlDateInputValue(type, value)).toThrow(`Invalid date format for type: ${type}`);
   });
 
   // The empty-string carve-out is the #1053 drift fix: clearing a date input
