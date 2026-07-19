@@ -331,7 +331,9 @@ const config: Config = {
           // deciding whether a team adopts, not the IC already trying it.
           to: '/docs/evaluate',
           position: 'left',
-          label: 'Why adopt',
+          // Short navbar form of the "Evaluating Atomic Testing" track (the
+          // footer uses the full name); matches the /docs/evaluate slug.
+          label: 'Evaluate',
         },
         {
           type: 'doc',

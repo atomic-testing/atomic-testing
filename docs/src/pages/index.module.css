@@ -812,7 +812,16 @@ a.badgeChip:hover {
   text-transform: uppercase;
   font-weight: 600;
   color: var(--at-text-faint);
-  margin-bottom: 4px;
+  margin: 0 0 4px;
+}
+.evaluatorLink {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--at-blue);
+  text-decoration: none;
+}
+.evaluatorLink:hover {
+  text-decoration: underline;
 }
 
 /* ============================ TRADEOFFS ============================ */

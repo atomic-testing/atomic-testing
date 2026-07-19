@@ -516,9 +516,9 @@ function EvaluatorDoorsSection(): JSX.Element {
         <div className={styles.evaluatorRow}>
           {evaluatorDoors.map(door => (
             <div key={door.title} className={styles.evaluatorCard}>
-              <div className={styles.evaluatorCardTitle}>{door.title}</div>
+              <h3 className={styles.evaluatorCardTitle}>{door.title}</h3>
               {door.links.map(link => (
-                <Link key={link.to} className={styles.tradeoffsLink} to={link.to}>
+                <Link key={link.to} className={styles.evaluatorLink} to={link.to}>
                   {link.label}
                 </Link>
               ))}
