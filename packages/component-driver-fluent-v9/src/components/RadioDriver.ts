@@ -22,13 +22,26 @@ export class RadioDriver extends ComponentDriver<{}> implements IToggleDriver, I
     return this.interactor.isChecked(this.locator);
   }
 
+  /**
+   * No-ops on a disabled radio rather than clicking it regardless: under
+   * jsdom, `userEvent.click` already silently skips a disabled native
+   * `<input>`, but `PlaywrightInteractor.click`'s actionability check instead
+   * retries "is enabled" until the click's own timeout — indistinguishable
+   * from a hang for a control that can never become enabled. Checking
+   * {@link isDisabled} first keeps the no-op behavior identical across every
+   * `Interactor`.
+   */
   async setSelected(selected: boolean): Promise<void> {
     if (!selected) {
       throw new Error('A Radio cannot be deselected directly; select a different item instead.');
     }
-    if (!(await this.isSelected())) {
-      await this.interactor.click(this.locator);
+    if (await this.isSelected()) {
+      return;
     }
+    if (await this.isDisabled()) {
+      return;
+    }
+    await this.interactor.click(this.locator);
   }
 
   /** Whether this radio is disabled (native `disabled` attribute; cascades from a disabled `RadioGroup`). */

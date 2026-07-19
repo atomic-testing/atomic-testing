@@ -1,0 +1,8 @@
+{
+  "label": "Driver Coverage",
+  "position": 8,
+  "link": {
+    "type": "generated-index",
+    "description": "Which components each design-system driver package covers, and which behaviours are observable only in a real browser (E2E) versus jsdom (DOM)."
+  }
+}

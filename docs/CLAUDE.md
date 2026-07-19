@@ -143,3 +143,11 @@ this site's.
   transcribe its options, buckets, or transform steps. Routine content changes (adding a
   package, retitling a category) should not require a doc edit here — only a change in how
   the pipeline works should.
+- **No internal delivery-sequencing jargon in `docs/docs/`.** Work on a driver package is
+  often planned and tracked internally in numbered batches ("Wave 0", "Wave 1", …, per an
+  epic/issue). That labeling belongs in `agent-docs/` and issue trackers, never in the
+  published site — a reader has no context for it and it reads as an unfinished draft.
+  When a coverage doc groups components by delivery batch, title the section by what the
+  components actually are (e.g. "Coverage — overlays & menus", "Coverage — in-tree
+  controls"), the way [`astryx-driver-coverage.md`](docs/driver-coverage/astryx-driver-coverage.md)
+  and [`radix-driver-coverage.md`](docs/driver-coverage/radix-driver-coverage.md) already do.

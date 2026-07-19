@@ -1,7 +1,7 @@
 ---
 id: astryx-driver-coverage
 sidebar_label: Astryx driver coverage
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # Astryx driver coverage matrix
@@ -88,7 +88,7 @@ All DOM + E2E (Chromium/Firefox/WebKit).
 
 ## Coverage — hard set (best-effort v1)
 
-These shipped against the now-landed Wave 0 primitives (`contextMenu`,
+These shipped against interactor primitives already available (`contextMenu`,
 `setInputFiles`) or via structural workarounds; each names its blocking dependency
 inline.
 
@@ -102,12 +102,12 @@ inline.
 | HoverCard         | `HoverCardDriver`         | content via the trigger's `aria-describedby` → layer `id`. **Open state is E2E-only** (no role/testid/open attr on the layer). Tracked upstream: [facebook/astryx#3240](https://github.com/facebook/astryx/issues/3240). |
 | Tooltip           | `TooltipDriver`           | same anchor/limitation as HoverCard. Tracked upstream: [facebook/astryx#3240](https://github.com/facebook/astryx/issues/3240).                                                                                           |
 
-## Earlier waves
+## Also fully covered
 
 Buttons, inputs, toggles, selection controls, overlays/menus, selectors,
-date/time pickers, lists, tables and trees (Waves 1–3) are fully covered with
+date/time pickers, lists, tables and trees are fully covered with
 DOM + E2E. See the package's `src/index.ts` for the complete export list; overlay
-open/close behavior follows the [Portals & overlays](./portal-and-overlays.md) recipe.
+open/close behavior follows the [Portals & overlays](../guides/portal-and-overlays.md) recipe.
 
 ## Out of scope (no driver)
 

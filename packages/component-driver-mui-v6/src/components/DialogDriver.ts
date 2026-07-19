@@ -25,6 +25,7 @@ export const parts = {
 const dialogRootLocator: PartLocator = byRole('presentation', 'Root');
 
 const defaultTransitionDuration = 250;
+const closeGraceMs = 150;
 
 export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
@@ -112,9 +113,11 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
   }
 
   /**
-   * Wait for dialog to close
+   * Wait for dialog to close. Polls for up to `timeoutMs`, then allows a further
+   * `closeGraceMs` grace period for a real transition timer that's merely running
+   * late before giving up (see the fallback below).
    * @param timeoutMs
-   * @returns true open has performed successfully
+   * @returns true once the dialog has closed, within `timeoutMs` plus the grace period.
    */
   async waitForClose(timeoutMs: number = defaultTransitionDuration): Promise<boolean> {
     const isOpened = await this.interactor.waitUntil({
@@ -122,7 +125,21 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
       terminateCondition: false,
       timeoutMs,
     });
-    return isOpened === false;
+    if (isOpened === false) {
+      return true;
+    }
+    // Under React's act() the close transition can commit only when the polling
+    // act block exits, so the loop above can still observe the dialog as open
+    // even though the real exit-transition timer is merely running late (e.g. a
+    // contended CI runner) rather than genuinely stuck. A short, act()-wrapped
+    // grace-period recheck gives that timer real wall-clock time to fire before
+    // giving up (mirrors OverlayDriver.waitForClose's fallback).
+    const settled = await this.interactor.waitUntil({
+      probeFn: () => this.isOpen(),
+      terminateCondition: false,
+      timeoutMs: closeGraceMs,
+    });
+    return settled === false;
   }
 
   /**

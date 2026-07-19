@@ -365,28 +365,24 @@ const config: Config = {
               to: '/docs/quick-start',
             },
             {
-              label: 'Scaffold with the CLI',
-              to: '/docs/quick-start',
-            },
-            {
               label: 'Why Atomic Testing?',
               to: '/docs/why-atomic-testing',
             },
             {
-              label: 'Introduction',
-              to: '/docs/intro',
+              label: 'Package Guide',
+              to: '/docs/framework-guide',
             },
             {
-              label: 'Concepts',
+              label: 'Core Concepts',
               to: '/docs/concepts',
-            },
-            {
-              label: 'API reference',
-              to: '/docs/api-reference/',
             },
             {
               label: 'Best practices',
               to: '/docs/best-practices',
+            },
+            {
+              label: 'API reference',
+              to: '/docs/api-reference/',
             },
           ],
         },

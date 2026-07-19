@@ -39,7 +39,19 @@ export class CheckboxDriver
     return (await this.interactor.getAttribute(this.locator, 'data-state')) === 'indeterminate';
   }
 
+  /**
+   * No-ops entirely on a disabled checkbox rather than clicking it regardless:
+   * under jsdom, `userEvent.click` already silently skips a disabled native
+   * `<button>`, but `PlaywrightInteractor.click`'s actionability check instead
+   * retries "is enabled" until the click's own timeout — indistinguishable
+   * from a hang for a control that can never become enabled. Checking
+   * {@link isDisabled} first keeps the no-op behavior identical across every
+   * `Interactor`.
+   */
   async setSelected(selected: boolean): Promise<void> {
+    if (await this.isDisabled()) {
+      return;
+    }
     if ((await this.isIndeterminate()) && !selected) {
       // indeterminate -> checked is Radix's only click outcome from indeterminate;
       // reaching unchecked needs a second click from there.
