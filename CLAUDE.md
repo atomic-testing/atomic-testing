@@ -131,6 +131,19 @@ pnpm test:e2e:chrome            # Run Chrome only (faster iteration)
 - Click coordinates can have sub-pixel offsets (~0.6px) - use tolerance-based comparisons
 - Always test all browsers before merging (`pnpm test:e2e`)
 
+## Code intelligence (tsgo LSP)
+
+Claude Code can drive **`tsgo --lsp`** (the TypeScript 7 native language server this repo
+already typechecks with) for go-to-definition, find-references, and live diagnostics —
+navigation backed by the same engine as `check:type`, not the classic
+`typescript-language-server` (which can't bind to tsgo). The repo-local plugin, the Cloud
+VM enablement (setup script / SessionStart hook, both idempotent via `enable.sh`), the
+reproducible acceptance test, and the cross-package-navigation limitation live in
+[`tools/ts7-lsp/README.md`](tools/ts7-lsp/README.md). Two load-bearing facts from there:
+cross-package jumps need `dist` **built** (the same stale-`dist` trap above), and
+`declarationMap` is a **no-op** for upgrading them (tsdown's bundler emits no declaration
+maps) — the source-navigation upgrade is a `paths→src` mapping tracked as separate work.
+
 ## Architecture
 
 ### Layer Stack
