@@ -10,7 +10,7 @@ in a Claude Code Cloud VM session.
 
 > This README is the **repo-specific setup**. For the portable reasoning — how to decide
 > whether to adopt an LSP for a coding agent, and how to do it in any repo (local or cloud) —
-> see [agent-docs/adopting-lsp-for-coding-agents.md](../../agent-docs/adopting-lsp-for-coding-agents.md),
+> see [agent-docs/ADOPTING-LSP-FOR-CODING-AGENTS.md](../../agent-docs/ADOPTING-LSP-FOR-CODING-AGENTS.md),
 > a standalone guide distilled from this adoption.
 
 ## Which `tsc` this uses (the coexistence setup)

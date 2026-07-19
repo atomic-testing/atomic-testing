@@ -94,11 +94,12 @@ that text search cannot resolve. Score your repo against these:
 **A 60-second test.** Pick a common symbol name and search the repo:
 
 ```bash
-# git grep is layout-agnostic (works whether sources sit in src/ or packages/*/src/)
-# and respects .gitignore (excludes node_modules/dist). If this returns dozens/hundreds
-# of hits across unrelated definitions, grep-based navigation is high-noise — exactly
-# what an LSP collapses to one answer.
-git grep -n "getValue" | wc -l        # occurrences   ;  git grep -l ... | wc -l for files
+# Rough count of a common symbol's occurrences. A high count across unrelated definitions
+# => high grep-noise, exactly what an LSP collapses to one answer. Use whichever tool you
+# have; all are layout-agnostic (src/ or packages/*/src/):
+rg "getValue" | wc -l                                            # ripgrep — no VCS needed, honors .gitignore
+git grep -n "getValue" | wc -l                                  # git repos — honors .gitignore
+grep -rn "getValue" . --exclude-dir={node_modules,dist,build,.git} | wc -l   # portable fallback
 ```
 
 The worked-example repo had `getValue` *appearing* (textual matches, not distinct
