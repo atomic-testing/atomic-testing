@@ -23,9 +23,23 @@ if ! command -v claude >/dev/null 2>&1; then
   exit 0
 fi
 
+# True (0) if dotted version $1 is strictly less than $2. Uses python3 (portable)
+# and falls back to `sort -V` only where python3 is absent — `sort -V` is a GNU
+# extension and isn't guaranteed on macOS/BSD, where enable.sh may be run by hand.
+version_lt() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 -c "import sys
+a=[int(p) for p in sys.argv[1].split('.')]
+b=[int(p) for p in sys.argv[2].split('.')]
+sys.exit(0 if a < b else 1)" "$1" "$2"
+  else
+    [ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V 2>/dev/null | head -1)" = "$1" ]
+  fi
+}
+
 # Warn loudly (never silently) if this Claude Code predates the LSP restart fields.
 ver="$(claude --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-if [ -n "$ver" ] && [ "$(printf '%s\n%s\n' "$MIN_CC_VERSION" "$ver" | sort -V | head -1)" != "$MIN_CC_VERSION" ]; then
+if [ -n "$ver" ] && version_lt "$ver" "$MIN_CC_VERSION"; then
   log "WARN: Claude Code $ver < $MIN_CC_VERSION — restartOnCrash/shutdownTimeout in .lsp.json will make"
   log "WARN: this build skip the LSP server entirely. Remove those two fields, or upgrade Claude Code."
 fi

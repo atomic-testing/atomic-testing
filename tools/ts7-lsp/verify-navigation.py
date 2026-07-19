@@ -19,6 +19,7 @@ Notes:
         pnpm --filter @atomic-testing/core build
 """
 import json, os, subprocess, sys, threading, time
+from pathlib import Path
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
@@ -92,7 +93,9 @@ class LspClient:
 
 
 def _uri(rel):
-    return "file://" + os.path.join(REPO, rel)
+    # Path.as_uri() percent-encodes and emits forward slashes, so the URI is valid
+    # on paths with spaces and correct on Windows (unlike "file://" + os.path.join).
+    return Path(os.path.join(REPO, rel)).resolve().as_uri()
 
 
 def _position_of(text, needle):
@@ -115,6 +118,8 @@ def _definition(client, rel, symbol, id_, timeout=40):
     client.notify("textDocument/didOpen", {"textDocument": {
         "uri": _uri(rel), "languageId": "typescript", "version": 1, "text": text}})
     pos = _position_of(text, symbol)
+    if pos is None:  # symbol not in the file (moved/renamed) — report a clean FAIL, not a crash
+        return None
     deadline = time.time() + timeout
     while time.time() < deadline:
         resp = client.request(id_, "textDocument/definition", {
