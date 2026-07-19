@@ -9,6 +9,7 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 | [ARCHITECTURE.md](ARCHITECTURE.md)                     | Entry points, layer stack, interactor inheritance, dependency graph, shared three-file test pattern.                              |
 | [RELEASING.md](RELEASING.md)                           | Release & publish runbook — cut a release, rotate `CODEMOD_TOKEN`, add a new package (bootstrap); OIDC trusted publishing.        |
 | [PLAN-EXECUTION-LESSONS.md](PLAN-EXECUTION-LESSONS.md) | Pitfalls when running multi-step `run-plan.sh` plans headlessly (ask-first stalls, weak verify gates, `state.json` resume traps). |
+| [adopting-lsp-for-coding-agents.md](adopting-lsp-for-coding-agents.md) | Standalone, repo-agnostic guide to evaluating & adopting an LSP for AI coding agents (local + cloud); distilled from the `tools/ts7-lsp/` adoption. |
 
 ## Modules
 
