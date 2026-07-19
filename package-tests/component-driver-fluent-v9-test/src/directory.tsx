@@ -2,6 +2,8 @@ import { IExampleUIUnit } from '@atomic-testing/core';
 import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example';
 import { JSX } from 'react';
 
+import { accordionUIExample } from './examples/accordion/Accordion.examples';
+import { breadcrumbUIExample } from './examples/breadcrumb/Breadcrumb.examples';
 import { buttonUIExample } from './examples/button/Button.examples';
 import { checkboxUIExample } from './examples/checkbox/Checkbox.examples';
 import { colorPickerUIExample } from './examples/color-picker/ColorPicker.examples';
@@ -17,6 +19,8 @@ import { inputUIExample } from './examples/input/Input.examples';
 import { labelUIExample } from './examples/label/Label.examples';
 import { linkUIExample } from './examples/link/Link.examples';
 import { menuUIExample } from './examples/menu/Menu.examples';
+import { navUIExample } from './examples/nav/Nav.examples';
+import { overflowUIExample } from './examples/overflow/Overflow.examples';
 import { popoverUIExample } from './examples/popover/Popover.examples';
 import { radioUIExample } from './examples/radio/Radio.examples';
 import { ratingUIExample } from './examples/rating/Rating.examples';
@@ -26,6 +30,7 @@ import { sliderUIExample } from './examples/slider/Slider.examples';
 import { spinButtonUIExample } from './examples/spinbutton/SpinButton.examples';
 import { swatchPickerUIExample } from './examples/swatch-picker/SwatchPicker.examples';
 import { switchUIExample } from './examples/switch/Switch.examples';
+import { tabListUIExample } from './examples/tabs/TabList.examples';
 import { tagPickerUIExample } from './examples/tag-picker/TagPicker.examples';
 import { tagsUIExample } from './examples/tags/Tags.examples';
 import { teachingPopoverUIExample } from './examples/teaching-popover/TeachingPopover.examples';
@@ -33,6 +38,7 @@ import { textUIExample } from './examples/text/Text.examples';
 import { textareaUIExample } from './examples/textarea/Textarea.examples';
 import { toastUIExample } from './examples/toast/Toast.examples';
 import { toggleButtonUIExample } from './examples/toggle-button/ToggleButton.examples';
+import { toolbarUIExample } from './examples/toolbar/Toolbar.examples';
 import { tooltipUIExample } from './examples/tooltip/Tooltip.examples';
 
 const toc = (label: string, path: string, example: IExampleUIUnit<JSX.Element>): ExampleToc => ({
@@ -42,6 +48,8 @@ const toc = (label: string, path: string, example: IExampleUIUnit<JSX.Element>):
 });
 
 export const tocs: ExampleToc[] = [
+  toc('Fluent Accordion', '/accordion', accordionUIExample),
+  toc('Fluent Breadcrumb', '/breadcrumb', breadcrumbUIExample),
   toc('Button', '/button', buttonUIExample),
   toc('CompoundButton', '/compound-button', compoundButtonUIExample),
   toc('ToggleButton', '/toggle-button', toggleButtonUIExample),
@@ -59,6 +67,10 @@ export const tocs: ExampleToc[] = [
   toc('Popover', '/popover', popoverUIExample),
   toc('Drawer', '/drawer', drawerUIExample),
   toc('Menu', '/menu', menuUIExample),
+  toc('Fluent Nav', '/nav', navUIExample),
+  toc('Fluent Overflow', '/overflow', overflowUIExample),
+  toc('Fluent Toolbar', '/toolbar', toolbarUIExample),
+  toc('Fluent TabList', '/tabs', tabListUIExample),
   toc('Tooltip', '/tooltip', tooltipUIExample),
   toc('Toast', '/toast', toastUIExample),
   toc('TeachingPopover', '/teaching-popover', teachingPopoverUIExample),
