@@ -5,4 +5,5 @@ module.exports = {
   testRegex: '(/__tests__/.*.dom.(test|spec)).(jsx?|tsx?)$',
   displayName: 'component-driver-fluent-v9-test',
   testEnvironment: 'jsdom',
+  setupFiles: ['<rootDir>/jest.setup.ts'],
 };
