@@ -30,8 +30,10 @@ export const listExampleTestSuite: TestSuiteInfo<typeof listExample.scene> = {
         assertEqual(await first?.getText(), 'Item One');
       });
 
-      test('an item in a non-selectable list is never selected', async () => {
+      test('an item in a non-selectable list is never selected, and setSelected no-ops', async () => {
         const first = await engine().parts.plain.getItemByIndex(0);
+        assertFalse((await first?.isSelected()) ?? true);
+        await first?.setSelected(true);
         assertFalse((await first?.isSelected()) ?? true);
       });
 

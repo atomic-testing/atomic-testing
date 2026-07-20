@@ -24,8 +24,19 @@ export class ListItemDriver extends ComponentDriver<{}> implements IToggleDriver
     return (await this.interactor.getAttribute(this.locator, 'aria-selected')) === 'true';
   }
 
-  /** Toggle selection by clicking the item. No-ops if already in the desired state. */
+  /**
+   * Toggle selection by clicking the item. No-ops if already in the desired
+   * state, or if the parent list has no `selectionMode` at all
+   * (`aria-selected` entirely absent, per the class doc) — clicking in that
+   * case would still fire the item's `onAction` handler with no selection
+   * state to actually toggle, a misleading side effect for a caller that
+   * asked specifically for selection.
+   */
   async setSelected(selected: boolean): Promise<void> {
+    const isSelectable = await this.interactor.hasAttribute(this.locator, 'aria-selected');
+    if (!isSelectable) {
+      return;
+    }
     const currentSelected = await this.isSelected();
     if (currentSelected === selected) {
       return;
