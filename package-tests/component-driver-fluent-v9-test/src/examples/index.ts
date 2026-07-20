@@ -5,6 +5,7 @@ export { badgeExample, badgeExampleTestSuite, badgeExamples, badgeUIExample } fr
 export { breadcrumbExample, breadcrumbExampleTestSuite, breadcrumbExamples, breadcrumbUIExample } from './breadcrumb';
 export { buttonExample, buttonExampleTestSuite, buttonExamples, buttonUIExample } from './button';
 export { cardExample, cardExampleTestSuite, cardExamples, cardUIExample } from './card';
+export { carouselExample, carouselExampleTestSuite, carouselExamples, carouselUIExample } from './carousel';
 export { checkboxExample, checkboxExampleTestSuite, checkboxExamples, checkboxUIExample } from './checkbox';
 export {
   colorPickerExample,
@@ -19,6 +20,7 @@ export {
   compoundButtonExamples,
   compoundButtonUIExample,
 } from './compound-button';
+export { dataGridExample, dataGridExampleTestSuite, dataGridExamples, dataGridUIExample } from './data-grid';
 export { dialogExample, dialogExampleTestSuite, dialogExamples, dialogUIExample } from './dialog';
 export { dividerExample, dividerExampleTestSuite, dividerExamples, dividerUIExample } from './divider';
 export { drawerExample, drawerExampleTestSuite, drawerExamples, drawerUIExample } from './drawer';
@@ -52,6 +54,7 @@ export {
   swatchPickerUIExample,
 } from './swatch-picker';
 export { switchExample, switchExampleTestSuite, switchExamples, switchUIExample } from './switch';
+export { tableExample, tableExampleTestSuite, tableExamples, tableUIExample } from './table';
 export { tabListExample, tabListExampleTestSuite, tabListExamples, tabListUIExample } from './tabs';
 export { tagPickerExample, tagPickerExampleTestSuite, tagPickerExamples, tagPickerUIExample } from './tag-picker';
 export { tagsExample, tagsExampleTestSuite, tagsExamples, tagsUIExample } from './tags';
@@ -72,3 +75,4 @@ export {
 } from './toggle-button';
 export { toolbarExample, toolbarExampleTestSuite, toolbarExamples, toolbarUIExample } from './toolbar';
 export { tooltipExample, tooltipExampleTestSuite, tooltipExamples, tooltipUIExample } from './tooltip';
+export { treeExample, treeExampleTestSuite, treeExamples, treeUIExample } from './tree';
