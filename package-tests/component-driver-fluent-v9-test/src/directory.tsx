@@ -3,8 +3,12 @@ import { ExampleList, ExampleToc } from '@atomic-testing/internal-react-example'
 import { JSX } from 'react';
 
 import { accordionUIExample } from './examples/accordion/Accordion.examples';
+import { alertUIExample } from './examples/alert/Alert.examples';
+import { avatarUIExample } from './examples/avatar/Avatar.examples';
+import { badgeUIExample } from './examples/badge/Badge.examples';
 import { breadcrumbUIExample } from './examples/breadcrumb/Breadcrumb.examples';
 import { buttonUIExample } from './examples/button/Button.examples';
+import { cardUIExample } from './examples/card/Card.examples';
 import { checkboxUIExample } from './examples/checkbox/Checkbox.examples';
 import { colorPickerUIExample } from './examples/color-picker/ColorPicker.examples';
 import { comboboxUIExample } from './examples/combobox/Combobox.examples';
@@ -15,19 +19,26 @@ import { drawerUIExample } from './examples/drawer/Drawer.examples';
 import { dropdownUIExample } from './examples/dropdown/Dropdown.examples';
 import { fieldUIExample } from './examples/field/Field.examples';
 import { imageUIExample } from './examples/image/Image.examples';
+import { infoLabelUIExample } from './examples/infolabel/InfoLabel.examples';
 import { inputUIExample } from './examples/input/Input.examples';
 import { labelUIExample } from './examples/label/Label.examples';
 import { linkUIExample } from './examples/link/Link.examples';
+import { listUIExample } from './examples/list/List.examples';
 import { menuUIExample } from './examples/menu/Menu.examples';
+import { messageBarUIExample } from './examples/message-bar/MessageBar.examples';
 import { navUIExample } from './examples/nav/Nav.examples';
 import { overflowUIExample } from './examples/overflow/Overflow.examples';
+import { personaUIExample } from './examples/persona/Persona.examples';
 import { popoverUIExample } from './examples/popover/Popover.examples';
+import { progressBarUIExample } from './examples/progress/ProgressBar.examples';
 import { radioUIExample } from './examples/radio/Radio.examples';
 import { ratingUIExample } from './examples/rating/Rating.examples';
 import { searchBoxUIExample } from './examples/search/SearchBox.examples';
 import { selectUIExample } from './examples/select/Select.examples';
+import { skeletonUIExample } from './examples/skeleton/Skeleton.examples';
 import { sliderUIExample } from './examples/slider/Slider.examples';
 import { spinButtonUIExample } from './examples/spinbutton/SpinButton.examples';
+import { spinnerUIExample } from './examples/spinner/Spinner.examples';
 import { swatchPickerUIExample } from './examples/swatch-picker/SwatchPicker.examples';
 import { switchUIExample } from './examples/switch/Switch.examples';
 import { tabListUIExample } from './examples/tabs/TabList.examples';
@@ -86,4 +97,15 @@ export const tocs: ExampleToc[] = [
   toc('TagPicker', '/tag-picker', tagPickerUIExample),
   toc('SearchBox', '/search', searchBoxUIExample),
   toc('Fluent Color Picker', '/color-picker', colorPickerUIExample),
+  toc('Fluent Avatar', '/avatar', avatarUIExample),
+  toc('Fluent Badge', '/badge', badgeUIExample),
+  toc('Fluent Card', '/card', cardUIExample),
+  toc('Fluent Persona', '/persona', personaUIExample),
+  toc('Fluent List', '/list', listUIExample),
+  toc('Fluent Skeleton', '/skeleton', skeletonUIExample),
+  toc('Fluent Spinner', '/spinner', spinnerUIExample),
+  toc('Fluent ProgressBar', '/progress', progressBarUIExample),
+  toc('Fluent InfoLabel', '/infolabel', infoLabelUIExample),
+  toc('Fluent MessageBar', '/message-bar', messageBarUIExample),
+  toc('Fluent Alert', '/alert', alertUIExample),
 ];
