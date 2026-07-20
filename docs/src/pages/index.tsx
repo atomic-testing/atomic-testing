@@ -278,6 +278,7 @@ function HeroSection(): JSX.Element {
             <Link
               className={styles.badgeChip}
               to='/docs/evaluate/api-stability'
+              aria-label='Pre-1.0 — read the API stability, versioning and EOL policy'
               title='What pre-1.0 means here — stability policy'>
               Pre-1.0
             </Link>

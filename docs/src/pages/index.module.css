@@ -172,11 +172,19 @@
   font-size: 11.5px;
 }
 /* The chip doubles as a link to the stability policy — keep the pill styling
-   when it renders as an anchor instead of picking up theme link colors. */
+   across every link state so theme/user-agent anchor styles can't leak
+   through (visited color, focus underline). */
 a.badgeChip,
-a.badgeChip:hover {
+a.badgeChip:hover,
+a.badgeChip:visited,
+a.badgeChip:focus,
+a.badgeChip:active {
   color: #fff;
   text-decoration: none;
+}
+a.badgeChip:focus-visible {
+  outline: 2px solid var(--at-blue);
+  outline-offset: 2px;
 }
 
 .heroTitle {
