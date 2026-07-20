@@ -122,5 +122,6 @@ targets, so any `paths` mapping must use the TS7-compliant form above.
 | No LSP tool in the session | Workspace not trusted, or plugin installed this session (run `/reload-plugins` or restart). |
 | Server silently absent | Claude Code < 2.1.205 skipping the restart fields — upgrade, or drop those two fields. |
 | `Executable not found` | `pnpm install` hasn't run; `tsc` isn't resolvable. |
+| Setup script fails: `ERR_PNPM_NO_PKG_MANIFEST  No package.json found in /home/user` | Setup scripts run as root from the home dir (not the checkout), and `CLAUDE_PROJECT_DIR` is a SessionStart-hook variable that isn't set for them — so `pnpm -C "$(pwd)"` targets the wrong dir. `setup-script.example.sh` resolves the checkout by its `.git` dir; re-copy its body. |
 | Cross-package jumps go nowhere | `dist` not built — `pnpm --filter @atomic-testing/core build`. |
 | LSP works on native binary? | Yes, verified at 2.1.211. Older (≤2.1.15) native builds had a gap. |
