@@ -9,10 +9,12 @@ import { badgeUIExample } from './examples/badge/Badge.examples';
 import { breadcrumbUIExample } from './examples/breadcrumb/Breadcrumb.examples';
 import { buttonUIExample } from './examples/button/Button.examples';
 import { cardUIExample } from './examples/card/Card.examples';
+import { carouselUIExample } from './examples/carousel/Carousel.examples';
 import { checkboxUIExample } from './examples/checkbox/Checkbox.examples';
 import { colorPickerUIExample } from './examples/color-picker/ColorPicker.examples';
 import { comboboxUIExample } from './examples/combobox/Combobox.examples';
 import { compoundButtonUIExample } from './examples/compound-button/CompoundButton.examples';
+import { dataGridUIExample } from './examples/data-grid/DataGrid.examples';
 import { dialogUIExample } from './examples/dialog/Dialog.examples';
 import { dividerUIExample } from './examples/divider/Divider.examples';
 import { drawerUIExample } from './examples/drawer/Drawer.examples';
@@ -41,6 +43,7 @@ import { spinButtonUIExample } from './examples/spinbutton/SpinButton.examples';
 import { spinnerUIExample } from './examples/spinner/Spinner.examples';
 import { swatchPickerUIExample } from './examples/swatch-picker/SwatchPicker.examples';
 import { switchUIExample } from './examples/switch/Switch.examples';
+import { tableUIExample } from './examples/table/Table.examples';
 import { tabListUIExample } from './examples/tabs/TabList.examples';
 import { tagPickerUIExample } from './examples/tag-picker/TagPicker.examples';
 import { tagsUIExample } from './examples/tags/Tags.examples';
@@ -51,6 +54,7 @@ import { toastUIExample } from './examples/toast/Toast.examples';
 import { toggleButtonUIExample } from './examples/toggle-button/ToggleButton.examples';
 import { toolbarUIExample } from './examples/toolbar/Toolbar.examples';
 import { tooltipUIExample } from './examples/tooltip/Tooltip.examples';
+import { treeUIExample } from './examples/tree/Tree.examples';
 
 const toc = (label: string, path: string, example: IExampleUIUnit<JSX.Element>): ExampleToc => ({
   label,
@@ -63,6 +67,10 @@ export const tocs: ExampleToc[] = [
   toc('Fluent Breadcrumb', '/breadcrumb', breadcrumbUIExample),
   toc('Button', '/button', buttonUIExample),
   toc('CompoundButton', '/compound-button', compoundButtonUIExample),
+  toc('Fluent Table', '/table', tableUIExample),
+  toc('Fluent DataGrid', '/data-grid', dataGridUIExample),
+  toc('Fluent Tree', '/tree', treeUIExample),
+  toc('Fluent Carousel', '/carousel', carouselUIExample),
   toc('ToggleButton', '/toggle-button', toggleButtonUIExample),
   toc('Input', '/input', inputUIExample),
   toc('Textarea', '/textarea', textareaUIExample),
