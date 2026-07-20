@@ -43,12 +43,20 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
     } as ListDriverOption<ItemT>);
   }
 
-  /** The `value` of every currently-selected item, in DOM order (supports `multiselect` mode). */
+  /**
+   * The `value` of every currently-selected item, in DOM order (supports
+   * `multiselect` mode). A selected item rendered without a `value` prop is
+   * omitted rather than coerced to `''` — that would be indistinguishable
+   * from a genuine `value=""` and could misrepresent selection state.
+   */
   async getSelectedValues(): Promise<string[]> {
     const selected: string[] = [];
     for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await item.isSelected()) {
-        selected.push((await item.getValue()) ?? '');
+        const value = await item.getValue();
+        if (value != null) {
+          selected.push(value);
+        }
       }
     }
     return selected;
