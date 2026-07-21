@@ -91,6 +91,25 @@ export const tableExampleTestSuite: TestSuiteInfo<typeof tableExample.scene> = {
         assertEqual(await headerRow!.getCellCount(), 3);
         assertEqual(await headerRow!.getCell(99), null);
       });
+
+      test('TableCellActions: present but hidden until the row is hovered; absent where none is wired', async () => {
+        const row = await engine().parts.tableA.getRow(0);
+        assertTrue(row != null);
+        const cell = await row!.getCell(0);
+        assertTrue(cell != null);
+
+        assertFalse(await cell!.isActionsVisible());
+        assertEqual((await cell!.getActionButtons()).length, 1);
+
+        await row!.hover();
+        assertTrue(await cell!.isActionsVisible());
+
+        // Table B wires no `TableCellActions` anywhere.
+        const otherRow = await engine().parts.tableB.getRow(0);
+        const otherCell = await otherRow!.getCell(0);
+        assertFalse(await otherCell!.isActionsVisible());
+        assertEqual((await otherCell!.getActionButtons()).length, 0);
+      });
     });
   },
 };

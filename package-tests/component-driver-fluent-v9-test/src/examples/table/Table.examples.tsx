@@ -1,9 +1,11 @@
 import { IExampleUIUnit } from '@atomic-testing/core';
 import {
+  Button,
   FluentProvider,
   Table,
   TableBody,
   TableCell,
+  TableCellActions,
   TableCellLayout,
   TableHeader,
   TableHeaderCell,
@@ -82,10 +84,21 @@ const productRows: Product[] = [
  * via `sortable={false}`, exercising the "not sortable at all" `aria-sort`-
  * absent case) and reorders its rows through the local sort state above;
  * Table B carries no `sortable` prop anywhere, so every header cell should
- * report no sort affordance at all.
+ * report no sort affordance at all — and, since it renders no
+ * `TableCellActions` anywhere, doubles as the "absent" case for
+ * `TableCellDriver.getActionButtons`/`isActionsVisible`.
+ *
+ * Table A's `Name` cell additionally wires a `TableCellActions` (see that
+ * component's class doc note on `TableCellDriver`/`DataGridCellDriver` — it
+ * ships NO default hover/focus CSS at all): `visible` is driven from local
+ * `activeRow` state set by the ROW's own `onMouseEnter`/`onMouseLeave` (mouse
+ * users) and `onFocus`/`onBlur` (keyboard users tabbing to the action button
+ * itself — React's `onFocus`/`onBlur` bubble, so the row sees it).
  */
 const TableExample = () => {
   const { rows, sortColumn, sortDirection, toggleSort } = usePeopleSort();
+  const [activeRow, setActiveRow] = useState<string | null>(null);
+  const clearActiveRow = (row: string) => setActiveRow(current => (current === row ? null : current));
 
   return (
     <FluentProvider theme={webLightTheme}>
@@ -107,8 +120,19 @@ const TableExample = () => {
         </TableHeader>
         <TableBody>
           {rows.map(person => (
-            <TableRow key={person.name}>
-              <TableCell>{person.name}</TableCell>
+            <TableRow
+              key={person.name}
+              onMouseEnter={() => setActiveRow(person.name)}
+              onMouseLeave={() => clearActiveRow(person.name)}
+              onFocus={() => setActiveRow(person.name)}
+              onBlur={() => clearActiveRow(person.name)}>
+              <TableCell>
+                {person.name}
+                <TableCellActions visible={activeRow === person.name}>
+                  {/* No visible text — a labeled child would leak into TableDriver's cell-text reads (e.g. `getCellText`). */}
+                  <Button aria-label='Edit' data-testid={`row-action-${person.name}`} size='small' />
+                </TableCellActions>
+              </TableCell>
               <TableCell>
                 <TableCellLayout>{person.age}</TableCellLayout>
               </TableCell>
