@@ -1,20 +1,14 @@
+import { ComponentDriver, IToggleDriver, listHelper, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
+
 import {
-  byCssClass,
-  byTagName,
-  ComponentDriver,
-  IToggleDriver,
-  listHelper,
-  locatorUtil,
-  Optional,
-  PartLocator,
-} from '@atomic-testing/core';
+  treeItemChildLocator,
+  treeItemLabelLocator,
+  treeItemLayoutLocator,
+  treeItemNativeInputLocator,
+  treeItemSelectorLocator,
+  treeSubtreeLocator,
+} from '../internal/treeLocators';
 
-import { treeItemChildLocator, treeSubtreeLocator } from '../internal/treeLocators';
-
-const layoutLocator = byCssClass('fui-TreeItemLayout', 'Child');
-const labelLocator = byCssClass('fui-TreeItemLayout__main');
-const selectorLocator = byCssClass('fui-TreeItemLayout__selector');
-const nativeInputLocator = byTagName('input');
 const defaultTransitionDuration = 1000;
 
 /**
@@ -98,15 +92,15 @@ const defaultTransitionDuration = 1000;
  */
 export class TreeItemDriver extends ComponentDriver<{}> implements IToggleDriver {
   private get layoutLocator(): PartLocator {
-    return locatorUtil.append(this.locator, layoutLocator);
+    return locatorUtil.append(this.locator, treeItemLayoutLocator);
   }
 
   private get labelLocator(): PartLocator {
-    return locatorUtil.append(this.layoutLocator, labelLocator);
+    return locatorUtil.append(this.layoutLocator, treeItemLabelLocator);
   }
 
   private get selectorInputLocator(): PartLocator {
-    return locatorUtil.append(this.layoutLocator, selectorLocator, nativeInputLocator);
+    return locatorUtil.append(this.layoutLocator, treeItemSelectorLocator, treeItemNativeInputLocator);
   }
 
   private get subtreeLocator(): PartLocator {
@@ -126,7 +120,7 @@ export class TreeItemDriver extends ComponentDriver<{}> implements IToggleDriver
   /** The nesting depth (1-based), read from `aria-level` on this item's own root. */
   async getLevel(): Promise<number> {
     const level = await this.interactor.getAttribute(this.locator, 'aria-level');
-    return level == null ? 1 : Number(level);
+    return level ? Number(level) : 1;
   }
 
   /**

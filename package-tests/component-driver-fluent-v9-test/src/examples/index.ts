@@ -26,6 +26,7 @@ export { dividerExample, dividerExampleTestSuite, dividerExamples, dividerUIExam
 export { drawerExample, drawerExampleTestSuite, drawerExamples, drawerUIExample } from './drawer';
 export { dropdownExample, dropdownExampleTestSuite, dropdownExamples, dropdownUIExample } from './dropdown';
 export { fieldExample, fieldExampleTestSuite, fieldExamples, fieldUIExample } from './field';
+export { flatTreeExample, flatTreeExampleTestSuite, flatTreeExamples, flatTreeUIExample } from './flat-tree';
 export { imageExample, imageExampleTestSuite, imageExamples, imageUIExample } from './image';
 export { infoLabelExample, infoLabelExampleTestSuite, infoLabelExamples, infoLabelUIExample } from './infolabel';
 export { inputExample, inputExampleTestSuite, inputExamples, inputUIExample } from './input';

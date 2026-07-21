@@ -20,6 +20,7 @@ import { dividerUIExample } from './examples/divider/Divider.examples';
 import { drawerUIExample } from './examples/drawer/Drawer.examples';
 import { dropdownUIExample } from './examples/dropdown/Dropdown.examples';
 import { fieldUIExample } from './examples/field/Field.examples';
+import { flatTreeUIExample } from './examples/flat-tree/FlatTree.examples';
 import { imageUIExample } from './examples/image/Image.examples';
 import { infoLabelUIExample } from './examples/infolabel/InfoLabel.examples';
 import { inputUIExample } from './examples/input/Input.examples';
@@ -70,6 +71,7 @@ export const tocs: ExampleToc[] = [
   toc('Fluent Table', '/table', tableUIExample),
   toc('Fluent DataGrid', '/data-grid', dataGridUIExample),
   toc('Fluent Tree', '/tree', treeUIExample),
+  toc('Fluent FlatTree', '/flat-tree', flatTreeUIExample),
   toc('Fluent Carousel', '/carousel', carouselUIExample),
   toc('ToggleButton', '/toggle-button', toggleButtonUIExample),
   toc('Input', '/input', inputUIExample),
