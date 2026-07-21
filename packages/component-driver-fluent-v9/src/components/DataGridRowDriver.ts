@@ -31,14 +31,17 @@ const selectionRadioInputSelector: PartLocator = byCssSelector('.fui-DataGridSel
  * (mirroring `component-driver-mui-x-v9`'s `DataGridPremiumDriver.selectRow`,
  * which does the same against `input[type="checkbox"]`).
  *
- * **`setSelected(false)` is rejected in single-select mode**, mirroring
- * `RadioDriver.setSelected`'s existing contract: verified against
- * `@fluentui/react-utilities@9.26.5`'s `useSingleSelection.toggleItem`, which
- * ALWAYS resolves a click to "select this row" (`changeSelection(event, new
- * Set([itemId]))`) regardless of the row's current state — there is no click
- * path back to "nothing selected" in single-select mode, so rejecting rather
- * than silently no-op-ing on a doomed click keeps the same portability
- * contract as every other native-radio-backed driver in this package.
+ * **`setSelected(false)` silently no-ops in single-select mode** — verified
+ * against `@fluentui/react-utilities@9.26.5`'s `useSingleSelection.toggleItem`,
+ * which ALWAYS resolves a click to "select this row" (`changeSelection(event,
+ * new Set([itemId]))`) regardless of the row's current state: there is no
+ * click path back to "nothing selected" in single-select mode, so clicking
+ * the input would be a doomed, effect-free action. Deliberately a no-op
+ * rather than a thrown error (unlike `RadioDriver.setSelected(false)`/
+ * `TreeItemDriver.setSelected(false)`'s single-select case) so that
+ * {@link DataGridDriver.deselectRow}'s own boolean-return, bulk-friendly
+ * contract (mirroring `selectAllRows`/`deselectAllRows`) never has to
+ * propagate an exception for an otherwise-valid row index.
  */
 export class DataGridRowDriver extends DataGridRowDriverBase<DataGridCellDriver> implements IToggleDriver {
   protected override getCellSelector(): string {
@@ -60,8 +63,8 @@ export class DataGridRowDriver extends DataGridRowDriverBase<DataGridCellDriver>
 
   /**
    * Select or deselect this row by clicking its selection checkbox/radio
-   * (no-op when already in the target state). Rejects `setSelected(false)`
-   * in single-select mode — see class doc.
+   * (no-op when already in the target state). Also a no-op for
+   * `setSelected(false)` in single-select mode — see class doc.
    */
   async setSelected(selected: boolean): Promise<void> {
     if ((await this.isSelected()) === selected) {
