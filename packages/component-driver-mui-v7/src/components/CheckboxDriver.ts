@@ -96,7 +96,7 @@ export class CheckboxDriver
    * context as the checkbox itself so that sibling checkboxes are never mismatched.
    */
   private getEnclosingLabelLocator(): PartLocator {
-    const chain = locatorUtil.toChain(this.locator);
+    const chain = this.locator;
     const selfSelector = chain[chain.length - 1].selector;
     return locatorUtil.append(chain.slice(0, -1), byCssSelector(`label:has(${selfSelector})`));
   }

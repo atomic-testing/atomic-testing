@@ -175,7 +175,7 @@ library versions and semantic over class-coupled. In order:
    instances never collide:
 
    ```ts
-   const chain = locatorUtil.toChain(this.locator);
+   const chain = this.locator; // PartLocator is always a chain, no normalization needed
    const self = chain[chain.length - 1].selector; // this element's own selector
    const target = locatorUtil.append(
      chain.slice(0, -1), // keep engine-root scope

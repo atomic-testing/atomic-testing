@@ -27,7 +27,7 @@ export class InfoButtonDriver extends ComponentDriver<{}> {
    * elsewhere on the page).
    */
   private get infoLocator(): PartLocator {
-    const chain = locatorUtil.toChain(this.locator);
+    const chain = this.locator;
     const selfSelector = chain[chain.length - 1].selector;
     return locatorUtil.append(chain.slice(0, -1), byCssSelector(`${selfSelector} + .fui-InfoButton__info`));
   }

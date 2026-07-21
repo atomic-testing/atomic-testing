@@ -1,5 +1,6 @@
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { PartLocator } from './PartLocator';
 
 export type ByCssSelectorSource = {
   _id: 'byCssSelector';
@@ -21,13 +22,15 @@ export type ByCssSelectorSource = {
  * const activeItem = byCssSelector('.menu .item.active');
  * ```
  */
-export function byCssSelector(selector: string, relativeTo: LocatorRelativePosition = 'Descendant'): CssLocator {
-  return new CssLocator(selector, {
-    relative: relativeTo,
-    source: {
-      _id: 'byCssSelector',
-      selector,
+export function byCssSelector(selector: string, relativeTo: LocatorRelativePosition = 'Descendant'): PartLocator {
+  return [
+    new CssLocator(selector, {
       relative: relativeTo,
-    },
-  });
+      source: {
+        _id: 'byCssSelector',
+        selector,
+        relative: relativeTo,
+      },
+    }),
+  ];
 }

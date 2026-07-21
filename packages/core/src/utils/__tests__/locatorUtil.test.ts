@@ -1,7 +1,12 @@
 import { Interactor } from '../../interactor/Interactor';
+import { byAriaLabel } from '../../locators/byAriaLabel';
+import { byAttribute } from '../../locators/byAttribute';
 import { byCssSelector } from '../../locators/byCssSelector';
 import { byDataTestId } from '../../locators/byDataTestId';
-import { append, documentRootSelector, overrideLocatorRelativePosition, toCssSelector } from '../locatorUtil';
+import { byLinkedElement } from '../../locators/byLinkedElement';
+import { byRole } from '../../locators/byRole';
+import { byTagName } from '../../locators/byTagName';
+import { and, append, documentRootSelector, overrideLocatorRelativePosition, toCssSelector } from '../locatorUtil';
 
 // toCssSelector only consults the interactor to resolve LinkedCssLocators; the
 // plain-CSS chains exercised here never touch it, so a bare stub is enough.
@@ -20,46 +25,46 @@ describe('toCssSelector', () => {
   });
 
   test('joins a descendant chain with a space separator', async () => {
-    const chain = [byCssSelector('.parent'), byCssSelector('.child')];
+    const chain = append(byCssSelector('.parent'), byCssSelector('.child'));
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent .child');
   });
 
   test('does not insert a separator for a Same-level locator', async () => {
-    const chain = [byCssSelector('.parent'), byCssSelector('.self', 'Same')];
+    const chain = append(byCssSelector('.parent'), byCssSelector('.self', 'Same'));
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent.self');
   });
 
   test('joins a Child-level locator with the child combinator (#1058)', async () => {
-    const chain = [byCssSelector('.parent'), byCssSelector('.child', 'Child')];
+    const chain = append(byCssSelector('.parent'), byCssSelector('.child', 'Child'));
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child');
   });
 
   test('mixes descendant, child, and same combinators in one chain (#1058)', async () => {
-    const chain = [
+    const chain = append(
       byCssSelector('.list'),
       byCssSelector('.row', 'Child'),
       byCssSelector('.active', 'Same'),
-      byCssSelector('.icon'),
-    ];
+      byCssSelector('.icon')
+    );
     expect(await toCssSelector(chain, stubInteractor)).toBe('.list > .row.active .icon');
   });
 
   test('does not emit a leading child combinator when a Child locator heads the chain (#1058)', async () => {
     // A child combinator has no left operand at the head of a selector; the head
     // statement must stay bare rather than produce an invalid `> .child`.
-    const chain = [byCssSelector('.child', 'Child')];
+    const chain = byCssSelector('.child', 'Child');
     expect(await toCssSelector(chain, stubInteractor)).toBe('.child');
   });
 
   test('emits the child combinator after a Root-sliced prefix (#1058)', async () => {
     // getEffectiveLocator slices at the Root, which becomes the bare head; the
     // following Child must still combine against it.
-    const chain = [byCssSelector('.ignored'), byCssSelector('.root', 'Root'), byCssSelector('.child', 'Child')];
+    const chain = append(byCssSelector('.ignored'), byCssSelector('.root', 'Root'), byCssSelector('.child', 'Child'));
     expect(await toCssSelector(chain, stubInteractor)).toBe('.root > .child');
   });
 
   test('emits the child combinator after a Same-level compound (#1058)', async () => {
-    const chain = [byCssSelector('.a'), byCssSelector('.b', 'Same'), byCssSelector('.c', 'Child')];
+    const chain = append(byCssSelector('.a'), byCssSelector('.b', 'Same'), byCssSelector('.c', 'Child'));
     expect(await toCssSelector(chain, stubInteractor)).toBe('.a.b > .c');
   });
 
@@ -69,9 +74,62 @@ describe('toCssSelector', () => {
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child');
   });
 
-  test('preserves a Child position through CssLocator.and() (#1058)', async () => {
-    const child = byCssSelector('.child', 'Child').and(byCssSelector('.active'));
+  test('preserves a Child position through locatorUtil.and() (#1058)', async () => {
+    const child = and(byCssSelector('.child', 'Child'), byCssSelector('.active'));
     const chain = append(byCssSelector('.parent'), child);
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child.active');
+  });
+});
+
+describe('and (same-element composition)', () => {
+  it('compounds a second matcher onto the same element', () => {
+    const [locator] = and(byRole('button'), byAriaLabel('Open'));
+    expect(locator.selector).toBe('[role="button"][aria-label="Open"]');
+  });
+
+  it('keeps the base locator position relative to its parent', () => {
+    const [descendant] = and(byRole('button'), byAriaLabel('Open'));
+    expect(descendant.relative).toBe('Descendant');
+
+    const [root] = and(byRole('dialog', 'Root'), byAriaLabel('Settings'));
+    expect(root.relative).toBe('Root');
+  });
+
+  it('compounds N matchers in a single call', () => {
+    const [locator] = and(byRole('tab'), byAttribute('aria-selected', 'true'), byAttribute('data-state', 'ready'));
+    expect(locator.selector).toBe('[role="tab"][aria-selected="true"][data-state="ready"]');
+  });
+
+  it('places a leading tag-name matcher at the start of the compound', () => {
+    const [locator] = and(byTagName('input'), byAttribute('type', 'text'));
+    expect(locator.selector).toBe('input[type="text"]');
+  });
+
+  it('produces the same selector as the append(..., "Same") form it supersedes', () => {
+    const [composed] = and(byRole('button'), byAriaLabel('Open'));
+    const [role] = byRole('button');
+    const [appendedChild] = byAriaLabel('Open', 'Same');
+    expect(composed.selector).toBe(role.selector + appendedChild.selector);
+  });
+
+  it('throws when the base is a linked locator', () => {
+    const linked = byLinkedElement()
+      .onLinkedElement(byDataTestId('input'))
+      .extractAttribute('for')
+      .toMatchMyAttribute('id');
+    expect(() => and(linked, byRole('button'))).toThrow(/linked/i);
+  });
+
+  it('throws when a linked locator is passed as a matcher', () => {
+    const linked = byLinkedElement()
+      .onLinkedElement(byDataTestId('input'))
+      .extractAttribute('for')
+      .toMatchMyAttribute('id');
+    expect(() => and(byRole('button'), linked)).toThrow(/linked/i);
+  });
+
+  it('throws when the base is already a multi-locator chain', () => {
+    const chain = append(byCssSelector('.parent'), byCssSelector('.child'));
+    expect(() => and(chain, byRole('button'))).toThrow(/chain/i);
   });
 });

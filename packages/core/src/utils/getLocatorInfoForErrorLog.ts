@@ -15,12 +15,5 @@ import { PartLocator } from '../locators/PartLocator';
  * @returns
  */
 export function getLocatorInfoForErrorLog(locator: PartLocator): string {
-  const locators = Array.isArray(locator) ? locator : [locator];
-
-  const selectors: string[] = [];
-  for (const loc of locators) {
-    selectors.push(loc.selector);
-  }
-
-  return selectors.join(', ');
+  return locator.map(loc => loc.selector).join(', ');
 }

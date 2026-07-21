@@ -1,4 +1,4 @@
-import { byCssSelector, type CssLocator, type PartLocator } from '../locators';
+import { byCssSelector, type PartLocator } from '../locators';
 import { ComponentDriverCtor, ScenePart } from '../partTypes';
 import { append } from '../utils/locatorUtil';
 import { ComponentDriver } from './ComponentDriver';
@@ -24,7 +24,7 @@ export async function getListItemByIndex<HostPartT extends ScenePart, ItemT exte
   // assumes the homogeneous-siblings requirement documented on getListItemCount:
   // no same-tag non-item sibling shifting the reckoning. childListHelper's
   // `:nth-child` + selector filter is the mixed-sibling alternative.
-  const nthLocator: CssLocator = byCssSelector(`:nth-of-type(${index + 1})`, 'Same');
+  const nthLocator: PartLocator = byCssSelector(`:nth-of-type(${index + 1})`, 'Same');
   const itemLocator = append(itemLocatorBase, nthLocator);
   const exists = await host.interactor.exists(itemLocator);
   if (exists) {

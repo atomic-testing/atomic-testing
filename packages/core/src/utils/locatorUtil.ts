@@ -5,7 +5,7 @@ import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
 import type { LocatorRelativePosition } from '../locators/LocatorRelativePosition';
-import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
+import { PartLocator } from '../locators/PartLocator';
 
 /**
  * The portable document-root selector an empty locator chain reduces to. `<html>`
@@ -16,31 +16,67 @@ import { CssLocatorChain, PartLocator } from '../locators/PartLocator';
  */
 export const documentRootSelector = ':root';
 
-export function isChain(locator: PartLocator): locator is CssLocatorChain {
-  return Array.isArray(locator);
-}
-
-export function toChain(locator: PartLocator): CssLocatorChain {
-  return isChain(locator) ? locator : [locator];
-}
-
 export function append(locatorBase: PartLocator, ...locatorsToAppend: PartLocator[]): PartLocator {
-  const baseLocator: CssLocatorChain = toChain(locatorBase);
-  const toAppend: CssLocator[] = locatorsToAppend.reduce((acc: CssLocator[], locator: PartLocator) => {
-    if (locator instanceof CssLocator) {
-      return acc.concat(locator);
-    }
-    return acc.concat(...(locator as CssLocatorChain));
-  }, [] as CssLocator[]);
+  return locatorBase.concat(...locatorsToAppend);
+}
 
-  return baseLocator.concat(toAppend);
+function assertSamePrimitive(locator: PartLocator): CssLocator {
+  if (locator.length !== 1) {
+    throw new Error(`locatorUtil.and() composes single locators only; received a ${locator.length}-locator chain.`);
+  }
+  const [only] = locator;
+  if (only.complexity !== 'primitive') {
+    throw new Error(
+      'locatorUtil.and() composes same-element primitive matchers only; ' +
+        'linked locators resolve at runtime and cannot be folded into a static compound.'
+    );
+  }
+  return only;
+}
+
+/**
+ * Compose additional matchers onto the SAME element, producing one compound
+ * CSS selector — e.g. `[role="button"]` and `[aria-label="Open"]` together
+ * become `[role="button"][aria-label="Open"]`.
+ *
+ * This is the ergonomic, footgun-free form of same-element composition: it
+ * supersedes `append(byRole('button'), byAriaLabel('Open', 'Same'))` — there is
+ * no `'Same'` argument to remember (the relationship no longer has to be stored
+ * on the appended child) and no wrapper call. The result keeps `base`'s position
+ * relative to its parent; the appended matchers contribute only their
+ * attribute/selector fragment.
+ *
+ * Same-element, pure-CSS only:
+ * - Put a tag-name matcher ({@link byTagName}) FIRST — a CSS type selector is
+ *   only valid at the start of a compound (`input[type="text"]`, never
+ *   `[type="text"]input`).
+ * - Computed accessible names (`aria-labelledby` / `<label>` / text) are not
+ *   CSS-expressible and stay out of scope (see #923); compose a verbatim
+ *   `aria-label` via {@link byAriaLabel} instead.
+ * - Linked locators ({@link byLinkedElement}) resolve at runtime and cannot be
+ *   folded into a static compound; passing one as `base` or as a matcher throws.
+ * - `base` and every matcher must each be a single-locator chain (a `by*`
+ *   builder's direct output) — the output of `append`/`and` cannot itself be
+ *   composed further, since there would be no single element left to compound.
+ *
+ * @param base - The locator to compound additional matchers onto.
+ * @param locators - Additional same-element matchers to compound onto `base`.
+ * @example
+ * ```ts
+ * const openButton = locatorUtil.and(byRole('button'), byAriaLabel('Open'));
+ * const activeTab = locatorUtil.and(byRole('tab'), byAttribute('aria-selected', 'true'));
+ * ```
+ */
+export function and(base: PartLocator, ...locators: PartLocator[]): PartLocator {
+  const parts = [base, ...locators].map(assertSamePrimitive);
+  const selector = parts.map(part => part.selector).join('');
+  return [new CssLocator(selector, { relative: parts[0].relative })];
 }
 
 function findRootLocatorIndex(locator: PartLocator): number {
-  const list = toChain(locator);
-  const length = list.length;
+  const length = locator.length;
   for (let i = length - 1; i >= 0; i--) {
-    const loc = list[i];
+    const loc = locator[i];
     if (loc.relative === 'Root') {
       return i;
     }
@@ -50,7 +86,7 @@ function findRootLocatorIndex(locator: PartLocator): number {
 }
 
 async function toPrimitiveLocators(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
-  const list = toChain(locator);
+  const list = locator;
   let result: CssLocator[] = [];
   for (let i = 0; i < list.length; i++) {
     const loc = list[i];
@@ -110,16 +146,13 @@ async function getLinkedCssLocator(
   const matchTargetValue = await getLinkedCssLocatorMatchingTargetValue(locator, context, interactor);
 
   if (matchTargetValue == null) {
-    throw new LocatorResolutionError(locator, 'match target of LinkedCssLocator not found');
+    throw new LocatorResolutionError([locator], 'match target of LinkedCssLocator not found');
   }
 
-  let resolvedLocator: CssLocator;
   if (locator.valueExtract.type === 'attribute') {
-    resolvedLocator = byAttribute(locator.valueExtract.attributeName, matchTargetValue, locator.relative);
-  } else {
-    throw new LocatorResolutionError(locator, `unsupported valueExtract type "${locator.valueExtract.type}"`);
+    return byAttribute(locator.valueExtract.attributeName, matchTargetValue, locator.relative);
   }
-  return resolvedLocator;
+  throw new LocatorResolutionError([locator], `unsupported valueExtract type "${locator.valueExtract.type}"`);
 }
 
 export async function getLinkedCssLocatorMatchingTargetValue(
@@ -133,7 +166,7 @@ export async function getLinkedCssLocatorMatchingTargetValue(
   }
 
   throw new LocatorResolutionError(
-    locator,
+    [locator],
     `unsupported matchingTargetValueExtract type "${locator.matchingTargetValueExtract.type}"`
   );
 }
@@ -171,8 +204,8 @@ export const defaultOverrideLocatorRelativePositionOption: Readonly<OverrideLoca
   });
 
 /**
- * Override the supplied locator's relative position, if the supplied locator is an array of locators,
- * only the first one is overridden
+ * Override the supplied locator chain's relative position; by default only the
+ * first locator in the chain is overridden.
  * @param locator
  * @param relative
  * @param option
@@ -183,22 +216,11 @@ export function overrideLocatorRelativePosition(
   relative: LocatorRelativePosition,
   option: Partial<Readonly<OverrideLocatorRelativePositionOption>> = defaultOverrideLocatorRelativePositionOption
 ): PartLocator {
-  if (Array.isArray(locator)) {
-    const actualOption: Readonly<OverrideLocatorRelativePositionOption> = {
-      ...defaultOverrideLocatorRelativePositionOption,
-      ...option,
-    };
-    return (locator as readonly CssLocator[]).map((loc, index) => {
-      return actualOption.shouldOverride(loc, index)
-        ? loc.clone({
-            relative,
-          })
-        : loc;
-    });
-  }
-  return (locator as CssLocator).clone({
-    relative,
-  });
+  const actualOption: Readonly<OverrideLocatorRelativePositionOption> = {
+    ...defaultOverrideLocatorRelativePositionOption,
+    ...option,
+  };
+  return locator.map((loc, index) => (actualOption.shouldOverride(loc, index) ? loc.clone({ relative }) : loc));
 }
 
 // Re-exported from a leaf module so the interactor errors can build their

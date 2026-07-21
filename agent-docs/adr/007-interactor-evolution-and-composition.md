@@ -88,6 +88,16 @@ It supersedes the previous `locatorUtil.append(byRole('button'), byAriaLabel('Op
 form (no `'Same'` argument to remember, no wrapper) and stays entirely within the
 CSS/DOM-only boundary declared in [D2 (#963)](008-css-dom-only-locator-boundary.md).
 
+> **Mechanism superseded by [ADR-017](017-part-locator-chain-reshape.md).** The
+> 2.0 `PartLocator` reshape (#1058) makes every `by*` builder return a chain
+> (`CssLocator[]`) rather than a bare `CssLocator`, so there is no longer a
+> guaranteed single-locator receiver for an instance method to live on. Same-
+> element composition moves to the `locatorUtil.and(base, ...matchers)` free
+> function — the "compose at the locator layer, not a new `Interactor` member"
+> decision below is unchanged; only the composition call's shape changes from
+> `byRole('button').and(byAriaLabel('Open'))` to
+> `locatorUtil.and(byRole('button'), byAriaLabel('Open'))`.
+
 The _computed_ accessible name (`aria-labelledby` / associated `<label>` / text
 content) is genuinely not CSS-expressible and remains deferred to **#923**. Under
 Decision 1 it is now safe to add after 1.0 — as a default-bearing method on
@@ -133,12 +143,12 @@ which `Interactor` re-exposes automatically.
 
 ## Alternatives considered
 
-| Alternative                                        | Why not chosen                                                                                                                                                             |
-| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Land a bespoke accessible-name `findByRole` now    | Pulls #923's hard cross-engine accname work forward and breaches the CSS/DOM-only boundary D2 declares; the common verbatim case is fully met by `CssLocator.and()`.       |
-| Make every `Interactor` member optional at 1.0     | Weakens the type contract for _all_ consumers to hedge the rare external bare-implementer; the extension path covers the common adapter author, optional members the rest. |
-| `bySameElement(...)` free function for composition | Considered; `.and()` reads better at call sites and adds no new barrel export — only one method on an already-frozen class.                                                |
-| `byRole(value, { name })` option object            | Bakes `aria-label` into `byRole`, does not generalize to other attributes, and the `name` term invites confusion with the deferred _computed_-name resolution.             |
+| Alternative                                        | Why not chosen                                                                                                                                                                                                                                                 |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Land a bespoke accessible-name `findByRole` now    | Pulls #923's hard cross-engine accname work forward and breaches the CSS/DOM-only boundary D2 declares; the common verbatim case is fully met by `CssLocator.and()`.                                                                                           |
+| Make every `Interactor` member optional at 1.0     | Weakens the type contract for _all_ consumers to hedge the rare external bare-implementer; the extension path covers the common adapter author, optional members the rest.                                                                                     |
+| `bySameElement(...)` free function for composition | Considered; `.and()` reads better at call sites and adds no new barrel export — only one method on an already-frozen class. (Revisited in [ADR-017](017-part-locator-chain-reshape.md): once builders return chains, a free function is the only option left.) |
+| `byRole(value, { name })` option object            | Bakes `aria-label` into `byRole`, does not generalize to other attributes, and the `name` term invites confusion with the deferred _computed_-name resolution.                                                                                                 |
 
 ## Related
 

@@ -32,7 +32,9 @@ public contract types and the one resolution seam:
   non-DOM seam; computed accessible names out of scope.
 - `PartLocator` — always reduces to one CSS selector; the locator model is closed
   to CSS for 1.0; `byCssSelector` is the raw-CSS escape hatch and
-  {@link CssLocator.and} composes same-element matchers.
+  {@link locatorUtil.and} composes same-element matchers (moved off
+  `CssLocator.and` in the 2.0 chain reshape — see
+  [ADR-017](017-part-locator-chain-reshape.md)).
 - `locatorUtil.toCssSelector` — the single, CSS-only resolution seam.
 
 What stays **in** scope (all CSS): attribute/role/state matchers, same-element

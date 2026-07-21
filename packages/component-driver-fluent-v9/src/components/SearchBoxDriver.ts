@@ -46,7 +46,7 @@ export class SearchBoxDriver extends HTMLTextInputDriver {
    * this input's own selector so sibling `SearchBox`es are never conflated.
    */
   private get dismissLocator(): PartLocator {
-    const chain = locatorUtil.toChain(this.locator);
+    const chain = this.locator;
     const selfSelector = chain[chain.length - 1].selector;
     return locatorUtil.append(
       chain.slice(0, -1),

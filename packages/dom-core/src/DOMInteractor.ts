@@ -928,10 +928,9 @@ export class DOMInteractor implements Interactor {
    * context.
    */
   private escapesToDocumentRoot(locator: PartLocator): boolean {
-    const list = locatorUtil.toChain(locator);
-    for (let i = list.length - 1; i >= 0; i--) {
-      if (list[i].relative === 'Root') {
-        return list[i].complexity !== 'linked';
+    for (let i = locator.length - 1; i >= 0; i--) {
+      if (locator[i].relative === 'Root') {
+        return locator[i].complexity !== 'linked';
       }
     }
     return false;
