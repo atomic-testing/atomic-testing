@@ -119,24 +119,19 @@ export class DataGridHeaderCellDriver extends TableHeaderCellDriver {
   /**
    * Whether this column's resize handle is currently the FOCUSED, keyboard-
    * interactive one — read via `aria-hidden` (`"false"` only for the active
-   * column; see class doc's keyboard-resize section). `false` also when the
-   * column has no resize handle at all.
+   * column; see class doc's keyboard-resize section). No separate existence
+   * check needed: `getAttribute` already resolves to `undefined` for a column
+   * with no resize handle at all (same house idiom as
+   * {@link TableHeaderCellDriver.isSortable}), which never equals `'false'`.
    */
   async isInKeyboardResizeMode(): Promise<boolean> {
-    if (!(await this.interactor.exists(this.resizeHandleLocator))) {
-      return false;
-    }
     return (await this.interactor.getAttribute(this.resizeHandleLocator, 'aria-hidden')) === 'false';
   }
 
   /**
-   * Dispatch a key on this column's resize handle — `'ArrowLeft'`/`'ArrowRight'`
-   * adjust the width (Fluent's fixed step, halved with `option.shift`),
-   * `'Enter'`/`'Space'`/`'Escape'` exit keyboard-resize mode. See the class
-   * doc's keyboard-resize section for why this assumes the handle is ALREADY
-   * focused/interactive — reaching that state has no Fluent-shipped trigger,
-   * so the caller must have driven their own app's entry point (whatever it
-   * is) into `columnSizing_unstable.enableKeyboardMode` first.
+   * Dispatch a key on this column's resize handle — see the class doc's
+   * keyboard-resize section for the key contract and why this assumes the
+   * handle is ALREADY focused/interactive.
    *
    * Gated on {@link isInKeyboardResizeMode} rather than just the handle's
    * existence: `useKeyboardResizing`'s `onKeyDown` handler is ONE shared

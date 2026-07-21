@@ -60,13 +60,14 @@ const peopleColumns: TableColumnDefinition<Person>[] = [
  * equivalent: one button per header cell, so the suite can drive entry
  * without depending on a `Menu`'s open/close behavior across jsdom and three
  * Playwright engines.
+ *
+ * No visible text: it lives inside the header cell alongside the column
+ * label, and `DataGridHeaderCellDriver`/`DataGridDriver`'s text reads (e.g.
+ * `getHeaderTexts`) read the cell's full text content — a labeled button
+ * here would leak into that reading, the same reason Fluent's own
+ * `TableCellActions` spec example uses an icon-only `Button` rather than one
+ * with visible children.
  */
-// No visible text: it lives inside the header cell alongside the column
-// label, and `DataGridHeaderCellDriver`/`DataGridDriver`'s text reads (e.g.
-// `getHeaderTexts`) read the cell's full text content — a labeled button
-// here would leak into that reading, the same reason Fluent's own
-// `TableCellActions` spec example uses an icon-only `Button` rather than one
-// with visible children.
 const KeyboardResizeTrigger = ({ columnId }: { columnId: string }) => {
   const enableKeyboardMode = useDataGridContext_unstable(ctx => ctx.columnSizing_unstable.enableKeyboardMode);
   return (

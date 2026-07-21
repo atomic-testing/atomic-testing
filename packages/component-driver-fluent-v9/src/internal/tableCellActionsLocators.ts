@@ -56,20 +56,11 @@ export function collectActionButtons(host: ComponentDriver, cellLocator: PartLoc
  * when `visible` is true) with no `:hover`/`:focus-within` selector anywhere
  * in its stylesheet — a consuming app must wire that prop itself from
  * whatever hover/focus state it tracks (row-level `onMouseEnter`/`onFocus`,
- * typically). Reading the actual computed `opacity` (rather than matching
- * either Griffel-hashed class name, which is a build artifact, not a stable
- * contract) is therefore both the portable AND the most honest signal: it
- * reflects real visibility however the app wired it, not just this one
- * built-in mechanism. Verified via a rendered probe that jsdom computes
- * Griffel's injected stylesheet correctly for this simple, non-layout
- * property, so this is NOT an E2E-only read like this package's geometry-based
- * primitives are.
+ * typically). Delegates to {@link Interactor.isVisible}, the package-wide
+ * `opacity`/`display`/`visibility` policy (#1053) shared verbatim by every
+ * interactor — the exact portability guarantee this needs, without a
+ * Fluent-local reimplementation of it.
  */
-export async function readActionsVisible(interactor: Interactor, cellLocator: PartLocator): Promise<boolean> {
-  const locator = actionsLocatorOf(cellLocator);
-  if (!(await interactor.exists(locator))) {
-    return false;
-  }
-  const opacity = await interactor.getStyleValue(locator, 'opacity');
-  return opacity != null && Number(opacity) > 0;
+export function readActionsVisible(interactor: Interactor, cellLocator: PartLocator): Promise<boolean> {
+  return interactor.isVisible(actionsLocatorOf(cellLocator));
 }
