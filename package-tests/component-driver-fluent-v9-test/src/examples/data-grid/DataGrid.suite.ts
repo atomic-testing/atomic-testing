@@ -1,4 +1,5 @@
 import { DataGridDriver } from '@atomic-testing/component-driver-fluent-v9';
+import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
@@ -8,6 +9,9 @@ import { dataGridUIExample } from './DataGrid.examples';
 export const dataGridExampleScenePart = {
   gridA: { locator: byDataTestId('data-grid-a'), driver: DataGridDriver },
   gridB: { locator: byDataTestId('data-grid-b'), driver: DataGridDriver },
+  // Stands in for whatever entry point a real app wires to
+  // `enableKeyboardMode` — see `DataGrid.examples.tsx`'s `KeyboardResizeTrigger`.
+  kbResizeTriggerName: { locator: byDataTestId('kb-resize-trigger-name'), driver: HTMLButtonDriver },
 } satisfies ScenePart;
 
 export const dataGridExample: IExampleUnit<typeof dataGridExampleScenePart, JSX.Element> = {
@@ -138,6 +142,46 @@ export const dataGridExampleTestSuite: TestSuiteInfo<typeof dataGridExample.scen
         assertTrue(headerRow != null);
         assertEqual(await headerRow!.getCellCount(), 3);
         assertEqual(await headerRow!.getCell(99), null);
+      });
+
+      test('keyboard-accessible resize: entering via the app-wired trigger enables arrow-key adjust and Escape exit', async () => {
+        assertFalse(await engine().parts.gridA.isColumnInKeyboardResizeMode(0));
+
+        await engine().parts.kbResizeTriggerName.click();
+        assertTrue(await engine().parts.gridA.isColumnInKeyboardResizeMode(0));
+
+        assertTrue(await engine().parts.gridA.pressColumnResizeKey(0, 'ArrowRight'));
+
+        assertTrue(await engine().parts.gridA.pressColumnResizeKey(0, 'Escape'));
+        assertFalse(await engine().parts.gridA.isColumnInKeyboardResizeMode(0));
+      });
+
+      test('keyboard-accessible resize is a no-op without a resize handle (last column, non-resizable grid)', async () => {
+        // The LAST column has no resize handle at all (same `autoFitColumns` caveat as the mouse-drag test above).
+        assertFalse(await engine().parts.gridA.isColumnInKeyboardResizeMode(2));
+        assertFalse(await engine().parts.gridA.pressColumnResizeKey(2, 'ArrowRight'));
+
+        assertFalse(await engine().parts.gridB.isColumnInKeyboardResizeMode(0));
+        assertFalse(await engine().parts.gridB.pressColumnResizeKey(0, 'ArrowRight'));
+      });
+
+      test('TableCellActions: present but hidden until the row is hovered; absent where none is wired', async () => {
+        const row = await engine().parts.gridA.getRow(0);
+        assertTrue(row != null);
+        const cell = await row!.getCell(0);
+        assertTrue(cell != null);
+
+        assertFalse(await cell!.isActionsVisible());
+        assertEqual((await cell!.getActionButtons()).length, 1);
+
+        await row!.hover();
+        assertTrue(await cell!.isActionsVisible());
+
+        // Grid B wires no `TableCellActions` anywhere.
+        const otherRow = await engine().parts.gridB.getRow(0);
+        const otherCell = await otherRow!.getCell(0);
+        assertFalse(await otherCell!.isActionsVisible());
+        assertEqual((await otherCell!.getActionButtons()).length, 0);
       });
     });
   },

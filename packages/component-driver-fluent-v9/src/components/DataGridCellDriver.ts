@@ -1,5 +1,8 @@
 import { ComponentDriver } from '@atomic-testing/core';
 
+import { collectActionButtons, readActionsVisible } from '../internal/tableCellActionsLocators';
+import { ButtonDriver } from './ButtonDriver';
+
 /**
  * Driver for a single Fluent v9 `DataGridCell` — a data cell in a `DataGrid`
  * row (see {@link DataGridRowDriver}).
@@ -20,9 +23,23 @@ import { ComponentDriver } from '@atomic-testing/core';
  * driver relies entirely on the inherited `getText()`/`exists()` — it exists
  * as a distinct type purely so {@link DataGridRowDriver} can expose typed
  * cell drivers.
+ *
+ * **`TableCellActions`** — see the `tableCellActionsLocators` internal
+ * module (shared with {@link TableCellDriver}) for the DOM/visibility audit
+ * behind {@link getActionButtons}/{@link isActionsVisible}.
  * @see https://react.fluentui.dev/?path=/docs/components-datagrid--docs
  */
 export class DataGridCellDriver extends ComponentDriver<{}> {
+  /** The `Button`s in this cell's `TableCellActions`, if any — see {@link isActionsVisible} for the visibility half. */
+  async getActionButtons(): Promise<ButtonDriver[]> {
+    return collectActionButtons(this, this.locator);
+  }
+
+  /** Whether this cell's `TableCellActions` are currently visible — see the internal module doc for the opacity-based read. */
+  async isActionsVisible(): Promise<boolean> {
+    return readActionsVisible(this.interactor, this.locator);
+  }
+
   override get driverName(): string {
     return 'FluentV9DataGridCellDriver';
   }

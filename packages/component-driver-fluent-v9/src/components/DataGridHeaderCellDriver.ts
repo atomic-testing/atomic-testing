@@ -1,4 +1,4 @@
-import { byCssClass, locatorUtil, type PartLocator } from '@atomic-testing/core';
+import { byCssClass, locatorUtil, type PartLocator, type PressKeyOption } from '@atomic-testing/core';
 
 import { TableHeaderCellDriver } from './TableHeaderCellDriver';
 
@@ -38,6 +38,40 @@ const widthStylePattern = /(?:^|;)\s*width:\s*([\d.]+)px/;
  * (`true`) is in effect — verified in the rendered output (the aside slot is
  * `null` for the final column so it can absorb the remaining container
  * width) — {@link resize} returns `false` in that case rather than throwing.
+ *
+ * **Keyboard-accessible resize** (`useKeyboardResizing`, `@fluentui/react-table`
+ * source audit): the SAME resize handle also carries a keyboard path — `role="separator"`,
+ * `aria-label="Resize column"`, `aria-valuetext="<n> pixels"`, and tabster hints
+ * that exempt `ArrowLeft`/`ArrowRight` from the grid's own arrow-navigation so
+ * they reach the handle instead. Once the handle is FOCUSED, its `onKeyDown`
+ * drives the same `setColumnWidth` the mouse drag does — `ArrowLeft`/`ArrowRight`
+ * adjust by a fixed step (`Shift` halves the step), `Enter`/`Space`/`Escape` blur
+ * it back out. **Entering that focused state has NO default trigger Fluent ships
+ * at all** — verified against the full `@fluentui/react-table` source: the
+ * capability is exposed only as an imperative escape hatch
+ * (`DataGridContext.columnSizing_unstable.enableKeyboardMode(columnId)`), which
+ * NOTHING in the library calls — not the header cell's `onKeyDown`, not the
+ * handle's own `onClick`/`onFocus`. Fluent's own Storybook demonstrates it via a
+ * consumer-added right-click context menu; this is why {@link resize}'s
+ * `deltaPx` cannot itself be driven by "just press Enter" — there is no `Enter`
+ * for a driver to press until the CONSUMING APP has wired its own entry point
+ * (a button, a menu item, whatever fits their UI) to that same
+ * `enableKeyboardMode` call. {@link pressResizeKey} and
+ * {@link isInKeyboardResizeMode} therefore model exactly what Fluent itself
+ * contributes to this interaction (the focused-handle key contract), and
+ * deliberately do NOT assume any particular app-side entry affordance — the
+ * caller drives that part themselves (e.g. `engine.parts.myResizeButton.click()`)
+ * before calling {@link pressResizeKey}. Verified via a rendered probe: once
+ * focus is moved onto the handle by simulating a real app's entry point, a
+ * plain `ArrowRight` key event synchronously invokes `DataGrid`'s
+ * `onColumnResize` callback with the expected `+20`px delta — confirming the
+ * key contract fires correctly. The resulting **inline `style="width"` does
+ * NOT visibly change under jsdom**, for the identical reason {@link resize}'s
+ * own drag doesn't: `resizableColumns`' default `autoFitColumns` recomputes
+ * column widths from the measured container width on every state change, and
+ * jsdom has no layout engine (that width is permanently `0`) — so this, too,
+ * is an E2E-only width assertion; only the DOM CONTRACT (focus/blur, key
+ * dispatch not throwing) is verifiable under jsdom.
  *
  * Unlike `component-driver-mui-x-v9`'s `DataGridPremiumDriver.getColumnWidth`
  * (which reads the header's bounding box — zero under jsdom, since jsdom has
@@ -79,6 +113,38 @@ export class DataGridHeaderCellDriver extends TableHeaderCellDriver {
       return false;
     }
     await this.interactor.drag(this.resizeHandleLocator, { x: deltaPx, y: 0 });
+    return true;
+  }
+
+  /**
+   * Whether this column's resize handle is currently the FOCUSED, keyboard-
+   * interactive one — read via `aria-hidden` (`"false"` only for the active
+   * column; see class doc's keyboard-resize section). `false` also when the
+   * column has no resize handle at all.
+   */
+  async isInKeyboardResizeMode(): Promise<boolean> {
+    if (!(await this.interactor.exists(this.resizeHandleLocator))) {
+      return false;
+    }
+    return (await this.interactor.getAttribute(this.resizeHandleLocator, 'aria-hidden')) === 'false';
+  }
+
+  /**
+   * Dispatch a key on this column's resize handle — `'ArrowLeft'`/`'ArrowRight'`
+   * adjust the width (Fluent's fixed step, halved with `option.shift`),
+   * `'Enter'`/`'Space'`/`'Escape'` exit keyboard-resize mode. See the class
+   * doc's keyboard-resize section for why this assumes the handle is ALREADY
+   * focused/interactive — reaching that state has no Fluent-shipped trigger,
+   * so the caller must have driven their own app's entry point (whatever it
+   * is) into `columnSizing_unstable.enableKeyboardMode` first.
+   * @returns `false` when this column has no resize handle at all (same
+   * last-column caveat as {@link resize}).
+   */
+  async pressResizeKey(key: string, option?: Partial<PressKeyOption>): Promise<boolean> {
+    if (!(await this.interactor.exists(this.resizeHandleLocator))) {
+      return false;
+    }
+    await this.interactor.pressKey(this.resizeHandleLocator, key, option);
     return true;
   }
 
