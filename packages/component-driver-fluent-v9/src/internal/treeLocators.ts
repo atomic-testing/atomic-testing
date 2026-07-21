@@ -20,15 +20,17 @@ import { byCssClass, type PartLocator } from '@atomic-testing/core';
 export const treeItemChildLocator: PartLocator = byCssClass('fui-TreeItem', 'Child');
 
 /**
- * Direct-child `.fui-Tree[role="group"]` selector reaching a `TreeItem`'s own
- * nested subtree (see {@link TreeItemDriver}'s class doc for the full shape).
+ * Direct-child `.fui-Tree` selector (`'Child'`-scoped, NOT role-filtered)
+ * reaching a `TreeItem`'s own nested subtree (see {@link TreeItemDriver}'s
+ * class doc for the full shape). At runtime that child renders as
+ * `<div class="fui-Tree" role="group">` — DOM audit: Fluent stamps
+ * `fui-Tree` on every `<Tree>`-rendered level, root and nested alike,
+ * distinguished only by `role` (`"tree"` at the root, `"group"` when
+ * nested) — but this selector doesn't need to filter on that role, since
+ * scoping to the immediate child already guarantees the right element.
  * Also matches `'Child'` for the same flattening reason as
  * {@link treeItemChildLocator}: a nested subtree's OWN nested subtrees carry
- * the identical `fui-Tree` class (DOM audit — Fluent stamps `fui-Tree` on
- * every `<Tree>`-rendered level, root and nested alike, distinguished only by
- * `role` — `"tree"` at the root, `"group"` when nested — which this selector
- * does not need to check, since scoping to the immediate child already
- * guarantees the right element).
+ * the identical `fui-Tree` class.
  *
  * Resolves to nothing while the owning item is collapsed (Fluent's
  * `Collapse` hard-codes `unmountOnExit`, the same fully-unmounted-while-closed
