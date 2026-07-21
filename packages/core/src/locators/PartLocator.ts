@@ -1,11 +1,13 @@
 import { CssLocator } from './CssLocator';
 
 /**
- * How to find an element: always a chain of one or more {@link CssLocator}s,
- * reduced to **one CSS selector** via `locatorUtil.toCssSelector`, which the
- * interactor runs against the DOM. A locator built by a single `by*` builder
- * (e.g. `byDataTestId('submit')`) is simply a one-element chain — there is no
- * separate "bare locator" shape to normalize away.
+ * How to find an element: always a chain of {@link CssLocator}s, reduced to
+ * **one CSS selector** via `locatorUtil.toCssSelector`, which the interactor
+ * runs against the DOM. A locator built by a single `by*` builder (e.g.
+ * `byDataTestId('submit')`) is simply a one-element chain — there is no
+ * separate "bare locator" shape to normalize away. An empty chain (`[]`) is
+ * also valid: it is the engine-root locator, and `toCssSelector` reduces it to
+ * the portable document-root selector rather than throwing (see #1048).
  *
  * **1.0 boundary — CSS only.** The locator model is deliberately closed to CSS:
  * every builder (`byRole`, `byAriaLabel`, `byAttribute`, `byCssSelector`, …)

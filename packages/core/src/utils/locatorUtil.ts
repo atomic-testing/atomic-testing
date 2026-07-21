@@ -55,9 +55,10 @@ function assertSamePrimitive(locator: PartLocator): CssLocator {
  *   `aria-label` via {@link byAriaLabel} instead.
  * - Linked locators ({@link byLinkedElement}) resolve at runtime and cannot be
  *   folded into a static compound; passing one as `base` or as a matcher throws.
- * - `base` and every matcher must each be a single-locator chain (a `by*`
- *   builder's direct output) — the output of `append`/`and` cannot itself be
- *   composed further, since there would be no single element left to compound.
+ * - `base` and every matcher must each be a one-element, primitive chain — what
+ *   a fresh `by*` call produces, and also what `and()` itself returns, so its
+ *   result can be composed again. A multi-element chain (`append()`'s typical
+ *   output) has no single element left to compound onto and is rejected.
  *
  * @param base - The locator to compound additional matchers onto.
  * @param locators - Additional same-element matchers to compound onto `base`.
