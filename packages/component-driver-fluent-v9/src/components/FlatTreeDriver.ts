@@ -1,6 +1,7 @@
 import {
   IComponentDriverOption,
   Interactor,
+  listHelper,
   ListComponentDriver,
   ListComponentDriverSpecificOption,
   PartLocator,
@@ -71,7 +72,8 @@ export class FlatTreeDriver<ItemT extends FlatTreeItemDriver = FlatTreeItemDrive
    * `value` is the app's own stable per-item identifier.
    */
   async getItemByValue<ItemClass extends ItemT = ItemT>(value: string): Promise<ItemClass | null> {
-    for (const item of await this.getItems<ItemClass>()) {
+    const driverClass = this.getItemClass<ItemClass>();
+    for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), driverClass)) {
       if ((await item.getValue()) === value) {
         return item;
       }

@@ -71,11 +71,17 @@ const flatTreeBItems: HeadlessFlatTreeItemProps[] = [
   { value: 'photos', itemType: 'leaf' },
 ];
 
+// `summary` deliberately shares its label with `detail` (a different item, at a
+// different level) rather than getting its own unique label like every other
+// item in this file — the one place in these fixtures where two items in the
+// SAME tree collide on visible text, so a test can prove `getItemByValue`
+// truly matches on `value` rather than incidentally agreeing with
+// `getItemByLabel` the way it would if every label here were unique.
 const flatTreeCLabels: Record<string, string> = {
   intro: 'Introduction',
   topic: 'Topic',
   detail: 'Detail',
-  summary: 'Summary',
+  summary: 'Detail',
 };
 
 const flatTreeCItems: HeadlessFlatTreeItemProps[] = [

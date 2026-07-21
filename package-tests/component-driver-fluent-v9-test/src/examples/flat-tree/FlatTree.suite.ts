@@ -29,7 +29,7 @@ export const flatTreeExampleTestSuite: TestSuiteInfo<typeof flatTreeExample.scen
         assertEqual(await engine().parts.flatTreeA.getItemCount(), 4);
         // flat-tree-b visible: Documents, Photos = 2 — fully collapsed by default.
         assertEqual(await engine().parts.flatTreeB.getItemCount(), 2);
-        // flat-tree-c visible: Introduction, Topic, Detail, Summary = 4 — Topic is open by default.
+        // flat-tree-c visible: Introduction, Topic, Detail, Detail(summary) = 4 — Topic is open by default.
         assertEqual(await engine().parts.flatTreeC.getItemCount(), 4);
       });
 
@@ -46,7 +46,26 @@ export const flatTreeExampleTestSuite: TestSuiteInfo<typeof flatTreeExample.scen
       test('getItemByValue finds an item by its Fluent-stamped value at any level; absent value is null', async () => {
         const citrus = await engine().parts.flatTreeA.getItemByValue('citrus');
         assertEqual(await citrus!.getLabel(), 'Citrus');
+        assertEqual(await citrus!.getValue(), 'citrus');
         assertEqual(await engine().parts.flatTreeA.getItemByValue('does-not-exist'), null);
+      });
+
+      test('getItemByValue matches by value, not incidentally by label, when two items share a visible label', async () => {
+        // `detail` (level 2, child of `topic`) and `summary` (level 1) share the label
+        // "Detail" — see FlatTree.examples.tsx. `detail` comes first in DOM order, so
+        // the inherited getItemByLabel('Detail') would resolve to `detail`; asking for
+        // `summary` by value must still return `summary`, proving the two lookups are
+        // not interchangeable.
+        const byLabel = await engine().parts.flatTreeC.getItemByLabel('Detail');
+        assertEqual(await byLabel!.getValue(), 'detail');
+
+        const summary = await engine().parts.flatTreeC.getItemByValue('summary');
+        assertEqual(await summary!.getLabel(), 'Detail');
+        assertEqual(await summary!.getLevel(), 1);
+
+        const detail = await engine().parts.flatTreeC.getItemByValue('detail');
+        assertEqual(await detail!.getLabel(), 'Detail');
+        assertEqual(await detail!.getLevel(), 2);
       });
 
       test('getLevel/getPosInSet/getSetSize read the required flat-item ARIA triad', async () => {

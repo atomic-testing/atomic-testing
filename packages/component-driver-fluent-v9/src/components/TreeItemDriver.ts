@@ -120,7 +120,7 @@ export class TreeItemDriver extends ComponentDriver<{}> implements IToggleDriver
   /** The nesting depth (1-based), read from `aria-level` on this item's own root. */
   async getLevel(): Promise<number> {
     const level = await this.interactor.getAttribute(this.locator, 'aria-level');
-    return level == null ? 1 : Number(level);
+    return level ? Number(level) : 1;
   }
 
   /**

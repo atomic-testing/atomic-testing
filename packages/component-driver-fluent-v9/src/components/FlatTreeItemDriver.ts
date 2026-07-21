@@ -82,20 +82,23 @@ export class FlatTreeItemDriver extends ComponentDriver<{}> implements IToggleDr
 
   /** The nesting depth (1-based), read from the required `aria-level` (see class doc). */
   async getLevel(): Promise<number> {
-    const level = await this.interactor.getAttribute(this.locator, 'aria-level');
-    return level == null ? 1 : Number(level);
+    return this.readAriaNumber('aria-level');
   }
 
   /** This item's 1-based position among its siblings at its own level, read from the required `aria-posinset` (see class doc). */
   async getPosInSet(): Promise<number> {
-    const posInSet = await this.interactor.getAttribute(this.locator, 'aria-posinset');
-    return posInSet == null ? 1 : Number(posInSet);
+    return this.readAriaNumber('aria-posinset');
   }
 
   /** The number of siblings at this item's own level, read from the required `aria-setsize` (see class doc). */
   async getSetSize(): Promise<number> {
-    const setSize = await this.interactor.getAttribute(this.locator, 'aria-setsize');
-    return setSize == null ? 1 : Number(setSize);
+    return this.readAriaNumber('aria-setsize');
+  }
+
+  /** Shared by {@link getLevel}/{@link getPosInSet}/{@link getSetSize} — falls back to `1` when the attribute is absent OR empty, matching `SliderDriver`'s `readBoundedNumber` convention. */
+  private async readAriaNumber(attribute: string): Promise<number> {
+    const value = await this.interactor.getAttribute(this.locator, attribute);
+    return value ? Number(value) : 1;
   }
 
   /** Whether this item can expand/collapse (`itemType="branch"`, read via `aria-expanded`'s presence). A leaf item always reports `false`. */
