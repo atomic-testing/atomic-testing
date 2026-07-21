@@ -35,6 +35,8 @@ export { DrawerDriverBase, drawerParts } from './components/DrawerDriverBase';
 export { DropdownDriver } from './components/DropdownDriver';
 export { DropdownOptionDriver } from './components/DropdownOptionDriver';
 export { FieldDriver } from './components/FieldDriver';
+export { FlatTreeDriver } from './components/FlatTreeDriver';
+export { FlatTreeItemDriver } from './components/FlatTreeItemDriver';
 export { ImageDriver } from './components/ImageDriver';
 export { InfoButtonDriver } from './components/InfoButtonDriver';
 export { InfoLabelDriver } from './components/InfoLabelDriver';
