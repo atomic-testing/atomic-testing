@@ -137,11 +137,22 @@ export class DataGridHeaderCellDriver extends TableHeaderCellDriver {
    * focused/interactive — reaching that state has no Fluent-shipped trigger,
    * so the caller must have driven their own app's entry point (whatever it
    * is) into `columnSizing_unstable.enableKeyboardMode` first.
+   *
+   * Gated on {@link isInKeyboardResizeMode} rather than just the handle's
+   * existence: `useKeyboardResizing`'s `onKeyDown` handler is ONE shared
+   * closure reused across every column's handle (verified in source), reading
+   * a single grid-wide "which column is active" state rather than which DOM
+   * node the event actually landed on. Dispatching on a handle that exists
+   * but isn't the active one wouldn't just no-op — it would silently resize
+   * WHICHEVER OTHER column the grid currently has active, a wrong-column
+   * mutation the caller has no way to see coming. Gating here makes that
+   * impossible: this method only ever affects the column it claims to.
    * @returns `false` when this column has no resize handle at all (same
-   * last-column caveat as {@link resize}).
+   * last-column caveat as {@link resize}), or when this column isn't
+   * currently the one in keyboard-resize mode.
    */
   async pressResizeKey(key: string, option?: Partial<PressKeyOption>): Promise<boolean> {
-    if (!(await this.interactor.exists(this.resizeHandleLocator))) {
+    if (!(await this.isInKeyboardResizeMode())) {
       return false;
     }
     await this.interactor.pressKey(this.resizeHandleLocator, key, option);

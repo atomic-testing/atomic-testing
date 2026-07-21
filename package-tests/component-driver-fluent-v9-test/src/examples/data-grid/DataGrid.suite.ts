@@ -147,6 +147,12 @@ export const dataGridExampleTestSuite: TestSuiteInfo<typeof dataGridExample.scen
       test('keyboard-accessible resize: entering via the app-wired trigger enables arrow-key adjust and Escape exit', async () => {
         assertFalse(await engine().parts.gridA.isColumnInKeyboardResizeMode(0));
 
+        // A handle exists but isn't the active one yet — pressColumnResizeKey must
+        // no-op rather than silently affecting whatever column IS currently active
+        // (`useKeyboardResizing`'s onKeyDown handler is shared across every column's
+        // handle and keys off grid-wide state, not which DOM node the event landed on).
+        assertFalse(await engine().parts.gridA.pressColumnResizeKey(0, 'ArrowRight'));
+
         await engine().parts.kbResizeTriggerName.click();
         assertTrue(await engine().parts.gridA.isColumnInKeyboardResizeMode(0));
 
