@@ -86,12 +86,11 @@ function findRootLocatorIndex(locator: PartLocator): number {
 }
 
 async function toPrimitiveLocators(locator: PartLocator, interactor: Interactor): Promise<CssLocator[]> {
-  const list = locator;
   let result: CssLocator[] = [];
-  for (let i = 0; i < list.length; i++) {
-    const loc = list[i];
+  for (let i = 0; i < locator.length; i++) {
+    const loc = locator[i];
     if (loc instanceof LinkedCssLocator) {
-      const currentContext = list.slice(0, i);
+      const currentContext = locator.slice(0, i);
       const resolved = await getLinkedCssLocator(loc, currentContext, interactor);
       result = result.concat(resolved);
     } else {
