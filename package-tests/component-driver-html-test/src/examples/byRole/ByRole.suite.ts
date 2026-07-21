@@ -18,9 +18,10 @@ export const byRoleExampleScenePart = {
     locator: locatorUtil.and(byRole('button'), byAriaLabel('Close')),
     driver: HTMLElementDriver,
   },
-  // The lower-level form `locatorUtil.and()` supersedes — `locatorUtil.append`
-  // with a `'Same'` child — must resolve the SAME element. Retained as a
-  // regression guard that both front doors compound identically.
+  // `locatorUtil.and()` (the higher-level form) supersedes the lower-level
+  // `locatorUtil.append(..., 'Same')` pattern below; both must resolve the
+  // SAME element. Retained as a regression guard that both front doors
+  // compound identically.
   openButtonViaAppend: {
     locator: locatorUtil.append(byRole('button'), byAriaLabel('Open', 'Same')),
     driver: HTMLElementDriver,
