@@ -7,6 +7,7 @@ import {
   locatorUtil,
   Optional,
   PartLocator,
+  type PressKeyOption,
 } from '@atomic-testing/core';
 
 import { DataGridHeaderRowDriver } from './DataGridHeaderRowDriver';
@@ -207,6 +208,23 @@ export class DataGridDriver<ItemT extends DataGridRowDriver = DataGridRowDriver>
   async getColumnWidth(columnIndex: number): Promise<number | undefined> {
     const header = await this.getHeaderRow();
     return header == null ? undefined : header.getColumnWidth(columnIndex);
+  }
+
+  /** Whether the column at `columnIndex` is currently keyboard-resize-focused — see {@link DataGridHeaderRowDriver.isColumnInKeyboardResizeMode}. */
+  async isColumnInKeyboardResizeMode(columnIndex: number): Promise<boolean> {
+    const header = await this.getHeaderRow();
+    return header != null && (await header.isColumnInKeyboardResizeMode(columnIndex));
+  }
+
+  /**
+   * Dispatch a key on the column at `columnIndex`'s resize handle — see
+   * {@link DataGridHeaderRowDriver.pressColumnResizeKey}. Requires the caller
+   * to have already entered keyboard-resize mode via their own app's entry
+   * point — see `DataGridHeaderCellDriver`'s class doc.
+   */
+  async pressColumnResizeKey(columnIndex: number, key: string, option?: Partial<PressKeyOption>): Promise<boolean> {
+    const header = await this.getHeaderRow();
+    return header != null && (await header.pressColumnResizeKey(columnIndex, key, option));
   }
   //#endregion Column resize
 
