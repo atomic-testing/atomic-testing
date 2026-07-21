@@ -28,9 +28,11 @@ type TreeDriverOption<ItemT extends TreeItemDriver> = ListComponentDriverSpecifi
 /**
  * Driver for the Fluent v9 `Tree` root (nested `TreeItem`s — see
  * {@link TreeItemDriver} for expand/collapse, selection, and per-item
- * recursive child access; the `FlatTree`/`FlatTreeItem` performance variant
- * is a different component built on an `_unstable`-suffixed hook and is out
- * of scope for this driver).
+ * recursive child access; the `FlatTree`/`FlatTreeItem` performance variant —
+ * built on `useHeadlessFlatTree_unstable`, still `_unstable`-suffixed as of
+ * `@fluentui/react-tree@9.16.3` — is a structurally different, non-nesting
+ * DOM and has its OWN driver pair, `FlatTreeDriver`/`FlatTreeItemDriver`; see
+ * that pair's class docs for why their shape differs from this one's).
  *
  * A {@link ListComponentDriver} over this level's TOP-LEVEL items only —
  * `getItemCount`/`getItems`/`getItemByIndex` (inherited) never descend into

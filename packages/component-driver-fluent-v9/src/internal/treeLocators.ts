@@ -1,4 +1,4 @@
-import { byCssClass, type PartLocator } from '@atomic-testing/core';
+import { byCssClass, byTagName, type PartLocator } from '@atomic-testing/core';
 
 /**
  * Direct-child `.fui-TreeItem` selector — enumerates the items at ONE level
@@ -38,3 +38,18 @@ export const treeItemChildLocator: PartLocator = byCssClass('fui-TreeItem', 'Chi
  * leaf (no subtree ever renders for `itemType="leaf"`).
  */
 export const treeSubtreeLocator: PartLocator = byCssClass('fui-Tree', 'Child');
+
+/**
+ * Locators into a `TreeItem`'s own `TreeItemLayout` slot (label + optional
+ * expand chevron + optional selection control) — shared by
+ * {@link TreeItemDriver} and `FlatTreeItemDriver`, since `@fluentui/react-tree`
+ * ships `FlatTreeItem` as a bare re-export of `TreeItem`
+ * (`export const FlatTreeItem = TreeItem;`, verified against
+ * `@fluentui/react-tree@9.16.3`'s compiled source) — a `FlatTreeItem` renders
+ * an IDENTICAL `.fui-TreeItemLayout` subtree to a nested `TreeItem`, so both
+ * drivers read it through the same locators rather than duplicating them.
+ */
+export const treeItemLayoutLocator: PartLocator = byCssClass('fui-TreeItemLayout', 'Child');
+export const treeItemLabelLocator: PartLocator = byCssClass('fui-TreeItemLayout__main');
+export const treeItemSelectorLocator: PartLocator = byCssClass('fui-TreeItemLayout__selector');
+export const treeItemNativeInputLocator: PartLocator = byTagName('input');
