@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-interactor-conformance",
-  "version": "0.98.0",
+  "version": "0.99.0",
   "private": true,
   "description": "Interactor conformance suite (TCK) proving every interactor behaves identically; not for production use",
   "keywords": [],

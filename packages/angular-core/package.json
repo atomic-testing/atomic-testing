@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/angular-core",
-  "version": "0.98.0",
+  "version": "0.99.0",
   "description": "Shared Angular adapter core for Atomic Testing: AngularInteractor plus the bootstrapApplication-based createTestEngine. Install the per-major package (@atomic-testing/angular-20/-21/-22) instead of depending on this directly.",
   "keywords": [
     "angular",
