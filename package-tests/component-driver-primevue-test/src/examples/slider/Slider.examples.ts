@@ -4,12 +4,15 @@ import { defineComponent, h, ref } from 'vue';
 /**
  * Slider scene: a live slider (0–100, step 5, keyboard-drivable) plus a
  * disabled instance. The live value is mirrored into a text span so e2e can
- * verify the model actually moved, not just the aria mirror.
+ * verify the model actually moved, not just the aria mirror. Also: a
+ * two-thumb range slider and a vertical slider (#1035).
  */
 export const SliderExample = defineComponent({
   name: 'SliderExample',
   setup() {
     const volume = ref(30);
+    const range = ref<number[]>([20, 60]);
+    const vertical = ref(40);
     return () =>
       h('div', [
         h(Slider, {
@@ -29,6 +32,30 @@ export const SliderExample = defineComponent({
           disabled: true,
           modelValue: 40,
           style: 'width: 14rem',
+        }),
+        h(Slider, {
+          'data-testid': 'range-slider',
+          range: true,
+          min: 0,
+          max: 100,
+          step: 5,
+          style: 'width: 14rem',
+          modelValue: range.value,
+          'onUpdate:modelValue': (value: number | number[]) => {
+            range.value = value as number[];
+          },
+        }),
+        h(Slider, {
+          'data-testid': 'vertical-slider',
+          orientation: 'vertical',
+          min: 0,
+          max: 100,
+          step: 5,
+          style: 'height: 14rem',
+          modelValue: vertical.value,
+          'onUpdate:modelValue': (value: number | number[]) => {
+            vertical.value = value as number;
+          },
         }),
       ]);
   },

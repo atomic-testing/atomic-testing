@@ -1,6 +1,6 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
-  byRole,
+  byCssSelector,
   ComponentDriver,
   IComponentDriverOption,
   IDisableableDriver,
@@ -12,8 +12,25 @@ import {
 } from '@atomic-testing/core';
 
 export const sliderParts = {
+  /**
+   * The single-thumb handle. Compound-anchored on `data-pc-section="handle"`
+   * (not a bare `role="slider"`) specifically so this part genuinely does not
+   * exist on a range slider — see the class doc's "Range" section — letting
+   * `enforcePartExistence('handle')` reject single-thumb calls with the usual
+   * `MissingPartError` instead of silently resolving to the start thumb.
+   */
   handle: {
-    locator: byRole('slider'),
+    locator: byCssSelector('[role="slider"][data-pc-section="handle"]'),
+    driver: HTMLElementDriver,
+  },
+  /** The lower thumb of a range (two-thumb) slider. */
+  startHandle: {
+    locator: byCssSelector('[role="slider"][data-pc-section="starthandler"]'),
+    driver: HTMLElementDriver,
+  },
+  /** The upper thumb of a range (two-thumb) slider. */
+  endHandle: {
+    locator: byCssSelector('[role="slider"][data-pc-section="endhandler"]'),
     driver: HTMLElementDriver,
   },
 } satisfies ScenePart;
@@ -39,10 +56,26 @@ export const sliderParts = {
  * carries only the orientation). {@link isDisabled} therefore reads that
  * class, the one documented exception to this package's attribute-first rule.
  *
- * Scope: single-handle, horizontal (a range slider renders two identical
- * `role="slider"` handles with no index-addressable attribute; vertical only
- * changes the arrow-key axis PrimeVue itself normalizes). Both are deferred
- * until a range/vertical scene is audited.
+ * **Range (two-thumb), #1035.** DOM audit (primevue@4.5.5): a range slider
+ * renders two `role="slider"` handles distinguished by PrimeVue's own
+ * pass-through markers — `data-pc-section="starthandler"` (lower thumb) and
+ * `="endhandler"` (upper thumb) — a stable, index-addressable anchor the v1
+ * audit hadn't yet found. {@link getRangeValues}/{@link setRangeValues} drive
+ * both thumbs through the same keyboard-stepping strategy as {@link setValue};
+ * PrimeVue does not clamp one thumb against the other on the keyboard path
+ * (only in the pointer-drag path, via `onDragStart`'s `value[0] === max` swap),
+ * so pass already-ordered, non-crossing targets (e.g. `[20, 70]`), mirroring
+ * the MUI `SliderDriver`'s `setRangeValues` contract.
+ *
+ * **Vertical orientation, #1035.** DOM audit (primevue@4.5.5): `orientation`
+ * changes only the root's `data-p`/CSS-position math and each handle's
+ * `aria-orientation` — verified empirically that PrimeVue's own `onKeyDown`
+ * treats `ArrowLeft`/`ArrowDown` and `ArrowRight`/`ArrowUp` as synonyms
+ * regardless of orientation, so {@link setValue}/{@link getValue}/{@link getMin}/
+ * {@link getMax} need no orientation-specific branch at all — the existing
+ * horizontal keyboard path already drives a vertical slider. {@link getOrientation}
+ * reads the one thing that does vary, `aria-orientation`, off whichever handle
+ * is present.
  */
 export class SliderDriver
   extends ComponentDriver<typeof sliderParts>
@@ -55,19 +88,22 @@ export class SliderDriver
     });
   }
 
-  /** The current value (`aria-valuenow` on the handle). */
+  /** The current value (`aria-valuenow` on the single-thumb handle). */
   async getValue(): Promise<number> {
-    return this.readHandleNumber('aria-valuenow');
+    await this.enforcePartExistence('handle');
+    return this.readHandleNumber(this.parts.handle, 'aria-valuenow');
   }
 
-  /** The minimum value (`aria-valuemin` on the handle). */
+  /** The minimum value (`aria-valuemin` on the single-thumb handle). */
   async getMin(): Promise<number> {
-    return this.readHandleNumber('aria-valuemin');
+    await this.enforcePartExistence('handle');
+    return this.readHandleNumber(this.parts.handle, 'aria-valuemin');
   }
 
-  /** The maximum value (`aria-valuemax` on the handle). */
+  /** The maximum value (`aria-valuemax` on the single-thumb handle). */
   async getMax(): Promise<number> {
-    return this.readHandleNumber('aria-valuemax');
+    await this.enforcePartExistence('handle');
+    return this.readHandleNumber(this.parts.handle, 'aria-valuemax');
   }
 
   /**
@@ -76,15 +112,83 @@ export class SliderDriver
    * it works for any `step` — PrimeVue does not expose the step in the DOM.
    * Stops when the value reaches `target`, can no longer move (a bound), or
    * steps past `target` (off the step grid, unreachable from here). Returns
-   * whether `target` was reached exactly.
+   * whether `target` was reached exactly. Single-thumb only — see
+   * {@link setRangeValues} for a range slider.
    */
   async setValue(target: number): Promise<boolean> {
-    await this.parts.handle.focus();
-    let current = await this.getValue();
+    await this.enforcePartExistence('handle');
+    return this.stepHandleToTarget(this.parts.handle, target);
+  }
+
+  /** The current `[lower, upper]` values of a range slider (`aria-valuenow` on each thumb). */
+  async getRangeValues(): Promise<[number, number]> {
+    await this.enforcePartExistence(['startHandle', 'endHandle']);
+    const lower = await this.readHandleNumber(this.parts.startHandle, 'aria-valuenow');
+    const upper = await this.readHandleNumber(this.parts.endHandle, 'aria-valuenow');
+    return [lower, upper];
+  }
+
+  /**
+   * Drive both thumbs of a range slider to `[lower, upper]` via the same
+   * keyboard-stepping strategy as {@link setValue}, one thumb at a time. Pass
+   * already-ordered, non-crossing targets — see the class doc's "Range" note.
+   * @returns whether both thumbs reached their exact targets
+   */
+  async setRangeValues(values: readonly [number, number]): Promise<boolean> {
+    await this.enforcePartExistence(['startHandle', 'endHandle']);
+    const [lowerTarget, upperTarget] = values;
+    const lowerReached = await this.stepHandleToTarget(this.parts.startHandle, lowerTarget);
+    const upperReached = await this.stepHandleToTarget(this.parts.endHandle, upperTarget);
+    return lowerReached && upperReached;
+  }
+
+  /**
+   * The slider's orientation (`aria-orientation`), read off whichever handle
+   * is present — the single-thumb handle, or (on a range slider) the start
+   * thumb.
+   */
+  async getOrientation(): Promise<'horizontal' | 'vertical'> {
+    const handle = (await this.interactor.exists(this.parts.handle.locator))
+      ? this.parts.handle
+      : this.parts.startHandle;
+    const raw = await handle.getAttribute('aria-orientation');
+    return raw === 'vertical' ? 'vertical' : 'horizontal';
+  }
+
+  /**
+   * Drag the handle by `delta` pixels — the pointer-driven counterpart to
+   * {@link setValue}. E2E-only: jsdom has no layout engine, so the drag has no
+   * positional outcome there (see {@link Interactor.drag}); the call still
+   * resolves without throwing under jsdom, exercising the event wiring only.
+   * Single-thumb only — see {@link dragRangeHandleBy} for a range slider.
+   */
+  async dragBy(delta: Point): Promise<void> {
+    // drag is protected on ComponentDriver (#1045); reach the child handle's
+    // gesture through the interactor and the child's resolved locator.
+    return this.interactor.drag(this.parts.handle.locator, delta);
+  }
+
+  /**
+   * Drag one thumb of a range slider by `delta` pixels — the pointer-driven
+   * counterpart to {@link setRangeValues}. E2E-only, see {@link dragBy}.
+   */
+  async dragRangeHandleBy(thumb: 'lower' | 'upper', delta: Point): Promise<void> {
+    const handle = thumb === 'lower' ? this.parts.startHandle : this.parts.endHandle;
+    return this.interactor.drag(handle.locator, delta);
+  }
+
+  /** Whether the slider is disabled (`p-disabled` state class on the root — see class doc). */
+  isDisabled(): Promise<boolean> {
+    return this.interactor.hasCssClass(this.locator, 'p-disabled');
+  }
+
+  private async stepHandleToTarget(handle: HTMLElementDriver, target: number): Promise<boolean> {
+    await handle.focus();
+    let current = await this.readHandleNumber(handle, 'aria-valuenow');
     while (current !== target && !Number.isNaN(current)) {
       const movingUp = target > current;
-      await this.parts.handle.pressKey(movingUp ? 'ArrowRight' : 'ArrowLeft');
-      const next = await this.getValue();
+      await handle.pressKey(movingUp ? 'ArrowRight' : 'ArrowLeft');
+      const next = await this.readHandleNumber(handle, 'aria-valuenow');
       // Stop once the value can't move (a bound) or has stepped past the target
       // (off the step grid) — from here `target` is unreachable, and continuing
       // would oscillate forever.
@@ -97,25 +201,8 @@ export class SliderDriver
     return current === target;
   }
 
-  /**
-   * Drag the handle by `delta` pixels — the pointer-driven counterpart to
-   * {@link setValue}. E2E-only: jsdom has no layout engine, so the drag has no
-   * positional outcome there (see {@link Interactor.drag}); the call still
-   * resolves without throwing under jsdom, exercising the event wiring only.
-   */
-  async dragBy(delta: Point): Promise<void> {
-    // drag is protected on ComponentDriver (#1045); reach the child handle's
-    // gesture through the interactor and the child's resolved locator.
-    return this.interactor.drag(this.parts.handle.locator, delta);
-  }
-
-  /** Whether the slider is disabled (`p-disabled` state class on the root — see class doc). */
-  isDisabled(): Promise<boolean> {
-    return this.interactor.hasCssClass(this.locator, 'p-disabled');
-  }
-
-  private async readHandleNumber(attribute: string): Promise<number> {
-    const raw = await this.parts.handle.getAttribute(attribute);
+  private async readHandleNumber(handle: HTMLElementDriver, attribute: string): Promise<number> {
+    const raw = await handle.getAttribute(attribute);
     return raw == null ? Number.NaN : Number.parseFloat(raw);
   }
 

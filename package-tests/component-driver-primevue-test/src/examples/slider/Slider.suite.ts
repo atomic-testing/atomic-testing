@@ -16,6 +16,14 @@ export const sliderScenePart = {
     locator: byDataTestId('frozen-slider'),
     driver: SliderDriver,
   },
+  range: {
+    locator: byDataTestId('range-slider'),
+    driver: SliderDriver,
+  },
+  vertical: {
+    locator: byDataTestId('vertical-slider'),
+    driver: SliderDriver,
+  },
 } satisfies ScenePart;
 
 export const sliderTestSuite: TestSuiteInfo<typeof sliderScenePart> = {
@@ -48,6 +56,34 @@ export const sliderTestSuite: TestSuiteInfo<typeof sliderScenePart> = {
       test('reads the disabled state', async () => {
         assertFalse(await engine().parts.volume.isDisabled());
         assertTrue(await engine().parts.frozen.isDisabled());
+      });
+
+      test('reports horizontal orientation for the default slider', async () => {
+        assertEqual(await engine().parts.volume.getOrientation(), 'horizontal');
+      });
+
+      test('range slider reads and drives both thumbs independently (#1035)', async () => {
+        assertEqual(await engine().parts.range.getRangeValues(), [20, 60]);
+        assertTrue(await engine().parts.range.setRangeValues([30, 80]));
+        assertEqual(await engine().parts.range.getRangeValues(), [30, 80]);
+        assertEqual(await engine().parts.range.getOrientation(), 'horizontal');
+      });
+
+      test('single-thumb reads/writes throw MissingPartError on a range slider', async () => {
+        let errorName = '';
+        try {
+          await engine().parts.range.getValue();
+        } catch (error) {
+          errorName = (error as Error).name;
+        }
+        assertEqual(errorName, 'MissingPartError');
+      });
+
+      test('vertical slider drives identically to horizontal and reports its orientation (#1035)', async () => {
+        assertEqual(await engine().parts.vertical.getValue(), 40);
+        assertEqual(await engine().parts.vertical.getOrientation(), 'vertical');
+        assertTrue(await engine().parts.vertical.setValue(70));
+        assertEqual(await engine().parts.vertical.getValue(), 70);
       });
     });
   },
