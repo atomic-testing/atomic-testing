@@ -26,17 +26,19 @@ export function byLinkedElement(relative: LocatorRelativePosition = 'Descendant'
             attributeName,
           };
           return {
-            toMatchMyAttribute: (myAttributeName: string): LinkedCssLocator => {
+            toMatchMyAttribute: (myAttributeName: string): PartLocator => {
               const valueExtract: LinkedCssLocatorValueExtract = {
                 type: 'attribute',
                 attributeName: myAttributeName,
               };
-              return new LinkedCssLocator('byLinkedElement', {
-                valueExtract,
-                matchingTargetLocator: locator,
-                matchingTargetValueExtract: matchExtract,
-                relative,
-              });
+              return [
+                new LinkedCssLocator('byLinkedElement', {
+                  valueExtract,
+                  matchingTargetLocator: locator,
+                  matchingTargetValueExtract: matchExtract,
+                  relative,
+                }),
+              ];
             },
           };
         },

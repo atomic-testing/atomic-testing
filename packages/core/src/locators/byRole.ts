@@ -1,6 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { PartLocator } from './PartLocator';
 
 export type ByRoleSource = {
   _id: 'byRole';
@@ -13,11 +14,11 @@ export type ByRoleSource = {
  *
  * To additionally disambiguate two same-role elements by their accessible name,
  * compose with {@link byAriaLabel} (verbatim `aria-label`) on the SAME element
- * via {@link CssLocator.and}:
+ * via {@link locatorUtil.and}:
  *
  * ```ts
- * import { byAriaLabel, byRole } from '@atomic-testing/core';
- * const openButton = byRole('button').and(byAriaLabel('Open'));
+ * import { byAriaLabel, byRole, locatorUtil } from '@atomic-testing/core';
+ * const openButton = locatorUtil.and(byRole('button'), byAriaLabel('Open'));
  * ```
  *
  * Computed accessible names (`aria-labelledby` / `<label>` / text content) are
@@ -33,14 +34,16 @@ export type ByRoleSource = {
  * const root = byRole('presentation', 'Root');
  * ```
  */
-export function byRole(value: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
+export function byRole(value: string, relative: LocatorRelativePosition = 'Descendant'): PartLocator {
   const sanitized = escapeValue(value);
-  return new CssLocator(`[role="${sanitized}"]`, {
-    relative,
-    source: {
-      _id: 'byRole',
-      value,
+  return [
+    new CssLocator(`[role="${sanitized}"]`, {
       relative,
-    },
-  });
+      source: {
+        _id: 'byRole',
+        value,
+        relative,
+      },
+    }),
+  ];
 }

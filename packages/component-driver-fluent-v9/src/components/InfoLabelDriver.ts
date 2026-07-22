@@ -22,7 +22,7 @@ import { LabelDriver } from './LabelDriver';
  */
 export class InfoLabelDriver extends LabelDriver {
   private get infoButtonLocator(): PartLocator {
-    const chain = locatorUtil.toChain(this.locator);
+    const chain = this.locator;
     const selfSelector = chain[chain.length - 1].selector;
     return locatorUtil.append(chain.slice(0, -1), byCssSelector(`.fui-InfoLabel:has(${selfSelector}) .fui-InfoButton`));
   }

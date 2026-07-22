@@ -1,5 +1,6 @@
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { PartLocator } from './PartLocator';
 
 export type ByTagNameSource = {
   _id: 'byTagName';
@@ -21,13 +22,15 @@ export type ByTagNameSource = {
  * const headings = byTagName('h1');
  * ```
  */
-export function byTagName(tagName: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
-  return new CssLocator(tagName, {
-    relative,
-    source: {
-      _id: 'byTagName',
-      tagName,
+export function byTagName(tagName: string, relative: LocatorRelativePosition = 'Descendant'): PartLocator {
+  return [
+    new CssLocator(tagName, {
       relative,
-    },
-  });
+      source: {
+        _id: 'byTagName',
+        tagName,
+        relative,
+      },
+    }),
+  ];
 }

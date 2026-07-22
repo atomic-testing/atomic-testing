@@ -1,6 +1,7 @@
 import { escapeValue } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
+import type { PartLocator } from './PartLocator';
 
 export type ByAriaLabelSource = {
   _id: 'byAriaLabel';
@@ -18,12 +19,12 @@ export type ByAriaLabelSource = {
  *
  * Most commonly composed with {@link byRole} on the SAME element to tell two
  * same-role siblings apart without relying on unstable (e.g. StyleX-hashed) class
- * names. Use {@link CssLocator.and} to compound the matchers onto one element:
+ * names. Use {@link locatorUtil.and} to compound the matchers onto one element:
  *
  * ```ts
- * import { byAriaLabel, byRole } from '@atomic-testing/core';
- * const openButton = byRole('button').and(byAriaLabel('Open'));
- * const closeButton = byRole('button').and(byAriaLabel('Close'));
+ * import { byAriaLabel, byRole, locatorUtil } from '@atomic-testing/core';
+ * const openButton = locatorUtil.and(byRole('button'), byAriaLabel('Open'));
+ * const closeButton = locatorUtil.and(byRole('button'), byAriaLabel('Close'));
  * ```
  *
  * @param value - Verbatim `aria-label` to match.
@@ -33,14 +34,16 @@ export type ByAriaLabelSource = {
  * const close = byAriaLabel('Close');
  * ```
  */
-export function byAriaLabel(value: string, relative: LocatorRelativePosition = 'Descendant'): CssLocator {
+export function byAriaLabel(value: string, relative: LocatorRelativePosition = 'Descendant'): PartLocator {
   const sanitized = escapeValue(value);
-  return new CssLocator(`[aria-label="${sanitized}"]`, {
-    relative,
-    source: {
-      _id: 'byAriaLabel',
-      value,
+  return [
+    new CssLocator(`[aria-label="${sanitized}"]`, {
       relative,
-    },
-  });
+      source: {
+        _id: 'byAriaLabel',
+        value,
+        relative,
+      },
+    }),
+  ];
 }

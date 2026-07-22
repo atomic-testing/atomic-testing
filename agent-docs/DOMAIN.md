@@ -11,7 +11,7 @@ Vocabulary, type system, and invariants for the `atomic-testing` library. Read t
 | **ContainerDriver**      | A `ComponentDriver` that also exposes `content` parts — for components whose inner DOM is dynamic or portal-rendered (dialogs, popovers).                                                       | [ContainerDriver.ts](../packages/core/src/drivers/ContainerDriver.ts#L13)                                                                            |
 | **ListComponentDriver**  | A `ComponentDriver` for repeated, indefinite-length item collections; iterates items by `:nth-of-type`.                                                                                         | [ListComponentDriver.ts](../packages/core/src/drivers/ListComponentDriver.ts#L16)                                                                    |
 | **Interactor**           | Environment adapter interface. Performs the low-level actions a driver requests — click, type, key chords, hover, scroll, drag, geometry, file upload — against DOM, React, Vue, or Playwright. | [Interactor.ts](../packages/core/src/interactor/Interactor.ts#L26)                                                                                   |
-| **PartLocator**          | How to find an element. Either a single `CssLocator` or a `CssLocator[]` chain.                                                                                                                 | [PartLocator.ts](../packages/core/src/locators/PartLocator.ts)                                                                                       |
+| **PartLocator**          | How to find an element. Always a `CssLocator[]` chain (#1058) — a single builder call is just a one-element chain.                                                                              | [PartLocator.ts](../packages/core/src/locators/PartLocator.ts)                                                                                       |
 | **CssLocator**           | A primitive selector + its relative position (`Root`/`Descendant`/`Same`) + source metadata.                                                                                                    | [CssLocator.ts](../packages/core/src/locators/CssLocator.ts#L13)                                                                                     |
 | **LinkedCssLocator**     | Experimental relational locator: match an element by an attribute extracted from another element.                                                                                               | [LinkedCssLocator.ts](../packages/core/src/locators/LinkedCssLocator.ts), [byLinkedElement.ts](../packages/core/src/locators/byLinkedElement.ts#L19) |
 | **ScenePart**            | `Record<string, ScenePartDefinition>` — the declarative map of a component's named child parts.                                                                                                 | [partTypes.ts](../packages/core/src/partTypes.ts#L119)                                                                                               |
@@ -86,17 +86,18 @@ Drivers implement small capability interfaces from [driverTypes.ts](../packages/
 
 ## Locator vocabulary
 
-A `PartLocator` is a `CssLocator` or an array of them ([PartLocator.ts](../packages/core/src/locators/PartLocator.ts)). Each `CssLocator` carries:
+A `PartLocator` is always a chain — `CssLocator[]` ([PartLocator.ts](../packages/core/src/locators/PartLocator.ts); reshaped from the former `CssLocator | CssLocator[]` union in #1058, see [ADR-017](adr/017-part-locator-chain-reshape.md)). Each `CssLocator` carries:
 
 - **`selector`** — the raw CSS string.
-- **`relative`** — `'Root' | 'Descendant' | 'Same'` ([LocatorRelativePosition.ts](../packages/core/src/locators/LocatorRelativePosition.ts#L4)), default `'Descendant'` ([CssLocator.ts#L14](../packages/core/src/locators/CssLocator.ts#L14)):
+- **`relative`** — `'Root' | 'Descendant' | 'Same' | 'Child'` ([LocatorRelativePosition.ts](../packages/core/src/locators/LocatorRelativePosition.ts#L4)), default `'Descendant'` ([CssLocator.ts#L14](../packages/core/src/locators/CssLocator.ts#L14)):
   - `Descendant` → element is nested inside the parent (CSS descendant combinator).
   - `Same` → the selector applies to the same element / no descendant hop (e.g. `:checked`, `:nth-of-type(n)`).
+  - `Child` → a direct child of the parent (CSS child combinator, `>`).
   - `Root` → **resets** the chain; selectors from the `Root` element onward are used, ignoring the parent context. Used by portal-rendered components (dialog/menu) to escape their declared parent.
 - **`type`** — `'css'` (the only supported `LocatorType` today).
 - **`complexity`** — `'primitive'` for `CssLocator`, `'linked'` for `LinkedCssLocator`.
 
-Builders (all in [locators/](../packages/core/src/locators/index.ts)) produce `CssLocator`s — see [modules/core.md](modules/core.md#locators) for the full `by*` catalog.
+Builders (all in [locators/](../packages/core/src/locators/index.ts)) each produce a one-element `PartLocator` chain — see [modules/core.md](modules/core.md#locators) for the full `by*` catalog. Compound same-element matchers onto one another with `locatorUtil.and(base, ...matchers)`; append chains with `locatorUtil.append(...)`.
 
 ## Invariants
 

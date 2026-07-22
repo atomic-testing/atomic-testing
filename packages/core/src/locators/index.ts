@@ -15,4 +15,4 @@ export { LinkedCssLocator } from './LinkedCssLocator';
 export type { LocatorRelativePosition } from './LocatorRelativePosition';
 export type { LocatorType } from './LocatorType';
 export { LocatorTypeLookup } from './LocatorType';
-export type { CssLocatorChain, PartLocator } from './PartLocator';
+export type { PartLocator } from './PartLocator';

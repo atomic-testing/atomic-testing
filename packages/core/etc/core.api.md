@@ -23,46 +23,46 @@ export interface BoundingRect {
 }
 
 // @public
-export function byAriaLabel(value: string, relative?: LocatorRelativePosition): CssLocator;
+export function byAriaLabel(value: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byAttribute(name: string, value: string, relativeTo?: LocatorRelativePosition): CssLocator;
+export function byAttribute(name: string, value: string, relativeTo?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byChecked(checked?: boolean, relative?: LocatorRelativePosition): CssLocator;
+export function byChecked(checked?: boolean, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byCssClass(className: string | string[], relativeTo?: LocatorRelativePosition): CssLocator;
+export function byCssClass(className: string | string[], relativeTo?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byCssSelector(selector: string, relativeTo?: LocatorRelativePosition): CssLocator;
+export function byCssSelector(selector: string, relativeTo?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byDataTestId(id: string | string[], relativeTo?: LocatorRelativePosition): CssLocator;
+export function byDataTestId(id: string | string[], relativeTo?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byInputType(type: string, relative?: LocatorRelativePosition): CssLocator;
+export function byInputType(type: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
 export function byLinkedElement(relative?: LocatorRelativePosition): {
     onLinkedElement: (locator: PartLocator) => {
         extractAttribute: (attributeName: string) => {
-            toMatchMyAttribute: (myAttributeName: string) => LinkedCssLocator;
+            toMatchMyAttribute: (myAttributeName: string) => PartLocator;
         };
     };
 };
 
 // @public
-export function byName(value: string, relative?: LocatorRelativePosition): CssLocator;
+export function byName(value: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byRole(value: string, relative?: LocatorRelativePosition): CssLocator;
+export function byRole(value: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byTagName(tagName: string, relative?: LocatorRelativePosition): CssLocator;
+export function byTagName(tagName: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
-export function byValue(value: string, relative?: LocatorRelativePosition): CssLocator;
+export function byValue(value: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public (undocumented)
 export namespace childListHelper {
@@ -171,9 +171,6 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
 export class CssLocator {
     // Warning: (ae-forgotten-export) The symbol "CssLocatorInitializer" needs to be exported by the entry point index.d.mts
     constructor(selector: string, initializeValue?: Partial<CssLocatorInitializer>);
-    and(...locators: CssLocator[]): CssLocator;
-    // (undocumented)
-    chain(...locatorsToAppend: PartLocator[]): PartLocator;
     // (undocumented)
     clone(override?: Partial<CssLocatorInitializer>): CssLocator;
     // Warning: (ae-forgotten-export) The symbol "LocatorComplexity" needs to be exported by the entry point index.d.mts
@@ -185,9 +182,6 @@ export class CssLocator {
     // (undocumented)
     readonly selector: string;
 }
-
-// @public (undocumented)
-export type CssLocatorChain = CssLocator[];
 
 // @public
 export type CssProperty = Exclude<keyof CSSStyleDeclaration, 'parentRule' | 'length' | 'getPropertyPriority' | 'getPropertyValue' | 'item' | 'removeProperty' | 'setProperty'>;
@@ -524,7 +518,7 @@ export const LocatorTypeLookup: Record<string, LocatorType>;
 
 // @public (undocumented)
 export namespace locatorUtil {
-    export { OverrideLocatorRelativePositionOption, append, defaultOverrideLocatorRelativePositionOption, documentRootSelector, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, isChain, overrideLocatorRelativePosition, toChain, toCssSelector };
+    export { OverrideLocatorRelativePositionOption, and, append, defaultOverrideLocatorRelativePositionOption, documentRootSelector, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, overrideLocatorRelativePosition, toCssSelector };
 }
 
 // @public (undocumented)
@@ -569,7 +563,7 @@ export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;
 
 // @public
-export type PartLocator = CssLocator | CssLocatorChain;
+export type PartLocator = CssLocator[];
 
 // @public (undocumented)
 export type PartName<T extends ScenePart> = keyof T;

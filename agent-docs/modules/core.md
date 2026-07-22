@@ -61,7 +61,7 @@ The contract every environment implements ([Interactor.ts](../../packages/core/s
 
 ## Locators
 
-Builders in [locators/](../../packages/core/src/locators/index.ts), each returning a `CssLocator` (and accepting an optional `relative` position):
+Builders in [locators/](../../packages/core/src/locators/index.ts), each returning a `PartLocator` — a one-element chain (and accepting an optional `relative` position):
 
 | Builder                         | Selects                               | File                                                                          |
 | ------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------- |
@@ -78,7 +78,7 @@ Builders in [locators/](../../packages/core/src/locators/index.ts), each returni
 | `byCssSelector(sel, relative?)` | raw CSS (escape hatch)                | [byCssSelector.ts](../../packages/core/src/locators/byCssSelector.ts)         |
 | `byLinkedElement()`             | fluent → `LinkedCssLocator`           | [byLinkedElement.ts](../../packages/core/src/locators/byLinkedElement.ts#L19) |
 
-Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)): `append(...locators)` chains while respecting `Root` boundaries; `toCssSelector(locator, interactor)` resolves to a runtime selector (awaiting linked-locator resolution); `overrideLocatorRelativePosition(...)` rewrites a locator's relative position. Disambiguate two same-role elements by accessible name with the same-element compound `byRole(role).and(byAriaLabel(name))` ([CssLocator.and](../../packages/core/src/locators/CssLocator.ts) — supersedes the older `append(byRole(role), byAriaLabel(name, 'Same'))`); computed accessible names (not CSS-expressible) await the deferred name-aware `findByRole` (see #923).
+Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)): `append(...locators)` chains while respecting `Root` boundaries; `toCssSelector(locator, interactor)` resolves to a runtime selector (awaiting linked-locator resolution); `overrideLocatorRelativePosition(...)` rewrites a locator's relative position. Disambiguate two same-role elements by accessible name with the same-element compound `locatorUtil.and(byRole(role), byAriaLabel(name))` ([locatorUtil.and](../../packages/core/src/utils/locatorUtil.ts) — supersedes the older `append(byRole(role), byAriaLabel(name, 'Same'))`); computed accessible names (not CSS-expressible) await the deferred name-aware `findByRole` (see #923).
 
 ## Utilities
 
@@ -86,7 +86,7 @@ Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/s
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
 | `timingUtil`     | `wait(ms)`, `waitUntil(option)` (probe loop; even cadence `timeoutMs/probeCount` default 10, or escalating `probeIntervals` when provided) | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts)         |
 | `interactorUtil` | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError`                                                           | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts) |
-| `locatorUtil`    | `append`, `toCssSelector`, `overrideLocatorRelativePosition`, chain helpers                                                                | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)       |
+| `locatorUtil`    | `append`, `and` (same-element compose), `toCssSelector`, `overrideLocatorRelativePosition`                                                 | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)       |
 | `escapeUtil`     | `escapeValue` (CSS escape, LRU-cached), `escapeCssClassName`, `escapeName`                                                                 | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts)         |
 | `dateUtil`       | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes`                              | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts)             |
 | `collectionUtil` | `toArray`, `getDifference`                                                                                                                 | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts) |

@@ -22,7 +22,7 @@ import { DataGridHeaderRowDriver } from './DataGridHeaderRowDriver';
 
 const parts = {
   headerRow: {
-    locator: byCssClass('MuiDataGrid-columnHeaders').chain(byCssSelector('[role=row]:first-of-type')),
+    locator: locatorUtil.append(byCssClass('MuiDataGrid-columnHeaders'), byCssSelector('[role=row]:first-of-type')),
     driver: DataGridHeaderRowDriver,
   },
   loading: {
