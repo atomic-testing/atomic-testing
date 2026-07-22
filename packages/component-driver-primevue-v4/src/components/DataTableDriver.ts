@@ -39,9 +39,9 @@ export type SortDirection = 'ascending' | 'descending' | 'none';
  * single-sort mode never returns to `'none'` once a column has been clicked
  * (verified empirically), it only flips between the two sorted states.
  * {@link sortBy} clicks up to twice to reach a target direction from any
- * starting state. Header cells are matched by their trimmed label text (the
- * `data-pc-section="columntitle"` span), same identity {@link getColumnLabels}
- * already uses.
+ * starting state. Header cells are matched by the whole `role="columnheader"`
+ * `<th>`'s trimmed visible text, same identity {@link getColumnLabels} already
+ * uses.
  *
  * **Row selection (#1034).** DOM audit (primevue@4.5.5): with the DataTable's
  * `selectionMode` set, each body `<tr>` gets `aria-selected` — the read
@@ -151,7 +151,7 @@ export class DataTableDriver extends ComponentDriver<{}> {
     if (header == null) {
       return false;
     }
-    for (let attempt = 0; attempt < 3; attempt++) {
+    for (let clicks = 0; clicks < 2; clicks++) {
       if ((await header.getAttribute('aria-sort')) === direction) {
         return true;
       }
@@ -160,7 +160,7 @@ export class DataTableDriver extends ComponentDriver<{}> {
     return (await header.getAttribute('aria-sort')) === direction;
   }
 
-  /** The sort state of the column labelled `columnLabel`, or `null` when no column has that label. */
+  /** The sort state of the column labelled `columnLabel`, or `undefined` when no column has that label. */
   async getSortDirection(columnLabel: string): Promise<Optional<SortDirection>> {
     const header = await this.getHeaderCellByLabel(columnLabel);
     if (header == null) {
