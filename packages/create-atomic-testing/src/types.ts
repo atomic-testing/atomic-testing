@@ -19,6 +19,7 @@ export type DesignSystemId =
   | 'angular-material'
   | 'primevue'
   | 'radix'
+  | 'reka'
   | 'shadcn'
   | 'astryx'
   | 'fluent';
