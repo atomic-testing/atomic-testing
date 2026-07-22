@@ -60,9 +60,11 @@ export type SortDirection = 'ascending' | 'descending' | 'none';
  * friends become page-scoped once paginated, not a change to those methods).
  * Prev/next/first/last are `data-pc-section="prev"/"next"/"first"/"last"`
  * `<button>`s with a native `disabled` attribute at a bound; page-number
- * buttons are `data-pc-section="page"` with `aria-label="Page N"` (localized —
- * the only DOM-native way to jump to an arbitrary page) and
- * `data-p-active="true"` on the current one. {@link getPageCount} counts
+ * buttons are `data-pc-section="page"` with `data-p-active="true"` on the
+ * current one and an `aria-label="Page N"` that is LOCALIZED — {@link goToPage}
+ * therefore matches on the button's visible text (just the digits, locale-independent)
+ * rather than that label, the same identity {@link getCurrentPage} already reads.
+ * {@link getPageCount} counts
  * currently-rendered page buttons — PrimeVue slides a window of page links
  * (default size 5) for large datasets, so it undercounts total pages beyond
  * that window; exact for small datasets, a known bound for large ones.
@@ -247,11 +249,11 @@ export class DataTableDriver extends ComponentDriver<{}> {
 
   /** Navigate to the page whose visible number is `pageNumber`. @returns `false` when that page link isn't rendered */
   async goToPage(pageNumber: number): Promise<boolean> {
-    const locator = this.pageLinkLocator(pageNumber);
-    if (!(await this.interactor.exists(locator))) {
+    const button = await this.getPageButtonByNumber(pageNumber);
+    if (button == null) {
       return false;
     }
-    await this.interactor.click(locator);
+    await button.click();
     return true;
   }
 
@@ -284,19 +286,31 @@ export class DataTableDriver extends ComponentDriver<{}> {
    * doc's "Pagination" note on the sliding-window bound for large datasets.
    */
   async getPageCount(): Promise<number> {
-    const pagesLocator = locatorUtil.append(this.paginatorLocator, byCssSelector('[data-pc-section="pages"]'));
-    return childListHelper.countMatchingChildren(this.interactor, pagesLocator, '[data-pc-section="page"]');
+    return childListHelper.countMatchingChildren(this.interactor, this.pagesLocator, '[data-pc-section="page"]');
   }
 
   private get paginatorLocator(): PartLocator {
     return locatorUtil.append(this.locator, byCssSelector('[data-pc-name="pcpaginator"]'));
   }
 
-  private pageLinkLocator(pageNumber: number): PartLocator {
-    return locatorUtil.append(
-      this.paginatorLocator,
-      byCssSelector(`[data-pc-section="page"][aria-label="Page ${pageNumber}"]`)
-    );
+  private get pagesLocator(): PartLocator {
+    return locatorUtil.append(this.paginatorLocator, byCssSelector('[data-pc-section="pages"]'));
+  }
+
+  /** The page-number button whose visible text is `pageNumber`, or `null` if not rendered. */
+  private async getPageButtonByNumber(pageNumber: number): Promise<HTMLElementDriver | null> {
+    const target = String(pageNumber);
+    for await (const button of childListHelper.iterateMatchingChildren(
+      this,
+      this.pagesLocator,
+      '[data-pc-section="page"]',
+      HTMLElementDriver
+    )) {
+      if (((await button.getText())?.trim() ?? '') === target) {
+        return button;
+      }
+    }
+    return null;
   }
 
   private async clickPaginatorButton(section: 'next' | 'prev'): Promise<boolean> {

@@ -79,6 +79,16 @@ export const sliderTestSuite: TestSuiteInfo<typeof sliderScenePart> = {
         assertEqual(errorName, 'MissingPartError');
       });
 
+      test('dragBy also throws MissingPartError on a range slider', async () => {
+        let errorName = '';
+        try {
+          await engine().parts.range.dragBy({ x: 5, y: 0 });
+        } catch (error) {
+          errorName = (error as Error).name;
+        }
+        assertEqual(errorName, 'MissingPartError');
+      });
+
       test('vertical slider drives identically to horizontal and reports its orientation (#1035)', async () => {
         assertEqual(await engine().parts.vertical.getValue(), 40);
         assertEqual(await engine().parts.vertical.getOrientation(), 'vertical');
