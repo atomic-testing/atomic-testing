@@ -84,8 +84,16 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * This is **static** because it is per-class metadata read off the constructor
    * before any instance exists — which makes the "no instance state" constraint
    * structural rather than a documented caution. Override with `static override`.
+   *
+   * `option` is the fully-merged constructor option the driver is about to receive
+   * (the same value passed to the driver's own constructor) — a purely static,
+   * per-invocation input, not instance state — so a driver whose portalling is
+   * conditional on how its scene configures it (e.g. an overlay that can render
+   * teleported OR in-tree, such as PrimeVue's `appendTo="self"`) can branch on a
+   * flag there instead of always re-rooting. Ignore it to keep unconditional
+   * portal behavior.
    */
-  static overriddenParentLocator(): Optional<PartLocator> {
+  static overriddenParentLocator(_option?: Partial<IComponentDriverOption<any>>): Optional<PartLocator> {
     return undefined;
   }
 
@@ -97,8 +105,13 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    *
    * Static for the same reason as {@link ComponentDriver.overriddenParentLocator}:
    * it is class-level metadata read before construction. Override with `static override`.
+   *
+   * See {@link ComponentDriver.overriddenParentLocator} for what `option` carries
+   * and why accepting it does not reintroduce instance state.
    */
-  static overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
+  static overrideLocatorRelativePosition(
+    _option?: Partial<IComponentDriverOption<any>>
+  ): Optional<LocatorRelativePosition> {
     return undefined;
   }
 

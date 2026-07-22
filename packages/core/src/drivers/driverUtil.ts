@@ -38,9 +38,12 @@ export function getPartFromDefinition<T extends ScenePart>(
     };
 
     // Portal hooks are static class metadata read off the constructor, never
-    // instance methods (they run before any instance exists).
-    const relativePositionOverride = driverCtor.overrideLocatorRelativePosition();
-    const locatorContext: PartLocator = driverCtor.overriddenParentLocator() ?? parentLocator;
+    // instance methods (they run before any instance exists) — but they do
+    // receive the fully-merged `componentOption` the constructor is about to be
+    // called with, so a driver can make its portal behavior conditional on how
+    // the scene configures it (see the hooks' TSDoc on ComponentDriver).
+    const relativePositionOverride = driverCtor.overrideLocatorRelativePosition(componentOption);
+    const locatorContext: PartLocator = driverCtor.overriddenParentLocator(componentOption) ?? parentLocator;
     const actualLocator: PartLocator =
       relativePositionOverride != null
         ? locatorUtil.overrideLocatorRelativePosition(locator, relativePositionOverride)

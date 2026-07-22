@@ -22,8 +22,8 @@ export type PartName<T extends ScenePart> = keyof T;
  */
 export type ComponentDriverCtor<T extends ComponentDriver<any>> = {
   new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>): T;
-  overriddenParentLocator(): Optional<PartLocator>;
-  overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+  overriddenParentLocator(option?: Partial<IComponentDriverOption<any>>): Optional<PartLocator>;
+  overrideLocatorRelativePosition(option?: Partial<IComponentDriverOption<any>>): Optional<LocatorRelativePosition>;
 };
 
 export interface ComponentPartDefinition<T extends ScenePart> {
