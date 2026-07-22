@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/component-driver-reka-ui-v2",
-  "version": "0.98.0",
+  "version": "0.99.0",
   "description": "Component driver for Reka UI primitives (reka-ui v2, Vue 3)",
   "repository": {
     "type": "git",
