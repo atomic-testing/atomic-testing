@@ -65,6 +65,16 @@ export interface SelectItemGetOption {
  * with a `placeholder`/`empty` token in the span's `data-p` attribute, which
  * is how {@link getSelectedLabel} distinguishes "no selection" from a real
  * selection whose label happens to equal the placeholder.
+ *
+ * **Anchoring (`appendTo`, #1033): no option needed, unlike {@link DialogDriver}
+ * /{@link MenuDriver}.** The `dropdown` part above resolves via a `'Root'`-relative
+ * `byLinkedElement` id match (see `byAriaIdReference`), which is a
+ * `document.querySelector`-style global id lookup — it finds the listbox
+ * wherever it physically sits in the DOM, so it resolves identically whether
+ * PrimeVue's `Portal` teleports the listbox to `document.body` (the default)
+ * or renders it in-tree (`appendTo="self"`, where `Portal` skips `<Teleport>`
+ * entirely — see `primevue/portal/Portal.vue`'s `inline` computed). Verified
+ * directly rather than assumed: see the `appendTo="self"` suite coverage.
  */
 export class SelectDriver
   extends ComponentDriver<SelectScenePart>

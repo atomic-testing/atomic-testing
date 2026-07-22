@@ -3,6 +3,8 @@ import {
   byRole,
   childListHelper,
   ComponentDriver,
+  IComponentDriverOption,
+  Interactor,
   type LocatorRelativePosition,
   locatorUtil,
   Optional,
@@ -28,6 +30,19 @@ const menuRootLocator: PartLocator = byCssSelector('[data-pc-name="menu"]', 'Roo
 const defaultTransitionDuration = 1000;
 
 /**
+ * Option for {@link MenuDriver}.
+ */
+export interface IMenuDriverOption extends IComponentDriverOption<{}> {
+  /**
+   * Set when the scene renders this Menu with PrimeVue's `appendTo="self"` —
+   * see {@link DialogDriver}'s "Anchoring" doc for the shared mechanism (both
+   * drivers portal through PrimeVue's own `Portal` wrapper, which renders
+   * in-tree whenever `appendTo === 'self'`). Defaults to `false`.
+   */
+  selfAnchored?: boolean;
+}
+
+/**
  * Driver for the PrimeVue `Menu` component in popup mode.
  *
  * DOM audit (primevue@4.5.5): in popup mode the whole `.p-menu` root
@@ -51,15 +66,27 @@ const defaultTransitionDuration = 1000;
  * No `MenuContentDriverBase`-style shared base (the Radix split): Menu is the
  * only menu-family driver in this package's v1 set, so a base class would be
  * speculative; extract one when a second menu surface (Menubar, ContextMenu,
- * TieredMenu) lands.
+ * TieredMenu) lands (tracked in #1036).
+ *
+ * **Anchoring (`appendTo="self"`, #1033)**: pass `{ selfAnchored: true }` for a
+ * scene rendering `appendTo="self"` — see {@link DialogDriver}'s class doc for
+ * the shared mechanism (PrimeVue's `Portal` renders in-tree, so the portal
+ * hooks fall back to ordinary parent-chain-relative resolution). Default
+ * (`selfAnchored` unset) is unchanged.
  */
 export class MenuDriver extends ComponentDriver<{}> {
-  static override overriddenParentLocator(): Optional<PartLocator> {
-    return menuRootLocator;
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IMenuDriverOption>) {
+    super(locator, interactor, option);
   }
 
-  static override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
-    return 'Same';
+  static override overriddenParentLocator(option?: Partial<IMenuDriverOption>): Optional<PartLocator> {
+    return option?.selfAnchored ? undefined : menuRootLocator;
+  }
+
+  static override overrideLocatorRelativePosition(
+    option?: Partial<IMenuDriverOption>
+  ): Optional<LocatorRelativePosition> {
+    return option?.selfAnchored ? undefined : 'Same';
   }
 
   private get listLocator(): PartLocator {

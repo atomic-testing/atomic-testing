@@ -16,6 +16,17 @@ export const menuScenePart = {
     locator: byDataTestId('actions-menu'),
     driver: MenuDriver,
   },
+  selfAnchoredToggle: {
+    locator: byDataTestId('self-anchored-menu-toggle'),
+    driver: ButtonDriver,
+  },
+  selfAnchoredMenu: {
+    locator: byDataTestId('self-anchored-menu'),
+    driver: MenuDriver,
+    option: {
+      selfAnchored: true,
+    },
+  },
 } satisfies ScenePart;
 
 export const menuTestSuite: TestSuiteInfo<typeof menuScenePart> = {
@@ -72,6 +83,15 @@ export const menuTestSuite: TestSuiteInfo<typeof menuScenePart> = {
           errorName = (error as Error).name;
         }
         assertEqual(errorName, MenuItemNotFoundErrorId);
+      });
+
+      test('appendTo="self" popup resolves and drives in-tree (#1033)', async () => {
+        assertFalse(await engine().parts.selfAnchoredMenu.isOpen());
+        await engine().parts.selfAnchoredToggle.click();
+        assertTrue(await engine().parts.selfAnchoredMenu.waitForOpen());
+        assertEqual(await engine().parts.selfAnchoredMenu.getMenuItemCount(), 2);
+        await engine().parts.selfAnchoredMenu.selectByLabel('Archive');
+        assertTrue(await engine().parts.selfAnchoredMenu.waitForClose());
       });
     });
   },

@@ -30,6 +30,18 @@ export const dialogScenePart = {
       content: dialogContentPart,
     },
   },
+  selfAnchoredTrigger: {
+    locator: byDataTestId('open-self-anchored-dialog'),
+    driver: ButtonDriver,
+  },
+  selfAnchoredDialog: {
+    locator: byDataTestId('self-anchored-dialog'),
+    driver: DialogDriver<{}>,
+    option: {
+      selfAnchored: true,
+      content: {},
+    },
+  },
 } satisfies ScenePart;
 
 export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
@@ -83,6 +95,15 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
         assertTrue(await engine().parts.dialog.close());
         await openDialog();
         assertTrue(await engine().parts.dialog.isOpen());
+      });
+
+      test('appendTo="self" dialog resolves and opens/closes in-tree (#1033)', async () => {
+        assertFalse(await engine().parts.selfAnchoredDialog.isOpen());
+        await engine().parts.selfAnchoredTrigger.click();
+        assertTrue(await engine().parts.selfAnchoredDialog.waitForOpen());
+        assertEqual(await engine().parts.selfAnchoredDialog.getTitle(), 'Self-anchored dialog');
+        assertTrue(await engine().parts.selfAnchoredDialog.closeByEscape());
+        assertFalse(await engine().parts.selfAnchoredDialog.isOpen());
       });
     });
   },

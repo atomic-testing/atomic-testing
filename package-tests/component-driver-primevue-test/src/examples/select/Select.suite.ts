@@ -15,6 +15,10 @@ export const selectScenePart = {
     locator: byDataTestId('locked-select'),
     driver: SelectDriver,
   },
+  selfAnchored: {
+    locator: byDataTestId('self-anchored-select'),
+    driver: SelectDriver,
+  },
 } satisfies ScenePart;
 
 export const selectTestSuite: TestSuiteInfo<typeof selectScenePart> = {
@@ -80,6 +84,15 @@ export const selectTestSuite: TestSuiteInfo<typeof selectScenePart> = {
       test('reads the disabled state', async () => {
         assertFalse(await engine().parts.city.isDisabled());
         assertTrue(await engine().parts.locked.isDisabled());
+      });
+
+      test('appendTo="self" overlay resolves and drives identically (#1033)', async () => {
+        assertFalse(await engine().parts.selfAnchored.isDropdownOpen());
+        await engine().parts.selfAnchored.openDropdown();
+        assertTrue(await engine().parts.selfAnchored.isDropdownOpen());
+        assertEqual(await engine().parts.selfAnchored.getMenuItemCount(), 2);
+        assertTrue(await engine().parts.selfAnchored.setValue('Large'));
+        assertEqual(await engine().parts.selfAnchored.getValue(), 'Large');
       });
     });
   },

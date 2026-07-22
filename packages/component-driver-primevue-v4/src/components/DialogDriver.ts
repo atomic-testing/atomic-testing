@@ -32,6 +32,24 @@ const dialogRootLocator: PartLocator = byRole('dialog', 'Root');
 const defaultTransitionDuration = 1000;
 
 /**
+ * Option for {@link DialogDriver}.
+ */
+export interface IDialogDriverOption<ContentT extends ScenePart> extends IContainerDriverOption<
+  ContentT,
+  typeof dialogParts
+> {
+  /**
+   * Set when the scene renders this Dialog with PrimeVue's `appendTo="self"`
+   * (see the class doc's "Anchoring" section) — the dialog then renders in-tree
+   * instead of teleporting to `document.body`, so the driver must resolve its
+   * locator as an ordinary descendant of the scene's declared locator rather
+   * than re-rooting at the document. Defaults to `false` (the zero-config,
+   * default-`appendTo` path).
+   */
+  selfAnchored?: boolean;
+}
+
+/**
  * Driver for the PrimeVue `Dialog` component.
  *
  * DOM audit (primevue@4.5.5): the dialog renders `role="dialog"` +
@@ -48,13 +66,22 @@ const defaultTransitionDuration = 1000;
  * The header links to the dialog via `aria-labelledby` → the title span's
  * `id`, which is how {@link getTitle} resolves the title (PrimeVue's a11y
  * contract) rather than assuming a header structure.
+ *
+ * **Anchoring (`appendTo`, #1033).** PrimeVue's `Portal` wrapper (shared by
+ * every overlay in this package) renders its slot INLINE — no `<Teleport>` at
+ * all — whenever `appendTo === 'self'` (`primevue/portal/Portal.vue`'s
+ * `inline` computed: `this.disabled || this.appendTo === 'self'`). A
+ * self-anchored dialog is therefore a genuine, ordinary DOM descendant of
+ * wherever the scene declares it: the document-root re-root above is not just
+ * unnecessary there, it is actively wrong (there is no portalled element at
+ * the document root to find). Pass `{ selfAnchored: true }` in the driver
+ * option for a scene rendering `appendTo="self"`; the portal hooks below then
+ * return `undefined` so `getPartFromDefinition` falls back to its normal
+ * parent-chain-relative resolution — the SAME code path an ordinary in-tree
+ * component uses. Default (`selfAnchored` unset/`false`) is unchanged.
  */
 export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof dialogParts> {
-  constructor(
-    locator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, typeof dialogParts>>
-  ) {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IDialogDriverOption<ContentT>>) {
     super(locator, interactor, {
       ...option,
       parts: dialogParts,
@@ -62,12 +89,14 @@ export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<Co
     });
   }
 
-  static override overriddenParentLocator(): Optional<PartLocator> {
-    return dialogRootLocator;
+  static override overriddenParentLocator(option?: Partial<IDialogDriverOption<any>>): Optional<PartLocator> {
+    return option?.selfAnchored ? undefined : dialogRootLocator;
   }
 
-  static override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
-    return 'Same';
+  static override overrideLocatorRelativePosition(
+    option?: Partial<IDialogDriverOption<any>>
+  ): Optional<LocatorRelativePosition> {
+    return option?.selfAnchored ? undefined : 'Same';
   }
 
   /**
