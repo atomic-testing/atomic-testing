@@ -39,17 +39,21 @@ Drivers land in waves (see the umbrella issue #1018); this table grows with each
 | `CheckboxDriver`                              | `Checkbox`                                  | Real (visually hidden) native input: `isSelected`/clicks/`disabled`/`required` ride it. Covers `binary` and array-value modes.                     |
 | `RadioButtonDriver`, `RadioButtonGroupDriver` | `RadioButton`                               | Native radio input per item; the group driver roots at a consumer container and selects by `value` (PrimeVue has no group component).              |
 | `ToggleSwitchDriver`                          | `ToggleSwitch` (v4 rename of `InputSwitch`) | Hidden native checkbox with `role="switch"`; reads the native `checked` property, the ground truth behind the `aria-checked` mirror.               |
-| `SliderDriver`                                | `Slider`                                    | No native range input — aria reads on the `role="slider"` handle, keyboard-driven `setValue`, `dragBy` for E2E-only positional checks.             |
-| `SelectDriver`                                | `Select` (v4 rename of `Dropdown`)          | Label-based selection (PrimeVue renders no option value in the DOM); the teleported listbox is pinned via the combobox's `aria-controls` id link.  |
-| `DialogDriver`                                | `Dialog`                                    | `ContainerDriver` with a content scene; portal re-root on `role="dialog"`; title via `aria-labelledby`; close via header button or Escape.         |
-| `MenuDriver`                                  | `Menu` (popup mode)                         | Portal re-root on `data-pc-name="menu"`; items iterated with `childListHelper` (separators share the `<li>` tag); activation clicks the item link. |
+| `SliderDriver`                                | `Slider`                                    | No native range input — aria reads on the `role="slider"` handle, keyboard-driven `setValue`, `dragBy` for E2E-only positional checks. Range (two-thumb, via `data-pc-section="starthandler"`/`"endhandler"`) and vertical orientation covered — see `getRangeValues`/`setRangeValues`/`getOrientation`. |
+| `SelectDriver`                                | `Select` (v4 rename of `Dropdown`)          | Label-based selection (PrimeVue renders no option value in the DOM); the teleported listbox is pinned via the combobox's `aria-controls` id link. `appendTo="self"` needs no option — see "Teleported overlays" below. |
+| `DialogDriver`                                | `Dialog`                                    | `ContainerDriver` with a content scene; portal re-root on `role="dialog"`; title via `aria-labelledby`; close via header button or Escape. `{ selfAnchored: true }` opts into `appendTo="self"` — see "Teleported overlays" below. |
+| `MenuDriver`                                  | `Menu` (popup mode)                         | Portal re-root on `data-pc-name="menu"`; items iterated with `childListHelper` (separators share the `<li>` tag); activation clicks the item link. `{ selfAnchored: true }` opts into `appendTo="self"`. |
 | `TabsDriver`, `TabDriver`                     | `Tabs` (v4 replacement for `TabView`)       | ARIA tabs pattern (`role="tab"`, `aria-selected`, `aria-controls` → panel id); unselected panels stay mounted, hidden.                             |
-| `DataTableDriver`, `DataTableRowDriver`       | `DataTable` + `Column`                      | Real `<table>` with `role` semantics; full-count row/cell iteration via `childListHelper`. v1 covers static read-only tables only.                 |
+| `DataTableDriver`, `DataTableRowDriver`       | `DataTable` + `Column`                      | Real `<table>` with `role` semantics; full-count row/cell iteration via `childListHelper`. Covers sorting (`sortBy`/`getSortDirection`), row selection (checkbox column or row click, `selectRow`/`isRowSelected`/select-all) and pagination (`goToPage`/`nextPage`/`getCurrentPage`). Filtering, virtual scroll, frozen columns and cell editing remain deferred — see the class doc. |
 
 ## Teleported overlays (`appendTo`)
 
 PrimeVue overlays (Select panel, Dialog, Menu popup, …) Teleport to `document.body` by default via the uniform `appendTo` prop. The overlay drivers follow the MUI portal re-root recipe — the portalled surface is located document-rooted ('Root'-relative), not under the in-tree trigger. See the
 [portals & overlays guide](https://atomic-testing.dev/docs/guides/portal-and-overlays).
-Non-default `appendTo="self"` is not covered by the v1 drivers.
+
+**`appendTo="self"` (self-anchored overlays, #1033)** is also covered. PrimeVue's shared `Portal` wrapper renders its slot in-tree — no `<Teleport>` at all — whenever `appendTo === 'self'`, so a self-anchored overlay is a genuine DOM descendant of wherever the scene declares it:
+
+- `SelectDriver` needs no option: its dropdown part resolves through an `aria-controls` id link, which finds the listbox wherever it physically sits.
+- `DialogDriver` and `MenuDriver` take a `selfAnchored: true` driver option (default `false`) that switches their portal re-root off in favor of ordinary parent-chain-relative resolution — pass it in the scene's `option` for any instance rendered with `appendTo="self"`.
 
 For more in-depth information, visit [https://atomic-testing.dev](https://atomic-testing.dev).
