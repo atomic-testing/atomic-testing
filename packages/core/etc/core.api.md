@@ -122,8 +122,8 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     protected mouseOver(option?: Partial<HoverOption>): Promise<void>;
     // (undocumented)
     protected mouseUp(option?: Partial<MouseUpOption>): Promise<void>;
-    static overriddenParentLocator(): Optional<PartLocator>;
-    static overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+    static overriddenParentLocator(_option?: Partial<IComponentDriverOption<any>>): Optional<PartLocator>;
+    static overrideLocatorRelativePosition(_option?: Partial<IComponentDriverOption<any>>): Optional<LocatorRelativePosition>;
     get parts(): ScenePartDriver<T>;
     pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void>;
     runtimeCssSelector(): Promise<string>;
@@ -139,8 +139,8 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 // @public
 export type ComponentDriverCtor<T extends ComponentDriver<any>> = {
     new (locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<ScenePart>>): T;
-    overriddenParentLocator(): Optional<PartLocator>;
-    overrideLocatorRelativePosition(): Optional<LocatorRelativePosition>;
+    overriddenParentLocator(option?: Partial<IComponentDriverOption<any>>): Optional<PartLocator>;
+    overrideLocatorRelativePosition(option?: Partial<IComponentDriverOption<any>>): Optional<LocatorRelativePosition>;
 };
 
 // @public (undocumented)
