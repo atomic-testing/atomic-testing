@@ -163,6 +163,7 @@ export class SliderDriver
    * Single-thumb only — see {@link dragRangeHandleBy} for a range slider.
    */
   async dragBy(delta: Point): Promise<void> {
+    await this.enforcePartExistence('handle');
     // drag is protected on ComponentDriver (#1045); reach the child handle's
     // gesture through the interactor and the child's resolved locator.
     return this.interactor.drag(this.parts.handle.locator, delta);
