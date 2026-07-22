@@ -154,6 +154,10 @@
         {
           "id": "primevue",
           "displayName": "PrimeVue"
+        },
+        {
+          "id": "reka",
+          "displayName": "Reka UI"
         }
       ]
     },
