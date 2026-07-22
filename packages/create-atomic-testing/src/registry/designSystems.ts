@@ -110,6 +110,20 @@ const radix: DesignSystemPlugin = {
   usageNote: 'Your Radix drivers are installed. Use them in the scene part to test Radix components.',
 };
 
+const reka: DesignSystemPlugin = {
+  id: 'reka',
+  displayName: 'Reka UI',
+  compatibleFrameworks: ['vue'],
+  driverPackage() {
+    return 'component-driver-reka-ui-v2';
+  },
+  defaultMajor: () => 2,
+  deps() {
+    return [THIRD_PARTY.rekaUi];
+  },
+  usageNote: 'Your Reka UI drivers are installed. Use them in the scene part to test Reka UI components.',
+};
+
 const shadcn: DesignSystemPlugin = {
   id: 'shadcn',
   displayName: 'shadcn/ui',
@@ -161,6 +175,7 @@ export const DESIGN_SYSTEMS: Readonly<Record<DesignSystemId, DesignSystemPlugin>
   'angular-material': angularMaterial,
   primevue,
   radix,
+  reka,
   shadcn,
   astryx,
   fluent,

@@ -1,0 +1,47 @@
+{
+  "name": "@atomic-testing/component-driver-reka-ui-test",
+  "version": "0.0.0",
+  "description": "Examples and tests for @atomic-testing/component-driver-reka-ui-v2",
+  "keywords": [
+    "e2e",
+    "testing",
+    "unit",
+    "vue"
+  ],
+  "license": "MIT",
+  "author": "Tianzhen Lin <tangent@usa.net>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "vite --force",
+    "build:ui": "vite build",
+    "test:dom": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:chrome": "playwright test --project=chromium"
+  },
+  "dependencies": {
+    "@atomic-testing/core": "workspace:*",
+    "reka-ui": "^2.0.0",
+    "vue": "^3.5.39"
+  },
+  "devDependencies": {
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/component-driver-reka-ui-v2": "workspace:*",
+    "@atomic-testing/internal-test-runner": "workspace:*",
+    "@atomic-testing/internal-test-runner-jest-adapter": "workspace:*",
+    "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
+    "@atomic-testing/vue-3": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/vue": "^8.1.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/compiler-sfc": "^3.5.0"
+  }
+}

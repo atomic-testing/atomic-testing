@@ -1,0 +1,43 @@
+{
+  "name": "@atomic-testing/component-driver-reka-ui-v2",
+  "version": "0.98.0",
+  "description": "Component driver for Reka UI primitives (reka-ui v2, Vue 3)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-testing/atomic-testing.git",
+    "directory": "packages/component-driver-reka-ui-v2"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check:type": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@atomic-testing/component-driver-html": "workspace:*",
+    "@atomic-testing/core": "workspace:*"
+  },
+  "devDependencies": {
+    "reka-ui": "^2.0.0",
+    "vue": "^3.5.39"
+  },
+  "peerDependencies": {
+    "reka-ui": "^2.0.0",
+    "vue": ">=3.0.0"
+  }
+}
