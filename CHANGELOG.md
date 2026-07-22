@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.99.0] - 2026-07-22
+
+### Breaking Changes
+
+- **core:** collapse PartLocator to always be a chain, move `.and()` to locatorUtil ([#1144](https://github.com/atomic-testing/atomic-testing/issues/1144))
+
+### Features
+
+- **component-driver-fluent-v9:** add TableCellActions and keyboard-resize drivers ([#1143](https://github.com/atomic-testing/atomic-testing/issues/1143))
+- **component-driver-fluent-v9:** add FlatTree/FlatTreeItem drivers ([#1142](https://github.com/atomic-testing/atomic-testing/issues/1142))
+- **component-driver-fluent-v9:** add Wave 6 complex/composite drivers (Table/DataGrid, Tree, Carousel)
+- **component-driver-fluent-v9:** add Wave 5 data display & feedback drivers ([#1131](https://github.com/atomic-testing/atomic-testing/issues/1131))
+- **component-driver-fluent-v9:** add Wave 4 navigation & disclosure drivers ([#1127](https://github.com/atomic-testing/atomic-testing/issues/1127))
+- **component-driver-fluent-v9:** add drivers for 10 additional Fluent components ([#1125](https://github.com/atomic-testing/atomic-testing/issues/1125))
+- **component-driver-fluent-v9:** add Wave 2 overlay & menu drivers ([#1122](https://github.com/atomic-testing/atomic-testing/issues/1122))
+
+### Fixes
+
+- **component-driver-fluent-v9:** correct doc/behavior mismatches flagged by Copilot review
+- **mui:** give a late close-transition timer real wall-clock time before giving up ([#1124](https://github.com/atomic-testing/atomic-testing/issues/1124))
+
+### Documentation
+
+- **agent-docs:** add standalone guide for adopting an LSP for AI coding agents ([#1129](https://github.com/atomic-testing/atomic-testing/issues/1129))
+- remove internal delivery-sequencing jargon from published docs ([#1123](https://github.com/atomic-testing/atomic-testing/issues/1123))
+- reorganize getting-started and package-selection flow ([#1120](https://github.com/atomic-testing/atomic-testing/issues/1120))
+- **support-matrix:** redesign as the Atomic Table + tier matrix ([#1119](https://github.com/atomic-testing/atomic-testing/issues/1119))
+
+### Build & Tooling
+
+- **deps-dev:** bump typedoc from 0.28.19 to 0.28.20
+- **deps-dev:** bump @vitejs/plugin-vue from 5.2.4 to 6.0.8
+- **deps-dev:** bump oxfmt from 0.55.0 to 0.58.0 ([#1113](https://github.com/atomic-testing/atomic-testing/issues/1113))
+- **deps:** bump @mui/icons-material from 5.17.1 to 7.3.11 in /package-tests/component-driver-mui-x-v8-test ([#1110](https://github.com/atomic-testing/atomic-testing/issues/1110))
+- **deps:** bump @mui/x-charts from 9.7.0 to 9.9.0 ([#1107](https://github.com/atomic-testing/atomic-testing/issues/1107))
+- install examples/* on setup, standardize their workspace pattern, bump to 0.97.0 ([#1118](https://github.com/atomic-testing/atomic-testing/issues/1118))
+
 ## [0.98.0] - 2026-07-14
 
 ### Features

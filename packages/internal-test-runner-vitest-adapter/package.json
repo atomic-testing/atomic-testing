@@ -1,6 +1,6 @@
 {
   "name": "@atomic-testing/internal-test-runner-vitest-adapter",
-  "version": "0.98.0",
+  "version": "0.99.0",
   "private": true,
   "description": "Vitest adapter for atomic-testing",
   "keywords": [],
