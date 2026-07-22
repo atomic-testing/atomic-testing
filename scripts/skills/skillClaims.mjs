@@ -46,6 +46,7 @@ export const DESIGN_SYSTEM_FAMILIES = {
   'mui-x': null,
   astryx: null,
   fluent: null,
+  'reka-ui': null,
 };
 
 /**
