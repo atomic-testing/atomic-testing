@@ -107,10 +107,14 @@ function readManifest(dir) {
   }
 }
 
-// Concrete `dependencies`/`devDependencies` pins only — peerDependencies are
-// intentionally open floors (e.g. `>=18.0.0`) and Dependabot doesn't bump them.
+// Concrete pins only. Most peerDependencies are intentionally open floors
+// (e.g. `react: >=18.0.0`) that majorOf() already skips, but some packages
+// (e.g. component-driver-fluent-v9's `@fluentui/react-components`,
+// component-driver-radix-v1's `radix-ui`/`cmdk`) pin their scoped third-party
+// dependency with a concrete caret range in peerDependencies alone — so those
+// need checking too, not just dependencies/devDependencies.
 function concreteDeps(json) {
-  return { ...(json.dependencies ?? {}), ...(json.devDependencies ?? {}) };
+  return { ...(json.dependencies ?? {}), ...(json.devDependencies ?? {}), ...(json.peerDependencies ?? {}) };
 }
 
 // Extract the major from a simple concrete range like `^20.3.0`, `~9.0.0`,
