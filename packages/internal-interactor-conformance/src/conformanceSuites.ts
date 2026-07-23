@@ -360,13 +360,7 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
         await assertResolves(() => interactor().drag(target, { x: 10, y: 10 }));
       });
 
-      // FINDING (#973): PlaywrightInteractor.drag delegates its "element not
-      // found" case entirely to getBoundingRect — see the full writeup on the
-      // 'getBoundingRect' describe block below, whose auto-wait bug this
-      // inherits verbatim (a raw Playwright TimeoutError instead of
-      // ElementNotFoundError). Skipped for the same root cause; un-skip once
-      // getBoundingRect is fixed.
-      test.skip('throws ElementNotFoundError for a missing element', async () => {
+      test('throws ElementNotFoundError for a missing element', async () => {
         await assertElementNotFound(() => interactor().drag(absent, { x: 10, y: 10 }));
       });
     });
@@ -432,26 +426,7 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
         assertEqual(await interactor().getInputValue(target), 'world');
       });
 
-      // FINDING (#973): PlaywrightInteractor's `append: true` path is broken —
-      // packages/playwright/src/PlaywrightInteractor.ts's enterText correctly
-      // skips the `.clear()` call when `append` is set, but then still calls
-      // `.fill(text)` unconditionally. Playwright's `fill()` is a direct
-      // value-REPLACEMENT primitive (like assigning `.value =`), not a
-      // type-at-cursor insertion — so it overwrites the field with just the
-      // new text, discarding the existing value, regardless of `append`.
-      // DOMInteractor (packages/dom-core/src/DOMInteractor.ts) genuinely
-      // appends: when `append` is set it also skips clearing, but then types
-      // via `userEvent.type`, which inserts at the current caret. The two
-      // interactors therefore disagree on `append: true`'s core behavior, not
-      // just an edge case — Playwright's `append` option is currently a no-op
-      // beyond "don't clear first" (the result still ends up replaced).
-      //
-      // Skipped rather than asserting the current (replacing) behavior as
-      // correct; this documents the contract EnterTextOption.append's own
-      // JSDoc ("Append text to the target") promises. Un-skip once
-      // PlaywrightInteractor.enterText inserts rather than replaces when
-      // append is true (e.g. pressSequentially, mirroring typeText).
-      test.skip('appends instead of replacing when append is true', async () => {
+      test('appends instead of replacing when append is true', async () => {
         await interactor().enterText(target, 'hello');
         await interactor().enterText(target, ' world', { append: true });
         assertEqual(await interactor().getInputValue(target), 'hello world');
@@ -773,28 +748,7 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
         });
       }
 
-      // FINDING (#973): PlaywrightInteractor.getBoundingRect's own JSDoc
-      // claims `boundingBox()` "returns null for a detached/invisible element
-      // rather than auto-waiting" — but for a locator matching NO elements at
-      // all (not just an invisible one), `.boundingBox()` in fact DOES
-      // auto-wait out the action timeout and throws Playwright's own raw
-      // TimeoutError; it never resolves to null, so the method's manual
-      // `box == null -> throw ElementNotFoundError` check is never reached in
-      // that case (packages/playwright/src/PlaywrightInteractor.ts). Confirmed
-      // empirically here: with the timeout bounded to 2s via boundAutoWait, the
-      // call still takes ~2s and rejects with `TimeoutError`, not
-      // `ElementNotFoundError`. DOMInteractor
-      // (packages/dom-core/src/DOMInteractor.ts) throws the correct
-      // `ElementNotFoundError` immediately, matching the "throw-vs-auto-wait
-      // convention" every other mutation follows.
-      //
-      // Skipped rather than asserting the current (auto-waiting,
-      // slow-to-fail, wrong-error-class) Playwright behavior as correct; this
-      // documents the intended, documented contract. Un-skip once
-      // PlaywrightInteractor.getBoundingRect short-circuits a genuinely-absent
-      // locator the same way firstMatch does for the other reads (e.g. an
-      // `exists()` check, or catching/translating boundingBox()'s TimeoutError).
-      test.skip('throws ElementNotFoundError for a missing element', async () => {
+      test('throws ElementNotFoundError for a missing element', async () => {
         await assertElementNotFound(() => interactor().getBoundingRect(absent));
       });
     });
@@ -804,24 +758,7 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
         assertEqual(await interactor().innerHTML(byDataTestId('inner-html-target')), '<span>hi</span>');
       });
 
-      // FINDING (#973) — missing-element read throws instead of short-circuiting.
-      // PlaywrightInteractor.innerHTML calls `page.locator(css).innerHTML()`
-      // directly (packages/playwright/src/PlaywrightInteractor.ts), bypassing
-      // BOTH the `firstMatch` short-circuit AND the `runMutation`
-      // error-translation that every other read primitive
-      // (getText/getAttribute/getStyleValue/…) uses to fix the #1047
-      // "missing element" defect class. A missing element therefore auto-waits
-      // out Playwright's default action timeout and throws a raw Playwright
-      // TimeoutError — not `ElementNotFoundError`, and not a resolved value.
-      // DOMInteractor (packages/dom-core/src/DOMInteractor.ts) returns an empty
-      // string immediately for the identical input, matching every other read's
-      // "missing -> falsy/empty, never throw" convention.
-      //
-      // Skipped rather than asserting the current (divergent, and slow-to-fail)
-      // Playwright behavior as correct; this documents the intended contract.
-      // Un-skip once PlaywrightInteractor.innerHTML is routed through
-      // `firstMatch` like its sibling reads.
-      test.skip('returns an empty string for a missing element, matching every other read primitive', async () => {
+      test('returns an empty string for a missing element, matching every other read primitive', async () => {
         assertEqual(await interactor().innerHTML(absent), '');
       });
     });
