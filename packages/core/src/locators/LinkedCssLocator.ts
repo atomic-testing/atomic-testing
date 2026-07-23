@@ -29,6 +29,14 @@ export interface LinkedCssLocatorInitializer {
   matchingTargetValueExtract: LinkedCssLocatorValueExtract;
 }
 
+/**
+ * A {@link CssLocator} whose match must also satisfy a value comparison against
+ * a second, independently-located target element — e.g. an `<option>` whose
+ * value equals a `<select>`'s current value. `valueExtract` describes how to
+ * read the value off this locator's own match; `matchingTargetLocator` /
+ * `matchingTargetValueExtract` describe where to read the value to compare
+ * against. Produced by {@link byLinkedElement} (experimental).
+ */
 export class LinkedCssLocator extends CssLocator {
   private _valueExtract: LinkedCssLocatorValueExtract = {
     type: 'attribute',
