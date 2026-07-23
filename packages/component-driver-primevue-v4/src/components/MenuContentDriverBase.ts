@@ -11,13 +11,17 @@ const menuItemSelector = '[role="menuitem"]';
  * (`role="menu"` list) and `ContextMenu` (`role="menubar"` top-level list, per
  * its DOM audit) both render `role="menuitem"` leaves interspersed with
  * same-tag `role="separator"` `<li>`s, and both activate an item via its inner
- * `data-pc-section="itemlink"` anchor ({@link MenuItemDriver}). Subclasses
- * differ only in how the item list is located (a concrete
- * {@link itemListLocator}) and how the surface opens — those reads live here
- * once. Extracted per #1036 when `ContextMenu` landed as the second menu
- * surface (mirrors `component-driver-radix-v1`'s `MenuContentDriverBase`
- * split: base owns item iteration + label matching; concrete drivers own
- * trigger/open semantics and their portalled-surface locator).
+ * `data-pc-section="itemlink"` anchor ({@link MenuItemDriver}). This base owns
+ * ONLY item iteration/label matching (the methods below) — open/close
+ * semantics are NOT here, each concrete driver owns its own entirely
+ * (`MenuDriver`'s `isOpen`/`waitForOpen`/`waitForClose`, `ContextMenuDriver`'s
+ * `open`/`isOpen`/`closeByEscape`/`waitForOpen`/`waitForClose`), since how a
+ * popup opens and how a right-click-anchored menu opens share no logic.
+ * Subclasses supply only a concrete {@link itemListLocator}. Extracted per
+ * #1036 when `ContextMenu` landed as the second menu surface (mirrors
+ * `component-driver-radix-v1`'s `MenuContentDriverBase` split: base owns item
+ * iteration + label matching; concrete drivers own trigger/open semantics and
+ * their portalled-surface locator).
  *
  * **Item iteration uses `childListHelper`, not a plain `:nth-of-type` walk**:
  * see {@link MenuDriver}'s class doc for the truncated-enumeration failure
