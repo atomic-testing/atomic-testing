@@ -82,6 +82,15 @@ function needsInputEventFidelity(el: Element): boolean {
   return contentEditable === '' || contentEditable === 'true';
 }
 
+/**
+ * The jsdom-backed {@link Interactor} implementation — dispatches events and
+ * reads the DOM via `@testing-library/dom`'s `fireEvent` and `user-event`. The
+ * blessed base for every framework adapter that runs against jsdom (ADR-002,
+ * ADR-007): `ReactInteractor` and `VueInteractor` extend it and layer their
+ * reactivity flush onto the {@link runInteraction} seam rather than
+ * reimplementing the primitives. `PlaywrightInteractor` does not extend this
+ * class — its browser backing shares no implementation with jsdom.
+ */
 export class DOMInteractor implements Interactor {
   protected readonly userEvent: UserEventDispatcher;
 

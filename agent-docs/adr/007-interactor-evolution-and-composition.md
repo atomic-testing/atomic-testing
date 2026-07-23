@@ -107,7 +107,7 @@ Decision 1 it is now safe to add after 1.0 — as a default-bearing method on
 
 The seam an external adapter must satisfy is "extends `DOMInteractor` (or
 implements the optional-member convention)". The conformance suite that exercises
-it is tracked separately (#972); this ADR documents the seam it targets.
+it is tracked separately (#973); this ADR documents the seam it targets.
 
 ### 4. Express `Interactor` as capability facets (#1055)
 
@@ -155,4 +155,4 @@ which `Interactor` re-exposes automatically.
 - [ADR-002](002-interactor-abstraction.md) — the `Interactor` abstraction and the per-adapter inheritance note this builds on.
 - [ADR-006](006-1.0-api-freeze-and-evolution.md) §6 — the constraint this decision's mechanism resolves.
 - [ADR-001](../../docs/adr/0001-interactor-primitives-and-name-aware-role.md) — the deferred accessible-name `findByRole` design (Decision B) this keeps deferred (#923).
-- Issues #962 (this decision), #923 (computed-name `findByRole`), #972 (conformance suite), #909 (Astryx umbrella).
+- Issues #962 (this decision), #923 (computed-name `findByRole`), #973 (conformance suite), #909 (Astryx umbrella).

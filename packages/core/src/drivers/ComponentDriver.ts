@@ -239,9 +239,10 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
-   * Dispatch a keyboard key press on the component. See {@link Interactor.pressKey}.
+   * Dispatch a keyboard key press on the component. See {@link Interactor.pressKey}
+   * for the full contract, including modifier-key delivery via {@link PressKeyOption}.
    * @param key A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`, `'Enter'`
-   * @param option Reserved for future modifier-key support
+   * @param option Modifier flags and other per-press options — see {@link PressKeyOption}
    */
   async pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void> {
     return this.interactor.pressKey(this.locator, key, option);
