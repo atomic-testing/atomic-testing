@@ -22,6 +22,10 @@ export const clickLocationMouseEventExampleScenePart = {
     locator: byDataTestId('event-name'),
     driver: HTMLElementDriver,
   },
+  clickCountDisplay: {
+    locator: byDataTestId('click-count'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 export const clickLocationMouseEventExample: IExampleUnit<typeof clickLocationMouseEventExampleScenePart, JSX.Element> =
@@ -33,7 +37,7 @@ export const clickLocationMouseEventExample: IExampleUnit<typeof clickLocationMo
 export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof clickLocationMouseEventExample.scene> = {
   title: 'Mouse event: Click',
   url: '/mouse-event',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertApproxEqual, assertEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertApproxEqual, assertEqual, assertTrue }) => {
     describe(`${clickLocationMouseEventExample.title}`, () => {
       const engine = useTestEngine(clickLocationMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
@@ -61,6 +65,27 @@ export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof click
       test('click({ clickCount: 2 }) dispatches a real double-click', async () => {
         await engine().parts.target.click({ clickCount: 2 });
         assertEqual(await engine().parts.eventDisplay.getText(), 'dblclick');
+      });
+
+      // The positioned path (`position` set) must still fire the two `click`
+      // events before `dblclick` — a component relying on both `onClick` and
+      // `onDoubleClick` would otherwise silently lose the click handling.
+      test('click({ position, clickCount: 2 }) fires click twice before dblclick', async () => {
+        await engine().parts.target.click({ position: { x: 10, y: 10 }, clickCount: 2 });
+        assertEqual(await engine().parts.eventDisplay.getText(), 'dblclick');
+        assertEqual(await engine().parts.clickCountDisplay.getText(), '2');
+      });
+
+      // clickCount values other than 2 are rejected consistently across
+      // every Interactor implementation (see assertValidClickCount).
+      test('click({ clickCount: 3 }) throws', async () => {
+        let threw = false;
+        try {
+          await engine().parts.target.click({ clickCount: 3 });
+        } catch {
+          threw = true;
+        }
+        assertTrue(threw);
       });
     });
   },

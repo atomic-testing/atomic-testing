@@ -8,6 +8,7 @@ export const ClickLocationMouseEventExample = () => {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const [mouseY, setMouseY] = useState<number | null>(null);
   const [eventName, setEventName] = useState<string | null>(null);
+  const [clickCount, setClickCount] = useState(0);
 
   const displayEvent = useCallback((evt: React.MouseEvent<HTMLDivElement>, evtName: string) => {
     const rect = evt.currentTarget.getBoundingClientRect();
@@ -21,6 +22,7 @@ export const ClickLocationMouseEventExample = () => {
   const onClick = useCallback(
     (evt: React.MouseEvent<HTMLDivElement>) => {
       displayEvent(evt, 'click');
+      setClickCount(count => count + 1);
     },
     [displayEvent]
   );
@@ -59,6 +61,11 @@ export const ClickLocationMouseEventExample = () => {
         <span className='label'>Event</span>
         <span className='value' data-testid='event-name'>
           {eventName}
+        </span>
+
+        <span className='label'>Click count</span>
+        <span className='value' data-testid='click-count'>
+          {clickCount}
         </span>
 
         <span className='label'>X</span>
