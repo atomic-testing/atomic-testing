@@ -70,7 +70,9 @@ export namespace childListHelper {
 }
 
 // @public (undocumented)
-export interface ClickOption extends MouseOption {}
+export interface ClickOption extends MouseOption {
+    clickCount?: number;
+}
 
 // @public (undocumented)
 export namespace collectionUtil {
