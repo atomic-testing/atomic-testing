@@ -50,7 +50,7 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
-    "@angular/platform-browser": "^22.0.0",
+    "@angular/platform-browser": "^20.3.26",
     "rxjs": "^7.8.0"
   }
 }
