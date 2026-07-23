@@ -1,5 +1,6 @@
 import { CssLocator, CssLocatorInitializer } from './CssLocator';
 import { LocatorComplexity } from './LocatorComplexity';
+import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
 export type AccessibleRoleLocatorSource = {
   _id: 'byAccessibleRole';
@@ -7,8 +8,22 @@ export type AccessibleRoleLocatorSource = {
   name?: string;
 };
 
+/**
+ * The only two {@link LocatorRelativePosition} values `AccessibleRoleLocator`
+ * resolution actually honors — `'Root'` escapes to the document root,
+ * anything else (the `'Descendant'` default) scopes to the preceding chain
+ * (or the interactor's own root when there is none). `'Same'`/`'Child'` have
+ * no accname-search equivalent (`'Same'` means "compound onto the same
+ * element," which conflicts with "search for a new element by name"; `'Child'`
+ * would need result filtering `queryAllByRole`/`getByRole` don't offer) — this
+ * narrower type makes passing them a compile error instead of a silent
+ * fallback to `'Descendant'` behavior.
+ */
+export type AccessibleRoleLocatorRelativePosition = Extract<LocatorRelativePosition, 'Root' | 'Descendant'>;
+
 export interface AccessibleRoleLocatorInitializer {
   name?: string;
+  relative?: AccessibleRoleLocatorRelativePosition;
 }
 
 /**
@@ -62,6 +77,17 @@ export class AccessibleRoleLocator extends CssLocator {
 
   override get complexity(): LocatorComplexity {
     return 'accessibleRole';
+  }
+
+  /**
+   * Narrows {@link CssLocator.relative}'s return type: the constructor only
+   * ever accepts {@link AccessibleRoleLocatorRelativePosition}, so every
+   * instance's underlying value is already within that narrower set — this
+   * cast just reflects that guarantee in the type, so `clone()` doesn't need
+   * one of its own.
+   */
+  override get relative(): AccessibleRoleLocatorRelativePosition {
+    return super.relative as AccessibleRoleLocatorRelativePosition;
   }
 
   get name(): string | undefined {

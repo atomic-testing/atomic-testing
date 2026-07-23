@@ -1,5 +1,4 @@
-import { AccessibleRoleLocator } from './AccessibleRoleLocator';
-import type { LocatorRelativePosition } from './LocatorRelativePosition';
+import { AccessibleRoleLocator, AccessibleRoleLocatorRelativePosition } from './AccessibleRoleLocator';
 import type { PartLocator } from './PartLocator';
 
 /**
@@ -31,13 +30,22 @@ import type { PartLocator } from './PartLocator';
  * @param name - The computed accessible name to match, exact and
  * case-sensitive. Omit to match by role alone (equivalent to {@link byRole}
  * but accname-resolved).
- * @param relative - Relative position of the locator. Defaults to `'Descendant'`.
+ * @param relative - Relative position of the locator. Only `'Root'` (escape to
+ * the document root) and `'Descendant'` (the default) are accepted: `'Same'`
+ * (compound onto the same element) and `'Child'` (restrict to a direct child)
+ * have no accname-search equivalent, so the type excludes them rather than
+ * silently falling back to `'Descendant'` behavior — see
+ * {@link AccessibleRoleLocatorRelativePosition}.
  * @example
  * ```ts
  * const saveButton = findByRole('button', 'Save');
  * const scopedSaveButton = locatorUtil.append(dialogLocator, findByRole('button', 'Save'));
  * ```
  */
-export function findByRole(role: string, name?: string, relative: LocatorRelativePosition = 'Descendant'): PartLocator {
+export function findByRole(
+  role: string,
+  name?: string,
+  relative: AccessibleRoleLocatorRelativePosition = 'Descendant'
+): PartLocator {
   return [new AccessibleRoleLocator(role, { name, relative })];
 }

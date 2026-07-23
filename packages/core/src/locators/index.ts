@@ -1,5 +1,5 @@
 export { AccessibleRoleLocator } from './AccessibleRoleLocator';
-export type { AccessibleRoleLocatorSource } from './AccessibleRoleLocator';
+export type { AccessibleRoleLocatorRelativePosition, AccessibleRoleLocatorSource } from './AccessibleRoleLocator';
 export { byAriaLabel } from './byAriaLabel';
 export { byAttribute } from './byAttribute';
 export { byChecked } from './byChecked';

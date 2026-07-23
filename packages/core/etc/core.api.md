@@ -15,9 +15,13 @@ export class AccessibleRoleLocator extends CssLocator {
     get complexity(): LocatorComplexity;
     // (undocumented)
     get name(): string | undefined;
+    get relative(): AccessibleRoleLocatorRelativePosition;
     // (undocumented)
     readonly role: string;
 }
+
+// @public
+export type AccessibleRoleLocatorRelativePosition = Extract<LocatorRelativePosition, 'Root' | 'Descendant'>;
 
 // @public (undocumented)
 export type AccessibleRoleLocatorSource = {
@@ -298,7 +302,7 @@ export namespace escapeUtil {
 }
 
 // @public
-export function findByRole(role: string, name?: string, relative?: LocatorRelativePosition): PartLocator;
+export function findByRole(role: string, name?: string, relative?: AccessibleRoleLocatorRelativePosition): PartLocator;
 
 // @public
 export interface FocusActions {

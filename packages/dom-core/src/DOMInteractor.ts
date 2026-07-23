@@ -812,11 +812,17 @@ export class DOMInteractor implements Interactor {
    *
    * Fired unconditionally: unlike a real browser — which fires `drop` only
    * when the `dragover` listener calls `preventDefault()` to accept the drop —
-   * this does not gate on that signal, so a component under test observes the
-   * full sequence regardless of whether it opts in. This keeps the primitive's
-   * behavior identical to {@link PlaywrightInteractor}'s explicit-dispatch path
-   * (`Locator.dispatchEvent`), which has no such native gating either, so the
-   * same `.suite.ts` sees the same sequence in both engines — see #922.
+   * jsdom has no native drag-recognition machinery to gate on, so this always
+   * runs the full sequence. This is NOT identical to {@link
+   * PlaywrightInteractor}, whose `drag`/`dragTo` drive a REAL pointer gesture
+   * that the real browser's own native DnD recognition processes — including
+   * the real `preventDefault()` gate — see #922. A target that opts in the
+   * way any real HTML5-DnD target must (calling `preventDefault()` in its
+   * `dragover`/`dragenter` handler, as the shared `.suite.ts` fixture does)
+   * sees `drop` fire in both engines regardless of this difference; a target
+   * that never opts in would still see `drop` here but not in a real browser
+   * — an accepted simplification for a synthetic environment with no native
+   * gesture recognition to simulate faithfully.
    *
    * jsdom implements neither `DragEvent` nor `DataTransfer` (only
    * `MouseEvent`), so `@testing-library/dom`'s `fireEvent.drag*` dispatch a
@@ -972,12 +978,22 @@ export class DOMInteractor implements Interactor {
   /**
    * Resolve a locator chain split at its {@link AccessibleRoleLocator}
    * segment (`findByRole`) — the second resolution channel, bypassing CSS
-   * entirely (#923). `before` resolves normally (recursing back into
-   * {@link getElement}, so it fully supports the `'Root'` portal escape,
-   * nested `LinkedCssLocator`s, etc.) to a single scope element; a
-   * `roleLocator.relative === 'Root'` OVERRIDES that scope with the document
-   * root instead, mirroring how a trailing `'Root'` locator in an ordinary
-   * chain slices away everything before it (see `escapesToDocumentRoot`).
+   * entirely (#923). Three cases for the scope the accname search runs
+   * within, mirroring how an ordinary CSS chain resolves:
+   *
+   * - `roleLocator.relative === 'Root'` — escapes to the document root
+   *   (via {@link getElement}'s existing `[]` → `:root` handling), mirroring
+   *   how a trailing `'Root'` locator in an ordinary chain slices away
+   *   everything before it (see `escapesToDocumentRoot`).
+   * - `before` is non-empty — resolves normally (recursing back into
+   *   {@link getElement}, so it fully supports nested `LinkedCssLocator`s
+   *   etc.) to a single scope element.
+   * - `before` is empty and NOT a `'Root'` escape — scopes to `this.rootEl`
+   *   directly, NOT the document root. An unscoped `findByRole(...)` must
+   *   still respect the interactor's own scoping (e.g. a Storybook canvas),
+   *   exactly like a bare CSS locator does; routing this case through
+   *   `getElement([])` would incorrectly escape to the document regardless
+   *   of `rootEl`, since an empty chain always reduces to `:root`.
    *
    * Within that scope, `@testing-library/dom`'s `queryAllByRole` resolves by
    * the accname algorithm — the same engine `dom-core` already depends on for
@@ -990,8 +1006,12 @@ export class DOMInteractor implements Interactor {
     split: { before: PartLocator; roleLocator: AccessibleRoleLocator },
     isMultiple: boolean
   ): Promise<T[] | Optional<T>> {
-    const scopeLocator = split.roleLocator.relative === 'Root' ? [] : split.before;
-    const scopeEl = await this.getElement(scopeLocator);
+    const scopeEl =
+      split.roleLocator.relative === 'Root'
+        ? await this.getElement([])
+        : split.before.length === 0
+          ? this.rootEl
+          : await this.getElement(split.before);
     if (scopeEl == null) {
       return isMultiple ? [] : undefined;
     }

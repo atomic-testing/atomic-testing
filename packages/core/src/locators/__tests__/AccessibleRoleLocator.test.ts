@@ -11,6 +11,13 @@ describe('AccessibleRoleLocator (#923)', () => {
     expect(locator.relative).toBe('Root');
   });
 
+  it("rejects 'Same'/'Child' at compile time — no accname-search equivalent (review follow-up)", () => {
+    // @ts-expect-error 'Same' has no meaning for an accname search (see AccessibleRoleLocatorRelativePosition).
+    findByRole('button', 'Save', 'Same');
+    // @ts-expect-error 'Child' likewise — queryAllByRole/getByRole offer no direct-child-only filter.
+    findByRole('button', 'Save', 'Child');
+  });
+
   it('reports accessibleRole complexity, distinct from primitive', () => {
     const [locator] = findByRole('button', 'Save');
     expect(locator.complexity).toBe('accessibleRole');
@@ -36,11 +43,11 @@ describe('AccessibleRoleLocator (#923)', () => {
 
   describe('clone', () => {
     it('keeps the role, name, and relative position by default', () => {
-      const [locator] = findByRole('button', 'Save', 'Same');
+      const [locator] = findByRole('button', 'Save', 'Root');
       const cloned = locator.clone();
       expect(cloned.role).toBe('button');
       expect(cloned.name).toBe('Save');
-      expect(cloned.relative).toBe('Same');
+      expect(cloned.relative).toBe('Root');
     });
 
     it('overrides the name when supplied', () => {
