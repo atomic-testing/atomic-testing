@@ -1,4 +1,3 @@
-import { locatorUtil } from '..';
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
 import { BoundingRect, Point } from '../geometry';
@@ -24,6 +23,7 @@ import {
   ScenePart,
   ScenePartDriver,
 } from '../partTypes';
+import * as locatorUtil from '../utils/locatorUtil';
 import { WaitUntilOption } from '../utils/timingUtil';
 import { getPartFromDefinition } from './driverUtil';
 import { defaultWaitForOption, WaitForOption } from './WaitForOption';
