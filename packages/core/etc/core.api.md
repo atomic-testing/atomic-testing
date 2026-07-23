@@ -33,6 +33,9 @@ export type AccessibleRoleLocatorSource = {
 // @public
 export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = Ctor;
 
+// @public
+export function assertValidClickCount(clickCount: number | undefined): void;
+
 // @public (undocumented)
 export interface BlurOption {}
 
@@ -96,7 +99,9 @@ export namespace childListHelper {
 }
 
 // @public (undocumented)
-export interface ClickOption extends MouseOption {}
+export interface ClickOption extends MouseOption {
+    clickCount?: number;
+}
 
 // @public (undocumented)
 export namespace collectionUtil {

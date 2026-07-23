@@ -1,8 +1,6 @@
 import {
   byCssSelector,
   byRole,
-  childListHelper,
-  ComponentDriver,
   IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
@@ -11,11 +9,7 @@ import {
   PartLocator,
 } from '@atomic-testing/core';
 
-import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
-import { MenuItemDriver } from './MenuItemDriver';
-
-/** CSS for a PrimeVue menu item — the ARIA role, never a theme class. */
-const menuItemSelector = '[role="menuitem"]';
+import { MenuContentDriverBase } from './MenuContentDriverBase';
 
 /**
  * `role="menu"` lives on the inner `<ul>`, not the teleported root the scene's
@@ -63,10 +57,10 @@ export interface IMenuDriverOption extends IComponentDriverOption<{}> {
  * CLAUDE.md records). Activation clicks land on the item's inner
  * `data-pc-section="itemlink"` anchor — see {@link MenuItemDriver}.
  *
- * No `MenuContentDriverBase`-style shared base (the Radix split): Menu is the
- * only menu-family driver in this package's v1 set, so a base class would be
- * speculative; extract one when a second menu surface (Menubar, ContextMenu,
- * TieredMenu) lands (tracked in #1036).
+ * **Shared base (#1036)**: item iteration/`selectByLabel`/typed-not-found-error
+ * logic lives on {@link MenuContentDriverBase}, extracted once `ContextMenu`
+ * landed as a second menu-family driver in this package. This class supplies
+ * only what's Menu-specific: the popup's portal locator and open/close reads.
  *
  * **Anchoring (`appendTo="self"`, #1033)**: pass `{ selfAnchored: true }` for a
  * scene rendering `appendTo="self"` — see {@link DialogDriver}'s class doc for
@@ -74,7 +68,7 @@ export interface IMenuDriverOption extends IComponentDriverOption<{}> {
  * hooks fall back to ordinary parent-chain-relative resolution). Default
  * (`selfAnchored` unset) is unchanged.
  */
-export class MenuDriver extends ComponentDriver<{}> {
+export class MenuDriver extends MenuContentDriverBase {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IMenuDriverOption>) {
     super(locator, interactor, option);
   }
@@ -89,7 +83,7 @@ export class MenuDriver extends ComponentDriver<{}> {
     return option?.selfAnchored ? undefined : 'Same';
   }
 
-  private get listLocator(): PartLocator {
+  protected get itemListLocator(): PartLocator {
     return locatorUtil.append(this.locator, byRole('menu'));
   }
 
@@ -116,53 +110,6 @@ export class MenuDriver extends ComponentDriver<{}> {
       timeoutMs,
     });
     return isOpened === false;
-  }
-
-  /** The item whose visible label matches `label`, or `null` when absent. */
-  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
-    for await (const item of childListHelper.iterateMatchingChildren(
-      this,
-      this.listLocator,
-      menuItemSelector,
-      MenuItemDriver
-    )) {
-      if ((await item.getLabel()) === label) {
-        return item;
-      }
-    }
-    return null;
-  }
-
-  /** Click the item whose visible label matches `label`. @throws {MenuItemNotFoundError} when absent. */
-  async selectByLabel(label: string): Promise<void> {
-    const item = await this.getMenuItemByLabel(label);
-    if (item) {
-      await item.click();
-    } else {
-      throw new MenuItemNotFoundError(label, this);
-    }
-  }
-
-  /** The number of items (`role="menuitem"`) in the open menu, separators excluded. */
-  async getMenuItemCount(): Promise<number> {
-    return childListHelper.countMatchingChildren(this.interactor, this.listLocator, menuItemSelector);
-  }
-
-  /** The item at the given zero-based index (separators excluded), or `null` if out of range. */
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
-    let position = 0;
-    for await (const item of childListHelper.iterateMatchingChildren(
-      this,
-      this.listLocator,
-      menuItemSelector,
-      MenuItemDriver
-    )) {
-      if (position === index) {
-        return item;
-      }
-      position++;
-    }
-    return null;
   }
 
   get driverName(): string {

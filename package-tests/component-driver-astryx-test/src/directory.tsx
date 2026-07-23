@@ -51,6 +51,7 @@ import { hoverCardUIExample } from './examples/hover-card/HoverCard.examples';
 import { iconButtonUIExample } from './examples/icon-button/IconButton.examples';
 import { inputGroupUIExample } from './examples/input-group/InputGroup.examples';
 import { itemUIExample } from './examples/item/Item.examples';
+import { lightboxUIExample } from './examples/lightbox/Lightbox.examples';
 import { linkUIExample } from './examples/link/Link.examples';
 import { listUIExample } from './examples/list/List.examples';
 import { markdownUIExample } from './examples/markdown/Markdown.examples';
@@ -139,6 +140,7 @@ export const tocs: ExampleToc[] = [
   toc('Popover', '/popover', popoverUIExample),
   toc('Dialog', '/dialog', dialogUIExample),
   toc('AlertDialog', '/alert-dialog', alertDialogUIExample),
+  toc('Lightbox', '/lightbox', lightboxUIExample),
   toc('List', '/list', listUIExample),
   toc('MetadataList', '/metadata-list', metadataListUIExample),
   toc('Outline', '/outline', outlineUIExample),

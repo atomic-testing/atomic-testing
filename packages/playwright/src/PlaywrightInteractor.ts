@@ -1,4 +1,5 @@
 import {
+  assertValidClickCount,
   BlurOption,
   BoundingRect,
   ClickOption,
@@ -410,8 +411,11 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
+    assertValidClickCount(option?.clickCount);
     const target = await this.resolveLocator(locator);
-    await this.runMutation(locator, 'click', () => target.click({ position: option?.position }));
+    await this.runMutation(locator, 'click', () =>
+      target.click({ position: option?.position, clickCount: option?.clickCount })
+    );
   }
 
   /**
