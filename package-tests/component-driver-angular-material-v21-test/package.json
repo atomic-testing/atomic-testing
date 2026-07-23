@@ -30,7 +30,7 @@
     "@angular/core": "^21.2.0",
     "@angular/forms": "^21.2.0",
     "@angular/material": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
+    "@angular/platform-browser": "^20.3.26",
     "@atomic-testing/core": "workspace:*",
     "rxjs": "^7.8.0",
     "zone.js": "^0.15.0"
