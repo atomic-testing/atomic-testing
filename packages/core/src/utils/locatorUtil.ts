@@ -1,6 +1,7 @@
 import { Optional } from '../dataTypes';
 import { LocatorResolutionError } from '../errors/LocatorResolutionError';
 import { Interactor } from '../interactor/Interactor';
+import { AccessibleRoleLocator } from '../locators/AccessibleRoleLocator';
 import { byAttribute } from '../locators/byAttribute';
 import { CssLocator } from '../locators/CssLocator';
 import { LinkedCssLocator } from '../locators/LinkedCssLocator';
@@ -112,12 +113,56 @@ async function getEffectiveLocator(locator: PartLocator, interactor: Interactor)
 }
 
 /**
+ * Split a locator chain at its {@link AccessibleRoleLocator} segment (built by
+ * `findByRole`) — the second resolution channel that bypasses
+ * {@link toCssSelector} entirely, resolving by computed accessible name
+ * instead of CSS (see #923). Returns `undefined` when the chain has no such
+ * segment — the common, CSS-only case every existing locator takes.
+ *
+ * The accessible-role segment must be the chain's LAST element: nothing can
+ * be appended after a name-aware resolution result, since there is no CSS
+ * expression for "descendant of an accname match." `before` — everything
+ * ahead of it — still resolves normally via {@link toCssSelector} and scopes
+ * the accname search to that ancestor's subtree.
+ *
+ * @throws {LocatorResolutionError} If the segment is present but not the last
+ * element of the chain (covers both "something follows it" and "more than one
+ * such segment" — the first occurrence not being terminal implies either).
+ */
+export function splitAtAccessibleRoleLocator(
+  locator: PartLocator
+): Optional<{ before: PartLocator; roleLocator: AccessibleRoleLocator }> {
+  const index = locator.findIndex(loc => loc instanceof AccessibleRoleLocator);
+  if (index === -1) {
+    return undefined;
+  }
+  if (index !== locator.length - 1) {
+    throw new LocatorResolutionError(
+      locator,
+      'findByRole() must be the last locator in a chain — nothing can be composed after a computed-accessible-name match, and only one such segment is allowed per chain.'
+    );
+  }
+  return { before: locator.slice(0, index), roleLocator: locator[index] as AccessibleRoleLocator };
+}
+
+/**
  * Reduce a {@link PartLocator} to the single CSS selector the interactor runs
  * against the DOM. This is the one locator-resolution seam in the system, and it
  * is **CSS-only by design** for 1.0 — every locator must express itself as CSS
  * here (see [ADR-008](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/008-css-dom-only-locator-boundary.md)).
+ *
+ * An {@link AccessibleRoleLocator} segment (`findByRole`) has no CSS
+ * representation at all — see {@link splitAtAccessibleRoleLocator}, which
+ * every interactor consults BEFORE reaching this function. Calling this
+ * directly with such a locator is a caller error, not a silent fallback.
  */
 export async function toCssSelector(locator: PartLocator, interactor: Interactor): Promise<string> {
+  if (locator.some(loc => loc instanceof AccessibleRoleLocator)) {
+    throw new LocatorResolutionError(
+      locator,
+      'findByRole() locators have no CSS representation (a computed accessible name is not CSS-expressible — see #923); resolve through the interactor rather than locatorUtil.toCssSelector().'
+    );
+  }
   const effectiveLocator = await getEffectiveLocator(locator, interactor);
   const statements: string[] = [];
   for (let i = 0; i < effectiveLocator.length; i++) {

@@ -72,12 +72,18 @@ export const keyboardEventExampleTestSuite: TestSuiteInfo<typeof keyboardEventEx
         assertEqual(await engine().parts.modifiers.getText(), 'shift');
       });
 
-      // Cross-engine pin: a PRINTABLE key with Shift delivers the `shift` modifier
-      // identically in both engines. The resulting `event.key` is deliberately NOT
-      // asserted here — Playwright case-folds it to 'A' while the jsdom path keeps
-      // 'a' (see #924) — so only the engine-consistent modifier is checked.
-      test(`pressKey('a', { shift: true }) delivers the shift modifier in both engines`, async () => {
+      // Cross-engine pin (#924): a PRINTABLE key with Shift delivers BOTH the
+      // `shift` modifier AND an unfolded `event.key` identically in both
+      // engines — verified empirically against this repo's pinned toolchain
+      // (playwright-core 1.61.1, jsdom 29.1.1): neither engine case-folds a
+      // `Shift+<letter>` chord's `key` to uppercase; only `shiftKey` flips.
+      // `pressKey`'s contract is therefore simpler than a naive port of
+      // browser keyboard semantics might suggest — see the docstrings on
+      // `KeyboardActions.pressKey` (core), `DOMInteractor.pressKey`, and
+      // `PlaywrightInteractor.pressKey` for the verification detail.
+      test(`pressKey('a', { shift: true }) reports the shift modifier and unfolded key in both engines`, async () => {
         await engine().parts.target.pressKey('a', { shift: true });
+        assertEqual(await engine().parts.detail.getText(), 'a');
         assertEqual(await engine().parts.modifiers.getText(), 'shift');
       });
 

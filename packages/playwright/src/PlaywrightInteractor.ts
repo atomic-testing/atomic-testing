@@ -70,6 +70,53 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   /**
+   * Resolve a {@link PartLocator} to the Playwright {@link Locator} every
+   * primitive in this class targets — the one locator-resolution seam in
+   * `PlaywrightInteractor`, mirroring `DOMInteractor.getElement`'s single seam.
+   *
+   * An {@link AccessibleRoleLocator} segment (`findByRole`, #923) has no CSS
+   * representation — a computed accessible name is not CSS-expressible (see
+   * [ADR-008](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/008-css-dom-only-locator-boundary.md))
+   * — so `locatorUtil.splitAtAccessibleRoleLocator` detects it BEFORE this
+   * reaches `toCssSelector`, and resolution routes to Playwright's own
+   * accname-aware `getByRole` instead. Everything else takes the ordinary
+   * `toCssSelector` → `page.locator(css)` path unchanged.
+   *
+   * `before` — the chain segments ahead of the accessible-role match — resolves
+   * recursively (through this same method, so a `LinkedCssLocator` or another
+   * `'Root'` escape ahead of it still works) to a scope `Locator`, `.first()`ed
+   * so a multi-match `before` scopes the accname search to only its first
+   * match — matching `DOMInteractor`'s `getElement`, which resolves `before`
+   * through its own singular (first-match) overload. Without this, the two
+   * engines could disagree on which subtree the search runs in.
+   *
+   * `name` matching is forced to `exact: true` (case-sensitive, whole-string)
+   * whenever a name is given, to match `@testing-library/dom`'s `getByRole` —
+   * which has no fuzzy-match mode for a string name — so both engines resolve
+   * identically (see {@link AccessibleRoleLocator}). `includeHidden: true`
+   * matches this codebase's other locators, which resolve structurally
+   * regardless of visibility (`isVisible` is the dedicated visibility check,
+   * not baked into resolution) — the same reasoning `DOMInteractor` documents
+   * for its `hidden: true`.
+   */
+  private async resolveLocator(locator: PartLocator): Promise<Locator> {
+    const split = locatorUtil.splitAtAccessibleRoleLocator(locator);
+    if (split == null) {
+      const cssLocator = await locatorUtil.toCssSelector(locator, this);
+      return this.page.locator(cssLocator);
+    }
+
+    const scopeLocator = split.roleLocator.relative === 'Root' ? [] : split.before;
+    const scope = scopeLocator.length === 0 ? this.page : (await this.resolveLocator(scopeLocator)).first();
+    const options: { name?: string; exact?: boolean; includeHidden: boolean } = { includeHidden: true };
+    if (split.roleLocator.name != null) {
+      options.name = split.roleLocator.name;
+      options.exact = true;
+    }
+    return scope.getByRole(split.roleLocator.role as Parameters<Page['getByRole']>[0], options);
+  }
+
+  /**
    * Resolve a locator for the READ path, returning the first matching element or
    * `undefined` when nothing matches.
    *
@@ -87,8 +134,7 @@ export class PlaywrightInteractor implements Interactor {
    * @returns The first matching {@link Locator}, or `undefined` if none match
    */
   private async firstMatch(locator: PartLocator): Promise<Optional<Locator>> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const elLocator = this.page.locator(cssLocator);
+    const elLocator = await this.resolveLocator(locator);
     if ((await elLocator.count()) === 0) {
       return undefined;
     }
@@ -103,8 +149,8 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async selectOptionValue(locator: PartLocator, values: string[]): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'selectOptionValue', () => this.page.locator(cssLocator).selectOption(values));
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'selectOptionValue', () => target.selectOption(values));
   }
 
   /**
@@ -119,8 +165,8 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async setInputFiles(locator: PartLocator, files: string | string[]): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'setInputFiles', () => this.page.locator(cssLocator).setInputFiles(files));
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'setInputFiles', () => target.setInputFiles(files));
   }
 
   /**
@@ -133,8 +179,8 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async scrollIntoView(locator: PartLocator): Promise<void> {
-    const css = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'scrollIntoView', () => this.page.locator(css).scrollIntoViewIfNeeded());
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'scrollIntoView', () => target.scrollIntoViewIfNeeded());
   }
 
   /**
@@ -153,9 +199,9 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async scrollBy(locator: PartLocator, delta: Point): Promise<void> {
-    const css = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     await this.runMutation(locator, 'scrollBy', () =>
-      this.page.locator(css).evaluate((el, d) => el.scrollBy(d.x, d.y), { x: delta.x, y: delta.y })
+      target.evaluate((el, d) => el.scrollBy(d.x, d.y), { x: delta.x, y: delta.y })
     );
   }
 
@@ -163,17 +209,28 @@ export class PlaywrightInteractor implements Interactor {
    * Drag the source element and drop it onto the target element.
    *
    * Delegates to Playwright's native `Locator.dragTo`, which performs a real,
-   * layout-aware drag gesture in the browser.
+   * layout-aware drag gesture in the browser — genuine, low-level pointer
+   * input the browser's own engine processes, unlike jsdom's synthesized
+   * events (see {@link DOMInteractor.dragTo}). This drives pointer-based DnD
+   * libraries (dnd-kit, react-beautiful-dnd) AND native HTML5 drag-and-drop
+   * (`draggable` + `ondragstart`/`ondragover`/`ondrop`): verified empirically
+   * (#922) that on a `draggable` source/target pair, `Locator.dragTo` alone
+   * makes the browser recognize and run its own native DnD gesture —
+   * `dragstart` → `dragenter`/`dragover` → `drop` → `dragend` fire with a
+   * real, populated `DataTransfer`, no extra dispatch needed. (This
+   * contradicts an earlier assumption that Playwright's pointer gesture does
+   * NOT drive native HTML5 DnD — re-verify if this ever regresses, since nothing
+   * pins it beyond the E2E suite below.)
    *
    * @param source - Locator of the element to drag
    * @param target - Locator of the drop target
    * @throws {ElementNotFoundError} If either the source or target is not found
    */
   async dragTo(source: PartLocator, target: PartLocator): Promise<void> {
-    const srcCss = await locatorUtil.toCssSelector(source, this);
-    const tgtCss = await locatorUtil.toCssSelector(target, this);
+    const sourceLocator = await this.resolveLocator(source);
+    const targetLocator = await this.resolveLocator(target);
     try {
-      await this.page.locator(srcCss).dragTo(this.page.locator(tgtCss));
+      await sourceLocator.dragTo(targetLocator);
     } catch (e) {
       if ((await this.exists(source)) === false) {
         throw new ElementNotFoundError(source, 'dragTo');
@@ -196,6 +253,13 @@ export class PlaywrightInteractor implements Interactor {
    * which throws `ElementNotFoundError` when the element has no box, so this
    * shares that "element not found" contract instead of re-deriving the box +
    * guard here.
+   *
+   * As with {@link dragTo}, this real pointer gesture drives native HTML5
+   * drag-and-drop too when the element is `draggable` — verified (#922) that
+   * the browser's own gesture recognition fires the full `dragstart` →
+   * `dragover` → `drop` (onto itself; there is no separate target for a
+   * delta drag) → `dragend` sequence with a real `DataTransfer`, with no
+   * additional dispatch required.
    *
    * @param locator - Locator of the element to drag
    * @param delta - Pixel offset to drag by
@@ -291,10 +355,10 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async enterText(locator: PartLocator, text: string, option?: Optional<Partial<EnterTextOption>>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     await this.runMutation(locator, 'enterText', async () => {
       if (!option?.append) {
-        await this.page.locator(cssLocator).clear();
+        await target.clear();
       }
 
       // Enforce the shared date/time/datetime-local format policy (#1053). The
@@ -303,7 +367,7 @@ export class PlaywrightInteractor implements Interactor {
       // matching DOMInteractor.
       const type = (await this.getAttribute(locator, 'type')) ?? '';
       dateUtil.assertValidHtmlDateInputValue(type, text);
-      await this.page.locator(cssLocator).fill(text);
+      await target.fill(text);
     });
   }
 
@@ -323,12 +387,12 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async typeText(locator: PartLocator, text: string): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'typeText', () => this.page.locator(cssLocator).pressSequentially(text));
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'typeText', () => target.pressSequentially(text));
   }
 
   async setRangeValue(locator: PartLocator, value: number): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     // Playwright's `fill` rejects `<input type="range">` (it is not a fillable
     // text control), so set the value in-page through the native value setter.
     // Calling the prototype setter both sanitizes the value to the input's step
@@ -336,7 +400,7 @@ export class PlaywrightInteractor implements Interactor {
     // React's value tracker observe the change; the dispatched input/change
     // events then drive a controlled component (e.g. MUI Slider) to re-render.
     await this.runMutation(locator, 'setRangeValue', () =>
-      this.page.locator(cssLocator).evaluate((el, nextValue) => {
+      target.evaluate((el, nextValue) => {
         const input = el as HTMLInputElement;
         const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
         setter?.call(input, nextValue);
@@ -348,9 +412,9 @@ export class PlaywrightInteractor implements Interactor {
 
   async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     assertValidClickCount(option?.clickCount);
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     await this.runMutation(locator, 'click', () =>
-      this.page.locator(cssLocator).click({ position: option?.position, clickCount: option?.clickCount })
+      target.click({ position: option?.position, clickCount: option?.clickCount })
     );
   }
 
@@ -364,13 +428,13 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async contextMenu(locator: PartLocator): Promise<void> {
-    const css = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'contextMenu', () => this.page.locator(css).click({ button: 'right' }));
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'contextMenu', () => target.click({ button: 'right' }));
   }
 
   async hover(locator: PartLocator, option?: Partial<HoverOption>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'hover', () => this.page.locator(cssLocator).hover({ position: option?.position }));
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'hover', () => target.hover({ position: option?.position }));
   }
 
   async mouseMove(locator: PartLocator, option?: Partial<MouseMoveOption>): Promise<void> {
@@ -400,12 +464,12 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async mouseOut(locator: PartLocator, _option?: Partial<MouseOutOption>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     await this.runMutation(locator, 'mouseOut', async () => {
       // First hover over the element to trigger mouseenter/mouseover
-      await this.page.locator(cssLocator).hover();
+      await target.hover();
       // Then dispatch mouseout event directly for cross-browser reliability
-      await this.page.locator(cssLocator).dispatchEvent('mouseout');
+      await target.dispatchEvent('mouseout');
     });
   }
 
@@ -414,27 +478,27 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async mouseLeave(locator: PartLocator, _option?: Partial<MouseLeaveOption>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     await this.runMutation(locator, 'mouseLeave', async () => {
       // First hover over the element to trigger mouseenter/mouseover
-      await this.page.locator(cssLocator).hover();
+      await target.hover();
       // Dispatch mouseout which triggers both mouseout and mouseleave handlers in React
-      await this.page.locator(cssLocator).dispatchEvent('mouseout');
+      await target.dispatchEvent('mouseout');
     });
   }
 
   async focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'focus', () => this.page.focus(cssLocator));
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'focus', () => target.focus());
   }
 
   async blur(locator: PartLocator, _option?: Partial<BlurOption>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'blur', () => this.page.locator(cssLocator).blur());
+    const target = await this.resolveLocator(locator);
+    await this.runMutation(locator, 'blur', () => target.blur());
   }
 
   async pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     // Compose Playwright's chord syntax — modifiers joined to the key by `+`, in
     // Playwright's accepted Control+Alt+Shift+Meta order — so the browser holds
     // those modifiers across the keypress and the event carries ctrlKey/etc.
@@ -454,18 +518,19 @@ export class PlaywrightInteractor implements Interactor {
     const chord = modifiers.length > 0 ? `${modifiers.join('+')}+${key}` : key;
     // locator.press auto-focuses the element, then dispatches a real, trusted
     // KeyboardEvent — the browser equivalent of the DOM focus-first keyDown/keyUp.
-    // Caveat: for Shift + a printable key the browser case-folds `event.key`
-    // (`Shift+a` → `'A'`) whereas the jsdom path keeps `'a'` — only the modifier
-    // flags are delivered identically across engines (see #924).
-    await this.runMutation(locator, 'pressKey', () => this.page.locator(cssLocator).press(chord));
+    // For Shift + a printable key, Playwright does NOT case-fold `event.key`
+    // (`Shift+a` → `key: 'a'`, not `'A'`) — verified against this repo's pinned
+    // playwright-core; it matches the jsdom path's `key: 'a', shiftKey: true`
+    // exactly, so the two engines agree here (see #924).
+    await this.runMutation(locator, 'pressKey', () => target.press(chord));
   }
 
   async activate(locator: PartLocator): Promise<void> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
+    const target = await this.resolveLocator(locator);
     // Geometry-free activation mirrors the mouseout dispatch precedent above: it
     // bypasses hit-testing to actuate a covered or zero-size input that
     // locator.click() (a real geometry hit-test) cannot reach.
-    await this.runMutation(locator, 'activate', () => this.page.locator(cssLocator).dispatchEvent('click'));
+    await this.runMutation(locator, 'activate', () => target.dispatchEvent('click'));
   }
 
   //#region wait conditions
@@ -490,8 +555,8 @@ export class PlaywrightInteractor implements Interactor {
     isMultiple?: boolean
   ): Promise<Optional<string> | readonly string[]> {
     if (isMultiple) {
-      const cssLocator = await locatorUtil.toCssSelector(locator, this);
-      const locators = await this.page.locator(cssLocator).all();
+      const target = await this.resolveLocator(locator);
+      const locators = await target.all();
       const values: string[] = [];
       for (const matched of locators) {
         const value = await matched.getAttribute(name);
@@ -532,8 +597,8 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element has no bounding box
    */
   async getBoundingRect(locator: PartLocator): Promise<BoundingRect> {
-    const css = await locatorUtil.toCssSelector(locator, this);
-    const box = await this.page.locator(css).boundingBox();
+    const target = await this.resolveLocator(locator);
+    const box = await target.boundingBox();
     if (box == null) {
       throw new ElementNotFoundError(locator, 'getBoundingRect');
     }
@@ -541,8 +606,8 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async exists(locator: PartLocator): Promise<boolean> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    const count = await this.page.locator(cssLocator).count();
+    const target = await this.resolveLocator(locator);
+    const count = await target.count();
     return count > 0;
   }
 
@@ -552,8 +617,8 @@ export class PlaywrightInteractor implements Interactor {
    * `exists()` probing this primitive replaces in the list helpers.
    */
   async getElementCount(locator: PartLocator): Promise<number> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    return this.page.locator(cssLocator).count();
+    const target = await this.resolveLocator(locator);
+    return target.count();
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {
@@ -644,8 +709,8 @@ export class PlaywrightInteractor implements Interactor {
 
   //#region
   async innerHTML(locator: PartLocator): Promise<string> {
-    const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    return this.page.locator(cssLocator).innerHTML();
+    const target = await this.resolveLocator(locator);
+    return target.innerHTML();
   }
   //#endregion
 }

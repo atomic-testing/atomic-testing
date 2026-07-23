@@ -52,20 +52,21 @@ Locators help find components on a page, using various locator strategies such a
 <details>
   <summary>Available locators</summary>
 
-| Locator                                                           | Description                                                                                                            |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| [byDataTestId(dataTestId)](/docs/api/core/functions/byDataTestId) | Locate by data-testid attribute.                                                                                       |
-| [byRole(role)](/docs/api/core/functions/byRole)                   | Locate by the value of role attribute.                                                                                 |
-| [byAriaLabel(value)](/docs/api/core/functions/byAriaLabel)        | Locate by the verbatim `aria-label` attribute — often composed with `byRole` to tell same-role siblings apart.         |
-| [byCssSelector(selector)](/docs/api/core/functions/byCssSelector) | Locate by CSS selector.                                                                                                |
-| [byCssClass(className)](/docs/api/core/functions/byCssClass)      | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily. |
-| [byAttribute(name, value)](/docs/api/core/functions/byAttribute)  | Locate element by attribute                                                                                            |
-| [byTagName(tagName)](/docs/api/core/functions/byTagName)          | Locate by HTML tag name (not recommended).                                                                             |
-| [byValue(value)](/docs/api/core/functions/byValue)                | Locate by the value of value attribute                                                                                 |
-| [byInputType(type)](/docs/api/core/functions/byInputType)         | Locate by input element by its type, such as text, radio, checkbox etc.                                                |
-| [byName(name)](/docs/api/core/functions/byName)                   | Locate by the value of name attribute.                                                                                 |
-| [byLinkedElement()](/docs/api/core/functions/byLinkedElement)     | (Experimental) Locate an element by matching attributes from another element                                           |
-| [byChecked(checked)](/docs/api/core/functions/byChecked)          | Locate checkbox which is checked, usually it can be chained with checkbox locator                                      |
+| Locator                                                           | Description                                                                                                                                                                                              |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [byDataTestId(dataTestId)](/docs/api/core/functions/byDataTestId) | Locate by data-testid attribute.                                                                                                                                                                         |
+| [byRole(role)](/docs/api/core/functions/byRole)                   | Locate by the value of role attribute.                                                                                                                                                                   |
+| [byAriaLabel(value)](/docs/api/core/functions/byAriaLabel)        | Locate by the verbatim `aria-label` attribute — often composed with `byRole` to tell same-role siblings apart.                                                                                           |
+| [findByRole(role, name)](/docs/api/core/functions/findByRole)     | Locate by role plus the COMPUTED accessible name (`aria-labelledby`, an associated `<label>`, or visible text) — use this instead of `byAriaLabel` when the name isn't a literal `aria-label` attribute. |
+| [byCssSelector(selector)](/docs/api/core/functions/byCssSelector) | Locate by CSS selector.                                                                                                                                                                                  |
+| [byCssClass(className)](/docs/api/core/functions/byCssClass)      | Locate by CSS class name. Locate by CSS class is not recommended because it is not reliable and can be changed easily.                                                                                   |
+| [byAttribute(name, value)](/docs/api/core/functions/byAttribute)  | Locate element by attribute                                                                                                                                                                              |
+| [byTagName(tagName)](/docs/api/core/functions/byTagName)          | Locate by HTML tag name (not recommended).                                                                                                                                                               |
+| [byValue(value)](/docs/api/core/functions/byValue)                | Locate by the value of value attribute                                                                                                                                                                   |
+| [byInputType(type)](/docs/api/core/functions/byInputType)         | Locate by input element by its type, such as text, radio, checkbox etc.                                                                                                                                  |
+| [byName(name)](/docs/api/core/functions/byName)                   | Locate by the value of name attribute.                                                                                                                                                                   |
+| [byLinkedElement()](/docs/api/core/functions/byLinkedElement)     | (Experimental) Locate an element by matching attributes from another element                                                                                                                             |
+| [byChecked(checked)](/docs/api/core/functions/byChecked)          | Locate checkbox which is checked, usually it can be chained with checkbox locator                                                                                                                        |
 
 </details>
 

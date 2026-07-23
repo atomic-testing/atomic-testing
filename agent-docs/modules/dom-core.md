@@ -8,13 +8,14 @@ The base DOM implementation of `Interactor`. Turns a `PartLocator` into real DOM
 
 Barrel: [dom-core/src/index.ts](../../packages/dom-core/src/index.ts).
 
-| Export                                          | Kind                              | File                                                                                        |
-| ----------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------- |
-| `DOMInteractor`                                 | class (`implements Interactor`)   | [DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts#L32)                        |
-| `createDomTestEngine(element, parts, _option?)` | function                          | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13)            |
-| `FakeMouseEvent`                                | class                             | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5) |
-| `IDomTestEngineOption`                          | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3)                                         |
-| `DOMInteractorOption`, `UserEventDispatcher`    | types (constructor DI seam)       | [types.ts](../../packages/dom-core/src/types.ts)                                            |
+| Export                                          | Kind                              | File                                                                                         |
+| ----------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------- |
+| `DOMInteractor`                                 | class (`implements Interactor`)   | [DOMInteractor.ts](../../packages/dom-core/src/DOMInteractor.ts)                             |
+| `createDomTestEngine(element, parts, _option?)` | function                          | [createDomTestEngine.ts](../../packages/dom-core/src/createDomTestEngine.ts#L13)             |
+| `FakeMouseEvent`                                | class                             | [fakeEvents/FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts#L5)  |
+| `FakeDataTransfer`                              | class                             | [fakeEvents/FakeDataTransfer.ts](../../packages/dom-core/src/fakeEvents/FakeDataTransfer.ts) |
+| `IDomTestEngineOption`                          | type (`= IComponentDriverOption`) | [types.ts](../../packages/dom-core/src/types.ts#L3)                                          |
+| `DOMInteractorOption`, `UserEventDispatcher`    | types (constructor DI seam)       | [types.ts](../../packages/dom-core/src/types.ts)                                             |
 
 Depends on: `@atomic-testing/core`, `@testing-library/dom`, `@testing-library/user-event`.
 
@@ -31,16 +32,18 @@ Depends on: `@atomic-testing/core`, `@testing-library/dom`, `@testing-library/us
 
 ## How it works
 
-`DOMInteractor` is constructed with a `rootEl` (default `document.documentElement`) and an optional `DOMInteractorOption` whose `userEvent` (a structural `UserEventDispatcher`) defaults to the `@testing-library/user-event` singleton — the injection seam `StorybookInteractor` uses to supply Storybook's instrumented `userEvent` ([DOMInteractor.ts#L35-L43](../../packages/dom-core/src/DOMInteractor.ts#L35-L43)). The private workhorse is `getElement(locator, isMultiple?)`: it calls `locatorUtil.toCssSelector(locator, this)` then `rootEl.querySelector`/`querySelectorAll` ([DOMInteractor.ts#L379-L391](../../packages/dom-core/src/DOMInteractor.ts#L379-L391)).
+`DOMInteractor` is constructed with a `rootEl` (default `document.documentElement`) and an optional `DOMInteractorOption` whose `userEvent` (a structural `UserEventDispatcher`) defaults to the `@testing-library/user-event` singleton — the injection seam `StorybookInteractor` uses to supply Storybook's instrumented `userEvent`. The private workhorse is `getElement(locator, isMultiple?)`: it first checks `locatorUtil.splitAtAccessibleRoleLocator(locator)` for a `findByRole` segment (#923) — if present, it resolves the preceding scope (recursing into itself) and runs `@testing-library/dom`'s `queryAllByRole` instead of CSS; otherwise it calls `locatorUtil.toCssSelector(locator, this)` then `rootEl.querySelector`/`querySelectorAll` as before. Every other primitive resolves through this one method, so `findByRole` locators work everywhere for free.
 
 Interaction details worth knowing:
 
-- **`click`** uses `userEvent.click(el)` for a simple click, but switches to `FakeMouseEvent('click', {clientX, clientY})` + `fireEvent` when a `position` is given — comment notes some MUI components ignore `fireEvent('click')` ([DOMInteractor.ts#L81-L101](../../packages/dom-core/src/DOMInteractor.ts#L81-L101)).
-- **`enterText`** clears first (unless `option.append`), validates date/time formats for date-typed inputs, then `userEvent.type` ([DOMInteractor.ts#L315-L339](../../packages/dom-core/src/DOMInteractor.ts#L315-L339)).
-- **Mouse position** is computed relative to the element's bounding box (`calculateMousePosition`), centering when no preferred point is given ([DOMInteractor.ts#L64-L71](../../packages/dom-core/src/DOMInteractor.ts#L64-L71)).
-- **`isVisible`** returns false on `opacity: 0`, `visibility: hidden`, or `display: none` (does not check viewport) ([DOMInteractor.ts#L456-L478](../../packages/dom-core/src/DOMInteractor.ts#L456-L478)).
-- **`mouseEnter`/`mouseLeave`** are emulated with `fireEvent.mouseOver`/`mouseOut` (testing-library nuance) ([DOMInteractor.ts#L240-L266](../../packages/dom-core/src/DOMInteractor.ts#L240-L266)).
-- **Layout-dependent primitives** — `scrollIntoView`/`scrollBy`/`getBoundingRect` are jsdom no-ops / zero-rects (no layout engine); `drag`/`dragTo` share a private `dispatchMouse` helper firing raw mouse events only, never HTML5 DnD (#922); `setInputFiles` uploads via `userEvent.upload`; `contextMenu` fires a focused `contextmenu` event; `pressKey` folds `ctrl/shift/alt/meta` into the event init (a Shift + printable key reports a different `event.key` than Playwright — #924). Real geometry/scroll/drag outcomes are E2E-only.
+- **`click`** uses `userEvent.click(el)` for a simple click, but switches to `FakeMouseEvent('click', {clientX, clientY})` + `fireEvent` when a `position` is given — comment notes some MUI components ignore `fireEvent('click')`.
+- **`enterText`** clears first (unless `option.append`), validates date/time formats for date-typed inputs, then `userEvent.type`.
+- **Mouse position** is computed relative to the element's bounding box (`calculateMousePosition`), centering when no preferred point is given.
+- **`isVisible`** returns false on `opacity: 0`, `visibility: hidden`, or `display: none` (does not check viewport).
+- **`mouseEnter`/`mouseLeave`** are emulated with `fireEvent.mouseOver`/`mouseOut` (testing-library nuance).
+- **Layout-dependent primitives** — `scrollIntoView`/`scrollBy`/`getBoundingRect` are jsdom no-ops / zero-rects (no layout engine); `setInputFiles` uploads via `userEvent.upload`; `contextMenu` fires a focused `contextmenu` event. Real geometry/scroll outcomes are E2E-only.
+- **`drag`/`dragTo`** share a private `dispatchMouse` helper firing raw mouse events, AND (#922) a private `dispatchHtml5DragSequence` helper that fires the native HTML5 DnD sequence (`dragstart`→`dragenter`→`dragover`→`drop`→`dragend`) sharing one `FakeDataTransfer` — jsdom has no native `DragEvent`/`DataTransfer`, so `@testing-library/dom`'s `fireEvent.drag*` attach the fake `dataTransfer` as a plain property, its own documented recipe for jsdom HTML5 DnD. Real positional drag outcomes remain E2E-only.
+- **`pressKey`** folds `ctrl/shift/alt/meta` into the event init. A Shift + printable key does NOT case-fold `event.key` here (`{key: 'a', shiftKey: true}` stays `'a'`) — verified (#924) that this matches Playwright's current behavior too (playwright-core 1.61.1 also does not case-fold), so the two engines agree; a caller needing an actual shifted character (`'A'`, `'!'`) passes it as `key` directly.
 - **`pressKey` carries the legacy numeric code** — synthetic `KeyboardEvent`s default to `keyCode: 0`, and some libraries (Angular Material/CDK) dispatch on `event.keyCode` rather than `event.key`, silently ignoring the press; the event init mirrors the key into `keyCode`/`which` via `DOMInteractor.legacyKeyCodes` so DOM-mode key presses match real browser input (#1027).
 
 `createDomTestEngine(element, parts)` simply wraps `new DOMInteractor(element)` in a `TestEngine` with an empty root locator and a no-op cleanup ([createDomTestEngine.ts#L13-L27](../../packages/dom-core/src/createDomTestEngine.ts#L13-L27)).
@@ -48,6 +51,10 @@ Interaction details worth knowing:
 ### FakeMouseEvent
 
 `@testing-library` events drop `pageX/pageY`; `FakeMouseEvent extends MouseEvent` shadows them with own properties (`Object.defineProperty`, not assignment — real Chromium exposes them as getter-only prototype accessors, and the Angular fixtures run DOM tests in a real browser per ADR-013) so position-based interactions work ([FakeMouseEvent.ts](../../packages/dom-core/src/fakeEvents/FakeMouseEvent.ts)).
+
+### FakeDataTransfer
+
+jsdom implements neither `DragEvent` nor `DataTransfer` (#922). `FakeDataTransfer` is a minimal `DataTransfer` implementation (`setData`/`getData`/`clearData`/`types`) shared across one `drag`/`dragTo` gesture's whole HTML5 event sequence, so a `dragstart` handler's `setData` is readable from `drop`'s `getData` ([FakeDataTransfer.ts](../../packages/dom-core/src/fakeEvents/FakeDataTransfer.ts)).
 
 ## Invariants & failure modes
 

@@ -228,6 +228,27 @@ steps 4–7 implement the signatures above verbatim.
 > Implementation is a follow-up wave per #909. Step 2 (`BYROLE_NAME(a)`) already lands the
 > _verbatim-`aria-label`_ stopgap; this ADR records why the _computed-name_ version cannot
 > follow the same path and sketches the path it must take instead.
+>
+> **Update (#923): implemented.** The follow-up wave landed `findByRole(role, name?, relative?)`
+> in `packages/core/src/locators/findByRole.ts`, built on a new `AccessibleRoleLocator`
+> (`CssLocator` subclass, `complexity: 'accessibleRole'`) rather than the
+> `Promise<PartLocator>` / opaque-handle shapes sketched below — the sketch assumed the
+> name → element resolution needed to run at locator-BUILD time (hence `Promise`); the
+> shipped design keeps `findByRole` a synchronous, ordinary locator builder and defers
+> resolution to each interactor's existing element-resolution seam instead
+> (`DOMInteractor.getElement`, a new `PlaywrightInteractor.resolveLocator`), which is where
+> an interactor instance is actually available. `locatorUtil.splitAtAccessibleRoleLocator` detects the
+> segment before `toCssSelector` is ever reached, splits the chain into the CSS-resolvable
+> `before` (the scope) and the accname segment, and each interactor resolves the latter via
+> `@testing-library/dom`'s `getByRole` (jsdom) or `Locator.getByRole`/`Page.getByRole`
+> (Playwright) — confirming the "second resolution channel bypassing CSS" design below. One
+> deliberate deviation from the sketch: no `exact` option. `@testing-library/dom`'s `getByRole`
+> only supports exact, case-sensitive string matching for `name` (no fuzzy mode), while
+> Playwright's `getByRole` defaults to fuzzy; exposing an `exact` toggle only one engine could
+> honor would have been a cross-engine correctness trap, so `PlaywrightInteractor` always
+> passes `exact: true`, matching jsdom's only mode — see
+> [ADR-018](../../agent-docs/adr/018-findbyrole-accessible-role-locator.md) for the full
+> implementation record.
 
 ### Context
 
