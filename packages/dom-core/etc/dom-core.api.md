@@ -137,6 +137,8 @@ export interface UserEventDispatcher {
     // (undocumented)
     click(element: Element): Promise<void>;
     // (undocumented)
+    dblClick(element: Element): Promise<void>;
+    // (undocumented)
     hover(element: Element): Promise<void>;
     // (undocumented)
     keyboard(text: string): Promise<unknown>;
