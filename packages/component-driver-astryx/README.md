@@ -2,13 +2,46 @@
 
 Component drivers for [Astryx](https://github.com/facebook/astryx), Meta's open-source, StyleX-based design system. Component drivers expose simple APIs for unit tests or end-to-end tests to interact with Astryx components—reading state and driving actions—so test engineers focus on test flows instead of the component internals.
 
-## The problem
+## Why atomic-testing
 
-Astryx styles components with [StyleX](https://stylexjs.com), whose class names are build-time hashed and therefore are **not stable test anchors**. Astryx is ARIA-role-first: widgets expose a semantic `role` plus an accessible name (visible text or `aria-label`). The stable anchors are **`data-testid`, `role`, and accessible name—never StyleX classes**.
+Testing a UI built on a third-party component library is hard to keep maintainable: a component's markup is an implementation detail, so tests that reach into it break every time the component changes or the library upgrades, and each framework/runner has its own interaction API. Atomic Testing gives you one consistent way to interact with components across every environment — describe the parts of a scene once, as a **ScenePart**, and drive them through **component drivers** that expose semantic actions (`click()`, `setValue()`, `getText()`) instead of DOM manipulation. The same scene and the same test body then run under DOM (jsdom) and end-to-end (Playwright), because only the `Interactor` underneath changes. See [Why Atomic Testing?](https://atomic-testing.dev/docs/why-atomic-testing) for the full case.
 
-## The solution
+This package adapts that pattern to Astryx. Astryx styles components with [StyleX](https://stylexjs.com), whose class names are build-time hashed and therefore **not stable test anchors** — one more reason markup-level assertions are a poor fit here specifically. Astryx is also ARIA-role-first: widgets expose a semantic `role` plus an accessible name (visible text or `aria-label`). The drivers in this package locate Astryx components by those stable anchors — **`data-testid`, `role`, and accessible name, never StyleX classes** — and expose the same high-level interactions across both environments.
 
-The drivers in this package locate Astryx components by those stable anchors and expose high-level interactions. Combined with a React adapter, the same scene definitions run across DOM (jsdom) and end-to-end (Playwright) tests.
+## Usage
+
+Declare the Astryx parts a scene needs, once, as a `ScenePart`:
+
+```typescript
+import { ButtonDriver, TextInputDriver } from '@atomic-testing/component-driver-astryx';
+import { byDataTestId, ScenePart } from '@atomic-testing/core';
+
+const signupScene = {
+  email: { locator: byDataTestId('email-input'), driver: TextInputDriver },
+  submit: { locator: byDataTestId('save-button'), driver: ButtonDriver },
+} satisfies ScenePart;
+```
+
+Then drive it through `engine.parts` — semantic calls, not DOM queries:
+
+```typescript
+await engine.parts.email.setValue('user@example.com');
+await engine.parts.submit.click();
+
+expect(await engine.parts.submit.isDisabled()).toBe(false);
+```
+
+The same scene and the same test body run unchanged in a DOM test and an end-to-end test — only the engine creation differs:
+
+```typescript
+// DOM (Jest + React), via @atomic-testing/react-19
+const engine = createTestEngine(<SignupForm />, signupScene);
+
+// End-to-end (Playwright), via @atomic-testing/playwright
+const engine = createTestEngine(page, signupScene);
+```
+
+For a larger, driver-per-component version of this pattern, see the real suites under [`package-tests/component-driver-astryx-test/src/examples`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-astryx-test/src/examples) — every driver in the tables below has a matching `*.suite.ts` there, run against both a `.dom.test.ts` (Jest) and an `.e2e.test.ts` (Playwright) adapter, so the DOM/E2E parity above is exercised on every driver in this package, not just the example.
 
 ## Target package & version pin
 
@@ -161,4 +194,8 @@ driver's source doc comment.
 | `DateTimeInputDriver`  | `DateTimeInput`  | Extends `DateInputDriver` with a paired time field (`getTimeValue`/`setTime`).                                              |
 | `DateRangeInputDriver` | `DateRangeInput` | **Best-effort v1**: popover `<dialog>` with presets + range `pickRange` (the end day is re-resolved after the start click). |
 
-For more in-depth information, visit [https://atomic-testing.dev](https://atomic-testing.dev).
+## Learn more
+
+- [Astryx driver coverage guide](https://atomic-testing.dev/docs/driver-coverage/astryx-driver-coverage) — the per-wave coverage matrix behind the tables above.
+- [atomic-testing.dev](https://atomic-testing.dev/) — full docs, guides, and the API reference.
+- [#909](https://github.com/atomic-testing/atomic-testing/issues/909) — the umbrella issue tracking this package's driver waves.
