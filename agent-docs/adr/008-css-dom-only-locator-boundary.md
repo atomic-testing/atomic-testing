@@ -51,6 +51,13 @@ optional `Interactor` member per
 [ADR-007](007-interactor-evolution-and-composition.md), not by reworking the
 locator model. The verbatim role+name case is already covered by `CssLocator.and`.
 
+> **Update ([ADR-018](018-findbyrole-accessible-role-locator.md), #923).** The computed-name
+> gap is now closed by `findByRole`, still without the general `resolve(locator)` indirection
+> this ADR declined: `AccessibleRoleLocator` subclasses `CssLocator` (so `PartLocator` stays
+> `CssLocator[]`, unchanged), and each interactor detects it BEFORE the CSS seam
+> (`locatorUtil.splitAtAccessibleRoleLocator`) rather than through a general non-CSS resolve
+> path. The "no seam for a non-DOM target" boundary this ADR declares is otherwise untouched.
+
 ## Consequences
 
 - ✅ The boundary is explicit in docs + ADR, not implicit — consumers know exactly

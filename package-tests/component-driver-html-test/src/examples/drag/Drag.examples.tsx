@@ -1,6 +1,9 @@
 import { IExampleUIUnit } from '@atomic-testing/core';
 import React, { JSX, useCallback, useRef, useState } from 'react';
 
+/** Payload carried through the native HTML5 DnD `DataTransfer` below. */
+const HTML5_DRAG_PAYLOAD = 'atomic-testing-drag-payload';
+
 /**
  * A pointer-draggable box plus a drop target.
  *
@@ -19,11 +22,20 @@ import React, { JSX, useCallback, useRef, useState } from 'react';
  * hit-test would land on the box, not the target). A source that stays put keeps
  * the drop target topmost at release, so its `mouseup` handler fires in both
  * engines.
+ *
+ * A separate `html5-drag-source`/`html5-drop-target` pair covers the OTHER DnD
+ * model: native HTML5 drag-and-drop (`draggable` + `ondragstart`/`ondragover`/
+ * `ondrop`), wired through `drag*` events only — no mouse handlers — so it can
+ * only pass if the interactor's HTML5 event synthesis (#922) is exercised, not
+ * the pointer sequence above.
  */
 export const DragExample = () => {
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [interactions, setInteractions] = useState<number>(0);
   const [dropStatus, setDropStatus] = useState<string>('');
+  const [html5DragStartCount, setHtml5DragStartCount] = useState<number>(0);
+  const [html5DragEndCount, setHtml5DragEndCount] = useState<number>(0);
+  const [html5DropPayload, setHtml5DropPayload] = useState<string>('');
 
   // Live drag state held in refs so the window listeners read current values
   // without re-subscribing on every render.
@@ -68,6 +80,28 @@ export const DragExample = () => {
     setDropStatus('dropped');
   }, []);
 
+  // Native HTML5 DnD: `draggable` + `ondragstart`/`ondragover`/`ondrop`, not
+  // wired through mousedown/mousemove/mouseup at all — proves the interactor's
+  // HTML5 event synthesis (#922), independent of the pointer-based gesture above.
+  const onHtml5DragStart = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData('text/plain', HTML5_DRAG_PAYLOAD);
+    setHtml5DragStartCount(count => count + 1);
+  }, []);
+
+  const onHtml5DragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    // The real-browser opt-in signal that this target accepts the drop.
+    event.preventDefault();
+  }, []);
+
+  const onHtml5Drop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setHtml5DropPayload(event.dataTransfer.getData('text/plain'));
+  }, []);
+
+  const onHtml5DragEnd = useCallback(() => {
+    setHtml5DragEndCount(count => count + 1);
+  }, []);
+
   return (
     <React.Fragment>
       <div
@@ -103,6 +137,31 @@ export const DragExample = () => {
       </div>
       {/* Set to 'dropped' once a mouseup lands on the drop target. */}
       <div data-testid='drop-status'>{dropStatus}</div>
+      {/* Native HTML5 DnD source: `draggable`, sets a dataTransfer payload in
+          `ondragstart`. No mouse handlers — only drag* events drive it. */}
+      <div
+        data-testid='html5-drag-source'
+        draggable
+        onDragStart={onHtml5DragStart}
+        onDragEnd={onHtml5DragEnd}
+        style={{ width: 120, height: 60, background: '#fed', border: '1px solid #c93', cursor: 'grab' }}>
+        HTML5 drag source
+      </div>
+      {/* Native HTML5 DnD target: accepts the drop via `preventDefault` in
+          `ondragover` (the real-browser opt-in) and reads the payload in `ondrop`. */}
+      <div
+        data-testid='html5-drop-target'
+        onDragOver={onHtml5DragOver}
+        onDrop={onHtml5Drop}
+        style={{ width: 120, height: 60, background: '#eef', border: '1px solid #33c' }}>
+        HTML5 drop here
+      </div>
+      {/* Counts `dragstart` on the HTML5 source. */}
+      <div data-testid='html5-drag-start-count'>{String(html5DragStartCount)}</div>
+      {/* The `dataTransfer` payload read by the HTML5 target's `ondrop`. */}
+      <div data-testid='html5-drop-payload'>{html5DropPayload}</div>
+      {/* Counts `dragend` on the HTML5 source. */}
+      <div data-testid='html5-drag-end-count'>{String(html5DragEndCount)}</div>
     </React.Fragment>
   );
 };

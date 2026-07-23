@@ -89,16 +89,25 @@ export interface PointerActions {
   /**
    * Drag the source element and drop it onto the target element.
    *
-   * jsdom has no layout engine, so the drag has no positional outcome there: the
-   * pointer sequence is synthesized at zeroed coordinates and only the event
-   * wiring (mousedown/mousemove/mouseup, and any drop handler they trigger) is
-   * exercised. Behavioral assertions about the final position are therefore
-   * E2E-only; the jsdom path only guarantees the events fire once both elements
-   * are found.
+   * Drives BOTH DnD models on the same gesture, so either kind of component
+   * under test is driven: the pointer sequence
+   * (`mousedown`/`mousemove`/`mouseup`, for pointer-based libraries such as
+   * dnd-kit or react-beautiful-dnd) and native HTML5 drag-and-drop
+   * (`dragstart`/`dragenter`/`dragover`/`drop`/`dragend`, sharing one
+   * `dataTransfer`, for components built on `draggable` +
+   * `ondragstart`/`ondragover`/`ondrop`) — see #922. The mechanism differs by
+   * environment: Playwright drives a real, low-level pointer gesture that the
+   * browser's own native drag recognition turns into genuine `drag*` events
+   * with a real `DataTransfer` (no synthesis needed); jsdom has no browser
+   * layer to recognize a gesture, so `DOMInteractor` explicitly synthesizes
+   * both event families.
    *
-   * Mouse/pointer-based only: native HTML5 drag-and-drop
-   * (`dragstart`/`dragover`/`drop` + `dataTransfer`) is not synthesized, so
-   * components built on the HTML5 DnD API are out of scope here — see #922.
+   * jsdom has no layout engine, so the drag has no positional outcome there:
+   * every event is synthesized at zeroed coordinates and only the event wiring
+   * (and any handler the sequence triggers, including a `dataTransfer`
+   * payload set in `dragstart` and read in `drop`) is exercised. Behavioral
+   * assertions about the final position are therefore E2E-only; the jsdom path
+   * only guarantees the events fire once both elements are found.
    *
    * @param source Locator of the element to drag
    * @param target Locator of the element to drop onto
@@ -108,14 +117,17 @@ export interface PointerActions {
   /**
    * Drag the desired element by the given pixel delta from its center.
    *
+   * Drives both DnD models, as {@link PointerActions.dragTo | dragTo} does —
+   * see #922. There is no separate drop target for a single-element delta
+   * drag, so the native HTML5 drag-and-drop sequence
+   * (`dragstart`/`dragenter`/`dragover`/`drop`/`dragend`) runs on the element
+   * itself, as its own drop target.
+   *
    * jsdom has no layout engine, so the drag has no positional outcome there: the
    * pointer sequence is synthesized from the caller-supplied delta and only the
    * event wiring is exercised. Behavioral assertions about the resulting position
    * are therefore E2E-only; the jsdom path only guarantees the events fire once
    * the element is found.
-   *
-   * Mouse/pointer-based only: native HTML5 drag-and-drop is not synthesized —
-   * see #922.
    *
    * @param locator Locator of the element to drag
    * @param delta Pixel offset to drag by, where `x` is horizontal and `y` is vertical
@@ -152,12 +164,15 @@ export interface KeyboardActions {
    * not this). No pointer event is involved, so behaviours unreachable by
    * {@link PointerActions.click | click} (geometry or not) become testable.
    *
-   * Cross-engine caveat: with `shift` and a PRINTABLE key the engines disagree on
-   * the resulting `KeyboardEvent.key` — Playwright case-folds (`Shift`+`a` →
-   * `'A'`) while the jsdom path leaves `key` as `'a'` (with `shiftKey: true`). The
-   * modifier flags themselves are delivered consistently; only the printed
-   * character differs. Prefer non-printable keys for cross-engine assertions on
-   * `key` — see #924.
+   * Cross-engine note: with `shift` and a PRINTABLE key, `KeyboardEvent.key`
+   * is delivered as the literal `key` passed in — NOT case-folded to a
+   * shifted variant (`Shift`+`'a'` stays `'a'`, not `'A'`) — with
+   * `shiftKey: true` carrying the modifier. This was verified to hold
+   * identically in both jsdom (`DOMInteractor`) and Playwright
+   * (`PlaywrightInteractor`) against this repo's pinned toolchain; a caller
+   * that needs an actual shifted character (e.g. `'A'`, `'!'`) passes it as
+   * `key` directly rather than relying on `shift` to transform a lowercase/
+   * unshifted one — see #924.
    *
    * @param locator
    * @param key A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`, `'Enter'`

@@ -9,7 +9,7 @@ Drivers for [Astryx](https://github.com/facebook/astryx) components (published o
 Barrel: [component-driver-astryx/src/index.ts](../../packages/component-driver-astryx/src/index.ts) — the canonical, authoritative export list. Drivers are grouped by leverage tier:
 
 - **Buttons, inputs, toggles (Wave 1):** `Button`, `IconButton`, `ToggleButton`, `ButtonGroup`, `ToggleButtonGroup`, `Link`, `TextInput`, `TextArea`, `NumberInput`, `TimeInput`, `CheckboxInput`, `RadioList`, `CheckboxList`, `Switch`, `SegmentedControl`, `SelectableCard`, `Slider`, `Field`, `InputGroup`, `FieldStatus`, `Banner`, `Pagination`, `Collapsible` drivers, plus the shared `AstryxFieldInputDriver` base.
-- **Overlays & menus (Wave 2):** `NavMenuDriver`, `ToolbarDriver`, `ToastDriver`, `TabListDriver` (+ `TabDriver`), `DropdownMenuDriver`, `MoreMenuDriver` (extends DropdownMenu), `PopoverDriver`, `DialogDriver`, `AlertDialogDriver`, plus the shared `AstryxMenuDriver` base and `MenuItemDriver`.
+- **Overlays & menus (Wave 2):** `NavMenuDriver`, `ToolbarDriver`, `ToastDriver`, `TabListDriver` (+ `TabDriver`), `DropdownMenuDriver`, `MoreMenuDriver` (extends DropdownMenu), `PopoverDriver`, `DialogDriver`, `AlertDialogDriver`, `LightboxDriver`, plus the shared `AstryxMenuDriver` base and `MenuItemDriver`.
 
 ## Dependency shape
 
@@ -40,6 +40,8 @@ Astryx overlays are **not portalled** — `DropdownMenu`/`MoreMenu`/`Popover` re
 Conditional/derived reads, not hard-coded roles: `Toast.getType` reads `data-type` (its `role` flips `alert`↔`status` by severity); `Dialog.getRole` returns `'alertdialog'` only for `purpose="required"`; `TabList` active tab is `aria-current="page"` (no `role="tab"`), and its label is read from the visible span (Astryx duplicates the label in an `aria-hidden` width "sizer").
 
 **E2E-only / WebKit-gated.** Native-popover open/close visibility is not modelled in jsdom (reads still work — content is mounted), so it is covered by the Playwright run. Playwright's **WebKit** cannot drive these interactions: opening a native-popover overlay busies WebKit's main thread (subsequent automation times out) and Escape on the animating modal `<dialog>` never reaches a stable press target. The 6 open/close _interaction_ tests are therefore skipped on WebKit via [src/webkitGate.ts](../../package-tests/component-driver-astryx-test/src/webkitGate.ts) (`useBrowserName` + `skipInteractionOnWebkit`); all reads run on chromium/firefox/webkit, full interactions on chromium/firefox.
+
+**`LightboxDriver`** ([LightboxDriver.ts](../../packages/component-driver-astryx/src/components/LightboxDriver.ts)) is also a native `<dialog>` (like `Dialog`, no portal), but its own Escape-to-dismiss is E2E-only for a different reason than Dialog's WebKit gate: Lightbox relies on the browser firing a native `cancel` event on Escape (verified empirically that jsdom does not synthesize this from a dispatched `keydown`), so `close()` instead drives the close button, which is jsdom-faithful. Its gallery counter/caption have no `data-testid`/role of their own; the driver anchors them structurally (`:has()`/`:not(:has(*))` on the fixed child layout — see the locator comments in the driver). `zoom()`/`pan()` are E2E-only and use the `Interactor.click({ clickCount: 2 })` option (added alongside this driver — see `ClickOption.clickCount`) since two separate `click()` calls do not reliably register as a real double-click.
 
 ## Non-goals
 

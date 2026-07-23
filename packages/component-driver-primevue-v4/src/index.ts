@@ -1,9 +1,11 @@
 export { ButtonDriver } from './components/ButtonDriver';
 export { CheckboxDriver } from './components/CheckboxDriver';
+export { ContextMenuDriver } from './components/ContextMenuDriver';
 export { DataTableDriver } from './components/DataTableDriver';
 export { DataTableRowDriver } from './components/DataTableRowDriver';
 export { DialogDriver, dialogParts } from './components/DialogDriver';
 export { InputTextDriver } from './components/InputTextDriver';
+export { MenuContentDriverBase } from './components/MenuContentDriverBase';
 export { MenuDriver } from './components/MenuDriver';
 export { MenuItemDriver } from './components/MenuItemDriver';
 export { RadioButtonDriver } from './components/RadioButtonDriver';

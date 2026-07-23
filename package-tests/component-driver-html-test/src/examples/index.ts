@@ -4,6 +4,7 @@ export * from './contextMenu';
 export * from './drag';
 export * from './elementNotFound';
 export * from './fileUpload';
+export * from './findByRole';
 export * from './focusEvent';
 export * from './form';
 export * from './input';

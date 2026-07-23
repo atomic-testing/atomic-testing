@@ -102,8 +102,10 @@ const infraMethods: ReadonlySet<string> = new Set([
   'constructor',
   'runInteraction',
   'getElement',
+  'getElementByAccessibleRole',
   'calculateMousePosition',
   'dispatchMouse',
+  'dispatchHtml5DragSequence',
   'escapesToDocumentRoot',
 ]);
 

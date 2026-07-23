@@ -59,6 +59,7 @@ All DOM + E2E (Chromium/Firefox/WebKit).
 | Avatar      | `AvatarDriver`      | image load-failure → initials fallback (jsdom never fires `onError`) |
 | AvatarGroup | `AvatarGroupDriver` | —                                                                    |
 | Thumbnail   | `ThumbnailDriver`   | hover tooltip & lightbox preview                                     |
+| Lightbox    | `LightboxDriver`    | double-click zoom & drag-to-pan (real double-click timing / pointer geometry) |
 
 ## Coverage — nav chrome
 

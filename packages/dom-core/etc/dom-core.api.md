@@ -123,6 +123,27 @@ export interface DOMInteractorOption {
 }
 
 // @internal
+export class FakeDataTransfer implements DataTransfer {
+    // (undocumented)
+    clearData(format?: string): void;
+    // (undocumented)
+    dropEffect: DataTransfer['dropEffect'];
+    // (undocumented)
+    effectAllowed: DataTransfer['effectAllowed'];
+    // (undocumented)
+    readonly files: FileList;
+    // (undocumented)
+    getData(format: string): string;
+    // (undocumented)
+    readonly items: DataTransferItemList;
+    // (undocumented)
+    setData(format: string, data: string): void;
+    setDragImage(_image: Element, _x: number, _y: number): void;
+    // (undocumented)
+    get types(): readonly string[];
+}
+
+// @internal
 export class FakeMouseEvent extends MouseEvent {
     constructor(type: string, overrides?: Partial<MouseEvent>);
 }
@@ -136,6 +157,8 @@ export interface UserEventDispatcher {
     clear(element: Element): Promise<void>;
     // (undocumented)
     click(element: Element): Promise<void>;
+    // (undocumented)
+    dblClick(element: Element): Promise<void>;
     // (undocumented)
     hover(element: Element): Promise<void>;
     // (undocumented)

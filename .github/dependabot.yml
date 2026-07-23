@@ -107,3 +107,333 @@ updates:
         versions: ['>=20.0.0']
       - dependency-name: '@types/react-dom'
         versions: ['>=20.0.0']
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Everything below guards a package intentionally pinned to ONE major
+  # version of a third-party dependency (see CLAUDE.md's Package Structure /
+  # per-major driver packages) that previously had NO dependabot coverage at
+  # all — the gap behind PR #1132 (@angular/core bumped 20/21 -> 22) and #1134
+  # (@mui/x-data-grid-generator bumped 6/7/8 -> 9 via the then-uncovered
+  # mui-x-v9-test). These use `update-types: semver-major` instead of a
+  # hardcoded version ceiling so a new major of the SAME dependency never
+  # silently slips through — no version number to remember to update here.
+  #
+  # IMPORTANT: PR #1134 shows these `ignore` rules are necessary but NOT
+  # sufficient on their own — the mui-x-v6/v7/v8-test rules above already
+  # existed and were bypassed anyway, because pnpm workspaces share one
+  # lockfile and an update from an unguarded sibling directory can rewrite
+  # other manifests without re-checking their ignore lists. The authoritative
+  # gate is `pnpm check:deps-pinning`
+  # (scripts/check-dependency-pinning.mjs, DEP-PIN-01), which verifies the
+  # committed manifest directly and runs in CI on every PR. Treat these
+  # entries as reducing how often a bad PR gets opened, not as the guarantee.
+  # ─────────────────────────────────────────────────────────────────────────
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/angular-20'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/angular-21'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/angular-22'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/angular-core'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/angular-20-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/angular-21-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/angular-22-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-angular-material-v20'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-angular-material-v21'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-angular-material-v22'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-angular-material-v20-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-angular-material-v21-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-angular-material-v22-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-mui-v7'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@mui/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-mui-v9'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@mui/*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-mui-v9-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@mui/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-mui-x-v9-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@mui/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@mui/x-*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-primevue-v4'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'primevue'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-primevue-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'primevue'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-radix-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'radix-ui'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'cmdk'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/component-driver-reka-ui-v2'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'reka-ui'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-reka-ui-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'reka-ui'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/component-driver-fluent-v9-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: '@fluentui/react-components'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/react-18'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/react-19'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  # react-legacy spans two majors by design (peerDep `^16 || ^17`); the pinned
+  # devDependency is already at the top of that range (17), so blocking any
+  # further semver-major bump is exactly right — Dependabot never proposes a
+  # downgrade to 16.
+  - package-ecosystem: 'npm'
+    directory: '/packages/react-legacy'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/vue-3'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+
+  # vue-3-test also depends on `storybook`, but at a deliberately different,
+  # unrelated major for its own Storybook stories (see DEP-PIN-01's `storybook`
+  # exception) — not guarded here on purpose.
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/vue-3-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/packages/storybook'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'storybook'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'npm'
+    directory: '/package-tests/storybook-test'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'storybook'
+        update-types: ['version-update:semver-major']

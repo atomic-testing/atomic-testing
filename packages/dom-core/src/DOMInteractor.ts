@@ -1,4 +1,6 @@
 import {
+  AccessibleRoleLocator,
+  assertValidClickCount,
   BlurOption,
   BoundingRect,
   ClickOption,
@@ -27,10 +29,10 @@ import {
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent, queryAllByRole } from '@testing-library/dom';
 import defaultUserEvent from '@testing-library/user-event';
 
-import { FakeMouseEvent } from './fakeEvents';
+import { FakeDataTransfer, FakeMouseEvent } from './fakeEvents';
 import { DOMInteractorOption, UserEventDispatcher } from './types';
 
 /**
@@ -168,25 +170,39 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
+    assertValidClickCount(option?.clickCount);
     return this.runInteraction(async () => {
       const el = await this.getElement(locator);
       if (el == null) {
         throw new ElementNotFoundError(locator, 'click');
       }
 
+      const isDoubleClick = option?.clickCount === 2;
       const isSimpleEvent = option?.position == null;
       if (isSimpleEvent) {
         // Some MUI component does not work with fireEvent('click', ...)
-        await this.userEvent.click(el);
+        await (isDoubleClick ? this.userEvent.dblClick(el) : this.userEvent.click(el));
       } else {
         const clickLocation = this.calculateMousePosition(el, option?.position);
-        const evt = new FakeMouseEvent('click', {
-          bubbles: true,
-          clientX: clickLocation.x,
-          clientY: clickLocation.y,
-        });
-
-        fireEvent(el, evt);
+        const dispatch = (type: string) =>
+          fireEvent(
+            el,
+            new FakeMouseEvent(type, {
+              bubbles: true,
+              clientX: clickLocation.x,
+              clientY: clickLocation.y,
+            })
+          );
+        // A real double-click gesture is two full clicks followed by the
+        // `dblclick` event — firing `dblclick` alone would skip `onClick`
+        // handlers a component also relies on.
+        if (isDoubleClick) {
+          dispatch('click');
+          dispatch('click');
+          dispatch('dblclick');
+        } else {
+          dispatch('click');
+        }
       }
     });
   }
@@ -457,6 +473,11 @@ export class DOMInteractor implements Interactor {
    * `code` is derived from `key` (see {@link deriveKeyCode}) so handlers that
    * switch on `event.code` — e.g. PrimeVue's Slider — behave as they do under a
    * real browser event, where `code` is always populated.
+   *
+   * `key` is dispatched verbatim — a `shift` modifier is NOT used to derive a
+   * shifted character (`{ key: 'a', shift: true }` stays `key: 'a'`, never
+   * folded to `'A'`), matching `PlaywrightInteractor`'s behavior (see
+   * {@link KeyboardActions.pressKey} for the cross-engine verification, #924).
    *
    * @param locator - Locator used to find the target element
    * @param key - A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`
@@ -806,6 +827,45 @@ export class DOMInteractor implements Interactor {
   }
 
   /**
+   * Fire the native HTML5 drag-and-drop event sequence — `dragstart` on
+   * `sourceEl` → `dragenter`/`dragover`/`drop` on `targetEl` → `dragend` on
+   * `sourceEl` — sharing one {@link FakeDataTransfer} across every event, so a
+   * `dragstart` handler's `setData` is readable from `drop`'s `getData`.
+   * `sourceEl === targetEl` is valid: {@link drag}'s single-element delta
+   * gesture has no separate drop target, so it drags and drops onto itself.
+   *
+   * Fired unconditionally: unlike a real browser — which fires `drop` only
+   * when the `dragover` listener calls `preventDefault()` to accept the drop —
+   * jsdom has no native drag-recognition machinery to gate on, so this always
+   * runs the full sequence. This is NOT identical to {@link
+   * PlaywrightInteractor}, whose `drag`/`dragTo` drive a REAL pointer gesture
+   * that the real browser's own native DnD recognition processes — including
+   * the real `preventDefault()` gate — see #922. A target that opts in the
+   * way any real HTML5-DnD target must (calling `preventDefault()` in its
+   * `dragover`/`dragenter` handler, as the shared `.suite.ts` fixture does)
+   * sees `drop` fire in both engines regardless of this difference; a target
+   * that never opts in would still see `drop` here but not in a real browser
+   * — an accepted simplification for a synthetic environment with no native
+   * gesture recognition to simulate faithfully.
+   *
+   * jsdom implements neither `DragEvent` nor `DataTransfer` (only
+   * `MouseEvent`), so `@testing-library/dom`'s `fireEvent.drag*` dispatch a
+   * plain `Event` with `dataTransfer` attached as a property rather than a
+   * real `DragEvent` — its own documented recipe for jsdom HTML5 DnD (see
+   * https://github.com/jsdom/jsdom/issues/1568). Coordinates are not carried on
+   * these events for the same reason {@link dispatchMouse}'s are E2E-only:
+   * jsdom has no layout.
+   */
+  private dispatchHtml5DragSequence(sourceEl: Element, targetEl: Element): void {
+    const dataTransfer = new FakeDataTransfer();
+    fireEvent.dragStart(sourceEl, { dataTransfer });
+    fireEvent.dragEnter(targetEl, { dataTransfer });
+    fireEvent.dragOver(targetEl, { dataTransfer });
+    fireEvent.drop(targetEl, { dataTransfer });
+    fireEvent.dragEnd(sourceEl, { dataTransfer });
+  }
+
+  /**
    * Drag the source element and drop it onto the target element.
    *
    * The pointer sequence (`mousedown` on source → `mousemove` on target →
@@ -814,9 +874,12 @@ export class DOMInteractor implements Interactor {
    * coordinates are all zeros — the event wiring (and any drop handler the
    * sequence triggers) is exercised, but the positional outcome is E2E-only.
    *
-   * Only raw mouse events are fired; native HTML5 drag-and-drop
-   * (`dragstart`/`dragover`/`drop` + `dataTransfer`) is NOT synthesized, so
-   * components built on the HTML5 DnD API are not driven by this — see #922.
+   * The native HTML5 drag-and-drop sequence
+   * (`dragstart`/`dragenter`/`dragover`/`drop`/`dragend` + `dataTransfer`) is
+   * ALSO synthesized via {@link dispatchHtml5DragSequence}, so both DnD
+   * models — pointer/mouse-based (dnd-kit, react-beautiful-dnd) and native
+   * HTML5 (`draggable` + `ondragstart`/`ondragover`/`ondrop`) — are driven by
+   * this one primitive (#922).
    *
    * @param source - Locator used to find the element to drag
    * @param target - Locator used to find the drop target
@@ -839,6 +902,7 @@ export class DOMInteractor implements Interactor {
       this.dispatchMouse(sourceEl, 'mousedown', sourcePoint);
       this.dispatchMouse(targetEl, 'mousemove', targetPoint);
       this.dispatchMouse(targetEl, 'mouseup', targetPoint);
+      this.dispatchHtml5DragSequence(sourceEl, targetEl);
     });
   }
 
@@ -852,8 +916,10 @@ export class DOMInteractor implements Interactor {
    * center resolves to zeros and only the event wiring is exercised — the
    * behavioral outcome of the drag is E2E-only.
    *
-   * Only raw mouse events are fired; native HTML5 drag-and-drop is NOT
-   * synthesized — see #922.
+   * The native HTML5 drag-and-drop sequence is ALSO synthesized (on the same
+   * element, as its own drop target — see {@link dispatchHtml5DragSequence}),
+   * so a `draggable` element driven by this primitive sees `dragstart` and
+   * `dragend` regardless of DnD model (#922).
    *
    * @param locator - Locator used to find the element to drag
    * @param delta - Pixel offset to drag by
@@ -872,6 +938,7 @@ export class DOMInteractor implements Interactor {
       this.dispatchMouse(el, 'mousedown', start);
       this.dispatchMouse(el, 'mousemove', end);
       this.dispatchMouse(el, 'mouseup', end);
+      this.dispatchHtml5DragSequence(el, el);
     });
   }
 
@@ -910,6 +977,11 @@ export class DOMInteractor implements Interactor {
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
+    const accessibleRoleSplit = locatorUtil.splitAtAccessibleRoleLocator(locator);
+    if (accessibleRoleSplit != null) {
+      return this.getElementByAccessibleRole<T>(accessibleRoleSplit, isMultiple);
+    }
+
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     // The engine-root locator (`[]`) resolves to `:root`, which matches `<html>` —
     // an ancestor of `rootEl`, so `rootEl.querySelector(':root')` finds nothing.
@@ -925,6 +997,53 @@ export class DOMInteractor implements Interactor {
       return result;
     }
     return queryRoot.querySelector<T>(cssLocator) ?? undefined;
+  }
+
+  /**
+   * Resolve a locator chain split at its {@link AccessibleRoleLocator}
+   * segment (`findByRole`) — the second resolution channel, bypassing CSS
+   * entirely (#923). Three cases for the scope the accname search runs
+   * within, mirroring how an ordinary CSS chain resolves:
+   *
+   * - `roleLocator.relative === 'Root'` — escapes to the document root
+   *   (via {@link getElement}'s existing `[]` → `:root` handling), mirroring
+   *   how a trailing `'Root'` locator in an ordinary chain slices away
+   *   everything before it (see `escapesToDocumentRoot`).
+   * - `before` is non-empty — resolves normally (recursing back into
+   *   {@link getElement}, so it fully supports nested `LinkedCssLocator`s
+   *   etc.) to a single scope element.
+   * - `before` is empty and NOT a `'Root'` escape — scopes to `this.rootEl`
+   *   directly, NOT the document root. An unscoped `findByRole(...)` must
+   *   still respect the interactor's own scoping (e.g. a Storybook canvas),
+   *   exactly like a bare CSS locator does; routing this case through
+   *   `getElement([])` would incorrectly escape to the document regardless
+   *   of `rootEl`, since an empty chain always reduces to `:root`.
+   *
+   * Within that scope, `@testing-library/dom`'s `queryAllByRole` resolves by
+   * the accname algorithm — the same engine `dom-core` already depends on for
+   * this exact purpose (see the `findByRole` design in ADR 0001, Decision B).
+   * `hidden: true` matches this codebase's other locators, which resolve
+   * structurally regardless of visibility (`isVisible` is the dedicated
+   * visibility check, not baked into resolution).
+   */
+  private async getElementByAccessibleRole<T extends Element>(
+    split: { before: PartLocator; roleLocator: AccessibleRoleLocator },
+    isMultiple: boolean
+  ): Promise<T[] | Optional<T>> {
+    const scopeEl =
+      split.roleLocator.relative === 'Root'
+        ? await this.getElement([])
+        : split.before.length === 0
+          ? this.rootEl
+          : await this.getElement(split.before);
+    if (scopeEl == null) {
+      return isMultiple ? [] : undefined;
+    }
+    const matches = queryAllByRole(scopeEl as HTMLElement, split.roleLocator.role, {
+      hidden: true,
+      ...(split.roleLocator.name != null ? { name: split.roleLocator.name } : {}),
+    }) as unknown as T[];
+    return isMultiple ? matches : matches[0];
   }
 
   /**

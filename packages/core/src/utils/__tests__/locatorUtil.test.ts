@@ -1,4 +1,5 @@
 import { Interactor } from '../../interactor/Interactor';
+import { AccessibleRoleLocator } from '../../locators/AccessibleRoleLocator';
 import { byAriaLabel } from '../../locators/byAriaLabel';
 import { byAttribute } from '../../locators/byAttribute';
 import { byCssSelector } from '../../locators/byCssSelector';
@@ -6,7 +7,15 @@ import { byDataTestId } from '../../locators/byDataTestId';
 import { byLinkedElement } from '../../locators/byLinkedElement';
 import { byRole } from '../../locators/byRole';
 import { byTagName } from '../../locators/byTagName';
-import { and, append, documentRootSelector, overrideLocatorRelativePosition, toCssSelector } from '../locatorUtil';
+import { findByRole } from '../../locators/findByRole';
+import {
+  and,
+  append,
+  documentRootSelector,
+  overrideLocatorRelativePosition,
+  splitAtAccessibleRoleLocator,
+  toCssSelector,
+} from '../locatorUtil';
 
 // toCssSelector only consults the interactor to resolve LinkedCssLocators; the
 // plain-CSS chains exercised here never touch it, so a bare stub is enough.
@@ -155,5 +164,50 @@ describe('and (same-element composition)', () => {
   it('throws when the base is already a multi-locator chain', () => {
     const chain = append(byCssSelector('.parent'), byCssSelector('.child'));
     expect(() => and(chain, byRole('button'))).toThrow(/chain/i);
+  });
+
+  it('throws when composing an AccessibleRoleLocator (#923)', () => {
+    // findByRole() has no CSS representation, so it cannot be folded into a
+    // same-element compound the way a primitive by* locator can.
+    expect(() => and(byRole('button'), findByRole('button', 'Save'))).toThrow(/primitive/i);
+  });
+});
+
+describe('splitAtAccessibleRoleLocator (#923)', () => {
+  it('returns undefined for a chain with no AccessibleRoleLocator', () => {
+    expect(splitAtAccessibleRoleLocator(byDataTestId('submit'))).toBeUndefined();
+    expect(splitAtAccessibleRoleLocator([])).toBeUndefined();
+  });
+
+  it('splits a bare findByRole() into an empty before and the role locator', () => {
+    const locator = findByRole('button', 'Save');
+    const split = splitAtAccessibleRoleLocator(locator);
+    expect(split?.before).toEqual([]);
+    expect(split?.roleLocator).toBeInstanceOf(AccessibleRoleLocator);
+    expect(split?.roleLocator.role).toBe('button');
+    expect(split?.roleLocator.name).toBe('Save');
+  });
+
+  it('splits a scoped findByRole() into its preceding chain and the role locator', () => {
+    const scoped = append(byDataTestId('dialog'), findByRole('button', 'Save'));
+    const split = splitAtAccessibleRoleLocator(scoped);
+    expect(split?.before).toEqual(byDataTestId('dialog'));
+    expect(split?.roleLocator.role).toBe('button');
+  });
+
+  it('throws when the AccessibleRoleLocator is not the last segment', () => {
+    const invalid = append(findByRole('button', 'Save'), byCssSelector('.icon'));
+    expect(() => splitAtAccessibleRoleLocator(invalid)).toThrow(/last locator/i);
+  });
+
+  it('throws when more than one AccessibleRoleLocator is chained', () => {
+    const invalid = append(findByRole('button', 'Save'), findByRole('span', 'Icon'));
+    expect(() => splitAtAccessibleRoleLocator(invalid)).toThrow(/last locator/i);
+  });
+});
+
+describe('toCssSelector rejects AccessibleRoleLocator (#923)', () => {
+  it('throws a clear error instead of silently emitting the diagnostic selector as CSS', async () => {
+    await expect(toCssSelector(findByRole('button', 'Save'), stubInteractor)).rejects.toThrow(/no CSS representation/i);
   });
 });

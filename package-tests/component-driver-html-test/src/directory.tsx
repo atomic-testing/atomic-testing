@@ -8,6 +8,7 @@ import { contextMenuUIExample } from './examples/contextMenu/ContextMenu.example
 import { dragUIExample } from './examples/drag/Drag.examples';
 import { elementNotFoundUIExample } from './examples/elementNotFound/ElementNotFound.examples';
 import { fileUploadUIExample } from './examples/fileUpload/FileUpload.examples';
+import { findByRoleUIExample } from './examples/findByRole/FindByRole.examples';
 import { focusEventUIExample } from './examples/focusEvent/Focus.examples';
 import { linkedElementUIExample } from './examples/form/LinkedElement.examples';
 import { textInputCapabilitiesUIExample } from './examples/input/Capabilities.examples';
@@ -74,6 +75,11 @@ export const tocs: ExampleToc[] = [
     label: 'By Role',
     path: '/by-role',
     ui: <ExampleList examples={[byRoleUIExample]} />,
+  },
+  {
+    label: 'Find By Role',
+    path: '/find-by-role',
+    ui: <ExampleList examples={[findByRoleUIExample]} />,
   },
   {
     label: 'File Upload',
