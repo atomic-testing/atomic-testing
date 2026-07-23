@@ -2,6 +2,7 @@ import { Component } from 'vue';
 
 import { ButtonExample } from './examples/button/Button.examples';
 import { CheckboxExample } from './examples/checkbox/Checkbox.examples';
+import { ContextMenuExample } from './examples/context-menu/ContextMenu.examples';
 import { DataTableExample } from './examples/data-table/DataTable.examples';
 import { DialogExample } from './examples/dialog/Dialog.examples';
 import { InputTextExample } from './examples/input-text/InputText.examples';
@@ -33,6 +34,7 @@ export const directory: DirectoryEntry[] = [
   { path: '/select', title: 'Select', component: SelectExample },
   { path: '/dialog', title: 'Dialog', component: DialogExample },
   { path: '/menu', title: 'Menu', component: MenuExample },
+  { path: '/context-menu', title: 'ContextMenu', component: ContextMenuExample },
   { path: '/tabs', title: 'Tabs', component: TabsExample },
   { path: '/data-table', title: 'DataTable', component: DataTableExample },
 ];
