@@ -400,6 +400,14 @@ jobs:
       - name: Skill harness unit tests
         run: pnpm test:skills
 
+      # Dependency-major-pinning gate (DEP-PIN-*): fails if a package intentionally
+      # scoped to one major version of a third-party dependency (by its own
+      # directory name, e.g. `angular-20`, `component-driver-mui-x-v6`) has that
+      # dependency pinned to a different major — the bug class behind PR #1132 and
+      # #1134. Dependency-free, reads package.json directly, so it runs here too.
+      - name: Dependency-major-pinning check
+        run: pnpm check:deps-pinning
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing
