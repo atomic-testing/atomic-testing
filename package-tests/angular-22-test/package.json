@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@angular/common": "^22.0.0",
-    "@angular/compiler": "^22.0.0",
+    "@angular/compiler": "^20.3.26",
     "@angular/core": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "@atomic-testing/angular-22": "workspace:*",
