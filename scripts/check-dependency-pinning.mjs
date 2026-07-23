@@ -138,7 +138,9 @@ function checkDir(dir, dirName, errors) {
   const manifest = readManifest(dir);
   if (!manifest) return;
   const deps = concreteDeps(manifest.json);
-  const names = rule.depPrefix ? Object.keys(deps).filter(n => n.startsWith(rule.depPrefix)) : rule.deps.filter(n => n in deps);
+  const names = rule.depPrefix
+    ? Object.keys(deps).filter(n => n.startsWith(rule.depPrefix))
+    : rule.deps.filter(n => n in deps);
   for (const name of names) {
     const major = majorOf(deps[name]);
     if (major == null) continue;
