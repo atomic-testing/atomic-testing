@@ -34,7 +34,7 @@ export const createDomTestEngine: typeof createTestEngine;
 // @public
 export function createTestEngine<T extends ScenePart>(element: HTMLElement, partDefinitions: T): TestEngine<T>;
 
-// @public (undocumented)
+// @public
 export class DOMInteractor implements Interactor {
     constructor(rootEl?: HTMLElement, option?: DOMInteractorOption);
     activate(locator: PartLocator): Promise<void>;

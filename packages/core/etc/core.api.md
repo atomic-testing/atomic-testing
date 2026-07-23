@@ -10,7 +10,7 @@ export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = 
 // @public (undocumented)
 export interface BlurOption {}
 
-// @public (undocumented)
+// @public
 export interface BoundingRect {
     // (undocumented)
     height: number;
@@ -167,7 +167,7 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
     option?: Partial<IContainerDriverOption<ContentT, T>>;
 }
 
-// @public (undocumented)
+// @public
 export class CssLocator {
     // Warning: (ae-forgotten-export) The symbol "CssLocatorInitializer" needs to be exported by the entry point index.d.mts
     constructor(selector: string, initializeValue?: Partial<CssLocatorInitializer>);
@@ -306,7 +306,7 @@ export type HtmlInputDateType = (typeof htmlInputDateTypes)[number];
 // @public
 export const htmlInputDateTypes: readonly string[];
 
-// @public (undocumented)
+// @public
 export interface IClickableDriver {
     // (undocumented)
     click(option?: ClickOption): Promise<void>;
@@ -356,13 +356,13 @@ export interface IExampleUnit<T extends ScenePart, ExampleT> extends IExampleUIU
     scene: T;
 }
 
-// @public (undocumented)
+// @public
 export interface IFormFieldDriver<T> {
     // (undocumented)
     getValue(): Promise<T>;
 }
 
-// @public (undocumented)
+// @public
 export interface IInputDriver<T> extends IFormFieldDriver<T> {
     // (undocumented)
     setValue(value: T): Promise<boolean>;
@@ -424,7 +424,7 @@ export interface ITestEngineOption extends IComponentDriverOption {
     rootElement?: Element;
 }
 
-// @public (undocumented)
+// @public
 export interface IToggleDriver {
     // (undocumented)
     isSelected(): Promise<boolean>;
@@ -443,7 +443,7 @@ export interface KeyboardActions {
     pressKey(locator: PartLocator, key: string, option?: Partial<PressKeyOption>): Promise<void>;
 }
 
-// @public (undocumented)
+// @public
 export class LinkedCssLocator extends CssLocator {
     // Warning: (ae-forgotten-export) The symbol "LinkedCssLocatorInitializer" needs to be exported by the entry point index.d.mts
     constructor(selector: string, initializeValue: LinkedCssLocatorInitializer & Partial<CssLocatorInitializer>);
@@ -521,7 +521,7 @@ export namespace locatorUtil {
     export { OverrideLocatorRelativePositionOption, and, append, defaultOverrideLocatorRelativePositionOption, documentRootSelector, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, overrideLocatorRelativePosition, toCssSelector };
 }
 
-// @public (undocumented)
+// @public
 export class MissingPartError<T extends ScenePart> extends ErrorBase {
     constructor(missingPartName: keyof T | ReadonlyArray<keyof T>, driver: {
         driverName: string;
@@ -568,7 +568,7 @@ export type PartLocator = CssLocator[];
 // @public (undocumented)
 export type PartName<T extends ScenePart> = keyof T;
 
-// @public (undocumented)
+// @public
 export interface Point {
     // (undocumented)
     x: number;
@@ -653,7 +653,7 @@ export interface Waiter {
 // @public (undocumented)
 export type WaitForCondition = 'attached' | 'visible' | 'detached' | 'hidden';
 
-// @public (undocumented)
+// @public
 export class WaitForFailureError extends InteractorErrorBase {
     constructor(locator: PartLocator, option: WaitForOption);
 }
