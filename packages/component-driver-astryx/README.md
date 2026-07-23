@@ -35,10 +35,10 @@ The same scene and the same test body run unchanged in a DOM test and an end-to-
 
 ```typescript
 // DOM (Jest + React), via @atomic-testing/react-19
-const engine = createTestEngine(<SignupForm />, signupScene);
+const domEngine = createTestEngine(<SignupForm />, signupScene);
 
 // End-to-end (Playwright), via @atomic-testing/playwright
-const engine = createTestEngine(page, signupScene);
+const e2eEngine = createTestEngine(page, signupScene);
 ```
 
 For a larger, driver-per-component version of this pattern, see the real suites under [`package-tests/component-driver-astryx-test/src/examples`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-astryx-test/src/examples) — every driver in the tables below has a matching `*.suite.ts` there, run against both a `.dom.test.ts` (Jest) and an `.e2e.test.ts` (Playwright) adapter, so the DOM/E2E parity above is exercised on every driver in this package, not just the example.
