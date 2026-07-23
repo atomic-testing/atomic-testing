@@ -1,4 +1,5 @@
 import {
+  assertValidClickCount,
   BlurOption,
   BoundingRect,
   ClickOption,
@@ -346,6 +347,7 @@ export class PlaywrightInteractor implements Interactor {
   }
 
   async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
+    assertValidClickCount(option?.clickCount);
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     await this.runMutation(locator, 'click', () =>
       this.page.locator(cssLocator).click({ position: option?.position, clickCount: option?.clickCount })

@@ -7,6 +7,9 @@
 // @public
 export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = Ctor;
 
+// @public
+export function assertValidClickCount(clickCount: number | undefined): void;
+
 // @public (undocumented)
 export interface BlurOption {}
 

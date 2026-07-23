@@ -1,4 +1,5 @@
 import {
+  assertValidClickCount,
   BlurOption,
   BoundingRect,
   ClickOption,
@@ -159,6 +160,7 @@ export class DOMInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element is not found
    */
   async click(locator: PartLocator, option?: ClickOption): Promise<void> {
+    assertValidClickCount(option?.clickCount);
     return this.runInteraction(async () => {
       const el = await this.getElement(locator);
       if (el == null) {
@@ -172,13 +174,25 @@ export class DOMInteractor implements Interactor {
         await (isDoubleClick ? this.userEvent.dblClick(el) : this.userEvent.click(el));
       } else {
         const clickLocation = this.calculateMousePosition(el, option?.position);
-        const evt = new FakeMouseEvent(isDoubleClick ? 'dblclick' : 'click', {
-          bubbles: true,
-          clientX: clickLocation.x,
-          clientY: clickLocation.y,
-        });
-
-        fireEvent(el, evt);
+        const dispatch = (type: string) =>
+          fireEvent(
+            el,
+            new FakeMouseEvent(type, {
+              bubbles: true,
+              clientX: clickLocation.x,
+              clientY: clickLocation.y,
+            })
+          );
+        // A real double-click gesture is two full clicks followed by the
+        // `dblclick` event — firing `dblclick` alone would skip `onClick`
+        // handlers a component also relies on.
+        if (isDoubleClick) {
+          dispatch('click');
+          dispatch('click');
+          dispatch('dblclick');
+        } else {
+          dispatch('click');
+        }
       }
     });
   }
