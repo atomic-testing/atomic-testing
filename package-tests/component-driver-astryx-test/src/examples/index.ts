@@ -30,6 +30,7 @@ export * from './more-menu';
 export * from './popover';
 export * from './dialog';
 export * from './alert-dialog';
+export * from './lightbox';
 export * from './list';
 export * from './metadata-list';
 export * from './outline';

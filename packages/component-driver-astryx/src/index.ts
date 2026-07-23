@@ -45,6 +45,7 @@ export { DropdownMenuDriver, MoreMenuDriver } from './components/DropdownMenuDri
 export { PopoverDriver } from './components/PopoverDriver';
 export { DialogDriver } from './components/DialogDriver';
 export { AlertDialogDriver } from './components/AlertDialogDriver';
+export { LightboxDriver } from './components/LightboxDriver';
 
 // Lists, tables & display (Wave 3)
 export { ListDriver } from './components/ListDriver';

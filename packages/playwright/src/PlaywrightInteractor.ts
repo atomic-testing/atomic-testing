@@ -347,7 +347,9 @@ export class PlaywrightInteractor implements Interactor {
 
   async click(locator: PartLocator, option?: Partial<ClickOption>): Promise<void> {
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
-    await this.runMutation(locator, 'click', () => this.page.locator(cssLocator).click({ position: option?.position }));
+    await this.runMutation(locator, 'click', () =>
+      this.page.locator(cssLocator).click({ position: option?.position, clickCount: option?.clickCount })
+    );
   }
 
   /**

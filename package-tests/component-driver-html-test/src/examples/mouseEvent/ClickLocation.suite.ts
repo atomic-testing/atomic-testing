@@ -18,6 +18,10 @@ export const clickLocationMouseEventExampleScenePart = {
     locator: byDataTestId('position-y'),
     driver: HTMLElementDriver,
   },
+  eventDisplay: {
+    locator: byDataTestId('event-name'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 export const clickLocationMouseEventExample: IExampleUnit<typeof clickLocationMouseEventExampleScenePart, JSX.Element> =
@@ -29,7 +33,7 @@ export const clickLocationMouseEventExample: IExampleUnit<typeof clickLocationMo
 export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof clickLocationMouseEventExample.scene> = {
   title: 'Mouse event: Click',
   url: '/mouse-event',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertApproxEqual }) => {
+  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertApproxEqual, assertEqual }) => {
     describe(`${clickLocationMouseEventExample.title}`, () => {
       const engine = useTestEngine(clickLocationMouseEventExample.scene, getTestEngine, { beforeEach, afterEach });
 
@@ -50,6 +54,13 @@ export const clickLocationMouseEventExampleTestSuite: TestSuiteInfo<typeof click
 
         assertApproxEqual(xActual, 20, 1);
         assertApproxEqual(yActual, 15, 1);
+      });
+
+      // clickCount: 2 dispatches a real double-click gesture, distinct from
+      // calling click() twice (which does not reliably register as one).
+      test('click({ clickCount: 2 }) dispatches a real double-click', async () => {
+        await engine().parts.target.click({ clickCount: 2 });
+        assertEqual(await engine().parts.eventDisplay.getText(), 'dblclick');
       });
     });
   },

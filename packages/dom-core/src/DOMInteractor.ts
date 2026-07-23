@@ -165,13 +165,14 @@ export class DOMInteractor implements Interactor {
         throw new ElementNotFoundError(locator, 'click');
       }
 
+      const isDoubleClick = option?.clickCount === 2;
       const isSimpleEvent = option?.position == null;
       if (isSimpleEvent) {
         // Some MUI component does not work with fireEvent('click', ...)
-        await this.userEvent.click(el);
+        await (isDoubleClick ? this.userEvent.dblClick(el) : this.userEvent.click(el));
       } else {
         const clickLocation = this.calculateMousePosition(el, option?.position);
-        const evt = new FakeMouseEvent('click', {
+        const evt = new FakeMouseEvent(isDoubleClick ? 'dblclick' : 'click', {
           bubbles: true,
           clientX: clickLocation.x,
           clientY: clickLocation.y,
