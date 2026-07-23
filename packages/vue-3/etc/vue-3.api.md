@@ -20,7 +20,7 @@ export function createTestEngine<T extends ScenePart>(component: Component | Vue
 // @public @deprecated (undocumented)
 export type IVueTestEngineOption = ITestEngineOption;
 
-// @public (undocumented)
+// @public
 export class VueInteractor extends DOMInteractor {
     protected runInteraction<T>(interaction: () => Promise<T>): Promise<T>;
 }
