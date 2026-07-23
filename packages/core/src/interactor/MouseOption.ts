@@ -9,7 +9,17 @@ export interface MouseOption {
   position?: Point;
 }
 
-export interface ClickOption extends MouseOption {}
+export interface ClickOption extends MouseOption {
+  /**
+   * Number of clicks to dispatch as a single gesture, e.g. `2` for a
+   * double-click. Only `2` is currently implemented; omit for a single click.
+   * Two separate `click()` calls do not reliably register as a real
+   * double-click (actionability re-checks between calls can exceed the
+   * platform's double-click timing threshold), so a genuine double-click
+   * gesture needs this option rather than calling `click()` twice.
+   */
+  clickCount?: number;
+}
 
 export interface MouseMoveOption extends MouseOption {}
 

@@ -39,6 +39,13 @@ export const ClickLocationMouseEventExample = () => {
     [displayEvent]
   );
 
+  const onDoubleClick = useCallback(
+    (evt: React.MouseEvent<HTMLDivElement>) => {
+      displayEvent(evt, 'dblclick');
+    },
+    [displayEvent]
+  );
+
   return (
     <React.Fragment>
       <div
@@ -46,7 +53,8 @@ export const ClickLocationMouseEventExample = () => {
         data-testid='click-target'
         onClick={onClick}
         onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}></div>
+        onMouseUp={onMouseUp}
+        onDoubleClick={onDoubleClick}></div>
       <div className='mouse-event'>
         <span className='label'>Event</span>
         <span className='value' data-testid='event-name'>

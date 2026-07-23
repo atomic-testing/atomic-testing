@@ -15,6 +15,7 @@ export type IDomTestEngineOption = ITestEngineOption;
 export interface UserEventDispatcher {
   clear(element: Element): Promise<void>;
   click(element: Element): Promise<void>;
+  dblClick(element: Element): Promise<void>;
   hover(element: Element): Promise<void>;
   // Returns unknown (not void): the default user-event export's keyboard()
   // resolves to its internal keyboard state, and Promise's type parameter is
