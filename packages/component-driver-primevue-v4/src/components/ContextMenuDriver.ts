@@ -38,13 +38,20 @@ const defaultTransitionDuration = 1000;
  * differs from `MenuDriver`'s.
  *
  * **Single-open-menu scoping caveat**: the surface locator is document-rooted
- * and generic (`[data-pc-name="contextmenu"]`) rather than instance-linked,
- * which is safe here because PrimeVue unmounts a closed `ContextMenu`
- * entirely — at most one such surface exists in the DOM while any one context
- * menu is open. A scene rendering two `ContextMenu` instances is fine as long
- * as tests never assert on both open at once (mirrors
- * `component-driver-radix-v1`'s `ContextMenuDriver`, which documents the same
- * limit for the same structural reason).
+ * and generic (`[data-pc-name="contextmenu"]`) rather than instance-linked —
+ * safe only while at most one `ContextMenu` is mounted at a time. PrimeVue
+ * unmounts a closed `ContextMenu`, but separate `ContextMenu` instances don't
+ * coordinate with each other (opening one doesn't close another that's
+ * already open — verified empirically: an instance's outside-dismiss listener
+ * only binds a `click` handler, which a `contextmenu` event never fires), so
+ * a scene with two instances CAN end up with two surfaces mounted at once if
+ * a caller opens the second without first closing the first. In that state,
+ * item reads resolve against whichever surface the underlying `querySelector`
+ * / `page.locator()` matches first, not necessarily the intended instance —
+ * so close one `ContextMenuDriver` before opening another when a scene
+ * renders more than one (mirrors `component-driver-radix-v1`'s
+ * `ContextMenuDriver`, which documents the same limit for the same
+ * structural reason).
  *
  * **Nested items** (a `model` entry with its own `items`, rendered as a
  * `role="menu"` submenu on hover): out of scope for this driver — item reads
@@ -69,11 +76,19 @@ export class ContextMenuDriver extends MenuContentDriverBase {
     return this.exists();
   }
 
-  /** Open the menu by dispatching a right-click (`contextmenu`) on the trigger. */
+  /**
+   * Open the menu by dispatching a right-click (`contextmenu`) on the
+   * trigger — unconditionally, never guarded by {@link isOpen}. `isOpen`
+   * reads the document-rooted, non-instance-scoped surface locator (see the
+   * class doc), so it can't tell "this instance is open" from "some other
+   * `ContextMenuDriver`'s menu is open"; guarding on it would silently no-op
+   * a second instance's `open()` while a first instance's menu is still
+   * showing. PrimeVue's own `show()` handles a redundant call safely
+   * (repositions rather than re-opening), so dispatching every time is safe
+   * for the same-instance case too.
+   */
   async open(): Promise<void> {
-    if (!(await this.isOpen())) {
-      await this.interactor.contextMenu(this.triggerLocator);
-    }
+    await this.interactor.contextMenu(this.triggerLocator);
   }
 
   /**

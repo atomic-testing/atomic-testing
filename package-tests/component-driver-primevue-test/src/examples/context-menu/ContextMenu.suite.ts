@@ -1,6 +1,6 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ContextMenuDriver, MenuItemNotFoundErrorId } from '@atomic-testing/component-driver-primevue-v4';
-import { byDataTestId, ScenePart } from '@atomic-testing/core';
+import { byCssSelector, byDataTestId, childListHelper, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 export const contextMenuScenePart = {
@@ -88,6 +88,26 @@ export const contextMenuTestSuite: TestSuiteInfo<typeof contextMenuScenePart> = 
         assertEqual(await engine().parts.secondTarget.getMenuItemCount(), 2);
         await engine().parts.secondTarget.selectByLabel('Rename');
         assertTrue(await engine().parts.secondTarget.waitForClose());
+      });
+
+      test('opening a second trigger while the first is still open does not no-op (review regression)', async () => {
+        await engine().parts.target.open();
+        assertTrue(await engine().parts.target.waitForOpen());
+
+        // The bug: open() used to guard on isOpen(), which reads the
+        // document-rooted, non-instance-scoped surface locator — so with
+        // target's menu already open, secondTarget.open() would silently
+        // skip dispatching the right-click, and only one surface would ever
+        // mount. Count mounted surfaces directly (order-independent, unlike
+        // reading either driver's own generic locator) rather than relying
+        // on which one a single-match read happens to resolve to.
+        await engine().parts.secondTarget.open();
+        const mountedSurfaceCount = await childListHelper.countMatchingChildren(
+          engine().interactor,
+          byCssSelector('body', 'Root'),
+          '[data-pc-name="contextmenu"]'
+        );
+        assertEqual(mountedSurfaceCount, 2);
       });
     });
   },
