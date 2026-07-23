@@ -1,4 +1,5 @@
 import {
+  AccessibleRoleLocator,
   BlurOption,
   BoundingRect,
   ClickOption,
@@ -27,10 +28,10 @@ import {
   WaitForOption,
   WaitUntilOption,
 } from '@atomic-testing/core';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent, queryAllByRole } from '@testing-library/dom';
 import defaultUserEvent from '@testing-library/user-event';
 
-import { FakeMouseEvent } from './fakeEvents';
+import { FakeDataTransfer, FakeMouseEvent } from './fakeEvents';
 import { DOMInteractorOption, UserEventDispatcher } from './types';
 
 /**
@@ -449,6 +450,11 @@ export class DOMInteractor implements Interactor {
    * switch on `event.code` — e.g. PrimeVue's Slider — behave as they do under a
    * real browser event, where `code` is always populated.
    *
+   * `key` is dispatched verbatim — a `shift` modifier is NOT used to derive a
+   * shifted character (`{ key: 'a', shift: true }` stays `key: 'a'`, never
+   * folded to `'A'`), matching `PlaywrightInteractor`'s behavior (see
+   * {@link KeyboardActions.pressKey} for the cross-engine verification, #924).
+   *
    * @param locator - Locator used to find the target element
    * @param key - A `KeyboardEvent.key` value, e.g. `'Escape'`, `'Backspace'`
    * @param option - Modifier flags folded into the event init as
@@ -797,6 +803,39 @@ export class DOMInteractor implements Interactor {
   }
 
   /**
+   * Fire the native HTML5 drag-and-drop event sequence — `dragstart` on
+   * `sourceEl` → `dragenter`/`dragover`/`drop` on `targetEl` → `dragend` on
+   * `sourceEl` — sharing one {@link FakeDataTransfer} across every event, so a
+   * `dragstart` handler's `setData` is readable from `drop`'s `getData`.
+   * `sourceEl === targetEl` is valid: {@link drag}'s single-element delta
+   * gesture has no separate drop target, so it drags and drops onto itself.
+   *
+   * Fired unconditionally: unlike a real browser — which fires `drop` only
+   * when the `dragover` listener calls `preventDefault()` to accept the drop —
+   * this does not gate on that signal, so a component under test observes the
+   * full sequence regardless of whether it opts in. This keeps the primitive's
+   * behavior identical to {@link PlaywrightInteractor}'s explicit-dispatch path
+   * (`Locator.dispatchEvent`), which has no such native gating either, so the
+   * same `.suite.ts` sees the same sequence in both engines — see #922.
+   *
+   * jsdom implements neither `DragEvent` nor `DataTransfer` (only
+   * `MouseEvent`), so `@testing-library/dom`'s `fireEvent.drag*` dispatch a
+   * plain `Event` with `dataTransfer` attached as a property rather than a
+   * real `DragEvent` — its own documented recipe for jsdom HTML5 DnD (see
+   * https://github.com/jsdom/jsdom/issues/1568). Coordinates are not carried on
+   * these events for the same reason {@link dispatchMouse}'s are E2E-only:
+   * jsdom has no layout.
+   */
+  private dispatchHtml5DragSequence(sourceEl: Element, targetEl: Element): void {
+    const dataTransfer = new FakeDataTransfer();
+    fireEvent.dragStart(sourceEl, { dataTransfer });
+    fireEvent.dragEnter(targetEl, { dataTransfer });
+    fireEvent.dragOver(targetEl, { dataTransfer });
+    fireEvent.drop(targetEl, { dataTransfer });
+    fireEvent.dragEnd(sourceEl, { dataTransfer });
+  }
+
+  /**
    * Drag the source element and drop it onto the target element.
    *
    * The pointer sequence (`mousedown` on source → `mousemove` on target →
@@ -805,9 +844,12 @@ export class DOMInteractor implements Interactor {
    * coordinates are all zeros — the event wiring (and any drop handler the
    * sequence triggers) is exercised, but the positional outcome is E2E-only.
    *
-   * Only raw mouse events are fired; native HTML5 drag-and-drop
-   * (`dragstart`/`dragover`/`drop` + `dataTransfer`) is NOT synthesized, so
-   * components built on the HTML5 DnD API are not driven by this — see #922.
+   * The native HTML5 drag-and-drop sequence
+   * (`dragstart`/`dragenter`/`dragover`/`drop`/`dragend` + `dataTransfer`) is
+   * ALSO synthesized via {@link dispatchHtml5DragSequence}, so both DnD
+   * models — pointer/mouse-based (dnd-kit, react-beautiful-dnd) and native
+   * HTML5 (`draggable` + `ondragstart`/`ondragover`/`ondrop`) — are driven by
+   * this one primitive (#922).
    *
    * @param source - Locator used to find the element to drag
    * @param target - Locator used to find the drop target
@@ -830,6 +872,7 @@ export class DOMInteractor implements Interactor {
       this.dispatchMouse(sourceEl, 'mousedown', sourcePoint);
       this.dispatchMouse(targetEl, 'mousemove', targetPoint);
       this.dispatchMouse(targetEl, 'mouseup', targetPoint);
+      this.dispatchHtml5DragSequence(sourceEl, targetEl);
     });
   }
 
@@ -843,8 +886,10 @@ export class DOMInteractor implements Interactor {
    * center resolves to zeros and only the event wiring is exercised — the
    * behavioral outcome of the drag is E2E-only.
    *
-   * Only raw mouse events are fired; native HTML5 drag-and-drop is NOT
-   * synthesized — see #922.
+   * The native HTML5 drag-and-drop sequence is ALSO synthesized (on the same
+   * element, as its own drop target — see {@link dispatchHtml5DragSequence}),
+   * so a `draggable` element driven by this primitive sees `dragstart` and
+   * `dragend` regardless of DnD model (#922).
    *
    * @param locator - Locator used to find the element to drag
    * @param delta - Pixel offset to drag by
@@ -863,6 +908,7 @@ export class DOMInteractor implements Interactor {
       this.dispatchMouse(el, 'mousedown', start);
       this.dispatchMouse(el, 'mousemove', end);
       this.dispatchMouse(el, 'mouseup', end);
+      this.dispatchHtml5DragSequence(el, el);
     });
   }
 
@@ -901,6 +947,11 @@ export class DOMInteractor implements Interactor {
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple = false) {
+    const accessibleRoleSplit = locatorUtil.splitAtAccessibleRoleLocator(locator);
+    if (accessibleRoleSplit != null) {
+      return this.getElementByAccessibleRole<T>(accessibleRoleSplit, isMultiple);
+    }
+
     const cssLocator = await locatorUtil.toCssSelector(locator, this);
     // The engine-root locator (`[]`) resolves to `:root`, which matches `<html>` —
     // an ancestor of `rootEl`, so `rootEl.querySelector(':root')` finds nothing.
@@ -916,6 +967,39 @@ export class DOMInteractor implements Interactor {
       return result;
     }
     return queryRoot.querySelector<T>(cssLocator) ?? undefined;
+  }
+
+  /**
+   * Resolve a locator chain split at its {@link AccessibleRoleLocator}
+   * segment (`findByRole`) — the second resolution channel, bypassing CSS
+   * entirely (#923). `before` resolves normally (recursing back into
+   * {@link getElement}, so it fully supports the `'Root'` portal escape,
+   * nested `LinkedCssLocator`s, etc.) to a single scope element; a
+   * `roleLocator.relative === 'Root'` OVERRIDES that scope with the document
+   * root instead, mirroring how a trailing `'Root'` locator in an ordinary
+   * chain slices away everything before it (see `escapesToDocumentRoot`).
+   *
+   * Within that scope, `@testing-library/dom`'s `queryAllByRole` resolves by
+   * the accname algorithm — the same engine `dom-core` already depends on for
+   * this exact purpose (see the `findByRole` design in ADR 0001, Decision B).
+   * `hidden: true` matches this codebase's other locators, which resolve
+   * structurally regardless of visibility (`isVisible` is the dedicated
+   * visibility check, not baked into resolution).
+   */
+  private async getElementByAccessibleRole<T extends Element>(
+    split: { before: PartLocator; roleLocator: AccessibleRoleLocator },
+    isMultiple: boolean
+  ): Promise<T[] | Optional<T>> {
+    const scopeLocator = split.roleLocator.relative === 'Root' ? [] : split.before;
+    const scopeEl = await this.getElement(scopeLocator);
+    if (scopeEl == null) {
+      return isMultiple ? [] : undefined;
+    }
+    const matches = queryAllByRole(scopeEl as HTMLElement, split.roleLocator.role, {
+      hidden: true,
+      ...(split.roleLocator.name != null ? { name: split.roleLocator.name } : {}),
+    }) as unknown as T[];
+    return isMultiple ? matches : matches[0];
   }
 
   /**

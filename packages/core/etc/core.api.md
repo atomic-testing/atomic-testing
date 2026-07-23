@@ -5,6 +5,28 @@
 ```ts
 
 // @public
+export class AccessibleRoleLocator extends CssLocator {
+    // Warning: (ae-forgotten-export) The symbol "AccessibleRoleLocatorInitializer" needs to be exported by the entry point index.d.mts
+    // Warning: (ae-forgotten-export) The symbol "CssLocatorInitializer" needs to be exported by the entry point index.d.mts
+    constructor(role: string, initializeValue: AccessibleRoleLocatorInitializer & Partial<CssLocatorInitializer>);
+    // (undocumented)
+    clone(override?: Partial<AccessibleRoleLocatorInitializer> & Partial<CssLocatorInitializer>): AccessibleRoleLocator;
+    // (undocumented)
+    get complexity(): LocatorComplexity;
+    // (undocumented)
+    get name(): string | undefined;
+    // (undocumented)
+    readonly role: string;
+}
+
+// @public (undocumented)
+export type AccessibleRoleLocatorSource = {
+    _id: 'byAccessibleRole';
+    role: string;
+    name?: string;
+};
+
+// @public
 export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = Ctor;
 
 // @public (undocumented)
@@ -169,12 +191,9 @@ export interface ContainerPartDefinition<ContentT extends ScenePart, T extends S
 
 // @public (undocumented)
 export class CssLocator {
-    // Warning: (ae-forgotten-export) The symbol "CssLocatorInitializer" needs to be exported by the entry point index.d.mts
     constructor(selector: string, initializeValue?: Partial<CssLocatorInitializer>);
     // (undocumented)
     clone(override?: Partial<CssLocatorInitializer>): CssLocator;
-    // Warning: (ae-forgotten-export) The symbol "LocatorComplexity" needs to be exported by the entry point index.d.mts
-    //
     // (undocumented)
     get complexity(): LocatorComplexity;
     // (undocumented)
@@ -277,6 +296,9 @@ export class ErrorBase extends Error {
 export namespace escapeUtil {
     export { escapeCssClassName, escapeName, escapeValue };
 }
+
+// @public
+export function findByRole(role: string, name?: string, relative?: LocatorRelativePosition): PartLocator;
 
 // @public
 export interface FocusActions {
@@ -500,6 +522,9 @@ export namespace listHelper {
 }
 
 // @public
+export type LocatorComplexity = 'primitive' | 'linked' | 'accessibleRole';
+
+// @public
 export type LocatorRelativePosition = 'Root' | 'Descendant' | 'Same' | 'Child';
 
 // @public
@@ -518,7 +543,7 @@ export const LocatorTypeLookup: Record<string, LocatorType>;
 
 // @public (undocumented)
 export namespace locatorUtil {
-    export { OverrideLocatorRelativePositionOption, and, append, defaultOverrideLocatorRelativePositionOption, documentRootSelector, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, overrideLocatorRelativePosition, toCssSelector };
+    export { OverrideLocatorRelativePositionOption, and, append, defaultOverrideLocatorRelativePositionOption, documentRootSelector, getLinkedCssLocatorMatchingTargetValue, getLocatorInfoForErrorLog, overrideLocatorRelativePosition, splitAtAccessibleRoleLocator, toCssSelector };
 }
 
 // @public (undocumented)

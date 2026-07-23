@@ -30,6 +30,26 @@ export const dragExampleScenePart = {
     locator: byDataTestId('drop-status'),
     driver: HTMLElementDriver,
   },
+  html5DragSource: {
+    locator: byDataTestId('html5-drag-source'),
+    driver: HTMLElementDriver,
+  },
+  html5DropTarget: {
+    locator: byDataTestId('html5-drop-target'),
+    driver: HTMLElementDriver,
+  },
+  html5DragStartCount: {
+    locator: byDataTestId('html5-drag-start-count'),
+    driver: HTMLElementDriver,
+  },
+  html5DropPayload: {
+    locator: byDataTestId('html5-drop-payload'),
+    driver: HTMLElementDriver,
+  },
+  html5DragEndCount: {
+    locator: byDataTestId('html5-drag-end-count'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 export const dragExample: IExampleUnit<typeof dragExampleScenePart, JSX.Element> = {
@@ -69,6 +89,46 @@ export const dragExampleTestSuite: TestSuiteInfo<typeof dragExample.scene> = {
           timeoutMs: 2000,
         });
         assertEqual(count, '1');
+      });
+
+      // Cross-engine: dragTo against a NATIVE HTML5 DnD source/target fires the
+      // full dragstart -> dragenter -> dragover -> drop -> dragend sequence and
+      // carries a dataTransfer payload from dragstart's setData through to
+      // drop's getData (#922). The target has no mouse handlers, so this only
+      // passes if the HTML5 event sequence itself is synthesized.
+      test(`dragTo drives native HTML5 drag-and-drop (dataTransfer payload observable)`, async () => {
+        assertEqual(await engine().parts.html5DragStartCount.getText(), '0');
+        assertEqual(await engine().parts.html5DropPayload.getText(), '');
+        assertEqual(await engine().parts.html5DragEndCount.getText(), '0');
+
+        await engine().interactor.dragTo(
+          engine().parts.html5DragSource.locator,
+          engine().parts.html5DropTarget.locator
+        );
+
+        const payload = await engine().parts.html5DropPayload.waitUntil({
+          probeFn: () => engine().parts.html5DropPayload.getText(),
+          terminateCondition: text => text != null && text !== '',
+          timeoutMs: 2000,
+        });
+        assertEqual(payload, 'atomic-testing-drag-payload');
+        assertEqual(await engine().parts.html5DragStartCount.getText(), '1');
+        assertEqual(await engine().parts.html5DragEndCount.getText(), '1');
+      });
+
+      // Cross-engine: drag (the single-element delta gesture) also fires
+      // dragstart/dragend on a native-DnD element, dragging and dropping onto
+      // itself (there is no separate target for a delta drag) — see #922.
+      test(`drag fires dragstart/dragend on a native HTML5 DnD element`, async () => {
+        assertEqual(await engine().parts.html5DragStartCount.getText(), '0');
+        await engine().interactor.drag(engine().parts.html5DragSource.locator, { x: 10, y: 10 });
+        const startCount = await engine().parts.html5DragStartCount.waitUntil({
+          probeFn: () => engine().parts.html5DragStartCount.getText(),
+          terminateCondition: '1',
+          timeoutMs: 2000,
+        });
+        assertEqual(startCount, '1');
+        assertEqual(await engine().parts.html5DragEndCount.getText(), '1');
       });
 
       // E2E-only: jsdom has no layout, so the box never actually moves. Real

@@ -103,6 +103,14 @@ content) is genuinely not CSS-expressible and remains deferred to **#923**. Unde
 Decision 1 it is now safe to add after 1.0 — as a default-bearing method on
 `DOMInteractor`, or an optional member — without a breaking change.
 
+> **Implemented in [ADR-018](018-findbyrole-accessible-role-locator.md) (#923).** The
+> shipped shape takes neither of the two options sketched above literally — no new
+> `Interactor` member was added at all. `findByRole` stays a locator builder; a new
+> `AccessibleRoleLocator` (`CssLocator` subclass) carries the resolution request, and
+> `DOMInteractor.getElement`'s existing single seam gained a branch for it — "a
+> default-bearing method on `DOMInteractor`" in spirit (every primitive gained the
+> capability via one change), just not as a literal new public method.
+
 ### 3. Conformance seam
 
 The seam an external adapter must satisfy is "extends `DOMInteractor` (or

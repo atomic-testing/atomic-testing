@@ -240,6 +240,7 @@ byAttribute('aria-label', 'X'); // any attribute
 byCssSelector('.my-class'); // raw CSS
 byValue('option1'); // value attribute
 byChecked(true); // checked state
+findByRole('button', 'Save'); // computed accessible name (text/label/aria-labelledby) — not CSS, see #923
 locatorUtil.append(a, b); // chain locators
 ```
 
