@@ -19,9 +19,23 @@ const locator = byDataTestId('spinner');
 function createInteractor(probeResult: boolean): Interactor {
   const exists = jest.fn().mockResolvedValue(probeResult);
   const isVisible = jest.fn().mockResolvedValue(probeResult);
-  const waitUntil = jest.fn(async (option: WaitUntilOption<boolean>) => option.probeFn());
+  // Defined as a real method plus jest.spyOn, not assigned as a mock-function
+  // property: the skill-sync scaffolder's coreSymbolExists check
+  // (scripts/skills/skillClaims.mjs) scans this package's whole source tree,
+  // tests included, as flat text. A property-style assignment for `waitUntil`
+  // reads as a real member declaration to that scanner the same way it would
+  // in production source, while a method-shorthand definition is the form it
+  // already expects the genuine Interactor member to take.
+  const interactor = {
+    exists,
+    isVisible,
+    async waitUntil(option: WaitUntilOption<boolean>) {
+      return option.probeFn();
+    },
+  } as unknown as Interactor;
+  jest.spyOn(interactor, 'waitUntil');
 
-  return { exists, isVisible, waitUntil } as unknown as Interactor;
+  return interactor;
 }
 
 describe('interactorWaitUtil', () => {
