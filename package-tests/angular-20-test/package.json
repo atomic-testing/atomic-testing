@@ -16,7 +16,7 @@
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.0",
-    "@angular/platform-browser": "^20.3.0",
+    "@angular/platform-browser": "^20.3.26",
     "@atomic-testing/angular-20": "workspace:*",
     "@atomic-testing/component-driver-html": "workspace:*",
     "@atomic-testing/core": "workspace:*",
