@@ -42,7 +42,7 @@
     "@atomic-testing/internal-test-runner": "workspace:*",
     "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
     "@atomic-testing/internal-test-runner-vitest-adapter": "workspace:*",
-    "@vitest/browser-playwright": "^4.1.9",
+    "@vitest/browser-playwright": "^4.1.10",
     "playwright": "^1.61.1",
     "vitest": "^4.1.9"
   }
