@@ -14,7 +14,7 @@
 > 2. **[Topic]** — [Question]
 > 3. **[Topic]** — [Open-ended question]
 
-**Keep docs in sync** — If you change code that a doc describes, update the doc. Each package has its own Documentation Freshness Rules — consult the relevant package's `CLAUDE.md` (the docs site's own build and freshness rules live in [`docs/CLAUDE.md`](docs/CLAUDE.md)). And mind the **altitude** when you do: name the concept and point to the canonical symbol — don't transcribe type shapes or constants the code already owns.
+**Keep docs in sync** — If you change code that a doc describes, update the doc. Check the relevant package's `CLAUDE.md` for its own Documentation Freshness Rules if it has one — currently only [`docs/CLAUDE.md`](docs/CLAUDE.md) does. And mind the **altitude** when you do: name the concept and point to the canonical symbol — don't transcribe type shapes or constants the code already owns.
 
 ### Engineering stance
 
