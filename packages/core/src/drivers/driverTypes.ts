@@ -1,13 +1,26 @@
 import { ClickOption, HoverOption } from '../interactor/MouseOption';
 
+/**
+ * A driver whose component holds a readable value — the base capability shared
+ * by every form field, regardless of whether that value can also be written.
+ */
 export interface IFormFieldDriver<T> {
   getValue(): Promise<T>;
 }
 
+/**
+ * A driver whose component's value can be both read and written — a text field,
+ * select, or similar input. Extends {@link IFormFieldDriver} with `setValue`.
+ */
 export interface IInputDriver<T> extends IFormFieldDriver<T> {
   setValue(value: T): Promise<boolean>;
 }
 
+/**
+ * A driver whose component has a binary selected/unselected state that can be
+ * toggled — a checkbox, radio, or switch. Distinct from {@link IInputDriver}:
+ * the state is a boolean toggle rather than an arbitrary typed value.
+ */
 export interface IToggleDriver {
   isSelected(): Promise<boolean>;
   setSelected(selected: boolean): Promise<void>;
@@ -45,6 +58,11 @@ export interface IValidatableDriver {
   isError(): Promise<boolean>;
 }
 
+/**
+ * A driver whose component can be clicked. Implemented uniformly so the obvious
+ * `await driver.click()` works across components, regardless of what a click
+ * means for that component internally.
+ */
 export interface IClickableDriver {
   click(option?: ClickOption): Promise<void>;
 }

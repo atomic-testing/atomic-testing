@@ -367,7 +367,18 @@ export class PlaywrightInteractor implements Interactor {
       // matching DOMInteractor.
       const type = (await this.getAttribute(locator, 'type')) ?? '';
       dateUtil.assertValidHtmlDateInputValue(type, text);
-      await target.fill(text);
+
+      // `fill()` is a direct value-REPLACEMENT primitive (like assigning
+      // `.value =`), not a type-at-cursor insertion — calling it unconditionally
+      // here would silently discard the existing value whenever `append` is set,
+      // making the option a no-op beyond skipping `clear()`. When appending,
+      // insert via keystrokes instead (mirrors `typeText`/DOMInteractor's
+      // `userEvent.type`, which appends at the caret left after the prior fill).
+      if (option?.append) {
+        await target.pressSequentially(text);
+      } else {
+        await target.fill(text);
+      }
     });
   }
 
@@ -597,8 +608,17 @@ export class PlaywrightInteractor implements Interactor {
    * @throws {ElementNotFoundError} If the element has no bounding box
    */
   async getBoundingRect(locator: PartLocator): Promise<BoundingRect> {
-    const target = await this.resolveLocator(locator);
-    const box = await target.boundingBox();
+    // Resolve via firstMatch (an immediate count() check), not a bare
+    // `.boundingBox()` call: a zero-match locator makes `.boundingBox()`
+    // auto-wait out the actionability timeout and throw a raw Playwright
+    // `TimeoutError` rather than answering "not found" the way every other
+    // read path here does (#1047's contract this method's own JSDoc — see
+    // {@link PlaywrightInteractor.drag} — already claims it upholds).
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      throw new ElementNotFoundError(locator, 'getBoundingRect');
+    }
+    const box = await el.boundingBox();
     if (box == null) {
       throw new ElementNotFoundError(locator, 'getBoundingRect');
     }
@@ -709,8 +729,14 @@ export class PlaywrightInteractor implements Interactor {
 
   //#region
   async innerHTML(locator: PartLocator): Promise<string> {
-    const target = await this.resolveLocator(locator);
-    return target.innerHTML();
+    // Resolve via firstMatch, not a bare `.innerHTML()` call: mirrors
+    // DOMInteractor, where a missing element yields '' rather than Playwright's
+    // auto-wait timeout (#1047).
+    const el = await this.firstMatch(locator);
+    if (el == null) {
+      return '';
+    }
+    return el.innerHTML();
   }
   //#endregion
 }
