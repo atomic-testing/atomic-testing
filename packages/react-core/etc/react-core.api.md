@@ -22,7 +22,7 @@ export function createTestEngine<T extends ScenePart>(node: ReactNode, partDefin
 // @public @deprecated (undocumented)
 export type IReactTestEngineOption = ITestEngineOption;
 
-// @public (undocumented)
+// @public
 export class ReactInteractor extends DOMInteractor {
     protected runInteraction<T>(interaction: () => Promise<T>): Promise<T>;
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
