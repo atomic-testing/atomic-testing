@@ -2,6 +2,14 @@ import { interactorUtil, PartLocator, timingUtil, WaitForOption, WaitUntilOption
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { act } from '@testing-library/react';
 
+/**
+ * The React-flavored {@link DOMInteractor}: every mutating interaction is
+ * wrapped in React's `act()` so the resulting state updates and effects are
+ * flushed before the driver reads the DOM back — the `act()`/`nextTick()` rule
+ * ADR-002 assigns per framework. See {@link runInteraction} for the seam this
+ * flush installs through, and {@link waitUntil} for why the two wait
+ * conditions deliberately flush per-probe instead.
+ */
 export class ReactInteractor extends DOMInteractor {
   /**
    * Flush React by running every mutating interaction inside `act` while holding
