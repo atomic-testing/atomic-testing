@@ -292,6 +292,10 @@ updates:
         update-types: ['version-update:semver-major']
       - dependency-name: 'vue'
         update-types: ['version-update:semver-major']
+      # @primeuix/themes is a companion theming package pinned to its own
+      # major (2), independent of primevue's (4) -- PR #1227 bumped it 2->3.
+      - dependency-name: '@primeuix/themes'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: 'npm'
     directory: '/package-tests/component-driver-primevue-test'
@@ -301,6 +305,10 @@ updates:
       - dependency-name: 'primevue'
         update-types: ['version-update:semver-major']
       - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+      # @primeuix/themes is a companion theming package pinned to its own
+      # major (2), independent of primevue's (4) -- PR #1227 bumped it 2->3.
+      - dependency-name: '@primeuix/themes'
         update-types: ['version-update:semver-major']
 
   - package-ecosystem: 'npm'
@@ -411,15 +419,21 @@ updates:
       - dependency-name: 'vue'
         update-types: ['version-update:semver-major']
 
-  # vue-3-test also depends on `storybook`, but at a deliberately different,
-  # unrelated major for its own Storybook stories (see DEP-PIN-01's `storybook`
-  # exception) — not guarded here on purpose.
+  # vue-3-test also runs its OWN Storybook toolchain, deliberately pinned at
+  # major 8 (independent of packages/storybook's major-10 target — see
+  # DEP-PIN-01's vue-3-test extra rule). PR #1238/#1237/#1235/#1233 proved
+  # this needs guarding too: they bumped storybook/@storybook/vue3/
+  # @storybook/vue3-vite/@storybook/addon-themes straight from 8 to 10.
   - package-ecosystem: 'npm'
     directory: '/package-tests/vue-3-test'
     schedule:
       interval: 'weekly'
     ignore:
       - dependency-name: 'vue'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'storybook'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@storybook/*'
         update-types: ['version-update:semver-major']
 
   - package-ecosystem: 'npm'
