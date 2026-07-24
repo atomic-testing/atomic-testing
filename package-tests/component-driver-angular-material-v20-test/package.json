@@ -33,7 +33,7 @@
     "@angular/platform-browser": "^20.3.0",
     "@atomic-testing/core": "workspace:*",
     "rxjs": "^7.8.0",
-    "zone.js": "^0.15.0"
+    "zone.js": "^0.16.2"
   },
   "devDependencies": {
     "@atomic-testing/angular-20": "workspace:*",
