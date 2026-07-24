@@ -28,6 +28,37 @@ export class SimpleButtonDriver extends ComponentDriver implements IClickableDri
 }
 ```
 
+## Capability interfaces
+
+`IClickableDriver` above is one of several small, single-method **capability
+interfaces** exported from `@atomic-testing/core` (`packages/core/src/drivers/driverTypes.ts`).
+Implement whichever ones describe what your component can actually do, so tests
+can assert against the interface rather than a component-specific method name:
+
+- `IFormFieldDriver<T>` — a readable value (`getValue()`); the base every form
+  field capability builds on.
+- `IInputDriver<T>` — a readable **and writable** value (`setValue()`), for text
+  fields, selects, and similar inputs.
+- `IToggleDriver` — a binary selected/unselected state (`isSelected()`/`setSelected()`),
+  for checkboxes, radios, and switches.
+- `IDisableableDriver`, `IReadonlyableDriver`, `IRequirableDriver`, `IValidatableDriver`
+  — the disabled/readonly/required/error state checks shared across form controls.
+- `IClickableDriver`, `IMouseInteractableDriver` — click and hover.
+
+A driver typically implements several of these together (e.g. a text field is
+`IInputDriver<string> & IDisableableDriver & IValidatableDriver`). Each interface
+maps to a `driver.interactor.*` call, so implementing one is usually a one-line
+delegation, as `click()` is above.
+
+## Portal hooks
+
+Some components render outside the DOM subtree of the driver that owns them — a
+dialog or menu portalled to the end of `<body>`. `ComponentDriver` exposes two
+static hooks, `overriddenParentLocator()` and `overrideLocatorRelativePosition()`,
+for re-rooting a driver's locator in that case. See
+[Testing portals & overlays](../guides/portal-and-overlays.md) for the full recipe
+and the jsdom Popover-API caveat to plan around.
+
 ## Why use drivers?
 
 Drivers abstract away the DOM details of complex components. Instead of manipulating HTML in tests, you interact with high level methods (`next()`, `setValue()`, etc.). Drivers can expose child parts so you can compose them into larger units and reuse them across tests.

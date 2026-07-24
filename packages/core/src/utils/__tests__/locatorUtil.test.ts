@@ -88,6 +88,30 @@ describe('toCssSelector', () => {
     const chain = append(byCssSelector('.parent'), child);
     expect(await toCssSelector(chain, stubInteractor)).toBe('.parent > .child.active');
   });
+
+  test('resolves multiple Root locators in one chain to the LAST one (last-wins)', async () => {
+    // findRootLocatorIndex scans back-to-front and returns the first Root it
+    // hits — i.e. the last Root in chain order — so everything before it,
+    // including an earlier Root, is dropped rather than accumulated.
+    const chain = append(
+      byCssSelector('.first-root', 'Root'),
+      byCssSelector('.between'),
+      byCssSelector('.second-root', 'Root'),
+      byCssSelector('.after')
+    );
+    expect(await toCssSelector(chain, stubInteractor)).toBe('.second-root .after');
+  });
+
+  // NOT separately tested: the `complexity === 'linked'` skip branch in
+  // getEffectiveLocator (locatorUtil.ts:110) is unreachable via this public
+  // toCssSelector entry point. toPrimitiveLocators (locatorUtil.ts:89-103) always
+  // resolves a Root-positioned LinkedCssLocator into a plain CssLocator (via
+  // getLinkedCssLocator -> byAttribute, which only ever constructs CssLocator,
+  // never LinkedCssLocator) before findRootLocatorIndex/getEffectiveLocator ever
+  // inspect `.complexity` — so by the time that check runs, no element of the
+  // list can still be `'linked'`. Confirmed by reading the call chain rather than
+  // asserted here, since a passing test would require contriving a value the
+  // production code path cannot actually produce.
 });
 
 describe('and (same-element composition)', () => {
