@@ -17,6 +17,14 @@
 // So this check verifies the committed manifest directly — it doesn't trust
 // Dependabot config to have worked.
 //
+// Confirmed live again in the PRs opened after #1150 merged: #1195
+// (@angular/core 20/21/22 -> 22.0.8, same mechanism as #1132), #1187
+// (@mui/x-date-pickers 6/7/8 -> 9.10.0 in mui-x-v6/v7/v8-test, same mechanism
+// as #1134 but a different @mui/x-* member), #1238/#1237/#1235/#1233
+// (vue-3-test's OWN independent Storybook-v8 toolchain bumped 8 -> 10), and
+// #1221/#1218 (a same-shape but opposite-direction case: @mui/icons-material
+// and @mui/material proposed DOWN from major 9 to major 5 in mui-x-v9-test).
+//
 // DEP-PIN-01  a package's own major-version suffix (or documented exception)
 //             doesn't match one of its pinned dependencies' majors
 //
@@ -54,7 +62,22 @@ const FAMILIES = [
     ],
   },
   { pattern: /^component-driver-mui-v(\d+)$/, deps: ['@mui/material', '@mui/icons-material'] },
-  { pattern: /^component-driver-mui-x-v(\d+)$/, depPrefix: '@mui/x-' },
+  {
+    pattern: /^component-driver-mui-x-v(\d+)$/,
+    depPrefix: '@mui/x-',
+    // MUI-X's own major does not track @mui/material's major 1:1 (MUI
+    // unified numbering at v9) — this is the pairing the real mui-x-vN-test
+    // fixtures actually use. Confirmed live by PR #1221/#1218, which proposed
+    // DOWNGRADING @mui/material/@mui/icons-material from major 9 to major 5
+    // in mui-x-v9-test; that pin is untracked without this table (mui-x-v6's
+    // own pairing uses a compound `>=5.0.0 <6.0.0` range that majorOf() can't
+    // parse anyway, so it's intentionally absent here — nothing to check).
+    pairedMaterialMajor: { 7: 6, 8: 7, 9: 9 },
+  },
+  // primevue itself tracks the vNN suffix; @primeuix/themes is a separate
+  // theming package that does NOT share primevue's major (primevue v4 pairs
+  // with @primeuix/themes v2 today) — that pairing is asserted via EXTRA_RULES
+  // below, not here, since it can't be derived from this pattern's capture.
   { pattern: /^component-driver-primevue-v(\d+)$/, deps: ['primevue'] },
   { pattern: /^component-driver-radix-v(\d+)$/, deps: ['radix-ui', 'cmdk'] },
   { pattern: /^component-driver-reka-ui-v(\d+)$/, deps: ['reka-ui'] },
@@ -72,29 +95,59 @@ const TEST_DIR_ALIASES = {
 };
 
 // Directories with no numeric suffix at all, so there's nothing for a pattern
-// to capture — the expected major(s) are asserted directly. Keep this list
-// short: it's for genuinely name-less singletons, not a substitute for FAMILIES.
+// to capture — the expected major(s) are asserted directly, REPLACING any
+// FAMILIES match for that exact directory name. Keep this list short: it's
+// for genuinely name-less singletons, not a substitute for FAMILIES.
 const EXPLICIT = {
   // Legacy React support spans two majors by design (peerDep `^16 || ^17`), so
   // either pinned major is acceptable — only a jump to 18+ is a real mistake.
-  'react-legacy': {
-    deps: ['react', 'react-dom', '@types/react', '@types/react-dom'],
-    allowedMajors: [16, 17],
-  },
+  'react-legacy': [
+    {
+      deps: ['react', 'react-dom', '@types/react', '@types/react-dom'],
+      allowedMajors: [16, 17],
+    },
+  ],
   // The shared AngularInteractor's dev/test harness is deliberately pinned to
   // the OLDEST Angular major this repo still supports (today: 20), so shared
   // code is proven against the floor, not just the newest major. Update this
   // if the oldest supported Angular major changes.
-  'angular-core': {
-    deps: ['@angular/core', '@angular/common', '@angular/compiler', '@angular/platform-browser'],
-    allowedMajors: [20],
-  },
+  'angular-core': [
+    {
+      deps: ['@angular/core', '@angular/common', '@angular/compiler', '@angular/platform-browser'],
+      allowedMajors: [20],
+    },
+  ],
   // CLAUDE.md: "packages/storybook ... (Storybook 10)". Scoped to exactly
   // these two directories — vue-3-test also depends on `storybook`, but at a
-  // deliberately different, unrelated major for its own Storybook stories, so
-  // it is intentionally NOT covered by this rule.
-  storybook: { deps: ['storybook'], allowedMajors: [10] },
-  'storybook-test': { deps: ['storybook'], allowedMajors: [10] },
+  // deliberately different, unrelated major (see EXTRA_RULES), so it is
+  // intentionally NOT covered by this rule.
+  storybook: [{ deps: ['storybook'], allowedMajors: [10] }],
+  'storybook-test': [{ deps: ['storybook'], allowedMajors: [10] }],
+};
+
+// Extra rules layered ON TOP of whatever FAMILIES already matches for a
+// directory — for a package that is independently pinned to a SECOND major
+// beyond the one FAMILIES derives from its own name. Found via PR #1227
+// (@primeuix/themes bumped 2->3 in the primevue-v4 test fixture — a companion
+// theming package that does not share primevue's own major) and PR
+// #1238/#1237/#1235/#1233 (vue-3-test's OWN Storybook toolchain, independent
+// of and pinned two majors behind packages/storybook's target).
+const EXTRA_RULES = {
+  'component-driver-primevue-v4': [{ deps: ['@primeuix/themes'], allowedMajors: [2] }],
+  'component-driver-primevue-test': [{ deps: ['@primeuix/themes'], allowedMajors: [2] }],
+  'vue-3-test': [
+    {
+      deps: [
+        'storybook',
+        '@storybook/vue3',
+        '@storybook/vue3-vite',
+        '@storybook/addon-themes',
+        '@storybook/addon-essentials',
+        '@storybook/test',
+      ],
+      allowedMajors: [8],
+    },
+  ],
 };
 
 function readManifest(dir) {
@@ -126,35 +179,47 @@ function majorOf(range) {
   return match ? Number(match[1]) : null;
 }
 
-function ruleFor(dirName) {
-  if (EXPLICIT[dirName]) return EXPLICIT[dirName];
+function rulesFor(dirName) {
+  if (EXPLICIT[dirName]) return [...EXPLICIT[dirName], ...(EXTRA_RULES[dirName] ?? [])];
   const base = TEST_DIR_ALIASES[dirName] ?? dirName.replace(/-test$/, '');
+  const rules = [];
   for (const family of FAMILIES) {
     const match = family.pattern.exec(base);
-    if (match) return { ...family, allowedMajors: [Number(match[1])] };
+    if (!match) continue;
+    const major = Number(match[1]);
+    rules.push({ deps: family.deps, depPrefix: family.depPrefix, allowedMajors: [major] });
+    if (family.pairedMaterialMajor?.[major] != null) {
+      rules.push({
+        deps: ['@mui/material', '@mui/icons-material'],
+        allowedMajors: [family.pairedMaterialMajor[major]],
+      });
+    }
   }
-  return null;
+  rules.push(...(EXTRA_RULES[dirName] ?? []));
+  return rules;
 }
 
 function checkDir(dir, dirName, errors) {
-  const rule = ruleFor(dirName);
-  if (!rule) return;
+  const rules = rulesFor(dirName);
+  if (rules.length === 0) return;
   const manifest = readManifest(dir);
   if (!manifest) return;
   const deps = concreteDeps(manifest.json);
-  const names = rule.depPrefix
-    ? Object.keys(deps).filter(n => n.startsWith(rule.depPrefix))
-    : rule.deps.filter(n => n in deps);
-  for (const name of names) {
-    const major = majorOf(deps[name]);
-    if (major == null) continue;
-    if (!rule.allowedMajors.includes(major)) {
-      const relPath = manifest.path.slice(repoRoot.length + 1);
-      errors.push(
-        `DEP-PIN-01: ${relPath} pins ${name} at ${deps[name]} (major ${major}), but ` +
-          `this package is scoped to major ${rule.allowedMajors.join(' or ')} — did a ` +
-          `dependency-update PR bump it past an intentional major-version boundary?`
-      );
+  for (const rule of rules) {
+    const names = rule.depPrefix
+      ? Object.keys(deps).filter(n => n.startsWith(rule.depPrefix))
+      : rule.deps.filter(n => n in deps);
+    for (const name of names) {
+      const major = majorOf(deps[name]);
+      if (major == null) continue;
+      if (!rule.allowedMajors.includes(major)) {
+        const relPath = manifest.path.slice(repoRoot.length + 1);
+        errors.push(
+          `DEP-PIN-01: ${relPath} pins ${name} at ${deps[name]} (major ${major}), but ` +
+            `this package is scoped to major ${rule.allowedMajors.join(' or ')} — did a ` +
+            `dependency-update PR bump it past an intentional major-version boundary?`
+        );
+      }
     }
   }
 }
