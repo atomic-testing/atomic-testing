@@ -33,7 +33,7 @@
     "@atomic-testing/internal-test-runner": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^24.0.3"
+    "@types/node": "^26.1.1"
   },
   "peerDependencies": {}
 }
