@@ -80,3 +80,75 @@ defaults to a no-op if omitted. If your custom interactor needs React's
 logic from that framework's own `createTestEngine`
 (`packages/react-core/src/createTestEngine.ts`,
 `packages/vue-3/src/createTestEngine.ts`).
+
+### The public toolkit
+
+`@atomic-testing/core` exports the same building blocks every shipped interactor
+is written with:
+
+- `locatorUtil.toCssSelector(locator, interactor)` — resolves a `PartLocator`
+  chain to the CSS selector string your environment actually queries with.
+- `interactorUtil.interactorWaitUtil` — backs `waitUntilComponentState`; probes
+  an `Interactor` method on an interval until a `WaitForOption.condition` is met
+  or the timeout elapses.
+- `timingUtil.wait` / `timingUtil.waitUntil` — the lower-level polling primitive
+  `interactorWaitUtil` itself is built on, if you need a bespoke probe.
+- `dateUtil` — the shared HTML date/time/datetime-local input validation policy
+  (`assertValidHtmlDateInputValue`), so `enterText` rejects malformed values
+  consistently across every interactor.
+- `ElementNotFoundError` and `defaultWaitForOption` — the shared error class and
+  default timeout/condition every interactor's option types build on.
+
+### The ElementNotFoundError-vs-auto-wait convention
+
+Every `Interactor` method that targets a missing element must resolve the same
+way regardless of environment: a **read** returns the type's empty/falsy value
+(`undefined`, `''`, `false`) immediately, and a **mutation** throws
+`ElementNotFoundError` immediately — never your environment's own native
+auto-wait timeout. `DOMInteractor` gets this for free (a jsdom query either
+finds an element or doesn't, synchronously). A browser-driving adapter has to
+work for it: `PlaywrightInteractor` resolves every read through a private
+`firstMatch` helper (an immediate `count() === 0` check, never Playwright's
+default actionability wait) and every mutation through `runMutation` (run the
+action; if it fails AND the element genuinely doesn't exist, rethrow as
+`ElementNotFoundError`; otherwise propagate the original error so a real,
+temporarily-not-actionable element still gets Playwright's auto-wait). Skipping
+this — calling your driver's native locator API directly instead of routing
+through an equivalent helper — is the single most common way a new adapter
+technically type-checks but disagrees with every other interactor on missing-element
+behavior.
+
+### jsdom vs. real-browser caveats
+
+A conformant interactor still can't fake real layout: jsdom performs no layout
+engine, so `getBoundingRect` on a jsdom-backed interactor returns a zero rect
+rather than the CSS-computed box a browser gives you, and `getStyleValue` only
+sees inline styles, never cascade from a stylesheet rule. Gate assertions that
+depend on real geometry behind the test harness's `hasLayout` flag (see
+`packages/internal-interactor-conformance/src/conformanceSuites.ts` for the
+pattern) rather than assuming every interactor's numbers are comparable.
+
+### PlaywrightInteractor: a from-scratch example
+
+`DOMInteractor` and its subclasses share almost all of their implementation, so
+they're a poor template for an adapter with **no** DOM to inherit from —
+`PlaywrightInteractor` (`packages/playwright/src/PlaywrightInteractor.ts`)
+`implements Interactor` bare, driving a `Page` object instead, and is the
+better model to study for a genuinely new environment (a native app driver, a
+different browser-automation library). Notice the shape: every primitive
+resolves a `PartLocator` via `locatorUtil.toCssSelector`, then reads go through
+`firstMatch` and mutations go through `runMutation` (both above) to uphold the
+error convention, and layout-dependent methods return real Playwright geometry
+with no jsdom fallback needed.
+
+### Validating your interactor: the conformance suite
+
+`@atomic-testing/internal-interactor-conformance` exports a runnable test-compatibility-kit
+(`defineConformanceSuite`) that asserts the full `Interactor` contract — every
+capability facet, the null-vs-empty and throw-vs-auto-wait conventions above,
+and `hasLayout`-gated geometry — against a factory that produces your
+interactor over a shared, framework-agnostic fixture DOM. It's how
+`DOMInteractor` and `PlaywrightInteractor` themselves stay provably in sync;
+wire your own interactor factory into it the same way
+`package-tests/internal-interactor-conformance-test` does for the two shipped
+adapters before trusting a new one in real tests.
