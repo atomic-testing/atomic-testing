@@ -1806,6 +1806,10 @@ importers:
       '@atomic-testing/internal-test-runner':
         specifier: workspace:*
         version: link:../internal-test-runner
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.3
+        version: 24.0.10
 
   packages/internal-mui-x-test-fixture: {}
 
