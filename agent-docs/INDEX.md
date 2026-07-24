@@ -2,13 +2,13 @@
 
 LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a portable UI-testing library built on the component-driver pattern. Generated for future agents; source-cited throughout. (The repo-root `docs/` folder is the separate user-facing Docusaurus site.)
 
-| Document                                               | Description                                                                                                                       |
-| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)                                 | Agent playbook — **read first**. Routing table, conventions, change workflows, build/test commands.                               |
-| [DOMAIN.md](DOMAIN.md)                                 | Vocabulary, type system, invariants, error catalog.                                                                               |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                     | Entry points, layer stack, interactor inheritance, dependency graph, shared three-file test pattern.                              |
-| [RELEASING.md](RELEASING.md)                           | Release & publish runbook — cut a release, rotate `CODEMOD_TOKEN`, add a new package (bootstrap); OIDC trusted publishing.        |
-| [PLAN-EXECUTION-LESSONS.md](PLAN-EXECUTION-LESSONS.md) | Pitfalls when running multi-step `run-plan.sh` plans headlessly (ask-first stalls, weak verify gates, `state.json` resume traps). |
+| Document                                                               | Description                                                                                                                                         |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [AGENTS.md](AGENTS.md)                                                 | Agent playbook — **read first**. Routing table, conventions, change workflows, build/test commands.                                                 |
+| [DOMAIN.md](DOMAIN.md)                                                 | Vocabulary, type system, invariants, error catalog.                                                                                                 |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                                     | Entry points, layer stack, interactor inheritance, dependency graph, shared three-file test pattern.                                                |
+| [RELEASING.md](RELEASING.md)                                           | Release & publish runbook — cut a release, rotate `CODEMOD_TOKEN`, add a new package (bootstrap); OIDC trusted publishing.                          |
+| [PLAN-EXECUTION-LESSONS.md](PLAN-EXECUTION-LESSONS.md)                 | Pitfalls when running multi-step `run-plan.sh` plans headlessly (ask-first stalls, weak verify gates, `state.json` resume traps).                   |
 | [ADOPTING-LSP-FOR-CODING-AGENTS.md](ADOPTING-LSP-FOR-CODING-AGENTS.md) | Standalone, repo-agnostic guide to evaluating & adopting an LSP for AI coding agents (local + cloud); distilled from the `tools/ts7-lsp/` adoption. |
 
 ## Modules
@@ -29,23 +29,24 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 
 ## ADRs
 
-| ADR                                                      | Decision                                                                   |
-| -------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [001](adr/001-component-driver-pattern.md)               | Component-driver pattern with declarative scene parts.                     |
-| [002](adr/002-interactor-abstraction.md)                 | `Interactor` abstraction for environment portability.                      |
-| [003](adr/003-version-specific-packages.md)              | Version-specific packages for React and MUI majors.                        |
-| [004](adr/004-shared-three-file-test-pattern.md)         | Shared three-file test pattern via `TestFrameworkMapper`.                  |
-| [005](adr/005-drop-mui-5-support.md)                     | End of support for MUI 5 and MUI-X 5.                                      |
-| [006](adr/006-1.0-api-freeze-and-evolution.md)           | 1.0 public-API freeze, SemVer & deprecation policy.                        |
-| [007](adr/007-interactor-evolution-and-composition.md)   | Interactor evolution strategy & same-element `CssLocator.and` composition. |
-| [008](adr/008-css-dom-only-locator-boundary.md)          | The 1.0 locator boundary is CSS- and DOM-only.                             |
-| [010](adr/010-narrow-error-payload.md)                   | Narrow the error payload to a serializable shape.                          |
-| [011](adr/011-retract-locator-source-ast.md)             | Retract the locator descriptive `source` AST.                              |
-| [012](adr/012-remove-dead-clone-wait-from-interactor.md) | Remove dead `clone()` / `wait()` from the `Interactor` contract.           |
-| [013](adr/013-angular-shared-core-thin-packages.md)      | Angular 20–22 support via a shared core and thin per-major packages.       |
-| [014](adr/014-extract-mui-5-to-separate-repo.md)         | Extract MUI 5 / MUI-X 5 to a separate repo, with full history.             |
-| [015](adr/015-component-driver-protected-primitives.md)  | Narrow `ComponentDriver`'s raw low-level primitives to `protected`.        |
-| [016](adr/016-defer-paths-src-cross-package-navigation.md) | Defer `paths→src` LSP source navigation; keep cross-package on built `.d.ts`. |
+| ADR                                                        | Decision                                                                                              |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [001](adr/001-component-driver-pattern.md)                 | Component-driver pattern with declarative scene parts.                                                |
+| [002](adr/002-interactor-abstraction.md)                   | `Interactor` abstraction for environment portability.                                                 |
+| [003](adr/003-version-specific-packages.md)                | Version-specific packages for React and MUI majors.                                                   |
+| [004](adr/004-shared-three-file-test-pattern.md)           | Shared three-file test pattern via `TestFrameworkMapper`.                                             |
+| [005](adr/005-drop-mui-5-support.md)                       | End of support for MUI 5 and MUI-X 5.                                                                 |
+| [006](adr/006-1.0-api-freeze-and-evolution.md)             | 1.0 public-API freeze, SemVer & deprecation policy.                                                   |
+| [007](adr/007-interactor-evolution-and-composition.md)     | Interactor evolution strategy & same-element `CssLocator.and` composition.                            |
+| [008](adr/008-css-dom-only-locator-boundary.md)            | The 1.0 locator boundary is CSS- and DOM-only.                                                        |
+| [010](adr/010-narrow-error-payload.md)                     | Narrow the error payload to a serializable shape.                                                     |
+| [011](adr/011-retract-locator-source-ast.md)               | Retract the locator descriptive `source` AST.                                                         |
+| [012](adr/012-remove-dead-clone-wait-from-interactor.md)   | Remove dead `clone()` / `wait()` from the `Interactor` contract.                                      |
+| [013](adr/013-angular-shared-core-thin-packages.md)        | Angular 20–22 support via a shared core and thin per-major packages.                                  |
+| [014](adr/014-extract-mui-5-to-separate-repo.md)           | Extract MUI 5 / MUI-X 5 to a separate repo, with full history.                                        |
+| [015](adr/015-component-driver-protected-primitives.md)    | Narrow `ComponentDriver`'s raw low-level primitives to `protected`.                                   |
+| [016](adr/016-defer-paths-src-cross-package-navigation.md) | Defer `paths→src` LSP source navigation; keep cross-package on built `.d.ts`.                         |
+| [017](adr/017-part-locator-chain-reshape.md)               | Reshape `PartLocator` to always be a chain; same-element `.and()` composition moves to `locatorUtil`. |
 
 ## Fresh repo tree
 
