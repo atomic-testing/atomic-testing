@@ -1,3 +1,4 @@
+import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import React, { type JSX, type ReactNode } from 'react';
 
@@ -64,7 +65,8 @@ function ProofStrip(): JSX.Element {
     <p className={styles.proof}>
       <span className={styles.proofBadge}>✓ verifiable</span>
       Not just a claim: this repo&apos;s own <code className={styles.inlineCode}>*.suite.ts</code> test logic runs
-      unmodified under Jest <em>and</em> across Chromium, Firefox &amp; WebKit via Playwright — see{' '}
+      unmodified under Jest <em>and</em> across Chromium, Firefox &amp; WebKit via Playwright —{' '}
+      <Link to='/docs/evaluate/proof-of-portability'>see how portability is tested →</Link> or browse{' '}
       <a href={PACKAGE_TESTS_URL} target='_blank' rel='noopener noreferrer'>
         package-tests/
       </a>{' '}

@@ -59,8 +59,7 @@ ones are stable.
 `0.81.0` but receive no fixes, new drivers, or CI/e2e coverage. Their source
 and full history have been extracted to
 [atomic-testing/component-driver-mui-v5](https://github.com/atomic-testing/component-driver-mui-v5).
-New work targets v6/v7/v9 (MUI-X also v8 and v9). Rationale and migration
-notes:
+New work targets v6/v7/v9 (MUI-X also v8 and v9). Rationale:
 [ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md).
 
 > Note: MUI Core has **no v8** — it jumped `7.3.11 → 9.0.0` to unify versioning
@@ -68,9 +67,10 @@ notes:
 > (there is no `-mui-v8` package).
 >
 > Note: the MUI-X date/time **picker** drivers originally shipped only in the v5
-> package. The v9 package revives a read-capable `DesktopDatePicker` driver
-> (rewritten for the v9 `PickersSectionList` field DOM); writing a value and the
-> other picker variants are tracked as follow-ups.
+> package. The v9 package revives picker coverage rewritten for the v9
+> `PickersSectionList` field DOM — desktop/mobile date, time, date-time, and
+> date-range drivers with keystroke-driven read/write `setValue` (shipped in
+> 0.97.0).
 
 ## Add Atomic Testing to your project
 

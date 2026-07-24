@@ -13,6 +13,14 @@ fixtures are the source to copy from. Each is a real, CI-green project: a render
 example component, its `ScenePart`, and the same suite driven under both a DOM
 runner and a browser. Lift the `ScenePart` and test logic straight out of one.
 
+Note the distinction: these are per-component **fixtures** — each proves and
+demonstrates one driver package against one rendered example. The repo's
+realistic example **apps** (two workspace apps — Astryx and shadcn/ui — a
+ticket console, and a multi-step signup form) are a different resource: whole
+pages decomposed into composed
+driver trees, closer to what your own suite will look like. For those, see
+[Example apps](../evaluate/example-apps.mdx).
+
 ## One reference fixture per stack
 
 | Design system             | Framework    | Runner(s)                           | Reference fixture                                                                                                                                                   |
