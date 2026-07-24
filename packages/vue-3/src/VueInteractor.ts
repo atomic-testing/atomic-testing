@@ -1,6 +1,13 @@
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { nextTick } from 'vue';
 
+/**
+ * The Vue-flavored {@link DOMInteractor}: every mutating interaction is
+ * followed by `nextTick()` so Vue's reactivity has settled before the driver
+ * reads the DOM back — the `act()`/`nextTick()` rule ADR-002 assigns per
+ * framework. See {@link runInteraction} for the seam this flush installs
+ * through.
+ */
 export class VueInteractor extends DOMInteractor {
   /**
    * Flush Vue reactivity after every mutating interaction (and both wait
