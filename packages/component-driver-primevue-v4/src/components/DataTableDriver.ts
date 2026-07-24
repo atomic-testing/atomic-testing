@@ -409,7 +409,10 @@ export class DataTableDriver extends ComponentDriver<{}> {
   /** Open the column's filter overlay (no-op if already open). @returns `false` when no such column/filter. */
   async openFilterMenu(columnLabel: string, timeoutMs: number = defaultFilterTransitionMs): Promise<boolean> {
     const resolved = await this.resolveFilterElements(columnLabel);
-    return resolved != null && this.openResolvedFilterMenu(resolved, timeoutMs);
+    if (resolved == null) {
+      return false;
+    }
+    return this.openResolvedFilterMenu(resolved, timeoutMs);
   }
 
   private async openResolvedFilterMenu(

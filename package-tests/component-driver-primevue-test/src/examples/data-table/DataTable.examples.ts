@@ -11,9 +11,6 @@ const products = [
   { name: 'Sprocket', code: 'S-500', quantity: 5 },
 ];
 
-/** A mutable copy for the filter/edit table — cell editing (#1034) writes back into it. */
-const filterableProducts = reactive(products.map(p => ({ ...p })));
-
 const virtualScrollRows = Array.from({ length: 100 }, (_, i) => ({
   name: `Item ${i}`,
   code: `C-${i}`,
@@ -37,6 +34,9 @@ export const DataTableExample = defineComponent({
     const filters = ref<Record<string, { value: unknown; matchMode: string }>>({
       name: { value: null, matchMode: 'contains' },
     });
+    // A per-mount mutable copy — cell editing (#1034) writes back into it, and a module-level
+    // singleton here would leak edits across independent mounts (each test's own engine/mount).
+    const filterableProducts = reactive(products.map(p => ({ ...p })));
     return () =>
       h('div', [
         h(
