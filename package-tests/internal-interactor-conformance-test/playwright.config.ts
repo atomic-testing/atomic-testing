@@ -5,6 +5,13 @@ import { defineConfig, devices } from '@playwright/test';
  * server / baseURL is needed — unlike the driver package-tests that serve React
  * examples through Vite.
  */
+
+// CHROMIUM_EXECUTABLE lets sandboxed dev environments point at a preinstalled
+// Chromium (mirroring package-tests/component-driver-mui-v9-test and siblings);
+// CI and normal dev machines resolve the browsers through Playwright's
+// registry (npx playwright install).
+const executablePath = process.env.CHROMIUM_EXECUTABLE;
+
 export default defineConfig({
   testDir: './__tests__',
   testMatch: /.*\.e2e\.(test|spec)\.(ts|tsx)$/,
@@ -24,7 +31,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], ...(executablePath ? { launchOptions: { executablePath } } : {}) },
     },
     {
       name: 'firefox',
