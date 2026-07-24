@@ -7,6 +7,13 @@ export interface CssLocatorInitializer {
   source: CssLocatorSource;
 }
 
+/**
+ * The primitive `PartLocator` element: a single CSS selector, optionally
+ * carrying its {@link LocatorRelativePosition} (how it composes with an
+ * ancestor locator) and descriptive {@link CssLocatorSource}. Every `by*`
+ * locator builder (`byDataTestId`, `byRole`, `byCssSelector`, ...) produces one
+ * of these; a `PartLocator` chain is an array of them.
+ */
 export class CssLocator {
   private _relativePosition: LocatorRelativePosition = 'Descendant';
   private _source?: CssLocatorSource;
