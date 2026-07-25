@@ -92,6 +92,8 @@ docs/docs/api
 .rollup.cache/
 
 .claude/settings.local.json
+# Isolated agent worktrees: nested checkouts of this repo, never source
+.claude/worktrees/
 temp/
 
 # Golden-fixture harness working backups (scripts/skills/snapshot-fixture.mjs)
