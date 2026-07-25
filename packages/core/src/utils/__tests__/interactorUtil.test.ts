@@ -1,9 +1,9 @@
-import { defaultWaitForOption } from '../../drivers/WaitForOption';
+import { defaultSettleProbeIntervals, defaultWaitForOption } from '../../drivers/WaitForOption';
 import { WaitForFailureError } from '../../errors/WaitForFailureError';
 import { Interactor } from '../../interactor/Interactor';
 import { byDataTestId } from '../../locators/byDataTestId';
 import { interactorWaitUtil } from '../interactorUtil';
-import { WaitUntilOption } from '../timingUtil';
+import { waitUntil, WaitUntilOption } from '../timingUtil';
 
 const locator = byDataTestId('spinner');
 
@@ -109,5 +109,99 @@ describe('interactorWaitUtil', () => {
     await expect(interactorWaitUtil(locator, interactor, { timeoutMs: 1234 })).rejects.toThrow(
       'Wait for element to be attached failed after 1234ms: [data-testid="spinner"]'
     );
+  });
+});
+
+/**
+ * An interactor whose `waitUntil` is the real probe loop rather than a single-shot stub,
+ * so these tests measure the cadence component-state waits actually run at. `exists`
+ * reports whatever `isPresent` currently returns, letting a test flip the element into
+ * existence partway through the wait.
+ */
+function createProbingInteractor(isPresent: () => boolean): {
+  interactor: Interactor;
+  probeCount: () => number;
+  lastWaitUntilOption: () => WaitUntilOption<boolean> | undefined;
+} {
+  let probes = 0;
+  let lastOption: WaitUntilOption<boolean> | undefined;
+  const probe = async (): Promise<boolean> => {
+    probes += 1;
+    return isPresent();
+  };
+  const interactor = {
+    exists: probe,
+    isVisible: probe,
+    async waitUntil(option: WaitUntilOption<boolean>) {
+      lastOption = option;
+      return waitUntil(option);
+    },
+  } as unknown as Interactor;
+
+  return { interactor, probeCount: () => probes, lastWaitUntilOption: () => lastOption };
+}
+
+describe('interactorWaitUtil probe cadence', () => {
+  it('names its own escalating cadence instead of inheriting the even probeCount grid', async () => {
+    const interactor = createInteractor(true);
+
+    await interactorWaitUtil(locator, interactor);
+
+    expect(interactor.waitUntil).toHaveBeenCalledWith(
+      expect.objectContaining({ probeIntervals: defaultSettleProbeIntervals })
+    );
+  });
+
+  it('observes a condition that flips early without waiting out a multi-second grid step', async () => {
+    // The regression this guards: with the 30s default timeout, the even cadence puts the
+    // second probe 3s in, so this wait would take ~3050ms instead of ~50ms.
+    let present = false;
+    setTimeout(() => {
+      present = true;
+    }, 50);
+    const { interactor } = createProbingInteractor(() => present);
+
+    const start = Date.now();
+    await interactorWaitUtil(locator, interactor);
+    const elapsedMs = Date.now() - start;
+
+    expect(elapsedMs).toBeGreaterThanOrEqual(50);
+    expect(elapsedMs).toBeLessThan(500);
+  });
+
+  it('still terminates at the timeout with a bounded probe count when the condition never holds', async () => {
+    const { interactor, probeCount } = createProbingInteractor(() => false);
+
+    const start = Date.now();
+    await expect(interactorWaitUtil(locator, interactor, { timeoutMs: 300 })).rejects.toThrow(WaitForFailureError);
+    const elapsedMs = Date.now() - start;
+
+    expect(elapsedMs).toBeGreaterThanOrEqual(295);
+    expect(elapsedMs).toBeLessThan(700);
+    // Escalating to the 500ms tail costs ~11 probes across 300ms; the pre-fix busy-wait
+    // burned hundreds. The ceiling is what matters — a slow machine only probes less.
+    expect(probeCount()).toBeLessThanOrEqual(20);
+  });
+
+  it('overrides an interactor-level default cadence, which is the intended precedence', async () => {
+    // StorybookInteractor composes its own default as
+    // `super.waitUntil({ probeIntervals: <its own>, ...option })`, so an option that
+    // carries probeIntervals wins. Component-state waits are meant to win: their cadence
+    // is tuned for element state specifically, and it is denser early than any
+    // interactor-wide default.
+    const interactorDefault = [0, 20, 50, 100, 100, 500];
+    let received: WaitUntilOption<boolean> | undefined;
+    const interactor = {
+      exists: async () => true,
+      isVisible: async () => true,
+      async waitUntil(option: WaitUntilOption<boolean>) {
+        received = { probeIntervals: interactorDefault, ...option };
+        return waitUntil(received);
+      },
+    } as unknown as Interactor;
+
+    await interactorWaitUtil(locator, interactor);
+
+    expect(received?.probeIntervals).toBe(defaultSettleProbeIntervals);
   });
 });
