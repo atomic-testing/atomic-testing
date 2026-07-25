@@ -76,7 +76,10 @@ function focusedLocator(testId: string): PartLocator {
  * fixed in #1047, plus error-hierarchy conformance (ADR-010), plus (#973) the
  * full ~41-method `Interactor` surface across every capability facet
  * (`PointerActions`, `KeyboardActions`, `FocusActions`, `FormActions`,
- * `ScrollActions`, `Waiter`, `ElementQueries`).
+ * `ScrollActions`, `Waiter`, `ElementQueries`), plus (#1054) the four remaining
+ * cross-engine divergences: multi-match on the MUTATION path, `getAttribute`'s
+ * `isMultiple` array shape, the boolean element-state policy, and index-aware
+ * match addressing.
  *
  * Layout/geometry assertions are gated on `hasLayout` (jsdom has no layout
  * engine — see each such block below); event-dispatch-only primitives with no
@@ -150,6 +153,60 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
 
       test('getAttribute reads the first match', async () => {
         assertEqual(await interactor().getAttribute(dup, 'data-order'), 'first');
+      });
+    });
+
+    // #1054 — the SAME ambiguity on the MUTATION path, the gap that let the
+    // divergence survive the read-path fix (#1047): reads resolved to the first
+    // match, but every mutation handed the raw multi-match locator to Playwright,
+    // whose strict mode rejects it ("resolved to 2 elements"). jsdom's
+    // querySelector had no such objection, so a suite green under Jest failed in
+    // E2E. Both engines must now act on the FIRST match.
+    describe('multiple matches mutate the first', () => {
+      const dupCheckbox = byDataTestId('dup-checkbox');
+      const dupFocusable = byDataTestId('dup-focusable');
+      /** A `[data-testid][data-order]` state probe, so which of the two matches was acted on is observable. */
+      const nth = (testId: string, order: string, state: string): PartLocator =>
+        byCssSelector(`[data-testid="${testId}"][data-order="${order}"]${state}`);
+
+      test('click toggles the first match only', async () => {
+        await interactor().click(dupCheckbox);
+        assertTrue(await interactor().exists(nth('dup-checkbox', 'first', ':checked')));
+        assertFalse(await interactor().exists(nth('dup-checkbox', 'second', ':checked')));
+      });
+
+      test('focus moves focus onto the first match only', async () => {
+        await interactor().focus(dupFocusable);
+        assertTrue(await interactor().exists(nth('dup-focusable', 'first', ':focus')));
+        assertFalse(await interactor().exists(nth('dup-focusable', 'second', ':focus')));
+      });
+
+      // The remaining mutating primitives have no CSS-observable effect in a
+      // script-free fixture, so they are held to the same convention the pointer
+      // block uses: on an ambiguous locator they must RESOLVE, not raise
+      // Playwright's strict-mode violation.
+      test('every other mutating primitive resolves on an ambiguous locator', async () => {
+        await assertResolves(() => interactor().hover(dupCheckbox));
+        await assertResolves(() => interactor().mouseMove(dupCheckbox));
+        await assertResolves(() => interactor().mouseDown(dupCheckbox));
+        await assertResolves(() => interactor().mouseUp(dupCheckbox));
+        await assertResolves(() => interactor().mouseOver(dupCheckbox));
+        await assertResolves(() => interactor().mouseOut(dupCheckbox));
+        await assertResolves(() => interactor().mouseEnter(dupCheckbox));
+        await assertResolves(() => interactor().mouseLeave(dupCheckbox));
+        await assertResolves(() => interactor().contextMenu(dupCheckbox));
+        await assertResolves(() => interactor().activate(dupCheckbox));
+        await assertResolves(() => interactor().pressKey(dupFocusable, 'a'));
+        await assertResolves(() => interactor().blur(dupFocusable));
+        await assertResolves(() => interactor().enterText(dupFocusable, 'x'));
+        await assertResolves(() => interactor().typeText(dupFocusable, 'y'));
+        await assertResolves(() => interactor().setRangeValue(byDataTestId('dup-range'), 5));
+        await assertResolves(() => interactor().selectOptionValue(byDataTestId('dup-select'), ['a']));
+        await assertResolves(() => interactor().setInputFiles(byDataTestId('dup-file'), fixtureFile('hello.txt')));
+        await assertResolves(() => interactor().scrollIntoView(dupCheckbox));
+        await assertResolves(() => interactor().scrollBy(dupCheckbox, { x: 0, y: 1 }));
+        await assertResolves(() => interactor().dragTo(dupCheckbox, dupFocusable));
+        await assertResolves(() => interactor().drag(dupCheckbox, { x: 1, y: 1 }));
       });
     });
 
@@ -684,26 +741,113 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
         assertEqual(await interactor().getAttribute(absent, 'data-flag', true), []);
       });
 
-      // FINDING (#973) — cross-engine isMultiple length divergence.
-      // DOMInteractor's isMultiple:true branch maps unconditionally
-      // (`el.getAttribute(name)!`) with no filtering, so an element that
-      // matches the locator but lacks the named attribute contributes a `null`
-      // entry — despite the `readonly string[]` return type — instead of being
-      // omitted. See packages/dom-core/src/DOMInteractor.ts, the `getAttribute`
-      // isMultiple branch. PlaywrightInteractor DOES filter `null` values out
-      // (packages/playwright/src/PlaywrightInteractor.ts, same method), so for
-      // an identical locator/attribute pair where only SOME matches carry the
-      // attribute, the two interactors return DIFFERENT-LENGTH arrays — the
-      // "cross-engine isMultiple length divergence" #973 calls out by name.
-      //
-      // Skipped rather than asserting either interactor's current (divergent)
-      // behavior as correct. The assertion below documents the contract that
-      // honors the declared `readonly string[]` type — filtering out matches
-      // that lack the attribute, i.e. PlaywrightInteractor's existing
-      // behavior — which DOMInteractor should converge on. Un-skip once
-      // DOMInteractor's isMultiple branch filters like PlaywrightInteractor's does.
-      test.skip('isMultiple: true omits matches that lack the attribute, matching the readonly string[] return type', async () => {
-        assertEqual(await interactor().getAttribute(multi, 'data-flag', true), ['a', 'b']);
+      // #1054 — the cross-engine isMultiple length divergence #973 found, now
+      // resolved in favor of index alignment. Three elements match; only the
+      // first two carry `data-flag`. jsdom used to answer ["a", null] (a `null`
+      // smuggled past a `readonly string[]` declaration by a `!`), Playwright
+      // ["a", "b"] with the absent entry dropped — different lengths for
+      // identical DOM, and in the Playwright case no way to tell WHICH matches
+      // carried the attribute. Both now keep one entry per match, so the array
+      // is index-aligned with getElementCount and the declared element type is
+      // `Optional<string>`.
+      test('isMultiple: true keeps one entry per match, index-aligned, with undefined for a match that lacks it', async () => {
+        const flags = await interactor().getAttribute(multi, 'data-flag', true);
+        assertEqual(flags.length, await interactor().getElementCount(multi));
+        assertEqual(flags.length, 3);
+        assertEqual(flags[0], 'a');
+        assertEqual(flags[1], 'b');
+        assertEqual(flags[2], undefined);
+      });
+    });
+
+    // #1054 — boolean element state. isChecked/isDisabled never got the shared,
+    // ARIA-aware, never-throws treatment isVisible got in #1053, so the two
+    // engines answered differently on the same DOM. Both now apply one shared
+    // policy (`elementStateUtil`), evaluated in-page by Playwright exactly as the
+    // visibility predicate is.
+    describe('boolean element state', () => {
+      test('a native checkbox still reads from its own checked state', async () => {
+        assertTrue(await interactor().isChecked(byDataTestId('checked-box')));
+        assertFalse(await interactor().isChecked(byDataTestId('click-checkbox')));
+      });
+
+      test('a custom widget reads checked from aria-checked', async () => {
+        assertTrue(await interactor().isChecked(byDataTestId('aria-checked-widget')));
+      });
+
+      test('aria-checked="mixed" is not checked', async () => {
+        assertFalse(await interactor().isChecked(byDataTestId('aria-mixed-widget')));
+      });
+
+      // A read never throws: a browser used to surface Playwright's
+      // "Not a checkbox or radio button" here while jsdom answered false.
+      test('an element with no checkable semantics reads false rather than throwing', async () => {
+        await assertResolves(() => interactor().isChecked(byDataTestId('uncheckable')));
+        assertFalse(await interactor().isChecked(byDataTestId('uncheckable')));
+      });
+
+      // The `disabled` IDL property mirrors only the element's own attribute, so
+      // this was the jsdom-side miss.
+      test('a control inside a disabled fieldset is disabled', async () => {
+        assertTrue(await interactor().isDisabled(byDataTestId('fieldset-input')));
+      });
+
+      test("a control inside the disabled fieldset's first legend stays enabled", async () => {
+        assertFalse(await interactor().isDisabled(byDataTestId('legend-input')));
+      });
+
+      test('aria-disabled marks an element disabled', async () => {
+        assertTrue(await interactor().isDisabled(byDataTestId('aria-disabled-button')));
+      });
+
+      test('an ordinary control is neither disabled nor checked', async () => {
+        assertFalse(await interactor().isDisabled(byDataTestId('present')));
+        assertFalse(await interactor().isChecked(byDataTestId('present')));
+      });
+    });
+
+    // #1054 — index-aware addressing. getElementCount sizes a collection by
+    // locator match; getMatchLocator addresses into it by the SAME reckoning, so
+    // a count and an item lookup cannot disagree. The fixture interleaves a
+    // same-tag non-item at position 0, the shape that made the previous
+    // `:nth-of-type(i + 1)` addressing resolve nothing at every index — a false
+    // green, since "no items" satisfies an emptiness assertion.
+    describe('getMatchLocator', () => {
+      const item = byDataTestId('mixed-item');
+
+      test('addresses the i-th MATCH, not the i-th sibling of that tag', async () => {
+        const first = await interactor().getMatchLocator(item, 0);
+        const second = await interactor().getMatchLocator(item, 1);
+        assertEqual(await interactor().getText(first!), 'alpha');
+        assertEqual(await interactor().getText(second!), 'beta');
+      });
+
+      test('the tag-position addressing it replaces matches nothing on this list', async () => {
+        assertFalse(await interactor().exists(byCssSelector('[data-testid="mixed-item"]:nth-of-type(1)')));
+      });
+
+      test('every addressed match resolves to exactly one element', async () => {
+        const count = await interactor().getElementCount(item);
+        assertEqual(count, 2);
+        for (let index = 0; index < count; index++) {
+          const matchLocator = await interactor().getMatchLocator(item, index);
+          assertEqual(await interactor().getElementCount(matchLocator!), 1);
+        }
+      });
+
+      test('an out-of-range or negative index yields undefined', async () => {
+        assertEqual(await interactor().getMatchLocator(item, 2), undefined);
+        assertEqual(await interactor().getMatchLocator(item, -1), undefined);
+      });
+
+      test('a locator matching nothing yields undefined', async () => {
+        assertEqual(await interactor().getMatchLocator(absent, 0), undefined);
+      });
+
+      test('the addressed locator supports the same reads as any other locator', async () => {
+        const second = await interactor().getMatchLocator(item, 1);
+        assertTrue(await interactor().exists(second!));
+        assertEqual(await interactor().getAttribute(second!, 'data-testid'), 'mixed-item');
       });
     });
 

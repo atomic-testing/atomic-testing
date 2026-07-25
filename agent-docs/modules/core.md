@@ -56,7 +56,7 @@ See [DOMAIN.md → Type system](../DOMAIN.md#type-system) for the full picture. 
 The contract every environment implements ([Interactor.ts](../../packages/core/src/interactor/Interactor.ts#L26-L153)):
 
 - **Mutative**: `click`, `mouseMove/Down/Up/Over/Out/Enter/Leave`, `focus`, `blur`, `enterText`, `selectOptionValue`, `hover`, `pressKey` (modifier chords), `activate`, `contextMenu`, `setInputFiles`, `scrollIntoView`, `scrollBy`, `dragTo`, `drag` (pointer-based; not HTML5 DnD — #922), `wait`, `waitUntilComponentState`, `waitUntil<T>`.
-- **Read-only**: `getInputValue`, `getSelectValues`, `getSelectLabels`, `getAttribute` (3 overloads incl. `isMultiple`), `getStyleValue`, `getText`, `getBoundingRect`, `exists`, `isChecked`, `isDisabled`, `isReadonly`, `isVisible`, `hasCssClass`, `hasAttribute`.
+- **Read-only**: `getInputValue`, `getSelectValues`, `getSelectLabels`, `getAttribute` (3 overloads; the `isMultiple` one answers one `Optional<string>` per match, index-aligned with `getElementCount`), `getStyleValue`, `getText`, `getBoundingRect`, `exists`, `getElementCount`, `getMatchLocator` (address the i-th match), `isChecked`, `isDisabled`, `isReadonly`, `isRequired`, `isError`, `isVisible`, `hasCssClass`, `hasAttribute`.
 - **Debug**: `innerHTML`, `clone()`.
 
 ## Locators
@@ -83,15 +83,17 @@ Composition lives in `locatorUtil` ([utils/locatorUtil.ts](../../packages/core/s
 
 ## Utilities
 
-| Namespace        | Notable members                                                                                                                            | File                                                                 |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
-| `timingUtil`     | `wait(ms)`, `waitUntil(option)` (probe loop; even cadence `timeoutMs/probeCount` default 10, or escalating `probeIntervals` when provided) | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts)         |
-| `interactorUtil` | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError`; probes on `defaultSettleProbeIntervals`, not the even cadence, because element state settles far sooner than its timeout budget | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts) |
-| `locatorUtil`    | `append`, `and` (same-element compose), `toCssSelector`, `overrideLocatorRelativePosition`, `splitAtAccessibleRoleLocator` (#923)          | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)       |
-| `escapeUtil`     | `escapeCssIdentifier` (id/class/attribute-name position), `escapeCssString` (quoted attribute value), `escapeCssClassName`; CSS escapes the two contexts differently, so picking the wrong one fails silently. `escapeValue` is a deprecated alias of `escapeCssString` | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts)         |
-| `dateUtil`       | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes`                              | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts)             |
-| `collectionUtil` | `toArray`, `getDifference`                                                                                                                 | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts) |
-| `listHelper`     | `getListItemByIndex`, `getListItemIterator`, `getListItemCount` (exported via `drivers`)                                                   | [listHelper.ts](../../packages/core/src/drivers/listHelper.ts)       |
+| Namespace          | Notable members                                                                                                                                                                                                                                                         | File                                                                     |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `timingUtil`       | `wait(ms)`, `waitUntil(option)` (probe loop; even cadence `timeoutMs/probeCount` default 10, or escalating `probeIntervals` when provided)                                                                                                                              | [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts)             |
+| `interactorUtil`   | `interactorWaitUtil(locator, interactor, option)` → throws `WaitForFailureError`; probes on `defaultSettleProbeIntervals`, not the even cadence, because element state settles far sooner than its timeout budget                                                       | [interactorUtil.ts](../../packages/core/src/utils/interactorUtil.ts)     |
+| `locatorUtil`      | `append`, `and` (same-element compose), `toCssSelector`, `overrideLocatorRelativePosition`, `splitAtAccessibleRoleLocator` (#923)                                                                                                                                       | [locatorUtil.ts](../../packages/core/src/utils/locatorUtil.ts)           |
+| `escapeUtil`       | `escapeCssIdentifier` (id/class/attribute-name position), `escapeCssString` (quoted attribute value), `escapeCssClassName`; CSS escapes the two contexts differently, so picking the wrong one fails silently. `escapeValue` is a deprecated alias of `escapeCssString` | [escapeUtil.ts](../../packages/core/src/utils/escapeUtil.ts)             |
+| `dateUtil`         | `isHtmlDateInputType`, `validateHtmlDateInput`, `isHtmlInput{Date,Time,DateTime}Format`, `htmlInputDateTypes`                                                                                                                                                           | [dateUtil.ts](../../packages/core/src/utils/dateUtil.ts)                 |
+| `collectionUtil`   | `toArray`, `getDifference`                                                                                                                                                                                                                                              | [collectionUtil.ts](../../packages/core/src/utils/collectionUtil.ts)     |
+| `listHelper`       | `getListItemByIndex`, `getListItemIterator`, `getListItemCount` (exported via `drivers`); items are addressed by locator MATCH index, so count and index agree (#1054)                                                                                                  | [listHelper.ts](../../packages/core/src/drivers/listHelper.ts)           |
+| `elementStateUtil` | `isElementChecked`, `isElementDisabled`, `isElementReadonly`, `isElementRequired`, `isElementInError` — one shared boolean-state policy both interactors apply (Playwright serializes it into the page, as with `visibilityUtil`); reads never throw                    | [elementStateUtil.ts](../../packages/core/src/utils/elementStateUtil.ts) |
+| `matchAddressUtil` | `getMatchAddress`, `toMatchLocator` — the shared policy behind `Interactor.getMatchLocator`: a live `:nth-child(k)` compound, falling back to an absolute `:root` path when a match set spans several parents                                                           | [matchAddressUtil.ts](../../packages/core/src/utils/matchAddressUtil.ts) |
 
 ## Invariants & failure modes
 
@@ -107,5 +109,5 @@ See [DOMAIN.md → Invariants](../DOMAIN.md#invariants) and [Failure modes](../D
 
 - [TestEngine.ts](../../packages/core/src/TestEngine.ts) — root driver.
 - [drivers/driverUtil.ts](../../packages/core/src/drivers/driverUtil.ts) — part-tree builder.
-- [drivers/listHelper.ts](../../packages/core/src/drivers/listHelper.ts) — `:nth-of-type` iteration.
+- [drivers/listHelper.ts](../../packages/core/src/drivers/listHelper.ts) — match-index item addressing.
 - [partTypes.ts](../../packages/core/src/partTypes.ts) — the type system.

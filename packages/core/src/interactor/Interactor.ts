@@ -362,7 +362,24 @@ export interface ElementQueries {
    */
   getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
 
-  getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+  /**
+   * Read `name` from EVERY element the locator matches, one entry per match, in
+   * document order.
+   *
+   * The result is **index-aligned with the match set** — its length always equals
+   * {@link ElementQueries.getElementCount | getElementCount} for the same locator
+   * — so entry `i` describes match `i`. A match that does not carry the attribute
+   * contributes `undefined` rather than being dropped, which is why the element
+   * type is `Optional<string>`: dropping the absent ones (what
+   * `PlaywrightInteractor` used to do, against a `readonly string[]` declaration
+   * that `DOMInteractor` upheld only with a `!`) silently destroys that alignment
+   * and made the two engines return different-length arrays for identical DOM.
+   *
+   * Callers that only want the present values filter explicitly
+   * (`.filter(v => v != null)`); callers that want a count use
+   * {@link ElementQueries.getElementCount | getElementCount}.
+   */
+  getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly Optional<string>[]>;
   getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
   getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
 
@@ -405,18 +422,64 @@ export interface ElementQueries {
    * when the items are interleaved with a same-tag non-item (a header/divider).
    */
   getElementCount(locator: PartLocator): Promise<number>;
+
+  /**
+   * Resolve the locator's `index`-th match (0-based, document order) to a locator
+   * that addresses THAT ONE element, or `undefined` when the locator has no such
+   * match.
+   *
+   * The index-aware counterpart to {@link ElementQueries.getElementCount | getElementCount}:
+   * together they let a collection be sized and then addressed by the SAME
+   * reckoning — match order — so a count and an item lookup cannot disagree. This
+   * is what `listHelper` addresses list items with; the `:nth-of-type(i + 1)` it
+   * used before counted by TAG position among siblings, so a single same-tag
+   * non-item (a header/divider `<li>`) interleaved before the items made
+   * `getItems()` answer `[]` while `getItemCount()` answered N — a false green,
+   * since "no items" satisfies an emptiness assertion (#1054).
+   *
+   * Resolution is one round-trip (`querySelectorAll()` in the DOM,
+   * `Locator.evaluateAll` in Playwright), not a position walk. A read: it never
+   * throws, and an out-of-range or negative `index` yields `undefined`.
+   *
+   * The returned locator normally compounds a `:nth-child(k)` onto the one passed
+   * in, so it stays LIVE — the original selector is still re-evaluated on every
+   * use and only the item's position among its own siblings is pinned. See
+   * `matchAddressUtil.getMatchAddress` for the policy, including the absolute-path
+   * fallback for a match set spread across several parents.
+   *
+   * @param locator The locator whose match set is being indexed
+   * @param index 0-based index into that match set, in document order
+   */
+  getMatchLocator(locator: PartLocator, index: number): Promise<Optional<PartLocator>>;
+
+  /**
+   * Whether the element is checked — a native checkbox/radio `<input>`'s live
+   * `checked` state, else `aria-checked="true"` for a custom widget. A
+   * non-checkable element is `false`, never an error. The policy is shared
+   * verbatim by every environment; see `elementStateUtil.isElementChecked`.
+   */
   isChecked(locator: PartLocator): Promise<boolean>;
+  /**
+   * Whether the element is disabled — natively (its own `disabled`, or inherited
+   * from an ancestor `<fieldset disabled>` / `<optgroup disabled>`) or through
+   * `aria-disabled="true"` on it or an ancestor. The policy is shared verbatim by
+   * every environment; see `elementStateUtil.isElementDisabled`.
+   */
   isDisabled(locator: PartLocator): Promise<boolean>;
+  /**
+   * Whether the element is marked read-only, via the native `readonly` attribute
+   * or `aria-readonly="true"`. See `elementStateUtil.isElementReadonly`.
+   */
   isReadonly(locator: PartLocator): Promise<boolean>;
   /**
    * Whether the element is marked required, via the native `required` property or
-   * an `aria-required="true"` attribute.
+   * an `aria-required="true"` attribute. See `elementStateUtil.isElementRequired`.
    */
   isRequired(locator: PartLocator): Promise<boolean>;
   /**
    * Whether the element is in an invalid/error state, signalled by
    * `aria-invalid="true"` (the cross-widget convention; native validity state is
-   * not consulted).
+   * not consulted). See `elementStateUtil.isElementInError`.
    */
   isError(locator: PartLocator): Promise<boolean>;
   isVisible(locator: PartLocator): Promise<boolean>;

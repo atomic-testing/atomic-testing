@@ -24,12 +24,13 @@ function matchingChildren(container: PartLocator, childSelector: string): PartLo
  * addressed positionally by `:nth-child`.
  *
  * `:nth-child` is the only element-position pseudo that both jsdom and Playwright
- * resolve identically, and — unlike the `:nth-of-type` used by {@link getListItemByIndex}
- * and friends — it counts across element types. This matters for lists whose items
- * either mix tags (e.g. `<a>`/`<div>` menu items) or are interspersed with
- * non-items (a `role="separator"`, an overflow trigger) sharing a tag with the
- * items: each position is filtered through `childSelector`, so non-matching
- * siblings are skipped without throwing off the index.
+ * resolve identically, and it counts across element types. Each position is
+ * filtered through `childSelector`, so non-matching siblings are skipped without
+ * throwing off the index — which is what lets this walk descend into
+ * `groupSelector` wrappers (below), the one shape a flat match set cannot
+ * express. For a FLAT list, {@link getListItemByIndex} is the cheaper address:
+ * it resolves the i-th match in one round-trip via
+ * {@link Interactor.getMatchLocator} rather than walking positions.
  *
  * When `groupSelector` is supplied, a child that is not itself an item but matches
  * `groupSelector` is treated as a wrapper and recursed into — so items nested one
@@ -39,10 +40,12 @@ function matchingChildren(container: PartLocator, childSelector: string): PartLo
  * walk.
  *
  * Iteration walks positions until no child exists there, using only
- * {@link Interactor.exists} — portable across interactors (notably,
- * `getAttribute(..., true)` is NOT a reliable element count: Playwright drops
- * null entries, jsdom keeps them). `container` must resolve to a single element so
- * `:nth-child` is unambiguous.
+ * {@link Interactor.exists}. `container` must resolve to a single element so
+ * `:nth-child` is unambiguous. For a count, prefer
+ * {@link Interactor.getElementCount} — `getAttribute(..., true).length` also
+ * answers the match count now that both engines keep one entry per match
+ * (#1054), but it pays for an attribute read per element to learn a number the
+ * count primitive returns in one round-trip.
  */
 export async function* iterateMatchingChildren<ItemT extends ComponentDriver>(
   host: ComponentDriver,
@@ -75,8 +78,7 @@ export async function* iterateMatchingChildren<ItemT extends ComponentDriver>(
  * filter counts exactly the direct children the walk would, still skipping
  * non-matching same-tag siblings. The recursive case must descend into
  * `groupSelector` wrappers, which no single query expresses, so it keeps walking
- * positions via {@link Interactor.exists} (see {@link iterateMatchingChildren} for
- * why a `getAttribute`-based count is not portable).
+ * positions via {@link Interactor.exists}.
  */
 export async function countMatchingChildren(
   interactor: Interactor,

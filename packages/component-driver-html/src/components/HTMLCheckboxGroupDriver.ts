@@ -13,6 +13,14 @@ export class HTMLCheckboxGroupDriver extends ComponentDriver<{}> implements IInp
     const availableValues = await this.interactor.getAttribute(this.locator, 'value', true);
     const value: string[] = [];
     for (const val of availableValues) {
+      // A checkbox with no `value` attribute contributes a null entry: it cannot be
+      // addressed by `byValue`, which matches the attribute rather than the IDL
+      // default of "on". Skipping it is what the previous `string[]` typing was
+      // silently getting wrong — under jsdom the null reached `byValue` and matched
+      // `[value="null"]`, while Playwright dropped it entirely.
+      if (val == null) {
+        continue;
+      }
       const itemLocator = byValue(val, 'Same');
       const locator = locatorUtil.append(this.locator, itemLocator);
       const isChecked = await this.interactor.isChecked(locator);

@@ -8,12 +8,14 @@ import {
   dateUtil,
   defaultWaitForOption,
   ElementNotFoundError,
+  elementStateUtil,
   EnterTextOption,
   FocusOption,
   HoverOption,
   Interactor,
   interactorUtil,
   locatorUtil,
+  matchAddressUtil,
   MouseDownOption,
   MouseEnterOption,
   MouseLeaveOption,
@@ -122,17 +124,21 @@ export class DOMInteractor implements Interactor {
     return fn();
   }
 
-  async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+  async getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly Optional<string>[]>;
   async getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
   async getAttribute(locator: PartLocator, name: string): Promise<Optional<string>>;
   async getAttribute(
     locator: PartLocator,
     name: string,
     isMultiple?: boolean
-  ): Promise<Optional<string> | readonly string[]> {
+  ): Promise<Optional<string> | readonly Optional<string>[]> {
     if (isMultiple) {
+      // One entry per MATCH, index-aligned with getElementCount: a match lacking
+      // the attribute contributes `undefined` (the same absent-value spelling the
+      // single-element overload uses) instead of the `null` the old `!` assertion
+      // smuggled past the declared type. See ElementQueries.getAttribute.
       const elements = await this.getElement(locator, true);
-      return Promise.resolve(elements.map(el => el.getAttribute(name)!));
+      return Promise.resolve(elements.map(el => el.getAttribute(name) ?? undefined));
     } else {
       const el = await this.getElement(locator);
       if (el != null) {
@@ -973,6 +979,23 @@ export class DOMInteractor implements Interactor {
     return elements.length;
   }
 
+  /**
+   * Resolve the locator's `index`-th match to a locator addressing that one
+   * element — the DOM's `querySelectorAll()[index]`, reduced back to CSS by the
+   * shared {@link matchAddressUtil.getMatchAddress} policy so
+   * `PlaywrightInteractor` cannot answer with a different address. A read: it does
+   * NOT route through {@link runInteraction}.
+   *
+   * @param locator - Locator whose match set is being indexed
+   * @param index - 0-based index into that match set, in document order
+   * @returns A locator for that match, or `undefined` when there is none
+   */
+  async getMatchLocator(locator: PartLocator, index: number): Promise<Optional<PartLocator>> {
+    const elements = await this.getElement(locator, true);
+    const address = matchAddressUtil.getMatchAddress(elements as Element[], index);
+    return address == null ? undefined : matchAddressUtil.toMatchLocator(locator, address);
+  }
+
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: true): Promise<readonly T[]>;
   async getElement<T extends Element = Element>(locator: PartLocator, isMultiple: false): Promise<Optional<T>>;
   async getElement<T extends Element = Element>(locator: PartLocator): Promise<Optional<T>>;
@@ -1124,51 +1147,38 @@ export class DOMInteractor implements Interactor {
     return { x: r.x, y: r.y, width: r.width, height: r.height };
   }
 
+  /**
+   * Apply one of the shared {@link elementStateUtil} predicates to the located
+   * element, answering `false` when nothing matches.
+   *
+   * Every boolean state read funnels through here so the policy lives in exactly
+   * one place — the same parameterized-by-primitive shape {@link isVisible} uses
+   * for `visibilityUtil`. `PlaywrightInteractor` evaluates the SAME predicate in
+   * the browser, so the two environments cannot answer differently.
+   */
+  private async readElementState(locator: PartLocator, predicate: (element: Element) => boolean): Promise<boolean> {
+    const el = await this.getElement(locator);
+    return el != null && predicate(el);
+  }
+
   async isChecked(locator: PartLocator): Promise<boolean> {
-    const el = await this.getElement<HTMLInputElement>(locator);
-    if (el != null && el.nodeName === 'INPUT') {
-      return Promise.resolve(el.checked);
-    }
-    return Promise.resolve(false);
+    return this.readElementState(locator, elementStateUtil.isElementChecked);
   }
 
   async isDisabled(locator: PartLocator): Promise<boolean> {
-    const el = await this.getElement(locator);
-    if (el != null) {
-      if ('disabled' in el) {
-        const isDisabled = Boolean(el.disabled);
-        return Promise.resolve(isDisabled);
-      }
-    }
-    return Promise.resolve(false);
+    return this.readElementState(locator, elementStateUtil.isElementDisabled);
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {
-    // Honor `aria-readonly` for symmetry with `isRequired`'s `aria-required`
-    // check (#1053): the native `readonly` attribute only exists on native form
-    // controls, whereas composite/custom widgets (comboboxes, grids,
-    // contenteditable regions) expose read-only state through ARIA. The two
-    // capability probes now read both the native and ARIA signals.
-    if (await this.hasAttribute(locator, 'readonly')) {
-      return true;
-    }
-    return (await this.getAttribute(locator, 'aria-readonly')) === 'true';
+    return this.readElementState(locator, elementStateUtil.isElementReadonly);
   }
 
   async isRequired(locator: PartLocator): Promise<boolean> {
-    const el = await this.getElement(locator);
-    if (el != null) {
-      if ('required' in el && Boolean((el as { required?: boolean }).required)) {
-        return true;
-      }
-      return el.getAttribute('aria-required') === 'true';
-    }
-    return false;
+    return this.readElementState(locator, elementStateUtil.isElementRequired);
   }
 
   async isError(locator: PartLocator): Promise<boolean> {
-    const el = await this.getElement(locator);
-    return el != null && el.getAttribute('aria-invalid') === 'true';
+    return this.readElementState(locator, elementStateUtil.isElementInError);
   }
 
   async isVisible(locator: PartLocator): Promise<boolean> {

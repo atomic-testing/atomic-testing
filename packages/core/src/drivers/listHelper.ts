@@ -1,16 +1,27 @@
-import { byCssSelector, type PartLocator } from '../locators';
+import { type PartLocator } from '../locators';
 import { ComponentDriverCtor, ScenePart } from '../partTypes';
-import { append } from '../utils/locatorUtil';
 import { ComponentDriver } from './ComponentDriver';
 
 /**
  * Get list item driver within host by index.  List item is an indefinite number of items under the same host
  * with similar characteristics defined by the itemLocatorBase.
+ *
+ * The i-th item is the i-th LOCATOR MATCH, resolved through
+ * {@link Interactor.getMatchLocator} — the same reckoning
+ * {@link getListItemCount} counts by, so the two cannot disagree for any list
+ * shape. Addressing used to append `:nth-of-type(i + 1)`, which counts by TAG
+ * position among siblings: interleave one same-tag non-item (a header/divider
+ * `<li>`) ahead of the items and every index missed, so `getItems()` answered
+ * `[]` while `getItemCount()` answered N — a false green, since "no items"
+ * satisfies an emptiness assertion (#1054). The caller could not detect the
+ * violation, which made the old "homogeneous siblings" note a trap rather than a
+ * contract.
+ *
  * @param host The component the list item is under
  * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
  * @param index The index of the list item
  * @param driverClass The driver class of the list item
- * @returns
+ * @returns The item's driver, or `null` when the list has no item at that index
  */
 export async function getListItemByIndex<HostPartT extends ScenePart, ItemT extends ComponentDriver>(
   host: ComponentDriver<HostPartT>,
@@ -18,19 +29,11 @@ export async function getListItemByIndex<HostPartT extends ScenePart, ItemT exte
   index: number,
   driverClass: ComponentDriverCtor<ItemT>
 ): Promise<ItemT | null> {
-  // Address the i-th item by tag position among siblings. `:nth-of-type` is the
-  // pseudo both jsdom and Playwright resolve identically here, but it counts by
-  // tag — so this addressing (and thus its agreement with getListItemCount)
-  // assumes the homogeneous-siblings requirement documented on getListItemCount:
-  // no same-tag non-item sibling shifting the reckoning. childListHelper's
-  // `:nth-child` + selector filter is the mixed-sibling alternative.
-  const nthLocator: PartLocator = byCssSelector(`:nth-of-type(${index + 1})`, 'Same');
-  const itemLocator = append(itemLocatorBase, nthLocator);
-  const exists = await host.interactor.exists(itemLocator);
-  if (exists) {
-    return new driverClass(itemLocator, host.interactor, host.commutableOption);
+  const itemLocator = await host.interactor.getMatchLocator(itemLocatorBase, index);
+  if (itemLocator == null) {
+    return null;
   }
-  return null;
+  return new driverClass(itemLocator, host.interactor, host.commutableOption);
 }
 
 /**
@@ -63,22 +66,21 @@ export async function* getListItemIterator<HostPartT extends ScenePart, ItemT ex
  * Counts by locator match: {@link Interactor.getElementCount} asks the interactor
  * how many elements `itemLocatorBase` matches. This replaces the former
  * index-by-index `exists()` probing — O(n) round-trips, costly under Playwright
- * where `locator.count()` is one call — and simultaneously fixes the count-side
- * `:nth-of-type` miscount: counting by match (not by tag position) no longer
- * mis-sizes a list interleaved with a same-tag non-item (a header/divider `<li>`).
+ * where `locator.count()` is one call.
  *
- * **Homogeneous-siblings requirement.** {@link getListItemByIndex} still ADDRESSES
- * the i-th item by appending `:nth-of-type(i + 1)` to `itemLocatorBase`, so this
- * count and that index access agree only when the items are the homogeneous set
- * the base matches — i.e. no non-item sibling of the same tag shifts the
- * `:nth-of-type` reckoning. For lists that mix item tags or interleave same-tag
- * non-items, use childListHelper's {@link countMatchingChildren} /
- * {@link iterateMatchingChildren} instead, whose `:nth-child` + `childSelector`
- * filter tolerates mixed siblings.
+ * {@link getListItemByIndex} addresses items by the SAME reckoning (match order,
+ * via {@link Interactor.getMatchLocator}), so this count and that index access
+ * agree by construction for any list shape — including one whose items are
+ * interleaved with same-tag non-items, which the previous `:nth-of-type`
+ * addressing silently mis-indexed (#1054).
+ *
+ * Items nested inside wrapper elements are a different problem, and still belong
+ * to childListHelper's {@link countMatchingChildren} /
+ * {@link iterateMatchingChildren}, whose `groupSelector` recursion descends into
+ * those wrappers — something no single locator match set expresses.
  *
  * @param host The component the list items are under
- * @param itemLocatorBase The locator of the list items without the index; it must
- * match the homogeneous item set only (see the requirement above)
+ * @param itemLocatorBase The locator matching the list's items
  * @returns The number of items in the list
  */
 export async function getListItemCount<HostPartT extends ScenePart>(

@@ -1,6 +1,8 @@
 import { Interactor } from '../../interactor/Interactor';
+import { byCssSelector } from '../../locators/byCssSelector';
 import { byDataTestId } from '../../locators/byDataTestId';
 import type { PartLocator } from '../../locators/PartLocator';
+import * as locatorUtil from '../../utils/locatorUtil';
 import { ComponentDriver } from '../ComponentDriver';
 import { collectItemLabels, getListItemByIndex, getListItemCount, getListItemIterator } from '../listHelper';
 
@@ -12,27 +14,27 @@ class LeafDriver extends ComponentDriver<{}> {
 
 const itemLocatorBase = byDataTestId('row');
 
-/** A fake Interactor whose `exists()` answers true for :nth-of-type positions
- * below `matchCount`, modeling a homogeneous list of exactly that many items. */
+/** A fake Interactor modeling a list of exactly `matchCount` items: it answers
+ * `getMatchLocator` for every in-range index with the live `:nth-child` compound
+ * the real primitive produces, and `undefined` beyond the match set. */
 function createInteractor(matchCount: number): Interactor {
-  const exists = jest.fn(async (locator: PartLocator) => {
-    const [{ selector }] = locator.slice(-1);
-    const match = /:nth-of-type\((\d+)\)$/.exec(selector);
-    const position = match ? Number(match[1]) : NaN;
-    return position >= 1 && position <= matchCount;
-  });
-  return { exists } as unknown as Interactor;
+  const getMatchLocator = jest.fn(async (locator: PartLocator, index: number) =>
+    index >= 0 && index < matchCount
+      ? locatorUtil.append(locator, byCssSelector(`:nth-child(${index + 1})`, 'Same'))
+      : undefined
+  );
+  return { getMatchLocator } as unknown as Interactor;
 }
 
 describe('getListItemByIndex', () => {
-  it('addresses the i-th item with a Same-positioned :nth-of-type locator', async () => {
+  it('addresses the i-th item by match index, not by tag position', async () => {
     const interactor = createInteractor(3);
     const host = new LeafDriver(itemLocatorBase, interactor);
 
     const item = await getListItemByIndex(host, itemLocatorBase, 0, LeafDriver);
 
-    expect(item?.locator.map(loc => loc.selector)).toEqual(['[data-testid="row"]', ':nth-of-type(1)']);
-    expect(item?.locator.at(-1)?.relative).toBe('Same');
+    expect(interactor.getMatchLocator).toHaveBeenCalledWith(itemLocatorBase, 0);
+    expect(item?.locator.map(loc => loc.selector)).toEqual(['[data-testid="row"]', ':nth-child(1)']);
   });
 
   it('returns null when no element exists at that index', async () => {
@@ -66,9 +68,9 @@ describe('getListItemIterator', () => {
 
     expect(items).toHaveLength(3);
     expect(items.map(item => item.locator.at(-1)?.selector)).toEqual([
-      ':nth-of-type(1)',
-      ':nth-of-type(2)',
-      ':nth-of-type(3)',
+      ':nth-child(1)',
+      ':nth-child(2)',
+      ':nth-child(3)',
     ]);
   });
 
@@ -81,7 +83,7 @@ describe('getListItemIterator', () => {
       items.push(item);
     }
 
-    expect(items.map(item => item.locator.at(-1)?.selector)).toEqual([':nth-of-type(2)', ':nth-of-type(3)']);
+    expect(items.map(item => item.locator.at(-1)?.selector)).toEqual([':nth-child(2)', ':nth-child(3)']);
   });
 
   it('yields nothing when the list is empty', async () => {

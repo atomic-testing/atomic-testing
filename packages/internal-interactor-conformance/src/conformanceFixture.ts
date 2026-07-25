@@ -30,12 +30,50 @@ export const conformanceFixtureHtml = `
     <div data-testid="dup" data-order="first">first</div>
     <div data-testid="dup" data-order="second">second</div>
 
+    <!-- Multi-match MUTATION: the same ambiguity on the write path. Playwright's
+         strict mode rejects a multi-match locator outright, so every mutation
+         must resolve to the FIRST match the way querySelector does (#1054).
+         Checkboxes make the outcome observable without app JS — which of the two
+         toggled is readable through a :checked selector — and the paired inputs
+         do the same for focus via the :focus probe. -->
+    <input type="checkbox" data-testid="dup-checkbox" data-order="first" />
+    <input type="checkbox" data-testid="dup-checkbox" data-order="second" />
+    <input type="text" data-testid="dup-focusable" data-order="first" />
+    <input type="text" data-testid="dup-focusable" data-order="second" />
+    <!-- Ambiguous targets for the form primitives, so the mutation audit covers
+         every member of FormActions rather than only the text-input ones. -->
+    <input type="range" data-testid="dup-range" min="0" max="10" step="1" value="0" />
+    <input type="range" data-testid="dup-range" min="0" max="10" step="1" value="0" />
+    <select data-testid="dup-select"><option value="a">Alpha</option></select>
+    <select data-testid="dup-select"><option value="a">Alpha</option></select>
+    <input type="file" data-testid="dup-file" />
+    <input type="file" data-testid="dup-file" />
+
     <!-- Value reads: a real input vs. a non-input element. -->
     <input type="text" data-testid="text-input" value="typed" />
     <div data-testid="not-input">not an input</div>
 
     <!-- A checkbox so isChecked has a positive control. -->
     <input type="checkbox" data-testid="checked-box" checked />
+
+    <!-- Boolean element state (#1054). isChecked/isDisabled were never given the
+         ARIA-aware, never-throws treatment isVisible got, so the two engines
+         answered differently for all of these:
+         - a role="checkbox" carrying aria-checked (jsdom false / browser true),
+         - a plain element (jsdom false / browser THREW "Not a checkbox or radio
+           button"), and
+         - a control disabled through an ancestor <fieldset disabled>, which the
+           disabled IDL property does not reflect (jsdom false / browser true).
+         The legend control is the HTML carve-out: a disabled fieldset does NOT
+         disable the controls in its own first <legend>. -->
+    <div role="checkbox" aria-checked="true" data-testid="aria-checked-widget">aria checked</div>
+    <div role="checkbox" aria-checked="mixed" data-testid="aria-mixed-widget">aria mixed</div>
+    <div data-testid="uncheckable">not checkable at all</div>
+    <fieldset disabled>
+      <legend><input type="text" data-testid="legend-input" /></legend>
+      <input type="text" data-testid="fieldset-input" />
+    </fieldset>
+    <button type="button" aria-disabled="true" data-testid="aria-disabled-button">aria disabled</button>
 
     <!-- A selected <option> with NO value attribute: its value must fall back to
          the option text (HTML IDL semantics), not be dropped. A single option
@@ -66,6 +104,17 @@ export const conformanceFixtureHtml = `
       <li data-testid="count-item">two</li>
       <li data-testid="count-item">three</li>
       <li data-testid="count-other">not a counted item</li>
+    </ul>
+
+    <!-- Index-aware addressing (#1054): a same-tag NON-item interleaved at
+         position 0, so tag position and match index disagree from the very first
+         item. A [data-testid="mixed-item"]:nth-of-type(1) selector matches nothing here —
+         the shape that made getItems() answer [] while getItemCount() answered 2.
+         getMatchLocator must address by match, so index 0 is "alpha". -->
+    <ul data-testid="mixed-list">
+      <li data-testid="mixed-other">divider</li>
+      <li data-testid="mixed-item">alpha</li>
+      <li data-testid="mixed-item">beta</li>
     </ul>
 
     <!-- click: a fresh, unchecked control so a positional click's real toggling
@@ -137,8 +186,10 @@ export const conformanceFixtureHtml = `
     </div>
 
     <!-- getAttribute(..., true): three matches sharing data-group (present on
-         all three, for the happy path) but data-flag only on the first two (for
-         the isMultiple length-divergence finding — see conformanceSuites.ts). -->
+         all three, for the happy path) but data-flag only on the first two, so
+         the array must stay index-aligned with the match set — one entry per
+         match, the absent one spelled undefined rather than dropped (#1054;
+         jsdom used to keep a null, Playwright used to drop it entirely). -->
     <div data-testid="attr-multi" data-flag="a" data-group="multi">one</div>
     <div data-testid="attr-multi" data-flag="b" data-group="multi">two</div>
     <div data-testid="attr-multi" data-group="multi">three</div>
