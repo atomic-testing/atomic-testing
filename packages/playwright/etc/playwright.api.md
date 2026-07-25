@@ -50,7 +50,7 @@ export class PlaywrightInteractor implements Interactor {
     // (undocumented)
     focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void>;
     // (undocumented)
-    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly Optional<string>[]>;
     // (undocumented)
     getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
     // (undocumented)
@@ -58,6 +58,7 @@ export class PlaywrightInteractor implements Interactor {
     getBoundingRect(locator: PartLocator): Promise<BoundingRect>;
     getElementCount(locator: PartLocator): Promise<number>;
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
+    getMatchLocator(locator: PartLocator, index: number): Promise<Optional<PartLocator>>;
     // (undocumented)
     getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
     getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>>;

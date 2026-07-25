@@ -49,7 +49,16 @@ function stepButtonAt(index: number): PartLocator {
  */
 export class StepperDriver extends ComponentDriver {
   private async getStepClassList(): Promise<readonly string[]> {
-    return this.interactor.getAttribute(locatorUtil.append(this.locator, stepLabelLocator), 'class', true);
+    // One entry per match, `undefined` for a match without the attribute. Here the
+    // locator IS a class selector, so every match necessarily carries `class` and
+    // no entry can be absent — which is what keeps this list index-aligned with
+    // `stepLabelAt(index)` even after filtering.
+    const classes = await this.interactor.getAttribute(
+      locatorUtil.append(this.locator, stepLabelLocator),
+      'class',
+      true
+    );
+    return classes.filter((className): className is string => className != null);
   }
 
   /**

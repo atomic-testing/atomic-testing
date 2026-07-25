@@ -32,7 +32,12 @@ export class AvatarGroupDriver extends ComponentDriver<{}> {
 
   /** Each visible avatar's accessible name (`aria-label`), in DOM order. */
   async getAvatarNames(): Promise<readonly string[]> {
-    return this.interactor.getAttribute(this.avatars, 'aria-label', true);
+    // One entry per `[role="img"]` match, `undefined` wherever a match carries no
+    // `aria-label` — the locator selects on role, so it cannot vouch for the
+    // attribute. Astryx always emits one (see the class doc), making this a
+    // type-level guard rather than an expected code path.
+    const names = await this.interactor.getAttribute(this.avatars, 'aria-label', true);
+    return names.filter((name): name is string => name != null);
   }
 
   /**

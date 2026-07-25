@@ -63,8 +63,12 @@ export class SimpleTreeViewDriver extends ComponentDriver {
    * Because collapsed branches are not in the DOM, this reflects only the visible items.
    */
   async getItemIds(): Promise<string[]> {
+    // One entry per `[role=treeitem]` match, `undefined` wherever a match carries no
+    // `id` — the locator selects on role, so it cannot vouch for the attribute.
+    // An item with no `id` has no app-assigned `itemId` to report, so it is dropped
+    // before the prefix is stripped.
     const ids = await this.interactor.getAttribute(locatorUtil.append(this.locator, byRole('treeitem')), 'id', true);
-    return ids.map(id => id.replace(treeIdPrefix, ''));
+    return ids.filter((id): id is string => id != null).map(id => id.replace(treeIdPrefix, ''));
   }
 
   /**

@@ -38,8 +38,11 @@ export class PowerSearchDriver extends IndexedOptionListDriver {
    */
   async getFilterLabels(): Promise<readonly string[]> {
     const removes = locatorUtil.append(this.locator, byCssSelector('button[aria-label^="Remove "]'));
+    // One entry per match, `undefined` for a match without the attribute. The
+    // selector already requires `[aria-label^="Remove "]`, so no entry can actually
+    // be absent; filtering first narrows the type before the prefix is stripped.
     const labels = await this.interactor.getAttribute(removes, 'aria-label', true);
-    return labels.map(label => label.replace(/^Remove /, ''));
+    return labels.filter((label): label is string => label != null).map(label => label.replace(/^Remove /, ''));
   }
 
   /** Number of filter chips. */

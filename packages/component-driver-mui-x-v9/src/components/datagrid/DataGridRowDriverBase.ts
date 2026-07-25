@@ -8,8 +8,11 @@ import {
   PartLocator,
 } from '@atomic-testing/core';
 
-// In MUI7+, there is an extra div preceding the actual data cells. We need to skip it.
-const columnStartingIndex = 1;
+// Cells are addressed by locator MATCH index (`Interactor.getMatchLocator`), so match 0
+// IS the first real cell. MUI's leading offset div is `role="none"` and never satisfied
+// the cell locator — it only occupied a TAG position, which is what the former
+// `:nth-of-type` addressing counted and what a starting index of 1 existed to skip.
+const columnStartingIndex = 0;
 
 /**
  * Base class for data grid row

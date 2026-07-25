@@ -209,6 +209,8 @@ export class CssLocator {
     get relative(): LocatorRelativePosition;
     // (undocumented)
     readonly selector: string;
+    // Warning: (ae-forgotten-export) The symbol "CssLocatorSource" needs to be exported by the entry point index.d.mts
+    protected get source(): CssLocatorSource | undefined;
 }
 
 // @public
@@ -238,6 +240,9 @@ export interface DateValidationSuccessResult {
     valid: true;
 }
 
+// @public
+export const defaultSettleProbeIntervals: readonly number[];
+
 // @public (undocumented)
 export const defaultWaitForOption: Readonly<WaitForOption>;
 
@@ -255,8 +260,7 @@ export const ElementNotFoundErrorId = "ElementNotFoundError";
 export interface ElementQueries {
     // (undocumented)
     exists(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
-    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly Optional<string>[]>;
     // (undocumented)
     getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
     // (undocumented)
@@ -265,6 +269,7 @@ export interface ElementQueries {
     getElementCount(locator: PartLocator): Promise<number>;
     // (undocumented)
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
+    getMatchLocator(locator: PartLocator, index: number): Promise<Optional<PartLocator>>;
     getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
     getSelectValues(locator: PartLocator): Promise<Optional<readonly string[]>>;
     getStyleValue(locator: PartLocator, propertyName: CssProperty): Promise<Optional<string>>;
@@ -275,16 +280,18 @@ export interface ElementQueries {
     // (undocumented)
     hasCssClass(locator: PartLocator, className: string): Promise<boolean>;
     innerHTML(locator: PartLocator): Promise<string>;
-    // (undocumented)
     isChecked(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
     isDisabled(locator: PartLocator): Promise<boolean>;
     isError(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
     isReadonly(locator: PartLocator): Promise<boolean>;
     isRequired(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isVisible(locator: PartLocator): Promise<boolean>;
+}
+
+// @public (undocumented)
+export namespace elementStateUtil {
+    export { isElementChecked, isElementDisabled, isElementInError, isElementReadonly, isElementRequired };
 }
 
 // @public (undocumented)
@@ -303,7 +310,7 @@ export class ErrorBase extends Error {
 
 // @public (undocumented)
 export namespace escapeUtil {
-    export { escapeCssClassName, escapeName, escapeValue };
+    export { escapeCssClassName, escapeCssIdentifier, escapeCssString, escapeValue };
 }
 
 // @public
@@ -556,6 +563,22 @@ export namespace locatorUtil {
 }
 
 // @public
+export interface MatchAddress {
+    // (undocumented)
+    readonly kind: MatchAddressKind;
+    // (undocumented)
+    readonly selector: string;
+}
+
+// @public
+export type MatchAddressKind = 'suffix' | 'path';
+
+// @public (undocumented)
+export namespace matchAddressUtil {
+    export { MatchAddress, MatchAddressKind, getMatchAddress, toMatchLocator };
+}
+
+// @public
 export class MissingPartError<T extends ScenePart> extends ErrorBase {
     constructor(missingPartName: keyof T | ReadonlyArray<keyof T>, driver: {
         driverName: string;
@@ -664,8 +687,6 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: IComponentDriverOption<T>, cleanUp?: () => Promise<void>);
     cleanUp(): Promise<void>;
     get driverName(): string;
-    // (undocumented)
-    readonly interactor: Interactor;
 }
 
 // @public (undocumented)

@@ -50,7 +50,7 @@ export class DOMInteractor implements Interactor {
     exists(locator: PartLocator): Promise<boolean>;
     focus(locator: PartLocator, _option?: Partial<FocusOption>): Promise<void>;
     // (undocumented)
-    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly string[]>;
+    getAttribute(locator: PartLocator, name: string, isMultiple: true): Promise<readonly Optional<string>[]>;
     // (undocumented)
     getAttribute(locator: PartLocator, name: string, isMultiple: false): Promise<Optional<string>>;
     // (undocumented)
@@ -65,6 +65,7 @@ export class DOMInteractor implements Interactor {
     getElementCount(locator: PartLocator): Promise<number>;
     // (undocumented)
     getInputValue(locator: PartLocator): Promise<Optional<string>>;
+    getMatchLocator(locator: PartLocator, index: number): Promise<Optional<PartLocator>>;
     // (undocumented)
     getSelectLabels(locator: PartLocator): Promise<Optional<readonly string[]>>;
     // (undocumented)

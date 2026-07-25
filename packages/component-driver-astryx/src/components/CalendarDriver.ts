@@ -44,7 +44,11 @@ export class CalendarDriver extends ComponentDriver {
   /** The ISO dates (`YYYY-MM-DD`) of the currently selected days, in DOM order. */
   async getSelectedDates(): Promise<readonly string[]> {
     const selected = locatorUtil.append(this.locator, byCssSelector('[data-date][aria-selected="true"]'));
-    return this.interactor.getAttribute(selected, 'data-date', true);
+    // One entry per match, `undefined` for a match without the attribute. The
+    // selector itself requires `[data-date]`, so no entry can actually be absent;
+    // the filter exists to narrow the type, not to drop real days.
+    const dates = await this.interactor.getAttribute(selected, 'data-date', true);
+    return dates.filter((date): date is string => date != null);
   }
 
   /** Whether the day with the given ISO date is selected. */
