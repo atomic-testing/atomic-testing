@@ -11,6 +11,8 @@ export const BasicInput: React.FunctionComponent = () => {
       <FilledInput data-testid='basic' />
       <FilledInput data-testid='readonly' readOnly />
       <FilledInput data-testid='disabled' disabled />
+      <FilledInput data-testid='required' required />
+      <FilledInput data-testid='error' error />
       <OutlinedInput data-testid='multiline' multiline rows={5} />
     </Box>
   );
