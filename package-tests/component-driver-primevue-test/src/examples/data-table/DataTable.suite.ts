@@ -11,12 +11,23 @@ export const dataTableScenePart = {
     locator: byDataTestId('interactive-table'),
     driver: DataTableDriver,
   },
+  filterable: {
+    locator: byDataTestId('filterable-table'),
+    driver: DataTableDriver,
+  },
+  virtualScroll: {
+    locator: byDataTestId('virtual-scroll-table'),
+    driver: DataTableDriver,
+  },
 } satisfies ScenePart;
 
 export const dataTableTestSuite: TestSuiteInfo<typeof dataTableScenePart> = {
   title: 'PrimeVue DataTable',
   url: '/data-table',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
+  tests: (
+    getTestEngine,
+    { describe, test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse, hasLayout }
+  ) => {
     describe('PrimeVue DataTable', () => {
       const engine = useTestEngine(dataTableScenePart, getTestEngine, { beforeEach, afterEach });
 
@@ -111,6 +122,76 @@ export const dataTableTestSuite: TestSuiteInfo<typeof dataTableScenePart> = {
         assertFalse(await engine().parts.table.hasSelectAllCheckbox());
         assertEqual(await engine().parts.table.getCurrentPage(), undefined);
       });
+
+      test('column filter (menu display, #1034): set/read/clear reduces and restores the row set', async () => {
+        assertTrue(await engine().parts.filterable.hasColumnFilter('Name'));
+        assertFalse(await engine().parts.filterable.hasColumnFilter('Code'));
+        assertEqual(await engine().parts.filterable.getRowCount(), 5);
+
+        assertTrue(await engine().parts.filterable.setColumnFilter('Name', 'Gadget'));
+        assertEqual(await engine().parts.filterable.getRowCount(), 1);
+        const filteredRow = await engine().parts.filterable.getRowByIndex(0);
+        assertEqual(await filteredRow?.getCellText(0), 'Gadget');
+        assertEqual(await engine().parts.filterable.getColumnFilterValue('Name'), 'Gadget');
+
+        assertTrue(await engine().parts.filterable.clearColumnFilter('Name'));
+        assertEqual(await engine().parts.filterable.getRowCount(), 5);
+      });
+
+      test('column filter menu open/close state', async () => {
+        assertFalse(await engine().parts.filterable.isFilterMenuOpen('Name'));
+        assertTrue(await engine().parts.filterable.openFilterMenu('Name'));
+        assertTrue(await engine().parts.filterable.isFilterMenuOpen('Name'));
+        assertTrue(await engine().parts.filterable.closeFilterMenu('Name'));
+        assertFalse(await engine().parts.filterable.isFilterMenuOpen('Name'));
+      });
+
+      test('column filter reports false/undefined for a non-filterable or unknown column', async () => {
+        assertFalse(await engine().parts.filterable.hasColumnFilter('Nonexistent'));
+        assertEqual(await engine().parts.filterable.isFilterMenuOpen('Code'), undefined);
+        assertFalse(await engine().parts.filterable.setColumnFilter('Code', 'x'));
+        assertFalse(await engine().parts.filterable.clearColumnFilter('Code'));
+      });
+
+      test('cell editing (editMode="cell", #1034): commit writes back, cancel discards', async () => {
+        const row = await engine().parts.filterable.getRowByIndex(0);
+        assertFalse(await row?.isCellEditing(2));
+
+        assertTrue(await row?.startCellEdit(2));
+        assertTrue(await row?.isCellEditing(2));
+        assertTrue(await row?.setCellValue(2, '99'));
+        assertTrue(await row?.commitCellEdit(2));
+        assertFalse(await row?.isCellEditing(2));
+        assertEqual(await row?.getCellText(2), '99');
+
+        assertTrue(await row?.startCellEdit(2));
+        assertTrue(await row?.setCellValue(2, '123'));
+        assertTrue(await row?.cancelCellEdit(2));
+        assertFalse(await row?.isCellEditing(2));
+        assertEqual(await row?.getCellText(2), '99');
+      });
+
+      test('cell editing reports false for a non-editable column or out-of-range cell', async () => {
+        const row = await engine().parts.filterable.getRowByIndex(0);
+        assertFalse(await row?.startCellEdit(1));
+        assertEqual(await row?.isCellEditing(99), undefined);
+      });
+
+      test('virtual scroll (#1034): scrollRowIntoView resolves without throwing', async () => {
+        const found = await engine().parts.virtualScroll.scrollRowIntoView(10, 200);
+        assertEqual(typeof found, 'boolean');
+      });
+
+      // E2E-only: jsdom renders zero or one row for a virtual-scroll table regardless of scroll
+      // position (see DataTableDriver's class doc "Virtual scroll" note) — asserting the target
+      // row is actually reached is only meaningful with a real layout engine.
+      if (hasLayout) {
+        test('virtual scroll (#1034): scrollRowIntoView reaches a row outside the initial viewport', async () => {
+          assertTrue(await engine().parts.virtualScroll.scrollRowIntoView(50));
+          const row = await engine().parts.virtualScroll.getRowByDataIndex(50);
+          assertEqual(await row?.getCellText(0), 'Item 50');
+        });
+      }
     });
   },
 };
