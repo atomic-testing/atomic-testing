@@ -1,4 +1,4 @@
-import { escapeName, escapeValue } from '../utils/escapeUtil';
+import { escapeCssIdentifier, escapeCssString } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 import type { PartLocator } from './PartLocator';
@@ -27,7 +27,10 @@ export function byAttribute(
   value: string,
   relativeTo: LocatorRelativePosition = 'Descendant'
 ): PartLocator {
-  const selector = name === 'id' ? `#${escapeValue(value)}` : `[${escapeName(name)}="${escapeValue(value)}"]`;
+  // Three interpolations, two escaping contexts: an id and an attribute name are CSS
+  // identifiers, whereas the value sits inside a quoted string. See `escapeUtil`.
+  const selector =
+    name === 'id' ? `#${escapeCssIdentifier(value)}` : `[${escapeCssIdentifier(name)}="${escapeCssString(value)}"]`;
   return [
     new CssLocator(selector, {
       relative: relativeTo,

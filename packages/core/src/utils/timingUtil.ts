@@ -25,8 +25,11 @@ export interface WaitUntilOption<T> {
    */
   timeoutMs: number;
   /**
-   * The number of times to probe before timing out. The interval between probes is
-   * calculated as timeoutMs / probeCount. Higher values mean more frequent checks.
+   * The number of evenly spaced probe slots to spread across the timeout; the interval
+   * between probes is timeoutMs / probeCount. Higher values mean more frequent checks.
+   * The first probe always happens immediately, so a wait that runs to the full timeout
+   * costs probeCount + 1 probes. Values below 1 are treated as 1 — a zero or negative
+   * step would collapse the cadence into a busy-wait.
    * Ignored when {@link WaitUntilOption.probeIntervals} is provided.
    * @default 10
    */
@@ -46,11 +49,16 @@ export interface WaitUntilOption<T> {
 }
 
 /**
- * Keep running a probe function until it returns a value that matches the terminate condition or timeout
+ * Keep running a probe function until it returns a value that matches the terminate
+ * condition or timeout. Never throws on timeout — it returns the value of the last probe,
+ * leaving it to the caller to decide whether that constitutes a failure.
  */
 export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
   const { probeFn, terminateCondition, timeoutMs, probeCount = 10, probeIntervals, debug } = option;
-  const intervalMs = timeoutMs / probeCount;
+  // Math.max keeps the grid step positive: probeCount <= 0 would otherwise produce an
+  // infinite or backwards step, and every "sleep until the next slot" would resolve
+  // immediately.
+  const probeIntervalMs = timeoutMs / Math.max(probeCount, 1);
   const hasEscalatingIntervals = probeIntervals != null && probeIntervals.length > 0;
 
   const eqCheck: (currentValue: T) => boolean =
@@ -74,24 +82,30 @@ export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
       break;
     }
 
-    const currentTime = Date.now();
-    const elapsed = currentTime - startMs;
+    const elapsed = Date.now() - startMs;
 
     if (elapsed >= timeoutMs) {
       break;
     }
 
+    let requestedDelayMs: number;
     if (hasEscalatingIntervals) {
-      const interval = probeIntervals[Math.min(probeIndex, probeIntervals.length - 1)];
+      requestedDelayMs = probeIntervals[Math.min(probeIndex, probeIntervals.length - 1)];
       probeIndex += 1;
-      await wait(Math.min(interval, timeoutMs - elapsed));
     } else {
-      const nextStart = Math.round(elapsed / intervalMs) * intervalMs;
-      if (nextStart >= timeoutMs) {
-        break;
-      }
-      await wait(nextStart - elapsed);
+      // Floor-then-step lands on the next slot strictly in the future. Rounding to the
+      // *nearest* slot instead picks one in the past for the first half of every
+      // interval, so the delay came out zero or negative and the loop busy-waited at
+      // setTimeout-0 speed — ~44x the requested probe count, and under
+      // PlaywrightInteractor every one of those probes is a browser round-trip.
+      requestedDelayMs = (Math.floor(elapsed / probeIntervalMs) + 1) * probeIntervalMs - elapsed;
     }
+
+    // Both cadences share one clamp so the invariants live in a single place: never
+    // sleep past the deadline, and never hand `wait` a negative duration (setTimeout
+    // treats those as 0, which is how a busy-wait sneaks back in — a caller-supplied
+    // negative entry in probeIntervals is degenerate, so it collapses to "probe now").
+    await wait(Math.max(0, Math.min(requestedDelayMs, timeoutMs - elapsed)));
   }
 
   return val;

@@ -1,4 +1,4 @@
-import { escapeValue } from '../utils/escapeUtil';
+import { escapeCssString } from '../utils/escapeUtil';
 import { CssLocator } from './CssLocator';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 import type { PartLocator } from './PartLocator';
@@ -35,7 +35,7 @@ export type ByAriaLabelSource = {
  * ```
  */
 export function byAriaLabel(value: string, relative: LocatorRelativePosition = 'Descendant'): PartLocator {
-  const sanitized = escapeValue(value);
+  const sanitized = escapeCssString(value);
   return [
     new CssLocator(`[aria-label="${sanitized}"]`, {
       relative,
