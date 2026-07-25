@@ -38,9 +38,22 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   /**
    * The component-agnostic slice of the constructor option that is safe to share
    * across the whole driver tree — everything the constructor received EXCEPT the
-   * component-specific `parts`, which each driver owns for itself. Parent drivers
-   * pass this straight to the constructors of children they create dynamically
-   * (see the list helpers). See {@link CommutableComponentDriverOption}.
+   * component-specific `parts`, which each driver owns for itself.
+   *
+   * This is the SINGLE definition of "what a child inherits": the parts declared
+   * in `parts` are built from it, {@link ContainerDriver}'s `content` parts are
+   * built from it, and parent drivers pass it straight to the constructors of
+   * children they create dynamically (the list helpers). See
+   * {@link CommutableComponentDriverOption}.
+   *
+   * Subclass obligation: a driver whose option type ADDS keys on top of
+   * {@link IComponentDriverOption} (a list's `itemClass`/`itemLocator`, a
+   * container's `content`) must strip those keys before calling `super`, or they
+   * ride along here and reach every descendant — the nested-list trap, where a
+   * submenu silently resolves its items against its parent menu's `itemLocator`.
+   * The base cannot do this for them: it has no way to know a subclass's keys.
+   * {@link ListComponentDriver} and {@link ContainerDriver} show the pattern,
+   * each locking its own strip-list against its option interface at compile time.
    */
   public readonly commutableOption: CommutableComponentDriverOption;
 
@@ -67,12 +80,14 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     option?: Partial<IComponentDriverOption<T>>
   ) {
     this._locator = locator;
-    this._parts = getPartFromDefinition<T>(option?.parts ?? ({} as T), this._locator, interactor, option ?? {});
-    // Strip the component-specific `parts` so the shared slice never leaks a
-    // parent's parts to its children — honestly, without the old `parts: {} as T`
-    // cast lie.
-    const { parts: _parts, ...commutable } = option ?? {};
+    // Derive the shared slice FIRST, then build the parts from it. Declared parts
+    // and dynamically-created children are then constructed from the same value,
+    // so there is one definition of what a child inherits rather than two that
+    // can drift. (`getPartFromDefinition` clears `parts` on the child option
+    // regardless, so routing it through the slice changes nothing for the parts.)
+    const { parts, ...commutable } = option ?? {};
     this.commutableOption = commutable;
+    this._parts = getPartFromDefinition<T>(parts ?? ({} as T), this._locator, interactor, this.commutableOption);
   }
 
   /**
@@ -142,33 +157,22 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
-   * Get the names of parts not in the DOM
+   * Get the names of the named parts that are not in the DOM.
+   *
+   * The result is ordered by `partName`, NOT by which existence probe settled
+   * first: the probes run concurrently, so collecting them in completion order
+   * would make {@link MissingPartError}'s message text vary run to run for the
+   * same failure.
+   *
    * @param partName Single or array of the names of the parts to be examined
-   * @returns
+   * @returns The missing part names, in the order they were asked for
    */
   protected async getMissingPartNames(
     partName: PartName<T> | ReadonlyArray<PartName<T>>
   ): Promise<readonly PartName<T>[]> {
-    let partNames: ReadonlyArray<keyof T>;
-    if (partName == null) {
-      partNames = Object.keys(this._parts) as ReadonlyArray<keyof T>;
-    } else {
-      partNames = Array.isArray(partName) ? partName : [partName];
-    }
-
-    const missingParts: PartName<T>[] = [];
-    const promises = partNames.map(x => {
-      const fn = async () => {
-        const partExists = await this.interactor.exists(this._parts[x]!.locator);
-        if (!partExists) {
-          missingParts.push(x);
-        }
-      };
-      return fn();
-    });
-
-    await Promise.all(promises);
-    return missingParts;
+    const partNames: ReadonlyArray<PartName<T>> = Array.isArray(partName) ? partName : [partName];
+    const existences = await Promise.all(partNames.map(name => this.interactor.exists(this._parts[name]!.locator)));
+    return partNames.filter((_, index) => !existences[index]);
   }
 
   /**

@@ -14,17 +14,27 @@ export interface ListComponentDriverOption<ItemT extends ComponentDriver>
   extends IComponentDriverOption, ListComponentDriverSpecificOption<ItemT> {}
 
 export class ListComponentDriver<ItemT extends ComponentDriver> extends ComponentDriver {
-  private readonly _option: ListComponentDriverSpecificOption<ItemT> & Partial<ListComponentDriverOption<ItemT>>;
+  private readonly _listOption: ListComponentDriverSpecificOption<ItemT>;
   private _itemLocator: PartLocator;
   constructor(locator: PartLocator, interactor: Interactor, option: ListComponentDriverSpecificOption<ItemT>) {
+    // Split the list's OWN configuration out of the option before handing the
+    // remainder to the base: whatever reaches `super` becomes
+    // `commutableOption`, which every descendant driver is constructed from. Left
+    // in, `itemLocator`/`itemClass` would make a nested list (a submenu, a tree
+    // branch) silently resolve its items against its PARENT's item config.
+    // Callers' own pass-through options are in `commutable` and still flow down.
+    const { itemClass, itemLocator, ...commutable } = option;
+    // Compile-time lock on the split above: an object literal typed as the
+    // list-specific option, so a key added to ListComponentDriverSpecificOption
+    // fails the build here until it is destructured out of `option` too.
+    const listOption: ListComponentDriverSpecificOption<ItemT> = { itemClass, itemLocator };
     super(locator, interactor, {
-      ...option,
+      ...commutable,
       parts: {},
     });
 
-    this._option = option;
-    const childLocator = option.itemLocator;
-    this._itemLocator = locatorUtil.append(locator, childLocator);
+    this._listOption = listOption;
+    this._itemLocator = locatorUtil.append(locator, listOption.itemLocator);
   }
 
   protected getItemLocator(): PartLocator {
@@ -34,7 +44,7 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
   protected getItemClass<ItemClass extends ComponentDriver = ItemT>(
     itemDriverClass?: ComponentDriverCtor<ItemClass>
   ): ComponentDriverCtor<ItemClass> {
-    return itemDriverClass ?? (this._option.itemClass as unknown as ComponentDriverCtor<ItemClass>);
+    return itemDriverClass ?? (this._listOption.itemClass as unknown as ComponentDriverCtor<ItemClass>);
   }
 
   /**

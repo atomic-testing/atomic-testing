@@ -75,7 +75,7 @@ export class LinkedCssLocator extends CssLocator {
   clone(override?: Partial<LinkedCssLocatorInitializer> & Partial<CssLocatorInitializer>): LinkedCssLocator {
     return new LinkedCssLocator(this.selector, {
       relative: override?.relative ?? this.relative,
-      source: override?.source,
+      source: override?.source ?? this.source,
       valueExtract: override?.valueExtract ?? this._valueExtract,
       matchingTargetLocator: override?.matchingTargetLocator ?? this._matchingTargetLocator,
       matchingTargetValueExtract: override?.matchingTargetValueExtract ?? this._matchingTargetValueExtract,

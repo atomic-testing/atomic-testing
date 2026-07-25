@@ -99,7 +99,7 @@ export class AccessibleRoleLocator extends CssLocator {
   ): AccessibleRoleLocator {
     return new AccessibleRoleLocator(this.role, {
       relative: override?.relative ?? this.relative,
-      source: override?.source,
+      source: override?.source ?? this.source,
       name: override?.name ?? this._name,
     });
   }

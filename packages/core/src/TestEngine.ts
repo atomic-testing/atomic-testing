@@ -22,7 +22,7 @@ export class TestEngine<T extends ScenePart> extends ComponentDriver<T> {
    */
   constructor(
     locator: PartLocator,
-    public readonly interactor: Interactor,
+    interactor: Interactor,
     option?: IComponentDriverOption<T>,
     cleanUp?: () => Promise<void>
   ) {

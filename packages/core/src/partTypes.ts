@@ -146,9 +146,10 @@ export interface IComponentDriverOption<T extends ScenePart = {}> {
 /**
  * The shared, component-agnostic slice of an {@link IComponentDriverOption} that
  * flows unchanged down the driver tree — every field EXCEPT the component-specific
- * `parts`. A parent driver hands this to the constructors of the children it
- * creates dynamically (the list helpers, `ComponentDriver.commutableOption`), so
- * it deliberately carries no `parts`: each child owns its own.
+ * `parts`. Every child a driver builds is constructed from it, so it deliberately
+ * carries no `parts`: each child owns its own. See
+ * `ComponentDriver.commutableOption` for what that covers and for the obligation
+ * a subclass with an extended option type takes on.
  *
  * Today {@link IComponentDriverOption} has only `parts`, so this resolves to an
  * empty object — which is exactly the honest shape, and why
