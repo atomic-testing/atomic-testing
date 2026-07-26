@@ -116,7 +116,7 @@ importers:
         version: link:../../packages/core
       '@vitest/browser-playwright':
         specifier: ^4.1.9
-        version: 4.1.9(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.9(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       playwright:
         specifier: ~1.56.1
         version: 1.56.1
@@ -124,8 +124,8 @@ importers:
         specifier: ^7.8.0
         version: 7.8.2
       vitest:
-        specifier: ^4.1.9
-        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       zone.js:
         specifier: ^0.15.0
         version: 0.15.1
@@ -134,16 +134,16 @@ importers:
     devDependencies:
       '@angular/common':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: ^21.2.0
         version: 21.2.17
       '@angular/core':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
+        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/platform-browser':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
       '@atomic-testing/angular-21':
         specifier: workspace:*
         version: link:../../packages/angular-21
@@ -166,23 +166,23 @@ importers:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       zone.js:
-        specifier: ^0.15.0
-        version: 0.15.1
+        specifier: ^0.16.2
+        version: 0.16.2
 
   package-tests/angular-22-test:
     devDependencies:
       '@angular/common':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: ^22.0.0
         version: 22.0.5
       '@angular/core':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)
+        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/platform-browser':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))
+        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))
       '@atomic-testing/angular-22':
         specifier: workspace:*
         version: link:../../packages/angular-22
@@ -193,8 +193,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       '@vitest/browser-playwright':
-        specifier: ^4.1.9
-        version: 4.1.9(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+        specifier: ^4.1.10
+        version: 4.1.10(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       playwright:
         specifier: ~1.56.1
         version: 1.56.1
@@ -202,35 +202,35 @@ importers:
         specifier: ^7.8.0
         version: 7.8.2
       vitest:
-        specifier: ^4.1.9
-        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       zone.js:
-        specifier: ^0.15.0
-        version: 0.15.1
+        specifier: ^0.16.2
+        version: 0.16.2
 
   package-tests/component-driver-angular-material-v20-test:
     dependencies:
       '@angular/cdk':
         specifier: ^20.2.0
-        version: 20.2.14(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 20.2.14(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/common':
         specifier: ^20.3.0
-        version: 20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: ^20.3.0
         version: 20.3.25
       '@angular/core':
-        specifier: ^20.3.0
-        version: 20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
+        specifier: ^20.3.26
+        version: 20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/forms':
         specifier: ^20.3.0
-        version: 20.3.25(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.25(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 20.3.25(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@angular/material':
         specifier: ^20.2.0
-        version: 20.2.14(759426f53bf75756c3a368027aa1f8ce)
+        version: 20.2.14(6217a07167deb4cffa5e4194d6cfa8af)
       '@angular/platform-browser':
-        specifier: ^20.3.0
-        version: 20.3.25(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))
+        specifier: ^20.3.26
+        version: 20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -260,38 +260,38 @@ importers:
         specifier: workspace:*
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
-        specifier: ^4.1.9
-        version: 4.1.9(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+        specifier: ^4.1.10
+        version: 4.1.10(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
       playwright:
         specifier: ^1.61.1
         version: 1.61.1
       vitest:
         specifier: ^4.1.9
-        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
 
   package-tests/component-driver-angular-material-v21-test:
     dependencies:
       '@angular/cdk':
         specifier: ^21.2.0
-        version: 21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/common':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: ^21.2.0
         version: 21.2.17
       '@angular/core':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
+        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/forms':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/material':
         specifier: ^21.2.0
-        version: 21.2.14(5d3abea766a539fd0b311e1932b77b1d)
+        version: 21.2.14(b90e3673ea3e6a43ae2acbeb43ff3954)
       '@angular/platform-browser':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -299,8 +299,8 @@ importers:
         specifier: ^7.8.0
         version: 7.8.2
       zone.js:
-        specifier: ^0.15.0
-        version: 0.15.1
+        specifier: ^0.16.2
+        version: 0.16.2
     devDependencies:
       '@atomic-testing/angular-21':
         specifier: workspace:*
@@ -383,13 +383,13 @@ importers:
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
         specifier: ^4.1.9
-        version: 4.1.9(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.9(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       playwright:
         specifier: ^1.61.1
         version: 1.61.1
       vitest:
-        specifier: ^4.1.9
-        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
 
   package-tests/component-driver-astryx-test:
     dependencies:
@@ -397,8 +397,8 @@ importers:
         specifier: ^0.1.3
         version: 0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@astryxdesign/theme-neutral':
-        specifier: ^0.1.3
-        version: 0.1.3(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
+        specifier: ^0.1.8
+        version: 0.1.8(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -449,8 +449,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/internal-react-example
       '@fluentui/react-components':
-        specifier: ^9.0.0
-        version: 9.74.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+        specifier: ^9.74.4
+        version: 9.74.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
       react:
         specifier: ^19.2.3
         version: 19.2.7
@@ -1057,13 +1057,13 @@ importers:
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@testing-library/vue':
         specifier: ^8.1.0
-        version: 8.1.0(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@7.0.2))
+        version: 8.1.0(@vue/compiler-sfc@3.5.40)(vue@3.5.39(typescript@7.0.2))
       '@vitejs/plugin-vue':
         specifier: ^6.0.8
         version: 6.0.8(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vue@3.5.39(typescript@7.0.2))
       '@vue/compiler-sfc':
-        specifier: ^3.5.0
-        version: 3.5.39
+        specifier: ^3.5.40
+        version: 3.5.40
 
   package-tests/component-driver-radix-test:
     dependencies:
@@ -1200,7 +1200,7 @@ importers:
         version: link:../../packages/storybook
       '@storybook/addon-vitest':
         specifier: ^10.4.6
-        version: 10.4.6(@vitest/browser-playwright@4.1.10)(@vitest/browser@4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9))(@vitest/runner@4.1.9)(react@19.2.7)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.6.2)(react@19.2.7))(vitest@4.1.9)
+        version: 10.4.6(@vitest/browser-playwright@4.1.10)(@vitest/browser@4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10))(@vitest/runner@4.1.10)(react@19.2.7)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.6.2)(react@19.2.7))(vitest@4.1.10)
       '@storybook/react-vite':
         specifier: ^10.4.6
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.6.2)(react@19.2.7))(typescript@7.0.2)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
@@ -1215,7 +1215,7 @@ importers:
         version: 6.0.2(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       '@vitest/browser-playwright':
         specifier: ^4.1.10
-        version: 4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       playwright:
         specifier: ^1.61.1
         version: 1.61.1
@@ -1232,8 +1232,8 @@ importers:
         specifier: ^8.0.16
         version: 8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
       vitest:
-        specifier: ^4.1.9
-        version: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
 
   package-tests/vue-3-test:
     devDependencies:
@@ -1253,8 +1253,8 @@ importers:
         specifier: ^8.0.5
         version: 8.6.14(storybook@8.6.18(prettier@3.6.2))
       '@storybook/test':
-        specifier: ^8.0.5
-        version: 8.6.14(storybook@8.6.18(prettier@3.6.2))
+        specifier: ^8.6.15
+        version: 8.6.15(storybook@8.6.18(prettier@3.6.2))
       '@storybook/vue3':
         specifier: ^8.0.5
         version: 8.6.14(storybook@8.6.18(prettier@3.6.2))(vue@3.5.39(typescript@5.9.3))
@@ -1269,13 +1269,13 @@ importers:
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@testing-library/vue':
         specifier: ^8.1.0
-        version: 8.1.0(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@5.9.3))
+        version: 8.1.0(@vue/compiler-sfc@3.5.40)(vue@3.5.39(typescript@5.9.3))
       '@vitejs/plugin-vue':
         specifier: ^6.0.8
         version: 6.0.8(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vue@3.5.39(typescript@5.9.3))
       '@vue/compiler-dom':
-        specifier: ^3.5.26
-        version: 3.5.39
+        specifier: ^3.5.40
+        version: 3.5.40
       '@vue/server-renderer':
         specifier: ^3.5.17
         version: 3.5.39(vue@3.5.39(typescript@5.9.3))
@@ -1362,22 +1362,22 @@ importers:
     devDependencies:
       '@angular/common':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: ^22.0.0
         version: 22.0.5
       '@angular/core':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)
+        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/platform-browser':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))
+        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))
       rxjs:
         specifier: ^7.8.0
         version: 7.8.2
       zone.js:
-        specifier: ^0.15.0
-        version: 0.15.1
+        specifier: ^0.16.2
+        version: 0.16.2
 
   packages/angular-core:
     dependencies:
@@ -1448,10 +1448,10 @@ importers:
     dependencies:
       '@angular/cdk':
         specifier: ^21.0.0
-        version: 21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/material':
         specifier: ^21.0.0
-        version: 21.2.14(5d3abea766a539fd0b311e1932b77b1d)
+        version: 21.2.14(b90e3673ea3e6a43ae2acbeb43ff3954)
       '@atomic-testing/angular-21':
         specifier: workspace:*
         version: link:../angular-21
@@ -1467,16 +1467,16 @@ importers:
     devDependencies:
       '@angular/common':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
       '@angular/core':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
+        version: 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/forms':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/platform-browser':
         specifier: ^21.2.0
-        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+        version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
       rxjs:
         specifier: ^7.8.0
         version: 7.8.2
@@ -1485,10 +1485,10 @@ importers:
     dependencies:
       '@angular/cdk':
         specifier: ^22.0.0
-        version: 22.0.3(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 22.0.3(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/material':
         specifier: ^22.0.0
-        version: 22.0.3(7574e87a70141ad47145ad36f30e1206)
+        version: 22.0.3(6349ffe7d7c95371f4650cc9b38e6b6b)
       '@atomic-testing/angular-22':
         specifier: workspace:*
         version: link:../angular-22
@@ -1504,16 +1504,16 @@ importers:
     devDependencies:
       '@angular/common':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+        version: 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
       '@angular/core':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)
+        version: 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/forms':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/platform-browser':
         specifier: ^22.0.0
-        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))
+        version: 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))
       rxjs:
         specifier: ^7.8.0
         version: 7.8.2
@@ -1757,10 +1757,10 @@ importers:
     devDependencies:
       reka-ui:
         specifier: ^2.0.0
-        version: 2.10.1(vue@3.5.39(typescript@7.0.2))
+        version: 2.10.1(vue@3.5.40(typescript@7.0.2))
       vue:
-        specifier: ^3.5.39
-        version: 3.5.39(typescript@7.0.2)
+        specifier: ^3.5.40
+        version: 3.5.40(typescript@7.0.2)
 
   packages/component-driver-shadcn-v1:
     dependencies:
@@ -2056,10 +2056,10 @@ importers:
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@testing-library/vue':
         specifier: ^8.1.0
-        version: 8.1.0(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@7.0.2))
+        version: 8.1.0(@vue/compiler-sfc@3.5.40)(vue@3.5.39(typescript@7.0.2))
       '@vue/compiler-sfc':
-        specifier: ^3.5.0
-        version: 3.5.39
+        specifier: ^3.5.40
+        version: 3.5.40
     devDependencies:
       vue:
         specifier: ^3.5.39
@@ -2131,6 +2131,19 @@ packages:
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       '@angular/compiler': 20.3.25
+      rxjs: ^6.5.3 || ^7.4.0
+      zone.js: ~0.15.0
+    peerDependenciesMeta:
+      '@angular/compiler':
+        optional: true
+      zone.js:
+        optional: true
+
+  '@angular/core@20.3.26':
+    resolution: {integrity: sha512-v+YtZ9eQVDb6v3V1TbUUBHU63FEp8Hqqqb3UhM4MLAOm0chyyh9jah7FiHr3HbCKrV1f4long1coftFK/KThog==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/compiler': 20.3.26
       rxjs: ^6.5.3 || ^7.4.0
       zone.js: ~0.15.0
     peerDependenciesMeta:
@@ -2233,6 +2246,17 @@ packages:
       '@angular/animations':
         optional: true
 
+  '@angular/platform-browser@20.3.26':
+    resolution: {integrity: sha512-In4wUiLUUT9LqyV9Rjz78k/dsnKAwec4AtDmwZoX8/ZmeJOSH7g5X1gTM+hxTxmifmZkrapQjXR299IcfIkzrw==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/animations': 20.3.26
+      '@angular/common': 20.3.26
+      '@angular/core': 20.3.26
+    peerDependenciesMeta:
+      '@angular/animations':
+        optional: true
+
   '@angular/platform-browser@21.2.17':
     resolution: {integrity: sha512-ROdSliejY37g1EphYmweYdm5cHM8HY3X4tbWt4ubxmhTyYgfN3nxrxfGQ/n7Mz5tDY9VXVLIGDgjLOGYOo4uTQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
@@ -2277,10 +2301,10 @@ packages:
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
 
-  '@astryxdesign/theme-neutral@0.1.3':
-    resolution: {integrity: sha512-diwEEukajD0OHSeQ3XnyaNYHssaWgbjbwAGG5t/NANjE4X0sjFXUKb5drwWHhje5AU+hTFU7yOUltvjSW4LHvg==}
+  '@astryxdesign/theme-neutral@0.1.8':
+    resolution: {integrity: sha512-ByagXqwTVijRm8aoTJXG2EirCrfx+qs1kn68X0VvPeEsI3yR650aZKsL8DYsvD8kLEEtKVprLCiSVxupHPJ+3w==}
     peerDependencies:
-      '@astryxdesign/core': 0.1.3
+      '@astryxdesign/core': 0.1.8
       react: '>=19'
 
   '@babel/code-frame@7.29.7':
@@ -2838,6 +2862,9 @@ packages:
   '@fluentui/priority-overflow@9.4.0':
     resolution: {integrity: sha512-NwhNNwCTbXYdLYwa6Ha484qCLHgRFo5vOv7BGaq0REcY2rkgwcDHVlbchwsGV7D3XgTZCjzDu54SSPmk5NOxXA==}
 
+  '@fluentui/priority-overflow@9.4.1':
+    resolution: {integrity: sha512-w/cO/mtqWd/ly4fhrbfCPLwdEAVmuifemnhl1SZm8IN7dMWv22pumsIuiH67T4YRLbhHtHXDAKp0HLXNR3z7lA==}
+
   '@fluentui/react-accordion@9.12.1':
     resolution: {integrity: sha512-F7xVaP0OR7JMCxrBwI3ryNhKof9Yi2c6RhYPsQy7rh2+KMGLGgYLsrDJyHmSejjxp4Bs11plXGdU38SN5j1hgw==}
     peerDependencies:
@@ -2936,6 +2963,14 @@ packages:
 
   '@fluentui/react-components@9.74.3':
     resolution: {integrity: sha512-HdcLR4V9KZnduui0v4UfBIyJrO4G8eZf3W4iu8hssykl0hN1uneNNJmsVZExT8G8ybFen85ucqMOxCXQ3L7raw==}
+    peerDependencies:
+      '@types/react': '>=16.14.0 <20.0.0'
+      '@types/react-dom': '>=16.9.0 <20.0.0'
+      react: '>=16.14.0 <20.0.0'
+      react-dom: '>=16.14.0 <20.0.0'
+
+  '@fluentui/react-components@9.74.4':
+    resolution: {integrity: sha512-/8IxyJiQ7J0R3rF/T6InuVffT72dJjt506WaAFt1ndnpEAu2zpjYD6Vjhv4+Xvye20ix2j4dHDs6OUXS/vlrpg==}
     peerDependencies:
       '@types/react': '>=16.14.0 <20.0.0'
       '@types/react-dom': '>=16.9.0 <20.0.0'
@@ -3098,6 +3133,14 @@ packages:
       react: '>=16.14.0 <20.0.0'
       react-dom: '>=16.14.0 <20.0.0'
 
+  '@fluentui/react-overflow@9.9.1':
+    resolution: {integrity: sha512-C5JP1zZ71Z1qtDAZSQ+/dMYiEqhQOrNSz3qNloRLYb7G5ywaBUp+vOLbETEe7QUiaDNtViYtxR1TI9nX2pPOUA==}
+    peerDependencies:
+      '@types/react': '>=16.14.0 <20.0.0'
+      '@types/react-dom': '>=16.9.0 <20.0.0'
+      react: '>=16.14.0 <20.0.0'
+      react-dom: '>=16.14.0 <20.0.0'
+
   '@fluentui/react-persona@9.7.5':
     resolution: {integrity: sha512-5MlVpl3+l+UW7vTf/d1qKP6EANBkxoXjmxmbNZpiuXjIE2QJFcVRBplWXwEPgt3GAOGnix1wPVkUgHElUJOCEw==}
     peerDependencies:
@@ -3250,6 +3293,14 @@ packages:
 
   '@fluentui/react-tabster@9.26.16':
     resolution: {integrity: sha512-napGx7dGdLoKoUpKlzc2Til43UMUTtr9J1GWrOFvCT6aZLTox5GjtoxQM/IPhcZ09jJOOUMbVF8ScA5u3/uyTA==}
+    peerDependencies:
+      '@types/react': '>=16.14.0 <20.0.0'
+      '@types/react-dom': '>=16.9.0 <20.0.0'
+      react: '>=16.14.0 <20.0.0'
+      react-dom: '>=16.14.0 <20.0.0'
+
+  '@fluentui/react-tag-picker@9.10.0':
+    resolution: {integrity: sha512-GV358puRbq4W/2nR3g0AQ43VxGHSXrocQY5szJwrneO7JJqhqp9qcMrK4b3eV5Fwo9X1V0e4grWDKbBPwlUGVw==}
     peerDependencies:
       '@types/react': '>=16.14.0 <20.0.0'
       '@types/react-dom': '>=16.9.0 <20.0.0'
@@ -6240,10 +6291,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@storybook/instrumenter@8.6.14':
-    resolution: {integrity: sha512-iG4MlWCcz1L7Yu8AwgsnfVAmMbvyRSk700Mfy2g4c8y5O+Cv1ejshE1LBBsCwHgkuqU0H4R0qu4g23+6UnUemQ==}
+  '@storybook/instrumenter@8.6.15':
+    resolution: {integrity: sha512-TvHR/+yyIAOp/1bLulFai2kkhIBtAlBw7J6Jd9DKyInoGhTWNE1G1Y61jD5GWXX29AlwaHfzGUaX5NL1K+FJpg==}
     peerDependencies:
-      storybook: ^8.6.14
+      storybook: ^8.6.15
 
   '@storybook/manager-api@8.6.14':
     resolution: {integrity: sha512-ez0Zihuy17udLbfHZQXkGqwtep0mSGgHcNzGN7iZrMP1m+VmNo+7aGCJJdvXi7+iU3yq8weXSQFWg5DqWgLS7g==}
@@ -6301,10 +6352,10 @@ packages:
       typescript:
         optional: true
 
-  '@storybook/test@8.6.14':
-    resolution: {integrity: sha512-GkPNBbbZmz+XRdrhMtkxPotCLOQ1BaGNp/gFZYdGDk2KmUWBKmvc5JxxOhtoXM2703IzNFlQHSSNnhrDZYuLlw==}
+  '@storybook/test@8.6.15':
+    resolution: {integrity: sha512-EwquDRUDVvWcZds3T2abmB5wSN/Vattal4YtZ6fpBlIUqONV4o/cOBX39cFfQSUCBrIXIjQ6RmapQCHK/PvBYw==}
     peerDependencies:
-      storybook: ^8.6.14
+      storybook: ^8.6.15
 
   '@storybook/theming@8.6.14':
     resolution: {integrity: sha512-r4y+LsiB37V5hzpQo+BM10PaCsp7YlZ0YcZzQP1OCkPlYXmUAFy2VvDKaFRpD8IeNPKug2u4iFm/laDEbs03dg==}
@@ -6948,6 +6999,9 @@ packages:
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
 
+  '@vitest/expect@4.1.10':
+    resolution: {integrity: sha512-YsCn+qAk1GWjQOWFEsEcL2gNQ0zmVmQu3T03qP6UyjhtmdtwtbuI+DASn/7iQB3HGTXkdBwGddzxPlmiql5vlA==}
+
   '@vitest/expect@4.1.9':
     resolution: {integrity: sha512-vl/rYsUKcBr3SnQn166+XR5ZQcgMx3DQhFWdfli/cWpLnLUmbxZvyrJZotLFUryib+LtArYMSTJ5RbQ57ZqrlA==}
 
@@ -6988,8 +7042,14 @@ packages:
   '@vitest/pretty-format@4.1.9':
     resolution: {integrity: sha512-s0iufns3iIFitdgm+YR7g1whCAaGtXz459VS9/PqyKDEEFgYIhsHOQmXgIgDuYCt7DeQmiZT0Qe2OA2p4ZPu5A==}
 
+  '@vitest/runner@4.1.10':
+    resolution: {integrity: sha512-IKI6kpIH+LmpROplyLwBBaCfMgOZOMsygVa6BARD6ahA04VRuJSa6OaVG7kRvSEMD870Vd91rSSw0eegtWyLGg==}
+
   '@vitest/runner@4.1.9':
     resolution: {integrity: sha512-KXLMDtc7oe70+3mJfGrPUWPesswH+3sTxAMAMl8DG7I8IUQT4XW718dY5ID3vPUcmlu27CcKfY4P3h3I29SLJg==}
+
+  '@vitest/snapshot@4.1.10':
+    resolution: {integrity: sha512-xRkfOT1qpTAi/Ti4Y1LtfRc3kEuqxGw59eN2jN9pRWMtS/XDevekhcFSqvQqjUNGksfjMJu3Y+oJ+4Ypn2OaJw==}
 
   '@vitest/snapshot@4.1.9':
     resolution: {integrity: sha512-Jc7RKGNBo8Z28WYIm0Niej4xdSPByRf6mU58VpHQkd6Zh05rlnA+twjbK5HyeIGHxrzsc3mJgS43uM0CZKzaIA==}
@@ -7033,14 +7093,26 @@ packages:
   '@vue/compiler-core@3.5.39':
     resolution: {integrity: sha512-16KBTEXAJCpDr0mwlw+AZyhu8iyC7R3S2vBwsI7QnWJU6X3WKc9VKeNEZpiMdZ569qWhz9574L3vV55qRL0Vtw==}
 
+  '@vue/compiler-core@3.5.40':
+    resolution: {integrity: sha512-39E8IgOhTbVDnoJFMKc2DvYnypcZwUqgUhQkccva/0m6FUwtIKSGV7n1hpVmYcFaoRAwf9pBcwnKlCEsN63ZEQ==}
+
   '@vue/compiler-dom@3.5.39':
     resolution: {integrity: sha512-oQPigALqYbNxTNPvNgSOe+czwVExfbVF02lz8jP0S3AXJiu3jxYDygNUiqSep4ezzW8XgnubqH63My2A7JR/vg==}
+
+  '@vue/compiler-dom@3.5.40':
+    resolution: {integrity: sha512-pwkx4vqlqOspFstrcmzwkKLePVMD3PT65imRzLhanU2V1Fj4K13g6OXjanOyzw3aTAuRk84BOmY8f3rEHqPaVA==}
 
   '@vue/compiler-sfc@3.5.39':
     resolution: {integrity: sha512-d0ki86iOyN8LoZPBmk5SJWNwHP19CnDDCfuo//+2WJa2g5Ke0Jay983PIBIcSSzldC68I8DrD5GrHV3OSDfodg==}
 
+  '@vue/compiler-sfc@3.5.40':
+    resolution: {integrity: sha512-gIf497P4kpuALcvs5n3AEg1Vdn0pSY4XbjASIfHNYF1/MP3T2Mf2STERTubysBxCRxzJGJYtF/O7vwJrxFB3Vw==}
+
   '@vue/compiler-ssr@3.5.39':
     resolution: {integrity: sha512-Ce7/wvwMHai74bdszfXExdazFigYnlF9zgCmEQUcM1j0fOymlouZ7XilTYNo8oUjhlnjYOZbGrcYKuqjz89Ucw==}
+
+  '@vue/compiler-ssr@3.5.40':
+    resolution: {integrity: sha512-rrE5xiXG663+vHCHa3J9p2z5OcBRjXmoqenprJxAFQxg5pSshzeBiCE6pu46axapRJ2Adk0YDA2BRZVjiHXnhg==}
 
   '@vue/compiler-vue2@2.7.16':
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
@@ -7056,19 +7128,34 @@ packages:
   '@vue/reactivity@3.5.39':
     resolution: {integrity: sha512-TpsuBJ9gGlZa5d23XcM2y8EXanz9dZeVDQBXRwzy46ItgvM+rWpzs+UVM0wcRLxGvcav0HE5jz2gNL53xlRAog==}
 
+  '@vue/reactivity@3.5.40':
+    resolution: {integrity: sha512-B7ot9UlUZOi1zbq61/LvE88ZLTV8IlajTdiZTAEiDQgrnIMIZoPr9kGw0Zw46ObW62O9+H/Be3kMbfb7kYPQZA==}
+
   '@vue/runtime-core@3.5.39':
     resolution: {integrity: sha512-9GLtNyRvPAUMbX+7ono0RC2j0guo2LXVi8LvcmAooImACUKm0oFf0jjwbX8/H0AE/t1nxhAkn8RSl9PMCzzxZw==}
 
+  '@vue/runtime-core@3.5.40':
+    resolution: {integrity: sha512-KAZLweuZ6uUJPK1PMSQPgBU5gCjgrrfjUhSglmU9NhH+Zjepa8cnwSydPWDWHDwOgY4g3VcZ+PljbiHlURNCbw==}
+
   '@vue/runtime-dom@3.5.39':
     resolution: {integrity: sha512-7Y6aAGboKcXAZ3ECuUy7RrS5yy2r47dhTp2SKaJmYxjopImaVFaNa5Ne66NwGovsrxVAl5S5rwc7m22UG7Lmww==}
+
+  '@vue/runtime-dom@3.5.40':
+    resolution: {integrity: sha512-ZfrX8ssZQds900L9pr8AuK05ddnMsR4MPMZr8cPN9GoqoPWcXLhjvvbIA2SMv+7a97sJ1vv9pj/zxK0Cq/eEFQ==}
 
   '@vue/server-renderer@3.5.39':
     resolution: {integrity: sha512-yZSakiAGw85rZfG7UM8akMnIF+FmeiNk47uvHf2nVBBSe+dIKUhZuZq9+XgJhbV3nS5Z4ALH23/MpXofW+mbcw==}
     peerDependencies:
       vue: 3.5.39
 
+  '@vue/server-renderer@3.5.40':
+    resolution: {integrity: sha512-XNJym9WpevhTVt1HuwOrCRJ5Q+9z4BjTMrDtjTrvx74SmUll8spNTw6whWJa9mEkO4PKn5TihI/bm/8ds2QVJw==}
+
   '@vue/shared@3.5.39':
     resolution: {integrity: sha512-l1rrBtBfTnmxvtsvdQDXltUUy8S1Y+ZaqdfUzmAnJkTd8Z8rv5v/ytW+TKiqEOWyHPoqtPlNFSs0lhRmYVSHVA==}
+
+  '@vue/shared@3.5.40':
+    resolution: {integrity: sha512-WxnBtruIqOoV3rA4jeKDWzrYI5h7Cp4+pjwDi8kWGHz+IslhiN+wguLVVhtv2l8VoU02rzDCVfDjgCl1lNpZVg==}
 
   '@vue/test-utils@2.4.6':
     resolution: {integrity: sha512-FMxEjOpYNYiFe0GkaHsnJPXFHxQ6m4t8vI/ElPGpMWxZKpmRvQ33OIrvRXemy6yha03RxhOlQuy+gZMC3CQSow==}
@@ -8637,8 +8724,8 @@ packages:
     resolution: {integrity: sha512-MhWWlVnuab1RG5/zMRRcVGXZLCXrZTgfwMikgzCegsPnG62yDQo5JnqKkrK4jO5iKqDAZGItAqN5CtKBCBWRUA==}
     engines: {node: '>=16.14'}
 
-  lucide-react@1.22.0:
-    resolution: {integrity: sha512-c9o3l0PiNcgOQDW4F31BEYHudE7kgxVt3o30qMl36ZPwTxXlGB4QnLilhERvVM4uh/pl5MDyY1/gzZSYcHDtBg==}
+  lucide-react@1.26.0:
+    resolution: {integrity: sha512-raglYVR2+VkMfJL158krjVmE+rV5ST2lzA/KQm1FRSjMHT4MnWaegHxoVEpmc2So3nOEhp9oGejJwAPX8MoAjg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -8954,6 +9041,10 @@ packages:
     resolution: {integrity: sha512-v4sDNP3fdNiWMfabO7OwOQdOX8TiQSztKyT1Wj0w+j7LDallJThJRBBBmzVGyYj0crMh7jlV4zepPkiNu9UwDQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postcss@8.5.22:
+    resolution: {integrity: sha512-KBDEIpLrvpv16pp3K0Fw+UCoZfopFjjgeB+0tA/aaThfEE74kKDLrgg603YvOWJyg3+WYtyq3xYsQWsIyZlPqQ==}
+    engines: {node: ^10 || ^12 || >=14}
+
   prettier@3.6.2:
     resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
     engines: {node: '>=14'}
@@ -9085,6 +9176,9 @@ packages:
 
   react-is@19.2.7:
     resolution: {integrity: sha512-kZFnouyVv7eP/Phmrlo9FK+zcAdriZJvzxXHF1Sl1P377WSGe2G/JxVolhTrB/jeV47lKImhNUsijjHAAbcl/A==}
+
+  react-is@19.2.8:
+    resolution: {integrity: sha512-s5un28nYxKJw5gvUHyW5PCC28CvBqLu9r3cWgzHT4Vo/5fqqkFcdRYsGcKf50WMPpjjFZS5d76fn3YCo2njKwQ==}
 
   react-remove-scroll-bar@2.3.8:
     resolution: {integrity: sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q==}
@@ -9848,6 +9942,47 @@ packages:
       yaml:
         optional: true
 
+  vitest@4.1.10:
+    resolution: {integrity: sha512-R9jUTe5S4Qb0HCd4TNqpC7oGcrMssMRGXLW80ubjWsW9VH5GF8y1Y0SFLY9AbqSk6nt0PnOx4H4WNJYZ13GUPw==}
+    engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
+    hasBin: true
+    peerDependencies:
+      '@edge-runtime/vm': '*'
+      '@opentelemetry/api': ^1.9.0
+      '@types/node': ^20.0.0 || ^22.0.0 || >=24.0.0
+      '@vitest/browser-playwright': 4.1.10
+      '@vitest/browser-preview': 4.1.10
+      '@vitest/browser-webdriverio': 4.1.10
+      '@vitest/coverage-istanbul': 4.1.10
+      '@vitest/coverage-v8': 4.1.10
+      '@vitest/ui': 4.1.10
+      happy-dom: '*'
+      jsdom: '*'
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      '@edge-runtime/vm':
+        optional: true
+      '@opentelemetry/api':
+        optional: true
+      '@types/node':
+        optional: true
+      '@vitest/browser-playwright':
+        optional: true
+      '@vitest/browser-preview':
+        optional: true
+      '@vitest/browser-webdriverio':
+        optional: true
+      '@vitest/coverage-istanbul':
+        optional: true
+      '@vitest/coverage-v8':
+        optional: true
+      '@vitest/ui':
+        optional: true
+      happy-dom:
+        optional: true
+      jsdom:
+        optional: true
+
   vitest@4.1.9:
     resolution: {integrity: sha512-nE3/LEyc0z87uHYLZebqCUOaJr2hdtuPp7BQ4BosVFnfltxgAvMG08NyrSGlPpOUWvR27c5flSmYFTNr78L9GQ==}
     engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
@@ -9933,6 +10068,14 @@ packages:
 
   vue@3.5.39:
     resolution: {integrity: sha512-xmZCYabFGcirU8r0fTuvl/LICc1OU620rnqepaJDL/a141ZigkG7AyaxQLdqJ02ZRYzWe6YPaDHeQx7MfknQfA==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  vue@3.5.40:
+    resolution: {integrity: sha512-+8PJ4SJXdn/cHGImF4CKdxlWHIN5Dkt7DoufRREM6h6uVCx2m7QxgcEQmmzyOK8A9mcafg7sFbJFYsdFVubTig==}
     peerDependencies:
       typescript: '*'
     peerDependenciesMeta:
@@ -10058,6 +10201,9 @@ packages:
   zone.js@0.15.1:
     resolution: {integrity: sha512-XE96n56IQpJM7NAoXswY3XRLcWFW83xe0BiAOeMD7K5k5xecOeul3Qcpx6GqEeeHNkW5DWL5zOyTbEfB4eti8w==}
 
+  zone.js@0.16.2:
+    resolution: {integrity: sha512-Eky7p2Z1Ig3NnbfodSPoARCjKBSTFMnE/ACsP1L/XJEfY4SdOFce19BsUCWVwL6K5ABZFy5J3bjcMWffX+YM3Q==}
+
 snapshots:
 
   '@adobe/css-tools@4.4.3': {}
@@ -10070,11 +10216,19 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/cdk@21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)':
+  '@angular/cdk@20.2.14(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
     dependencies:
-      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@angular/platform-browser': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/common': 20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
+      parse5: 8.0.1
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/cdk@21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
       parse5: 8.0.1
       rxjs: 7.8.2
       tslib: 2.8.1
@@ -10088,9 +10242,24 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
+  '@angular/cdk@22.0.3(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/common': 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))
+      parse5: 8.0.1
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
     dependencies:
       '@angular/core': 20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
       rxjs: 7.8.2
       tslib: 2.8.1
 
@@ -10100,9 +10269,21 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
+  '@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
     dependencies:
       '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
       rxjs: 7.8.2
       tslib: 2.8.1
 
@@ -10126,6 +10307,14 @@ snapshots:
       '@angular/compiler': 20.3.25
       zone.js: 0.15.1
 
+  '@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)':
+    dependencies:
+      rxjs: 7.8.2
+      tslib: 2.8.1
+    optionalDependencies:
+      '@angular/compiler': 20.3.25
+      zone.js: 0.15.1
+
   '@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)':
     dependencies:
       rxjs: 7.8.2
@@ -10133,6 +10322,14 @@ snapshots:
     optionalDependencies:
       '@angular/compiler': 21.2.17
       zone.js: 0.15.1
+
+  '@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)':
+    dependencies:
+      rxjs: 7.8.2
+      tslib: 2.8.1
+    optionalDependencies:
+      '@angular/compiler': 21.2.17
+      zone.js: 0.16.2
 
   '@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)':
     dependencies:
@@ -10142,6 +10339,14 @@ snapshots:
       '@angular/compiler': 22.0.5
       zone.js: 0.15.1
 
+  '@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)':
+    dependencies:
+      rxjs: 7.8.2
+      tslib: 2.8.1
+    optionalDependencies:
+      '@angular/compiler': 22.0.5
+      zone.js: 0.16.2
+
   '@angular/forms@20.3.25(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.25(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)':
     dependencies:
       '@angular/common': 20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -10150,11 +10355,19 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/forms@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)':
+  '@angular/forms@20.3.25(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)':
     dependencies:
-      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@angular/platform-browser': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/common': 20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/platform-browser': 20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/forms@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
       '@standard-schema/spec': 1.1.0
       rxjs: 7.8.2
       tslib: 2.8.1
@@ -10169,6 +10382,26 @@ snapshots:
       tslib: 2.8.1
       zod: 4.4.3
 
+  '@angular/forms@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/common': 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))
+      '@standard-schema/spec': 1.1.0
+      rxjs: 7.8.2
+      tslib: 2.8.1
+      zod: 4.4.3
+
+  '@angular/material@20.2.14(6217a07167deb4cffa5e4194d6cfa8af)':
+    dependencies:
+      '@angular/cdk': 20.2.14(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/common': 20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/forms': 20.3.25(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@angular/platform-browser': 20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@angular/material@20.2.14(759426f53bf75756c3a368027aa1f8ce)':
     dependencies:
       '@angular/cdk': 20.2.14(@angular/common@20.3.25(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -10179,13 +10412,23 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/material@21.2.14(5d3abea766a539fd0b311e1932b77b1d)':
+  '@angular/material@21.2.14(b90e3673ea3e6a43ae2acbeb43ff3954)':
     dependencies:
-      '@angular/cdk': 21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
-      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
-      '@angular/forms': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
-      '@angular/platform-browser': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/cdk': 21.2.14(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
+      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/forms': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
+      '@angular/platform-browser': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/material@22.0.3(6349ffe7d7c95371f4650cc9b38e6b6b)':
+    dependencies:
+      '@angular/cdk': 22.0.3(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
+      '@angular/common': 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/forms': 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
+      '@angular/platform-browser': 22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))
       rxjs: 7.8.2
       tslib: 2.8.1
 
@@ -10205,16 +10448,34 @@ snapshots:
       '@angular/core': 20.3.25(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
       tslib: 2.8.1
 
+  '@angular/platform-browser@20.3.26(@angular/common@20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))':
+    dependencies:
+      '@angular/common': 20.3.25(@angular/core@20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 20.3.26(@angular/compiler@20.3.25)(rxjs@7.8.2)(zone.js@0.15.1)
+      tslib: 2.8.1
+
   '@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))':
     dependencies:
       '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.15.1)
       tslib: 2.8.1
 
+  '@angular/platform-browser@21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))':
+    dependencies:
+      '@angular/common': 21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      tslib: 2.8.1
+
   '@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))':
     dependencies:
       '@angular/common': 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.15.1)
+      tslib: 2.8.1
+
+  '@angular/platform-browser@22.0.5(@angular/common@22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))':
+    dependencies:
+      '@angular/common': 22.0.5(@angular/core@22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 22.0.5(@angular/compiler@22.0.5)(rxjs@7.8.2)(zone.js@0.16.2)
       tslib: 2.8.1
 
   '@asamuzakjp/css-color@5.1.11':
@@ -10243,10 +10504,10 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@astryxdesign/theme-neutral@0.1.3(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
+  '@astryxdesign/theme-neutral@0.1.8(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@astryxdesign/core': 0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      lucide-react: 1.22.0(react@19.2.7)
+      lucide-react: 1.26.0(react@19.2.7)
       react: 19.2.7
 
   '@babel/code-frame@7.29.7':
@@ -10848,11 +11109,24 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@floating-ui/vue@1.1.11(vue@3.5.40(typescript@7.0.2))':
+    dependencies:
+      '@floating-ui/dom': 1.8.0
+      '@floating-ui/utils': 0.2.12
+      vue-demi: 0.14.10(vue@3.5.40(typescript@7.0.2))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   '@fluentui/keyboard-keys@9.0.8':
     dependencies:
       '@swc/helpers': 0.5.23
 
   '@fluentui/priority-overflow@9.4.0':
+    dependencies:
+      '@swc/helpers': 0.5.23
+
+  '@fluentui/priority-overflow@9.4.1':
     dependencies:
       '@swc/helpers': 0.5.23
 
@@ -11129,6 +11403,77 @@ snapshots:
       '@fluentui/react-tabs': 9.12.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
       '@fluentui/react-tabster': 9.26.16(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@fluentui/react-tag-picker': 9.9.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-tags': 9.9.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-teaching-popover': 9.7.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-text': 9.6.18(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-textarea': 9.7.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-theme': 9.2.1
+      '@fluentui/react-toast': 9.8.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-toolbar': 9.8.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-tooltip': 9.10.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-tree': 9.16.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-utilities': 9.26.5(@types/react@19.2.17)(react@19.2.7)
+      '@fluentui/react-virtualizer': 9.0.0-alpha.114(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@griffel/react': 1.7.5(react@19.2.7)
+      '@swc/helpers': 0.5.23
+      '@types/react': 19.2.17
+      '@types/react-dom': 19.2.3(@types/react@19.2.17)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+    transitivePeerDependencies:
+      - scheduler
+
+  '@fluentui/react-components@9.74.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)':
+    dependencies:
+      '@fluentui/react-accordion': 9.12.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-alert': 9.0.0-beta.142(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-aria': 9.17.13(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-avatar': 9.11.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-badge': 9.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-breadcrumb': 9.4.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-button': 9.10.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-card': 9.7.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-carousel': 9.9.10(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-checkbox': 9.6.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-color-picker': 9.2.18(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-combobox': 9.17.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-dialog': 9.18.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-divider': 9.7.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-drawer': 9.13.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-field': 9.5.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-image': 9.4.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-infobutton': 9.0.0-beta.117(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-infolabel': 9.4.22(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-input': 9.8.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-label': 9.4.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-link': 9.8.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-list': 9.6.16(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-menu': 9.25.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-message-bar': 9.7.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-motion': 9.16.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-nav': 9.4.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-overflow': 9.9.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-persona': 9.7.5(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-popover': 9.14.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-portal': 9.8.14(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-positioning': 9.22.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-progress': 9.5.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-provider': 9.22.18(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-radio': 9.6.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-rating': 9.4.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-search': 9.4.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-select': 9.5.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-shared-contexts': 9.26.2(@types/react@19.2.17)(react@19.2.7)
+      '@fluentui/react-skeleton': 9.7.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-slider': 9.6.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-spinbutton': 9.6.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-spinner': 9.8.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-swatch-picker': 9.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-switch': 9.7.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-table': 9.19.17(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-tabs': 9.12.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-tabster': 9.26.16(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-tag-picker': 9.10.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
       '@fluentui/react-tags': 9.9.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
       '@fluentui/react-teaching-popover': 9.7.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
       '@fluentui/react-text': 9.6.18(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -11449,6 +11794,19 @@ snapshots:
   '@fluentui/react-overflow@9.9.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@fluentui/priority-overflow': 9.4.0
+      '@fluentui/react-shared-contexts': 9.26.2(@types/react@19.2.17)(react@19.2.7)
+      '@fluentui/react-theme': 9.2.1
+      '@fluentui/react-utilities': 9.26.5(@types/react@19.2.17)(react@19.2.7)
+      '@griffel/react': 1.7.5(react@19.2.7)
+      '@swc/helpers': 0.5.23
+      '@types/react': 19.2.17
+      '@types/react-dom': 19.2.3(@types/react@19.2.17)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
+  '@fluentui/react-overflow@9.9.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@fluentui/priority-overflow': 9.4.1
       '@fluentui/react-shared-contexts': 9.26.2(@types/react@19.2.17)(react@19.2.7)
       '@fluentui/react-theme': 9.2.1
       '@fluentui/react-utilities': 9.26.5(@types/react@19.2.17)(react@19.2.7)
@@ -11789,6 +12147,31 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       tabster: 8.8.0
+
+  '@fluentui/react-tag-picker@9.10.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)':
+    dependencies:
+      '@fluentui/keyboard-keys': 9.0.8
+      '@fluentui/react-aria': 9.17.13(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-combobox': 9.17.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-context-selector': 9.2.18(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-field': 9.5.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-icons': 2.0.333(react@19.2.7)
+      '@fluentui/react-jsx-runtime': 9.4.4(@types/react@19.2.17)(react@19.2.7)
+      '@fluentui/react-portal': 9.8.14(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-positioning': 9.22.3(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-shared-contexts': 9.26.2(@types/react@19.2.17)(react@19.2.7)
+      '@fluentui/react-tabster': 9.26.16(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@fluentui/react-tags': 9.9.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)
+      '@fluentui/react-theme': 9.2.1
+      '@fluentui/react-utilities': 9.26.5(@types/react@19.2.17)(react@19.2.7)
+      '@griffel/react': 1.7.5(react@19.2.7)
+      '@swc/helpers': 0.5.23
+      '@types/react': 19.2.17
+      '@types/react-dom': 19.2.3(@types/react@19.2.17)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+    transitivePeerDependencies:
+      - scheduler
 
   '@fluentui/react-tag-picker@9.9.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(scheduler@0.27.0)':
     dependencies:
@@ -15037,16 +15420,16 @@ snapshots:
       memoizerific: 1.11.3
       storybook: 8.6.18(prettier@3.6.2)
 
-  '@storybook/addon-vitest@10.4.6(@vitest/browser-playwright@4.1.10)(@vitest/browser@4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9))(@vitest/runner@4.1.9)(react@19.2.7)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.6.2)(react@19.2.7))(vitest@4.1.9)':
+  '@storybook/addon-vitest@10.4.6(@vitest/browser-playwright@4.1.10)(@vitest/browser@4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10))(@vitest/runner@4.1.10)(react@19.2.7)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.6.2)(react@19.2.7))(vitest@4.1.10)':
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 2.1.0(react@19.2.7)
       storybook: 10.5.4(@types/react@19.2.17)(prettier@3.6.2)(react@19.2.7)
     optionalDependencies:
-      '@vitest/browser': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
-      '@vitest/browser-playwright': 4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
-      '@vitest/runner': 4.1.9
-      vitest: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/browser': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/browser-playwright': 4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/runner': 4.1.10
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
     transitivePeerDependencies:
       - react
 
@@ -15127,7 +15510,7 @@ snapshots:
     dependencies:
       react: 19.2.7
 
-  '@storybook/instrumenter@8.6.14(storybook@8.6.18(prettier@3.6.2))':
+  '@storybook/instrumenter@8.6.15(storybook@8.6.18(prettier@3.6.2))':
     dependencies:
       '@storybook/global': 5.0.0
       '@vitest/utils': 2.1.9
@@ -15196,10 +15579,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/test@8.6.14(storybook@8.6.18(prettier@3.6.2))':
+  '@storybook/test@8.6.15(storybook@8.6.18(prettier@3.6.2))':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/instrumenter': 8.6.14(storybook@8.6.18(prettier@3.6.2))
+      '@storybook/instrumenter': 8.6.15(storybook@8.6.18(prettier@3.6.2))
       '@testing-library/dom': 10.4.0
       '@testing-library/jest-dom': 6.5.0
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
@@ -15320,6 +15703,11 @@ snapshots:
       '@tanstack/virtual-core': 3.17.5
       vue: 3.5.39(typescript@7.0.2)
 
+  '@tanstack/vue-virtual@3.13.33(vue@3.5.40(typescript@7.0.2))':
+    dependencies:
+      '@tanstack/virtual-core': 3.17.5
+      vue: 3.5.40(typescript@7.0.2)
+
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.29.7
@@ -15400,15 +15788,6 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.1
 
-  '@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@5.9.3))':
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@testing-library/dom': 9.3.4
-      '@vue/test-utils': 2.4.6
-      vue: 3.5.39(typescript@5.9.3)
-    optionalDependencies:
-      '@vue/compiler-sfc': 3.5.39
-
   '@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@7.0.2))':
     dependencies:
       '@babel/runtime': 7.29.7
@@ -15417,6 +15796,24 @@ snapshots:
       vue: 3.5.39(typescript@7.0.2)
     optionalDependencies:
       '@vue/compiler-sfc': 3.5.39
+
+  '@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.40)(vue@3.5.39(typescript@5.9.3))':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      '@testing-library/dom': 9.3.4
+      '@vue/test-utils': 2.4.6
+      vue: 3.5.39(typescript@5.9.3)
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.5.40
+
+  '@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.40)(vue@3.5.39(typescript@7.0.2))':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      '@testing-library/dom': 9.3.4
+      '@vue/test-utils': 2.4.6
+      vue: 3.5.39(typescript@7.0.2)
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.5.40
 
   '@tybys/wasm-util@0.10.3':
     dependencies:
@@ -15741,13 +16138,52 @@ snapshots:
       vite: 8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
       vue: 3.5.39(typescript@7.0.2)
 
-  '@vitest/browser-playwright@4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)':
+  '@vitest/browser-playwright@4.1.10(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
     dependencies:
-      '@vitest/browser': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      playwright: 1.56.1
+      tinyrainbow: 3.1.0
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser-playwright@4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
+    dependencies:
+      '@vitest/browser': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       '@vitest/mocker': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       playwright: 1.61.1
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser-playwright@4.1.10(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)':
+    dependencies:
+      '@vitest/browser': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      playwright: 1.61.1
+      tinyrainbow: 3.1.0
+      vitest: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser-playwright@4.1.9(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
+    dependencies:
+      '@vitest/browser': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/mocker': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      playwright: 1.56.1
+      tinyrainbow: 3.1.0
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -15767,6 +16203,19 @@ snapshots:
       - utf-8-validate
       - vite
 
+  '@vitest/browser-playwright@4.1.9(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
+    dependencies:
+      '@vitest/browser': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/mocker': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      playwright: 1.61.1
+      tinyrainbow: 3.1.0
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
   '@vitest/browser-playwright@4.1.9(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)':
     dependencies:
       '@vitest/browser': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
@@ -15780,7 +16229,7 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)':
+  '@vitest/browser@4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
     dependencies:
       '@blazediff/core': 1.9.1
       '@vitest/mocker': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
@@ -15789,7 +16238,58 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      ws: 8.21.0
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser@4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
+    dependencies:
+      '@blazediff/core': 1.9.1
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/utils': 4.1.10
+      magic-string: 0.30.21
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.1.0
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      ws: 8.21.0
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser@4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)':
+    dependencies:
+      '@blazediff/core': 1.9.1
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/utils': 4.1.10
+      magic-string: 0.30.21
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.1.0
+      vitest: 4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      ws: 8.21.0
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser@4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
+    dependencies:
+      '@blazediff/core': 1.9.1
+      '@vitest/mocker': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/utils': 4.1.9
+      magic-string: 0.30.21
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.1.0
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
@@ -15829,6 +16329,15 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
+  '@vitest/expect@4.1.10':
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      '@types/chai': 5.2.2
+      '@vitest/spy': 4.1.10
+      '@vitest/utils': 4.1.10
+      chai: 6.2.2
+      tinyrainbow: 3.1.0
+
   '@vitest/expect@4.1.9':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -15846,13 +16355,13 @@ snapshots:
     optionalDependencies:
       vite: 8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
 
-  '@vitest/mocker@4.1.9(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))':
     dependencies:
-      '@vitest/spy': 4.1.9
+      '@vitest/spy': 4.1.10
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
+      vite: 8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
 
   '@vitest/mocker@4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))':
     dependencies:
@@ -15882,9 +16391,21 @@ snapshots:
     dependencies:
       tinyrainbow: 3.1.0
 
+  '@vitest/runner@4.1.10':
+    dependencies:
+      '@vitest/utils': 4.1.10
+      pathe: 2.0.3
+
   '@vitest/runner@4.1.9':
     dependencies:
       '@vitest/utils': 4.1.9
+      pathe: 2.0.3
+
+  '@vitest/snapshot@4.1.10':
+    dependencies:
+      '@vitest/pretty-format': 4.1.10
+      '@vitest/utils': 4.1.10
+      magic-string: 0.30.21
       pathe: 2.0.3
 
   '@vitest/snapshot@4.1.9':
@@ -15957,10 +16478,23 @@ snapshots:
       estree-walker: 2.0.2
       source-map-js: 1.2.1
 
+  '@vue/compiler-core@3.5.40':
+    dependencies:
+      '@babel/parser': 7.29.7
+      '@vue/shared': 3.5.40
+      entities: 7.0.1
+      estree-walker: 2.0.2
+      source-map-js: 1.2.1
+
   '@vue/compiler-dom@3.5.39':
     dependencies:
       '@vue/compiler-core': 3.5.39
       '@vue/shared': 3.5.39
+
+  '@vue/compiler-dom@3.5.40':
+    dependencies:
+      '@vue/compiler-core': 3.5.40
+      '@vue/shared': 3.5.40
 
   '@vue/compiler-sfc@3.5.39':
     dependencies:
@@ -15974,10 +16508,27 @@ snapshots:
       postcss: 8.5.21
       source-map-js: 1.2.1
 
+  '@vue/compiler-sfc@3.5.40':
+    dependencies:
+      '@babel/parser': 7.29.7
+      '@vue/compiler-core': 3.5.40
+      '@vue/compiler-dom': 3.5.40
+      '@vue/compiler-ssr': 3.5.40
+      '@vue/shared': 3.5.40
+      estree-walker: 2.0.2
+      magic-string: 0.30.21
+      postcss: 8.5.22
+      source-map-js: 1.2.1
+
   '@vue/compiler-ssr@3.5.39':
     dependencies:
       '@vue/compiler-dom': 3.5.39
       '@vue/shared': 3.5.39
+
+  '@vue/compiler-ssr@3.5.40':
+    dependencies:
+      '@vue/compiler-dom': 3.5.40
+      '@vue/shared': 3.5.40
 
   '@vue/compiler-vue2@2.7.16':
     dependencies:
@@ -15987,7 +16538,7 @@ snapshots:
   '@vue/language-core@2.2.12(typescript@5.9.3)':
     dependencies:
       '@volar/language-core': 2.4.15
-      '@vue/compiler-dom': 3.5.39
+      '@vue/compiler-dom': 3.5.40
       '@vue/compiler-vue2': 2.7.16
       '@vue/shared': 3.5.39
       alien-signals: 1.0.13
@@ -16001,16 +16552,32 @@ snapshots:
     dependencies:
       '@vue/shared': 3.5.39
 
+  '@vue/reactivity@3.5.40':
+    dependencies:
+      '@vue/shared': 3.5.40
+
   '@vue/runtime-core@3.5.39':
     dependencies:
       '@vue/reactivity': 3.5.39
       '@vue/shared': 3.5.39
+
+  '@vue/runtime-core@3.5.40':
+    dependencies:
+      '@vue/reactivity': 3.5.40
+      '@vue/shared': 3.5.40
 
   '@vue/runtime-dom@3.5.39':
     dependencies:
       '@vue/reactivity': 3.5.39
       '@vue/runtime-core': 3.5.39
       '@vue/shared': 3.5.39
+      csstype: 3.2.3
+
+  '@vue/runtime-dom@3.5.40':
+    dependencies:
+      '@vue/reactivity': 3.5.40
+      '@vue/runtime-core': 3.5.40
+      '@vue/shared': 3.5.40
       csstype: 3.2.3
 
   '@vue/server-renderer@3.5.39(vue@3.5.39(typescript@5.9.3))':
@@ -16025,7 +16592,15 @@ snapshots:
       '@vue/shared': 3.5.39
       vue: 3.5.39(typescript@7.0.2)
 
+  '@vue/server-renderer@3.5.40':
+    dependencies:
+      '@vue/compiler-ssr': 3.5.40
+      '@vue/runtime-dom': 3.5.40
+      '@vue/shared': 3.5.40
+
   '@vue/shared@3.5.39': {}
+
+  '@vue/shared@3.5.40': {}
 
   '@vue/test-utils@2.4.6':
     dependencies:
@@ -16039,11 +16614,22 @@ snapshots:
       '@vueuse/shared': 14.3.0(vue@3.5.39(typescript@7.0.2))
       vue: 3.5.39(typescript@7.0.2)
 
+  '@vueuse/core@14.3.0(vue@3.5.40(typescript@7.0.2))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 14.3.0
+      '@vueuse/shared': 14.3.0(vue@3.5.40(typescript@7.0.2))
+      vue: 3.5.40(typescript@7.0.2)
+
   '@vueuse/metadata@14.3.0': {}
 
   '@vueuse/shared@14.3.0(vue@3.5.39(typescript@7.0.2))':
     dependencies:
       vue: 3.5.39(typescript@7.0.2)
+
+  '@vueuse/shared@14.3.0(vue@3.5.40(typescript@7.0.2))':
+    dependencies:
+      vue: 3.5.40(typescript@7.0.2)
 
   '@webcontainer/env@1.1.1': {}
 
@@ -17721,7 +18307,7 @@ snapshots:
 
   lru-cache@8.0.5: {}
 
-  lucide-react@1.22.0(react@19.2.7):
+  lucide-react@1.26.0(react@19.2.7):
     dependencies:
       react: 19.2.7
 
@@ -18054,6 +18640,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  postcss@8.5.22:
+    dependencies:
+      nanoid: 3.3.16
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
   prettier@3.6.2:
     optional: true
 
@@ -18068,7 +18660,7 @@ snapshots:
       '@jest/schemas': 30.4.1
       ansi-styles: 5.2.0
       react-is-18: react-is@18.3.1
-      react-is-19: react-is@19.2.7
+      react-is-19: react-is@19.2.8
 
   primevue@4.5.5(vue@3.5.39(typescript@7.0.2)):
     dependencies:
@@ -18279,6 +18871,8 @@ snapshots:
 
   react-is@19.2.7: {}
 
+  react-is@19.2.8: {}
+
   react-remove-scroll-bar@2.3.8(@types/react@19.2.17)(react@19.2.7):
     dependencies:
       react: 19.2.7
@@ -18418,6 +19012,22 @@ snapshots:
       defu: 6.1.7
       ohash: 2.0.11
       vue: 3.5.39(typescript@7.0.2)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
+  reka-ui@2.10.1(vue@3.5.40(typescript@7.0.2)):
+    dependencies:
+      '@floating-ui/dom': 1.8.0
+      '@floating-ui/vue': 1.1.11(vue@3.5.40(typescript@7.0.2))
+      '@internationalized/date': 3.12.2
+      '@internationalized/number': 3.6.7
+      '@tanstack/vue-virtual': 3.13.33(vue@3.5.40(typescript@7.0.2))
+      '@vueuse/core': 14.3.0(vue@3.5.40(typescript@7.0.2))
+      '@vueuse/shared': 14.3.0(vue@3.5.40(typescript@7.0.2))
+      aria-hidden: 1.2.6
+      defu: 6.1.7
+      ohash: 2.0.11
+      vue: 3.5.40(typescript@7.0.2)
     transitivePeerDependencies:
       - '@vue/composition-api'
 
@@ -19065,7 +19675,7 @@ snapshots:
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.5
-      postcss: 8.5.21
+      postcss: 8.5.22
       rolldown: 1.1.5
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -19076,10 +19686,97 @@ snapshots:
       tsx: 4.23.1
       yaml: 2.9.0
 
-  vitest@4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)):
+  vitest@4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)):
+    dependencies:
+      '@vitest/expect': 4.1.10
+      '@vitest/mocker': 4.1.10(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/pretty-format': 4.1.10
+      '@vitest/runner': 4.1.10
+      '@vitest/snapshot': 4.1.10
+      '@vitest/spy': 4.1.10
+      '@vitest/utils': 4.1.10
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.3
+      pathe: 2.0.3
+      picomatch: 4.0.5
+      std-env: 4.1.0
+      tinybench: 2.9.0
+      tinyexec: 1.2.4
+      tinyglobby: 0.2.17
+      tinyrainbow: 3.1.0
+      vite: 8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.0.10
+      '@vitest/browser-playwright': 4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      jsdom: 29.1.1
+    transitivePeerDependencies:
+      - msw
+
+  vitest@4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)):
+    dependencies:
+      '@vitest/expect': 4.1.10
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/pretty-format': 4.1.10
+      '@vitest/runner': 4.1.10
+      '@vitest/snapshot': 4.1.10
+      '@vitest/spy': 4.1.10
+      '@vitest/utils': 4.1.10
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.3
+      pathe: 2.0.3
+      picomatch: 4.0.5
+      std-env: 4.1.0
+      tinybench: 2.9.0
+      tinyexec: 1.2.4
+      tinyglobby: 0.2.17
+      tinyrainbow: 3.1.0
+      vite: 8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.0.10
+      '@vitest/browser-playwright': 4.1.10(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      jsdom: 29.1.1
+    transitivePeerDependencies:
+      - msw
+
+  vitest@4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.9)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)):
+    dependencies:
+      '@vitest/expect': 4.1.10
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/pretty-format': 4.1.10
+      '@vitest/runner': 4.1.10
+      '@vitest/snapshot': 4.1.10
+      '@vitest/spy': 4.1.10
+      '@vitest/utils': 4.1.10
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.3
+      pathe: 2.0.3
+      picomatch: 4.0.5
+      std-env: 4.1.0
+      tinybench: 2.9.0
+      tinyexec: 1.2.4
+      tinyglobby: 0.2.17
+      tinyrainbow: 3.1.0
+      vite: 8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.0.10
+      '@vitest/browser-playwright': 4.1.9(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      jsdom: 29.1.1
+    transitivePeerDependencies:
+      - msw
+
+  vitest@4.1.9(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.9
-      '@vitest/mocker': 4.1.9(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.9(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.9
       '@vitest/runner': 4.1.9
       '@vitest/snapshot': 4.1.9
@@ -19096,11 +19793,11 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
+      vite: 8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.0.10
-      '@vitest/browser-playwright': 4.1.10(playwright@1.61.1)(vite@8.1.4(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser-playwright': 4.1.10(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
       jsdom: 29.1.1
     transitivePeerDependencies:
       - msw
@@ -19155,12 +19852,16 @@ snapshots:
     dependencies:
       vue: 3.5.39(typescript@7.0.2)
 
+  vue-demi@0.14.10(vue@3.5.40(typescript@7.0.2)):
+    dependencies:
+      vue: 3.5.40(typescript@7.0.2)
+
   vue-docgen-api@4.79.2(vue@3.5.39(typescript@5.9.3)):
     dependencies:
       '@babel/parser': 7.29.7
       '@babel/types': 7.29.7
-      '@vue/compiler-dom': 3.5.39
-      '@vue/compiler-sfc': 3.5.39
+      '@vue/compiler-dom': 3.5.40
+      '@vue/compiler-sfc': 3.5.40
       ast-types: 0.16.1
       esm-resolve: 1.0.11
       hash-sum: 2.0.0
@@ -19192,6 +19893,16 @@ snapshots:
       '@vue/runtime-dom': 3.5.39
       '@vue/server-renderer': 3.5.39(vue@3.5.39(typescript@7.0.2))
       '@vue/shared': 3.5.39
+    optionalDependencies:
+      typescript: 7.0.2
+
+  vue@3.5.40(typescript@7.0.2):
+    dependencies:
+      '@vue/compiler-dom': 3.5.40
+      '@vue/compiler-sfc': 3.5.40
+      '@vue/runtime-dom': 3.5.40
+      '@vue/server-renderer': 3.5.40
+      '@vue/shared': 3.5.40
     optionalDependencies:
       typescript: 7.0.2
 
@@ -19312,3 +20023,5 @@ snapshots:
   zod@4.4.3: {}
 
   zone.js@0.15.1: {}
+
+  zone.js@0.16.2: {}

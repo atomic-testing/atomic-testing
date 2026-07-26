@@ -10,6 +10,10 @@ export const basicTextFieldExampleScenePart = {
     locator: byDataTestId('basic'),
     driver: TextFieldDriver,
   },
+  requiredError: {
+    locator: byDataTestId('required-error'),
+    driver: TextFieldDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -24,7 +28,7 @@ export const basicTextFieldExample: IExampleUnit<typeof basicTextFieldExampleSce
 export const basicTextFieldTestSuite: TestSuiteInfo<typeof basicTextFieldExampleScenePart> = {
   title: 'Basic TextField',
   url: '/textfield',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(basicTextFieldExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have a basic text field', async () => {
@@ -45,6 +49,16 @@ export const basicTextFieldTestSuite: TestSuiteInfo<typeof basicTextFieldExample
       await engine().parts.basic.setValue('Hello World');
       const value = await engine().parts.basic.getValue();
       assertEqual(value, 'Hello World');
+    });
+
+    test('a required, error field reports both', async () => {
+      assertTrue(await engine().parts.requiredError.isRequired());
+      assertTrue(await engine().parts.requiredError.isError());
+    });
+
+    test('a plain field reports not required and no error', async () => {
+      assertFalse(await engine().parts.basic.isRequired());
+      assertFalse(await engine().parts.basic.isError());
     });
   },
 };
