@@ -23,7 +23,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v5
@@ -31,8 +33,12 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
+      # --no-frozen-lockfile, matching every other workflow's install step
+      # (.github/actions/deps-setup, builderui-setup): dependabot PRs in this repo
+      # sometimes bump a manifest without a matching pnpm-lock.yaml update (e.g. #1267),
+      # which --frozen-lockfile would hard-fail on every run until a human intervened.
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run triage
         run: pnpm triage:dependabot
