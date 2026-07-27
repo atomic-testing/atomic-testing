@@ -22,7 +22,7 @@
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/vue-3": "workspace:*",
     "@storybook/addon-essentials": "^8.0.5",
-    "@storybook/addon-themes": "^8.0.5",
+    "@storybook/addon-themes": "^8.6.18",
     "@storybook/test": "^8.6.15",
     "@storybook/vue3": "^8.0.5",
     "@storybook/vue3-vite": "^8.0.5",
@@ -30,7 +30,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@testing-library/vue": "^8.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
-    "@vue/compiler-dom": "^3.5.26",
+    "@vue/compiler-dom": "^3.5.40",
     "@vue/server-renderer": "^3.5.17",
     "storybook": "^8.6.15",
     "vue": "^3.5.39"
