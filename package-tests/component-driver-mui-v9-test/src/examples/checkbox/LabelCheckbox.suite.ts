@@ -13,6 +13,10 @@ export const labelCheckboxExampleScenePart = {
     locator: byDataTestId('banana'),
     driver: CheckboxDriver,
   },
+  cherry: {
+    locator: byDataTestId('cherry'),
+    driver: CheckboxDriver,
+  },
 } satisfies ScenePart;
 
 export const labelCheckboxExample: IExampleUnit<typeof labelCheckboxExampleScenePart, JSX.Element> = {
@@ -50,6 +54,14 @@ export const labelCheckboxTestSuite: TestSuiteInfo<typeof labelCheckboxExample.s
       await engine().parts.banana.setSelected(true);
       const isSelected = await engine().parts.banana.isSelected();
       assertTrue(isSelected);
+    });
+
+    test('Cherry checkbox reports required', async () => {
+      assertTrue(await engine().parts.cherry.isRequired());
+    });
+
+    test('Banana checkbox reports not required', async () => {
+      assertFalse(await engine().parts.banana.isRequired());
     });
   },
 };
