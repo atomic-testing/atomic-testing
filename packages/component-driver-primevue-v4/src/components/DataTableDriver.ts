@@ -8,6 +8,7 @@ import {
   PartLocator,
 } from '@atomic-testing/core';
 
+import { byAriaIdReference } from '../internal/ariaLinkedLocators';
 import { DataTableRowDriver } from './DataTableRowDriver';
 
 /** CSS for a table row — the ARIA role PrimeVue stamps on every `<tr>`. */
@@ -16,6 +17,16 @@ const rowSelector = '[role="row"]';
 const columnHeaderSelector = '[role="columnheader"]';
 /** ARIA sort state a sortable `<th>` reports; the initial/non-sortable state is `'none'`. */
 export type SortDirection = 'ascending' | 'descending' | 'none';
+// A ceiling, not a sleep: waitUntil returns as soon as the probe flips. The filter overlay's
+// enter/leave transition is the same PrimeVue anchored-overlay mechanism Select/Menu use (see
+// their drivers' identical constant), so it shares their 1000ms ceiling.
+const defaultFilterTransitionMs = 1000;
+/**
+ * Rough row-height estimate used to size virtual-scroll steps in {@link DataTableDriver.scrollRowIntoView}
+ * when the caller doesn't know their table's `virtualScrollerOptions.itemSize` — override with the real
+ * value for precise stepping. Mirrors the MUI `DataGridPremiumDriver`'s identical estimate/caveat.
+ */
+const estimatedVirtualScrollRowHeightPx = 46;
 
 /**
  * Driver for the PrimeVue `DataTable` component (with `Column` children).
@@ -69,20 +80,64 @@ export type SortDirection = 'ascending' | 'descending' | 'none';
  * (default size 5) for large datasets, so it undercounts total pages beyond
  * that window; exact for small datasets, a known bound for large ones.
  *
- * **Deferred (audited, not implemented): filtering, virtual scroll, frozen
- * columns, cell editing.** Filtering's rendered control is CONSUMER-authored
- * (`<Column>`'s `#filter` template slot — verified empirically that PrimeVue
- * renders nothing for `filter: true` alone, only the slot's own content, e.g.
- * an `InputText`), so there is no single PrimeVue-owned filter-input contract
- * for a generic `setColumnFilter` to drive; filter menus (`showFilterMenu`)
- * additionally teleport, reusing the overlay recipe from this package's
- * `SelectDriver`/`MenuDriver`. Both need a follow-up scoped around a specific
- * filter control, not a blanket API. Virtual scroll has no layout in jsdom (per
- * CLAUDE.md's E2E-only precedent) and needs its own scene audit. Cell editing
- * was blocked on #903 (the keystroke `Interactor` primitive); #903 has since
- * landed, so it is unblocked, but — mirroring the filter finding — PrimeVue's
- * cell editor is also consumer-authored via `<Column>`'s `#editor` slot, so it
- * needs the same kind of control-specific follow-up rather than a generic API.
+ * **Filtering (#1034), scoped to `filterDisplay="menu"`.** DOM audit
+ * (primevue@4.5.5): a filterable column's `<th>` carries a
+ * `.p-datatable-column-filter-button` trigger with `aria-expanded` and an
+ * `aria-controls` id-link to the filter panel — the SAME `byAriaIdReference`
+ * overlay recipe {@link SelectDriver}'s `dropdown` part already uses, reused
+ * here rather than a fresh mechanism. The panel (`role="dialog"`, teleported
+ * to `document.body`) holds the match-mode picker, the filter's `#filter`-slot
+ * value control (CONSUMER-authored — verified empirically that PrimeVue
+ * renders nothing for `filter: true` alone; {@link setColumnFilter} assumes it
+ * renders a plain `<input>`, the same assumption MUI's `DataGridPremiumDriver`
+ * makes for its filter panel), and PrimeVue-owned Apply/Clear buttons
+ * (`data-pc-name="pcfilterapplybutton"`/`"pcfilterclearbutton"` — locale-independent,
+ * like this driver's `pcheadercheckbox`). Apply/Clear both commit AND close the
+ * panel (verified: `aria-expanded` flips to `false` immediately; the panel's
+ * own DOM removal lags behind by its leave transition, which
+ * {@link openFilterMenu}/{@link closeFilterMenu}'s `waitUntil` absorbs).
+ *
+ * **Focus-trap race (same class as {@link DialogDriver}'s documented one).**
+ * The overlay is focus-trapped and grabs initial focus a frame after mount —
+ * verified to occasionally swallow every keystroke a caller types immediately
+ * after opening (a truncated-to-EMPTY value, not merely truncated text, since
+ * the whole type happened before the trap's grab). {@link openFilterMenu}
+ * absorbs this itself (a `:focus-within` wait mirroring
+ * {@link DialogDriver.waitForOpen}) before returning, so {@link setColumnFilter}
+ * and every other caller of it types/reads/clicks safely without its own workaround.
+ * **`filterDisplay="row"` (the inline per-column filter row) is a DIFFERENT
+ * DOM shape — its own "Show Filter Menu" popup is match-mode-only, with the
+ * value input inline in the header instead — and is NOT covered here**; it
+ * needs its own follow-up, the same "specific control" scoping this class doc
+ * has recorded since #1034's first wave.
+ *
+ * **Virtual scroll (#1034): audited, minimal E2E-only support.** DOM audit
+ * (primevue@4.5.5, `virtualScrollerOptions`): jsdom's zero layout is a harder
+ * failure mode here than MUI's DataGrid (which at least renders its whole
+ * unwindowed page in jsdom) — PrimeVue's `VirtualScroller` computes how many
+ * rows FIT from the container's `clientHeight`, which jsdom always reports as
+ * `0`, so it renders **zero or one** row regardless of dataset size. No jsdom
+ * assertion on row count/content is meaningful for a virtual-scroll table —
+ * asserting one would be exactly the vacuously-green failure class the root
+ * CLAUDE.md warns about. What DOES still work in jsdom: scrolling the
+ * `.p-virtualscroller` container recomputes which row(s) are rendered from
+ * `scrollTop`, so {@link scrollRowIntoView} at least exercises its code path
+ * everywhere; its actual "bring a specific row into a multi-row rendered
+ * window" behavior is E2E-only, mirroring the MUI driver's identical
+ * `scrollRowIntoView` and its identical caveat.
+ *
+ * **Cell editing (#1034): see {@link DataTableRowDriver}.** #903 (the keystroke
+ * `Interactor` primitive) unblocked it; DOM audit found `editMode="cell"`
+ * needs no keystroke to ENTER edit (a plain click suffices — PrimeVue marks a
+ * column editable purely by the presence of an `#editor` slot, no `editable`
+ * prop), only to commit (`Enter`) or cancel (`Escape`) — the opposite split
+ * from MUI's DataGrid, which needs a keystroke to enter. The editor control is
+ * consumer-authored (`#editor` slot), so {@link DataTableRowDriver.setCellValue}
+ * makes the same plain-`<input>` assumption as the filter's value control.
+ *
+ * **Deferred (audited, not implemented): `filterDisplay="row"` inline
+ * filtering, frozen columns.** Both need their own control-specific follow-up
+ * — see the notes above.
  */
 export class DataTableDriver extends ComponentDriver<{}> {
   private get tbodyLocator(): PartLocator {
@@ -120,6 +175,21 @@ export class DataTableDriver extends ComponentDriver<{}> {
       position++;
     }
     return null;
+  }
+
+  /**
+   * The row whose `data-p-index` equals `dataIndex` — PrimeVue's own per-row data index, stamped
+   * on every body row (verified present outside virtual scroll too) and stable regardless of
+   * scroll position, unlike {@link getRowByIndex}'s DOM-position addressing (which shifts once
+   * virtual scroll windows the rendered rows — see {@link scrollRowIntoView}).
+   * @returns `null` when that row isn't currently rendered.
+   */
+  async getRowByDataIndex(dataIndex: number): Promise<DataTableRowDriver | null> {
+    const locator = locatorUtil.append(this.tbodyLocator, byCssSelector(`[data-p-index="${dataIndex}"]`));
+    if (!(await this.interactor.exists(locator))) {
+      return null;
+    }
+    return new DataTableRowDriver(locator, this.interactor, this.commutableOption);
   }
 
   /** Trimmed header label of every column, in DOM order (a selection-checkbox column reports `''`). */
@@ -320,6 +390,233 @@ export class DataTableDriver extends ComponentDriver<{}> {
     }
     await this.interactor.click(locator);
     return true;
+  }
+
+  /** Whether the column labelled `columnLabel` has a filter (a `filterDisplay="menu"` trigger). */
+  async hasColumnFilter(columnLabel: string): Promise<boolean> {
+    return (await this.resolveFilterElements(columnLabel)) != null;
+  }
+
+  /** Whether the column's filter overlay is currently open. `undefined` when no such column/filter. */
+  async isFilterMenuOpen(columnLabel: string): Promise<Optional<boolean>> {
+    const resolved = await this.resolveFilterElements(columnLabel);
+    if (resolved == null) {
+      return undefined;
+    }
+    return (await this.interactor.getAttribute(resolved.trigger, 'aria-expanded')) === 'true';
+  }
+
+  /** Open the column's filter overlay (no-op if already open). @returns `false` when no such column/filter. */
+  async openFilterMenu(columnLabel: string, timeoutMs: number = defaultFilterTransitionMs): Promise<boolean> {
+    const resolved = await this.resolveFilterElements(columnLabel);
+    if (resolved == null) {
+      return false;
+    }
+    return this.openResolvedFilterMenu(resolved, timeoutMs);
+  }
+
+  private async openResolvedFilterMenu(
+    resolved: { header: PartLocator; trigger: PartLocator },
+    timeoutMs: number
+  ): Promise<boolean> {
+    if ((await this.interactor.getAttribute(resolved.trigger, 'aria-expanded')) === 'true') {
+      return true;
+    }
+    await this.interactor.click(resolved.trigger);
+    const opened = await this.waitForFilterTriggerExpanded(resolved.trigger, true, timeoutMs);
+    if (opened) {
+      await this.waitForFilterOverlayFocusSettled(resolved.header, timeoutMs);
+    }
+    return opened;
+  }
+
+  /**
+   * PrimeVue's filter overlay is focus-trapped and grabs initial focus a frame after mount — the
+   * same class of race {@link DialogDriver}'s `waitForOpen` documents ("an interaction issued in
+   * that window can lose focus mid-gesture"), verified here to occasionally swallow every
+   * keystroke {@link setColumnFilter} types. Best-effort (`:focus-within`, tolerated to fail): a
+   * caller-typed value is confirmed by the caller regardless.
+   */
+  private async waitForFilterOverlayFocusSettled(headerLocator: PartLocator, timeoutMs: number): Promise<void> {
+    const focusedLocator = locatorUtil.append(
+      this.filterOverlayLocator(headerLocator),
+      byCssSelector(':focus-within', 'Same')
+    );
+    await this.interactor.waitUntil({
+      probeFn: () => this.interactor.exists(focusedLocator),
+      terminateCondition: true,
+      timeoutMs,
+    });
+  }
+
+  /** Close the column's filter overlay (no-op if already closed). @returns `false` when no such column/filter. */
+  async closeFilterMenu(columnLabel: string, timeoutMs: number = defaultFilterTransitionMs): Promise<boolean> {
+    const resolved = await this.resolveFilterElements(columnLabel);
+    if (resolved == null) {
+      return false;
+    }
+    if ((await this.interactor.getAttribute(resolved.trigger, 'aria-expanded')) !== 'true') {
+      return true;
+    }
+    await this.interactor.click(resolved.trigger);
+    return this.waitForFilterTriggerExpanded(resolved.trigger, false, timeoutMs);
+  }
+
+  /**
+   * Type `value` into the column's filter overlay (opening it first if needed) and commit with
+   * Apply — see the class doc's "Filtering" note for why the value control is assumed to be a
+   * plain `<input>`.
+   * @returns `false` when no such column/filter, or the filter's value control isn't a plain input.
+   */
+  async setColumnFilter(
+    columnLabel: string,
+    value: string,
+    timeoutMs: number = defaultFilterTransitionMs
+  ): Promise<boolean> {
+    const resolved = await this.resolveFilterElements(columnLabel);
+    if (resolved == null || !(await this.openResolvedFilterMenu(resolved, timeoutMs))) {
+      return false;
+    }
+    const overlay = this.filterOverlayLocator(resolved.header);
+    const input = locatorUtil.append(overlay, byCssSelector('.p-datatable-filter-rule-list input'));
+    if (!(await this.interactor.exists(input))) {
+      return false;
+    }
+    await this.interactor.enterText(input, value);
+    await this.interactor.click(locatorUtil.append(overlay, byCssSelector('[data-pc-name="pcfilterapplybutton"]')));
+    await this.waitForFilterTriggerExpanded(resolved.trigger, false, timeoutMs);
+    return true;
+  }
+
+  /**
+   * Read the column filter's current value — opens the overlay first if needed (left open
+   * afterward), reading it back from the value input.
+   * @returns `undefined` when no such column/filter, or the filter's value control isn't a plain input.
+   */
+  async getColumnFilterValue(
+    columnLabel: string,
+    timeoutMs: number = defaultFilterTransitionMs
+  ): Promise<Optional<string>> {
+    const resolved = await this.resolveFilterElements(columnLabel);
+    if (resolved == null || !(await this.openResolvedFilterMenu(resolved, timeoutMs))) {
+      return undefined;
+    }
+    const overlay = this.filterOverlayLocator(resolved.header);
+    const input = locatorUtil.append(overlay, byCssSelector('.p-datatable-filter-rule-list input'));
+    if (!(await this.interactor.exists(input))) {
+      return undefined;
+    }
+    return (await this.interactor.getInputValue(input)) ?? '';
+  }
+
+  /**
+   * Click the filter overlay's Clear button (opening it first if needed), resetting the column's
+   * filter. @returns `false` when no such column/filter.
+   */
+  async clearColumnFilter(columnLabel: string, timeoutMs: number = defaultFilterTransitionMs): Promise<boolean> {
+    const resolved = await this.resolveFilterElements(columnLabel);
+    if (resolved == null || !(await this.openResolvedFilterMenu(resolved, timeoutMs))) {
+      return false;
+    }
+    const overlay = this.filterOverlayLocator(resolved.header);
+    const clearButton = locatorUtil.append(overlay, byCssSelector('[data-pc-name="pcfilterclearbutton"]'));
+    if (!(await this.interactor.exists(clearButton))) {
+      return false;
+    }
+    await this.interactor.click(clearButton);
+    await this.waitForFilterTriggerExpanded(resolved.trigger, false, timeoutMs);
+    return true;
+  }
+
+  private filterTriggerLocator(headerLocator: PartLocator): PartLocator {
+    return locatorUtil.append(headerLocator, byCssSelector('.p-datatable-column-filter-button'));
+  }
+
+  /**
+   * `'Root'`-relative locator for the filter overlay teleported to `document.body` — the same
+   * `byAriaIdReference` recipe {@link SelectDriver}'s `dropdown` part uses, keyed off the
+   * trigger's own `aria-controls`.
+   */
+  private filterOverlayLocator(headerLocator: PartLocator): PartLocator {
+    return locatorUtil.append(
+      headerLocator,
+      byAriaIdReference(byCssSelector('.p-datatable-column-filter-button'), 'aria-controls')
+    );
+  }
+
+  private async resolveFilterElements(
+    columnLabel: string
+  ): Promise<{ header: PartLocator; trigger: PartLocator } | null> {
+    const header = await this.getHeaderCellByLabel(columnLabel);
+    if (header == null) {
+      return null;
+    }
+    const trigger = this.filterTriggerLocator(header.locator);
+    if (!(await this.interactor.exists(trigger))) {
+      return null;
+    }
+    return { header: header.locator, trigger };
+  }
+
+  private async waitForFilterTriggerExpanded(
+    trigger: PartLocator,
+    expanded: boolean,
+    timeoutMs: number
+  ): Promise<boolean> {
+    const target = expanded ? 'true' : 'false';
+    const state = await this.interactor.waitUntil({
+      probeFn: () => this.interactor.getAttribute(trigger, 'aria-expanded'),
+      terminateCondition: target,
+      timeoutMs,
+    });
+    return state === target;
+  }
+
+  /**
+   * Bring a virtualized row into the rendered window by paging the `.p-virtualscroller`
+   * container toward it, then scroll it into the viewport. See the class doc's "Virtual scroll"
+   * note: this is E2E-only — jsdom renders zero or one row regardless, so this can exercise the
+   * code path there but never actually verify the windowing behavior.
+   * @param rowIndex The row's absolute data index (`data-p-index`, stable across scroll position).
+   * @param rowHeightPx Row-height estimate for sizing scroll steps; pass the table's actual
+   * `virtualScrollerOptions.itemSize` for precise stepping (see {@link estimatedVirtualScrollRowHeightPx}).
+   */
+  async scrollRowIntoView(
+    rowIndex: number,
+    timeoutMs: number = 10000,
+    rowHeightPx: number = estimatedVirtualScrollRowHeightPx
+  ): Promise<boolean> {
+    const row = locatorUtil.append(this.tbodyLocator, byCssSelector(`[data-p-index="${rowIndex}"]`));
+    const scroller = locatorUtil.append(this.locator, byCssSelector('.p-virtualscroller'));
+    if (!(await this.interactor.exists(scroller))) {
+      return false;
+    }
+    const found = await this.waitUntil({
+      probeFn: async () => {
+        if (await this.interactor.exists(row)) {
+          return true;
+        }
+        const renderedIndexes = (
+          await this.interactor.getAttribute(
+            locatorUtil.append(this.tbodyLocator, byCssSelector('[data-p-index]')),
+            'data-p-index',
+            true
+          )
+        ).map(Number);
+        if (renderedIndexes.length > 0) {
+          const nearestRendered =
+            rowIndex > Math.max(...renderedIndexes) ? Math.max(...renderedIndexes) : Math.min(...renderedIndexes);
+          await this.interactor.scrollBy(scroller, { x: 0, y: (rowIndex - nearestRendered) * rowHeightPx });
+        }
+        return this.interactor.exists(row);
+      },
+      terminateCondition: true,
+      timeoutMs,
+    });
+    if (found) {
+      await this.interactor.scrollIntoView(row);
+    }
+    return found === true;
   }
 
   get driverName(): string {
