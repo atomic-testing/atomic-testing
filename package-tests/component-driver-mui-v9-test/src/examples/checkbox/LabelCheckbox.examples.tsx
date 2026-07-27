@@ -9,6 +9,7 @@ export const LabelCheckbox = () => {
     <FormGroup>
       <FormControlLabel control={<Checkbox defaultChecked data-testid='apple' value='apple' />} label='Apple' />
       <FormControlLabel control={<Checkbox data-testid='banana' value='banana' />} label='Banana' />
+      <FormControlLabel control={<Checkbox data-testid='cherry' required value='cherry' />} label='Cherry' />
     </FormGroup>
   );
 };
