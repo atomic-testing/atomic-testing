@@ -10,6 +10,10 @@ export const basicSelectExampleScenePart = {
     locator: byDataTestId('simple-select'),
     driver: SelectDriver,
   },
+  requiredSelect: {
+    locator: byDataTestId('required-select'),
+    driver: SelectDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -24,7 +28,7 @@ export const basicSelectExample: IExampleUnit<typeof basicSelectExampleScenePart
 export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExampleScenePart> = {
   title: 'Basic Select',
   url: '/select',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(basicSelectExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have default select element', async () => {
@@ -41,6 +45,14 @@ export const basicSelectTestSuite: TestSuiteInfo<typeof basicSelectExampleSceneP
       await engine().parts.select.selectByLabel('Thirty');
       const value = await engine().parts.select.getValue();
       assertEqual(value, '30');
+    });
+
+    test('a required select reports required', async () => {
+      assertTrue(await engine().parts.requiredSelect.isRequired());
+    });
+
+    test('a plain select reports not required', async () => {
+      assertFalse(await engine().parts.select.isRequired());
     });
   },
 };
