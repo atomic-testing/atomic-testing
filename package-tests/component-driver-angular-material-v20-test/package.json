@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@angular/cdk": "^20.2.0",
-    "@angular/common": "^20.3.0",
+    "@angular/common": "^20.3.26",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.26",
     "@angular/forms": "^20.3.26",
@@ -33,7 +33,7 @@
     "@angular/platform-browser": "^20.3.26",
     "@atomic-testing/core": "workspace:*",
     "rxjs": "^7.8.0",
-    "zone.js": "^0.15.0"
+    "zone.js": "^0.16.2"
   },
   "devDependencies": {
     "@atomic-testing/angular-20": "workspace:*",
