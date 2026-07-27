@@ -8,6 +8,7 @@ export const BasicTextField: React.FunctionComponent = () => {
   return (
     <Box component='form' noValidate autoComplete='off'>
       <TextField data-testid='basic' label='Basic Field' variant='outlined' helperText='Enter text here' />
+      <TextField data-testid='required-error' label='Email' required error placeholder='you@example.com' />
     </Box>
   );
 };
