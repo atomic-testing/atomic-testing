@@ -29,7 +29,7 @@
     "triage:dependabot": "tsx scripts/triage-dependabot-prs.ts"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.58.9",
+    "@microsoft/api-extractor": "^7.58.12",
     "@octokit/rest": "^22.0.0",
     "@playwright/test": "^1.61.1",
     "@swc/jest": "^0.2.39",
