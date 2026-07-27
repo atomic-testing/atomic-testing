@@ -18,6 +18,10 @@ export const basicSwitchExampleScenePart = {
     locator: byDataTestId('disabled'),
     driver: SwitchDriver,
   },
+  required: {
+    locator: byDataTestId('required'),
+    driver: SwitchDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -53,6 +57,14 @@ export const basicSwitchTestSuite: TestSuiteInfo<typeof basicSwitchExampleSceneP
     test('it should be able to toggle unchecked switch', async () => {
       await engine().parts.unchecked.setSelected(true);
       assertTrue(await engine().parts.unchecked.isSelected());
+    });
+
+    test('a required switch reports required', async () => {
+      assertTrue(await engine().parts.required.isRequired());
+    });
+
+    test('a plain switch reports not required', async () => {
+      assertFalse(await engine().parts.unchecked.isRequired());
     });
   },
 };
