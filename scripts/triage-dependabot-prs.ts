@@ -1,25 +1,31 @@
 #!/usr/bin/env -S pnpm tsx
-// Stateless dependabot PR triage.
+// Standalone local dependabot PR triage - no GitHub Actions/YAML involved. Run it
+// on demand:
+//   pnpm triage:dependabot             # loop until every open dependabot PR is
+//                                       # closed or merged, then exit
+//   pnpm triage:dependabot --dry-run   # same loop, logs decisions without making them
 //
-// Rules (mirrors the manual triage policy applied to PRs #1136-#1262):
+// Auth: uses GITHUB_TOKEN if set, otherwise shells out to `gh auth token` (requires
+// `gh auth login` once). Needs repo scope: contents:write, pull-requests:write,
+// issues:write.
+//
+// Rules per PR (mirrors the manual triage policy applied to PRs #1136-#1262):
 //   - CI failing on the current head, or a real merge conflict with main -> close.
-//   - CI passing, head behind main               -> update the branch, re-check next run.
+//   - CI passing, head behind main               -> update the branch, re-check next pass.
 //   - CI passing, head already up to date with main -> approve + squash merge.
-//   - CI still running                            -> no action this run.
-//
-// Deliberately re-entrant and single-step-per-run: it never blocks waiting for CI,
-// so it tolerates a CI queue that can take a long time to drain (see
-// .github/workflows/triage-dependabot-prs.yml, which re-invokes this on a schedule).
+//   - CI still running                            -> no action this pass.
 // No DEP-PIN-01 (or any other) special-casing - every failing check is blocking.
 //
-// Runs the same way locally as in CI - no GitHub Actions context is required:
-//   GITHUB_TOKEN=<pat with repo + workflow scopes> pnpm triage:dependabot
-//   GITHUB_TOKEN=$(gh auth token) pnpm triage:dependabot   # reuse an existing gh login
-// Pass --dry-run to log the close/update/approve-and-merge decisions without making
-// them - useful for previewing what a run would do before letting it touch real PRs.
+// The rules above only ever make one decision per PR per pass - a branch update or a
+// pending CI run needs time to resolve - so main() re-polls every POLL_INTERVAL_MS
+// until no open dependabot PRs remain (dependabot opens new ones on its own weekly
+// schedule, so this converges on the current backlog rather than running forever).
+import { execFileSync } from 'node:child_process';
+
 import { Octokit } from '@octokit/rest';
 
 const DRY_RUN = process.argv.includes('--dry-run');
+const POLL_INTERVAL_MS = 60_000;
 
 const OWNER = 'atomic-testing';
 const REPO = 'atomic-testing';
@@ -27,13 +33,22 @@ const DEPENDABOT_LOGIN = 'dependabot[bot]';
 const MERGE_METHOD = 'squash' as const;
 const PASSING_CONCLUSIONS = new Set(['success', 'neutral', 'skipped']);
 
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
-  return value;
+function resolveGithubToken(): string {
+  if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
+  try {
+    return execFileSync('gh', ['auth', 'token'], { encoding: 'utf8' }).trim();
+  } catch {
+    throw new Error(
+      'No GITHUB_TOKEN set and `gh auth token` failed - run `gh auth login`, or set GITHUB_TOKEN directly.'
+    );
+  }
 }
 
-const octokit = new Octokit({ auth: requireEnv('GITHUB_TOKEN') });
+const octokit = new Octokit({ auth: resolveGithubToken() });
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 type CiStatus = 'pending' | 'passing' | 'failing';
 
@@ -154,7 +169,7 @@ async function triagePullRequest(pull: TriagedPull): Promise<void> {
   }
 
   if (ci.status === 'pending') {
-    console.log(`#${pullNumber}: CI still running, no action this run`);
+    console.log(`#${pullNumber}: CI still running, no action this pass`);
     return;
   }
 
@@ -163,7 +178,7 @@ async function triagePullRequest(pull: TriagedPull): Promise<void> {
     if (result === 'conflict') {
       await closePullRequest(pullNumber, 'merge conflict with main.');
     } else if (result === 'updated') {
-      console.log(`#${pullNumber}: branch update triggered, will re-check CI next run`);
+      console.log(`#${pullNumber}: branch update triggered, will re-check CI next pass`);
     }
     return;
   }
@@ -172,22 +187,39 @@ async function triagePullRequest(pull: TriagedPull): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  const pulls = await octokit.paginate(octokit.pulls.list, {
-    owner: OWNER,
-    repo: REPO,
-    state: 'open',
-    per_page: 100,
-  });
+  for (;;) {
+    const pulls = await octokit.paginate(octokit.pulls.list, {
+      owner: OWNER,
+      repo: REPO,
+      state: 'open',
+      per_page: 100,
+    });
 
-  const dependabotPulls = pulls.filter(pull => pull.user?.login === DEPENDABOT_LOGIN);
-  console.log(`Found ${dependabotPulls.length} open dependabot PR(s)`);
+    const dependabotPulls = pulls.filter(pull => pull.user?.login === DEPENDABOT_LOGIN);
 
-  for (const pull of dependabotPulls) {
-    try {
-      await triagePullRequest(pull);
-    } catch (error) {
-      console.error(`#${pull.number}: error during triage`, error);
+    if (dependabotPulls.length === 0) {
+      console.log('No open dependabot PRs remain.');
+      return;
     }
+
+    console.log(`Found ${dependabotPulls.length} open dependabot PR(s)`);
+    for (const pull of dependabotPulls) {
+      try {
+        await triagePullRequest(pull);
+      } catch (error) {
+        console.error(`#${pull.number}: error during triage`, error);
+      }
+    }
+
+    if (DRY_RUN) {
+      // A dry run never changes PR state, so re-polling would just repeat the same
+      // decisions forever - one pass is the whole preview.
+      console.log('[dry-run] stopping after one pass.');
+      return;
+    }
+
+    console.log(`Sleeping ${POLL_INTERVAL_MS / 1000}s before re-checking...`);
+    await sleep(POLL_INTERVAL_MS);
   }
 }
 
