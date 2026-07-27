@@ -2,7 +2,12 @@ name: Triage dependabot PRs
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    # Offset off :00/:15/:30/:45 - GitHub's scheduler queues everyone's on-the-hour
+    # crons together and delays/drops runs under that load (documented behavior:
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule).
+    # Actual runs since this workflow shipped landed 1-4 hours apart despite the
+    # */15 config; an off-beat minute is GitHub's own recommended mitigation.
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 concurrency:
