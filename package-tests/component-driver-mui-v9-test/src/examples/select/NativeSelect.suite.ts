@@ -10,6 +10,10 @@ export const nativeSelectExampleScenePart = {
     locator: byDataTestId('native-select'),
     driver: SelectDriver,
   },
+  requiredSelect: {
+    locator: byDataTestId('required-native-select'),
+    driver: SelectDriver,
+  },
 } satisfies ScenePart;
 
 /**
@@ -24,7 +28,7 @@ export const nativeSelectExample: IExampleUnit<typeof nativeSelectExampleScenePa
 export const nativeSelectTestSuite: TestSuiteInfo<typeof nativeSelectExampleScenePart> = {
   title: 'Native Select',
   url: '/select',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(nativeSelectExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have default native select element', async () => {
@@ -40,6 +44,14 @@ export const nativeSelectTestSuite: TestSuiteInfo<typeof nativeSelectExampleScen
       await engine().parts.select.setValue('20');
       const value = await engine().parts.select.getValue();
       assertEqual(value, '20');
+    });
+
+    test('a required native select reports required', async () => {
+      assertTrue(await engine().parts.requiredSelect.isRequired());
+    });
+
+    test('a plain native select reports not required', async () => {
+      assertFalse(await engine().parts.select.isRequired());
     });
   },
 };

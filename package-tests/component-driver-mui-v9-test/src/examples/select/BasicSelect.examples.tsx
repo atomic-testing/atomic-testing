@@ -17,14 +17,34 @@ export const basicSelectExampleData = {
 
 export const BasicSelectExample = () => {
   const [value, setValue] = React.useState('');
+  const [requiredValue, setRequiredValue] = React.useState('');
   const onChange = useCallback((event: SelectChangeEvent<string>) => {
     setValue(event.target.value);
+  }, []);
+  const onRequiredChange = useCallback((event: SelectChangeEvent<string>) => {
+    setRequiredValue(event.target.value);
   }, []);
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <InputLabel id='simple-select-label'>Age</InputLabel>
         <Select data-testid='simple-select' label='Age' labelId='simple-select-label' value={value} onChange={onChange}>
+          {basicSelectExampleData.options.map(option => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl fullWidth>
+        <InputLabel id='required-select-label'>Age</InputLabel>
+        <Select
+          data-testid='required-select'
+          label='Age'
+          labelId='required-select-label'
+          required
+          value={requiredValue}
+          onChange={onRequiredChange}>
           {basicSelectExampleData.options.map(option => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}

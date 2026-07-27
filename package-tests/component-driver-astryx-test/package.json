@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@astryxdesign/core": "^0.1.3",
-    "@astryxdesign/theme-neutral": "^0.1.3",
+    "@astryxdesign/theme-neutral": "^0.1.8",
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/internal-react-example": "workspace:*",
     "react": "^19.2.3",

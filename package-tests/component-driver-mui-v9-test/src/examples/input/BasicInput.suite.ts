@@ -21,6 +21,14 @@ export const basicInputExampleScenePart = {
     locator: byDataTestId('disabled'),
     driver: InputDriver,
   },
+  required: {
+    locator: byDataTestId('required'),
+    driver: InputDriver,
+  },
+  error: {
+    locator: byDataTestId('error'),
+    driver: InputDriver,
+  },
 } satisfies ScenePart;
 
 export const basicInputExample: IExampleUnit<typeof basicInputExampleScenePart, JSX.Element> = {
@@ -31,7 +39,7 @@ export const basicInputExample: IExampleUnit<typeof basicInputExampleScenePart, 
 export const basicInputTestSuite: TestSuiteInfo<typeof basicInputExample.scene> = {
   title: 'Basic Input',
   url: '/input',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(basicInputExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Basic input should exist', async () => {
@@ -59,6 +67,22 @@ export const basicInputTestSuite: TestSuiteInfo<typeof basicInputExample.scene> 
       await engine().parts.multiline.setValue('Line 1\nLine 2');
       const value = await engine().parts.multiline.getValue();
       assertEqual(value, 'Line 1\nLine 2');
+    });
+
+    test('Required input reports required', async () => {
+      assertTrue(await engine().parts.required.isRequired());
+    });
+
+    test('Basic input reports not required', async () => {
+      assertFalse(await engine().parts.basic.isRequired());
+    });
+
+    test('Error input reports error', async () => {
+      assertTrue(await engine().parts.error.isError());
+    });
+
+    test('Basic input reports no error', async () => {
+      assertFalse(await engine().parts.basic.isError());
     });
   },
 };

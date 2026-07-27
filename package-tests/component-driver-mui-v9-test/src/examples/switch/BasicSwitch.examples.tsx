@@ -10,6 +10,7 @@ export const BasicSwitch: React.FunctionComponent = () => {
       <Switch data-testid='default-checked' defaultChecked />
       <Switch data-testid='default-unchecked' />
       <Switch data-testid='disabled' disabled />
+      <Switch data-testid='required' required />
     </Stack>
   );
 };
