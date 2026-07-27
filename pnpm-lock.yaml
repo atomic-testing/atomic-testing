@@ -1250,8 +1250,8 @@ importers:
         specifier: ^8.0.5
         version: 8.6.14(@types/react@19.2.17)(storybook@8.6.18(prettier@3.6.2))
       '@storybook/addon-themes':
-        specifier: ^8.0.5
-        version: 8.6.14(storybook@8.6.18(prettier@3.6.2))
+        specifier: ^8.6.18
+        version: 8.6.18(storybook@8.6.18(prettier@3.6.2))
       '@storybook/test':
         specifier: ^8.6.15
         version: 8.6.15(storybook@8.6.18(prettier@3.6.2))
@@ -6183,10 +6183,10 @@ packages:
     peerDependencies:
       storybook: ^8.6.14
 
-  '@storybook/addon-themes@8.6.14':
-    resolution: {integrity: sha512-/HJCgskA3OFGectuoLEBQ3JX1nQhE7lnpSv5gH13CWyyaMEk/mP8JYF1uO25YQqwGuSgL2gaEox+aK7UmglAmQ==}
+  '@storybook/addon-themes@8.6.18':
+    resolution: {integrity: sha512-v+Xcxo/XB2ayw9E/RygGOqUIaPOXp9XEFv6EF7DRt41/RQkQ846yJBARTC2cH8kCb+7FYcvDLD3GN/ms7i8wNg==}
     peerDependencies:
-      storybook: ^8.6.14
+      storybook: ^8.6.18
 
   '@storybook/addon-toolbars@8.6.14':
     resolution: {integrity: sha512-W/wEXT8h3VyZTVfWK/84BAcjAxTdtRiAkT2KAN0nbSHxxB5KEM1MjKpKu2upyzzMa3EywITqbfy4dP6lpkVTwQ==}
@@ -15406,7 +15406,7 @@ snapshots:
       storybook: 8.6.18(prettier@3.6.2)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-themes@8.6.14(storybook@8.6.18(prettier@3.6.2))':
+  '@storybook/addon-themes@8.6.18(storybook@8.6.18(prettier@3.6.2))':
     dependencies:
       storybook: 8.6.18(prettier@3.6.2)
       ts-dedent: 2.2.0
