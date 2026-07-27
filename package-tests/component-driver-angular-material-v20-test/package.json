@@ -28,7 +28,7 @@
     "@angular/common": "^20.3.26",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.26",
-    "@angular/forms": "^20.3.0",
+    "@angular/forms": "^20.3.26",
     "@angular/material": "^20.2.0",
     "@angular/platform-browser": "^20.3.26",
     "@atomic-testing/core": "workspace:*",
@@ -43,7 +43,7 @@
     "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
     "@atomic-testing/internal-test-runner-vitest-adapter": "workspace:*",
     "@vitest/browser-playwright": "^4.1.10",
-    "playwright": "^1.61.1",
+    "playwright": "^1.62.0",
     "vitest": "^4.1.9"
   }
 }
