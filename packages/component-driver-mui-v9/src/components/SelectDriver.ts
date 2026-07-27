@@ -13,6 +13,7 @@ import {
   IComponentDriverOption,
   IInputDriver,
   Interactor,
+  IRequirableDriver,
   listHelper,
   locatorUtil,
   Nullable,
@@ -53,7 +54,10 @@ export interface MenuItemGetOption {
 }
 const optionLocator = byRole('option');
 
-export class SelectDriver extends ComponentDriver<SelectScenePart> implements IInputDriver<string | null> {
+export class SelectDriver
+  extends ComponentDriver<SelectScenePart>
+  implements IInputDriver<string | null>, IRequirableDriver
+{
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
@@ -215,6 +219,17 @@ export class SelectDriver extends ComponentDriver<SelectScenePart> implements II
       // Cannot determine readonly state of a select input.
       return false;
     }
+  }
+
+  /**
+   * Whether the select is required. The native select carries `required` directly;
+   * a rich (non-native) select mirrors its value into a hidden `<input>` that also
+   * carries the native `required` attribute, so both cases resolve through the same probe.
+   */
+  async isRequired(): Promise<boolean> {
+    const isNative = await this.isNative();
+    const locator = isNative ? this.parts.nativeSelect.locator : this.parts.input.locator;
+    return this.interactor.isRequired(locator);
   }
 
   get driverName(): string {
