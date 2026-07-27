@@ -34,7 +34,7 @@
     "@atomic-testing/dom-core": "workspace:*"
   },
   "devDependencies": {
-    "storybook": "^10.4.6"
+    "storybook": "^10.5.5"
   },
   "peerDependencies": {
     "storybook": "^10.0.0"
