@@ -230,7 +230,7 @@
       }
     },
     {
-      "files": ["packages/create-atomic-testing/src/cli.ts"],
+      "files": ["packages/create-atomic-testing/src/cli.ts", "scripts/triage-dependabot-prs.ts"],
       "rules": {
         "no-console": "off"
       }
