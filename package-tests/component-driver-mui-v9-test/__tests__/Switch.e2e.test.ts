@@ -4,6 +4,6 @@ import {
   playWrightTestFrameworkMapper,
 } from '@atomic-testing/internal-test-runner-playwright-adapter';
 
-import { basicSelectTestSuite } from '../src/examples';
+import { basicSwitchTestSuite } from '../src/examples';
 
-testRunner(basicSelectTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
+testRunner(basicSwitchTestSuite, playWrightTestFrameworkMapper, getTestRunnerInterface());
