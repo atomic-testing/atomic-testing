@@ -20,12 +20,23 @@
 // pending CI run needs time to resolve - so main() re-polls every POLL_INTERVAL_MS
 // until no open dependabot PRs remain (dependabot opens new ones on its own weekly
 // schedule, so this converges on the current backlog rather than running forever).
+//
+// At most MAX_BRANCH_UPDATES_PER_PASS "behind base" PRs get updated per pass, not
+// every one of them: merging any single PR moves main, which immediately makes every
+// *other* just-updated branch behind again. Updating all N stale PRs every pass means
+// each merge cascades into another N-1 updates (and CI runs) next pass - quadratic
+// waste that gets worse the larger the backlog. Throttling to one keeps each PR's
+// branch updated at most once per merge that lands ahead of it. Merges don't need the
+// same cap: isBehindBase is re-checked live immediately before each one, so merging
+// PR A and then re-checking PR B naturally finds B now behind (and defers it to an
+// update instead of merging onto a stale base) - no explicit limit required there.
 import { execFileSync } from 'node:child_process';
 
 import { Octokit } from '@octokit/rest';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const POLL_INTERVAL_MS = 60_000;
+const MAX_BRANCH_UPDATES_PER_PASS = 1;
 
 const OWNER = 'atomic-testing';
 const REPO = 'atomic-testing';
@@ -153,37 +164,48 @@ interface TriagedPull {
   base: { ref: string };
 }
 
-async function triagePullRequest(pull: TriagedPull): Promise<void> {
+// Returns the update budget remaining after this PR - the caller threads it through
+// the whole pass so only MAX_BRANCH_UPDATES_PER_PASS branch updates happen in total.
+async function triagePullRequest(pull: TriagedPull, updateBudget: number): Promise<number> {
   const pullNumber = pull.number;
 
   if (pull.draft === true) {
     console.log(`#${pullNumber}: skipped (draft)`);
-    return;
+    return updateBudget;
   }
 
   const ci = await getCiResult(pull.head.sha);
 
   if (ci.status === 'failing') {
     await closePullRequest(pullNumber, `CI failing on the current commit (${ci.failingChecks.join(', ')}).`);
-    return;
+    return updateBudget;
   }
 
   if (ci.status === 'pending') {
     console.log(`#${pullNumber}: CI still running, no action this pass`);
-    return;
+    return updateBudget;
   }
 
   if (await isBehindBase(pull.base.ref, pull.head.sha)) {
+    if (updateBudget <= 0) {
+      console.log(`#${pullNumber}: behind base, deferring update to a later pass`);
+      return updateBudget;
+    }
+
     const result = await updateBranch(pullNumber);
     if (result === 'conflict') {
+      // Rejected without triggering a CI run, so it doesn't spend the pass's budget.
       await closePullRequest(pullNumber, 'merge conflict with main.');
-    } else if (result === 'updated') {
+      return updateBudget;
+    }
+    if (result === 'updated') {
       console.log(`#${pullNumber}: branch update triggered, will re-check CI next pass`);
     }
-    return;
+    return updateBudget - 1;
   }
 
   await approveAndMerge(pullNumber);
+  return updateBudget;
 }
 
 async function main(): Promise<void> {
@@ -195,7 +217,11 @@ async function main(): Promise<void> {
       per_page: 100,
     });
 
-    const dependabotPulls = pulls.filter(pull => pull.user?.login === DEPENDABOT_LOGIN);
+    // Oldest first, so a steady stream of new dependabot PRs (created newest-first by
+    // the list API) can never starve out the ones already waiting in the queue.
+    const dependabotPulls = pulls
+      .filter(pull => pull.user?.login === DEPENDABOT_LOGIN)
+      .sort((a, b) => a.number - b.number);
 
     if (dependabotPulls.length === 0) {
       console.log('No open dependabot PRs remain.');
@@ -203,9 +229,10 @@ async function main(): Promise<void> {
     }
 
     console.log(`Found ${dependabotPulls.length} open dependabot PR(s)`);
+    let updateBudget = MAX_BRANCH_UPDATES_PER_PASS;
     for (const pull of dependabotPulls) {
       try {
-        await triagePullRequest(pull);
+        updateBudget = await triagePullRequest(pull, updateBudget);
       } catch (error) {
         console.error(`#${pull.number}: error during triage`, error);
       }
