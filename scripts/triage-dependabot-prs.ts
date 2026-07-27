@@ -98,13 +98,13 @@ function isConflictError(error: unknown): boolean {
 
 // Returns 'conflict' rather than throwing on a 422, since a real merge conflict
 // is an expected outcome here, not an operational failure.
-async function updateBranch(pullNumber: number): Promise<'updated' | 'conflict'> {
+async function updateBranch(pullNumber: number): Promise<'updated' | 'conflict' | 'dry-run'> {
   if (DRY_RUN) {
     // Whether this would conflict is only knowable by attempting the merge, so
     // dry-run can't distinguish the two outcomes without mutating - report the
     // decision (behind base -> needs an update) and stop there.
     console.log(`#${pullNumber}: [dry-run] would update branch (behind base)`);
-    return 'updated';
+    return 'dry-run';
   }
   try {
     await octokit.pulls.updateBranch({ owner: OWNER, repo: REPO, pull_number: pullNumber });
@@ -162,7 +162,7 @@ async function triagePullRequest(pull: TriagedPull): Promise<void> {
     const result = await updateBranch(pullNumber);
     if (result === 'conflict') {
       await closePullRequest(pullNumber, 'merge conflict with main.');
-    } else {
+    } else if (result === 'updated') {
       console.log(`#${pullNumber}: branch update triggered, will re-check CI next run`);
     }
     return;
