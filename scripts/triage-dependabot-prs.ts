@@ -11,7 +11,15 @@
 // so it tolerates a CI queue that can take a long time to drain (see
 // .github/workflows/triage-dependabot-prs.yml, which re-invokes this on a schedule).
 // No DEP-PIN-01 (or any other) special-casing - every failing check is blocking.
+//
+// Runs the same way locally as in CI - no GitHub Actions context is required:
+//   GITHUB_TOKEN=<pat with repo + workflow scopes> pnpm triage:dependabot
+//   GITHUB_TOKEN=$(gh auth token) pnpm triage:dependabot   # reuse an existing gh login
+// Pass --dry-run to log the close/update/approve-and-merge decisions without making
+// them - useful for previewing what a run would do before letting it touch real PRs.
 import { Octokit } from '@octokit/rest';
+
+const DRY_RUN = process.argv.includes('--dry-run');
 
 const OWNER = 'atomic-testing';
 const REPO = 'atomic-testing';
@@ -70,6 +78,10 @@ async function isBehindBase(base: string, head: string): Promise<boolean> {
 }
 
 async function closePullRequest(pullNumber: number, reason: string): Promise<void> {
+  if (DRY_RUN) {
+    console.log(`#${pullNumber}: [dry-run] would close (${reason})`);
+    return;
+  }
   await octokit.issues.createComment({
     owner: OWNER,
     repo: REPO,
@@ -86,7 +98,14 @@ function isConflictError(error: unknown): boolean {
 
 // Returns 'conflict' rather than throwing on a 422, since a real merge conflict
 // is an expected outcome here, not an operational failure.
-async function updateBranch(pullNumber: number): Promise<'updated' | 'conflict'> {
+async function updateBranch(pullNumber: number): Promise<'updated' | 'conflict' | 'dry-run'> {
+  if (DRY_RUN) {
+    // Whether this would conflict is only knowable by attempting the merge, so
+    // dry-run can't distinguish the two outcomes without mutating - report the
+    // decision (behind base -> needs an update) and stop there.
+    console.log(`#${pullNumber}: [dry-run] would update branch (behind base)`);
+    return 'dry-run';
+  }
   try {
     await octokit.pulls.updateBranch({ owner: OWNER, repo: REPO, pull_number: pullNumber });
     return 'updated';
@@ -97,6 +116,10 @@ async function updateBranch(pullNumber: number): Promise<'updated' | 'conflict'>
 }
 
 async function approveAndMerge(pullNumber: number): Promise<void> {
+  if (DRY_RUN) {
+    console.log(`#${pullNumber}: [dry-run] would approve and merge`);
+    return;
+  }
   await octokit.pulls.createReview({
     owner: OWNER,
     repo: REPO,
@@ -139,7 +162,7 @@ async function triagePullRequest(pull: TriagedPull): Promise<void> {
     const result = await updateBranch(pullNumber);
     if (result === 'conflict') {
       await closePullRequest(pullNumber, 'merge conflict with main.');
-    } else {
+    } else if (result === 'updated') {
       console.log(`#${pullNumber}: branch update triggered, will re-check CI next run`);
     }
     return;
