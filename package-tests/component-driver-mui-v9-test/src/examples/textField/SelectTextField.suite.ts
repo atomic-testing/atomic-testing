@@ -10,6 +10,10 @@ export const selectTextFieldExampleScenePart = {
     locator: byDataTestId('select'),
     driver: TextFieldDriver,
   },
+  requiredErrorSelect: {
+    locator: byDataTestId('required-error-select'),
+    driver: TextFieldDriver,
+  },
 } satisfies ScenePart;
 
 export const selectTextFieldExample: IExampleUnit<typeof selectTextFieldExampleScenePart, JSX.Element> = {
@@ -20,7 +24,7 @@ export const selectTextFieldExample: IExampleUnit<typeof selectTextFieldExampleS
 export const selectTextFieldTestSuite: TestSuiteInfo<typeof selectTextFieldExampleScenePart> = {
   title: 'Select TextField',
   url: '/textfield',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(selectTextFieldExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('it should have the correct label', async () => {
@@ -37,6 +41,16 @@ export const selectTextFieldTestSuite: TestSuiteInfo<typeof selectTextFieldExamp
       await engine().parts.select.setValue('60');
       const value = await engine().parts.select.getValue();
       assertEqual(value, '60');
+    });
+
+    test('a required, error select-variant field reports both', async () => {
+      assertTrue(await engine().parts.requiredErrorSelect.isRequired());
+      assertTrue(await engine().parts.requiredErrorSelect.isError());
+    });
+
+    test('a plain select-variant field reports not required and no error', async () => {
+      assertFalse(await engine().parts.select.isRequired());
+      assertFalse(await engine().parts.select.isError());
     });
   },
 };

@@ -22,6 +22,13 @@ export const SelectTextField = () => {
           </MenuItem>
         ))}
       </TextField>
+      <TextField data-testid='required-error-select' select label='Number' defaultValue='30' required error>
+        {selectTextFieldExampleData.options.map(option => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
     </Box>
   );
 };

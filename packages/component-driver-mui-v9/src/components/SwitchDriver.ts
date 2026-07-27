@@ -5,6 +5,7 @@ import {
   IComponentDriverOption,
   IFormFieldDriver,
   Interactor,
+  IRequirableDriver,
   IToggleDriver,
   PartLocator,
   ScenePart,
@@ -19,7 +20,7 @@ export const parts = {
 
 export class SwitchDriver
   extends ComponentDriver<typeof parts>
-  implements IFormFieldDriver<string | null>, IToggleDriver
+  implements IFormFieldDriver<string | null>, IToggleDriver, IRequirableDriver
 {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
@@ -54,6 +55,15 @@ export class SwitchDriver
   async isReadonly(): Promise<boolean> {
     // MUI v5 does not have a readonly state for the switch
     return Promise.resolve(false);
+  }
+
+  /**
+   * Whether the switch is required. MUI puts the native `required` attribute
+   * directly on the underlying `<input type="checkbox" role="switch">`.
+   */
+  async isRequired(): Promise<boolean> {
+    await this.enforcePartExistence('input');
+    return this.interactor.isRequired(this.parts.input.locator);
   }
 
   get driverName(): string {
