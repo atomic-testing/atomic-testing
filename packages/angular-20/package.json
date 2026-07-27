@@ -40,7 +40,7 @@
     "@atomic-testing/dom-core": "workspace:*"
   },
   "devDependencies": {
-    "@angular/common": "^20.3.0",
+    "@angular/common": "^22.0.8",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
