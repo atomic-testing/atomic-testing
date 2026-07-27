@@ -21,22 +21,25 @@
 // until no open dependabot PRs remain (dependabot opens new ones on its own weekly
 // schedule, so this converges on the current backlog rather than running forever).
 //
-// At most MAX_BRANCH_UPDATES_PER_PASS "behind base" PRs get updated per pass, not
-// every one of them: merging any single PR moves main, which immediately makes every
-// *other* just-updated branch behind again. Updating all N stale PRs every pass means
-// each merge cascades into another N-1 updates (and CI runs) next pass - quadratic
-// waste that gets worse the larger the backlog. Throttling to one keeps each PR's
-// branch updated at most once per merge that lands ahead of it. Merges don't need the
-// same cap: isBehindBase is re-checked live immediately before each one, so merging
-// PR A and then re-checking PR B naturally finds B now behind (and defers it to an
-// update instead of merging onto a stale base) - no explicit limit required there.
+// At most one branch update is ever in flight at a time, globally - not per pass.
+// Merging any single PR moves main, which immediately makes every *other* just-updated
+// branch behind again; updating multiple PRs while one is still mid-CI risks an
+// unrelated merge landing in between and invalidating several in-flight updates at
+// once instead of just one. A PR counts as "in flight" the moment its branch is
+// updated and stays that way until its CI resolves - detected statelessly each pass
+// by checking whether *any* dependabot PR currently has pending CI, so this holds even
+// across separate invocations of this script (no run remembers what an earlier run
+// did). Merges don't need the same treatment: isBehindBase is re-checked live
+// immediately before each one, so merging PR A and then re-checking PR B naturally
+// finds B now behind (and defers it instead of merging onto a stale base) - and a
+// merge itself never starts a new CI run (buildui.yml triggers on pull_request, not
+// push, so landing on main doesn't retrigger anything).
 import { execFileSync } from 'node:child_process';
 
 import { Octokit } from '@octokit/rest';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const POLL_INTERVAL_MS = 60_000;
-const MAX_BRANCH_UPDATES_PER_PASS = 1;
 
 const OWNER = 'atomic-testing';
 const REPO = 'atomic-testing';
@@ -164,48 +167,46 @@ interface TriagedPull {
   base: { ref: string };
 }
 
-// Returns the update budget remaining after this PR - the caller threads it through
-// the whole pass so only MAX_BRANCH_UPDATES_PER_PASS branch updates happen in total.
-async function triagePullRequest(pull: TriagedPull, updateBudget: number): Promise<number> {
+// Returns true iff this call started a new branch update - the caller uses that to
+// keep updateInFlight accurate for the rest of the pass (see main()).
+async function triagePullRequest(pull: TriagedPull, ci: CiResult, updateInFlight: boolean): Promise<boolean> {
   const pullNumber = pull.number;
 
   if (pull.draft === true) {
     console.log(`#${pullNumber}: skipped (draft)`);
-    return updateBudget;
+    return false;
   }
-
-  const ci = await getCiResult(pull.head.sha);
 
   if (ci.status === 'failing') {
     await closePullRequest(pullNumber, `CI failing on the current commit (${ci.failingChecks.join(', ')}).`);
-    return updateBudget;
+    return false;
   }
 
   if (ci.status === 'pending') {
     console.log(`#${pullNumber}: CI still running, no action this pass`);
-    return updateBudget;
+    return false;
   }
 
   if (await isBehindBase(pull.base.ref, pull.head.sha)) {
-    if (updateBudget <= 0) {
-      console.log(`#${pullNumber}: behind base, deferring update to a later pass`);
-      return updateBudget;
+    if (updateInFlight) {
+      console.log(`#${pullNumber}: behind base, deferring update - another branch update is still in flight`);
+      return false;
     }
 
     const result = await updateBranch(pullNumber);
     if (result === 'conflict') {
-      // Rejected without triggering a CI run, so it doesn't spend the pass's budget.
+      // Rejected without triggering a CI run, so nothing is "in flight" from this.
       await closePullRequest(pullNumber, 'merge conflict with main.');
-      return updateBudget;
+      return false;
     }
     if (result === 'updated') {
       console.log(`#${pullNumber}: branch update triggered, will re-check CI next pass`);
     }
-    return updateBudget - 1;
+    return true;
   }
 
   await approveAndMerge(pullNumber);
-  return updateBudget;
+  return false;
 }
 
 async function main(): Promise<void> {
@@ -229,10 +230,19 @@ async function main(): Promise<void> {
     }
 
     console.log(`Found ${dependabotPulls.length} open dependabot PR(s)`);
-    let updateBudget = MAX_BRANCH_UPDATES_PER_PASS;
+
+    // Computed once per PR up front (not re-fetched inside triagePullRequest) so it can
+    // double as the "is anything already in flight" check below before any action runs.
+    const ciByPr = new Map<number, CiResult>();
+    for (const pull of dependabotPulls) {
+      ciByPr.set(pull.number, await getCiResult(pull.head.sha));
+    }
+
+    let updateInFlight = [...ciByPr.values()].some(ci => ci.status === 'pending');
     for (const pull of dependabotPulls) {
       try {
-        updateBudget = await triagePullRequest(pull, updateBudget);
+        const startedUpdate = await triagePullRequest(pull, ciByPr.get(pull.number)!, updateInFlight);
+        if (startedUpdate) updateInFlight = true;
       } catch (error) {
         console.error(`#${pull.number}: error during triage`, error);
       }
