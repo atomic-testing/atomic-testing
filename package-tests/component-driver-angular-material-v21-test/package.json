@@ -44,6 +44,6 @@
     "@atomic-testing/internal-test-runner-vitest-adapter": "workspace:*",
     "@vitest/browser-playwright": "^4.1.9",
     "playwright": "^1.61.1",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   }
 }
