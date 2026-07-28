@@ -13,13 +13,13 @@ import React, { JSX } from 'react';
  */
 export const AvatarGroupExample = () => (
   <div>
-    <AvatarGroup size='small' data-testid='avatar-group-overflow'>
+    <AvatarGroup size='md' data-testid='avatar-group-overflow'>
       <Avatar name='John Doe' data-testid='ag-overflow-avatar-1' />
       <Avatar name='Jane Smith' data-testid='ag-overflow-avatar-2' />
       <Avatar name='Sam Lee' data-testid='ag-overflow-avatar-3' />
       <AvatarGroupOverflow count={5} />
     </AvatarGroup>
-    <AvatarGroup size='small' data-testid='avatar-group-plain'>
+    <AvatarGroup size='md' data-testid='avatar-group-plain'>
       <Avatar name='Alice Wong' data-testid='ag-plain-avatar-1' />
       <Avatar name='Bob Carter' data-testid='ag-plain-avatar-2' />
     </AvatarGroup>

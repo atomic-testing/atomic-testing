@@ -7,8 +7,10 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  * `contenteditable` editor), a send/stop button, and an optional status message.
  * The scene anchors on the root (`data-testid`, `data-density`). The embedded
  * input carries no `data-testid` of its own, so it is reached by its
- * `role="textbox"][contenteditable]`; the send button by its stable
- * `astryx-chat-send-button` class (Astryx does not forward a testid there either).
+ * `role="textbox"][contenteditable]`; the send button renders as a plain `Button`
+ * with no `data-testid` and no stable class of its own (see
+ * {@link ChatSendButtonDriver}), so it is reached by its verbatim `aria-label`,
+ * which is unconditionally `"Send"` or `"Stop"`.
  *
  * Reads are jsdom-faithful: `canSend` (the button's `disabled`), `isStopShown`
  * (the button flips `aria-label` Send↔Stop), and the status text (`role="alert"`).
@@ -17,7 +19,7 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  */
 export class ChatComposerDriver extends ComponentDriver<{}> {
   private get sendButton(): PartLocator {
-    return locatorUtil.append(this.locator, byCssSelector('.astryx-chat-send-button'));
+    return locatorUtil.append(this.locator, byCssSelector('button[aria-label="Send"], button[aria-label="Stop"]'));
   }
 
   private get editable(): PartLocator {

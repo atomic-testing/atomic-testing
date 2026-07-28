@@ -8,7 +8,12 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator, tim
  * Open/closed state is read from the trigger's `aria-expanded`; clicking it
  * toggles — mirrors the MUI `AccordionDriver`. (True content visibility is
  * CSS-driven and only observable in a real browser; jsdom keeps the content
- * mounted, so assert via `isExpanded`.)
+ * mounted, so assert via `isExpanded`.) Since Astryx 0.1.8, a single item can be
+ * disabled (`isDisabled`, works standalone and inside `CollapsibleGroup`); the
+ * trigger keeps the native `disabled` attribute off (staying focusable and
+ * perceivable to assistive tech per the system-wide disabled convention) and
+ * marks it with `aria-disabled="true"` instead — the same convention `MenuItemDriver`
+ * reads.
  */
 export class CollapsibleDriver extends ComponentDriver<{}> {
   private get triggerLocator(): PartLocator {
@@ -26,6 +31,11 @@ export class CollapsibleDriver extends ComponentDriver<{}> {
   /** The trigger's visible text (the chevron carries no text). */
   async getTriggerText(): Promise<Optional<string>> {
     return (await this.interactor.getText(this.triggerLocator)) ?? undefined;
+  }
+
+  /** Whether this item is disabled (`aria-disabled="true"` on the trigger). */
+  async isDisabled(): Promise<boolean> {
+    return (await this.interactor.getAttribute(this.triggerLocator, 'aria-disabled')) === 'true';
   }
 
   /** Toggle the collapsible. */

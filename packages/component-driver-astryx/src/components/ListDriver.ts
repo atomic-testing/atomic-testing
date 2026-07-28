@@ -32,7 +32,7 @@ export class ListDriver extends ListComponentDriver<ListItemDriver> {
     return listHelper.collectItemLabels(items);
   }
 
-  /** The labels of the currently selected rows (`aria-selected="true"`), in DOM order. */
+  /** The labels of the currently selected rows (see {@link ListItemDriver.isSelected}), in DOM order. */
   async getSelectedLabels(): Promise<readonly string[]> {
     const selected: string[] = [];
     for (const item of await this.getItems()) {

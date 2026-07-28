@@ -4,12 +4,13 @@ import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
  * Driver for the Astryx ChatSendButton (`@astryxdesign/core/Chat`) — the circular
  * send/stop toggle for a chat composer.
  *
- * It renders an icon-only `<button class="astryx-chat-send-button">`. Crucially,
- * **it does not forward `data-testid`** (it spreads props onto the inner `Button`,
- * which keeps its own), so the scene anchors on the stable `astryx-chat-send-button`
- * class, or — to disambiguate the two states — on the verbatim accessible name the
- * icon-only Button writes as `aria-label`: `"Send"` (accent/primary) versus
- * `"Stop"` (neutral/secondary). The send state disables via the native `disabled`
+ * It renders an icon-only `<button class="astryx-button ...">` — it is a thin
+ * wrapper around the shared `Button` and carries neither its own `data-testid` nor
+ * a stable class of its own (only `Button`'s), so the scene anchors on the
+ * verbatim accessible name it writes as `aria-label`: `"Send"` (accent/primary)
+ * versus `"Stop"` (neutral/secondary) — unconditional in either state, so
+ * `button[aria-label="Send"], button[aria-label="Stop"]` is a reliable anchor
+ * within a scoped parent. The send state disables via the native `disabled`
  * attribute, so {@link isDisabled} is inherited from {@link HTMLButtonDriver}.
  */
 export class ChatSendButtonDriver extends HTMLButtonDriver {

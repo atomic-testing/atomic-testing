@@ -8,20 +8,22 @@ import { MenuItemDriver } from './MenuItemDriver';
  * `TopNavMegaMenu`).
  *
  * TopNavMegaMenu renders a trigger `<button class="astryx-top-nav-mega-menu"
- * aria-haspopup="true" aria-expanded>` and a full-width `role="menu"` panel whose
- * entries are `astryx-top-nav-mega-menu-item` elements — an `<a>` when the entry has
- * an `href`, a `<div>` otherwise — laid out in a grid. The trigger does **not**
- * forward `data-testid`, so the scene anchors on `button.astryx-top-nav-mega-menu`.
- * (Note `aria-haspopup="true"`, not `"dialog"`.)
+ * aria-haspopup="true" aria-expanded aria-controls>` and a full-width panel (a
+ * `popover="auto"` `<div>`, no `role="menu"` — it wraps a `role="group"` instead)
+ * whose entries are `astryx-top-nav-mega-menu-item` elements — an `<a>` when the
+ * entry has an `href`, a `<div>` otherwise — laid out several layout-wrapper levels
+ * deep in a grid. The trigger does **not** forward `data-testid`, so the scene
+ * anchors on `button.astryx-top-nav-mega-menu`. (Note `aria-haspopup="true"`, not
+ * `"dialog"`.)
  *
- * The panel is a sibling of the trigger with **no `aria-controls` id link** back to
- * it, so {@link resolveListContainer} re-roots to the panel's `role="menu"` at the
- * document (`'Root'`) — best-effort for a single mega menu per scene (documented v1
- * limit). The count/labels come from {@link PositionalListDriver} over
- * `childListHelper`'s `:nth-child` walk (with a `'*'` group selector to descend
- * through the grid's column wrappers), which is tag-agnostic — so the `<a>`/`<div>`
- * entry mix and any per-column wrapping enumerate faithfully, unlike the prior
- * `:nth-of-type` index.
+ * The panel is a sibling of the trigger, linked back by the trigger's
+ * `aria-controls`, so {@link resolveListContainer} reads that link at runtime and
+ * re-roots from the document — instance-safe even with several mega menus on the
+ * page, mirroring {@link DropdownMenuDriver}. The count/labels come from
+ * {@link PositionalListDriver} over `childListHelper`'s `:nth-child` walk (with a
+ * `'*'` group selector to recurse through the panel's layout wrappers, however many
+ * levels deep), which is tag-agnostic — so the `<a>`/`<div>` entry mix and any
+ * per-column wrapping enumerate faithfully, unlike the prior `:nth-of-type` index.
  *
  * Entry markup is always mounted, so {@link getItemTitles} and structural reads are
  * faithful in jsdom. The OPEN transition uses the native Popover API
@@ -34,9 +36,13 @@ export class TopNavMegaMenuDriver extends PositionalListDriver<MenuItemDriver> {
   protected readonly itemDriverClass: ComponentDriverCtor<MenuItemDriver> = MenuItemDriver;
   protected override readonly groupSelector = '*';
 
-  /** The mega-menu panel's `role="menu"`, re-rooted at the document (best-effort single instance). */
-  protected override resolveListContainer(): Promise<PartLocator | null> {
-    return Promise.resolve(byCssSelector('[role="menu"]', 'Root'));
+  /** The mega-menu panel, resolved via the trigger's `aria-controls` and re-rooted at the document. */
+  protected override async resolveListContainer(): Promise<PartLocator | null> {
+    const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
+    if (!panelId) {
+      return null;
+    }
+    return byCssSelector(`[id="${panelId}"]`, 'Root');
   }
 
   /** The trigger's visible label. */

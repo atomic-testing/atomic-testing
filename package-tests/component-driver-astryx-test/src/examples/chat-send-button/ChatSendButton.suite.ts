@@ -5,10 +5,14 @@ import { JSX } from 'react';
 
 import { chatSendButtonUIExample } from './ChatSendButton.examples';
 
-// ChatSendButton forwards no testid, so each button is reached as the
-// `astryx-chat-send-button` descendant of its testid'd wrapper.
+// ChatSendButton forwards no testid and carries no stable class of its own, so
+// each button is reached by its unconditional aria-label within its testid'd
+// wrapper (see ChatSendButtonDriver's class doc).
 const sendButtonIn = (wrapperTestId: string) =>
-  locatorUtil.append(byDataTestId(wrapperTestId), byCssSelector('.astryx-chat-send-button'));
+  locatorUtil.append(
+    byDataTestId(wrapperTestId),
+    byCssSelector('button[aria-label="Send"], button[aria-label="Stop"]')
+  );
 
 export const chatSendButtonExampleScenePart = {
   enabledSend: {

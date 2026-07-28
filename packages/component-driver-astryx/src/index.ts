@@ -35,7 +35,7 @@ export { CollapsibleDriver } from './components/CollapsibleDriver';
 
 // Overlays & menus (Wave 2)
 export { AstryxMenuDriver } from './components/AstryxMenuDriver';
-export { MenuItemDriver } from './components/MenuItemDriver';
+export { MenuItemDriver, type MenuItemRole } from './components/MenuItemDriver';
 export { NavMenuDriver } from './components/NavMenuDriver';
 export { ToolbarDriver } from './components/ToolbarDriver';
 export { ToastDriver } from './components/ToastDriver';
@@ -116,6 +116,7 @@ export { TopNavMenuDriver } from './components/TopNavMenuDriver';
 export { TopNavMegaMenuDriver } from './components/TopNavMegaMenuDriver';
 export { BreadcrumbsDriver } from './components/BreadcrumbsDriver';
 export { BreadcrumbItemDriver } from './components/BreadcrumbItemDriver';
+export { BreadcrumbMenuDriver } from './components/BreadcrumbMenuDriver';
 export { SideNavDriver } from './components/SideNavDriver';
 export { SideNavItemDriver } from './components/SideNavItemDriver';
 export { MobileNavDriver } from './components/MobileNavDriver';

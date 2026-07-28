@@ -19,12 +19,19 @@ export const avatarImageSrc =
  * (`alt || name || 'Avatar'`); its inner content is conditional — an `<img>` when
  * `src` is set, otherwise initials (from `name`) or an icon. The scene renders an
  * initials avatar, an image avatar, and an icon avatar to cover those branches.
+ *
+ * A fourth avatar covers Astryx 0.1.9's `tooltip` prop with a **custom string**
+ * (not the default name-on-hover tooltip): only that case wires `aria-describedby`
+ * to the tooltip's `role="tooltip"` layer — the default omits it to avoid
+ * double-announcing the name already in `aria-label` — so this is the branch
+ * {@link AvatarDriver.getTooltipText} can actually read.
  */
 export const AvatarExample = () => (
   <div>
     <Avatar name='John Doe' data-testid='avatar-initials' />
     <Avatar src={avatarImageSrc} alt='Jane Smith photo' data-testid='avatar-image' />
     <Avatar data-testid='avatar-icon' />
+    <Avatar name='Ada Lovelace' tooltip='Staff Engineer' data-testid='avatar-tooltip' />
   </div>
 );
 
