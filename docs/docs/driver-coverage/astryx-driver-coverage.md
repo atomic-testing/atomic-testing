@@ -68,8 +68,8 @@ All DOM + E2E (Chromium/Firefox/WebKit).
 | TopNav         | `TopNavDriver`         | —                                                                           |
 | TopNavItem     | `TopNavItemDriver`     | —                                                                           |
 | TopNavMenu     | `TopNavMenuDriver`     | menu **open** (native popover); items read while closed via `aria-controls` |
-| TopNavMegaMenu | `TopNavMegaMenuDriver` | panel **open** (native popover); best-effort single-instance scope          |
-| Breadcrumbs    | `BreadcrumbsDriver`    | —                                                                           |
+| TopNavMegaMenu | `TopNavMegaMenuDriver` | panel **open** (native popover); items read while closed via `aria-controls` |
+| Breadcrumbs    | `BreadcrumbsDriver`    | a crumb's `menu` (0.1.9): item reads/`selectByLabel` work closed; the trigger carries no `aria-expanded`, so open state is **E2E-only** |
 | SideNav        | `SideNavDriver`        | collapsed visual state                                                      |
 | SideNavItem    | `SideNavItemDriver`    | flyout (collapsed mode)                                                     |
 | MobileNav      | `MobileNavDriver`      | `dialog[open]` (set by `showModal`)                                         |

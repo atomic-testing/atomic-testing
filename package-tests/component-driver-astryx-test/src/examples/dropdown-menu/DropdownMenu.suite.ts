@@ -16,6 +16,10 @@ export const dropdownMenuExampleScenePart = {
     locator: byDataTestId('dropdown-last'),
     driver: HTMLElementDriver,
   },
+  selectableMenu: {
+    locator: byDataTestId('dropdown-selectable'),
+    driver: DropdownMenuDriver,
+  },
 } satisfies ScenePart;
 
 export const dropdownMenuExample: IExampleUnit<typeof dropdownMenuExampleScenePart, JSX.Element> = {
@@ -74,6 +78,44 @@ export const dropdownMenuExampleTestSuite: TestSuiteInfo<typeof dropdownMenuExam
 
       test(`selectByLabel returns false for an unknown item`, async () => {
         assertFalse(await engine().parts.menu.selectByLabel('Nope'));
+      });
+
+      // The selectable menu mixes a plain menuitem-less checkbox item with a
+      // radioGroup section — getItemLabels/getItemCount must not silently drop
+      // the menuitemcheckbox/menuitemradio roles (see AstryxMenuDriver's
+      // MENU_ITEM_SELECTOR doc for why a naive role="menuitem" selector would).
+      test(`getItemLabels and getItemCount include checkbox and radio items`, async () => {
+        assertEqual(await engine().parts.selectableMenu.getItemLabels(), ['Show archived', 'Newest', 'Oldest']);
+        assertEqual(await engine().parts.selectableMenu.getItemCount(), 3);
+      });
+
+      // isItemChecked reflects aria-checked on the checkbox/radio items;
+      // unchecked/absent items read false, including a plain menuitem.
+      test(`isItemChecked reflects the checkbox and radio state`, async () => {
+        assertFalse(await engine().parts.selectableMenu.isItemChecked('Show archived'));
+        assertTrue(await engine().parts.selectableMenu.isItemChecked('Newest'));
+        assertFalse(await engine().parts.selectableMenu.isItemChecked('Oldest'));
+      });
+
+      // isItemDisabled still works for a disabled radio item.
+      test(`isItemDisabled reflects the disabled radio item`, async () => {
+        assertTrue(await engine().parts.selectableMenu.isItemDisabled('Oldest'));
+        assertFalse(await engine().parts.selectableMenu.isItemDisabled('Newest'));
+      });
+
+      // Clicking a checkbox item toggles it without closing the menu (default
+      // hasCloseOnSelect=false); getItemByLabel + getRole confirm the ARIA role.
+      test(`selecting the checkbox item toggles its checked state`, async () => {
+        if (skipInteractionOnWebkit(test, browser())) return;
+        await engine().parts.selectableMenu.open();
+        const checkboxItem = await engine().parts.selectableMenu.getItemByLabel('Show archived');
+        assertEqual(await checkboxItem?.getRole(), 'menuitemcheckbox');
+        assertTrue(await engine().parts.selectableMenu.selectByLabel('Show archived'));
+        await engine().parts.selectableMenu.waitUntil({
+          probeFn: () => engine().parts.selectableMenu.isItemChecked('Show archived'),
+          terminateCondition: true,
+          timeoutMs: 2000,
+        });
       });
     });
   },

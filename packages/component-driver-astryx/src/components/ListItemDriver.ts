@@ -6,10 +6,14 @@ import { byTagName, ComponentDriver, locatorUtil, Optional } from '@atomic-testi
  * Astryx renders each `ListItem` as an `<li>` whose label (and optional
  * description) live in nested `<span>`s; an interactive item wraps its content in
  * an invisible `<a href>` (link) or `<button>` (`onClick`), and the `<li>` itself
- * carries the row state — `aria-selected="true"` when selected and
- * `aria-disabled="true"` when disabled (never the native `disabled` attribute,
- * since `<li>` is not a form control). State is therefore read from ARIA on the
- * row, never from StyleX-hashed classes.
+ * carries the row state — selected and `aria-disabled="true"` when disabled
+ * (never the native `disabled` attribute, since `<li>` is not a form control).
+ * State is therefore read from ARIA on the row, never from StyleX-hashed classes.
+ *
+ * `ListItem` renders through the shared `Item` primitive without an explicit
+ * selectable `role` (a plain `<li>`'s implicit role is `listitem`, which does not
+ * permit `aria-selected` per WAI-ARIA), so since Astryx 0.1.9 a selected row is
+ * conveyed via `aria-current="true"` instead — see {@link isSelected}.
  *
  * {@link getLabel} returns the row's full visible text (trimmed). When an item has
  * a `description`, that text is included after the label — mirroring the MUI
@@ -22,9 +26,9 @@ export class ListItemDriver extends ComponentDriver {
     return (await this.getText())?.trim() || undefined;
   }
 
-  /** Whether the row is selected — Astryx marks this with `aria-selected="true"`. */
+  /** Whether the row is selected — Astryx marks this with `aria-current="true"` (see the class doc). */
   async isSelected(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.locator, 'aria-selected')) === 'true';
+    return (await this.interactor.getAttribute(this.locator, 'aria-current')) === 'true';
   }
 
   /** Whether the row is disabled — Astryx marks this with `aria-disabled="true"`. */

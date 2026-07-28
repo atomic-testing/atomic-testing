@@ -10,6 +10,10 @@ export const collapsibleExampleScenePart = {
     locator: byDataTestId('details'),
     driver: CollapsibleDriver,
   },
+  disabledDetails: {
+    locator: byDataTestId('details-disabled'),
+    driver: CollapsibleDriver,
+  },
 } satisfies ScenePart;
 
 export const collapsibleExample: IExampleUnit<typeof collapsibleExampleScenePart, JSX.Element> = {
@@ -36,6 +40,19 @@ export const collapsibleExampleTestSuite: TestSuiteInfo<typeof collapsibleExampl
         assertTrue(await engine().parts.details.isExpanded());
         await engine().parts.details.collapse();
         assertFalse(await engine().parts.details.isExpanded());
+      });
+
+      // isDisabled (Astryx 0.1.8) reads aria-disabled; a non-disabled item is false.
+      test(`isDisabled reflects the disabled item`, async () => {
+        assertFalse(await engine().parts.details.isDisabled());
+        assertTrue(await engine().parts.disabledDetails.isDisabled());
+      });
+
+      // A disabled item blocks the toggle entirely — clicking it is a no-op.
+      test(`a disabled item stays collapsed when clicked`, async () => {
+        assertFalse(await engine().parts.disabledDetails.isExpanded());
+        await engine().parts.disabledDetails.click();
+        assertFalse(await engine().parts.disabledDetails.isExpanded());
       });
     });
   },

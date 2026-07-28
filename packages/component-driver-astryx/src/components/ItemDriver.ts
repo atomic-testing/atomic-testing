@@ -5,8 +5,11 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  *
  * Item renders a tag chosen by its `as` prop (`<div>` by default, also `<li>` or
  * `<span>`), with `data-testid`, `data-density`, and `data-align` on that root.
- * The selected state is expressed as `aria-selected="true"` ONLY on an `<li>`
- * root (a `<div>` item never emits it). When the item is a link it wraps an inner
+ * The selected state is `aria-selected="true"` when an explicit `role` permits it
+ * (`option`/`tab`/`row`/`gridcell`/`columnheader`/`rowheader`/`treeitem`), or —
+ * since Astryx 0.1.9 — `aria-current="true"` on any other root (no `role`, or one
+ * that doesn't permit `aria-selected`, e.g. the default `<div>`/`<li>`), never
+ * both at once. See {@link isSelected}. When the item is a link it wraps an inner
  * `<a href>`; when it has an `onClick` it wraps an inner `<button>`. The driver
  * anchors on the root and reads the label as its text content.
  */
@@ -32,11 +35,19 @@ export class ItemDriver extends ComponentDriver<{}> {
   }
 
   /**
-   * Whether the item is selected. Astryx emits `aria-selected="true"` only on an
-   * `<li>` root, so a `<div>`/`<span>` item always reports `false`.
+   * Whether the item is selected. Since Astryx 0.1.9, `aria-selected` is only
+   * emitted when an explicit `role` permits it (`option`/`tab`/`row`/`gridcell`/
+   * `columnheader`/`rowheader`/`treeitem`) — invalid ARIA otherwise (axe:
+   * aria-allowed-attr). A `<div>`/plain `<li>` root (no permitted role) instead
+   * falls back to `aria-current="true"`, so this checks both; they are mutually
+   * exclusive by construction (never both `"true"` at once).
    */
   async isSelected(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.locator, 'aria-selected')) === 'true';
+    const [ariaSelected, ariaCurrent] = await Promise.all([
+      this.interactor.getAttribute(this.locator, 'aria-selected'),
+      this.interactor.getAttribute(this.locator, 'aria-current'),
+    ]);
+    return ariaSelected === 'true' || ariaCurrent === 'true';
   }
 
   /** The link target (`href` of the inner `<a>`), or `undefined` when the item is not a link. */

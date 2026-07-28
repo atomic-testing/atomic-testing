@@ -45,7 +45,7 @@ For a larger, driver-per-component version of this pattern, see the real suites 
 
 ## Target package & version pin
 
-This driver targets the published Astryx package **[`@astryxdesign/core`](https://www.npmjs.com/package/@astryxdesign/core)** (the components live here; theme packages such as `@astryxdesign/theme-neutral` are separate). It is declared as a **peer dependency pinned to `^0.1.1`**: consumers bring their own Astryx, and the caret on a `0.x` release locks the `0.1` minor (`>=0.1.1 <0.2.0`)—the closest analogue to "pin a major" while Astryx is pre-1.0. Astryx peer-requires **React ≥19**.
+This driver targets the published Astryx package **[`@astryxdesign/core`](https://www.npmjs.com/package/@astryxdesign/core)** (the components live here; theme packages such as `@astryxdesign/theme-neutral` are separate). It is declared as a **peer dependency pinned to `^0.1.9`**: consumers bring their own Astryx, and the caret on a `0.x` release locks the `0.1` minor (`>=0.1.9 <0.2.0`)—the closest analogue to "pin a major" while Astryx is pre-1.0. Astryx peer-requires **React ≥19** and, as of Astryx 0.1.9, **`@stylexjs/stylex` ≥0.19.0** (also a peer dependency of `@astryxdesign/core`).
 
 > Astryx forks (`-vN`) are deferred: a single package tracks one `0.x` minor until a breaking Astryx release warrants a versioned fork.
 
@@ -103,14 +103,14 @@ any E2E-only behaviour live in each driver's source doc comment.
 
 ### Structure & feedback
 
-| Driver              | Astryx component | Notes                                                                            |
-| ------------------- | ---------------- | -------------------------------------------------------------------------------- |
-| `FieldDriver`       | `Field`          | `getLabel`/`getDescription`/`getStatusMessage`, `isRequired`/`isOptional`.       |
-| `InputGroupDriver`  | `InputGroup`     | `getLabel`, `getAddonTexts`.                                                     |
-| `FieldStatusDriver` | `FieldStatus`    | `getStatus`/`getMessage`/`isError` via stable `data-type` (role is conditional). |
-| `BannerDriver`      | `Banner`         | `getTitle`/`getDescription`/`getStatus`, `dismiss`, `toggleExpand`.              |
-| `PaginationDriver`  | `Pagination`     | `getCurrentPage`, `goToPage`/`next`/`previous`, `getCountText`.                  |
-| `CollapsibleDriver` | `Collapsible`    | `isExpanded`/`expand`/`collapse` via the trigger's `aria-expanded`.              |
+| Driver              | Astryx component | Notes                                                                             |
+| ------------------- | ---------------- | --------------------------------------------------------------------------------- |
+| `FieldDriver`       | `Field`          | `getLabel`/`getDescription`/`getStatusMessage`, `isRequired`/`isOptional`.        |
+| `InputGroupDriver`  | `InputGroup`     | `getLabel`, `getAddonTexts`.                                                      |
+| `FieldStatusDriver` | `FieldStatus`    | `getStatus`/`getMessage`/`isError` via stable `data-type` (role is conditional).  |
+| `BannerDriver`      | `Banner`         | `getTitle`/`getDescription`/`getStatus`, `dismiss`, `toggleExpand`.               |
+| `PaginationDriver`  | `Pagination`     | `getCurrentPage`, `goToPage`/`next`/`previous`, `getCountText`.                   |
+| `CollapsibleDriver` | `Collapsible`    | `isExpanded`/`expand`/`collapse` via the trigger's `aria-expanded`; `isDisabled`. |
 
 Wave 2 — overlays & menus. Astryx renders these **in-tree** (no portal): menus and
 popovers mount their panel as a sibling of the trigger via the native Popover API,
@@ -123,16 +123,16 @@ comment.
 
 ### Menus & navigation
 
-| Driver               | Astryx component | Notes                                                                            |
-| -------------------- | ---------------- | -------------------------------------------------------------------------------- |
-| `NavMenuDriver`      | `NavHeadingMenu` | Flat link/action menu; `getItemLabels`/`getItemCount`/`clickItem`/`getItemHref`. |
-| `DropdownMenuDriver` | `DropdownMenu`   | Trigger-anchored; `open`/`close`/`isOpen`, `selectByLabel`, `getTriggerLabel`.   |
-| `MoreMenuDriver`     | `MoreMenu`       | Icon-only `DropdownMenu`; `getTriggerLabel` reads the `aria-label`.              |
-| `TabListDriver`      | `TabList`        | `getItemLabels`/`getActiveLabel`/`selectTab`/`isActive`/`getTabHref`.            |
-| `TabDriver`          | `Tab`            | A single tab: `getLabel`/`isActive` (`aria-current="page"`)/`getHref`.           |
-| `ToolbarDriver`      | `Toolbar`        | `getLabel`/`getOrientation`/`getSize`/`getItemCount`.                            |
-| `AstryxMenuDriver`   | —                | Shared menu base (positional `role="menuitem"` iteration).                       |
-| `MenuItemDriver`     | —                | A single `role="menuitem"` (`<a>`/`<div>`): `getLabel`/`isDisabled`/`getHref`.   |
+| Driver               | Astryx component | Notes                                                                                                                                                                         |
+| -------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NavMenuDriver`      | `NavHeadingMenu` | Flat link/action menu; `getItemLabels`/`getItemCount`/`clickItem`/`getItemHref`.                                                                                              |
+| `DropdownMenuDriver` | `DropdownMenu`   | Trigger-anchored; `open`/`close`/`isOpen`, `selectByLabel`, `getTriggerLabel`, `isItemChecked` (for the `DropdownMenuCheckboxItem`/`DropdownMenuRadioItem` selectable items). |
+| `MoreMenuDriver`     | `MoreMenu`       | Icon-only `DropdownMenu`; `getTriggerLabel` reads the `aria-label`.                                                                                                           |
+| `TabListDriver`      | `TabList`        | `getItemLabels`/`getActiveLabel`/`selectTab`/`isActive`/`getTabHref`.                                                                                                         |
+| `TabDriver`          | `Tab`            | A single tab: `getLabel`/`isActive` (`aria-current="page"`)/`getHref`.                                                                                                        |
+| `ToolbarDriver`      | `Toolbar`        | `getLabel`/`getOrientation`/`getSize`/`getItemCount`.                                                                                                                         |
+| `AstryxMenuDriver`   | —                | Shared menu base; positional iteration over `menuitem`/`menuitemcheckbox`/`menuitemradio`.                                                                                    |
+| `MenuItemDriver`     | —                | A single menu item (`<a>`/`<div>`): `getLabel`/`isDisabled`/`getHref`/`getRole`/`isChecked`.                                                                                  |
 
 ### Overlays & feedback
 

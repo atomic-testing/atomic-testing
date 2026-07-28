@@ -14,11 +14,17 @@ import React, { JSX } from 'react';
  * labels and miss the current crumb — the driver reads the label from the crumb's
  * content element and checks `aria-current` on the `<li>` too, so `getLabels`,
  * `getCurrentLabel`, and `getHrefs` all stay correct.
+ *
+ * A third (non-last) crumb covers Astryx 0.1.9's `menu` prop, which turns a crumb
+ * into a menu trigger (button + `aria-haspopup="menu"`/`aria-controls`, reusing the
+ * DropdownMenu item pipeline) instead of a link. It sits before the last crumb so
+ * auto-current detection still lands on "My Project", unaffected.
  */
 export const BreadcrumbsExample = () => (
   <Breadcrumbs label='Breadcrumb' data-testid='breadcrumbs'>
     <BreadcrumbItem href='/'>Home</BreadcrumbItem>
     <BreadcrumbItem href='/projects'>Projects</BreadcrumbItem>
+    <BreadcrumbItem menu={[{ label: 'Settings' }, { label: 'Archive' }]}>Switch project</BreadcrumbItem>
     <BreadcrumbItem>My Project</BreadcrumbItem>
   </Breadcrumbs>
 );

@@ -18,6 +18,10 @@ export const avatarExampleScenePart = {
     locator: byDataTestId('avatar-icon'),
     driver: AvatarDriver,
   },
+  tooltip: {
+    locator: byDataTestId('avatar-tooltip'),
+    driver: AvatarDriver,
+  },
 } satisfies ScenePart;
 
 export const avatarExample: IExampleUnit<typeof avatarExampleScenePart, JSX.Element> = {
@@ -52,6 +56,21 @@ export const avatarExampleTestSuite: TestSuiteInfo<typeof avatarExample.scene> =
       test(`getInitials reads the initials fallback`, async () => {
         assertEqual(await engine().parts.initials.getInitials(), 'JD');
         assertEqual(await engine().parts.image.getInitials(), undefined);
+      });
+
+      // getSize reads the raw data-size attribute — Astryx 0.1.8 renamed the scale
+      // to xsm/sm/md/lg/xl (default md); this is a passthrough either way.
+      test(`getSize reads the default size`, async () => {
+        assertEqual(await engine().parts.initials.getSize(), 'md');
+      });
+
+      // getTooltipText (Astryx 0.1.9) reads a custom string tooltip via
+      // aria-describedby -> role="tooltip". The default name tooltip (the other
+      // three avatars, tooltip omitted) is NOT aria-describedby-linked (it would
+      // double-announce the aria-label), so it reads undefined.
+      test(`getTooltipText reads a custom tooltip, and is absent for the default`, async () => {
+        assertEqual(await engine().parts.tooltip.getTooltipText(), 'Staff Engineer');
+        assertEqual(await engine().parts.initials.getTooltipText(), undefined);
       });
     });
   },

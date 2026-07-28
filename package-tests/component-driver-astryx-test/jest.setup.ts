@@ -113,3 +113,74 @@ if (win != null && typeof win.matchMedia !== 'function') {
 if (win != null) {
   win.scrollTo = () => {};
 }
+
+/**
+ * jsdom's `HTMLCanvasElement.getContext` is a stub that logs a noisy
+ * "not implemented" console error instead of returning a context. Astryx's
+ * `Spinner` draws its ring on a `<canvas>` and already guards `if (!context)
+ * return` — the drawing effect no-ops harmlessly — so this only silences the
+ * console spam on every Spinner mount; no drawing behaviour is modelled (nor
+ * needed: the driver reads the `role="status"`/label, not pixels).
+ */
+const canvasProto = globalThis.HTMLCanvasElement?.prototype as unknown as {
+  getContext?: (id: string) => unknown;
+};
+if (canvasProto != null) {
+  canvasProto.getContext = () => null;
+}
+
+/**
+ * jsdom does not expose the global `CSS` object (CSSOM's `CSS.escape`/`CSS.supports`).
+ * Astryx 0.1.9's `Dialog` reads `CSS.escape(titleId)` in a dev-only effect that
+ * checks for a `DialogHeader` title to auto-label the modal — `titleId` comes from
+ * `useId()`, whose colons (`:r1:`) are exactly what `escape` exists to neutralize
+ * in a CSS selector. A missing `CSS` global throws `ReferenceError: CSS is not
+ * defined` from that effect, tearing down every Dialog-based component (Dialog,
+ * AlertDialog, CommandPalette). Polyfill just `escape` with the CSSOM spec
+ * algorithm (https://drafts.csswg.org/cssom/#serialize-an-identifier) — sufficient
+ * for driver purposes, which never call any other `CSS` member.
+ */
+const cssGlobal = globalThis as unknown as { CSS?: { escape?: (value: string) => string } };
+if (cssGlobal.CSS == null) {
+  cssGlobal.CSS = {};
+}
+if (typeof cssGlobal.CSS.escape !== 'function') {
+  cssGlobal.CSS.escape = (value: string): string => {
+    const string = String(value);
+    const length = string.length;
+    let result = '';
+    for (let index = 0; index < length; index++) {
+      const codeUnit = string.charCodeAt(index);
+      if (codeUnit === 0x0000) {
+        result += '�';
+        continue;
+      }
+      if (
+        (codeUnit >= 0x0001 && codeUnit <= 0x001f) ||
+        codeUnit === 0x007f ||
+        (index === 0 && codeUnit >= 0x0030 && codeUnit <= 0x0039) ||
+        (index === 1 && codeUnit >= 0x0030 && codeUnit <= 0x0039 && string.charCodeAt(0) === 0x002d)
+      ) {
+        result += `\\${codeUnit.toString(16)} `;
+        continue;
+      }
+      if (index === 0 && length === 1 && codeUnit === 0x002d) {
+        result += `\\${string.charAt(index)}`;
+        continue;
+      }
+      if (
+        codeUnit >= 0x0080 ||
+        codeUnit === 0x002d ||
+        codeUnit === 0x005f ||
+        (codeUnit >= 0x0030 && codeUnit <= 0x0039) ||
+        (codeUnit >= 0x0041 && codeUnit <= 0x005a) ||
+        (codeUnit >= 0x0061 && codeUnit <= 0x007a)
+      ) {
+        result += string.charAt(index);
+        continue;
+      }
+      result += `\\${string.charAt(index)}`;
+    }
+    return result;
+  };
+}
