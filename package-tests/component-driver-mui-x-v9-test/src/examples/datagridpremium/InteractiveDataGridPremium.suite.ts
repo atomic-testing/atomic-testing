@@ -34,7 +34,7 @@ const deskFilterMatchCount = interactiveGridRows.filter(row => String(row.desk).
 export const interactiveDataGridPremiumTestSuite: TestSuiteInfo<typeof interactiveDataGridPremiumExampleScenePart> = {
   title: 'Interactive DataGridPremium',
   url: '/datagridinteractive',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse, hasLayout }) => {
     const engine = useTestEngine(interactiveDataGridPremiumExample.scene, getTestEngine, { beforeEach, afterEach });
 
     //#region Sorting
@@ -180,6 +180,25 @@ export const interactiveDataGridPremiumTestSuite: TestSuiteInfo<typeof interacti
       const after = await engine().parts.grid.getColumnWidth('desk');
       if (before > 0) {
         assertTrue(after > before);
+      }
+    });
+
+    // Reordering is native HTML5 drag-and-drop, whose direction MUI computes from consecutive
+    // dragover events' clientX/clientY — jsdom's synthesized events carry no real coordinates,
+    // so the resulting order there is not a reliable signal (see reorderColumn's doc comment).
+    // Reaching this point without throwing is the jsdom-side assertion; the actual reorder is
+    // verified only where a layout engine produces real coordinates.
+    test('reorderColumn moves the dragged column next to the drop target', async () => {
+      await engine().parts.grid.waitForLoad();
+      await engine().parts.grid.reorderColumn('commodity', 'desk');
+      if (hasLayout) {
+        assertEqual(await engine().parts.grid.getHeaderText(), [
+          '',
+          'Commodity',
+          'Desk',
+          'Trader Name',
+          'Trader Email',
+        ]);
       }
     });
     //#endregion
