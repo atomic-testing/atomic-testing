@@ -95,6 +95,11 @@ const aggregationFooterRowLocator = byCssSelector('[role="row"][data-id="auto-ge
 // separator (not HTML5 drag-and-drop), so the portable pixel-delta `drag` primitive can move it.
 const resizeSeparatorSelector = '.MuiDataGrid-columnSeparator--resizable';
 
+// Column reordering, unlike resizing, IS native HTML5 drag-and-drop (`draggable="true"` +
+// `dragstart`/`dragover`/`drop`) on the header's draggable container, so it uses `dragTo`
+// rather than the resize separator's mouse-only pixel-delta `drag`.
+const columnHeaderDraggableLocator = byCssSelector('.MuiDataGrid-columnHeaderDraggableContainer');
+
 // Both the page-size select's input-base wrapper and its inner combobox carry
 // `MuiTablePagination-select`; the role pins the combobox element itself.
 const pageSizeComboboxLocator = byCssSelector('.MuiTablePagination-select[role="combobox"]');
@@ -698,6 +703,27 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   async getColumnWidth(field: string): Promise<number> {
     const rect = await this.interactor.getBoundingRect(this.columnHeaderLocator(field));
     return rect.width;
+  }
+
+  /**
+   * Reorder columns by dragging the `sourceField` column header and dropping it onto the
+   * `targetField` column header's position. MUI drives column reordering with native HTML5
+   * drag-and-drop on the header's draggable container — unlike {@link resizeColumn}'s resize
+   * separator, which is mouse-only — so this uses the portable `dragTo` primitive.
+   *
+   * MUI's reorder logic decides drag direction from consecutive `dragover` events'
+   * `clientX`/`clientY`, which jsdom's synthesized events carry no real values for (jsdom has no
+   * layout engine). The actual reorder is E2E-only; under jsdom this only exercises the code
+   * path and may leave the order unchanged, or change it inconsistently with the requested
+   * direction — do not assert on the resulting order there.
+   *
+   * @param sourceField The field of the column to drag.
+   * @param targetField The field of the column to drop onto.
+   */
+  async reorderColumn(sourceField: string, targetField: string): Promise<void> {
+    const source = locatorUtil.append(this.columnHeaderLocator(sourceField), columnHeaderDraggableLocator);
+    const target = locatorUtil.append(this.columnHeaderLocator(targetField), columnHeaderDraggableLocator);
+    await this.interactor.dragTo(source, target);
   }
   //#endregion Column management
 
