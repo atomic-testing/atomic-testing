@@ -104,6 +104,13 @@ const headerCheckboxLocator = byCssSelector('[role=columnheader][data-field="__c
 const virtualScrollerLocator = byCssClass('MuiDataGrid-virtualScroller');
 const overlayWrapperLocator = byCssClass('MuiDataGrid-overlayWrapper');
 
+// Master-detail: the row's detail-panel toggle is a dedicated cell (MUI X's fixed internal
+// field name `__detail_panel_toggle__`) whose button carries its own `aria-expanded` — unlike
+// row grouping, where `aria-expanded` lives on the row itself. The expanded panel renders as
+// that row's next DOM sibling within the virtualized render zone (not nested inside the row),
+// so it is addressed with the adjacent-sibling combinator off the row rather than a descendant.
+const rowDetailToggleLocator = byCssSelector('.MuiDataGrid-detailPanelToggleCell');
+
 /** `aria-sort` attribute values mapped to the driver's sort-direction vocabulary. */
 const ariaSortToDirection: Record<string, 'asc' | 'desc' | null> = {
   ascending: 'asc',
@@ -257,6 +264,13 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
 
   private columnHeaderLocator(field: string): PartLocator {
     return locatorUtil.append(this.locator, byCssSelector(`[role=columnheader][data-field="${field}"]`));
+  }
+
+  private rowDetailPanelLocator(rowIndex: number): PartLocator {
+    return locatorUtil.append(
+      this.locator,
+      byCssSelector(`[role=row][data-rowindex="${rowIndex}"] + .MuiDataGrid-detailPanel`)
+    );
   }
 
   private cellLocator(query: DataGridCellQuery): PartLocator {
@@ -771,6 +785,92 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
     return text == null || text.trim().length === 0 ? null : text.trim();
   }
   //#endregion Row grouping and aggregation
+
+  //#region Row detail panel (master-detail)
+  /**
+   * Whether the row at the given index has its detail panel expanded, read from the panel
+   * toggle's `aria-expanded`. Requires the grid's `getDetailPanelContent` (Pro/Premium
+   * master-detail) — throws when the row has no detail-panel toggle rendered (e.g. the
+   * community DataGrid, or `getDetailPanelContent` not configured).
+   *
+   * @param rowIndex The rendered `data-rowindex` of the row.
+   */
+  async isRowDetailExpanded(rowIndex: number): Promise<boolean> {
+    const toggle = locatorUtil.append(this.rowLocator(rowIndex), rowDetailToggleLocator);
+    if (!(await this.interactor.exists(toggle))) {
+      throw new Error(`${this.driverName}: row ${rowIndex} has no detail-panel toggle`);
+    }
+    return (await this.interactor.getAttribute(toggle, 'aria-expanded')) === 'true';
+  }
+
+  /**
+   * Expand the row's detail panel by clicking its toggle (no-op when already expanded). Throws
+   * when the row's `getDetailPanelContent` returned no content for it — the toggle is disabled
+   * in that case, the same way MUI disables it in the browser.
+   */
+  async expandRowDetail(rowIndex: number, timeoutMs: number = 10000): Promise<void> {
+    await this.setRowDetailExpansion(rowIndex, true, timeoutMs);
+  }
+
+  /**
+   * Collapse the row's detail panel by clicking its toggle (no-op when already collapsed). See
+   * {@link isRowDetailExpanded} for the row-index addressing caveat.
+   */
+  async collapseRowDetail(rowIndex: number, timeoutMs: number = 10000): Promise<void> {
+    await this.setRowDetailExpansion(rowIndex, false, timeoutMs);
+  }
+
+  private async setRowDetailExpansion(rowIndex: number, expanded: boolean, timeoutMs: number): Promise<void> {
+    if ((await this.isRowDetailExpanded(rowIndex)) === expanded) {
+      return;
+    }
+    const toggle = locatorUtil.append(this.rowLocator(rowIndex), rowDetailToggleLocator);
+    if (expanded && (await this.interactor.isDisabled(toggle))) {
+      throw new Error(`${this.driverName}: row ${rowIndex} has no detail-panel content to expand`);
+    }
+    await this.interactor.click(toggle);
+    const reached = await this.waitUntil({
+      probeFn: () => this.isRowDetailExpanded(rowIndex),
+      terminateCondition: expanded,
+      timeoutMs,
+    });
+    if (reached !== expanded) {
+      throw new Error(
+        `${this.driverName}: row ${rowIndex} detail panel never became ${expanded ? 'expanded' : 'collapsed'}`
+      );
+    }
+  }
+
+  /**
+   * The driver for the row's expanded detail-panel content, or `null` when the panel is not
+   * currently expanded. The panel renders as the row's next DOM sibling within the virtualized
+   * render zone rather than nested inside the row, so it is addressed off the row locator with
+   * the CSS adjacent-sibling combinator rather than as a descendant.
+   *
+   * @param rowIndex The rendered `data-rowindex` of the row.
+   * @param driverClass Optional, the driver class to use for the panel content, default to HTMLElementDriver.
+   */
+  async getRowDetailPanel<DriverT extends ComponentDriver = HTMLElementDriver>(
+    rowIndex: number,
+    driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
+  ): Promise<DriverT | null> {
+    const panel = this.rowDetailPanelLocator(rowIndex);
+    if (!(await this.interactor.exists(panel))) {
+      return null;
+    }
+    return new driverClass(panel, this.interactor, this.commutableOption);
+  }
+
+  /**
+   * The text content of the row's expanded detail panel, or `null` when the panel is not
+   * currently expanded. Convenience wrapper over {@link getRowDetailPanel} for the common
+   * text-only case.
+   */
+  async getRowDetailText(rowIndex: number): Promise<string | null> {
+    const panel = await this.getRowDetailPanel(rowIndex);
+    return panel == null ? null : ((await panel.getText()) ?? null);
+  }
+  //#endregion Row detail panel (master-detail)
 
   //#region Page size and overlays
   /**
