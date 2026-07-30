@@ -10,6 +10,15 @@ Barrel: [component-driver-astryx/src/index.ts](../../packages/component-driver-a
 
 - **Buttons, inputs, toggles (Wave 1):** `Button`, `IconButton`, `ToggleButton`, `ButtonGroup`, `ToggleButtonGroup`, `Link`, `TextInput`, `TextArea`, `NumberInput`, `TimeInput`, `CheckboxInput`, `RadioList`, `CheckboxList`, `Switch`, `SegmentedControl`, `SelectableCard`, `Slider`, `Field`, `InputGroup`, `FieldStatus`, `Banner`, `Pagination`, `Collapsible` drivers, plus the shared `AstryxFieldInputDriver` base.
 - **Overlays & menus (Wave 2):** `NavMenuDriver`, `ToolbarDriver`, `ToastDriver`, `TabListDriver` (+ `TabDriver`), `DropdownMenuDriver`, `MoreMenuDriver` (extends DropdownMenu), `PopoverDriver`, `DialogDriver`, `AlertDialogDriver`, `LightboxDriver`, plus the shared `AstryxMenuDriver` base and `MenuItemDriver`.
+- **Lists, tables, selectors & dates (Wave 3):** `ListDriver` (+ `ListItemDriver`), `MetadataListDriver`, `OutlineDriver` (+ `OutlineItemDriver`), `CarouselDriver`, `TableDriver`, `TreeListDriver`, `SelectorDriver`, `MultiSelectorDriver`, `TypeaheadDriver`, `TokenizerDriver`, `CommandPaletteDriver`, `CalendarDriver`, `DateInputDriver` (+ `DateTimeInputDriver`), `DateRangeInputDriver`, and `PowerSearchDriver` (best-effort v1), plus the shared combobox base (`AstryxComboboxDriver` over the internal `IndexedOptionListDriver`) the Selector/MultiSelector/Typeahead/Tokenizer/CommandPalette/PowerSearch family shares. Full per-driver notes: [package README](../../packages/component-driver-astryx/README.md#lists--display).
+- **Wave 4** — display/typography, media/status, feedback/misc primitives; nav chrome; the chat suite; and a "hard set" of best-effort-v1 drivers (each with a named structural limitation, documented inline and in the [driver coverage matrix](../../docs/docs/driver-coverage/astryx-driver-coverage.md)):
+  - Display & typography: `BadgeDriver`, `TextDriver`, `HeadingDriver`, `CodeDriver`, `BlockquoteDriver`, `TimestampDriver`, `DividerDriver`.
+  - Media & status: `StatusDotDriver`, `CitationDriver`, `TokenDriver`, `AvatarDriver` (+ `AvatarGroupDriver`), `ThumbnailDriver`.
+  - Feedback & misc: `EmptyStateDriver`, `ProgressBarDriver`, `SpinnerDriver`, `NavIconDriver`, `ItemDriver`, `MarkdownDriver`, `CodeBlockDriver`.
+  - Nav chrome: `TopNavDriver` (+ `TopNavItemDriver`, `TopNavMenuDriver`, `TopNavMegaMenuDriver`), `BreadcrumbsDriver` (+ `BreadcrumbItemDriver`, `BreadcrumbMenuDriver`), `SideNavDriver` (+ `SideNavItemDriver`), `MobileNavDriver`.
+  - Chat suite: `ChatMessageDriver` (+ `ChatMessageBubbleDriver`, `ChatMessageListDriver`, `ChatSystemMessageDriver`, `ChatToolCallsDriver`, `ChatLayoutDriver`), `ChatSendButtonDriver`, `ChatDictationButtonDriver`.
+  - Hard set (best-effort v1): `FileInputDriver`, `ContextMenuDriver`, `AppShellDriver`, `ChatComposerInputDriver`, `ChatComposerDriver`, `HoverCardDriver`, `TooltipDriver`.
+  - Full per-driver notes for all of Wave 4: [package README](../../packages/component-driver-astryx/README.md#display--typography).
 
 ## Dependency shape
 
