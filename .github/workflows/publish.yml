@@ -4,59 +4,112 @@ on:
   release:
     types: [published]
 
-permissions:
-  contents: write
-  id-token: write
+# Deny by default; each job grants only the scopes it actually needs. Notably the
+# `publish` job runs WITHOUT repository write access — the version-bump commit is
+# isolated in `commit-version` below.
+permissions: {}
+
+env:
+  # `pnpm publish` shells out to npm, and OIDC trusted publishing requires
+  # npm >= 11.5.1: the Node 22 runner ships npm 10.x, which doesn't attempt the
+  # OIDC token exchange and fails with ENEEDAUTH.
+  #
+  # Pinned EXACTLY rather than `npm@latest` for two reasons: a release must never
+  # silently adopt an npm the pipeline has never been run against, and `latest` is
+  # currently npm 12.x, whose OIDC path is unvalidated here. Bump this
+  # deliberately, as a reviewed change.
+  #
+  # Keep pnpm on 10.x — pnpm 11 has a known OIDC regression.
+  NPM_VERSION: '11.19.0'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # read the tagged source
+      id-token: write # npm Trusted Publishing (OIDC)
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          persist-credentials: true
-          token: ${{ secrets.CODEMOD_TOKEN }}
+          # No repository-write credential is persisted in this job. `./publish.sh`
+          # builds all packages — arbitrary third-party build tooling — and then
+          # publishes, so any code able to read this job's filesystem would
+          # otherwise reach a credential that can write to the repository. The
+          # push happens in `commit-version`, which runs no third-party code.
+          persist-credentials: false
+
+      - name: Resolve and validate version
+        id: get_version
+        run: |
+          # Tag is expected to look like "v0.56.0".
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          # Fail closed: bumpVersion writes this string verbatim into every
+          # package manifest, so a malformed ref must never reach it.
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "ERROR: refusing to publish — '$VERSION' is not a bare semver version." >&2
+            echo "Expected a tag of the form v1.2.3 (got ref '$GITHUB_REF')." >&2
+            exit 1
+          fi
+          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Determined version: $VERSION"
 
       - name: Setup
         uses: ./.github/actions/builderui-setup
 
-      - name: Extract version from release tag
-        id: get_version
-        run: |
-          # Assuming the tag is like "v0.56.0"
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "Determined version: $VERSION"
-
       - name: Set package versions
-        run: pnpm bumpVersion $VERSION
+        run: pnpm bumpVersion "$VERSION"
 
       - name: Upgrade npm for OIDC trusted publishing
-        # `pnpm publish` shells out to npm, and OIDC trusted publishing requires
-        # npm >= 11.5.1. The Node 22 runner ships npm 10.x, which doesn't attempt
-        # the OIDC token exchange and fails with ENEEDAUTH. Keep pnpm on 10.x —
-        # pnpm 11 has a known OIDC regression.
-        run: npm install -g npm@latest
+        run: npm install -g "npm@${NPM_VERSION}"
 
       - name: Publish packages
         # Auth via npm Trusted Publishing (OIDC) — no NPM_TOKEN needed.
         # Requires `id-token: write` (above) plus a Trusted Publisher configured
         # for every @atomic-testing/* package on npmjs.com (org: atomic-testing,
-        # repo: atomic-testing, workflow file: publish.yml).
+        # repo: atomic-testing, workflow file: publish.yml). npm attaches the
+        # provenance attestation automatically on this path, so no extra flag is
+        # needed — and `pnpm publish` exposes none.
         run: ./publish.sh
 
+  # Split out from `publish` on purpose: this is the only job holding a credential
+  # that can write to `main`, and it installs NO dependencies. `bumpVersion.js` and
+  # `generateChangelog.js` use only Node built-ins (fs / path / child_process), so
+  # no third-party code — not even a dependency's install script — ever runs while
+  # that credential is present.
+  commit-version:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+        with:
+          # Latest main, so the bump fast-forwards even if main advanced (e.g. a
+          # merge) while the release was building. Full history + tags are
+          # required: generateChangelog.js resolves the previous release from
+          # `refs/tags` and walks `<prev>..HEAD`.
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.CODEMOD_TOKEN }}
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
       - name: Commit version updates
+        env:
+          VERSION: ${{ needs.publish.outputs.version }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Re-apply the bump onto the latest main so the push fast-forwards even
-          # if main advanced (e.g. a merge) while this release was building.
-          git fetch origin main
-          git reset --hard
-          git checkout -B main origin/main
-          pnpm bumpVersion "$VERSION"
+          node scripts/bumpVersion.js "$VERSION"
           node scripts/generateChangelog.js "$VERSION"
           git add -A
           git diff --cached --quiet || git commit -m "chore: bump version to $VERSION [skip ci]"
