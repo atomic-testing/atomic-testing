@@ -51,7 +51,7 @@ const defaultTransitionDurationMs = 1000;
  * the `ContainerDriver` `content` option; they resolve relative to the
  * container.
  */
-export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof dialogParts> {
+export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,

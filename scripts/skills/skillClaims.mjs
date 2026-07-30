@@ -19,10 +19,13 @@ import { join } from 'node:path';
  */
 export const CANONICAL_CORE_SYMBOLS = [
   { name: 'ComponentDriver', kind: 'export' },
-  { name: 'ContainerDriver', kind: 'export' },
   { name: 'ListComponentDriver', kind: 'export' },
   { name: 'AssertScenePlaceableDriver', kind: 'export' },
   { name: 'commutableOption', kind: 'member' },
+  // The call-time interior accessor the skills teach for caller-varying content;
+  // replaced the deprecated `ContainerDriver`/`content` channel in ADR-019, which
+  // the skills therefore no longer name.
+  { name: 'scope', kind: 'member' },
   { name: 'waitUntilComponentState', kind: 'member' },
   { name: 'waitUntil', kind: 'member' },
 ];

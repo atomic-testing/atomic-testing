@@ -42,6 +42,12 @@ export interface ComponentPartDefinition<T extends ScenePart> {
   option?: Partial<IComponentDriverOption<T>>;
 }
 
+/**
+ * @deprecated Declare the part with {@link ComponentPartDefinition} and reach its
+ * interior through {@link ComponentDriver.scope} instead — that drops the
+ * `content` option, which names the same scene the `driver` type argument already
+ * names. Scheduled for removal in the 2.0 window tracked by ADR-017.
+ */
 export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
   /**
    * The locator of the part
@@ -97,6 +103,13 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
   option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>;
 }
 
+/**
+ * The forms a named part in a {@link ScenePart} may take.
+ *
+ * The {@link ContainerPartDefinition} member is deprecated and leaves with it in
+ * 2.0 (ADR-017): a container is now an ordinary {@link ComponentPartDefinition}
+ * whose interior is reached through {@link ComponentDriver.scope}.
+ */
 export type ScenePartDefinition =
   | ComponentPartDefinition<ScenePart>
   | ContainerPartDefinition<ScenePart, ScenePart>
@@ -172,6 +185,15 @@ export interface ITestEngineOption extends IComponentDriverOption {
   rootElement?: Element;
 }
 
+/**
+ * @deprecated Use {@link ComponentDriver.scope}, which takes the interior
+ * scene as a call-time argument and so needs no option field. Scheduled for
+ * removal in the 2.0 window tracked by ADR-017.
+ *
+ * Note the `content` this adds is also the reason a `ContainerDriver`'s
+ * {@link CommutableComponentDriverOption} carries a field its type does not
+ * admit; retiring this interface closes that gap for containers.
+ */
 export interface IContainerDriverOption<
   ContentT extends ScenePart = {},
   T extends ScenePart = {},

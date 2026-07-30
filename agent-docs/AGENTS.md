@@ -85,7 +85,7 @@ generated from ([`agent-docs/RELEASING.md`](RELEASING.md)).
 
 ### Add a component driver
 
-1. Pick the package (`component-driver-html` for native, `component-driver-mui-v*` for MUI). 2. Create `src/components/XDriver.ts` extending `ComponentDriver`/`ContainerDriver`/`ListComponentDriver`. 3. Declare `parts` (`satisfies ScenePart`), composing existing leaf drivers. 4. Implement semantic methods + `driverName`. 5. For portals, override the locator hooks. 6. Export from `index.ts`. 7. Mirror across version packages if MUI. 8. Add a `*.suite.ts` + `.dom`/`.e2e` adapters under `package-tests/`. → [modules/component-driver-html.md](modules/component-driver-html.md), [modules/component-driver-mui.md](modules/component-driver-mui.md).
+1. Pick the package (`component-driver-html` for native, `component-driver-mui-v*` for MUI). 2. Create `src/components/XDriver.ts` extending `ComponentDriver`/`ListComponentDriver`. 3. Declare `parts` (`satisfies ScenePart`), composing existing leaf drivers. 4. Implement semantic methods + `driverName`. 5. For portals, override the locator hooks. 6. Export from `index.ts`. 7. Mirror across version packages if MUI. 8. Add a `*.suite.ts` + `.dom`/`.e2e` adapters under `package-tests/`. → [modules/component-driver-html.md](modules/component-driver-html.md), [modules/component-driver-mui.md](modules/component-driver-mui.md).
 
 ### Add a locator
 

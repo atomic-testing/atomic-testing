@@ -17,10 +17,7 @@ export const dialogScenePart = {
   },
   dialog: {
     locator: byDataTestId('dialog-content'),
-    driver: DialogDriver<typeof dialogContentPart>,
-    option: {
-      content: dialogContentPart,
-    },
+    driver: DialogDriver,
   },
 } satisfies ScenePart;
 
@@ -52,7 +49,7 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
 
       test('clicking the close button closes the dialog', async () => {
         await openDialog();
-        await engine().parts.dialog.content.close.click();
+        await engine().parts.dialog.scope(dialogContentPart).close.click();
         await engine().parts.dialog.waitForClose();
         assertFalse(await engine().parts.dialog.isOpen());
       });

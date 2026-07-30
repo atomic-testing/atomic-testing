@@ -20,10 +20,7 @@ export const popoverExampleScenePart = {
   // this trigger's aria-controls at call time instead of a static portal re-root.
   popover: {
     locator: byDataTestId('popover-trigger'),
-    driver: PopoverDriver<typeof popoverContentPart>,
-    option: {
-      content: popoverContentPart,
-    },
+    driver: PopoverDriver,
   },
 } satisfies ScenePart;
 
@@ -62,7 +59,7 @@ export const popoverExampleTestSuite: TestSuiteInfo<typeof popoverExample.scene>
       test('the linked content close button closes the popover', async () => {
         await engine().parts.popover.open();
         await engine().parts.popover.waitForOpen();
-        await engine().parts.popover.content.close.click();
+        await engine().parts.popover.scope(popoverContentPart).close.click();
         await engine().parts.popover.waitForClose();
         assertFalse(await engine().parts.popover.isOpen());
       });

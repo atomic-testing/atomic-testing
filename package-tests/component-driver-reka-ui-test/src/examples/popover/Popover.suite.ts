@@ -24,17 +24,11 @@ export const popoverScenePart = {
   // this trigger's aria-controls at call time instead of a static portal re-root.
   first: {
     locator: byDataTestId('first-trigger'),
-    driver: PopoverDriver<typeof firstContentPart>,
-    option: {
-      content: firstContentPart,
-    },
+    driver: PopoverDriver,
   },
   second: {
     locator: byDataTestId('second-trigger'),
-    driver: PopoverDriver<typeof secondContentPart>,
-    option: {
-      content: secondContentPart,
-    },
+    driver: PopoverDriver,
   },
 } satisfies ScenePart;
 
@@ -65,7 +59,7 @@ export const popoverTestSuite: TestSuiteInfo<typeof popoverScenePart> = {
       test('the linked content close button closes the popover', async () => {
         await engine().parts.first.open();
         await engine().parts.first.waitForOpen();
-        await engine().parts.first.content.close.click();
+        await engine().parts.first.scope(firstContentPart).close.click();
         await engine().parts.first.waitForClose();
         assertFalse(await engine().parts.first.isOpen());
       });
@@ -107,6 +101,13 @@ export const popoverTestSuite: TestSuiteInfo<typeof popoverScenePart> = {
 
         assertTrue(await engine().parts.second.isOpen());
         assertFalse(await engine().parts.first.isOpen());
+
+        // Closing via the SECOND instance's own close button is the positive half
+        // of the disambiguation: the aria-controls link resolved to this trigger's
+        // content, not the first instance's identically-roled panel.
+        await engine().parts.second.scope(secondContentPart).close.click();
+        await engine().parts.second.waitForClose();
+        assertFalse(await engine().parts.second.isOpen());
       });
     });
   },

@@ -130,6 +130,35 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
+   * Driver instances for a caller-supplied interior scene, resolved against this
+   * component's own locator.
+   *
+   * The call-time counterpart to {@link ComponentDriver.parts}: `parts` is the
+   * chrome the driver author hardcodes, this is the interior the *scene* author
+   * owns — a dialog's body, a popover's panel, a toast's action area. A
+   * {@link PartLocator} resolves lazily and queries nothing here, so this is
+   * synchronous and safe to call before the interior has mounted.
+   *
+   * Supersedes {@link ContainerDriver}'s `content` channel, which required the
+   * same scene to be named twice — once as a type argument, once in the driver
+   * option — plus a laundering constructor in every subclass. Named `scope`
+   * rather than `getContent` because leaf drivers already own that name for
+   * reading a component's own text (a badge's content, a tooltip's content), and
+   * a base-class member cannot collide with them.
+   *
+   * Interior children are constructed with an empty option, exactly as `content`
+   * parts always have been: an interior belongs to the scene, so it inherits no
+   * driver-specific configuration from its host. This differs deliberately from
+   * {@link ComponentDriver.parts}, whose children do inherit the host's option.
+   *
+   * @param parts The interior scene to resolve against this component's locator
+   * @returns One driver instance per named part
+   */
+  scope<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT> {
+    return getPartFromDefinition<ContentT>(parts, this._locator, this.interactor, {});
+  }
+
+  /**
    * Check the specified parts' existences, and throw MissingPartError if any of the part is found not existence.
    * Existence is defined by the part's existence in the DOM regardless of its visibility on the screen
    * @param partName Single or array of the names of the parts to be enforced

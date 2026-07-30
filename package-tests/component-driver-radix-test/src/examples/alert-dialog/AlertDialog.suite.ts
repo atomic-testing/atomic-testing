@@ -27,10 +27,7 @@ export const alertDialogExampleScenePart = {
   },
   dialog: {
     locator: byDataTestId('alert-dialog-content'),
-    driver: AlertDialogDriver<typeof alertDialogContentPart>,
-    option: {
-      content: alertDialogContentPart,
-    },
+    driver: AlertDialogDriver,
   },
 } satisfies ScenePart;
 
@@ -66,7 +63,7 @@ export const alertDialogExampleTestSuite: TestSuiteInfo<typeof alertDialogExampl
       test('the cancel content part closes the dialog', async () => {
         await engine().parts.trigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.content.cancel.click();
+        await engine().parts.dialog.scope(alertDialogContentPart).cancel.click();
         await engine().parts.dialog.waitForClose();
         assertFalse(await engine().parts.dialog.isOpen());
       });
@@ -74,7 +71,7 @@ export const alertDialogExampleTestSuite: TestSuiteInfo<typeof alertDialogExampl
       test('the action content part closes the dialog', async () => {
         await engine().parts.trigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.content.action.click();
+        await engine().parts.dialog.scope(alertDialogContentPart).action.click();
         await engine().parts.dialog.waitForClose();
         assertFalse(await engine().parts.dialog.isOpen());
       });

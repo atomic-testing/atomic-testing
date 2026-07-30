@@ -193,11 +193,15 @@ const parts = {
 
 ### Driver Types
 
-| Type                     | Purpose                      | Example       |
-| ------------------------ | ---------------------------- | ------------- |
-| `ComponentDriver<T>`     | Base driver with child parts | Most drivers  |
-| `ContainerDriver<C,T>`   | Driver with dynamic content  | Modal, Dialog |
-| `ListComponentDriver<I>` | Driver for lists of items    | Menu, List    |
+| Type                     | Purpose                      | Example      |
+| ------------------------ | ---------------------------- | ------------ |
+| `ComponentDriver<T>`     | Base driver with child parts | Most drivers |
+| `ListComponentDriver<I>` | Driver for lists of items    | Menu, List   |
+
+A caller-supplied interior is **not** a driver type — every driver inherits
+`scope(parts)`, which resolves a `ScenePart` against its own locator at call time
+(synchronously; locators are lazy). `ContainerDriver` + its `content` option were the
+earlier form and are deprecated — see [ADR-019](agent-docs/adr/019-call-time-scope-supersedes-container-content.md).
 
 ## Package Structure
 

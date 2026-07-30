@@ -74,8 +74,8 @@ re-verify the **two-instance disambiguation** for every locator you touched.
 - A repeated collection → a `ListComponentDriver` part (if the section *became*
   a list — e.g. one fixed row is now N rows — replace the fixed parts with the
   list part; don't keep both).
-- Caller-varying content → a `ContainerDriver` with `content` threaded at the
-  call site.
+- Caller-varying content → an ordinary driver whose interior the caller reaches
+  with `scope(parts)` at the call site.
 - A nameable, semantically independent feature → **promote it to its own child
   driver file**, not method #11 on the parent. Concrete promotion triggers: the
   parent would cross **~7–10 direct parts**; the new surface has its own

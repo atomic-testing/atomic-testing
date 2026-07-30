@@ -35,11 +35,12 @@ from simpler ones. The engine instantiates drivers based on the `ScenePart`
 definition. Learn how to build your own drivers in
 [Build Component Driver](./build-component-driver.mdx).
 
-Two specializations extend `ComponentDriver` for shapes many UIs share:
-`ContainerDriver` for a component whose content is a caller-supplied scene
-(e.g. a dialog body), and `ListComponentDriver` for a repeated collection of
-items (e.g. a menu). See [Driver Types](../core-concepts.mdx#driver-types) in
-Core Concepts for both, with shipped examples.
+One specialization extends `ComponentDriver` for a shape many UIs share:
+`ListComponentDriver`, for a repeated collection of items (e.g. a menu). A
+component whose interior is a caller-supplied scene (e.g. a dialog body) needs no
+specialization — every driver inherits `scope(parts)`. See
+[Driver Types](../core-concepts.mdx#driver-types) in Core Concepts for both, with
+shipped examples.
 
 ## ScenePart
 

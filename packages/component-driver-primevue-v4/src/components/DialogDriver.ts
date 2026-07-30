@@ -34,7 +34,7 @@ const defaultTransitionDuration = 1000;
 /**
  * Option for {@link DialogDriver}.
  */
-export interface IDialogDriverOption<ContentT extends ScenePart> extends IContainerDriverOption<
+export interface IDialogDriverOption<ContentT extends ScenePart = {}> extends IContainerDriverOption<
   ContentT,
   typeof dialogParts
 > {
@@ -80,7 +80,7 @@ export interface IDialogDriverOption<ContentT extends ScenePart> extends IContai
  * parent-chain-relative resolution — the SAME code path an ordinary in-tree
  * component uses. Default (`selfAnchored` unset/`false`) is unchanged.
  */
-export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof dialogParts> {
+export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IDialogDriverOption<ContentT>>) {
     super(locator, interactor, {
       ...option,

@@ -13,8 +13,7 @@ export const teachingPopoverExampleScenePart = {
   trigger: { locator: byDataTestId('teaching-popover-trigger'), driver: ButtonDriver },
   popover: {
     locator: byDataTestId('teaching-popover'),
-    driver: TeachingPopoverDriver<typeof teachingPopoverContentPart>,
-    option: { content: teachingPopoverContentPart },
+    driver: TeachingPopoverDriver,
   },
 } satisfies ScenePart;
 
@@ -45,7 +44,7 @@ export const teachingPopoverExampleTestSuite: TestSuiteInfo<typeof teachingPopov
       test('reads consumer-declared footer content', async () => {
         await engine().parts.trigger.click();
         await engine().parts.popover.waitForOpen();
-        assertEqual(await engine().parts.popover.content.next.getText(), 'Next');
+        assertEqual(await engine().parts.popover.scope(teachingPopoverContentPart).next.getText(), 'Next');
       });
 
       test('dismisses via the built-in dismiss button', async () => {

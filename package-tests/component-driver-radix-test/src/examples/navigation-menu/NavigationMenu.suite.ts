@@ -23,10 +23,7 @@ export const navigationMenuExampleScenePart = {
   // NavigationMenuItemDriver's class doc).
   learn: {
     locator: byDataTestId('navigation-menu-learn-trigger'),
-    driver: NavigationMenuItemDriver<typeof learnContentPart>,
-    option: {
-      content: learnContentPart,
-    },
+    driver: NavigationMenuItemDriver,
   },
   // A plain NavigationMenu.Link item is an ordinary in-tree anchor.
   docsLink: {
@@ -71,7 +68,7 @@ export const navigationMenuExampleTestSuite: TestSuiteInfo<typeof navigationMenu
       test('reads a link inside the open content', async () => {
         await engine().parts.learn.open();
         await engine().parts.learn.waitForOpen();
-        assertEqual(await engine().parts.learn.content.gettingStarted.getText(), 'Getting started');
+        assertEqual(await engine().parts.learn.scope(learnContentPart).gettingStarted.getText(), 'Getting started');
       });
 
       test('close() unmounts the content', async () => {
