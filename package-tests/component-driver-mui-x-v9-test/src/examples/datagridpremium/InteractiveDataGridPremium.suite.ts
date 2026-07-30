@@ -34,7 +34,7 @@ const deskFilterMatchCount = interactiveGridRows.filter(row => String(row.desk).
 export const interactiveDataGridPremiumTestSuite: TestSuiteInfo<typeof interactiveDataGridPremiumExampleScenePart> = {
   title: 'Interactive DataGridPremium',
   url: '/datagridinteractive',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse, hasLayout }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(interactiveDataGridPremiumExample.scene, getTestEngine, { beforeEach, afterEach });
 
     //#region Sorting
@@ -183,23 +183,22 @@ export const interactiveDataGridPremiumTestSuite: TestSuiteInfo<typeof interacti
       }
     });
 
-    // Reordering is native HTML5 drag-and-drop, whose direction MUI computes from consecutive
-    // dragover events' clientX/clientY — jsdom's synthesized events carry no real coordinates,
-    // so the resulting order there is not a reliable signal (see reorderColumn's doc comment).
-    // Reaching this point without throwing is the jsdom-side assertion; the actual reorder is
-    // verified only where a layout engine produces real coordinates.
+    // "commodity" sits after "desk", so this is the "target before source" direction that
+    // genuinely reorders under jsdom too (React state, not geometry — see reorderColumn's doc
+    // comment) — the resulting header order is a real, deterministic assertion here, not just a
+    // does-it-throw check. The full real-browser reorder (drag distance, drop acceptance) is
+    // still only meaningfully exercised where a layout engine produces real coordinates.
     test('reorderColumn moves the dragged column next to the drop target', async () => {
       await engine().parts.grid.waitForLoad();
       await engine().parts.grid.reorderColumn('commodity', 'desk');
-      if (hasLayout) {
-        assertEqual(await engine().parts.grid.getHeaderText(), [
-          '',
-          'Commodity',
-          'Desk',
-          'Trader Name',
-          'Trader Email',
-        ]);
-      }
+      assertEqual(await engine().parts.grid.getHeaderText(), ['', 'Commodity', 'Desk', 'Trader Name', 'Trader Email']);
+    });
+
+    test('reorderColumn only affects its own grid instance', async () => {
+      await engine().parts.grid.waitForLoad();
+      const emptyGridHeadersBefore = await engine().parts.emptyGrid.getHeaderText();
+      await engine().parts.grid.reorderColumn('commodity', 'desk');
+      assertEqual(await engine().parts.emptyGrid.getHeaderText(), emptyGridHeadersBefore);
     });
     //#endregion
 

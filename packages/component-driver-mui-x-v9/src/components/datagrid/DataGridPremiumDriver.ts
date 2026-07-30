@@ -709,21 +709,48 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
    * Reorder columns by dragging the `sourceField` column header and dropping it onto the
    * `targetField` column header's position. MUI drives column reordering with native HTML5
    * drag-and-drop on the header's draggable container — unlike {@link resizeColumn}'s resize
-   * separator, which is mouse-only — so this uses the portable `dragTo` primitive.
+   * separator, which is mouse-only — so this uses the portable `dragTo` primitive. Throws if
+   * either column is not currently rendered, or if the drop is not accepted (the dragged column
+   * never moved) — including MUI's own non-reorderable columns, e.g. one just pinned via
+   * {@link pinColumn}, or a checkbox-selection column.
    *
-   * MUI's reorder logic decides drag direction from consecutive `dragover` events'
-   * `clientX`/`clientY`, which jsdom's synthesized events carry no real values for (jsdom has no
-   * layout engine). The actual reorder is E2E-only; under jsdom this only exercises the code
-   * path and may leave the order unchanged, or change it inconsistently with the requested
-   * direction — do not assert on the resulting order there.
+   * MUI's reorder direction is decided from consecutive `dragover` events' `clientX`/`clientY`.
+   * jsdom's synthesized `dragover` carries no real coordinates (jsdom has no layout engine), so
+   * the comparison against the initial `{x: 0, y: 0}` cursor position always resolves to "moving
+   * left": a drag whose `targetField` sits before `sourceField` genuinely reorders under jsdom
+   * too (this is React state, not geometry, so it doesn't need a layout engine) — the reverse
+   * direction is a no-op there and this method throws. That throw is a jsdom-only artifact, not a
+   * real error; it does not happen in a real browser. Prefer the "target before source" direction
+   * when a case needs to run under both jsdom and E2E.
    *
    * @param sourceField The field of the column to drag.
    * @param targetField The field of the column to drop onto.
    */
-  async reorderColumn(sourceField: string, targetField: string): Promise<void> {
-    const source = locatorUtil.append(this.columnHeaderLocator(sourceField), columnHeaderDraggableLocator);
-    const target = locatorUtil.append(this.columnHeaderLocator(targetField), columnHeaderDraggableLocator);
-    await this.interactor.dragTo(source, target);
+  async reorderColumn(sourceField: string, targetField: string, timeoutMs: number = 10000): Promise<void> {
+    const sourceHeader = this.columnHeaderLocator(sourceField);
+    if (!(await this.interactor.exists(sourceHeader))) {
+      throw new Error(`${this.driverName}: column "${sourceField}" is not currently rendered`);
+    }
+    const targetHeader = this.columnHeaderLocator(targetField);
+    if (!(await this.interactor.exists(targetHeader))) {
+      throw new Error(`${this.driverName}: column "${targetField}" is not currently rendered`);
+    }
+    const originalIndex = await this.interactor.getAttribute(sourceHeader, 'aria-colindex');
+    await this.interactor.dragTo(
+      locatorUtil.append(sourceHeader, columnHeaderDraggableLocator),
+      locatorUtil.append(targetHeader, columnHeaderDraggableLocator)
+    );
+    const moved = await this.waitUntil({
+      probeFn: async () => (await this.interactor.getAttribute(sourceHeader, 'aria-colindex')) !== originalIndex,
+      terminateCondition: true,
+      timeoutMs,
+    });
+    if (!moved) {
+      throw new Error(
+        `${this.driverName}: column "${sourceField}" never moved — the drop may not have been accepted (e.g. ` +
+          `"${targetField}" is not reorderable, such as a pinned or checkbox-selection column)`
+      );
+    }
   }
   //#endregion Column management
 
@@ -839,15 +866,24 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   }
 
   /**
-   * Collapse the row's detail panel by clicking its toggle (no-op when already collapsed). See
-   * {@link isRowDetailExpanded} for the row-index addressing caveat.
+   * Collapse the row's detail panel by clicking its toggle (no-op when already collapsed).
    */
   async collapseRowDetail(rowIndex: number, timeoutMs: number = 10000): Promise<void> {
     await this.setRowDetailExpansion(rowIndex, false, timeoutMs);
   }
 
+  /**
+   * Click the toggle and wait until BOTH the toggle's `aria-expanded` AND the panel's DOM
+   * presence agree with `expanded`. MUI updates these on two separate render commits (the
+   * toggle synchronously, the panel's insertion/removal via a `useEffect`), so waiting on
+   * `aria-expanded` alone leaves a window where a caller's next read (e.g. `getRowDetailText`)
+   * can race the still-pending panel commit — this closes it by polling both signals together.
+   */
   private async setRowDetailExpansion(rowIndex: number, expanded: boolean, timeoutMs: number): Promise<void> {
-    if ((await this.isRowDetailExpanded(rowIndex)) === expanded) {
+    const isSettled = async (): Promise<boolean> =>
+      (await this.isRowDetailExpanded(rowIndex)) === expanded &&
+      (await this.interactor.exists(this.rowDetailPanelLocator(rowIndex))) === expanded;
+    if (await isSettled()) {
       return;
     }
     const toggle = locatorUtil.append(this.rowLocator(rowIndex), rowDetailToggleLocator);
@@ -855,12 +891,8 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
       throw new Error(`${this.driverName}: row ${rowIndex} has no detail-panel content to expand`);
     }
     await this.interactor.click(toggle);
-    const reached = await this.waitUntil({
-      probeFn: () => this.isRowDetailExpanded(rowIndex),
-      terminateCondition: expanded,
-      timeoutMs,
-    });
-    if (reached !== expanded) {
+    const settled = await this.waitUntil({ probeFn: isSettled, terminateCondition: true, timeoutMs });
+    if (!settled) {
       throw new Error(
         `${this.driverName}: row ${rowIndex} detail panel never became ${expanded ? 'expanded' : 'collapsed'}`
       );
@@ -868,10 +900,17 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   }
 
   /**
-   * The driver for the row's expanded detail-panel content, or `null` when the panel is not
-   * currently expanded. The panel renders as the row's next DOM sibling within the virtualized
-   * render zone rather than nested inside the row, so it is addressed off the row locator with
-   * the CSS adjacent-sibling combinator rather than as a descendant.
+   * The driver for the row's expanded detail-panel content, or `null` when the row exists but its
+   * panel is not currently expanded. Throws when `rowIndex` does not correspond to any currently
+   * rendered row, matching {@link getRowText}/{@link getCellText} — `null` is reserved for "this
+   * row exists but its panel is collapsed."
+   *
+   * The panel renders as the row's next DOM sibling within the virtualized render zone rather than
+   * nested inside the row, so it is addressed off the row locator with the CSS adjacent-sibling
+   * combinator rather than as a descendant. Caveat: MUI's virtualizer can render an off-window row
+   * as a lone keyboard-focus placeholder (e.g. immediately after `scrollRowIntoView` moved focus
+   * elsewhere) without stitching its panel in as a sibling for that render pass, even though the
+   * row is genuinely expanded — this can transiently return `null` for such a row.
    *
    * @param rowIndex The rendered `data-rowindex` of the row.
    * @param driverClass Optional, the driver class to use for the panel content, default to HTMLElementDriver.
@@ -880,6 +919,9 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
     rowIndex: number,
     driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
   ): Promise<DriverT | null> {
+    if (!(await this.interactor.exists(this.rowLocator(rowIndex)))) {
+      throw new Error(`Row ${rowIndex} does not exist`);
+    }
     const panel = this.rowDetailPanelLocator(rowIndex);
     if (!(await this.interactor.exists(panel))) {
       return null;
@@ -888,9 +930,11 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   }
 
   /**
-   * The text content of the row's expanded detail panel, or `null` when the panel is not
-   * currently expanded. Convenience wrapper over {@link getRowDetailPanel} for the common
-   * text-only case.
+   * The text content of the row's expanded detail panel, or `null` when the row exists but its
+   * panel is not currently expanded — deliberately `null` rather than a throw here, unlike
+   * {@link getRowText}/{@link getCellText}: an unexpanded panel is normal, expected state, not an
+   * invalid query. A nonexistent row still throws, via {@link getRowDetailPanel}. Convenience
+   * wrapper over {@link getRowDetailPanel} for the common text-only case.
    */
   async getRowDetailText(rowIndex: number): Promise<string | null> {
     const panel = await this.getRowDetailPanel(rowIndex);
