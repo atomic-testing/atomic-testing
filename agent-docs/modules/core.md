@@ -47,7 +47,7 @@ Barrel: [core/src/index.ts](../../packages/core/src/index.ts). Highlights:
 See [DOMAIN.md → Type system](../DOMAIN.md#type-system) for the full picture. The driver class hierarchy:
 
 - `ComponentDriver<T extends ScenePart>` — base ([ComponentDriver.ts#L25](../../packages/core/src/drivers/ComponentDriver.ts#L25)).
-- `ContainerDriver<ContentT, T>` — adds `content` ([ContainerDriver.ts#L13](../../packages/core/src/drivers/ContainerDriver.ts#L13)).
+- `ContainerDriver<ContentT, T>` — **deprecated** (ADR-019); its `content` is now a wrapper over `ComponentDriver.scope(parts)` ([ContainerDriver.ts#L13](../../packages/core/src/drivers/ContainerDriver.ts#L13)).
 - `ListComponentDriver<ItemT>` — adds `getItemByIndex/getItemByLabel/getItems/getItemCount` ([ListComponentDriver.ts#L16](../../packages/core/src/drivers/ListComponentDriver.ts#L16)).
 - `TestEngine<T>` — adds `cleanUp()` ([TestEngine.ts#L12](../../packages/core/src/TestEngine.ts#L12)).
 

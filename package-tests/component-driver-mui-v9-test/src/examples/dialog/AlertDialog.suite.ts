@@ -22,10 +22,7 @@ export const alertExampleScenePart = {
   },
   dialog: {
     locator: byDataTestId('alert-dialog'),
-    driver: DialogDriver<typeof dialogContentPart>,
-    option: {
-      content: dialogContentPart,
-    },
+    driver: DialogDriver,
   },
 } satisfies ScenePart;
 
@@ -53,7 +50,7 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
 
     test('Clicking agree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
-      await engine().parts.dialog.content.agree.click();
+      await engine().parts.dialog.scope(dialogContentPart).agree.click();
       // Settle the close transition before sampling, so isOpen() isn't read mid-fade.
       await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
@@ -62,7 +59,7 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
 
     test('Clicking disagree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
-      await engine().parts.dialog.content.disagree.click();
+      await engine().parts.dialog.scope(dialogContentPart).disagree.click();
       // Settle the close transition before sampling, so isOpen() isn't read mid-fade.
       await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();

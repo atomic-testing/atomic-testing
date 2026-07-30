@@ -23,10 +23,7 @@ export const dialogScenePart = {
   // with — the driver re-roots the lookup into the CDK overlay container.
   dialog: {
     locator: byAttribute('id', 'archive-dialog'),
-    driver: DialogDriver<typeof dialogContentPart>,
-    option: {
-      content: dialogContentPart,
-    },
+    driver: DialogDriver,
   },
   result: {
     locator: byDataTestId('dialog-result'),
@@ -70,7 +67,7 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
       test('closes from a content action button', async () => {
         await engine().parts.openTrigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.content.archive.click();
+        await engine().parts.dialog.scope(dialogContentPart).archive.click();
         assertTrue(await engine().parts.dialog.waitForClose());
         assertEqual(await waitForResult('archived'), 'archived');
       });
@@ -78,7 +75,7 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
       test('closes from the cancel button with the dismissed result', async () => {
         await engine().parts.openTrigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.content.cancel.click();
+        await engine().parts.dialog.scope(dialogContentPart).cancel.click();
         assertTrue(await engine().parts.dialog.waitForClose());
         assertEqual(await waitForResult('dismissed'), 'dismissed');
       });

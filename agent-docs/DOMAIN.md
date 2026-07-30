@@ -8,7 +8,7 @@ Vocabulary, type system, and invariants for the `atomic-testing` library. Read t
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **TestEngine**           | Root driver for a test scene. A `ComponentDriver` plus a `cleanUp()` hook. Created per-environment by a `createTestEngine` factory.                                                             | [TestEngine.ts](../packages/core/src/TestEngine.ts#L12)                                                                                              |
 | **ComponentDriver**      | Base class exposing a semantic API (`click`, `getText`, `exists`, `hover`, `waitUntilComponentState`, …) over one component, plus typed access to its child `parts`.                            | [ComponentDriver.ts](../packages/core/src/drivers/ComponentDriver.ts#L25)                                                                            |
-| **ContainerDriver**      | A `ComponentDriver` that also exposes `content` parts — for components whose inner DOM is dynamic or portal-rendered (dialogs, popovers).                                                       | [ContainerDriver.ts](../packages/core/src/drivers/ContainerDriver.ts#L13)                                                                            |
+| **ContainerDriver**      | **Deprecated** (ADR-019) — the former base for components whose inner DOM is caller-supplied. Its `content` channel is superseded by `ComponentDriver.scope(parts)`, available on every driver. | [ContainerDriver.ts](../packages/core/src/drivers/ContainerDriver.ts#L13)                                                                            |
 | **ListComponentDriver**  | A `ComponentDriver` for repeated, indefinite-length item collections; iterates items by `:nth-of-type`.                                                                                         | [ListComponentDriver.ts](../packages/core/src/drivers/ListComponentDriver.ts#L16)                                                                    |
 | **Interactor**           | Environment adapter interface. Performs the low-level actions a driver requests — click, type, key chords, hover, scroll, drag, geometry, file upload — against DOM, React, Vue, or Playwright. | [Interactor.ts](../packages/core/src/interactor/Interactor.ts#L26)                                                                                   |
 | **PartLocator**          | How to find an element. Always a `CssLocator[]` chain (#1058) — a single builder call is just a one-element chain.                                                                              | [PartLocator.ts](../packages/core/src/locators/PartLocator.ts)                                                                                       |
@@ -42,8 +42,10 @@ classDiagram
       +locator: PartLocator
       +interactor: Interactor
       +driverName: string
+      +scope(parts) ScenePartDriver
     }
     class ContainerDriver~ContentT,T~ {
+      <<deprecated>>
       +content: ScenePartDriver~ContentT~
     }
     class ListComponentDriver~ItemT~ {
@@ -68,7 +70,7 @@ classDiagram
   - `ContainerPartDefinition<ContentT, T>` — adds required `content` (nested parts) + `option`
   - `ListComponentPartDefinition<ItemT>` — adds `itemClass` + `itemLocator` via `ListComponentDriverSpecificOption`
 - **`ScenePartDriver<T>`** maps part names to driver instances using `InstanceType<T[partName]['driver']>` ([partTypes.ts#L121-L123](../packages/core/src/partTypes.ts#L121-L123)). This is why `engine.parts.email` is typed as the concrete driver you declared.
-- **Driver option types**: `IComponentDriverOption<T> = { parts: T }`; `IContainerDriverOption<ContentT,T>` adds `content: ContentT` ([partTypes.ts#L125-L134](../packages/core/src/partTypes.ts#L125-L134)).
+- **Driver option types**: `IComponentDriverOption<T> = { parts: T }` ([partTypes.ts](../packages/core/src/partTypes.ts)). `IContainerDriverOption<ContentT,T>` adds `content: ContentT` but is **deprecated** (ADR-019) — an interior scene is now a call-time argument to `ComponentDriver.scope`, not an option field.
 - **`ITestEngine<T> extends IComponentDriver<T>`** and adds `cleanUp()` ([partTypes.ts#L183-L185](../packages/core/src/partTypes.ts#L183-L185)).
 - **Intentional `any`**: `ComponentDriverClass`/`ComponentDriverCtor` constrain `T extends ComponentDriver<any>` for variance reasons — concrete driver classes must be assignable regardless of their `ScenePart` parameter ([partTypes.ts#L11-L39](../packages/core/src/partTypes.ts#L11-L39)). Do not "fix" these to stricter types.
 

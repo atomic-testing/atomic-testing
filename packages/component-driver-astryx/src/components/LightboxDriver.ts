@@ -79,7 +79,7 @@ export const parts = {
  * `showModal()`-opened dialog but jsdom does not synthesize from a dispatched
  * `keydown` — verified empirically, not merely assumed.
  */
-export class LightboxDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
+export class LightboxDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,

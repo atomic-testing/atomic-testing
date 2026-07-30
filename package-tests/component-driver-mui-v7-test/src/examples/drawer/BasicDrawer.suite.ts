@@ -19,10 +19,7 @@ export const basicDrawerExampleScenePart = {
   },
   drawer: {
     locator: byDataTestId('basic-drawer'),
-    driver: DrawerDriver<typeof drawerContentPart>,
-    option: {
-      content: drawerContentPart,
-    },
+    driver: DrawerDriver,
   },
 } satisfies ScenePart;
 
@@ -56,7 +53,7 @@ export const basicDrawerTestSuite: TestSuiteInfo<typeof basicDrawerExampleSceneP
     test('exposes its content when open', async () => {
       await engine().parts.openTrigger.click();
       await engine().parts.drawer.waitForOpen();
-      assertTrue(await engine().parts.drawer.content.content.exists());
+      assertTrue(await engine().parts.drawer.scope(drawerContentPart).content.exists());
     });
 
     test('closes when the backdrop is clicked', async () => {

@@ -13,7 +13,7 @@ import { DrawerDriverBase } from './DrawerDriverBase';
  * the scene's declared locator resolves the normal descendant way; no static
  * portal hooks are needed here, unlike every other driver in this wave.
  */
-export class InlineDrawerDriver<ContentT extends ScenePart> extends DrawerDriverBase<ContentT> {
+export class InlineDrawerDriver<ContentT extends ScenePart = {}> extends DrawerDriverBase<ContentT> {
   get driverName(): string {
     return 'FluentV9InlineDrawerDriver';
   }

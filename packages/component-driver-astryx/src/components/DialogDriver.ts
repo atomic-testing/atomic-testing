@@ -33,7 +33,7 @@ export const parts = {
  * works in jsdom (the `<dialog>` keydown handler) and in a real browser; backdrop
  * (`::backdrop`) dismissal is a native pointer behaviour left to the E2E run.
  */
-export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
+export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,

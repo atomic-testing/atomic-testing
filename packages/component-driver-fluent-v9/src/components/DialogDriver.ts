@@ -59,7 +59,7 @@ const defaultTransitionDuration = 1000;
  * (mirrors `component-driver-radix-v1`'s `DialogDriver`, which hits the same
  * un-linkable-overlay wall).
  */
-export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof dialogParts> {
+export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,

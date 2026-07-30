@@ -27,7 +27,7 @@ const dialogRootLocator: PartLocator = byRole('presentation', 'Root');
 const defaultTransitionDuration = 250;
 const closeGraceMs = 150;
 
-export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof parts> {
+export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,

@@ -34,9 +34,11 @@ node, in this order** — the first rule that matches wins:
    [`ListComponentDriver`](../core-concepts.mdx#driver-types) and recurse only into
    the _item_ shape — never `item1`, `item2`, `item3` as separate named parts.
 3. **Fixed chrome, caller-varying content** (a dialog whose body differs per
-   usage)? Model it with a [`ContainerDriver`](../core-concepts.mdx#driver-types); the
-   caller threads the `content` scene per usage, and the container's own file
-   knows nothing about any specific interior.
+   usage)? Keep it an ordinary driver and let each caller reach the interior with
+   [`scope(parts)`](../core-concepts.mdx#driver-types) at the point of use — the
+   driver's own file stays ignorant of any specific interior. Keep the interior's
+   `ScenePart` const in the scene file so the scene still reads as the map of what
+   a test can reach.
 4. **A semantically independent, nameable feature** — it has its own component
    file, bundles a domain operation (`save`, `send`, `fillShippingInfo`), or
    could plausibly appear more than once? Factor it into its **own composite

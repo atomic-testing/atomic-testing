@@ -57,7 +57,7 @@ const defaultTransitionDuration = 250;
  * bubbling `keydown` dispatched anywhere in the document (including on this
  * driver's own re-rooted locator, via `Interactor.pressKey`) reaches it.
  */
-export class DialogDriver<ContentT extends ScenePart> extends ContainerDriver<ContentT, typeof dialogParts> {
+export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
   constructor(
     locator: PartLocator,
     interactor: Interactor,

@@ -42,7 +42,7 @@ const drawerRootLocator: PartLocator = byRole('presentation', 'Root');
  * this driver adds the anchor read and the portal re-rooting.
  * @see https://mui.com/material-ui/react-drawer/
  */
-export class DrawerDriver<ContentT extends ScenePart> extends OverlayDriver<ContentT, typeof drawerParts> {
+export class DrawerDriver<ContentT extends ScenePart = {}> extends OverlayDriver<ContentT, typeof drawerParts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
     super(locator, interactor, {
       ...option,

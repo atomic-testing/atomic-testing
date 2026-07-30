@@ -26,10 +26,7 @@ export const toastExampleScenePart = {
   },
   toast: {
     locator: byDataTestId('toast-root'),
-    driver: ToastDriver<typeof toastContentPart>,
-    option: {
-      content: toastContentPart,
-    },
+    driver: ToastDriver,
   },
 } satisfies ScenePart;
 
@@ -59,8 +56,11 @@ export const toastExampleTestSuite: TestSuiteInfo<typeof toastExample.scene> = {
       test('reads title and description content parts', async () => {
         await engine().parts.trigger.click();
         await engine().parts.toast.waitForOpen();
-        assertEqual(await engine().parts.toast.content.title.getText(), 'Changes saved');
-        assertEqual(await engine().parts.toast.content.description.getText(), 'Your changes have been saved.');
+        assertEqual(await engine().parts.toast.scope(toastContentPart).title.getText(), 'Changes saved');
+        assertEqual(
+          await engine().parts.toast.scope(toastContentPart).description.getText(),
+          'Your changes have been saved.'
+        );
       });
 
       test('close() dismisses the toast', async () => {

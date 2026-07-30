@@ -46,7 +46,7 @@ It iterates `byRole('menuitem')` with `listHelper.getListItemIterator(..., MenuI
 
 ### Container driver — `DialogDriver`
 
-`DialogDriver<ContentT> extends ContainerDriver<ContentT, typeof parts>` with `parts = { title, dialogContainer }` and a generic `content` for the dialog body ([DialogDriver.ts](../../packages/component-driver-mui-v7/src/components/DialogDriver.ts#L29-L97)). It also uses `overriddenParentLocator() → byRole('presentation','Root')`, and adds `getTitle`, `isOpen`, and transition-aware `waitForOpen`/`waitForClose` (built on `interactor.waitUntil`).
+`DialogDriver` with `parts = { title, dialogContainer }`; the dialog body comes from the caller via `scope(parts)` (it still extends the deprecated `ContainerDriver` pending the 2.0 removal — see ADR-019) ([DialogDriver.ts](../../packages/component-driver-mui-v7/src/components/DialogDriver.ts#L29-L97)). It also uses `overriddenParentLocator() → byRole('presentation','Root')`, and adds `getTitle`, `isOpen`, and transition-aware `waitForOpen`/`waitForClose` (built on `interactor.waitUntil`).
 
 ### Composite input — `SelectDriver`
 
@@ -64,7 +64,7 @@ Handles both native `<select>` and MUI's custom dropdown via a four-part scene (
 
 ## Extension points — add/port a MUI driver
 
-1. Create `src/components/XDriver.ts` extending `ComponentDriver`/`ContainerDriver`/`ListComponentDriver`.
+1. Create `src/components/XDriver.ts` extending `ComponentDriver`/`ListComponentDriver`.
 2. Declare `parts` with `satisfies ScenePart`, composing HTML drivers for leaves.
 3. For portal components, override `overriddenParentLocator()`/`overrideLocatorRelativePosition()`.
 4. Set `driverName` to `MuiV<N><Name>Driver`; export from the package `index.ts`.

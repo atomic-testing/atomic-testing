@@ -36,7 +36,7 @@ const defaultTransitionDuration = 1000;
  * any instance exists (see `ComponentDriver`), so which recipe applies must be
  * a compile-time class choice, not an instance-time one.
  */
-export abstract class DrawerDriverBase<ContentT extends ScenePart> extends ContainerDriver<
+export abstract class DrawerDriverBase<ContentT extends ScenePart = {}> extends ContainerDriver<
   ContentT,
   typeof drawerParts
 > {

@@ -158,6 +158,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     get parts(): ScenePartDriver<T>;
     pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void>;
     runtimeCssSelector(): Promise<string>;
+    scope<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT>;
     protected scrollBy(delta: Point): Promise<void>;
     scrollIntoView(): Promise<void>;
     typeText(text: string): Promise<void>;
@@ -184,14 +185,14 @@ export interface ComponentPartDefinition<T extends ScenePart> {
     option?: Partial<IComponentDriverOption<T>>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export abstract class ContainerDriver<ContentT extends ScenePart, T extends ScenePart = {}> extends ComponentDriver<T> implements IComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>);
-    // (undocumented)
+    // @deprecated (undocumented)
     get content(): ScenePartDriver<ContentT>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
     driver: typeof ContainerDriver<ContentT, T> | (new (locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) => ContainerDriver<ContentT, T>);
     locator: PartLocator;
@@ -359,7 +360,7 @@ export interface IComponentDriverOption<T extends ScenePart = {}> {
     parts: T;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export interface IContainerDriverOption<ContentT extends ScenePart = {}, T extends ScenePart = {}> extends IComponentDriverOption<T> {
     // (undocumented)
     content: ContentT;
@@ -644,7 +645,7 @@ export interface PressKeyOption {
 // @public
 export interface ScenePart extends Record<string, ScenePartDefinition> {}
 
-// @public (undocumented)
+// @public
 export type ScenePartDefinition = ComponentPartDefinition<ScenePart> | ContainerPartDefinition<ScenePart, ScenePart> | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
 
 // @public (undocumented)

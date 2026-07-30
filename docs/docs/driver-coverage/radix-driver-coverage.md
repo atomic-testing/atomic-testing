@@ -81,7 +81,7 @@ NavigationMenu, Toast, and Toolbar render **in-tree**, no portal at all.
 | Separator    | `SeparatorDriver`    | —                                                                                                                                                                                |
 | Select       | `SelectDriver`       | — (jsdom needs `hasPointerCapture`/`scrollIntoView` polyfills the harness ships; **value identity is label-based**, not `data-value`, since Radix renders none on `Select.Item`) |
 | Dialog       | `DialogDriver`       | only `closeByEscape` is exposed — `Dialog.Overlay` carries no ARIA distinguishing it from page content, so there is no portable `closeByBackdropClick`                           |
-| DropdownMenu | `DropdownMenuDriver` | a `ContainerDriver`, so scenes can declare custom `content` parts for `CheckboxItem`/`RadioGroup`/submenu content                                                                |
+| DropdownMenu | `DropdownMenuDriver` | scenes reach custom interiors — `CheckboxItem`/`RadioGroup`/submenu content — through `scope(parts)`                                                                             |
 | Popover      | `PopoverDriver`      | trigger-anchored via `aria-controls` → `byLinkedElement` (its content shares `role="dialog"` with modal `Dialog`, so a static re-root would collide)                             |
 
 ## Coverage — in-tree controls

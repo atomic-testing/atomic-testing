@@ -68,9 +68,10 @@ first rule that matches wins:
    Recurse only into the *item* shape (one `itemClass`) — never into
    "item1, item2, item3" as separate named parts.
 3. **Chrome fixed, content varies by call site** (dialog body, tab panel,
-   slide-over hosting a different form per usage)? → **`ContainerDriver`**, with
-   the caller threading `content` per usage in *its* ScenePart — the container
-   driver's own file knows nothing about any specific content.
+   slide-over hosting a different form per usage)? → an ordinary driver, with each
+   caller reaching the interior via **`scope(parts)`** at the point of use — the
+   driver's own file knows nothing about any specific content. Declare the
+   interior's ScenePart const in the scene file, not inline at the call site.
 4. **Semantically independent, nameable feature** — it has its own component
    file, it bundles a domain-level operation (`fillShippingInfo`, `send`,
    `save`), or it plausibly appears in more than one place? → **Factor it into
@@ -108,7 +109,7 @@ CheckoutPage                     → rule 6: page object (1 root ScenePart entry
 │   └── country                  → rule 1: reuse <ds> SelectDriver
 ├── cartSummary                  → rule 4: new CartSummaryDriver
 │   └── lineItems                → rule 2: ListComponentDriver(itemClass: LineItemDriver)
-├── couponDialog                 → rule 3: reuse <ds> DialogDriver (ContainerDriver), content per usage
+├── couponDialog                 → rule 3: reuse <ds> DialogDriver, interior via scope() per usage
 └── submit                       → rule 1: reuse <ds> ButtonDriver (inline, rule 5 placement)
 ```
 
