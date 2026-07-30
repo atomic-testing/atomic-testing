@@ -7,11 +7,14 @@ import { chatSendButtonUIExample } from './ChatSendButton.examples';
 
 // ChatSendButton forwards no testid and carries no stable class of its own, so
 // each button is reached by its unconditional aria-label within its testid'd
-// wrapper (see ChatSendButtonDriver's class doc).
+// wrapper (see ChatSendButtonDriver's class doc). :is(...) keeps this a single
+// compound selector — locatorUtil.append concatenates the chain into one CSS
+// string, so a bare `,` union would split in two and the second half
+// (`button[aria-label="Stop"]`) would lose the wrapper's scoping entirely.
 const sendButtonIn = (wrapperTestId: string) =>
   locatorUtil.append(
     byDataTestId(wrapperTestId),
-    byCssSelector('button[aria-label="Send"], button[aria-label="Stop"]')
+    byCssSelector(':is(button[aria-label="Send"], button[aria-label="Stop"])')
   );
 
 export const chatSendButtonExampleScenePart = {
