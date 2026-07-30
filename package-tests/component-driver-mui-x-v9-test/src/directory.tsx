@@ -4,6 +4,7 @@ import { basicChartsUIExample } from './examples/charts/Charts.examples';
 import { basicDataGridPremiumUIExample } from './examples/datagridpremium/BasicDataGridPremium.examples';
 import { groupedDataGridPremiumUIExample } from './examples/datagridpremium/GroupedDataGridPremium.examples';
 import { interactiveDataGridPremiumUIExample } from './examples/datagridpremium/InteractiveDataGridPremium.examples';
+import { masterDetailDataGridPremiumUIExample } from './examples/datagridpremium/MasterDetailDataGridPremium.examples';
 import { basicDateRangePickerUIExample } from './examples/datepicker/DateRangePicker.examples';
 import { basicDateTimePickerUIExample } from './examples/datepicker/DateTimePicker.examples';
 import { basicDesktopDatePickerUIExample } from './examples/datepicker/DesktopDatePicker.examples';
@@ -31,6 +32,11 @@ export const tocs: ExampleToc[] = [
     label: 'Grouped DataGrid Premium',
     path: '/datagridgrouped',
     ui: <ExampleList examples={[groupedDataGridPremiumUIExample]} />,
+  },
+  {
+    label: 'Master-Detail DataGrid Premium',
+    path: '/datagridmasterdetail',
+    ui: <ExampleList examples={[masterDetailDataGridPremiumUIExample]} />,
   },
   {
     label: 'Desktop Date Picker',
