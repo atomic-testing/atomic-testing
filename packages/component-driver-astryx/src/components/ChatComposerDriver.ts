@@ -19,7 +19,11 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  */
 export class ChatComposerDriver extends ComponentDriver<{}> {
   private get sendButton(): PartLocator {
-    return locatorUtil.append(this.locator, byCssSelector('button[aria-label="Send"], button[aria-label="Stop"]'));
+    // :is(...) keeps this a single compound selector — locatorUtil.append/toCssSelector
+    // concatenates chain segments into one selector STRING, so a top-level `,` union
+    // would split into two selectors, one of which loses this.locator's scoping
+    // entirely (`button[aria-label="Stop"]` would match anywhere in the document).
+    return locatorUtil.append(this.locator, byCssSelector(':is(button[aria-label="Send"], button[aria-label="Stop"])'));
   }
 
   private get editable(): PartLocator {
