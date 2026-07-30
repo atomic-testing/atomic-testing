@@ -194,6 +194,89 @@ driver's source doc comment.
 | `DateTimeInputDriver`  | `DateTimeInput`  | Extends `DateInputDriver` with a paired time field (`getTimeValue`/`setTime`).                                              |
 | `DateRangeInputDriver` | `DateRangeInput` | **Best-effort v1**: popover `<dialog>` with presets + range `pickRange` (the end day is re-resolved after the start click). |
 
+Wave 4 — the remaining display/typography, media/status, and feedback
+primitives; a "hard set" of drivers that shipped against interactor
+primitives already available or via structural workarounds (each with a
+named **best-effort v1** limitation); and the nav-chrome and chat-suite
+component families. As with the earlier waves, anchoring is `data-testid`,
+`role`, or accessible name — never a StyleX class — and rationale plus any
+E2E-only behaviour live in each driver's source doc comment.
+
+### Display & typography
+
+| Driver             | Astryx component | Notes                                                                                                                                                                                                               |
+| ------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BadgeDriver`      | `Badge`          | `getVariant` via `data-variant`; label is inherited `getText`.                                                                                                                                                      |
+| `TextDriver`       | `Text`           | `getType`/`getColor` (`data-type`/`data-color`); `getColor` is theme-resolved, not the authored prop.                                                                                                               |
+| `HeadingDriver`    | `Heading`        | `getLevel`/`getAccessibilityLevel`; the latter prefers `aria-level`, falling back to `getLevel` when absent (i.e. the levels coincide).                                                                             |
+| `CodeDriver`       | `Code`           | No own methods; content is inherited `getText`.                                                                                                                                                                     |
+| `BlockquoteDriver` | `Blockquote`     | `getCitation` reads the `<cite>` descendant in isolation; inherited `getText` returns quote + citation concatenated.                                                                                                |
+| `TimestampDriver`  | `Timestamp`      | `getDateTime` reads `datetime` on the inner `<time>`; inherited `getText` gives the display string. `data-format` lives on the wrapper, read via a sibling part; relative-time tooltip & live updates are E2E-only. |
+| `DividerDriver`    | `Divider`        | `getVariant`/`getOrientation`/`getLabel`; `getLabel` reads the middle child, `undefined` when unlabeled.                                                                                                            |
+
+### Media & status
+
+| Driver              | Astryx component | Notes                                                                                                                                                                                     |
+| ------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `StatusDotDriver`   | `StatusDot`      | `getLabel`/`getVariant`/`isPresent`; hover tooltip is E2E-only.                                                                                                                           |
+| `CitationDriver`    | `Citation`       | `getTitle`/`getNumber` (parsed from `aria-label`)/`getHref`/`isLink`/`getVariant`.                                                                                                        |
+| `TokenDriver`       | `Token`          | `getLabel`/`getVariant` (`data-color`)/`getHref`/`isRemovable`/`remove`; disabled state is class-only (not exposed).                                                                      |
+| `AvatarDriver`      | `Avatar`         | `getAccessibleName`/`getImageSrc`/`hasImage`/`getInitials`/`getSize`/`getTooltipText` (custom `tooltip` text only, via `aria-describedby`); load-failure → initials fallback is E2E-only. |
+| `AvatarGroupDriver` | `AvatarGroup`    | `getVisibleCount`/`getAvatarNames`/`getOverflowCount`, parsed from the overflow chip's `aria-label`.                                                                                      |
+| `ThumbnailDriver`   | `Thumbnail`      | `getAccessibleName`/`getImageSrc`/`isLoading`/`isPlaceholder`/`canRemove`; hover tooltip & lightbox preview are E2E-only.                                                                 |
+
+### Feedback & misc
+
+| Driver              | Astryx component | Notes                                                                                                                                                                        |
+| ------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EmptyStateDriver`  | `EmptyState`     | `getTitle`/`getDescription`/`getHeadingLevel`/`isPresent`/`hasAction`; probed across `h1`–`h6` (description is the heading's next-sibling `<div>`).                          |
+| `ProgressBarDriver` | `ProgressBar`    | `getValueNow`/`getValueMin`/`getValueMax`/`getValueText`/`getLabel`/`getVariant`/`isIndeterminate`; both modes share `role="progressbar"`.                                   |
+| `SpinnerDriver`     | `Spinner`        | `getAccessibleName`/`getLabelText`/`getSize`; accessible name falls back to the nested `role="status"` span when labeled.                                                    |
+| `NavIconDriver`     | `NavIcon`        | No custom methods; presence via inherited `exists` (the icon has no role/text semantics).                                                                                    |
+| `ItemDriver`        | `Item`           | `getLabel`/`getDensity`/`getAlign`/`getHref`; `isSelected` checks `aria-selected` (when the role permits it) or `aria-current` otherwise (Astryx 0.1.9; mutually exclusive). |
+| `MarkdownDriver`    | `Markdown`       | `isInline`/`getDensity`/`getHeadingCount`/`getLinkCount`; copy-code is E2E-only (clipboard).                                                                                 |
+| `CodeBlockDriver`   | `CodeBlock`      | `getLanguage`/`getCode`/`getLineCount`/`isCollapsed`/`toggleCollapse`; copy-state flip is E2E-only (clipboard).                                                              |
+
+### Hard set (best-effort v1)
+
+| Driver                    | Astryx component    | Notes                                                                                                                                                                                                               |
+| ------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FileInputDriver`         | `FileInput`         | **Best-effort v1**: `getAccept`/`isMultiple`/`isRequired`/`isInvalid`/`isDisabled`/`getLabel`/`getStatusMessage` + `uploadFiles` (via `setInputFiles`); file-chip readback and dropzone drag-and-drop are E2E-only. |
+| `ContextMenuDriver`       | `ContextMenu`       | **Best-effort v1**: `open` (via the `contextMenu` primitive); items read from the document-rooted `role="menu"` (no `aria-controls` link). No `isOpen`; single-instance per scene.                                  |
+| `AppShellDriver`          | `AppShell`          | **Best-effort v1**: `getVariant`/`hasHeader`/`hasSideNav`/`hasMain`/`getMainText`/`hasSkipLink` confirm landmarks and variant, then delegate to child drivers; responsive collapse/mobile drawer are E2E-only.      |
+| `ChatComposerInputDriver` | `ChatComposerInput` | **Best-effort v1**: `getValue`/`appendValue` on the `contenteditable` via `textContent` (`getInputValue` returns `null`; typing is append-only). Suggestions-menu open is E2E-only.                                 |
+| `ChatComposerDriver`      | `ChatComposer`      | **Best-effort v1**: `submit`/`canSend`/`isStopShown`/`getStatusMessage` anchor the send/stop button by verbatim `aria-label` (`"Send"`/`"Stop"`) — no stable class/testid upstream. Enter-to-send is E2E-only.      |
+| `HoverCardDriver`         | `HoverCard`         | **Best-effort v1**: `getContent` resolves the body-level popover via the trigger's `aria-describedby` → layer `id` (no role/testid/open attr on the layer); open state is E2E-only.                                 |
+| `TooltipDriver`           | `Tooltip`           | **Best-effort v1**: same `aria-describedby` → layer `id` anchor as HoverCard; open state is E2E-only.                                                                                                               |
+
+### Nav chrome
+
+| Driver                 | Astryx component | Notes                                                                                                                                                                                                          |
+| ---------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TopNavDriver`         | `TopNav`         | Header nav landmark; `getLabel`/`getItemLabels`/`selectByLabel` over `startContent` links; heading link & menu triggers excluded from the tally.                                                               |
+| `TopNavItemDriver`     | `TopNavItem`     | `getLabel`/`isSelected` (`aria-current="page"`)/`isDisabled`; inherited `getHref`/`click`.                                                                                                                     |
+| `TopNavMenuDriver`     | `TopNavMenu`     | Sibling popover panel resolved via trigger `aria-controls`; `getLabel`/`getItemTitles`/`selectByLabel`; `isOpen` is E2E-only for `true` (native popover).                                                      |
+| `TopNavMegaMenuDriver` | `TopNavMegaMenu` | Sibling panel resolved via the trigger's `aria-controls`, re-rooted at the document (instance-safe); the panel is `role="group"`, not `menu`. `getLabel`/`getItemTitles`; `isExpanded` is E2E-only for `true`. |
+| `BreadcrumbsDriver`    | `Breadcrumbs`    | `<ol>` of crumbs; `getLabel` (`aria-label`, default "Breadcrumb")/`getLabels`/`getCurrentLabel` (`aria-current`)/`getHrefs`.                                                                                   |
+| `BreadcrumbItemDriver` | `BreadcrumbItem` | Single crumb; `getLabel`/`getHref`/`isCurrent`; `hasMenu`/`menu()` for Astryx 0.1.9's menu-trigger crumbs (→ `BreadcrumbMenuDriver`).                                                                          |
+| `BreadcrumbMenuDriver` | —                | Returned by `BreadcrumbItemDriver.menu()`; `open`/`getItemLabels`/`selectByLabel` work while closed; the trigger carries no `aria-expanded`, so verifying open is E2E-only (no `isOpen`).                      |
+| `SideNavDriver`        | `SideNav`        | `getLabel` (hardcoded "Side navigation")/`hasCollapseButton`/`getSectionCount` (`role="group"` sections); collapsed (icon-only) state is E2E-only.                                                             |
+| `SideNavItemDriver`    | `SideNavItem`    | Leaf `<a>` or collapsible `<div>` + toggle; `getLabel`/`isSelected` (`aria-current`)/`getHref`/`isExpanded`; flyout in collapsed mode is E2E-only.                                                             |
+| `MobileNavDriver`      | `MobileNav`      | Native `<dialog>` drawer; `getLabel`/`getSide` (`data-side`)/`hasCloseButton`; `isOpen` is E2E-only for `true` (`showModal` is a no-op in jsdom).                                                              |
+
+### Chat suite
+
+| Driver                      | Astryx component      | Notes                                                                                                                                                                    |
+| --------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ChatMessageDriver`         | `ChatMessage`         | `getSender`/`getDensity`/`getBubbleText`/`getMetadataText`; sender name is not exposed (a generated-`id` `aria-labelledby` anchor only).                                 |
+| `ChatMessageBubbleDriver`   | `ChatMessageBubble`   | `getText`/`getSender`/`getVariant`/`getDensity`.                                                                                                                         |
+| `ChatMessageListDriver`     | `ChatMessageList`     | List of `ChatMessageDriver` rows; `getMessageCount`/`getDensity`/`getEmptyStateText`; auto-scroll is E2E-only.                                                           |
+| `ChatSystemMessageDriver`   | `ChatSystemMessage`   | `getText`/`getVariant`.                                                                                                                                                  |
+| `ChatToolCallsDriver`       | `ChatToolCalls`       | `isGrouped`/`getCallCount`/`isExpanded`/`toggleGroup`.                                                                                                                   |
+| `ChatLayoutDriver`          | `ChatLayout`          | `getDensity`/`getEmptyStateText`; scroll-to-bottom button is E2E-only.                                                                                                   |
+| `ChatSendButtonDriver`      | `ChatSendButton`      | Icon-only `HTMLButtonDriver`; anchored on `aria-label` (`"Send"`/`"Stop"`), since Astryx gives it no stable class of its own; `isSend`/`isStop`, inherited `isDisabled`. |
+| `ChatDictationButtonDriver` | `ChatDictationButton` | `getAccessibleName`/`isListening` via `aria-label` (`"Start dictation"`/`"Stop dictation"`); live dictation is E2E-only (Web Speech API; mock the `dictation` prop).     |
+
 ## Learn more
 
 - [Astryx driver coverage guide](https://atomic-testing.dev/docs/driver-coverage/astryx-driver-coverage) — the per-wave coverage matrix behind the tables above.
