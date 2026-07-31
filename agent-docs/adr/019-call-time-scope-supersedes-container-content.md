@@ -58,7 +58,7 @@ precedent, but it needs the driver class to carry its own locator — what Angul
 gets from `static hostSelector` and Frontside Interactors from `TextField.byId(…)`.
 This repo deliberately splits locator (ScenePart) from driver class. Every real
 interior here is a bag of siblings (`{cancel, confirm}`, `{nameInput, saveButton}`),
-so the ScenePart form covers all 24 existing sites and the class form covers none
+so the ScenePart form covers every existing site and the class form covers none
 without a wrapper driver per interior.
 
 **Synchronous.** A `PartLocator` resolves lazily, so `scope` queries nothing and
@@ -73,15 +73,27 @@ existence, as `getActionComponent` and `getCell` both do.
   `driver: DialogDriver` needs no type argument and no `option`.
 - ✅ One host instance serves any number of interiors.
 - ✅ Available on every driver, including those that never extended `ContainerDriver`.
-- ✅ Fully additive — `scope` added, three symbols marked `@deprecated`, nothing
-  removed from `etc/core.api.md`. Satisfies ADR-006 §2's deprecate-for-≥1-minor rule,
-  and `skillClaims.mjs`'s `ContainerDriver` export claim still holds.
+- ✅ Fully additive to the **public API** — `scope` added, three symbols marked
+  `@deprecated`, nothing removed from `etc/core.api.md`. Satisfies ADR-006 §2's
+  deprecate-for-≥1-minor rule.
+- ℹ️ `skillClaims.mjs`'s `CANONICAL_CORE_SYMBOLS` **did** change: `ContainerDriver`
+  was dropped and `scope` added. That list asserts a two-way bond — SKILL-SYNC-01
+  fails if a listed symbol leaves core, SKILL-SYNC-02 fails if no distributed skill
+  names it. Since the skills now teach `scope` and no longer name `ContainerDriver`,
+  keeping the old entry would have tripped 02. `ContainerDriver` remains exported;
+  it is simply no longer a symbol the skills claim.
 - ⚠️ **The scene file is no longer the complete map** of what a test can reach —
   part of the tree now lives at call sites. Mitigated by convention: keep interior
-  `ScenePart` consts in the scene file, where all 24 migrated ones already live.
+  `ScenePart` consts in the scene file, where every migrated one already lives.
 - ⚠️ The interior is named at each use rather than once. For a composite driver,
-  hoist it into one accessor — see `DangerZoneDriver.confirmButtons` in
-  `examples/example-shadcn-workspace`.
+  hoist it into one accessor rather than repeating the const per method.
+- ⚠️ **`examples/*` cannot adopt `scope` until it is published.** Each example app
+  is a standalone workspace pinning `@atomic-testing/*` at released npm versions
+  (not `workspace:*`), so it typechecks against the _published_ `core` — where
+  `scope` does not yet exist, and shipped `DialogDriver`s still require their
+  `ContentT` argument. `example-shadcn-workspace` therefore stays on the
+  deprecated `content` channel deliberately; migrate it in the release that
+  follows this one. `package-tests/*` are workspace-linked and have no such wait.
 - ⚠️ The 33 laundering constructors survive until the 2.0 removal; this ADR retires
   the `content` _channel_ in-repo, not yet the classes that offer it. Shipped driver
   classes keep their `ContentT` parameter (now defaulted to `{}`) so external scenes
@@ -93,14 +105,14 @@ existence, as `getActionComponent` and `getCell` both do.
 
 ## Alternatives considered
 
-| Alternative                                  | Why not chosen                                                                                                                                     |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `getContent(parts)`                          | Name occupied by 8 shipped leaf drivers with an incompatible signature; rejected by `tsc`.                                                         |
-| `scope(locator, driverClass)` only           | More in-repo precedent, but covers none of the 24 real sites without a wrapper driver per interior.                                                |
-| Ship both forms now                          | One arm would have zero callers; the overload can be added when a single-interior case appears.                                                    |
-| Keep `ContainerDriver`, slim it down         | Retains the class, option field, and union member, so the dual vocabulary and boilerplate constructors survive — most of the gain forfeited.       |
-| Remove the container types now               | Breaks external scenes with no runway and violates ADR-006 §2.                                                                                     |
-| Pass `commutableOption` to interior children | Would change behavior for the 24 migrated scenes; `content` children have always received `{}`. Preserved deliberately, and documented on `scope`. |
+| Alternative                                  | Why not chosen                                                                                                                                  |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `getContent(parts)`                          | Name occupied by 8 shipped leaf drivers with an incompatible signature; rejected by `tsc`.                                                      |
+| `scope(locator, driverClass)` only           | More in-repo precedent, but covers none of the 24 real sites without a wrapper driver per interior.                                             |
+| Ship both forms now                          | One arm would have zero callers; the overload can be added when a single-interior case appears.                                                 |
+| Keep `ContainerDriver`, slim it down         | Retains the class, option field, and union member, so the dual vocabulary and boilerplate constructors survive — most of the gain forfeited.    |
+| Remove the container types now               | Breaks external scenes with no runway and violates ADR-006 §2.                                                                                  |
+| Pass `commutableOption` to interior children | Would change behavior for the migrated scenes; `content` children have always received `{}`. Preserved deliberately, and documented on `scope`. |
 
 ## Related
 
