@@ -139,7 +139,7 @@ comment.
 | Driver              | Astryx component | Notes                                                                            |
 | ------------------- | ---------------- | -------------------------------------------------------------------------------- |
 | `PopoverDriver`     | `Popover`        | Trigger-anchored; `open`/`close`/`isOpen`, `getLabel`/`getContent`.              |
-| `DialogDriver`      | `Dialog`         | Native `<dialog>`; `isOpen`/`isModal`/`getTitle`/`closeByEscape`; content parts. |
+| `DialogDriver`      | `Dialog`         | Native `<dialog>`; `isOpen`/`isModal`/`getTitle`/`closeByEscape`; interior via `scope(parts)`. |
 | `AlertDialogDriver` | `AlertDialog`    | `role="alertdialog"`; `getTitle`/`getDescription`, `clickAction`/`clickCancel`.  |
 | `ToastDriver`       | `Toast`          | Stable `data-type`: `getType`/`isError`/`getRole`/`getMessage`, `dismiss`.       |
 
