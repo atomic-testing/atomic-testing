@@ -28,7 +28,7 @@ diff surgical; surface adjacent smells, don't silently fix them.
 ## Phase 0 — Locate the work
 
 1. Driver source: `packages/component-driver-<lib>/src/components/<Name>Driver.ts`.
-   Read it **and its base** — `ComponentDriver` / `ContainerDriver` /
+   Read it **and its base** — `ComponentDriver` /
    `ListComponentDriver` in `packages/core/src/drivers/`. Many "missing" methods
    are already inherited (e.g. `isDisabled`, `getText`, `exists`). Don't re-add them.
 2. Test package: `package-tests/component-driver-<lib>-test/`.

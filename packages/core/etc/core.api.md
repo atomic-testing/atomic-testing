@@ -185,20 +185,6 @@ export interface ComponentPartDefinition<T extends ScenePart> {
     option?: Partial<IComponentDriverOption<T>>;
 }
 
-// @public @deprecated (undocumented)
-export abstract class ContainerDriver<ContentT extends ScenePart, T extends ScenePart = {}> extends ComponentDriver<T> implements IComponentDriver<T> {
-    constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>);
-    // @deprecated (undocumented)
-    get content(): ScenePartDriver<ContentT>;
-}
-
-// @public @deprecated (undocumented)
-export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
-    driver: typeof ContainerDriver<ContentT, T> | (new (locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, T>>) => ContainerDriver<ContentT, T>);
-    locator: PartLocator;
-    option?: Partial<IContainerDriverOption<ContentT, T>>;
-}
-
 // @public
 export class CssLocator {
     constructor(selector: string, initializeValue?: Partial<CssLocatorInitializer>);
@@ -358,12 +344,6 @@ export interface IComponentDriver<T extends ScenePart = {}> {
 export interface IComponentDriverOption<T extends ScenePart = {}> {
     // (undocumented)
     parts: T;
-}
-
-// @public @deprecated (undocumented)
-export interface IContainerDriverOption<ContentT extends ScenePart = {}, T extends ScenePart = {}> extends IComponentDriverOption<T> {
-    // (undocumented)
-    content: ContentT;
 }
 
 // @public
@@ -646,7 +626,7 @@ export interface PressKeyOption {
 export interface ScenePart extends Record<string, ScenePartDefinition> {}
 
 // @public
-export type ScenePartDefinition = ComponentPartDefinition<ScenePart> | ContainerPartDefinition<ScenePart, ScenePart> | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
+export type ScenePartDefinition = ComponentPartDefinition<ScenePart> | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
 
 // @public (undocumented)
 export type ScenePartDriver<T extends ScenePart> = { [partName in keyof T]: InstanceType<T[partName]['driver']> };

@@ -2,9 +2,15 @@
 
 ## Status
 
-Accepted (2026-07-30). Additive: `ComponentDriver.scope()` ships now,
-`ContainerDriver` and its three companion types are deprecated in place, and removal
-is scheduled for the 2.0 window tracked by [ADR-017](017-part-locator-chain-reshape.md).
+Accepted (2026-07-31). `ComponentDriver.scope()` replaces the container mechanism
+outright: `ContainerDriver`, `IContainerDriverOption`, and `ContainerPartDefinition`
+(with its `ScenePartDefinition` union member) are **removed**, not deprecated.
+
+Removing rather than deprecating is a deliberate use of the pre-1.0 window. ADR-006
+§2's deprecate-for-≥1-minor lifecycle binds **once 1.0 ships**; core is at 0.99.0, so
+this is the last point where the container vocabulary can leave cheaply. Deprecating
+instead would have frozen it into the 1.0 surface and deferred removal to 2.0 —
+carrying two ways to express one idea across the entire 1.x line.
 
 ## Context
 
@@ -40,8 +46,9 @@ declared-default-plus-call-time-override hybrid. The plumbing (`listHelper`,
 ## Decision
 
 Add **`ComponentDriver.scope(parts)`** — synchronous, returns one driver per named
-part, resolved against the host's own locator. Deprecate `ContainerDriver`,
-`IContainerDriverOption`, `ContainerPartDefinition`, and the union member.
+part, resolved against the host's own locator. Delete `ContainerDriver`,
+`IContainerDriverOption`, `ContainerPartDefinition`, and the union member, and
+re-base every driver that extended the container base onto plain `ComponentDriver`.
 
 Three sub-decisions worth recording:
 
@@ -73,31 +80,29 @@ existence, as `getActionComponent` and `getCell` both do.
   `driver: DialogDriver` needs no type argument and no `option`.
 - ✅ One host instance serves any number of interiors.
 - ✅ Available on every driver, including those that never extended `ContainerDriver`.
-- ✅ Fully additive to the **public API** — `scope` added, three symbols marked
-  `@deprecated`, nothing removed from `etc/core.api.md`. Satisfies ADR-006 §2's
-  deprecate-for-≥1-minor rule.
-- ℹ️ `skillClaims.mjs`'s `CANONICAL_CORE_SYMBOLS` **did** change: `ContainerDriver`
-  was dropped and `scope` added. That list asserts a two-way bond — SKILL-SYNC-01
-  fails if a listed symbol leaves core, SKILL-SYNC-02 fails if no distributed skill
-  names it. Since the skills now teach `scope` and no longer name `ContainerDriver`,
-  keeping the old entry would have tripped 02. `ContainerDriver` remains exported;
-  it is simply no longer a symbol the skills claim.
+- ✅ **One mechanism, one vocabulary.** The base class, the `<ContentT, T>` pair, the
+  option interface, the part-definition variant, and the union member are all gone;
+  the 33 laundering constructors collapse to ordinary `parts`-hardcoding ones.
+- ⚠️ **Breaking.** `etc/core.api.md` loses three exports, and every shipped driver
+  that was a container loses its `ContentT` type parameter and its `content` getter.
+  An external scene written as `DialogDriver<typeof body>` + `option: { content: body }`
+  becomes `DialogDriver` + `dialog.scope(body)`. Taken knowingly while pre-1.0 (see
+  Status).
+- ℹ️ `skillClaims.mjs`'s `CANONICAL_CORE_SYMBOLS` drops `ContainerDriver` and gains
+  `scope`. That list asserts a two-way bond — SKILL-SYNC-01 fails if a listed symbol
+  leaves core, SKILL-SYNC-02 fails if no distributed skill names it — so the entry
+  had to leave with the class.
 - ⚠️ **The scene file is no longer the complete map** of what a test can reach —
   part of the tree now lives at call sites. Mitigated by convention: keep interior
   `ScenePart` consts in the scene file, where every migrated one already lives.
 - ⚠️ The interior is named at each use rather than once. For a composite driver,
   hoist it into one accessor rather than repeating the const per method.
-- ⚠️ **`examples/*` cannot adopt `scope` until it is published.** Each example app
-  is a standalone workspace pinning `@atomic-testing/*` at released npm versions
-  (not `workspace:*`), so it typechecks against the _published_ `core` — where
-  `scope` does not yet exist, and shipped `DialogDriver`s still require their
-  `ContentT` argument. `example-shadcn-workspace` therefore stays on the
-  deprecated `content` channel deliberately; migrate it in the release that
-  follows this one. `package-tests/*` are workspace-linked and have no such wait.
-- ⚠️ The 33 laundering constructors survive until the 2.0 removal; this ADR retires
-  the `content` _channel_ in-repo, not yet the classes that offer it. Shipped driver
-  classes keep their `ContentT` parameter (now defaulted to `{}`) so external scenes
-  still compile.
+- ⚠️ **`examples/*` lag by one release.** Each example app is a standalone workspace
+  pinning `@atomic-testing/*` at released npm versions (not `workspace:*`), so it
+  typechecks against the _published_ `core`, where `scope` does not exist yet.
+  `example-shadcn-workspace` therefore still uses `content` and keeps compiling
+  against its `^0.99.0` pin; migrate it in the same change that bumps that pin past
+  this release. `package-tests/*` are workspace-linked and had no such wait.
 - ℹ️ Only containers' `commutableOption` leak is closed. The general mismatch
   (`ListComponentDriver` leaks `itemClass`/`itemLocator` the same way) is untouched
   and needs its own change to `listHelper`, `childListHelper`, and
@@ -105,14 +110,14 @@ existence, as `getActionComponent` and `getCell` both do.
 
 ## Alternatives considered
 
-| Alternative                                  | Why not chosen                                                                                                                                  |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `getContent(parts)`                          | Name occupied by 8 shipped leaf drivers with an incompatible signature; rejected by `tsc`.                                                      |
-| `scope(locator, driverClass)` only           | More in-repo precedent, but covers none of the 24 real sites without a wrapper driver per interior.                                             |
-| Ship both forms now                          | One arm would have zero callers; the overload can be added when a single-interior case appears.                                                 |
-| Keep `ContainerDriver`, slim it down         | Retains the class, option field, and union member, so the dual vocabulary and boilerplate constructors survive — most of the gain forfeited.    |
-| Remove the container types now               | Breaks external scenes with no runway and violates ADR-006 §2.                                                                                  |
-| Pass `commutableOption` to interior children | Would change behavior for the migrated scenes; `content` children have always received `{}`. Preserved deliberately, and documented on `scope`. |
+| Alternative                                  | Why not chosen                                                                                                                                                                                                                |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `getContent(parts)`                          | Name occupied by 8 shipped leaf drivers with an incompatible signature; rejected by `tsc`.                                                                                                                                    |
+| `scope(locator, driverClass)` only           | More in-repo precedent, but covers none of the 24 real sites without a wrapper driver per interior.                                                                                                                           |
+| Ship both forms now                          | One arm would have zero callers; the overload can be added when a single-interior case appears.                                                                                                                               |
+| Keep `ContainerDriver`, slim it down         | Retains the class, option field, and union member, so the dual vocabulary and boilerplate constructors survive — most of the gain forfeited.                                                                                  |
+| Deprecate now, remove in 2.0                 | Freezes the container vocabulary into the 1.0 surface and carries two ways to say one thing across all of 1.x. ADR-006 §2's lifecycle binds only once 1.0 ships, so pre-1.0 removal costs a runway nobody is standing on yet. |
+| Pass `commutableOption` to interior children | Would change behavior for the migrated scenes; `content` children have always received `{}`. Preserved deliberately, and documented on `scope`.                                                                               |
 
 ## Related
 

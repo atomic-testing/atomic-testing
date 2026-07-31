@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byRole,
   byTagName,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -61,19 +61,15 @@ const defaultTransitionDuration = 250;
  * `Escape` still dismisses through `DismissableLayer` — `closeByEscape` is the
  * portable programmatic dismissal, same as `DialogDriver`.
  */
-export class AlertDialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<
-  ContentT,
-  typeof alertDialogParts
-> {
+export class AlertDialogDriver extends ComponentDriver<typeof alertDialogParts> {
   constructor(
     locator: PartLocator,
     interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, typeof alertDialogParts>>
+    option?: Partial<IComponentDriverOption<typeof alertDialogParts>>
   ) {
     super(locator, interactor, {
       ...option,
       parts: alertDialogParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

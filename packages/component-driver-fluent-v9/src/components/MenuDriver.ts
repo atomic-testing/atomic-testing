@@ -1,10 +1,9 @@
 import {
   childListHelper,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -43,19 +42,14 @@ const defaultTransitionDuration = 1000;
  * `childListHelper`'s `:nth-child` + selector filter skips them without losing
  * position.
  */
-export class MenuDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
+export class MenuDriver extends ComponentDriver<{}> {
   /** The scene-supplied trigger locator (the element `MenuTrigger` clones `aria-haspopup`/`id` onto). */
   protected readonly triggerLocator: PartLocator;
 
-  constructor(
-    triggerLocator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, {}>>
-  ) {
+  constructor(triggerLocator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(menuListLocator(triggerLocator), interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
     this.triggerLocator = triggerLocator;
   }

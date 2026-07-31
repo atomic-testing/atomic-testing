@@ -1,4 +1,4 @@
-import { byLinkedElement, IContainerDriverOption, Interactor, PartLocator, ScenePart } from '@atomic-testing/core';
+import { byLinkedElement, IComponentDriverOption, Interactor, PartLocator } from '@atomic-testing/core';
 
 import { MenuContentDriverBase } from './MenuContentDriverBase';
 
@@ -27,14 +27,10 @@ const defaultTransitionDuration = 250;
  * (`getMenuItemByLabel`, `selectByLabel`, …) come from `MenuContentDriverBase`
  * and are only meaningful while open.
  */
-export class MenubarMenuDriver<ContentT extends ScenePart = {}> extends MenuContentDriverBase<ContentT> {
+export class MenubarMenuDriver extends MenuContentDriverBase {
   private readonly triggerLocator: PartLocator;
 
-  constructor(
-    triggerLocator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, {}>>
-  ) {
+  constructor(triggerLocator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     const contentLocator: PartLocator = byLinkedElement('Root')
       .onLinkedElement(triggerLocator)
       .extractAttribute('aria-controls')
@@ -42,7 +38,6 @@ export class MenubarMenuDriver<ContentT extends ScenePart = {}> extends MenuCont
     super(contentLocator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
     this.triggerLocator = triggerLocator;
   }

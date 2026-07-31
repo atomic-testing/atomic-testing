@@ -65,7 +65,7 @@ first rule that matches wins:
    something `component-driver-html` or your design-system package already ships.
 2. **Variable-length collection of identically-shaped children** (list, table
    rows, menu items, chat messages, search results)? → **`ListComponentDriver`**.
-   Recurse only into the *item* shape (one `itemClass`) — never into
+   Recurse only into the _item_ shape (one `itemClass`) — never into
    "item1, item2, item3" as separate named parts.
 3. **Chrome fixed, content varies by call site** (dialog body, tab panel,
    slide-over hosting a different form per usage)? → an ordinary driver, with each
@@ -75,7 +75,7 @@ first rule that matches wins:
 4. **Semantically independent, nameable feature** — it has its own component
    file, it bundles a domain-level operation (`fillShippingInfo`, `send`,
    `save`), or it plausibly appears in more than one place? → **Factor it into
-   its own composite driver class, its own file.** Recurse into *its* children
+   its own composite driver class, its own file.** Recurse into _its_ children
    with these same rules, one level down.
 5. **Otherwise** — a small fixed cluster of primitives with no reuse potential
    and no domain operation of its own (a label + icon + close button that only
@@ -125,7 +125,7 @@ wrapping root span, not the `<input>`; Radix portals menus to `<body>`).
 **Render it and look**, per node that needs a new driver.
 
 Fastest authoritative probe — a throwaway test in the project's own DOM runner
-(jsdom is the *stricter* selector engine, so what passes here passes in real
+(jsdom is the _stricter_ selector engine, so what passes here passes in real
 browsers):
 
 ```tsx
@@ -140,8 +140,11 @@ it('probe', async () => {
   const el = document.querySelector('[data-testid="settings-panel"]');
   console.log('OUTER=', el?.outerHTML);
   // Probe the candidate selector AND whether the engine supports it (e.g. :has()):
-  try { console.log('SEL=', document.querySelector('<candidate selector>')?.textContent); }
-  catch (e) { console.log('SEL THREW=', (e as Error).message); }
+  try {
+    console.log('SEL=', document.querySelector('<candidate selector>')?.textContent);
+  } catch (e) {
+    console.log('SEL THREW=', (e as Error).message);
+  }
   await engine.cleanUp();
 });
 ```
@@ -172,7 +175,7 @@ library versions and semantic over class-coupled. In order:
    appends as a descendant of the parent locator).
 4. **Ancestor / sibling outside the subtree** (e.g. an implicit wrapping
    `<label>`): CSS can only go "up" via `:has()`. Re-root at the ancestor
-   matched against *this* element, **keeping the surrounding scope** so sibling
+   matched against _this_ element, **keeping the surrounding scope** so sibling
    instances never collide:
 
    ```ts
@@ -186,6 +189,7 @@ library versions and semantic over class-coupled. In order:
 
    `:has()` is supported by jsdom's nwsapi (≥2.2) and all three Playwright
    engines — but **verify in the Phase 3 probe**, don't assume.
+
 5. **Portal / outside-the-tree content** (Dialog, Menu, Drawer, Toast): address
    it from the document root in the ScenePart —
    `byDataTestId(id, 'Root')` — or, for a reusable driver class, override
@@ -261,8 +265,9 @@ type _Lock = AssertScenePlaceableDriver<typeof ShippingFormDriver>;
   // read via getItemByIndex / getItemByLabel / getItems / getItemCount
   ```
 
-- **Rule-3 (container) placement** — the content is threaded at the *call
-  site's* ScenePart, never inside the container driver's file:
+- **Rule-3 (caller-varying interior) placement** — the driver is declared like
+  any other; the interior is named at the _call site_, never inside the driver's
+  own file:
 
   ```ts
   const dialogContent = {
@@ -271,11 +276,13 @@ type _Lock = AssertScenePlaceableDriver<typeof ShippingFormDriver>;
 
   couponDialog: {
     locator: byDataTestId(T.couponDialog, 'Root'), // portals to <body>
-    driver: DialogDriver<typeof dialogContent>,
-    option: { content: dialogContent },
+    driver: DialogDriver,
   },
-  // read via engine.parts.couponDialog.content.form
+  // read via engine.parts.couponDialog.scope(dialogContent).form
   ```
+
+  `scope()` is synchronous (locators resolve lazily), and one driver instance can
+  scope any number of different interiors.
 
 - **Dynamically-constructed children** (a per-label chip getter, an item
   accessor no ScenePart can pre-declare): pass `this.commutableOption` — the

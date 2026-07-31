@@ -1,5 +1,4 @@
 export { ComponentDriver } from './ComponentDriver';
-export { ContainerDriver } from './ContainerDriver';
 export type {
   IClickableDriver,
   IDisableableDriver,

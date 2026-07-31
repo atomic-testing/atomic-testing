@@ -20,7 +20,7 @@
 // (source string in, findings out) so it is unit-testable without a filesystem.
 
 /** The composite-driver base classes whose subclasses carry the fixed idioms. */
-const DRIVER_BASES = ['ComponentDriver', 'ContainerDriver', 'ListComponentDriver'];
+const DRIVER_BASES = ['ComponentDriver', 'ListComponentDriver'];
 
 /** Soft upper bound on a single driver's direct parts before extraction is due. */
 export const PARTS_CEILING = 10;

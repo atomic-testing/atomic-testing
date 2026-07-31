@@ -56,7 +56,7 @@ await engine.parts.dialog.scope(confirmContent).confirm.click();
 ```
 
 :::note
-`ContainerDriver<ContentT, T>` and its `content` option were the earlier form of this and are **deprecated** — see [ADR-019](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/019-call-time-scope-supersedes-container-content.md). They still work, and are scheduled for removal in 2.0.
+Earlier versions modeled this with a `ContainerDriver` base and a `content` driver option, which required naming the interior scene twice. Both were removed in favor of `scope()` — see [ADR-019](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/019-call-time-scope-supersedes-container-content.md).
 :::
 
 **`ListComponentDriver<ItemT>`** (`packages/core/src/drivers/ListComponentDriver.ts`) extends `ComponentDriver` and adds `getItemByIndex()`, `getItemByLabel()`, `getItems()`, and `getItemCount()` — all resolved by matching a single `itemLocator` repeatedly and wrapping each match in an `itemClass` driver. Reach for it whenever a component renders a variable-length collection of identically-shaped children. `ListDriver` in `@atomic-testing/component-driver-mui-v7` (`packages/component-driver-mui-v7/src/components/ListDriver.ts`) is a shipped example driving a `<List>` of `<ListItem>`s.

@@ -1,4 +1,4 @@
-import { byCssClass, ContainerDriver, locatorUtil, PartLocator, ScenePart } from '@atomic-testing/core';
+import { byCssClass, ComponentDriver, locatorUtil, PartLocator, ScenePart } from '@atomic-testing/core';
 
 const backdropLocator = byCssClass('MuiBackdrop-root');
 const defaultTransitionDuration = 250;
@@ -20,10 +20,7 @@ const closeGraceMs = 150;
  * added to every interactor (DOM/React/Vue/Playwright). It is deferred rather than
  * partially implemented.
  */
-export abstract class OverlayDriver<ContentT extends ScenePart, T extends ScenePart = {}> extends ContainerDriver<
-  ContentT,
-  T
-> {
+export abstract class OverlayDriver<T extends ScenePart = {}> extends ComponentDriver<T> {
   /**
    * Locator of the surface whose visibility reflects the open state (e.g. the
    * drawer/dialog paper).

@@ -1,11 +1,10 @@
 import {
   byRole,
-  IContainerDriverOption,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 import { MenuContentDriverBase } from './MenuContentDriverBase';
@@ -25,18 +24,17 @@ const menuRootLocator: PartLocator = byRole('menu', 'Root');
  * locator (e.g. a `data-testid` forwarded onto `DropdownMenuContent`) onto the SAME
  * `[role="menu"]` element.
  *
- * Extends `MenuContentDriverBase` (a `ContainerDriver`, not a plain `ComponentDriver`)
+ * Extends `MenuContentDriverBase` (a `ComponentDriver`, not a plain `ComponentDriver`)
  * for the same reason radix-v1's counterpart does: Reka menus can mix plain items with
  * richer content, so callers can declare a custom `content` scene. The item operations
  * (`getMenuItemByLabel`/`selectByLabel`/`getMenuItemCount`/`getMenuItemByIndex`) live on
  * the base.
  */
-export class DropdownMenuDriver<ContentT extends ScenePart = {}> extends MenuContentDriverBase<ContentT> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, {}>>) {
+export class DropdownMenuDriver extends MenuContentDriverBase {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(locator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

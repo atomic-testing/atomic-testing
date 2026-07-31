@@ -1,10 +1,9 @@
 import {
   byLinkedElement,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 const defaultTransitionDuration = 250;
@@ -63,14 +62,10 @@ const defaultTransitionDuration = 250;
  * directly on the content element closes the popover), the same "handled
  * globally" behavior `component-driver-radix-v1`'s driver relies on.
  */
-export class PopoverDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
+export class PopoverDriver extends ComponentDriver<{}> {
   protected readonly triggerLocator: PartLocator;
 
-  constructor(
-    triggerLocator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, {}>>
-  ) {
+  constructor(triggerLocator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     const contentLocator: PartLocator = byLinkedElement('Root')
       .onLinkedElement(triggerLocator)
       .extractAttribute('aria-controls')
@@ -78,7 +73,6 @@ export class PopoverDriver<ContentT extends ScenePart = {}> extends ContainerDri
     super(contentLocator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
     this.triggerLocator = triggerLocator;
   }

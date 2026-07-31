@@ -1,6 +1,5 @@
 import { Optional } from './dataTypes';
 import { ComponentDriver } from './drivers/ComponentDriver';
-import { ContainerDriver } from './drivers/ContainerDriver';
 import { ListComponentDriver, ListComponentDriverSpecificOption } from './drivers/ListComponentDriver';
 import { WaitForOption } from './drivers/WaitForOption';
 import { Interactor } from './interactor';
@@ -43,36 +42,6 @@ export interface ComponentPartDefinition<T extends ScenePart> {
 }
 
 /**
- * @deprecated Declare the part with {@link ComponentPartDefinition} and reach its
- * interior through {@link ComponentDriver.scope} instead — that drops the
- * `content` option, which names the same scene the `driver` type argument already
- * names. Scheduled for removal in the 2.0 window tracked by ADR-017.
- */
-export interface ContainerPartDefinition<ContentT extends ScenePart, T extends ScenePart> {
-  /**
-   * The locator of the part
-   */
-  locator: PartLocator;
-
-  /**
-   * The class of driver which is used to interact with the element
-   */
-  driver:
-    | typeof ContainerDriver<ContentT, T>
-    | (new (
-        locator: PartLocator,
-        interactor: Interactor,
-        option?: Partial<IContainerDriverOption<ContentT, T>>
-      ) => ContainerDriver<ContentT, T>);
-
-  /**
-   * Option for the driver. Optional, mirroring {@link ComponentPartDefinition.option};
-   * a container with no extra content/parts can omit it.
-   */
-  option?: Partial<IContainerDriverOption<ContentT, T>>;
-}
-
-/**
  * Definition for a list component part. The `any` in `ItemT extends ComponentDriver<any>`
  * is necessary because ItemT represents the item driver type, and we need to accept
  * any item driver regardless of its ScenePart type parameter.
@@ -106,13 +75,13 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
 /**
  * The forms a named part in a {@link ScenePart} may take.
  *
- * The {@link ContainerPartDefinition} member is deprecated and leaves with it in
- * 2.0 (ADR-017): a container is now an ordinary {@link ComponentPartDefinition}
- * whose interior is reached through {@link ComponentDriver.scope}.
+ * A component whose interior is caller-supplied is an ordinary
+ * {@link ComponentPartDefinition}; its interior is reached at call time through
+ * {@link ComponentDriver.scope} rather than declared as a second parts channel
+ * (ADR-019).
  */
 export type ScenePartDefinition =
   | ComponentPartDefinition<ScenePart>
-  | ContainerPartDefinition<ScenePart, ScenePart>
   | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
 
 /**
@@ -183,22 +152,6 @@ export interface ITestEngineOption extends IComponentDriverOption {
    * Playwright.
    */
   rootElement?: Element;
-}
-
-/**
- * @deprecated Use {@link ComponentDriver.scope}, which takes the interior
- * scene as a call-time argument and so needs no option field. Scheduled for
- * removal in the 2.0 window tracked by ADR-017.
- *
- * Note the `content` this adds is also the reason a `ContainerDriver`'s
- * {@link CommutableComponentDriverOption} carries a field its type does not
- * admit; retiring this interface closes that gap for containers.
- */
-export interface IContainerDriverOption<
-  ContentT extends ScenePart = {},
-  T extends ScenePart = {},
-> extends IComponentDriverOption<T> {
-  content: ContentT;
 }
 
 export interface IComponentDriver<T extends ScenePart = {}> {

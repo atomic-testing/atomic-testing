@@ -1,12 +1,11 @@
 import {
   byCssSelector,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 /**
@@ -46,12 +45,11 @@ const defaultTransitionDuration = 250;
  * behaviour, and closing by pointer-leave (jsdom's `mouseOut` fires no
  * `pointerleave`), are E2E-only — {@link closeByEscape} is the portable close.
  */
-export class HoverCardDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, {}>>) {
+export class HoverCardDriver extends ComponentDriver<{}> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(locator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

@@ -1,8 +1,8 @@
 import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssSelector,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   Optional,
   PartLocator,
@@ -54,16 +54,15 @@ const defaultTransitionDuration = 250;
  * click-driven paths ({@link close}, {@link clickAction}) and leave
  * timer-driven auto-dismissal to E2E where it matters to the consumer.
  */
-export class ToastDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof toastParts> {
+export class ToastDriver extends ComponentDriver<typeof toastParts> {
   constructor(
     locator: PartLocator,
     interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, typeof toastParts>>
+    option?: Partial<IComponentDriverOption<typeof toastParts>>
   ) {
     super(locator, interactor, {
       ...option,
       parts: toastParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

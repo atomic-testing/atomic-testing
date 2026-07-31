@@ -5,7 +5,6 @@ import {
   locatorUtil,
   Optional,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -72,7 +71,7 @@ function escapeAttributeValue(value: string): string {
  *   that pairing is `DialogDriver` territory and would motivate the standalone
  *   `component-driver-cmdk` package #1007 names if demand appears.
  */
-export class ComboboxDriver<ContentT extends ScenePart = {}> extends PopoverDriver<ContentT> {
+export class ComboboxDriver extends PopoverDriver {
   /** The cmdk filter input inside the open panel. */
   protected get inputLocator(): PartLocator {
     return locatorUtil.append(this.locator, byCssSelector(inputSelector));

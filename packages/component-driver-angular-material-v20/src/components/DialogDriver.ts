@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byLinkedElement,
   byRole,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   locatorUtil,
   type LocatorRelativePosition,
@@ -48,15 +48,14 @@ const defaultTransitionDurationMs = 1000;
  * `role: 'alertdialog'` needs its own locator arrangement.
  *
  * Dialog content is the consumer's own component — declare its parts through
- * the `ContainerDriver` `content` option; they resolve relative to the
+ * the `ComponentDriver` `content` option; they resolve relative to the
  * container.
  */
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class DialogDriver extends ComponentDriver<typeof dialogParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: dialogParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 
