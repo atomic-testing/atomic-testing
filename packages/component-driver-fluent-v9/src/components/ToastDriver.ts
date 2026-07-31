@@ -1,11 +1,4 @@
-import {
-  byCssClass,
-  ContainerDriver,
-  IContainerDriverOption,
-  Interactor,
-  PartLocator,
-  ScenePart,
-} from '@atomic-testing/core';
+import { byCssClass, ComponentDriver, IComponentDriverOption, Interactor, PartLocator } from '@atomic-testing/core';
 
 import { readOptionalDescendantText } from '../internal/optionalText';
 
@@ -38,12 +31,11 @@ const bodyLocator = byCssClass('fui-ToastBody');
  * no longer matches the bare-`{}` shape) — the same "intentional variance" gap
  * CLAUDE.md documents, hit here by the item itself rather than the host.
  */
-export class ToastDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, {}>>) {
+export class ToastDriver extends ComponentDriver<{}> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(locator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

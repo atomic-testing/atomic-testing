@@ -1,9 +1,8 @@
 import { Interactor } from '../../interactor/Interactor';
 import { byDataTestId } from '../../locators/byDataTestId';
 import type { PartLocator } from '../../locators/PartLocator';
-import { IComponentDriverOption, IContainerDriverOption, ScenePart } from '../../partTypes';
+import { IComponentDriverOption, ScenePart } from '../../partTypes';
 import { ComponentDriver } from '../ComponentDriver';
-import { ContainerDriver } from '../ContainerDriver';
 
 // scope composes locators and never queries — a PartLocator resolves lazily
 // — so a bare interactor stub is enough to assert on everything below.
@@ -70,21 +69,6 @@ class HostDriver extends ComponentDriver<typeof chromeParts> {
   }
 }
 
-/** The same host expressed through the deprecated `content` channel. */
-class LegacyContainerHost extends ContainerDriver<typeof interiorParts, typeof chromeParts> {
-  constructor(
-    locator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<typeof interiorParts, typeof chromeParts>>
-  ) {
-    super(locator, interactor, { ...option, parts: chromeParts, content: interiorParts });
-  }
-
-  get driverName(): string {
-    return 'LegacyContainerHost';
-  }
-}
-
 const selectorsOf = (locator: PartLocator): string[] => locator.map(part => part.selector);
 
 describe('ComponentDriver.scope', () => {
@@ -95,15 +79,6 @@ describe('ComponentDriver.scope', () => {
 
     expect(selectorsOf(content.confirm.locator)).toEqual(['[data-testid="dialog"]', '[data-testid="confirm"]']);
     expect(selectorsOf(content.cancel.locator)).toEqual(['[data-testid="dialog"]', '[data-testid="cancel"]']);
-  });
-
-  it('resolves identically to the deprecated ContainerDriver content channel', () => {
-    const locator = byDataTestId('dialog');
-    const viaGetContent = new HostDriver(locator, stubInteractor).scope(interiorParts);
-    const viaContentOption = new LegacyContainerHost(locator, stubInteractor).content;
-
-    expect(selectorsOf(viaGetContent.confirm.locator)).toEqual(selectorsOf(viaContentOption.confirm.locator));
-    expect(selectorsOf(viaGetContent.cancel.locator)).toEqual(selectorsOf(viaContentOption.cancel.locator));
   });
 
   it("withholds the host's option from interior children, while chrome parts still receive it", () => {

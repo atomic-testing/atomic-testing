@@ -5,7 +5,7 @@ import { defineComponent, h, ref } from 'vue';
 
 /**
  * Dialog scene: a trigger button opens a modal Dialog whose body holds an
- * InputText and a Save button (the ContainerDriver content scene); Save writes
+ * InputText and a Save button (the ComponentDriver content scene); Save writes
  * the entered name into an in-page span so tests can observe that content
  * interaction really flowed through the teleported dialog. A second, simpler
  * Dialog renders with `appendTo="self"` (#1033) to prove the in-tree anchoring

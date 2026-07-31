@@ -1,8 +1,8 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -59,12 +59,11 @@ const defaultTransitionDuration = 1000;
  * (mirrors `component-driver-radix-v1`'s `DialogDriver`, which hits the same
  * un-linkable-overlay wall).
  */
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class DialogDriver extends ComponentDriver<typeof dialogParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: dialogParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

@@ -1,4 +1,4 @@
-import { byCssClass, type LocatorRelativePosition, Optional, PartLocator, ScenePart } from '@atomic-testing/core';
+import { byCssClass, type LocatorRelativePosition, Optional, PartLocator } from '@atomic-testing/core';
 
 import { DrawerDriverBase } from './DrawerDriverBase';
 
@@ -29,7 +29,7 @@ const defaultTransitionDuration = 1000;
  * `DialogDriver` hits, and for the same reason. Only {@link closeByEscape} is
  * offered as a portable dismissal path.
  */
-export class OverlayDrawerDriver<ContentT extends ScenePart = {}> extends DrawerDriverBase<ContentT> {
+export class OverlayDrawerDriver extends DrawerDriverBase {
   static override overriddenParentLocator(): Optional<PartLocator> {
     return overlayDrawerRootLocator;
   }

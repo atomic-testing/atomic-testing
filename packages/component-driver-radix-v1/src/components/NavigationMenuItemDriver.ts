@@ -1,11 +1,10 @@
 import {
   byLinkedElement,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   Optional,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 const defaultTransitionDuration = 250;
@@ -30,14 +29,10 @@ const defaultTransitionDuration = 250;
  * driver — they are ordinary in-tree anchors; declare them as plain scene
  * parts. Consumer links INSIDE this item's content go in the `content` scene.
  */
-export class NavigationMenuItemDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
+export class NavigationMenuItemDriver extends ComponentDriver<{}> {
   private readonly triggerLocator: PartLocator;
 
-  constructor(
-    triggerLocator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, {}>>
-  ) {
+  constructor(triggerLocator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     const contentLocator: PartLocator = byLinkedElement('Root')
       .onLinkedElement(triggerLocator)
       .extractAttribute('aria-controls')
@@ -45,7 +40,6 @@ export class NavigationMenuItemDriver<ContentT extends ScenePart = {}> extends C
     super(contentLocator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
     this.triggerLocator = triggerLocator;
   }

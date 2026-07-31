@@ -1,8 +1,8 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   PartLocator,
   ScenePart,
@@ -36,15 +36,11 @@ const defaultTransitionDuration = 1000;
  * any instance exists (see `ComponentDriver`), so which recipe applies must be
  * a compile-time class choice, not an instance-time one.
  */
-export abstract class DrawerDriverBase<ContentT extends ScenePart = {}> extends ContainerDriver<
-  ContentT,
-  typeof drawerParts
-> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export abstract class DrawerDriverBase extends ComponentDriver<typeof drawerParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: drawerParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

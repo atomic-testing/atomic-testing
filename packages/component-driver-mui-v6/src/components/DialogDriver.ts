@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
   byRole,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -27,12 +27,11 @@ const dialogRootLocator: PartLocator = byRole('presentation', 'Root');
 const defaultTransitionDuration = 250;
 const closeGraceMs = 150;
 
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class DialogDriver extends ComponentDriver<typeof parts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

@@ -139,12 +139,12 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * {@link PartLocator} resolves lazily and queries nothing here, so this is
    * synchronous and safe to call before the interior has mounted.
    *
-   * Supersedes {@link ContainerDriver}'s `content` channel, which required the
-   * same scene to be named twice — once as a type argument, once in the driver
-   * option — plus a laundering constructor in every subclass. Named `scope`
-   * rather than `getContent` because leaf drivers already own that name for
-   * reading a component's own text (a badge's content, a tooltip's content), and
-   * a base-class member cannot collide with them.
+   * This replaced an earlier `ContainerDriver` base whose `content` option
+   * required the same scene to be named twice — once as a type argument, once in
+   * the driver option — plus a laundering constructor in every subclass (ADR-019).
+   * Named `scope` rather than `getContent` because leaf drivers already own that
+   * name for reading a component's own text (a badge's content, a tooltip's
+   * content), and a base-class member cannot collide with them.
    *
    * Interior children are constructed with an empty option, exactly as `content`
    * parts always have been: an interior belongs to the scene, so it inherits no

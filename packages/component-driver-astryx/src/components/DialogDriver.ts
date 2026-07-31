@@ -1,8 +1,8 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byTagName,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   Optional,
   PartLocator,
@@ -29,16 +29,15 @@ export const parts = {
  * portal root to escape to, hence no `overriddenParentLocator()`.
  *
  * `getTitle` reads the `DialogHeader` title (`<h2>`); arbitrary content is reached
- * through this `ContainerDriver`'s `content` parts. The Escape-to-dismiss flow
+ * through this `ComponentDriver`'s `content` parts. The Escape-to-dismiss flow
  * works in jsdom (the `<dialog>` keydown handler) and in a real browser; backdrop
  * (`::backdrop`) dismissal is a native pointer behaviour left to the E2E run.
  */
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class DialogDriver extends ComponentDriver<typeof parts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

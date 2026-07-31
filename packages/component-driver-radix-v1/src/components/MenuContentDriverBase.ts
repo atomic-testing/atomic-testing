@@ -1,4 +1,4 @@
-import { childListHelper, ContainerDriver, ScenePart } from '@atomic-testing/core';
+import { childListHelper, ComponentDriver } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
 import { MenuItemDriver } from './MenuItemDriver';
@@ -30,7 +30,7 @@ const menuItemSelector = '[role="menuitem"]';
  *
  * @internal
  */
-export abstract class MenuContentDriverBase<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
+export abstract class MenuContentDriverBase extends ComponentDriver<{}> {
   /** The item whose visible label matches `label`, or `null` when absent. */
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
     for await (const item of childListHelper.iterateMatchingChildren(

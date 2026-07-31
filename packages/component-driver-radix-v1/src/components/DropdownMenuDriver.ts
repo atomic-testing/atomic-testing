@@ -1,11 +1,10 @@
 import {
   byRole,
-  IContainerDriverOption,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 import { MenuContentDriverBase } from './MenuContentDriverBase';
@@ -23,7 +22,7 @@ const menuRootLocator: PartLocator = byRole('menu', 'Root');
  * `DialogDriver`; the scene's declared locator (e.g. a `data-testid` forwarded
  * onto `DropdownMenu.Content`) compounds onto the SAME `[role="menu"]` element.
  *
- * Extends `MenuContentDriverBase` (a `ContainerDriver`, not a plain
+ * Extends `MenuContentDriverBase` (a `ComponentDriver`, not a plain
  * `ComponentDriver`, unlike `component-driver-mui-v7`'s `MenuDriver`) because
  * Radix menus commonly mix plain items with richer content —
  * `DropdownMenu.CheckboxItem`, `DropdownMenu.RadioGroup`, submenus — so callers
@@ -32,12 +31,11 @@ const menuRootLocator: PartLocator = byRole('menu', 'Root');
  * `MenubarMenuDriver` (and the `childListHelper` separator rationale) live on
  * the base.
  */
-export class DropdownMenuDriver<ContentT extends ScenePart = {}> extends MenuContentDriverBase<ContentT> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, {}>>) {
+export class DropdownMenuDriver extends MenuContentDriverBase {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(locator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

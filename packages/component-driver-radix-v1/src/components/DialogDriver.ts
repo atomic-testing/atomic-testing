@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byRole,
   byTagName,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -53,16 +53,15 @@ const defaultTransitionDuration = 250;
  * against real Radix DOM is `closeByEscape` (Radix's `DismissableLayer` handles
  * `Escape` globally, same code path a real user relies on).
  */
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
+export class DialogDriver extends ComponentDriver<typeof dialogParts> {
   constructor(
     locator: PartLocator,
     interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, typeof dialogParts>>
+    option?: Partial<IComponentDriverOption<typeof dialogParts>>
   ) {
     super(locator, interactor, {
       ...option,
       parts: dialogParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

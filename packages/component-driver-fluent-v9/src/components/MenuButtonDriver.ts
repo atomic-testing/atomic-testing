@@ -1,5 +1,4 @@
 import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
-import { ScenePart } from '@atomic-testing/core';
 
 import { MenuDriver } from './MenuDriver';
 
@@ -16,12 +15,13 @@ import { MenuDriver } from './MenuDriver';
  * `MenuTrigger`'s child, exactly what `MenuDriver` expects as its trigger).
  */
 export class MenuButtonDriver extends HTMLButtonDriver {
-  /** The `Menu` this button opens, resolved via its trigger `id` → `aria-labelledby` link. See {@link MenuDriver}. */
-  getMenu<ContentT extends ScenePart = {}>(content?: ContentT): MenuDriver<ContentT> {
-    return new MenuDriver<ContentT>(this.locator, this.interactor, {
-      ...this.commutableOption,
-      content: content ?? ({} as ContentT),
-    });
+  /**
+   * The `Menu` this button opens, resolved via its trigger `id` → `aria-labelledby`
+   * link. See {@link MenuDriver}. Reach consumer-declared menu content with
+   * `getMenu().scope(parts)`.
+   */
+  getMenu(): MenuDriver {
+    return new MenuDriver(this.locator, this.interactor, { ...this.commutableOption });
   }
 
   override get driverName(): string {

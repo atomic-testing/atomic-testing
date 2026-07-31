@@ -1,8 +1,8 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   PartLocator,
   ScenePart,
@@ -34,12 +34,11 @@ const alertSeverityEvaluators: AlertSeverityEvaluator[] = [
  * Driver for Material UI v7 Alert component.
  * @see https://mui.com/material-ui/react-alert/
  */
-export class AlertDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof parts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class AlertDriver extends ComponentDriver<typeof parts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: parts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

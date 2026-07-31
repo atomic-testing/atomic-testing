@@ -35,7 +35,7 @@ modelled on `packages/create-atomic-testing/scripts/check-recipe-sync.mjs`. It
 fails loudly when a concrete claim in a SKILL.md has drifted from the library:
 
 - a core driver class/method the skills name (`ComponentDriver`,
-  `ContainerDriver`, `ListComponentDriver`, `AssertScenePlaceableDriver`,
+  `ListComponentDriver`, `AssertScenePlaceableDriver`,
   `commutableOption`, `waitUntilComponentState`, `waitUntil`) no longer exists in
   `packages/core/src` — or the canonical list names one no skill references;
 - a shipped `component-driver-*` family is unaccounted-for, or the config names a

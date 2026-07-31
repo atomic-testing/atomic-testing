@@ -1,12 +1,11 @@
 import {
   byCssClass,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 const popoverSurfaceRootLocator: PartLocator = byCssClass('fui-PopoverSurface', 'Root');
@@ -38,12 +37,11 @@ const defaultTransitionDuration = 1000;
  * used here), so simple existence doubles as the open signal — no separate
  * visibility check needed, unlike MUI's always-mounted-during-transition Dialog.
  */
-export class PopoverDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption<ContentT, {}>>) {
+export class PopoverDriver extends ComponentDriver<{}> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(locator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

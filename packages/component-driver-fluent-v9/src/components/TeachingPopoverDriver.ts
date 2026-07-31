@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byAttribute,
   byCssClass,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -54,15 +54,11 @@ const defaultTransitionDuration = 1000;
  * dismiss `<button aria-label="dismiss">`, unlike plain `Dialog`/`Popover`
  * (which leave dismissal entirely to consumer-supplied actions or Escape).
  */
-export class TeachingPopoverDriver<ContentT extends ScenePart = {}> extends ContainerDriver<
-  ContentT,
-  typeof teachingPopoverParts
-> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class TeachingPopoverDriver extends ComponentDriver<typeof teachingPopoverParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: teachingPopoverParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

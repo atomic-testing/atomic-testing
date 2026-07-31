@@ -23,7 +23,7 @@ export const CANONICAL_CORE_SYMBOLS = [
   { name: 'AssertScenePlaceableDriver', kind: 'export' },
   { name: 'commutableOption', kind: 'member' },
   // The call-time interior accessor the skills teach for caller-varying content;
-  // replaced the deprecated `ContainerDriver`/`content` channel in ADR-019, which
+  // replaced the removed `ContainerDriver`/`content` channel in ADR-019, which
   // the skills therefore no longer name.
   { name: 'scope', kind: 'member' },
   { name: 'waitUntilComponentState', kind: 'member' },

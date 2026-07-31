@@ -2,7 +2,7 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byCssClass,
   byRole,
-  IContainerDriverOption,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -43,12 +43,11 @@ const drawerRootLocator: PartLocator = byRole('presentation', 'Root');
  * {@link OverlayDriver}; this driver adds the anchor read and the portal re-rooting.
  * @see https://mui.com/material-ui/react-drawer/
  */
-export class DrawerDriver<ContentT extends ScenePart = {}> extends OverlayDriver<ContentT, typeof drawerParts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IContainerDriverOption>) {
+export class DrawerDriver extends OverlayDriver<typeof drawerParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: drawerParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

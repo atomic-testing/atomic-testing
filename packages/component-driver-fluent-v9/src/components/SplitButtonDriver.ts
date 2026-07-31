@@ -54,12 +54,12 @@ export class SplitButtonDriver extends ComponentDriver<typeof splitButtonParts> 
     return this.parts.primaryButton.isDisabled();
   }
 
-  /** The `Menu` the menu-invoking half opens. See {@link MenuDriver}. */
-  getMenu<ContentT extends ScenePart = {}>(content?: ContentT): MenuDriver<ContentT> {
-    return new MenuDriver<ContentT>(this.parts.menuButton.locator, this.interactor, {
-      ...this.commutableOption,
-      content: content ?? ({} as ContentT),
-    });
+  /**
+   * The `Menu` the menu-invoking half opens. See {@link MenuDriver}. Reach
+   * consumer-declared menu content with `getMenu().scope(parts)`.
+   */
+  getMenu(): MenuDriver {
+    return new MenuDriver(this.parts.menuButton.locator, this.interactor, { ...this.commutableOption });
   }
 
   get driverName(): string {

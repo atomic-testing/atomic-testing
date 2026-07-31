@@ -11,10 +11,10 @@ Barrel: [core/src/index.ts](../../packages/core/src/index.ts). Highlights:
 | Export                                                                                                                                  | Kind                    | File                                                                                                                                   |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `TestEngine`                                                                                                                            | class                   | [TestEngine.ts](../../packages/core/src/TestEngine.ts#L12)                                                                             |
-| `ComponentDriver`, `ContainerDriver`, `ListComponentDriver`                                                                             | classes                 | [drivers/index.ts](../../packages/core/src/drivers/index.ts)                                                                           |
+| `ComponentDriver`, `ListComponentDriver`                                                                                                | classes                 | [drivers/index.ts](../../packages/core/src/drivers/index.ts)                                                                           |
 | `IInputDriver`, `IFormFieldDriver`, `IToggleDriver`, `IClickableDriver`, `IMouseInteractableDriver`                                     | interfaces              | [driverTypes.ts](../../packages/core/src/drivers/driverTypes.ts)                                                                       |
 | `Interactor`                                                                                                                            | interface               | [interactor/Interactor.ts](../../packages/core/src/interactor/Interactor.ts#L26)                                                       |
-| `ScenePart`, `ScenePartDefinition`, `ScenePartDriver`, `IComponentDriverOption`, `IContainerDriverOption`, `ComponentDriverCtor`        | types                   | [partTypes.ts](../../packages/core/src/partTypes.ts)                                                                                   |
+| `ScenePart`, `ScenePartDefinition`, `ScenePartDriver`, `IComponentDriverOption`, `ComponentDriverCtor`                                  | types                   | [partTypes.ts](../../packages/core/src/partTypes.ts)                                                                                   |
 | `by*` locator builders, `findByRole`, `CssLocator`, `LinkedCssLocator`, `AccessibleRoleLocator`, `PartLocator`, `LocatorComplexity`     | functions/types         | [locators/index.ts](../../packages/core/src/locators/index.ts)                                                                         |
 | `WaitForOption`, `WaitForCondition`, `defaultWaitForOption`, `WaitUntilOption`                                                          | types/const             | [WaitForOption.ts](../../packages/core/src/drivers/WaitForOption.ts), [timingUtil.ts](../../packages/core/src/utils/timingUtil.ts#L14) |
 | errors: `ElementNotFoundError`, `WaitForFailureError`, `MissingPartError`, `TooManyMatchingElementError`, `ItemNotFoundError` (+ `*Id`) | classes                 | [errors/index.ts](../../packages/core/src/errors/index.ts)                                                                             |
@@ -28,7 +28,7 @@ Barrel: [core/src/index.ts](../../packages/core/src/index.ts). Highlights:
 ## Responsibilities
 
 - Define the type contracts (`ScenePart`, driver options, `Interactor`) that bind the whole system. See [DOMAIN.md](../DOMAIN.md#type-system).
-- Provide the `ComponentDriver` base + `Container`/`List` specializations and the `TestEngine` root.
+- Provide the `ComponentDriver` base + the `List` specialization and the `TestEngine` root.
 - Provide the locator builders and the `locatorUtil` resolution logic that turns a `PartLocator` into a runtime CSS selector.
 - Define the error hierarchy and timing/wait primitives.
 
@@ -47,7 +47,6 @@ Barrel: [core/src/index.ts](../../packages/core/src/index.ts). Highlights:
 See [DOMAIN.md → Type system](../DOMAIN.md#type-system) for the full picture. The driver class hierarchy:
 
 - `ComponentDriver<T extends ScenePart>` — base ([ComponentDriver.ts#L25](../../packages/core/src/drivers/ComponentDriver.ts#L25)).
-- `ContainerDriver<ContentT, T>` — **deprecated** (ADR-019); its `content` is now a wrapper over `ComponentDriver.scope(parts)` ([ContainerDriver.ts#L13](../../packages/core/src/drivers/ContainerDriver.ts#L13)).
 - `ListComponentDriver<ItemT>` — adds `getItemByIndex/getItemByLabel/getItems/getItemCount` ([ListComponentDriver.ts#L16](../../packages/core/src/drivers/ListComponentDriver.ts#L16)).
 - `TestEngine<T>` — adds `cleanUp()` ([TestEngine.ts#L12](../../packages/core/src/TestEngine.ts#L12)).
 

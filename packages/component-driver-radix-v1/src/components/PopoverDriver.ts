@@ -1,10 +1,9 @@
 import {
   byLinkedElement,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   PartLocator,
-  ScenePart,
 } from '@atomic-testing/core';
 
 const defaultTransitionDuration = 250;
@@ -36,18 +35,14 @@ const defaultTransitionDuration = 250;
  * specific failure as "not attached," so `isOpen()`/`waitForOpen()`/
  * `waitForClose()` behave the same as `DialogDriver`'s. Declared `content` parts
  * are therefore only meaningful once `isOpen()` (or `open()`) confirms the
- * popover is mounted, exactly as documented on `ContainerDriver`-based portal
+ * popover is mounted, exactly as documented on `ComponentDriver`-based portal
  * drivers generally.
  */
-export class PopoverDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, {}> {
+export class PopoverDriver extends ComponentDriver<{}> {
   /** The scene-supplied trigger locator — also the anchor subclasses (e.g. `ComboboxDriver`) read trigger-side state from. */
   protected readonly triggerLocator: PartLocator;
 
-  constructor(
-    triggerLocator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, {}>>
-  ) {
+  constructor(triggerLocator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     const contentLocator: PartLocator = byLinkedElement('Root')
       .onLinkedElement(triggerLocator)
       .extractAttribute('aria-controls')
@@ -55,7 +50,6 @@ export class PopoverDriver<ContentT extends ScenePart = {}> extends ContainerDri
     super(contentLocator, interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
     this.triggerLocator = triggerLocator;
   }

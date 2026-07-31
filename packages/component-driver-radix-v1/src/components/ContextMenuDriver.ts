@@ -1,4 +1,4 @@
-import { byRole, IContainerDriverOption, Interactor, PartLocator, ScenePart } from '@atomic-testing/core';
+import { byRole, IComponentDriverOption, Interactor, PartLocator } from '@atomic-testing/core';
 
 import { MenuContentDriverBase } from './MenuContentDriverBase';
 
@@ -29,18 +29,13 @@ const defaultTransitionDuration = 250;
  * driver's contract; Astryx's `ContextMenuDriver` documents the same
  * single-instance limit for the same structural reason.
  */
-export class ContextMenuDriver<ContentT extends ScenePart = {}> extends MenuContentDriverBase<ContentT> {
+export class ContextMenuDriver extends MenuContentDriverBase {
   private readonly triggerLocator: PartLocator;
 
-  constructor(
-    triggerLocator: PartLocator,
-    interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, {}>>
-  ) {
+  constructor(triggerLocator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {
     super(byRole('menu', 'Root'), interactor, {
       ...option,
       parts: {},
-      content: (option?.content ?? {}) as ContentT,
     });
     this.triggerLocator = triggerLocator;
   }

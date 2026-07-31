@@ -2,8 +2,8 @@ import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import {
   byRole,
   byTagName,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   Optional,
@@ -57,16 +57,15 @@ const defaultTransitionDuration = 250;
  * bubbling `keydown` dispatched anywhere in the document (including on this
  * driver's own re-rooted locator, via `Interactor.pressKey`) reaches it.
  */
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
+export class DialogDriver extends ComponentDriver<typeof dialogParts> {
   constructor(
     locator: PartLocator,
     interactor: Interactor,
-    option?: Partial<IContainerDriverOption<ContentT, typeof dialogParts>>
+    option?: Partial<IComponentDriverOption<typeof dialogParts>>
   ) {
     super(locator, interactor, {
       ...option,
       parts: dialogParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 

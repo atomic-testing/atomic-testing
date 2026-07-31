@@ -3,8 +3,8 @@ import {
   byAttribute,
   byCssSelector,
   byRole,
-  ContainerDriver,
-  IContainerDriverOption,
+  ComponentDriver,
+  IComponentDriverOption,
   Interactor,
   type LocatorRelativePosition,
   locatorUtil,
@@ -34,10 +34,7 @@ const defaultTransitionDuration = 1000;
 /**
  * Option for {@link DialogDriver}.
  */
-export interface IDialogDriverOption<ContentT extends ScenePart = {}> extends IContainerDriverOption<
-  ContentT,
-  typeof dialogParts
-> {
+export interface IDialogDriverOption extends IComponentDriverOption {
   /**
    * Set when the scene renders this Dialog with PrimeVue's `appendTo="self"`
    * (see the class doc's "Anchoring" section) — the dialog then renders in-tree
@@ -80,21 +77,20 @@ export interface IDialogDriverOption<ContentT extends ScenePart = {}> extends IC
  * parent-chain-relative resolution — the SAME code path an ordinary in-tree
  * component uses. Default (`selfAnchored` unset/`false`) is unchanged.
  */
-export class DialogDriver<ContentT extends ScenePart = {}> extends ContainerDriver<ContentT, typeof dialogParts> {
-  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IDialogDriverOption<ContentT>>) {
+export class DialogDriver extends ComponentDriver<typeof dialogParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IDialogDriverOption>) {
     super(locator, interactor, {
       ...option,
       parts: dialogParts,
-      content: (option?.content ?? {}) as ContentT,
     });
   }
 
-  static override overriddenParentLocator(option?: Partial<IDialogDriverOption<any>>): Optional<PartLocator> {
+  static override overriddenParentLocator(option?: Partial<IDialogDriverOption>): Optional<PartLocator> {
     return option?.selfAnchored ? undefined : dialogRootLocator;
   }
 
   static override overrideLocatorRelativePosition(
-    option?: Partial<IDialogDriverOption<any>>
+    option?: Partial<IDialogDriverOption>
   ): Optional<LocatorRelativePosition> {
     return option?.selfAnchored ? undefined : 'Same';
   }

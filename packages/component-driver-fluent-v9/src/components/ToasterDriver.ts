@@ -28,7 +28,7 @@ const toastListItemSelector = '[role="listitem"]';
  * than for Dialog/Menu, but the same `data-testid`-compounding recipe applies
  * when a consumer does mount more than one.
  *
- * **Not a `ContainerDriver`**: toasts arrive dynamically via
+ * **Not a `ComponentDriver`**: toasts arrive dynamically via
  * `useToastController(toasterId).dispatchToast(...)`, not as a fixed scene the
  * caller declares up front, so items are read positionally/by-title through
  * `childListHelper` (each direct child is a `role="listitem"` wrapper Fluent
