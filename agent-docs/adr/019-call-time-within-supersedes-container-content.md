@@ -118,12 +118,14 @@ slot-level targeting; it is just not the default.
 
 **Rollout width — audited, not assumed.** Every shipped driver a scene can call
 `within` on was probed against rendered DOM before deciding whether it needed an
-override. Only MUI's Modal family does: `Dialog`, `Drawer`, and — found by that same
-probe — `Menu`, which is a `Popover` on a `Modal` and so carries the identical
-backdrop-and-sentinels root. Its override anchors on the `role="menu"` list its own
-`menu` chrome part already names, mirroring Dialog's use of `paper`.
+override (Reka excepted — its suite does not render in this environment; it is a Vue
+port of Radix and shares that anchor shape). Only MUI's Modal family needs one:
+`Dialog`, `Drawer`, and — found by that same probe — `Menu`, which is a `Popover` on a
+`Modal` and so carries the identical backdrop-and-sentinels root. Its override anchors
+on the `role="menu"` list its own `menu` chrome part already names, mirroring Dialog's
+use of `paper`.
 
-Three candidate narrowings were rejected on the evidence:
+Candidate narrowings rejected on the evidence:
 
 - **MUI `Snackbar`** — its root's only child _is_ the caller's content, and narrowing
   to `SnackbarContent` would break the `Snackbar`-wrapping-an-`Alert` form, where no
@@ -134,10 +136,14 @@ Three candidate narrowings were rejected on the evidence:
   rather than ancestors of it. Chrome does therefore leak into a `'Child'`-relative
   interior, but no element holds the caller's content and nothing else: narrowing to
   `DialogBody` would over-narrow, Fluent treating it as optional.
-- **Angular Material `MatDialog`** — its container wraps caller content in a single
-  surface div, so the only narrowing available is a `.mat-mdc-*` class, which the
-  package's own overlay-locator rule reserves for `.cdk-*` alone. `MatMenu` needs
-  nothing: its locator already _is_ the `role="menu"` panel.
+- **Angular Material `MatDialog` and `MatSnackBar`** — both nest caller content behind
+  chrome wrappers (the dialog behind an inner container and the dialog surface, before
+  the caller's own component host; the snackbar behind its surface and label). Every
+  narrowing available is therefore a `.mat-mdc-*`/`.mdc-*` class, which that package's
+  overlay-locator rule reserves for `.cdk-*` alone — and for the snackbar no single
+  anchor covers both the simple and the `openFromComponent` forms, which seat caller
+  content at different depths. `MatMenu` needs nothing: its locator already _is_ the
+  `role="menu"` panel.
 
 Radix and PrimeVue anchor on the caller's content surface directly and probed clean.
 The rule that falls out: override only where the driver's locator element holds chrome
