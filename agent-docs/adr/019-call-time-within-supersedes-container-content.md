@@ -76,6 +76,43 @@ interior here is a bag of siblings (`{cancel, confirm}`, `{nameInput, saveButton
 so the ScenePart form covers every existing site and the class form covers none
 without a wrapper driver per interior.
 
+**The anchor is the driver's, not the locator's.** `within` resolves against
+`ComponentDriver.interiorLocator` — a `protected` getter defaulting to the driver's
+own `locator` — rather than against `locator` directly. The default is correct
+wherever a driver's locator already resolves to the surface holding caller content
+(Radix/Reka anchor at `Dialog.Content`, Fluent at `DialogSurface`, Angular Material
+at `<mat-dialog-container>`), which is most of them.
+
+It is wrong for MUI. `DialogDriver` and `DrawerDriver` anchor at the portal-rendered
+**Modal root**, whose direct children are `.MuiBackdrop-root`, two focus-trap
+sentinels and a positioning container; the caller's content is a further two levels
+in, inside `.MuiDialog-paper` (`role="dialog"`). Verified against rendered DOM on
+v6, v7 and v9 — identical in all three. Un-narrowed, `within` reached MUI's own
+backdrop and sentinels, and a `'Child'`-relative interior part resolved to
+`.MuiBackdrop-root` rather than to anything the scene wrote. Nothing raised: a
+locator that matches the wrong element is indistinguishable from one that matches
+the right one.
+
+That made the same scene line mean different things per design system, which defeats
+the portability the library exists for. Anchoring is the driver's job — knowing that
+MUI wraps its paper in a Modal root is exactly the kind of DOM knowledge a driver
+exists to absorb, and doing it here keeps scene code unchanged.
+
+The binding rule for an override: **it must contain everything the caller supplied.**
+For a slotted component that means the surface, never one slot. MUI spreads caller
+content across `DialogTitle`/`DialogContent`/`DialogActions` as siblings, so
+narrowing to `.MuiDialogContent-root` would drop the action buttons scenes actually
+click. Over-narrowing fails the same silent way it fixes.
+
+Two alternatives were rejected. **Per-slot proxy methods** (`withinActions`,
+`withinBody`) are more explicit, but design systems disagree on slot names
+(`DialogContent` vs `DialogBody` vs `mat-dialog-content`), so scenes stop being
+portable — and it rebuilds the per-driver vocabulary sprawl this ADR just deleted.
+**Chaining through a chrome part** (`dialog.parts.paper.within(…)`) needs no new API
+and works today, but it pushes package-specific structure into scene code and
+promotes chrome parts into navigation API. It stays available for deliberate
+slot-level targeting; it is just not the default.
+
 **Synchronous.** A `PartLocator` resolves lazily, so `within` queries nothing and
 needs no `await`. CDK's `getHarness` is async because it resolves elements; copying
 that here would put an `await` and a paren nest at every call site and reverse the
@@ -105,6 +142,11 @@ existence, as `getActionComponent` and `getCell` both do.
   `ScenePart` consts in the scene file, where every migrated one already lives.
 - ⚠️ The interior is named at each use rather than once. For a composite driver,
   hoist it into one accessor rather than repeating the const per method.
+- ⚠️ **`within` no longer literally means "under this driver's locator."** The
+  indirection is deliberate — "inside this component, as the driver defines inside" —
+  but a driver author who over-narrows `interiorLocator` breaks every scene using
+  that driver, silently. Any override needs a DOM audit and a regression test
+  anchored on something relative (`'Child'`), which is what actually detects it.
 - ⚠️ **`examples/*` lag by one release.** Each example app is a standalone workspace
   pinning `@atomic-testing/*` at released npm versions (not `workspace:*`), so it
   typechecks against the _published_ `core`, where `within` does not exist yet.

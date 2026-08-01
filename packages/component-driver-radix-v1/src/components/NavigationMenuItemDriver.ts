@@ -27,7 +27,7 @@ const defaultTransitionDuration = 250;
  *
  * Items that are a plain `NavigationMenu.Link` (no trigger/content) need no
  * driver — they are ordinary in-tree anchors; declare them as plain scene
- * parts. Consumer links INSIDE this item's content go in the `content` scene.
+ * parts. Consumer links INSIDE this item's content are reached with `within(parts)`.
  */
 export class NavigationMenuItemDriver extends ComponentDriver<{}> {
   private readonly triggerLocator: PartLocator;

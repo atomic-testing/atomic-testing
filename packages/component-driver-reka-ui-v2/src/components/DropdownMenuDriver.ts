@@ -26,7 +26,7 @@ const menuRootLocator: PartLocator = byRole('menu', 'Root');
  *
  * Extends `MenuContentDriverBase` (a `ComponentDriver`, not a plain `ComponentDriver`)
  * for the same reason radix-v1's counterpart does: Reka menus can mix plain items with
- * richer content, so callers can declare a custom `content` scene. The item operations
+ * richer content, so callers can reach a custom interior with `within(parts)`. The item operations
  * (`getMenuItemByLabel`/`selectByLabel`/`getMenuItemCount`/`getMenuItemByIndex`) live on
  * the base.
  */

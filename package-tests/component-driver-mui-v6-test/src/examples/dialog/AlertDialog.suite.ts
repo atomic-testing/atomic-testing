@@ -1,5 +1,6 @@
+import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, DialogDriver } from '@atomic-testing/component-driver-mui-v6';
-import { byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
+import { byCssSelector, byDataTestId, ScenePart, IExampleUnit } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { alertDialogUIExample } from './AlertDialog.examples';
@@ -12,6 +13,18 @@ const dialogContentPart = {
   agree: {
     locator: byDataTestId('agree-button'),
     driver: ButtonDriver,
+  },
+} satisfies ScenePart;
+
+/**
+ * A deliberately anchor-sensitive interior: the FIRST DIRECT CHILD of whatever
+ * `within` resolves against. Anchored on the dialog surface it is the caller's
+ * `DialogTitle`; anchored on the Modal root it would be `.MuiBackdrop-root`.
+ */
+const firstInteriorChildPart = {
+  firstChild: {
+    locator: byCssSelector('*', 'Child'),
+    driver: HTMLElementDriver,
   },
 } satisfies ScenePart;
 
@@ -34,7 +47,7 @@ export const alertDialogExample: IExampleUnit<typeof alertExampleScenePart, JSX.
 export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene> = {
   title: 'Alert dialog',
   url: '/dialog',
-  tests: (getTestEngine, { test, beforeEach, afterEach, assertTrue, assertFalse }) => {
+  tests: (getTestEngine, { test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
     const engine = useTestEngine(alertDialogExample.scene, getTestEngine, { beforeEach, afterEach });
 
     test('Dialog should not be open initially', async () => {
@@ -67,6 +80,17 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
       await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
+    });
+
+    // Regression for the interior anchor (ADR-019): MUI's dialog locator is the
+    // portal-rendered Modal root, whose own children are the backdrop and two
+    // focus-trap sentinels. `within` must resolve against the surface instead, or
+    // every relative interior part silently addresses MUI chrome.
+    test('Interior parts anchor on the dialog surface, not the modal root', async () => {
+      await engine().parts.openTrigger.click();
+      await engine().parts.dialog.waitForOpen();
+      const firstChild = engine().parts.dialog.within(firstInteriorChildPart).firstChild;
+      assertEqual(await firstChild.getText(), "Use Google's location service?");
     });
 
     test('Clicking the backdrop should close the dialog', async () => {

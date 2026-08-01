@@ -26,7 +26,7 @@ const menuRootLocator: PartLocator = byRole('menu', 'Root');
  * `ComponentDriver`, unlike `component-driver-mui-v7`'s `MenuDriver`) because
  * Radix menus commonly mix plain items with richer content —
  * `DropdownMenu.CheckboxItem`, `DropdownMenu.RadioGroup`, submenus — so callers
- * can declare a custom `content` scene the same way `DialogDriver`/
+ * can reach a custom interior with `within(parts)` the same way `DialogDriver`/
  * `PopoverDriver` do. The item operations shared with `ContextMenuDriver`/
  * `MenubarMenuDriver` (and the `childListHelper` separator rationale) live on
  * the base.

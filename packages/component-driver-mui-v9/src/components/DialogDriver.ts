@@ -20,6 +20,14 @@ export const parts = {
     locator: byRole('presentation'),
     driver: HTMLElementDriver,
   },
+  /**
+   * The dialog surface — the `role="dialog"` element holding the caller's
+   * `DialogTitle`/`DialogContent`/`DialogActions`. Anchors {@link DialogDriver.interiorLocator}.
+   */
+  paper: {
+    locator: byCssClass('MuiDialog-paper'),
+    driver: HTMLElementDriver,
+  },
 } satisfies ScenePart;
 
 const dialogRootLocator: PartLocator = byRole('presentation', 'Root');
@@ -41,6 +49,17 @@ export class DialogDriver extends ComponentDriver<typeof parts> {
 
   static override overrideLocatorRelativePosition(): Optional<LocatorRelativePosition> {
     return 'Same';
+  }
+
+  /**
+   * Interiors resolve against the dialog surface, not this driver's own locator.
+   * That locator is the portal-rendered Modal root, whose direct children are the
+   * backdrop and MUI's two focus-trap sentinels — so an un-narrowed interior
+   * reaches MUI chrome the scene never wrote. The paper is the tightest element
+   * still containing every caller slot (title, content AND actions).
+   */
+  protected override get interiorLocator(): PartLocator {
+    return this.parts.paper.locator;
   }
 
   async getTitle(): Promise<string | null> {

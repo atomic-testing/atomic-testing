@@ -137,6 +137,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     protected innerHTML(): Promise<string>;
     // (undocumented)
     readonly interactor: Interactor;
+    protected get interiorLocator(): PartLocator;
     isVisible(): Promise<boolean>;
     get locator(): PartLocator;
     // (undocumented)

@@ -34,7 +34,7 @@ const toastListItemSelector = '[role="listitem"]';
  * `childListHelper` (each direct child is a `role="listitem"` wrapper Fluent
  * adds around the caller's `Toast`; `.fui-Toast` sits one level inside it —
  * the `groupSelector` recursion existing exactly for this "wrapped items"
- * shape) rather than a declared `content` part.
+ * shape) rather than a caller-declared interior.
  */
 export class ToasterDriver extends ComponentDriver<{}> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<{}>>) {

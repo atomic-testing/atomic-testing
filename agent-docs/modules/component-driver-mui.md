@@ -46,7 +46,7 @@ It iterates `byRole('menuitem')` with `listHelper.getListItemIterator(..., MenuI
 
 ### Container driver — `DialogDriver`
 
-`DialogDriver` with `parts = { title, dialogContainer }`; the dialog body comes from the caller via `within(parts)` ([DialogDriver.ts](../../packages/component-driver-mui-v7/src/components/DialogDriver.ts#L29-L97)). It also uses `overriddenParentLocator() → byRole('presentation','Root')`, and adds `getTitle`, `isOpen`, and transition-aware `waitForOpen`/`waitForClose` (built on `interactor.waitUntil`).
+`DialogDriver` with `parts = { title, dialogContainer, paper }`; the dialog body comes from the caller via `within(parts)`, anchored by `interiorLocator` at `paper` (the `role="dialog"` surface) rather than at the Modal root the driver re-roots to — `OverlayDriver`/`DrawerDriver` do the same via `getSurfaceLocator()` ([DialogDriver.ts](../../packages/component-driver-mui-v7/src/components/DialogDriver.ts#L29-L97)). It also uses `overriddenParentLocator() → byRole('presentation','Root')`, and adds `getTitle`, `isOpen`, and transition-aware `waitForOpen`/`waitForClose` (built on `interactor.waitUntil`).
 
 ### Composite input — `SelectDriver`
 

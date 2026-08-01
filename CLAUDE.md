@@ -199,9 +199,14 @@ const parts = {
 | `ListComponentDriver<I>` | Driver for lists of items    | Menu, List   |
 
 A caller-supplied interior is **not** a driver type — every driver inherits
-`within(parts)`, which resolves a `ScenePart` against its own locator at call time
-(synchronously; locators are lazy). An earlier `ContainerDriver` base and its `content`
-option were removed in favor of it — see [ADR-019](agent-docs/adr/019-call-time-within-supersedes-container-content.md).
+`within(parts)`, which resolves a `ScenePart` at call time (synchronously; locators
+are lazy) against the driver's `interiorLocator`. That anchor defaults to the driver's
+own locator and is overridden only where the locator resolves to a **wrapper** rather
+than the surface holding caller content — MUI's Dialog/Drawer anchor at the Modal
+root, whose own children are the backdrop and focus sentinels. An override must
+contain _every_ caller slot (the paper, never `DialogContent` alone); over-narrowing
+breaks scenes silently. An earlier `ContainerDriver` base and its `content` option
+were removed in favor of all this — see [ADR-019](agent-docs/adr/019-call-time-within-supersedes-container-content.md).
 
 ## Package Structure
 

@@ -20,7 +20,7 @@ const bodyLocator = byCssClass('fui-ToastBody');
  * for you). There is no built-in dismiss/action button by default (Fluent
  * leaves that to consumer-supplied content, e.g. a `ToastFooter`), so — like
  * `component-driver-mui-v9`'s `SnackbarDriver` — arbitrary action content is
- * reached through the declared `content` scene rather than a hardcoded part.
+ * reached with `within(parts)` rather than a hardcoded part.
  *
  * **No `ScenePart` `parts` of its own** (title/body are read via direct
  * locator composition instead, the same technique `FieldDriver` uses) —

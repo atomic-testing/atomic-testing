@@ -2,9 +2,10 @@ import { Interactor } from '../../interactor/Interactor';
 import { byDataTestId } from '../../locators/byDataTestId';
 import type { PartLocator } from '../../locators/PartLocator';
 import { IComponentDriverOption, ScenePart } from '../../partTypes';
+import * as locatorUtil from '../../utils/locatorUtil';
 import { ComponentDriver } from '../ComponentDriver';
 
-// scope composes locators and never queries — a PartLocator resolves lazily
+// within composes locators and never queries — a PartLocator resolves lazily
 // — so a bare interactor stub is enough to assert on everything below.
 const stubInteractor = {} as Interactor;
 
@@ -69,6 +70,25 @@ class HostDriver extends ComponentDriver<typeof chromeParts> {
   }
 }
 
+/**
+ * A host whose own locator resolves to a wrapper rather than to the surface —
+ * the shape MUI's Dialog and Drawer have, where the driver's locator is the Modal
+ * root and the caller's content sits inside the paper.
+ */
+class WrapperHostDriver extends ComponentDriver<typeof chromeParts> {
+  constructor(locator: PartLocator, interactor: Interactor, option: LabeledOption = {}) {
+    super(locator, interactor, { ...option, parts: chromeParts });
+  }
+
+  protected override get interiorLocator(): PartLocator {
+    return locatorUtil.append(this.locator, byDataTestId('surface'));
+  }
+
+  get driverName(): string {
+    return 'WrapperHostDriver';
+  }
+}
+
 const selectorsOf = (locator: PartLocator): string[] => locator.map(part => part.selector);
 
 describe('ComponentDriver.within', () => {
@@ -118,5 +138,35 @@ describe('ComponentDriver.within', () => {
     const host = new HostDriver(byDataTestId('dialog'), stubInteractor);
 
     expect(host.within({})).toEqual({});
+  });
+
+  it('resolves against an overridden interiorLocator instead of the host locator', () => {
+    const host = new WrapperHostDriver(byDataTestId('dialog'), stubInteractor);
+
+    expect(selectorsOf(host.within(interiorParts).confirm.locator)).toEqual([
+      '[data-testid="dialog"]',
+      '[data-testid="surface"]',
+      '[data-testid="confirm"]',
+    ]);
+  });
+
+  it("anchors a 'Child'-relative interior part on the surface, not the wrapper", () => {
+    const host = new WrapperHostDriver(byDataTestId('dialog'), stubInteractor);
+    const direct = { body: { locator: byDataTestId('body', 'Child'), driver: RecordingDriver } } satisfies ScenePart;
+
+    // The failure the anchor exists to prevent: anchored on the wrapper, "direct
+    // child" means the chrome the component renders around its surface (MUI's
+    // backdrop and focus sentinels), never anything the scene wrote.
+    const [, , childPart] = host.within(direct).body.locator;
+    expect(childPart.selector).toBe('[data-testid="body"]');
+    expect(childPart._relativePosition).toBe('Child');
+  });
+
+  it("leaves the driver's own chrome parts anchored on the host locator", () => {
+    const host = new WrapperHostDriver(byDataTestId('dialog'), stubInteractor);
+
+    // Chrome is the driver author's; it is addressed from the root the driver was
+    // given, and must NOT follow the interior into the surface.
+    expect(selectorsOf(host.parts.title.locator)).toEqual(['[data-testid="dialog"]', '[data-testid="title"]']);
   });
 });
