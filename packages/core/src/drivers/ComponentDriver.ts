@@ -137,12 +137,17 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * `Dialog.Content`, Fluent at `DialogSurface`).
    *
    * Override it when the driver's locator resolves to a **wrapper** instead. MUI's
-   * Dialog and Drawer are the shipped cases: their locator is the portal-rendered
+   * Dialog, Drawer and Menu are the shipped cases: their locator is the portal-rendered
    * Modal root, whose children are the backdrop, two focus-trap sentinels and a
    * positioning container. Un-narrowed, an interior there reaches MUI's own chrome,
    * and a `'Child'`-relative interior part resolves to `.MuiBackdrop-root` rather
    * than to anything the scene wrote — silently, since a locator that matches the
    * wrong element raises nothing.
+   *
+   * An override only helps where that chrome is **ancestral to** the caller's content.
+   * Where a design system interleaves chrome *beside* it — Fluent's focus-trap
+   * sentinels are siblings of the dialog body — no anchor separates the two, and the
+   * default stands (ADR-019's rollout-width audit).
    *
    * An override MUST resolve to an element containing **everything the caller
    * supplied**. For a slotted component that means the surface, never one slot: MUI

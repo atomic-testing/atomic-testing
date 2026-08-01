@@ -83,7 +83,8 @@ without a wrapper driver per interior.
 own `locator` — rather than against `locator` directly. The default is correct
 wherever a driver's locator already resolves to the surface holding caller content
 (Radix/Reka anchor at `Dialog.Content`, Fluent at `DialogSurface`, Angular Material
-at `<mat-dialog-container>`), which is most of them.
+at `<mat-dialog-container>`), which is most of them — see **Rollout width** below for
+what "correct enough" means in each case.
 
 It is wrong for MUI. `DialogDriver` and `DrawerDriver` anchor at the portal-rendered
 **Modal root**, whose direct children are `.MuiBackdrop-root`, two focus-trap
@@ -114,6 +115,34 @@ portable — and it rebuilds the per-driver vocabulary sprawl this ADR just dele
 and works today, but it pushes package-specific structure into scene code and
 promotes chrome parts into navigation API. It stays available for deliberate
 slot-level targeting; it is just not the default.
+
+**Rollout width — audited, not assumed.** Every shipped driver a scene can call
+`within` on was probed against rendered DOM before deciding whether it needed an
+override. Only MUI's Modal family does: `Dialog`, `Drawer`, and — found by that same
+probe — `Menu`, which is a `Popover` on a `Modal` and so carries the identical
+backdrop-and-sentinels root. Its override anchors on the `role="menu"` list its own
+`menu` chrome part already names, mirroring Dialog's use of `paper`.
+
+Three candidate narrowings were rejected on the evidence:
+
+- **MUI `Snackbar`** — its root's only child _is_ the caller's content, and narrowing
+  to `SnackbarContent` would break the `Snackbar`-wrapping-an-`Alert` form, where no
+  `SnackbarContent` is rendered at all. The default resolves correctly already, and
+  the `actionArea` chrome part reaches the `action` prop's interior.
+- **Fluent `DialogSurface` / `OverlayDrawer` / `TeachingPopoverSurface`** — each wraps
+  caller content in tabster focus-trap sentinels that are _siblings_ of that content
+  rather than ancestors of it. Chrome does therefore leak into a `'Child'`-relative
+  interior, but no element holds the caller's content and nothing else: narrowing to
+  `DialogBody` would over-narrow, Fluent treating it as optional.
+- **Angular Material `MatDialog`** — its container wraps caller content in a single
+  surface div, so the only narrowing available is a `.mat-mdc-*` class, which the
+  package's own overlay-locator rule reserves for `.cdk-*` alone. `MatMenu` needs
+  nothing: its locator already _is_ the `role="menu"` panel.
+
+Radix and PrimeVue anchor on the caller's content surface directly and probed clean.
+The rule that falls out: override only where the driver's locator element holds chrome
+**ancestral to** the caller's content. Where chrome is merely adjacent to it, no anchor
+separates the two and the default is the honest answer.
 
 **Synchronous.** A `PartLocator` resolves lazily, so `within` queries nothing and
 needs no `await`. CDK's `getHarness` is async because it resolves elements; copying

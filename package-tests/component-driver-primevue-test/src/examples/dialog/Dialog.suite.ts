@@ -33,10 +33,9 @@ export const dialogScenePart = {
   },
   selfAnchoredDialog: {
     locator: byDataTestId('self-anchored-dialog'),
-    driver: DialogDriver<{}>,
+    driver: DialogDriver,
     option: {
       selfAnchored: true,
-      content: {},
     },
   },
 } satisfies ScenePart;

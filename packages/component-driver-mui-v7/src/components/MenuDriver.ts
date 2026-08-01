@@ -40,6 +40,19 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     return 'Same';
   }
 
+  /**
+   * Interiors resolve against the menu list, not this driver's own locator.
+   * That locator is the portal-rendered Modal root (Menu builds on Popover,
+   * which builds on Modal), whose direct children are the invisible backdrop
+   * and MUI's focus-trap sentinels — so an un-narrowed interior reaches MUI
+   * chrome the scene never wrote. Every child passed to `<Menu>` renders inside
+   * the `role="menu"` list, which is therefore the tightest element still
+   * holding all of it.
+   */
+  protected override get interiorLocator(): PartLocator {
+    return this.parts.menu.locator;
+  }
+
   async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
     for await (const item of listHelper.getListItemIterator(this, menuItemLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
