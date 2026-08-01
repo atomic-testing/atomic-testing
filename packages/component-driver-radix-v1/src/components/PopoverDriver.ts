@@ -30,10 +30,10 @@ const defaultTransitionDuration = 250;
  *
  * **Consequence**: while the popover is closed, `aria-controls` is absent, so
  * `byLinkedElement` cannot resolve a content element at all. Any operation that
- * touches `this.locator` (content parts, `exists()`, `getText()`, …) in that
+ * touches `this.locator` (interior parts, `exists()`, `getText()`, …) in that
  * state would otherwise throw — `exists()` is overridden below to treat that
  * specific failure as "not attached," so `isOpen()`/`waitForOpen()`/
- * `waitForClose()` behave the same as `DialogDriver`'s. Declared `content` parts
+ * `waitForClose()` behave the same as `DialogDriver`'s. Interior parts
  * are therefore only meaningful once `isOpen()` (or `open()`) confirms the
  * popover is mounted, exactly as documented on `ComponentDriver`-based portal
  * drivers generally.

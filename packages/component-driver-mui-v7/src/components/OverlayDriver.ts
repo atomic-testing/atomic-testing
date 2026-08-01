@@ -23,6 +23,17 @@ export abstract class OverlayDriver<T extends ScenePart = {}> extends ComponentD
   protected abstract getSurfaceLocator(): PartLocator;
 
   /**
+   * Interiors resolve against the overlay's surface, not its Modal root: the root's
+   * own children are the backdrop, the focus-trap sentinels and a positioning
+   * container, none of which the scene wrote. The surface is exactly the element
+   * {@link getSurfaceLocator} already names for the open-state read, so the two
+   * stay in lockstep by construction.
+   */
+  protected override get interiorLocator(): PartLocator {
+    return this.getSurfaceLocator();
+  }
+
+  /**
    * Locator of the dismissible backdrop. Defaults to MUI's `.MuiBackdrop-root`.
    */
   protected getBackdropLocator(): PartLocator {

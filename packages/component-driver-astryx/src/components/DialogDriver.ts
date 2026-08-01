@@ -29,7 +29,7 @@ export const parts = {
  * portal root to escape to, hence no `overriddenParentLocator()`.
  *
  * `getTitle` reads the `DialogHeader` title (`<h2>`); arbitrary content is reached
- * through this `ComponentDriver`'s `content` parts. The Escape-to-dismiss flow
+ * with `within(parts)`. The Escape-to-dismiss flow
  * works in jsdom (the `<dialog>` keydown handler) and in a real browser; backdrop
  * (`::backdrop`) dismissal is a native pointer behaviour left to the E2E run.
  */

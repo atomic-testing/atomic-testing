@@ -41,6 +41,7 @@ classDiagram
       +interactor: Interactor
       +driverName: string
       +within(parts) ScenePartDriver
+      #interiorLocator: PartLocator
     }
     class ListComponentDriver~ItemT~ {
       +getItemByIndex()

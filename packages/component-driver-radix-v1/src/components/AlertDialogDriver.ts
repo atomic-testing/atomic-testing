@@ -53,7 +53,7 @@ const defaultTransitionDuration = 250;
  * attribute** (both render plain `<button>`s with no role/`data-*` marker, and
  * their order is consumer-defined — verified against rendered `radix-ui@1.6.1`
  * DOM), so the driver cannot expose portable `clickCancel`/`clickAction`;
- * declare them as `content` parts anchored by forwarded `data-testid`s.
+ * reach them with `within(parts)`, anchored by forwarded `data-testid`s.
  * (Astryx's positional first/last-button match does not transfer: Radix
  * imposes no button order or count.)
  *

@@ -49,9 +49,25 @@ reference implementations:
 
 Each overrides the two hooks above to re-root at the overlay's presentation
 container and matches its parts there. The overlay's own interior comes from the
-caller via [`within(parts)`](../core-concepts.mdx#driver-types), which resolves that
-scene against the re-rooted locator — so a portalled interior is declared the same
-way as any other component's.
+caller via [`within(parts)`](../core-concepts.mdx#driver-types) — so a portalled
+interior is declared the same way as any other component's.
+
+:::note Interiors anchor at the surface, not the presentation container
+
+Re-rooting lands these drivers on MUI's `role="presentation"` **Modal root**, whose
+own children are the backdrop and two focus-trap sentinels — the caller's content is
+further in, inside `.MuiDialog-paper` / `.MuiDrawer-paper`. So these drivers override
+`interiorLocator` to that surface, and `within(parts)` resolves there rather than at
+the re-rooted locator. Scene code is unaffected; it is what keeps a relative interior
+part (`byCssSelector('*', 'Child')`) addressing your markup instead of MUI's backdrop.
+
+Writing your own overlay driver: override `interiorLocator` only if your driver's
+locator is a wrapper, and point it at an element containing **every** caller slot.
+MUI spreads content across `DialogTitle`/`DialogContent`/`DialogActions` as siblings,
+so the paper is correct and `.MuiDialogContent-root` would silently drop the action
+buttons.
+
+:::
 
 ### Which frameworks this applies to
 

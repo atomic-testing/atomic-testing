@@ -46,7 +46,7 @@ const defaultTransitionDuration = 250;
  * **`Toast.Title`/`Toast.Description` have NO stable anchor** (plain `<div>`s,
  * no role/`data-slot`/link — the `role="status"` live announcer Radix renders
  * is a separate off-tree element that duplicates the text for screen readers),
- * so title/description reads are consumer `content` parts anchored by
+ * so title/description reads are consumer interior parts anchored by
  * forwarded `data-testid`s rather than driver-owned parts. The action/close
  * buttons DO have structural anchors (see {@link toastParts}).
  *

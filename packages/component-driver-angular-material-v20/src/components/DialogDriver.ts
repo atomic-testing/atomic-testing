@@ -47,9 +47,8 @@ const defaultTransitionDurationMs = 1000;
  * The driver assumes the default `role: 'dialog'`; a dialog opened with
  * `role: 'alertdialog'` needs its own locator arrangement.
  *
- * Dialog content is the consumer's own component — declare its parts through
- * the `ComponentDriver` `content` option; they resolve relative to the
- * container.
+ * Dialog content is the consumer's own component — reach its parts with
+ * `within(parts)`; they resolve relative to the container.
  */
 export class DialogDriver extends ComponentDriver<typeof dialogParts> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {

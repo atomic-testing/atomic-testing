@@ -130,8 +130,34 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
   }
 
   /**
+   * The element {@link ComponentDriver.within} resolves an interior scene against —
+   * "inside this component", as *this driver* defines inside. Defaults to
+   * {@link ComponentDriver.locator}, which is already correct wherever a driver's own
+   * locator resolves to the surface holding caller content (Radix/Reka anchor at
+   * `Dialog.Content`, Fluent at `DialogSurface`).
+   *
+   * Override it when the driver's locator resolves to a **wrapper** instead. MUI's
+   * Dialog and Drawer are the shipped cases: their locator is the portal-rendered
+   * Modal root, whose children are the backdrop, two focus-trap sentinels and a
+   * positioning container. Un-narrowed, an interior there reaches MUI's own chrome,
+   * and a `'Child'`-relative interior part resolves to `.MuiBackdrop-root` rather
+   * than to anything the scene wrote — silently, since a locator that matches the
+   * wrong element raises nothing.
+   *
+   * An override MUST resolve to an element containing **everything the caller
+   * supplied**. For a slotted component that means the surface, never one slot: MUI
+   * spreads caller content across `DialogTitle`/`DialogContent`/`DialogActions` as
+   * siblings, so narrowing to `.MuiDialogContent-root` would drop the action buttons
+   * scenes click. Over-narrowing fails the same silent way it fixes — the part just
+   * stops resolving (ADR-019).
+   */
+  protected get interiorLocator(): PartLocator {
+    return this._locator;
+  }
+
+  /**
    * Driver instances for a caller-supplied interior scene, resolved against this
-   * component's own locator.
+   * component's {@link ComponentDriver.interiorLocator}.
    *
    * The call-time counterpart to {@link ComponentDriver.parts}: `parts` is the
    * chrome the driver author hardcodes, this is the interior the *scene* author
@@ -151,11 +177,11 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * driver-specific configuration from its host. This differs deliberately from
    * {@link ComponentDriver.parts}, whose children do inherit the host's option.
    *
-   * @param parts The interior scene to resolve against this component's locator
+   * @param parts The interior scene to resolve against this component's interior
    * @returns One driver instance per named part
    */
   within<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT> {
-    return getPartFromDefinition<ContentT>(parts, this._locator, this.interactor, {});
+    return getPartFromDefinition<ContentT>(parts, this.interiorLocator, this.interactor, {});
   }
 
   /**
