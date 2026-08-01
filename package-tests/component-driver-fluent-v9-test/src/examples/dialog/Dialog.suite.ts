@@ -50,7 +50,7 @@ export const dialogExampleTestSuite: TestSuiteInfo<typeof dialogExample.scene> =
       test('closes the modal dialog via its own close button', async () => {
         await engine().parts.modalTrigger.click();
         await engine().parts.modalDialog.waitForOpen();
-        await engine().parts.modalDialog.scope(modalDialogContentPart).close.click();
+        await engine().parts.modalDialog.within(modalDialogContentPart).close.click();
         assertTrue(await engine().parts.modalDialog.waitForClose());
         assertFalse(await engine().parts.modalDialog.isOpen());
       });

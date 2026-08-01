@@ -18,7 +18,7 @@ export class MenuButtonDriver extends HTMLButtonDriver {
   /**
    * The `Menu` this button opens, resolved via its trigger `id` → `aria-labelledby`
    * link. See {@link MenuDriver}. Reach consumer-declared menu content with
-   * `getMenu().scope(parts)`.
+   * `getMenu().within(parts)`.
    */
   getMenu(): MenuDriver {
     return new MenuDriver(this.locator, this.interactor, { ...this.commutableOption });

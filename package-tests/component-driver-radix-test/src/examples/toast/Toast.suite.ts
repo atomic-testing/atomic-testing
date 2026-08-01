@@ -56,9 +56,9 @@ export const toastExampleTestSuite: TestSuiteInfo<typeof toastExample.scene> = {
       test('reads title and description content parts', async () => {
         await engine().parts.trigger.click();
         await engine().parts.toast.waitForOpen();
-        assertEqual(await engine().parts.toast.scope(toastContentPart).title.getText(), 'Changes saved');
+        assertEqual(await engine().parts.toast.within(toastContentPart).title.getText(), 'Changes saved');
         assertEqual(
-          await engine().parts.toast.scope(toastContentPart).description.getText(),
+          await engine().parts.toast.within(toastContentPart).description.getText(),
           'Your changes have been saved.'
         );
       });

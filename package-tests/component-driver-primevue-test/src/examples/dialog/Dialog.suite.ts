@@ -69,8 +69,8 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
 
       test('drives the content scene through the teleported dialog', async () => {
         await openDialog();
-        await engine().parts.dialog.scope(dialogContentPart).nameInput.setValue('Ada Lovelace');
-        await engine().parts.dialog.scope(dialogContentPart).saveButton.click();
+        await engine().parts.dialog.within(dialogContentPart).nameInput.setValue('Ada Lovelace');
+        await engine().parts.dialog.within(dialogContentPart).saveButton.click();
         assertTrue(await engine().parts.dialog.waitForClose());
         assertEqual(await engine().parts.savedName.getText(), 'Ada Lovelace');
       });

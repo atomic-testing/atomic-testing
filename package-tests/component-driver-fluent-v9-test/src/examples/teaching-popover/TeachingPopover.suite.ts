@@ -44,7 +44,7 @@ export const teachingPopoverExampleTestSuite: TestSuiteInfo<typeof teachingPopov
       test('reads consumer-declared footer content', async () => {
         await engine().parts.trigger.click();
         await engine().parts.popover.waitForOpen();
-        assertEqual(await engine().parts.popover.scope(teachingPopoverContentPart).next.getText(), 'Next');
+        assertEqual(await engine().parts.popover.within(teachingPopoverContentPart).next.getText(), 'Next');
       });
 
       test('dismisses via the built-in dismiss button', async () => {

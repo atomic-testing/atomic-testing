@@ -35,7 +35,7 @@ node, in this order** — the first rule that matches wins:
    the _item_ shape — never `item1`, `item2`, `item3` as separate named parts.
 3. **Fixed chrome, caller-varying content** (a dialog whose body differs per
    usage)? Keep it an ordinary driver and let each caller reach the interior with
-   [`scope(parts)`](../core-concepts.mdx#driver-types) at the point of use — the
+   [`within(parts)`](../core-concepts.mdx#driver-types) at the point of use — the
    driver's own file stays ignorant of any specific interior. Keep the interior's
    `ScenePart` const in the scene file so the scene still reads as the map of what
    a test can reach.

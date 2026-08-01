@@ -142,7 +142,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * This replaced an earlier `ContainerDriver` base whose `content` option
    * required the same scene to be named twice — once as a type argument, once in
    * the driver option — plus a laundering constructor in every subclass (ADR-019).
-   * Named `scope` rather than `getContent` because leaf drivers already own that
+   * Named `within` rather than `getContent` because leaf drivers already own that
    * name for reading a component's own text (a badge's content, a tooltip's
    * content), and a base-class member cannot collide with them.
    *
@@ -154,7 +154,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
    * @param parts The interior scene to resolve against this component's locator
    * @returns One driver instance per named part
    */
-  scope<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT> {
+  within<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT> {
     return getPartFromDefinition<ContentT>(parts, this._locator, this.interactor, {});
   }
 

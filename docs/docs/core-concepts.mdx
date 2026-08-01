@@ -40,9 +40,9 @@ Every driver extends `ComponentDriver<T>`, and one specialization exists for a s
 | `ComponentDriver<T>`     | Base driver with a fixed set of child parts           | Most drivers |
 | `ListComponentDriver<I>` | Driver for a repeated collection of same-shaped items | Menu, List   |
 
-A component whose interior varies per usage needs no special driver type. Every driver inherits **`scope(parts)`** (`packages/core/src/drivers/ComponentDriver.ts`), which resolves a caller-supplied `ScenePart` against that driver's own locator and returns one driver per named part. Where `parts` is the chrome the driver author hardcodes, `scope()` is the interior the _scene_ author owns: a dialog's title and close behavior are the same everywhere, but its body differs per usage. Because locators resolve lazily, `scope()` is synchronous and can be called before the interior mounts — and one driver instance can scope any number of interiors.
+A component whose interior varies per usage needs no special driver type. Every driver inherits **`within(parts)`** (`packages/core/src/drivers/ComponentDriver.ts`), which resolves a caller-supplied `ScenePart` against that driver's own locator and returns one driver per named part. Where `parts` is the chrome the driver author hardcodes, `within()` is the interior the _scene_ author owns: a dialog's title and close behavior are the same everywhere, but its body differs per usage. Because locators resolve lazily, `within()` is synchronous and can be called before the interior mounts — and one driver instance can serve any number of interiors.
 
-`DialogDriver` in `@atomic-testing/component-driver-mui-v7` (`packages/component-driver-mui-v7/src/components/DialogDriver.ts`) is a shipped example — it re-roots to the dialog's portal target (see [Testing portals & overlays](./guides/portal-and-overlays.md)) and exposes driver-specific methods like `getTitle()` and `closeByEscape()`, while the caller reaches the dialog body through `scope()`:
+`DialogDriver` in `@atomic-testing/component-driver-mui-v7` (`packages/component-driver-mui-v7/src/components/DialogDriver.ts`) is a shipped example — it re-roots to the dialog's portal target (see [Testing portals & overlays](./guides/portal-and-overlays.md)) and exposes driver-specific methods like `getTitle()` and `closeByEscape()`, while the caller reaches the dialog body through `within()`:
 
 ```typescript
 const confirmContent = {
@@ -52,11 +52,11 @@ const confirmContent = {
 
 const parts = { dialog: { locator: byDataTestId('dialog'), driver: DialogDriver } } satisfies ScenePart;
 
-await engine.parts.dialog.scope(confirmContent).confirm.click();
+await engine.parts.dialog.within(confirmContent).confirm.click();
 ```
 
 :::note
-Earlier versions modeled this with a `ContainerDriver` base and a `content` driver option, which required naming the interior scene twice. Both were removed in favor of `scope()` — see [ADR-019](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/019-call-time-scope-supersedes-container-content.md).
+Earlier versions modeled this with a `ContainerDriver` base and a `content` driver option, which required naming the interior scene twice. Both were removed in favor of `within()` — see [ADR-019](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/019-call-time-within-supersedes-container-content.md).
 :::
 
 **`ListComponentDriver<ItemT>`** (`packages/core/src/drivers/ListComponentDriver.ts`) extends `ComponentDriver` and adds `getItemByIndex()`, `getItemByLabel()`, `getItems()`, and `getItemCount()` — all resolved by matching a single `itemLocator` repeatedly and wrapping each match in an `itemClass` driver. Reach for it whenever a component renders a variable-length collection of identically-shaped children. `ListDriver` in `@atomic-testing/component-driver-mui-v7` (`packages/component-driver-mui-v7/src/components/ListDriver.ts`) is a shipped example driving a `<List>` of `<ListItem>`s.

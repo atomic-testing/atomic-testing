@@ -54,7 +54,7 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
     test('Clicking agree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
       await engine().parts.dialog.waitForOpen();
-      await engine().parts.dialog.scope(dialogContentPart).agree.click();
+      await engine().parts.dialog.within(dialogContentPart).agree.click();
       await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);
@@ -63,7 +63,7 @@ export const alertDialogTestSuite: TestSuiteInfo<typeof alertDialogExample.scene
     test('Clicking disagree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
       await engine().parts.dialog.waitForOpen();
-      await engine().parts.dialog.scope(dialogContentPart).disagree.click();
+      await engine().parts.dialog.within(dialogContentPart).disagree.click();
       await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);

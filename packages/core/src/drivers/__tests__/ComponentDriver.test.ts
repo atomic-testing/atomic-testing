@@ -71,11 +71,11 @@ class HostDriver extends ComponentDriver<typeof chromeParts> {
 
 const selectorsOf = (locator: PartLocator): string[] => locator.map(part => part.selector);
 
-describe('ComponentDriver.scope', () => {
+describe('ComponentDriver.within', () => {
   it("resolves interior parts as descendants of the host's own locator", () => {
     const host = new HostDriver(byDataTestId('dialog'), stubInteractor);
 
-    const content = host.scope(interiorParts);
+    const content = host.within(interiorParts);
 
     expect(selectorsOf(content.confirm.locator)).toEqual(['[data-testid="dialog"]', '[data-testid="confirm"]']);
     expect(selectorsOf(content.cancel.locator)).toEqual(['[data-testid="dialog"]', '[data-testid="cancel"]']);
@@ -86,7 +86,7 @@ describe('ComponentDriver.scope', () => {
 
     // The documented asymmetry: an interior belongs to the scene, so it inherits
     // no driver-specific configuration; the driver's own chrome does.
-    expect(host.scope(interiorParts).confirm.receivedOption.label).toBeUndefined();
+    expect(host.within(interiorParts).confirm.receivedOption.label).toBeUndefined();
     expect(host.parts.title.receivedOption.label).toBe('fromHost');
   });
 
@@ -95,11 +95,11 @@ describe('ComponentDriver.scope', () => {
 
     // Not expressible through the `content` option, which admits one scene per
     // driver instance — the motivating capability for the call-time form.
-    expect(selectorsOf(host.scope(interiorParts).confirm.locator)).toEqual([
+    expect(selectorsOf(host.within(interiorParts).confirm.locator)).toEqual([
       '[data-testid="dialog"]',
       '[data-testid="confirm"]',
     ]);
-    expect(selectorsOf(host.scope(otherInteriorParts).nameInput.locator)).toEqual([
+    expect(selectorsOf(host.within(otherInteriorParts).nameInput.locator)).toEqual([
       '[data-testid="dialog"]',
       '[data-testid="name"]',
     ]);
@@ -109,7 +109,7 @@ describe('ComponentDriver.scope', () => {
     const host = new HostDriver(byDataTestId('dialog'), stubInteractor);
     const nested = { panel: { locator: byDataTestId('panel'), driver: PortalDriver } } satisfies ScenePart;
 
-    const content = host.scope(nested);
+    const content = host.within(nested);
 
     expect(selectorsOf(content.panel.locator)).toEqual(['[data-testid="portal-root"]', '[data-testid="panel"]']);
   });
@@ -117,6 +117,6 @@ describe('ComponentDriver.scope', () => {
   it('returns an empty part map for an empty interior', () => {
     const host = new HostDriver(byDataTestId('dialog'), stubInteractor);
 
-    expect(host.scope({})).toEqual({});
+    expect(host.within({})).toEqual({});
   });
 });

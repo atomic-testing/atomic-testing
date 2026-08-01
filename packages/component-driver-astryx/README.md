@@ -136,12 +136,12 @@ comment.
 
 ### Overlays & feedback
 
-| Driver              | Astryx component | Notes                                                                            |
-| ------------------- | ---------------- | -------------------------------------------------------------------------------- |
-| `PopoverDriver`     | `Popover`        | Trigger-anchored; `open`/`close`/`isOpen`, `getLabel`/`getContent`.              |
-| `DialogDriver`      | `Dialog`         | Native `<dialog>`; `isOpen`/`isModal`/`getTitle`/`closeByEscape`; interior via `scope(parts)`. |
-| `AlertDialogDriver` | `AlertDialog`    | `role="alertdialog"`; `getTitle`/`getDescription`, `clickAction`/`clickCancel`.  |
-| `ToastDriver`       | `Toast`          | Stable `data-type`: `getType`/`isError`/`getRole`/`getMessage`, `dismiss`.       |
+| Driver              | Astryx component | Notes                                                                                           |
+| ------------------- | ---------------- | ----------------------------------------------------------------------------------------------- |
+| `PopoverDriver`     | `Popover`        | Trigger-anchored; `open`/`close`/`isOpen`, `getLabel`/`getContent`.                             |
+| `DialogDriver`      | `Dialog`         | Native `<dialog>`; `isOpen`/`isModal`/`getTitle`/`closeByEscape`; interior via `within(parts)`. |
+| `AlertDialogDriver` | `AlertDialog`    | `role="alertdialog"`; `getTitle`/`getDescription`, `clickAction`/`clickCancel`.                 |
+| `ToastDriver`       | `Toast`          | Stable `data-type`: `getType`/`isError`/`getRole`/`getMessage`, `dismiss`.                      |
 
 Wave 3 — lists, tables, selectors & dates. The list/table/tree drivers read
 structure from native semantics (`<li>`, `<table>`, `ul[role="tree"]`) and per-row
