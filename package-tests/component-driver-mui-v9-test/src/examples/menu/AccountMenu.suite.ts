@@ -1,9 +1,21 @@
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, MenuDriver } from '@atomic-testing/component-driver-mui-v9';
-import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
+import { byCssSelector, byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 
 import { accountMenuUIExample } from './AccountMenu.examples';
+
+/**
+ * A deliberately anchor-sensitive interior: the FIRST DIRECT CHILD of whatever
+ * `within` resolves against. Anchored on the menu list it is the caller's first
+ * `MenuItem`; anchored on the Modal root it would be `.MuiBackdrop-root`.
+ */
+const firstInteriorChildPart = {
+  firstChild: {
+    locator: byCssSelector('*', 'Child'),
+    driver: HTMLElementDriver,
+  },
+} satisfies ScenePart;
 
 export const accountMenuExampleScenePart = {
   menu: {
@@ -62,6 +74,15 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene
         const item = await engine().parts.menu.getMenuItemByLabel('Logout');
         const isDisabled = await item?.isDisabled();
         assertTrue(isDisabled);
+      });
+
+      // Regression for the interior anchor (ADR-019): MUI's menu locator is the
+      // portal-rendered Modal root, whose own children are the invisible backdrop
+      // and the focus-trap sentinels. `within` must resolve against the menu list
+      // instead, or every relative interior part silently addresses MUI chrome.
+      test('Interior parts anchor on the menu list, not the modal root', async () => {
+        const firstChild = engine().parts.menu.within(firstInteriorChildPart).firstChild;
+        assertEqual(await firstChild.getAttribute('data-testid'), 'menu-profile');
       });
     });
   },
