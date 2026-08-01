@@ -48,8 +48,10 @@ jobs:
           # Tag is expected to look like "v0.56.0".
           VERSION="${GITHUB_REF#refs/tags/v}"
           # Fail closed: bumpVersion writes this string verbatim into every
-          # package manifest, so a malformed ref must never reach it.
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+          # package manifest, so a malformed ref must never reach it. The
+          # prerelease class includes '-' because SemVer prerelease identifiers
+          # are [0-9A-Za-z-] (e.g. 1.2.3-alpha-1), not just alphanumerics.
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
             echo "ERROR: refusing to publish — '$VERSION' is not a bare semver version." >&2
             echo "Expected a tag of the form v1.2.3 (got ref '$GITHUB_REF')." >&2
             exit 1
@@ -79,8 +81,11 @@ jobs:
   # Split out from `publish` on purpose: this is the only job holding a credential
   # that can write to `main`, and it installs NO dependencies. `bumpVersion.js` and
   # `generateChangelog.js` use only Node built-ins (fs / path / child_process), so
-  # no third-party code — not even a dependency's install script — ever runs while
-  # that credential is present.
+  # no third-party npm package — not even a dependency's install script — is ever
+  # installed or executed while that credential is present. The only external code
+  # here is the two GitHub-published actions below (`actions/checkout`,
+  # `actions/setup-node`); the point of the split is that the dependency tree,
+  # which is what `publish` necessarily exposes itself to, never enters this job.
   commit-version:
     needs: publish
     runs-on: ubuntu-latest
@@ -113,4 +118,17 @@ jobs:
           node scripts/generateChangelog.js "$VERSION"
           git add -A
           git diff --cached --quiet || git commit -m "chore: bump version to $VERSION [skip ci]"
-          git push origin HEAD:main
+          # The packages are already on npm by the time this runs, so dropping this
+          # commit would leave the repo's manifests disagreeing with the published
+          # versions and corrupt the next release's changelog range. If main
+          # advanced while this job ran, rebase onto it and retry rather than
+          # failing the release on a non-fast-forward.
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push rejected (main advanced); rebasing and retrying ($attempt/3)…"
+            git pull --rebase origin main
+          done
+          echo "ERROR: could not push the version bump to main after 3 attempts." >&2
+          exit 1
