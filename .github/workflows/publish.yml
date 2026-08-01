@@ -39,7 +39,7 @@ jobs:
           # builds all packages — arbitrary third-party build tooling — and then
           # publishes, so any code able to read this job's filesystem would
           # otherwise reach a credential that can write to the repository. The
-          # push happens in `commit-version`, which runs no third-party code.
+          # push happens in `commit-version`, which installs no dependencies.
           persist-credentials: false
 
       - name: Resolve and validate version
