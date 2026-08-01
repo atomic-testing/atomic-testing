@@ -56,7 +56,7 @@ export class SplitButtonDriver extends ComponentDriver<typeof splitButtonParts> 
 
   /**
    * The `Menu` the menu-invoking half opens. See {@link MenuDriver}. Reach
-   * consumer-declared menu content with `getMenu().scope(parts)`.
+   * consumer-declared menu content with `getMenu().within(parts)`.
    */
   getMenu(): MenuDriver {
     return new MenuDriver(this.parts.menuButton.locator, this.interactor, { ...this.commutableOption });

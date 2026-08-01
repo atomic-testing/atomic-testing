@@ -59,7 +59,7 @@ export const popoverTestSuite: TestSuiteInfo<typeof popoverScenePart> = {
       test('the linked content close button closes the popover', async () => {
         await engine().parts.first.open();
         await engine().parts.first.waitForOpen();
-        await engine().parts.first.scope(firstContentPart).close.click();
+        await engine().parts.first.within(firstContentPart).close.click();
         await engine().parts.first.waitForClose();
         assertFalse(await engine().parts.first.isOpen());
       });
@@ -105,7 +105,7 @@ export const popoverTestSuite: TestSuiteInfo<typeof popoverScenePart> = {
         // Closing via the SECOND instance's own close button is the positive half
         // of the disambiguation: the aria-controls link resolved to this trigger's
         // content, not the first instance's identically-roled panel.
-        await engine().parts.second.scope(secondContentPart).close.click();
+        await engine().parts.second.within(secondContentPart).close.click();
         await engine().parts.second.waitForClose();
         assertFalse(await engine().parts.second.isOpen());
       });

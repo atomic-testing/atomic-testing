@@ -53,7 +53,7 @@ export const slideinDialogTestSuite: TestSuiteInfo<typeof slideInDialogExample.s
 
     test('Clicking agree button should close dialog', async () => {
       await engine().parts.openTrigger.click();
-      await engine().parts.dialog.scope(dialogContentPart).agree.click();
+      await engine().parts.dialog.within(dialogContentPart).agree.click();
       await engine().parts.dialog.waitForClose();
       const isOpen = await engine().parts.dialog.isOpen();
       assertFalse(isOpen);

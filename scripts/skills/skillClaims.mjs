@@ -25,7 +25,7 @@ export const CANONICAL_CORE_SYMBOLS = [
   // The call-time interior accessor the skills teach for caller-varying content;
   // replaced the removed `ContainerDriver`/`content` channel in ADR-019, which
   // the skills therefore no longer name.
-  { name: 'scope', kind: 'member' },
+  { name: 'within', kind: 'member' },
   { name: 'waitUntilComponentState', kind: 'member' },
   { name: 'waitUntil', kind: 'member' },
 ];

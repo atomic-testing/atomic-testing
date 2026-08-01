@@ -67,7 +67,7 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
       test('closes from a content action button', async () => {
         await engine().parts.openTrigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.scope(dialogContentPart).archive.click();
+        await engine().parts.dialog.within(dialogContentPart).archive.click();
         assertTrue(await engine().parts.dialog.waitForClose());
         assertEqual(await waitForResult('archived'), 'archived');
       });
@@ -75,7 +75,7 @@ export const dialogTestSuite: TestSuiteInfo<typeof dialogScenePart> = {
       test('closes from the cancel button with the dismissed result', async () => {
         await engine().parts.openTrigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.scope(dialogContentPart).cancel.click();
+        await engine().parts.dialog.within(dialogContentPart).cancel.click();
         assertTrue(await engine().parts.dialog.waitForClose());
         assertEqual(await waitForResult('dismissed'), 'dismissed');
       });

@@ -40,7 +40,7 @@ classDiagram
       +locator: PartLocator
       +interactor: Interactor
       +driverName: string
-      +scope(parts) ScenePartDriver
+      +within(parts) ScenePartDriver
     }
     class ListComponentDriver~ItemT~ {
       +getItemByIndex()
@@ -62,7 +62,7 @@ classDiagram
   - `ComponentPartDefinition<T>` — `{ locator, driver, option? }`
   - `ListComponentPartDefinition<ItemT>` — adds `itemClass` + `itemLocator` via `ListComponentDriverSpecificOption`
 - **`ScenePartDriver<T>`** maps part names to driver instances using `InstanceType<T[partName]['driver']>` ([partTypes.ts#L121-L123](../packages/core/src/partTypes.ts#L121-L123)). This is why `engine.parts.email` is typed as the concrete driver you declared.
-- **Driver option types**: `IComponentDriverOption<T> = { parts: T }` ([partTypes.ts](../packages/core/src/partTypes.ts)). An interior scene is a call-time argument to `ComponentDriver.scope`, never an option field (ADR-019).
+- **Driver option types**: `IComponentDriverOption<T> = { parts: T }` ([partTypes.ts](../packages/core/src/partTypes.ts)). An interior scene is a call-time argument to `ComponentDriver.within`, never an option field (ADR-019).
 - **`ITestEngine<T> extends IComponentDriver<T>`** and adds `cleanUp()` ([partTypes.ts#L183-L185](../packages/core/src/partTypes.ts#L183-L185)).
 - **Intentional `any`**: `ComponentDriverClass`/`ComponentDriverCtor` constrain `T extends ComponentDriver<any>` for variance reasons — concrete driver classes must be assignable regardless of their `ScenePart` parameter ([partTypes.ts#L11-L39](../packages/core/src/partTypes.ts#L11-L39)). Do not "fix" these to stricter types.
 

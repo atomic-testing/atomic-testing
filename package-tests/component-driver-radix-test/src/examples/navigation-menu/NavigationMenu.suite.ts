@@ -68,7 +68,7 @@ export const navigationMenuExampleTestSuite: TestSuiteInfo<typeof navigationMenu
       test('reads a link inside the open content', async () => {
         await engine().parts.learn.open();
         await engine().parts.learn.waitForOpen();
-        assertEqual(await engine().parts.learn.scope(learnContentPart).gettingStarted.getText(), 'Getting started');
+        assertEqual(await engine().parts.learn.within(learnContentPart).gettingStarted.getText(), 'Getting started');
       });
 
       test('close() unmounts the content', async () => {

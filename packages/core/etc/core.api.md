@@ -158,7 +158,6 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     get parts(): ScenePartDriver<T>;
     pressKey(key: string, option?: Partial<PressKeyOption>): Promise<void>;
     runtimeCssSelector(): Promise<string>;
-    scope<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT>;
     protected scrollBy(delta: Point): Promise<void>;
     scrollIntoView(): Promise<void>;
     typeText(text: string): Promise<void>;
@@ -166,6 +165,7 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
     waitUntil<T>(option: WaitUntilOption<T>): Promise<T>;
     waitUntilComponentState(option?: Partial<Readonly<WaitForOption>>): Promise<void>;
     waitUntilVisible(timeoutMs?: number): Promise<void>;
+    within<ContentT extends ScenePart>(parts: ContentT): ScenePartDriver<ContentT>;
 }
 
 // @public

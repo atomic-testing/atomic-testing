@@ -49,7 +49,7 @@ reference implementations:
 
 Each overrides the two hooks above to re-root at the overlay's presentation
 container and matches its parts there. The overlay's own interior comes from the
-caller via [`scope(parts)`](../core-concepts.mdx#driver-types), which resolves that
+caller via [`within(parts)`](../core-concepts.mdx#driver-types), which resolves that
 scene against the re-rooted locator — so a portalled interior is declared the same
 way as any other component's.
 

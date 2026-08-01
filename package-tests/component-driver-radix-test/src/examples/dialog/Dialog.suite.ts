@@ -57,7 +57,7 @@ export const dialogExampleTestSuite: TestSuiteInfo<typeof dialogExample.scene> =
       test('clicking the close button closes the dialog', async () => {
         await engine().parts.trigger.click();
         await engine().parts.dialog.waitForOpen();
-        await engine().parts.dialog.scope(dialogContentPart).close.click();
+        await engine().parts.dialog.within(dialogContentPart).close.click();
         await engine().parts.dialog.waitForClose();
         assertFalse(await engine().parts.dialog.isOpen());
       });

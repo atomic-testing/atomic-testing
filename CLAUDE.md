@@ -199,9 +199,9 @@ const parts = {
 | `ListComponentDriver<I>` | Driver for lists of items    | Menu, List   |
 
 A caller-supplied interior is **not** a driver type — every driver inherits
-`scope(parts)`, which resolves a `ScenePart` against its own locator at call time
+`within(parts)`, which resolves a `ScenePart` against its own locator at call time
 (synchronously; locators are lazy). An earlier `ContainerDriver` base and its `content`
-option were removed in favor of it — see [ADR-019](agent-docs/adr/019-call-time-scope-supersedes-container-content.md).
+option were removed in favor of it — see [ADR-019](agent-docs/adr/019-call-time-within-supersedes-container-content.md).
 
 ## Package Structure
 

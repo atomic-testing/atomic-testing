@@ -77,7 +77,7 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
  *
  * A component whose interior is caller-supplied is an ordinary
  * {@link ComponentPartDefinition}; its interior is reached at call time through
- * {@link ComponentDriver.scope} rather than declared as a second parts channel
+ * {@link ComponentDriver.within} rather than declared as a second parts channel
  * (ADR-019).
  */
 export type ScenePartDefinition =
