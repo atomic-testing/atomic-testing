@@ -4,10 +4,8 @@ import {
   ComponentDriver,
   IComponentDriverOption,
   Interactor,
-  locatorUtil,
   PartLocator,
   ScenePart,
-  ComponentDriverCtor,
 } from '@atomic-testing/core';
 
 export const parts = {
@@ -23,6 +21,13 @@ export const parts = {
 
 /**
  * Driver for Material UI v9 Snackbar component.
+ *
+ * Content passed to the `action` prop is the scene's, not this driver's: reach it
+ * with `snackbar.parts.actionArea.within(parts)`, which anchors an ordinary
+ * `ScenePart` inside `.MuiSnackbarContent-action`. A bespoke `getActionComponent`
+ * accessor previously did this one locator + one driver class at a time; it was
+ * removed in favor of the general mechanism (ADR-019).
+ *
  * @see https://mui.com/material-ui/react-snackbar/
  */
 export class SnackbarDriver extends ComponentDriver<typeof parts> {
@@ -41,25 +46,6 @@ export class SnackbarDriver extends ComponentDriver<typeof parts> {
     await this.enforcePartExistence('contentDisplay');
     const content = await this.parts.contentDisplay.getText();
     return content ?? null;
-  }
-
-  /**
-   * Get a driver instance of a component in the action area of the snackbar.
-   * @param locator
-   * @param driverClass
-   * @returns
-   */
-  async getActionComponent<ItemClass extends ComponentDriver>(
-    locator: PartLocator,
-    driverClass: ComponentDriverCtor<ItemClass>
-  ): Promise<ItemClass | null> {
-    await this.enforcePartExistence('actionArea');
-    const componentLocator = locatorUtil.append(this.parts.actionArea.locator, locator);
-    const exists = await this.interactor.exists(componentLocator);
-    if (exists) {
-      return new driverClass(componentLocator, this.interactor, this.commutableOption);
-    }
-    return null;
   }
 
   override get driverName(): string {
