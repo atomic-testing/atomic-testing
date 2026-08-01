@@ -37,11 +37,13 @@ The cost landed on scene authors and driver authors alike:
   ignore their option).
 
 In-repo prior art already pointed at the fix. `SnackbarDriver.getActionComponent`
-solves the same arbitrary-interior problem for MUI's `action` prop with a call-time
-getter and a plain `ComponentDriver` — no `content` channel. `DataGridRowDriverBase.getCell`
-and `ListComponentDriver.getItemByIndex` are the same shape, the latter with the
-declared-default-plus-call-time-override hybrid. The plumbing (`listHelper`,
-`childListHelper`, `getPartFromDefinition`) was already written.
+solved the same arbitrary-interior problem for MUI's `action` prop with a call-time
+getter and a plain `ComponentDriver` — no `content` channel — and this ADR's own
+mechanism then subsumed it, so it is removed here too (see Consequences).
+`DataGridRowDriverBase.getCell` and `ListComponentDriver.getItemByIndex` are the same
+shape and survive, the latter with the declared-default-plus-call-time-override
+hybrid. The plumbing (`listHelper`, `childListHelper`, `getPartFromDefinition`) was
+already written.
 
 ## Decision
 
@@ -117,7 +119,7 @@ slot-level targeting; it is just not the default.
 needs no `await`. CDK's `getHarness` is async because it resolves elements; copying
 that here would put an `await` and a paren nest at every call site and reverse the
 ergonomic gain. A future class-taking overload _would_ be async — it probes
-existence, as `getActionComponent` and `getCell` both do.
+existence, as `getCell` does.
 
 ## Consequences
 
@@ -142,6 +144,11 @@ existence, as `getActionComponent` and `getCell` both do.
   `ScenePart` consts in the scene file, where every migrated one already lives.
 - ⚠️ The interior is named at each use rather than once. For a composite driver,
   hoist it into one accessor rather than repeating the const per method.
+- ⚠️ **`SnackbarDriver.getActionComponent` (mui v6/v7/v9) is removed.** It reached an
+  interior one locator + one driver class at a time, async and nullable — a second,
+  narrower way to express what `within` now covers, and called by no suite in the
+  repo. `snackbar.parts.actionArea.within(parts)` replaces it with no new code and
+  handles the multi-part action areas the old signature could not.
 - ⚠️ **`within` no longer literally means "under this driver's locator."** The
   indirection is deliberate — "inside this component, as the driver defines inside" —
   but a driver author who over-narrows `interiorLocator` breaks every scene using

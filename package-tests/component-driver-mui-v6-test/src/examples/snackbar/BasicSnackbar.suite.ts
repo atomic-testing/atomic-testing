@@ -1,9 +1,22 @@
+import { HTMLButtonDriver } from '@atomic-testing/component-driver-html';
 import { ButtonDriver, SnackbarDriver } from '@atomic-testing/component-driver-mui-v6';
 import { IExampleUnit, ScenePart, byDataTestId } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
 import { JSX } from 'react';
 
 import { basicSnackbarUIExample } from './BasicSnackbar.examples';
+
+/**
+ * Content the scene passes to Snackbar's `action` prop. Reached by anchoring an
+ * ordinary ScenePart inside the driver's `actionArea` chrome part — the general
+ * replacement for the removed bespoke `getActionComponent` accessor.
+ */
+const snackbarActionPart = {
+  close: {
+    locator: byDataTestId('close-button'),
+    driver: HTMLButtonDriver,
+  },
+} satisfies ScenePart;
 
 export const basicSnackbarExampleScenePart = {
   basicSnackbar: {
@@ -48,6 +61,13 @@ export const basicSnackbarTestSuite: TestSuiteInfo<typeof basicSnackbarExampleSc
       await engine().parts.snackOpener.click();
       const message = await engine().parts.basicSnackbar.getLabel();
       assertEqual(message, 'Note archived');
+    });
+
+    test('it should expose action-area content through within', async () => {
+      await engine().parts.snackOpener.click();
+      const action = engine().parts.basicSnackbar.parts.actionArea.within(snackbarActionPart);
+      assertTrue(await action.close.exists());
+      assertEqual(await action.close.getAttribute('aria-label'), 'close');
     });
   },
 };
