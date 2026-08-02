@@ -54,6 +54,16 @@ export const collapsibleExampleTestSuite: TestSuiteInfo<typeof collapsibleExampl
         await engine().parts.disabledDetails.click();
         assertFalse(await engine().parts.disabledDetails.isExpanded());
       });
+
+      // The no-op contract holds for the higher-level toggles too, not just click:
+      // expand/collapse route through the same disabled check, so neither waits on a
+      // state the item can never reach.
+      test(`expand and collapse are no-ops on a disabled item`, async () => {
+        await engine().parts.disabledDetails.expand();
+        assertFalse(await engine().parts.disabledDetails.isExpanded());
+        await engine().parts.disabledDetails.collapse();
+        assertFalse(await engine().parts.disabledDetails.isExpanded());
+      });
     });
   },
 };

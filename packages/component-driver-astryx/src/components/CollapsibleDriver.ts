@@ -55,21 +55,25 @@ export class CollapsibleDriver extends ComponentDriver<{}> {
     await this.interactor.click(this.triggerLocator);
   }
 
-  /** Expand the content if it is collapsed. */
+  /** Expand the content if it is collapsed. No-ops on a disabled item, as {@link click} does. */
   async expand(): Promise<void> {
     await this.setExpanded(true);
   }
 
-  /** Collapse the content if it is expanded. */
+  /** Collapse the content if it is expanded. No-ops on a disabled item, as {@link click} does. */
   async collapse(): Promise<void> {
     await this.setExpanded(false);
   }
 
   private async setExpanded(expanded: boolean): Promise<void> {
-    if ((await this.isExpanded()) === expanded) {
+    // A disabled trigger can never reach the requested state, so bail before the wait
+    // below spins for its whole timeout — and before the click, since Playwright reads
+    // `aria-disabled` as "not enabled" and would retry actionability until its own
+    // timeout. Toggling through `click` keeps that rule in one place.
+    if ((await this.isDisabled()) || (await this.isExpanded()) === expanded) {
       return;
     }
-    await this.interactor.click(this.triggerLocator);
+    await this.click();
     await timingUtil.waitUntil({
       probeFn: () => this.isExpanded(),
       terminateCondition: expanded,
