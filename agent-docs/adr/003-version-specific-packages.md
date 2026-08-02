@@ -20,6 +20,37 @@ Accepted (describes the existing design).
 > `react`/`react-dom` peerDependency range. A cross-cutting fix in `react-core`
 > requires no changes to either version package. The duplication caveat under
 > Consequences now applies to the MUI packages only.
+>
+> **Update (2026-08-02):** `component-driver-mui-v7` and `component-driver-mui-v9`
+> each carried a hard `dependencies` pin on `@atomic-testing/react-18` — leftover
+> from copying an earlier version package's manifest, never imported by either
+> driver's own `src/` (both are pure DOM/role/class matchers; the framework
+> binding is the *consumer's* choice of engine, not the driver's). `@mui/material`
+> itself declares one identical peer range across v6/v7/v9
+> (`^17.0.0 || ^18.0.0 || ^19.0.0`) — there was never a version-specific reason
+> for either package to force React 18 on every consumer, and doing so produced
+> real "unmet peer dependency" conflicts for any consumer actually on React 19
+> (react-18's own peer is `react >=18.0.0 <19.0.0`). Both hard dependencies were
+> removed; the "Cross-package coupling" consequence below no longer applies to
+> `mui-v7 → react-18`. A new CI check (DEP-PIN-02 in
+> `scripts/check-dependency-pinning.mjs`) now fails the build if a
+> `component-driver-*` package hard-depends on an `@atomic-testing/react-N` /
+> `vue-N` / `angular-N` engine package whose major doesn't match its own —
+> Angular Material's `component-driver-angular-material-vNN → angular-NN`
+> pairing is the one legitimate case, because Angular Material's major *is* the
+> Angular major it requires; MUI's major is an independent axis from React's,
+> so no such pairing is ever legitimate there.
+>
+> **Guidance for new version-specific packages:** don't copy a sibling
+> package's `dependencies`/`peerDependencies` verbatim. Check the actual
+> peerDependencies of the third-party library the new package wraps (its
+> published `package.json`) to find the framework-major range it really
+> supports, and declare that — don't assume it matches whatever an existing
+> sibling package happened to declare. Only add a hard dependency on one
+> specific `@atomic-testing/react-N`/`vue-N`/`angular-N` engine package if the
+> wrapped design system's major is genuinely locked to that one framework
+> major (Angular Material); otherwise leave the framework as an open
+> peerDependencies floor and let the consumer's own engine choice satisfy it.
 
 ## Context
 
@@ -46,7 +77,7 @@ Consumers install the package matching their framework major; each pins the appr
 - ✅ Consumers pull only the version they use.
 - ✅ A MUI-major DOM change is fixed in one package without risk to others.
 - ⚠️ **Code duplication**: mui-v5/v6/v7 are ~95% identical; a cross-cutting fix or new driver must be replicated across version packages. `react-18` and `react-19` were originally duplicated copies; since #1014 they are thin re-exports of `react-core`'s implementation (see the 2026-07-03 update above).
-- ⚠️ Cross-package coupling exists where a driver package depends on a specific adapter (`mui-v7` → `react-18`; `mui-x-v8` → `mui-v6`) — see [ARCHITECTURE.md dependency graph](../ARCHITECTURE.md#package-dependency-graph).
+- ⚠️ Cross-package coupling exists where a driver package depends on another driver package for shared implementation (`mui-x-v8` → `mui-v6`) — see [ARCHITECTURE.md dependency graph](../ARCHITECTURE.md#package-dependency-graph). This is different from a driver hard-depending on a specific framework-engine package (`mui-v7` → `react-18`, removed 2026-08-02 per the update above) — that pairing named an arbitrary framework major, not a real requirement.
 
 ## Alternatives considered
 

@@ -274,6 +274,8 @@ export class MyDriver extends ComponentDriver<{}> implements IInputDriver<string
 
 > **Shipping a new component-driver _package_ (a new design system) or a framework engine?** Register it with the scaffolder so `create atomic-testing` offers it and it shows up in the generated **Framework & Runner Support** matrix (that matrix is derived from the same registry): add or extend a plugin in `packages/create-atomic-testing/src/registry/` (`designSystems.ts` / `frameworks.ts`) plus a `compatibility.ts` row. The `check:coverage` (COV-\*) CI gate fails if a shipped `component-driver-*` package isn't registered. Details: [`packages/create-atomic-testing/CLAUDE.md`](packages/create-atomic-testing/CLAUDE.md).
 
+> **Its `package.json`'s peer/framework dependencies** — don't copy a sibling package's `dependencies`/`peerDependencies` verbatim. Check the actual peerDependencies of the third-party library the new package wraps (its published `package.json`) and declare the framework-major range it really supports; don't assume it matches whatever an existing sibling declared. Only hard-depend on one specific `@atomic-testing/react-N`/`vue-N`/`angular-N` engine package if the wrapped design system's major is genuinely locked to that one framework major (e.g. Angular Material) — otherwise leave the framework as an open peerDependencies floor. `check:deps-pinning` (DEP-PIN-02) fails the build if a `component-driver-*` package's hard-depended engine major doesn't match its own. See [ADR-003](agent-docs/adr/003-version-specific-packages.md) for the mui-v7/mui-v9 case this guards against.
+
 ## Testing Pattern
 
 ### Simple DOM-Only Test
