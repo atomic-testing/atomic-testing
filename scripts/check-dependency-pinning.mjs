@@ -27,6 +27,22 @@
 //
 // DEP-PIN-01  a package's own major-version suffix (or documented exception)
 //             doesn't match one of its pinned dependencies' majors
+// DEP-PIN-02  a component-driver-* package hard-depends on an
+//             @atomic-testing/{react,vue,angular}-N engine package whose major
+//             doesn't match the driver's own major. A design-system's major
+//             (MUI vN, Fluent vN, ...) and a framework's major (React N, Vue N,
+//             Angular N) are independent axes almost everywhere; the one family
+//             where they legitimately coincide is Angular Material, whose own
+//             major IS the Angular major it requires (e.g.
+//             component-driver-angular-material-v20 -> angular-20, 20 == 20).
+//             Anywhere the numbers don't match, the dependency is an arbitrary
+//             pin rather than a real requirement — the bug behind
+//             component-driver-mui-v7 and -mui-v9 each hard-depending on
+//             react-18 regardless of which MUI major they wrapped: never
+//             imported by either package's own src/, and it forced every
+//             consumer to install react-18's own peerDependency (react
+//             <19.0.0) even when their app — and @mui/material itself — was
+//             on React 19. See agent-docs/adr/003-version-specific-packages.md.
 //
 // Dependency-free Node ESM, modelled on scripts/skills/check-skill-sync.mjs.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -224,7 +240,7 @@ function checkDir(dir, dirName, errors) {
   }
 }
 
-// DEP-PIN-02: `@playwright/test` re-exports the core `playwright` package and
+// DEP-PIN-03: `@playwright/test` re-exports the core `playwright` package and
 // hard-errors ("did not expect test.describe() to be called here … two
 // different versions of @playwright/test") when the two resolve to different
 // versions. A package-test that runs Playwright Test AND separately pins
@@ -253,10 +269,53 @@ function checkPlaywrightLockstep(errors) {
     const pinned = manifest && concreteDeps(manifest.json).playwright;
     if (!pinned || minorOf(pinned) === want) continue;
     errors.push(
-      `DEP-PIN-02: ${manifest.path.slice(repoRoot.length + 1)} pins playwright at ${pinned}, but the ` +
+      `DEP-PIN-03: ${manifest.path.slice(repoRoot.length + 1)} pins playwright at ${pinned}, but the ` +
         `root @playwright/test is ${expected} — they must match, or every e2e suite in this package ` +
         `fails at load with "did not expect test.describe() to be called here".`
     );
+  }
+}
+
+// A package's own version-suffix major, derived the same way rulesFor() derives
+// it (FAMILIES pattern match against the test-suffix-stripped name) — but with
+// no EXPLICIT/EXTRA_RULES layer, since those are name-less singletons or
+// second-major add-ons, not a package's own identity major.
+function ownMajorOf(dirName) {
+  const base = TEST_DIR_ALIASES[dirName] ?? dirName.replace(/-test$/, '');
+  for (const family of FAMILIES) {
+    const match = family.pattern.exec(base);
+    if (match) return Number(match[1]);
+  }
+  return null;
+}
+
+// A hard (dependencies, not peerDependencies) pin on a specific per-major
+// @atomic-testing engine package — only meaningful to check on shipped
+// component-driver-* packages, scoped to `dependencies` because that's what
+// actually forces the engine (and its own peerDependencies) onto every
+// consumer; a *-test fixture's devDependency choice of engine major is an
+// independent, intentional test-matrix decision, not this bug class.
+const ENGINE_DEP = /^@atomic-testing\/(?:react|vue|angular)-(\d+)$/;
+
+function checkEngineCoupling(dir, dirName, errors) {
+  if (!dirName.startsWith('component-driver-')) return;
+  const manifest = readManifest(dir);
+  if (!manifest) return;
+  const own = ownMajorOf(dirName);
+  const deps = manifest.json.dependencies ?? {};
+  for (const name of Object.keys(deps)) {
+    const match = ENGINE_DEP.exec(name);
+    if (!match) continue;
+    const engineMajor = Number(match[1]);
+    if (own !== engineMajor) {
+      const relPath = manifest.path.slice(repoRoot.length + 1);
+      errors.push(
+        `DEP-PIN-02: ${relPath} hard-depends on ${name} (major ${engineMajor}), but this ` +
+          `package's own major is ${own ?? 'n/a'} — a design-system driver and a framework ` +
+          `engine are different version axes almost everywhere (Angular Material is the one ` +
+          `documented exception); is this pin actually required, or an arbitrary/stale one?`
+      );
+    }
   }
 }
 
@@ -265,6 +324,9 @@ for (const root of [packagesDir, packageTestsDir]) {
   for (const dirName of readdirSync(root)) {
     checkDir(join(root, dirName), dirName, errors);
   }
+}
+for (const dirName of readdirSync(packagesDir)) {
+  checkEngineCoupling(join(packagesDir, dirName), dirName, errors);
 }
 checkPlaywrightLockstep(errors);
 

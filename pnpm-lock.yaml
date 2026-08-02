@@ -1598,9 +1598,6 @@ importers:
       '@atomic-testing/dom-core':
         specifier: workspace:*
         version: link:../dom-core
-      '@atomic-testing/react-18':
-        specifier: workspace:*
-        version: link:../react-18
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.17)(react@19.2.7)
@@ -1635,9 +1632,6 @@ importers:
       '@atomic-testing/dom-core':
         specifier: workspace:*
         version: link:../dom-core
-      '@atomic-testing/react-18':
-        specifier: workspace:*
-        version: link:../react-18
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.17)(react@19.2.7)

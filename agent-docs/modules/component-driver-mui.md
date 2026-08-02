@@ -11,7 +11,7 @@ Drivers for Material-UI core components, one package per MUI major:
 >
 > The two packages are ~95% identical at the code level — same exports, same APIs. They diverge only where a MUI major changes DOM structure, roles, or class names. See [ADR-003](../adr/003-version-specific-packages.md). This doc uses **v7** as the reference; the catalog and patterns apply to v6 too.
 
-Each mui package depends on `component-driver-html`, `core`, `dom-core`, and a React package (`mui-v7` → `react-18`) plus `@mui/material` and `@emotion/*` ([mui-v7/package.json#L25-L33](../../packages/component-driver-mui-v7/package.json#L25-L33)).
+Each mui package depends on `component-driver-html`, `core`, `dom-core`, plus `@mui/material` and `@emotion/*` ([mui-v7/package.json#L30-L37](../../packages/component-driver-mui-v7/package.json#L30-L37)). It does **not** hard-depend on any `react-N` engine package — the consumer's own choice of `react-18`/`react-19` satisfies the driver's open `react`/`react-dom` peerDependencies (a hard pin to `react-18` regardless of MUI major was removed 2026-08-02; see [ADR-003](../adr/003-version-specific-packages.md)).
 
 ## Public surface (v7)
 
