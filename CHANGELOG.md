@@ -1,5 +1,125 @@
 # Changelog
 
+## [0.100.0] - 2026-08-02
+
+### Breaking Changes
+
+- **mui:** anchor Menu interiors at the menu list
+- **mui:** remove dead SnackbarDriver.getActionComponent
+- **core:** anchor within() at a driver-defined interiorLocator
+- **core:** rename ComponentDriver.scope to within
+- **core:** remove ContainerDriver and its container option types
+
+### Features
+
+- **core:** add ComponentDriver.scope() and deprecate ContainerDriver's content
+- **component-driver-mui-x-v9:** reorderColumn for DataGridPremiumDriver
+- **component-driver-mui-x-v9:** master-detail row expansion for DataGridPremiumDriver
+- **component-driver-mui-v9:** add isRequired and isError for v6/v7 capability parity ([#1270](https://github.com/atomic-testing/atomic-testing/issues/1270))
+- **component-driver-primevue-v4:** add filtering, cell editing, virtual scroll support ([#1034](https://github.com/atomic-testing/atomic-testing/issues/1034)) ([#1269](https://github.com/atomic-testing/atomic-testing/issues/1269))
+- **component-driver-reka-ui-v2:** complete Reka UI driver coverage ([#1152](https://github.com/atomic-testing/atomic-testing/issues/1152))
+- **dom-core,playwright,core:** HTML5 drag-and-drop, findByRole, pressKey cross-engine parity ([#1153](https://github.com/atomic-testing/atomic-testing/issues/1153))
+- **component-driver-astryx:** add LightboxDriver
+- **component-driver-primevue-v4:** ContextMenu driver + shared menu-content base ([#1036](https://github.com/atomic-testing/atomic-testing/issues/1036))
+- **component-driver-reka-ui-v2:** new Vue 3 driver package for Reka UI ([#1037](https://github.com/atomic-testing/atomic-testing/issues/1037))
+- **component-driver-primevue-v4:** DataTable sorting, selection, pagination ([#1034](https://github.com/atomic-testing/atomic-testing/issues/1034))
+- **component-driver-primevue-v4:** slider range + vertical orientation ([#1035](https://github.com/atomic-testing/atomic-testing/issues/1035))
+- **component-driver-primevue-v4:** support appendTo="self" overlays ([#1033](https://github.com/atomic-testing/atomic-testing/issues/1033))
+- **core:** let a driver's portal re-root vary per scene instance
+
+### Fixes
+
+- **scaffolder:** regenerate embedded skill content
+- **example:** keep shadcn workspace on the deprecated content channel
+- **component-driver-mui-x-v9:** harden master-detail and reorderColumn per review
+- **component-driver-astryx:** scope the ChatSendButton aria-label selector
+- **ci:** offset dependabot triage cron off the top-of-hour minutes ([#1273](https://github.com/atomic-testing/atomic-testing/issues/1273))
+- **ci:** pin pnpm version and unfreeze lockfile in dependabot triage workflow ([#1272](https://github.com/atomic-testing/atomic-testing/issues/1272))
+- **playwright:** resolve missing-element and append bugs found by the new conformance suite ([#1154](https://github.com/atomic-testing/atomic-testing/issues/1154))
+- **core,dom-core,playwright:** validate clickCount and fix positioned double-click sequence
+- **component-driver-primevue-v4:** ContextMenu open() no longer no-ops on another open instance
+- **component-driver-primevue-v4:** address further Copilot review comments on DataTableDriver
+- **component-driver-reka-ui-v2:** bump version to 0.99.0 to match lockstep release
+- **component-driver-primevue-v4:** address Copilot review comments on PR [#1145](https://github.com/atomic-testing/atomic-testing/issues/1145)
+
+### Refactoring
+
+- **ci:** replace scheduled triage workflow with a standalone local script ([#1274](https://github.com/atomic-testing/atomic-testing/issues/1274))
+
+### Documentation
+
+- **adr:** correct the Angular Material rows of the rollout-width audit
+- **component-driver-astryx:** document the Wave 4 driver set
+- **component-driver-astryx:** fix duplicate const in README engine snippet
+- **component-driver-astryx:** lead README with atomic-testing's mission, add usage example
+- **component-driver-primevue-v4:** update driver table for [#1033](https://github.com/atomic-testing/atomic-testing/issues/1033)/[#1034](https://github.com/atomic-testing/atomic-testing/issues/1034)/[#1035](https://github.com/atomic-testing/atomic-testing/issues/1035)
+
+### Build & Tooling
+
+- **deps-dev:** bump playwright from 1.56.1 to 1.62.0 in /package-tests/component-driver-angular-material-v20-test ([#1290](https://github.com/atomic-testing/atomic-testing/issues/1290))
+- **deps:** bump @angular/forms from 20.3.25 to 20.3.26 in /package-tests/component-driver-angular-material-v20-test ([#1289](https://github.com/atomic-testing/atomic-testing/issues/1289))
+- **deps-dev:** bump @storybook/react-vite from 10.4.6 to 10.5.5 in /package-tests/storybook-test ([#1287](https://github.com/atomic-testing/atomic-testing/issues/1287))
+- **deps-dev:** bump storybook from 10.4.6 to 10.5.5 in /package-tests/storybook-test ([#1285](https://github.com/atomic-testing/atomic-testing/issues/1285))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /package-tests/angular-20-test ([#1284](https://github.com/atomic-testing/atomic-testing/issues/1284))
+- **deps-dev:** bump playwright from 1.56.1 to 1.62.0 in /package-tests/storybook-test ([#1283](https://github.com/atomic-testing/atomic-testing/issues/1283))
+- **deps-dev:** bump @vitejs/plugin-react from 6.0.2 to 6.0.4 in /package-tests/storybook-test ([#1282](https://github.com/atomic-testing/atomic-testing/issues/1282))
+- **deps-dev:** bump @playwright/test from 1.61.1 to 1.62.0 ([#1276](https://github.com/atomic-testing/atomic-testing/issues/1276))
+- **deps:** bump @mui/x-tree-view from 9.7.0 to 9.10.1 in /package-tests/component-driver-mui-x-v9-test ([#1259](https://github.com/atomic-testing/atomic-testing/issues/1259))
+- **deps:** bump zone.js from 0.15.1 to 0.16.2 in /package-tests/component-driver-angular-material-v22-test ([#1258](https://github.com/atomic-testing/atomic-testing/issues/1258))
+- **deps:** bump @mui/x-charts from 9.9.0 to 9.10.1 in /package-tests/component-driver-mui-x-v9-test ([#1257](https://github.com/atomic-testing/atomic-testing/issues/1257))
+- **deps:** bump @mui/x-data-grid-premium from 9.7.0 to 9.10.1 in /package-tests/component-driver-mui-x-v9-test ([#1256](https://github.com/atomic-testing/atomic-testing/issues/1256))
+- **deps-dev:** bump playwright from 1.56.1 to 1.61.1 in /package-tests/angular-22-test ([#1246](https://github.com/atomic-testing/atomic-testing/issues/1246))
+- **deps:** bump vue from 3.5.39 to 3.5.40 in /package-tests/component-driver-reka-ui-test ([#1231](https://github.com/atomic-testing/atomic-testing/issues/1231))
+- **deps-dev:** bump @vue/compiler-sfc from 3.5.39 to 3.5.40 in /package-tests/component-driver-reka-ui-test ([#1230](https://github.com/atomic-testing/atomic-testing/issues/1230))
+- **deps:** bump radix-ui from 1.6.1 to 1.6.5 in /package-tests/component-driver-radix-test ([#1222](https://github.com/atomic-testing/atomic-testing/issues/1222))
+- **deps:** bump zone.js from 0.15.1 to 0.16.2 in /package-tests/component-driver-angular-material-v20-test ([#1202](https://github.com/atomic-testing/atomic-testing/issues/1202))
+- **deps:** bump @angular/common from 20.3.25 to 20.3.26 in /package-tests/component-driver-angular-material-v20-test ([#1201](https://github.com/atomic-testing/atomic-testing/issues/1201))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /packages/angular-core ([#1163](https://github.com/atomic-testing/atomic-testing/issues/1163))
+- **deps-dev:** bump @angular/core from 20.3.25 to 20.3.26 in /package-tests/angular-20-test ([#1160](https://github.com/atomic-testing/atomic-testing/issues/1160))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /packages/angular-21 ([#1159](https://github.com/atomic-testing/atomic-testing/issues/1159))
+- **deps-dev:** bump @vitest/browser-playwright from 4.1.9 to 4.1.10 in /package-tests/angular-20-test ([#1157](https://github.com/atomic-testing/atomic-testing/issues/1157))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /packages/angular-20 ([#1156](https://github.com/atomic-testing/atomic-testing/issues/1156))
+- **deps-dev:** bump playwright from 1.56.1 to 1.61.1 in /package-tests/angular-21-test ([#1162](https://github.com/atomic-testing/atomic-testing/issues/1162))
+- **deps-dev:** bump @vitest/browser-playwright from 4.1.9 to 4.1.10 in /package-tests/component-driver-angular-material-v21-test ([#1255](https://github.com/atomic-testing/atomic-testing/issues/1255))
+- **deps-dev:** bump vitest from 4.1.9 to 4.1.10 in /package-tests/component-driver-angular-material-v21-test ([#1207](https://github.com/atomic-testing/atomic-testing/issues/1207))
+- **deps-dev:** bump @vitest/browser-playwright from 4.1.9 to 4.1.10 in /package-tests/component-driver-angular-material-v22-test ([#1219](https://github.com/atomic-testing/atomic-testing/issues/1219))
+- **deps-dev:** bump @storybook/vue3-vite from 8.6.14 to 8.6.18 in /package-tests/vue-3-test ([#1265](https://github.com/atomic-testing/atomic-testing/issues/1265))
+- **deps-dev:** bump @storybook/react-vite from 10.4.6 to 10.5.4 in /package-tests/storybook-test ([#1266](https://github.com/atomic-testing/atomic-testing/issues/1266))
+- **deps-dev:** bump @storybook/addon-themes from 8.6.14 to 8.6.18 in /package-tests/vue-3-test ([#1267](https://github.com/atomic-testing/atomic-testing/issues/1267))
+- **deps-dev:** bump @vue/compiler-dom from 3.5.39 to 3.5.40 in /package-tests/vue-3-test ([#1268](https://github.com/atomic-testing/atomic-testing/issues/1268))
+- **deps-dev:** bump vitest from 4.1.9 to 4.1.10 in /package-tests/component-driver-angular-material-v22-test ([#1261](https://github.com/atomic-testing/atomic-testing/issues/1261))
+- **deps:** bump zone.js from 0.15.1 to 0.16.2 in /package-tests/component-driver-angular-material-v21-test ([#1254](https://github.com/atomic-testing/atomic-testing/issues/1254))
+- **deps-dev:** bump vitest from 4.1.9 to 4.1.10 in /package-tests/angular-22-test ([#1250](https://github.com/atomic-testing/atomic-testing/issues/1250))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /package-tests/angular-22-test ([#1248](https://github.com/atomic-testing/atomic-testing/issues/1248))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /package-tests/angular-21-test ([#1247](https://github.com/atomic-testing/atomic-testing/issues/1247))
+- **deps-dev:** bump vitest from 4.1.9 to 4.1.10 in /package-tests/storybook-test ([#1242](https://github.com/atomic-testing/atomic-testing/issues/1242))
+- **deps-dev:** bump @storybook/test from 8.6.14 to 8.6.15 in /package-tests/vue-3-test ([#1239](https://github.com/atomic-testing/atomic-testing/issues/1239))
+- **deps:** bump @vue/compiler-sfc from 3.5.39 to 3.5.40 in /packages/vue-3 ([#1236](https://github.com/atomic-testing/atomic-testing/issues/1236))
+- **deps:** bump @fluentui/react-components from 9.74.3 to 9.74.4 in /package-tests/component-driver-fluent-v9-test ([#1232](https://github.com/atomic-testing/atomic-testing/issues/1232))
+- **deps-dev:** bump @vue/compiler-sfc from 3.5.39 to 3.5.40 in /package-tests/component-driver-primevue-test ([#1228](https://github.com/atomic-testing/atomic-testing/issues/1228))
+- **deps-dev:** bump vue from 3.5.39 to 3.5.40 in /packages/component-driver-reka-ui-v2 ([#1226](https://github.com/atomic-testing/atomic-testing/issues/1226))
+- **deps-dev:** bump @vitest/browser-playwright from 4.1.9 to 4.1.10 in /package-tests/component-driver-angular-material-v20-test ([#1205](https://github.com/atomic-testing/atomic-testing/issues/1205))
+- **deps:** bump @angular/core from 20.3.25 to 20.3.26 in /package-tests/component-driver-angular-material-v20-test ([#1204](https://github.com/atomic-testing/atomic-testing/issues/1204))
+- **deps:** bump @angular/platform-browser from 20.3.25 to 20.3.26 in /package-tests/component-driver-angular-material-v20-test ([#1203](https://github.com/atomic-testing/atomic-testing/issues/1203))
+- **deps:** bump @astryxdesign/theme-neutral from 0.1.3 to 0.1.8 ([#1196](https://github.com/atomic-testing/atomic-testing/issues/1196))
+- **deps-dev:** bump @vitest/browser-playwright from 4.1.9 to 4.1.10 in /package-tests/angular-22-test ([#1190](https://github.com/atomic-testing/atomic-testing/issues/1190))
+- **deps-dev:** bump zone.js from 0.15.1 to 0.16.2 in /packages/angular-22 ([#1173](https://github.com/atomic-testing/atomic-testing/issues/1173))
+- **deps-dev:** bump vitest from 4.1.9 to 4.1.10 in /package-tests/angular-20-test ([#1171](https://github.com/atomic-testing/atomic-testing/issues/1171))
+- **deps:** extend DEP-PIN-01 for gaps found in post-[#1150](https://github.com/atomic-testing/atomic-testing/issues/1150) PRs ([#1245](https://github.com/atomic-testing/atomic-testing/issues/1245))
+- **deps-dev:** bump @vitest/browser-playwright from 4.1.9 to 4.1.10 in /package-tests/storybook-test ([#1243](https://github.com/atomic-testing/atomic-testing/issues/1243))
+- **deps-dev:** bump storybook from 10.4.6 to 10.5.3 in /package-tests/storybook-test ([#1244](https://github.com/atomic-testing/atomic-testing/issues/1244))
+
+### Other
+
+- **publish:** fix the second instance of the overstated isolation claim
+- **publish:** address review — semver hyphens, push retry, accurate comment
+- **publish:** isolate the push credential and pin npm on the release path
+- Upgrade component-driver-astryx to Astryx 0.1.9 (from 0.1.3)
+- add automated dependabot PR triage workflow ([#1271](https://github.com/atomic-testing/atomic-testing/issues/1271))
+- Address review: check peerDependencies too, minimize lockfile diff
+- Close dependabot.yml coverage gaps and wire up the DEP-PIN-01 CI gate
+- Add DEP-PIN-01 gate: verify major-version-scoped packages match their own pin
+
 ## [0.99.0] - 2026-07-22
 
 ### Breaking Changes
