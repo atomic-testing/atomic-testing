@@ -38,8 +38,20 @@ export class CollapsibleDriver extends ComponentDriver<{}> {
     return (await this.interactor.getAttribute(this.triggerLocator, 'aria-disabled')) === 'true';
   }
 
-  /** Toggle the collapsible. */
+  /**
+   * Toggle the collapsible. No-ops on a disabled trigger rather than clicking
+   * it regardless — same contract as `AccordionItemDriver.click` in
+   * component-driver-fluent-v9, and for the same reason: under jsdom the click
+   * is silently ignored, but `PlaywrightInteractor.click`'s actionability check
+   * retries "is enabled" until its own timeout, which for a trigger that can
+   * never become enabled is indistinguishable from a hang. Checking
+   * {@link isDisabled} first keeps the no-op identical across every
+   * `Interactor`.
+   */
   override async click(): Promise<void> {
+    if (await this.isDisabled()) {
+      return;
+    }
     await this.interactor.click(this.triggerLocator);
   }
 
