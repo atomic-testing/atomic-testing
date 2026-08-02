@@ -250,18 +250,25 @@ export class PlaywrightInteractor implements Interactor {
       // source; everything after `down` is raw pointer input, since a mid-drag
       // actionability check would hit-test against the element being dragged.
       await sourceLocator.hover();
+      await this.page.mouse.down();
+      // Resolved while the button is held, matching where `Locator.dragTo` resolves its
+      // own target: a drop target below the fold is only reachable once the drag scrolls
+      // to it, and its box has to be read after that scroll to be viewport-accurate.
+      await targetLocator.scrollIntoViewIfNeeded();
       const targetBox = await targetLocator.boundingBox();
       if (targetBox == null) {
         throw new ElementNotFoundError(target, 'dragTo');
       }
       const tx = targetBox.x + targetBox.width / 2;
       const ty = targetBox.y + targetBox.height / 2;
-      await this.page.mouse.down();
       await this.page.mouse.move(tx, ty, { steps: dragStepCount });
       // Some browsers only raise `dragover` at the drop point on a second move there.
       await this.page.mouse.move(tx, ty);
       await this.page.mouse.up();
     } catch (e) {
+      // The button may still be held — the target is resolved mid-drag — and a stuck
+      // button would poison every later interaction on this page, masking the real error.
+      await this.page.mouse.up().catch(() => undefined);
       if ((await this.exists(source)) === false) {
         throw new ElementNotFoundError(source, 'dragTo');
       }
