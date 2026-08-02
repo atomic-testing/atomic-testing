@@ -127,6 +127,14 @@ jobs:
       # One browser's failure must not hide another's — the whole point of the
       # matrix is comparing engines.
       fail-fast: false
+      # Actions concurrency is an ACCOUNT-wide pool, not a per-workflow one, and
+      # this matrix reaches 51 legs. Uncapped, its first run claimed the pool for
+      # over an hour and starved the rest of CI: two pushes to this branch
+      # produced no Verify / Documentation / E2E runs at all. Capping keeps the
+      # slowest tier from deciding how fast every other workflow gets to run.
+      # Wall clock is barely affected — these legs are minutes each, and the
+      # queue was the bottleneck, not the cap.
+      max-parallel: 10
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - name: Checkout
