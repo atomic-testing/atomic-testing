@@ -2,13 +2,15 @@ packages:
   - packages/*
   - package-tests/*
 
+# WARNING: this block is INERT. pnpm reads `pnpm.overrides` from package.json
+# and ignores this one entirely when both exist — neither entry below reaches
+# the lockfile. Add new overrides to package.json instead; these two are left
+# in place only because removing them is a resolution change that needs its own
+# verification. See the `@playwright/test` entry in package.json for what this
+# silently cost us.
 overrides:
   '@atomic-testing/internal-react-example>react': ^19.2.3
   '@atomic-testing/internal-react-example>react-dom': ^19.2.3
-  # Playwright hard-errors when two copies of @playwright/test load in one
-  # process. The adapter's permissive peer (>=1.50.0) lets pnpm auto-install a
-  # stale minor alongside the root devDependency, so pin one version tree-wide.
-  '@playwright/test': ^1.61.1
 
 ignoredBuiltDependencies:
   - '@mui/x-telemetry'
