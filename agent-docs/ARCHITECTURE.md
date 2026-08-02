@@ -125,14 +125,13 @@ flowchart TD
     core --> html
     html --> mui
     domcore --> mui
-    r18 --> mui
     html --> muix
     mui --> muix
 ```
 
 Edges are "depends on" (arrow points from dependency to dependent). Notable real edges from `package.json`:
 
-- `component-driver-mui-v7` depends on `react-18` (and `@mui/material@^7`, `component-driver-html`, `core`, `dom-core`) ([mui-v7/package.json#L25-L33](../packages/component-driver-mui-v7/package.json#L25-L33)).
+- `component-driver-mui-v7`/`-v9` depend only on `@mui/material`, `component-driver-html`, `core`, and `dom-core` ([mui-v7/package.json](../packages/component-driver-mui-v7/package.json)) — **not** on any `react-N` engine package. Each declares its own `react`/`react-dom` peerDependencies as an open floor; a hard dependency on `react-18` regardless of MUI major was removed 2026-08-02 (see [ADR-003](adr/003-version-specific-packages.md)) as an unused, over-narrow pin.
 - `component-driver-mui-x-v8` depends on `component-driver-mui-v6` (plus `component-driver-html`, `core`) ([mui-x-v8/package.json#L40-L45](../packages/component-driver-mui-x-v8/package.json#L40-L45)). [inferred] other mui-x versions pair with their contemporaneous mui-v\* package — confirm in each `package.json`.
 - `playwright` depends on `core` only; `@playwright/test` is a peer ([playwright/package.json](../packages/playwright/package.json)). Its E2E test-runner glue lives in the workspace-private `internal-test-runner-playwright-adapter` (which depends on `playwright` + `internal-test-runner`), so the published driver never depends on an internal package.
 
