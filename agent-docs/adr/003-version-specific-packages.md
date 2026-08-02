@@ -25,7 +25,7 @@ Accepted (describes the existing design).
 > each carried a hard `dependencies` pin on `@atomic-testing/react-18` — leftover
 > from copying an earlier version package's manifest, never imported by either
 > driver's own `src/` (both are pure DOM/role/class matchers; the framework
-> binding is the *consumer's* choice of engine, not the driver's). `@mui/material`
+> binding is the _consumer's_ choice of engine, not the driver's). `@mui/material`
 > itself declares one identical peer range across v6/v7/v9
 > (`^17.0.0 || ^18.0.0 || ^19.0.0`) — there was never a version-specific reason
 > for either package to force React 18 on every consumer, and doing so produced
@@ -37,7 +37,7 @@ Accepted (describes the existing design).
 > `component-driver-*` package hard-depends on an `@atomic-testing/react-N` /
 > `vue-N` / `angular-N` engine package whose major doesn't match its own —
 > Angular Material's `component-driver-angular-material-vNN → angular-NN`
-> pairing is the one legitimate case, because Angular Material's major *is* the
+> pairing is the one legitimate case, because Angular Material's major _is_ the
 > Angular major it requires; MUI's major is an independent axis from React's,
 > so no such pairing is ever legitimate there.
 >
