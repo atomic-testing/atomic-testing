@@ -3,18 +3,20 @@ import { DialogDriver } from '@atomic-testing/component-driver-shadcn-v1';
 import {
   byDataTestId,
   ComponentDriver,
+  ComponentDriverCtor,
   IComponentDriverOption,
   Interactor,
   PartLocator,
   ScenePart,
+  ScenePartDriver,
 } from '@atomic-testing/core';
 
 import { ProfileSettingsDataTestId as T } from '../components/profileSettings/ProfileSettingsDataTestId';
 
 /**
- * The confirm dialog's own buttons, declared as the `DialogDriver`'s `content`
- * scene — they only exist while the (portalled) dialog is mounted, so they are
- * scoped inside the re-rooted `role="dialog"` content rather than the page.
+ * The confirm dialog's own buttons, resolved through the `DialogDriver`'s
+ * `within` — they only exist while the (portalled) dialog is mounted, so they
+ * are scoped inside the re-rooted `role="dialog"` content rather than the page.
  */
 const confirmDialogContent = {
   cancel: { locator: byDataTestId(T.deleteCancel), driver: HTMLButtonDriver },
@@ -33,8 +35,7 @@ const parts = {
   deleteTrigger: { locator: byDataTestId(T.deleteTrigger), driver: HTMLButtonDriver },
   dialog: {
     locator: byDataTestId(T.deleteDialog),
-    driver: DialogDriver<typeof confirmDialogContent>,
-    option: { content: confirmDialogContent },
+    driver: DialogDriver as ComponentDriverCtor<DialogDriver>,
   },
   status: { locator: byDataTestId(T.workspaceStatus), driver: HTMLElementDriver },
 } satisfies ScenePart;
@@ -50,15 +51,20 @@ export class DangerZoneDriver extends ComponentDriver<typeof parts> {
     await this.parts.dialog.waitForOpen();
   }
 
+  /** The confirm dialog's interior, scoped inside the portalled dialog content. */
+  private get confirmButtons(): ScenePartDriver<typeof confirmDialogContent> {
+    return this.parts.dialog.within(confirmDialogContent);
+  }
+
   /** Click Cancel and wait for the dialog to close. */
   async cancel(): Promise<void> {
-    await this.parts.dialog.content.cancel.click();
+    await this.confirmButtons.cancel.click();
     await this.parts.dialog.waitForClose();
   }
 
   /** Click the destructive confirm and wait for the dialog to close. */
   async confirmDelete(): Promise<void> {
-    await this.parts.dialog.content.confirm.click();
+    await this.confirmButtons.confirm.click();
     await this.parts.dialog.waitForClose();
   }
 
@@ -67,7 +73,7 @@ export class DangerZoneDriver extends ComponentDriver<typeof parts> {
     return (await this.parts.status.getText())?.trim() ?? null;
   }
 
-  get dialog(): DialogDriver<typeof confirmDialogContent> {
+  get dialog(): DialogDriver {
     return this.parts.dialog;
   }
 
