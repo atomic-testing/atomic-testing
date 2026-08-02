@@ -1,7 +1,7 @@
 {
-  "name": "@atomic-testing/component-driver-mui-v6-test",
+  "name": "@atomic-testing/component-driver-mui-v7-test",
   "version": "0.0.0",
-  "description": "Examples and tests for @atomic-testing/component-driver-mui-v6",
+  "description": "Examples and tests for @atomic-testing/component-driver-mui-v7",
   "keywords": [
     "integration",
     "integration-driver",
@@ -10,7 +10,7 @@
     "react",
     "testing",
     "unit",
-    "v5"
+    "v7"
   ],
   "license": "MIT",
   "author": "Tianzhen Lin <tangent@usa.net>",
