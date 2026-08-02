@@ -323,10 +323,10 @@ importers:
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
         specifier: ^4.1.10
-        version: 4.1.10(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+        version: 4.1.10(playwright@1.62.0)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       playwright:
-        specifier: ^1.61.1
-        version: 1.61.1
+        specifier: ^1.62.0
+        version: 1.62.0
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
@@ -384,10 +384,10 @@ importers:
         version: link:../../packages/internal-test-runner-vitest-adapter
       '@vitest/browser-playwright':
         specifier: ^4.1.10
-        version: 4.1.10(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+        version: 4.1.10(playwright@1.62.0)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       playwright:
-        specifier: ^1.61.1
-        version: 1.61.1
+        specifier: ^1.62.0
+        version: 1.62.0
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
@@ -17928,6 +17928,19 @@ snapshots:
       - utf-8-validate
       - vite
 
+  '@vitest/browser-playwright@4.1.10(playwright@1.62.0)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)':
+    dependencies:
+      '@vitest/browser': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/mocker': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+      playwright: 1.62.0
+      tinyrainbow: 3.1.0
+      vitest: 4.1.10(@types/node@24.0.10)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
   '@vitest/browser-playwright@4.1.10(playwright@1.62.0)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)':
     dependencies:
       '@vitest/browser': 4.1.10(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.9)
@@ -21508,7 +21521,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.0.10
-      '@vitest/browser-playwright': 4.1.10(playwright@1.56.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/browser-playwright': 4.1.10(playwright@1.61.1)(vite@8.1.5(@types/node@24.0.10)(esbuild@0.28.1)(jiti@2.4.2)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
       jsdom: 29.1.1
     transitivePeerDependencies:
       - msw

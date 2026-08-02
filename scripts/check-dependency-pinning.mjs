@@ -224,12 +224,49 @@ function checkDir(dir, dirName, errors) {
   }
 }
 
+// DEP-PIN-02: `@playwright/test` re-exports the core `playwright` package and
+// hard-errors ("did not expect test.describe() to be called here … two
+// different versions of @playwright/test") when the two resolve to different
+// versions. A package-test that runs Playwright Test AND separately pins
+// `playwright` for its own Vitest browser mode therefore has to keep that pin
+// in lockstep with the root `@playwright/test` devDependency.
+//
+// This is not hypothetical: it took down every e2e suite in
+// component-driver-angular-material-v21/v22-test on all three browsers, while
+// v20 — already on the matching pin — passed. Dependabot bumps these
+// manifests one at a time, so the skew reappears on its own.
+function checkPlaywrightLockstep(errors) {
+  const root = readManifest(repoRoot);
+  const expected = root && concreteDeps(root.json)['@playwright/test'];
+  if (!expected) return;
+  const minorOf = range => /^[\^~]?(\d+\.\d+)\./.exec(range.trim())?.[1] ?? null;
+  const want = minorOf(expected);
+  if (want == null) return;
+
+  for (const dirName of readdirSync(packageTestsDir)) {
+    const dir = join(packageTestsDir, dirName);
+    // Only directories that actually run Playwright Test. A package pinning
+    // `playwright` purely for Vitest browser mode (angular-20/21/22-test) is
+    // deliberately free to sit on a different version.
+    if (!existsSync(join(dir, 'playwright.config.ts'))) continue;
+    const manifest = readManifest(dir);
+    const pinned = manifest && concreteDeps(manifest.json).playwright;
+    if (!pinned || minorOf(pinned) === want) continue;
+    errors.push(
+      `DEP-PIN-02: ${manifest.path.slice(repoRoot.length + 1)} pins playwright at ${pinned}, but the ` +
+        `root @playwright/test is ${expected} — they must match, or every e2e suite in this package ` +
+        `fails at load with "did not expect test.describe() to be called here".`
+    );
+  }
+}
+
 const errors = [];
 for (const root of [packagesDir, packageTestsDir]) {
   for (const dirName of readdirSync(root)) {
     checkDir(join(root, dirName), dirName, errors);
   }
 }
+checkPlaywrightLockstep(errors);
 
 if (errors.length > 0) {
   console.error(`[deps-pinning] ${errors.length} problem(s):`);
