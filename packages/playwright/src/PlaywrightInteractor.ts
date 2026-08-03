@@ -31,6 +31,14 @@ import {
 import { Locator, Page } from '@playwright/test';
 
 /**
+ * Intermediate pointer positions a drag gesture passes through on its way to the
+ * destination. Shared by {@link PlaywrightInteractor.dragTo} and
+ * {@link PlaywrightInteractor.drag} so both look alike to a drop target that reads
+ * movement, not just endpoints.
+ */
+const dragStepCount = 8;
+
+/**
  * Implementation of the {@link Interactor} interface using Playwright.
  */
 export class PlaywrightInteractor implements Interactor {
@@ -208,19 +216,27 @@ export class PlaywrightInteractor implements Interactor {
   /**
    * Drag the source element and drop it onto the target element.
    *
-   * Delegates to Playwright's native `Locator.dragTo`, which performs a real,
-   * layout-aware drag gesture in the browser — genuine, low-level pointer
-   * input the browser's own engine processes, unlike jsdom's synthesized
-   * events (see {@link DOMInteractor.dragTo}). This drives pointer-based DnD
-   * libraries (dnd-kit, react-beautiful-dnd) AND native HTML5 drag-and-drop
-   * (`draggable` + `ondragstart`/`ondragover`/`ondrop`): verified empirically
-   * (#922) that on a `draggable` source/target pair, `Locator.dragTo` alone
-   * makes the browser recognize and run its own native DnD gesture —
-   * `dragstart` → `dragenter`/`dragover` → `drop` → `dragend` fire with a
-   * real, populated `DataTransfer`, no extra dispatch needed. (This
-   * contradicts an earlier assumption that Playwright's pointer gesture does
-   * NOT drive native HTML5 DnD — re-verify if this ever regresses, since nothing
-   * pins it beyond the E2E suite below.)
+   * A real, layout-aware pointer gesture the browser's own engine processes,
+   * unlike jsdom's synthesized events (see {@link DOMInteractor.dragTo}). It
+   * drives pointer-based DnD libraries (dnd-kit, react-beautiful-dnd) AND
+   * native HTML5 drag-and-drop (`draggable` + `ondragstart`/`ondragover`/
+   * `ondrop`): verified empirically (#922) that the browser recognizes and runs
+   * its own native DnD gesture from pointer input alone — `dragstart` →
+   * `dragenter`/`dragover` → `drop` → `dragend` fire with a real, populated
+   * `DataTransfer`, no extra dispatch needed. (This contradicts an earlier
+   * assumption that Playwright's pointer gesture does NOT drive native HTML5
+   * DnD — re-verify if this ever regresses, since nothing pins it beyond the
+   * E2E suite below.)
+   *
+   * The pointer travels to the target in `dragStepCount` steps rather than
+   * jumping, which is what `Locator.dragTo` does. The intermediate motion
+   * is load-bearing, not cosmetic: a drop target may infer *direction* by
+   * comparing consecutive `dragover` coordinates, and a single jump gives it
+   * one sample against whatever it initialized from. MUI's DataGrid column
+   * reorder is exactly that — it seeds its cursor reference at the origin, so a
+   * jump always reads as "moved right" and a leftward reorder is silently
+   * dropped. Stepping matches what a real drag looks like, so direction-sensing
+   * targets see the truth.
    *
    * @param source - Locator of the element to drag
    * @param target - Locator of the drop target
@@ -230,8 +246,29 @@ export class PlaywrightInteractor implements Interactor {
     const sourceLocator = await this.resolveLocator(source);
     const targetLocator = await this.resolveLocator(target);
     try {
-      await sourceLocator.dragTo(targetLocator);
+      // `hover` carries Playwright's actionability checks and scroll-into-view for the
+      // source; everything after `down` is raw pointer input, since a mid-drag
+      // actionability check would hit-test against the element being dragged.
+      await sourceLocator.hover();
+      await this.page.mouse.down();
+      // Resolved while the button is held, matching where `Locator.dragTo` resolves its
+      // own target: a drop target below the fold is only reachable once the drag scrolls
+      // to it, and its box has to be read after that scroll to be viewport-accurate.
+      await targetLocator.scrollIntoViewIfNeeded();
+      const targetBox = await targetLocator.boundingBox();
+      if (targetBox == null) {
+        throw new ElementNotFoundError(target, 'dragTo');
+      }
+      const tx = targetBox.x + targetBox.width / 2;
+      const ty = targetBox.y + targetBox.height / 2;
+      await this.page.mouse.move(tx, ty, { steps: dragStepCount });
+      // Some browsers only raise `dragover` at the drop point on a second move there.
+      await this.page.mouse.move(tx, ty);
+      await this.page.mouse.up();
     } catch (e) {
+      // The button may still be held — the target is resolved mid-drag — and a stuck
+      // button would poison every later interaction on this page, masking the real error.
+      await this.page.mouse.up().catch(() => undefined);
       if ((await this.exists(source)) === false) {
         throw new ElementNotFoundError(source, 'dragTo');
       }
@@ -271,7 +308,7 @@ export class PlaywrightInteractor implements Interactor {
     const cy = rect.y + rect.height / 2;
     await this.page.mouse.move(cx, cy);
     await this.page.mouse.down();
-    await this.page.mouse.move(cx + delta.x, cy + delta.y, { steps: 8 });
+    await this.page.mouse.move(cx + delta.x, cy + delta.y, { steps: dragStepCount });
     await this.page.mouse.up();
   }
 

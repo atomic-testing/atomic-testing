@@ -1,20 +1,15 @@
 {
+  // Do NOT add a `references` array here. Playwright resolves the nearest
+  // tsconfig for every file it loads, so requiring `dist/index.cjs` from a
+  // test makes it read THIS file and try to resolve the referenced projects —
+  // which fails, and takes down every *.e2e.test.ts in the repo at module
+  // load with "Failed to resolve references path". Nothing runs `tsc --build`,
+  // so project references buy us nothing to offset that.
   "extends": "../../tsconfig.json",
   "exclude": ["node_modules", "declaration", "generator-build", "runtime"],
   "include": ["./src"],
   "compilerOptions": {
     "outDir": "./build",
     "composite": true
-  },
-  "references": [
-    {
-      "path": "../core"
-    },
-    {
-      "path": "../dom-core"
-    },
-    {
-      "path": "../internal-test-runner"
-    }
-  ]
+  }
 }

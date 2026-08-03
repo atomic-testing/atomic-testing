@@ -23,7 +23,19 @@ env:
   NPM_VERSION: '11.19.0'
 
 jobs:
+  # The release path publishes whatever the tag points at, with no gate of its
+  # own — a red main reaches npm silently. This runs the full e2e matrix
+  # against the tagged tree first, and `publish` needs it, so a browser-only
+  # regression blocks the release instead of shipping in it.
+  e2e-gate:
+    uses: ./.github/workflows/e2e.yml
+    permissions:
+      contents: read
+    with:
+      scope: full
+
   publish:
+    needs: e2e-gate
     runs-on: ubuntu-latest
     permissions:
       contents: read # read the tagged source

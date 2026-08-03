@@ -1,0 +1,171 @@
+name: E2E
+
+# The e2e tier runs the same suites as `test:dom` but through
+# PlaywrightInteractor in a real browser, so it is the only thing that can
+# catch a jsdom-vs-browser divergence before it becomes frozen API.
+#
+# Scope is decided by scripts/plan-e2e-matrix.mjs rather than hardcoded here —
+# see that file for why the default PR run is not the full 51-job matrix. The
+# layers, cheapest first:
+#
+#   pull_request      chromium everywhere + all browsers on the interactor
+#                     primitives; auto-escalates to the full matrix when the
+#                     shared interactor surface changes
+#   `e2e:full` label  full matrix on demand, for a PR the path rules miss
+#   schedule          full matrix nightly on main, skipped when main is idle
+#   workflow_dispatch full matrix (or the PR-style plan) by hand
+#   workflow_call     full matrix as the pre-publish gate (see publish.yml)
+
+on:
+  pull_request:
+    # `labeled` is what makes the `e2e:full` escape hatch work after a PR is
+    # already open; without it the label only takes effect on the next push.
+    types: [opened, synchronize, reopened, labeled]
+  schedule:
+    # 06:00 UTC — after the working day in the maintainers' timezones, so a
+    # nightly failure is waiting rather than interrupting.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: 'Which browsers to run'
+        type: choice
+        options: [full, changed]
+        default: full
+  workflow_call:
+    inputs:
+      scope:
+        type: string
+        default: full
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  # Superseding a PR run is free; killing a nightly or a release gate is not.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+jobs:
+  plan:
+    name: Plan matrix
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      should_run: ${{ steps.plan.outputs.should_run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Full history so the PR diff and the nightly idle check can both
+          # reach the base commit.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Plan
+        id: plan
+        env:
+          SCOPE: ${{ inputs.scope || (github.event_name == 'pull_request' && 'changed') || 'full' }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+
+          # Nightly on an idle main would burn 51 jobs to re-prove yesterday's
+          # result. Anything else always runs.
+          if [[ "${GITHUB_EVENT_NAME}" == "schedule" ]] && [[ -z "$(git log --since='25 hours ago' --format=%H -1)" ]]; then
+            echo "main has no commits in the last 25h — skipping the nightly run."
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ -n "${BASE_SHA}" ]]; then
+            CHANGED_FILES="$(git diff --name-only "${BASE_SHA}"...HEAD)"
+          else
+            CHANGED_FILES=""
+          fi
+          export CHANGED_FILES
+
+          MATRIX="$(node scripts/plan-e2e-matrix.mjs)"
+          echo "matrix=${MATRIX}" >> "$GITHUB_OUTPUT"
+          echo "should_run=true" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build packages
+    needs: plan
+    if: needs.plan.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup with build
+        uses: ./.github/actions/builderui-setup
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-built-packages
+          path: |
+            packages/*/build
+            packages/*/dist
+          retention-days: 1
+
+  e2e:
+    name: ${{ matrix.name }}
+    needs: [plan, build]
+    if: needs.plan.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      # One browser's failure must not hide another's — the whole point of the
+      # matrix is comparing engines.
+      fail-fast: false
+      # Actions concurrency is an ACCOUNT-wide pool, not a per-workflow one, and
+      # this matrix reaches 51 legs. Uncapped, its first run claimed the pool for
+      # over an hour and starved the rest of CI: two pushes to this branch
+      # produced no Verify / Documentation / E2E runs at all. Capping keeps the
+      # slowest tier from deciding how fast every other workflow gets to run.
+      # Wall clock is barely affected — these legs are minutes each, and the
+      # queue was the bottleneck, not the cap.
+      max-parallel: 10
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: e2e-built-packages
+          path: packages
+
+      - name: Install ${{ matrix.project }}
+        run: pnpm exec playwright install ${{ matrix.project }} --with-deps
+
+      # No `build:ui` step: each package's playwright.config.ts starts the Vite
+      # dev server itself via `webServer`, so the served app comes from src. The
+      # drivers it imports come from the dist downloaded above.
+      - name: Run e2e
+        run: pnpm exec playwright test --project=${{ matrix.project }}
+        working-directory: ./package-tests/${{ matrix.directory }}
+
+      - name: Upload failure traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-trace-${{ matrix.directory }}-${{ matrix.project }}
+          path: package-tests/${{ matrix.directory }}/test-results
+          retention-days: 7
+          if-no-files-found: ignore

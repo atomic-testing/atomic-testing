@@ -16,9 +16,15 @@ import { BreadcrumbMenuDriver } from './BreadcrumbMenuDriver';
  * excluded across every shape.
  */
 export class BreadcrumbItemDriver extends ComponentDriver {
-  /** The crumb's content element — the child that is not the `aria-hidden` separator. */
+  /**
+   * The crumb's content element — the child that is neither the `aria-hidden`
+   * separator nor, on a menu crumb, the popover panel Astryx renders as a
+   * *third* `<li>` child. Excluding `[popover]` matters only in a real browser:
+   * `querySelector` silently returns the trigger as the first match, while
+   * Playwright's strict mode rejects the two-element resolution outright.
+   */
   private get content(): PartLocator {
-    return locatorUtil.append(this.locator, byCssSelector('> :not([aria-hidden="true"])'));
+    return locatorUtil.append(this.locator, byCssSelector('> :not([aria-hidden="true"]):not([popover])'));
   }
 
   /** The crumb's visible label, read from its content element (separator excluded). */

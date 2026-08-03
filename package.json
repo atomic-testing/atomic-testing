@@ -75,7 +75,8 @@
       "@tootallnate/once": ">=2.0.1",
       "esbuild": ">=0.28.1",
       "@babel/core": ">=7.29.6",
-      "jest-environment-jsdom>jsdom": "^29.0.0"
+      "jest-environment-jsdom>jsdom": "^29.0.0",
+      "@playwright/test": "$@playwright/test"
     }
   }
 }

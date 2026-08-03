@@ -38,26 +38,42 @@ export class CollapsibleDriver extends ComponentDriver<{}> {
     return (await this.interactor.getAttribute(this.triggerLocator, 'aria-disabled')) === 'true';
   }
 
-  /** Toggle the collapsible. */
+  /**
+   * Toggle the collapsible. No-ops on a disabled trigger rather than clicking
+   * it regardless — same contract as `AccordionItemDriver.click` in
+   * component-driver-fluent-v9, and for the same reason: under jsdom the click
+   * is silently ignored, but `PlaywrightInteractor.click`'s actionability check
+   * retries "is enabled" until its own timeout, which for a trigger that can
+   * never become enabled is indistinguishable from a hang. Checking
+   * {@link isDisabled} first keeps the no-op identical across every
+   * `Interactor`.
+   */
   override async click(): Promise<void> {
+    if (await this.isDisabled()) {
+      return;
+    }
     await this.interactor.click(this.triggerLocator);
   }
 
-  /** Expand the content if it is collapsed. */
+  /** Expand the content if it is collapsed. No-ops on a disabled item, as {@link click} does. */
   async expand(): Promise<void> {
     await this.setExpanded(true);
   }
 
-  /** Collapse the content if it is expanded. */
+  /** Collapse the content if it is expanded. No-ops on a disabled item, as {@link click} does. */
   async collapse(): Promise<void> {
     await this.setExpanded(false);
   }
 
   private async setExpanded(expanded: boolean): Promise<void> {
-    if ((await this.isExpanded()) === expanded) {
+    // A disabled trigger can never reach the requested state, so bail before the wait
+    // below spins for its whole timeout — and before the click, since Playwright reads
+    // `aria-disabled` as "not enabled" and would retry actionability until its own
+    // timeout. Toggling through `click` keeps that rule in one place.
+    if ((await this.isDisabled()) || (await this.isExpanded()) === expanded) {
       return;
     }
-    await this.interactor.click(this.triggerLocator);
+    await this.click();
     await timingUtil.waitUntil({
       probeFn: () => this.isExpanded(),
       terminateCondition: expanded,

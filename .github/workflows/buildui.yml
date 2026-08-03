@@ -182,9 +182,10 @@ jobs:
 
   # Interactor conformance suite (TCK, #1046): the same specs run against every
   # interactor to prove they honor the one jsdom-defined contract (ADR-006). This
-  # runs the jsdom (DOMInteractor) leg; the real-browser Playwright leg needs the
-  # matched Playwright browser and is tracked as follow-up. The suite itself lives
-  # in packages/internal-interactor-conformance.
+  # runs the jsdom (DOMInteractor) leg; the real-browser PlaywrightInteractor leg
+  # runs in the E2E workflow, which treats this package as part of the
+  # always-cross-browser subset. The suite itself lives in
+  # packages/internal-interactor-conformance.
   interactor-conformance-test:
     name: Test interactor conformance (TCK)
     runs-on: ubuntu-latest

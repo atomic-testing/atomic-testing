@@ -92,10 +92,10 @@ export default defineConfig({
   // outputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'pnpm start',
-  //   timeout: 120 * 1000,
-  //   url: baseUrl,
-  //   reuseExistingServer: true,
-  // },
+  webServer: {
+    command: 'pnpm start',
+    timeout: 120 * 1000,
+    url: baseUrl,
+    reuseExistingServer: true,
+  },
 });
