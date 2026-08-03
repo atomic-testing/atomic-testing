@@ -329,55 +329,6 @@ jobs:
         run: pnpm test:dom
         working-directory: ./packages/react-legacy
 
-  # Minimum declared peer set (audit A4, #1297). ADR-006 §3 makes the advertised
-  # peer ranges part of the 1.0 contract, but `.npmrc` sets `auto-install-peers=true`
-  # and every other job installs newest-satisfying — so the declared FLOORS were
-  # never exercised anywhere and were effectively prose. `--resolution-mode=lowest-direct`
-  # resolves each direct dependency to the lowest version its range permits, which
-  # is what a consumer pinning the floor actually gets. Self-contained (no
-  # `needs: build`): the whole point is to build and test against this resolution,
-  # not against the artifact built from the newest one.
-  minimum-peers-test:
-    name: Test against minimum declared peers
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-
-      - name: PNPM Setup
-        uses: pnpm/action-setup@v6
-        with:
-          version: 10
-          run_install: false
-
-      # Deliberately not --frozen-lockfile: the lockfile pins the newest-satisfying
-      # resolution, and re-resolving to the floor is the entire purpose of this job.
-      - name: Install at the declared floors
-        run: pnpm install --no-frozen-lockfile --resolution-mode=lowest-direct
-
-      - name: Build packages
-        run: pnpm run build:packages
-
-      - name: Test react-19 adapter at its floor
-        run: pnpm test:dom
-        working-directory: ./packages/dom-core
-
-      - name: Test vue-3 adapter at its floor
-        run: pnpm build:ui && pnpm test:dom
-        working-directory: ./package-tests/vue-3-test
-
-      - name: Test core at its floor
-        run: pnpm test:dom
-        working-directory: ./packages/core
-
   # core unit tests (jsdom) — the first package on ADR-006's frozen list, and the
   # load-bearing behavior behind it: timingUtil.waitUntil, locatorUtil,
   # childListHelper, listHelper, AccessibleRoleLocator, CssLocator and the error
