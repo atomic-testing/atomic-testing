@@ -30,21 +30,21 @@ export const breadcrumbExampleTestSuite: TestSuiteInfo<typeof breadcrumbExample.
         assertEqual(await engine().parts.breadcrumbB.getItemLabels(), ['Root', 'Locked']);
       });
 
-      test('getItemByIndex/getItemByLabel resolve items, or null when absent', async () => {
+      test('getItemByIndex/getItemByLabel resolve items, or undefined when absent', async () => {
         const home = await engine().parts.breadcrumbA.getItemByIndex(0);
         assertEqual(await home?.getLabel(), 'Home');
-        assertEqual(await engine().parts.breadcrumbA.getItemByIndex(99), null);
+        assertEqual(await engine().parts.breadcrumbA.getItemByIndex(99), undefined);
 
         const library = await engine().parts.breadcrumbA.getItemByLabel('Library');
         assertEqual(await library?.getButton().getHref(), '/home/library');
-        assertEqual(await engine().parts.breadcrumbA.getItemByLabel('Nonexistent'), null);
+        assertEqual(await engine().parts.breadcrumbA.getItemByLabel('Nonexistent'), undefined);
       });
 
-      test('getCurrentItem finds the crumb marked current, or null when none is', async () => {
+      test('getCurrentItem finds the crumb marked current, or undefined when none is', async () => {
         const current = await engine().parts.breadcrumbA.getCurrentItem();
         assertEqual(await current?.getLabel(), 'Data');
 
-        assertEqual(await engine().parts.breadcrumbB.getCurrentItem(), null);
+        assertEqual(await engine().parts.breadcrumbB.getCurrentItem(), undefined);
       });
 
       test('isDisabled reflects the disabled crumb only', async () => {

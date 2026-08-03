@@ -54,7 +54,7 @@ export const tagsExampleTestSuite: TestSuiteInfo<typeof tagsExample.scene> = {
       test('has zero tags for an empty group', async () => {
         assertEqual(await engine().parts.groupEmpty.getTagCount(), 0);
         assertEqual(await engine().parts.groupEmpty.getTagLabels(), []);
-        assertEqual(await engine().parts.groupEmpty.getTagByIndex(0), null);
+        assertEqual(await engine().parts.groupEmpty.getTagByIndex(0), undefined);
       });
 
       test('getTagByIndex resolves the concrete driver matching each position', async () => {
@@ -66,7 +66,7 @@ export const tagsExampleTestSuite: TestSuiteInfo<typeof tagsExample.scene> = {
         assertTrue(third instanceof InteractionTagDriver);
         assertEqual(await third?.getLabel(), 'Gamma');
 
-        assertEqual(await engine().parts.groupA.getTagByIndex(99), null);
+        assertEqual(await engine().parts.groupA.getTagByIndex(99), undefined);
       });
 
       test('dismiss() removes only the targeted InteractionTag from its own group', async () => {

@@ -5,6 +5,7 @@ import {
   ListComponentDriver,
   ListComponentDriverSpecificOption,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { treeItemChildLocator } from '../internal/treeLocators';
@@ -65,20 +66,20 @@ export class FlatTreeDriver<ItemT extends FlatTreeItemDriver = FlatTreeItemDrive
 
   /**
    * The first item (at ANY level) whose Fluent-stamped `value` (see
-   * {@link FlatTreeItemDriver.getValue}) matches, or `null` when absent —
+   * {@link FlatTreeItemDriver.getValue}) matches, or `undefined` when absent —
    * the natural lookup key for a flat tree: the inherited `getItemByLabel`
    * only matches by visible label text, which a real flat dataset (the
    * scenario `FlatTree` exists for) commonly repeats across branches, while
    * `value` is the app's own stable per-item identifier.
    */
-  async getItemByValue<ItemClass extends ItemT = ItemT>(value: string): Promise<ItemClass | null> {
+  async getItemByValue<ItemClass extends ItemT = ItemT>(value: string): Promise<Optional<ItemClass>> {
     const driverClass = this.getItemClass<ItemClass>();
     for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), driverClass)) {
       if ((await item.getValue()) === value) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   override get driverName(): string {

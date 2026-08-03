@@ -141,7 +141,7 @@ export const dataGridExampleTestSuite: TestSuiteInfo<typeof dataGridExample.scen
         const headerRow = await engine().parts.gridA.getHeaderRow();
         assertTrue(headerRow != null);
         assertEqual(await headerRow!.getCellCount(), 3);
-        assertEqual(await headerRow!.getCell(99), null);
+        assertEqual(await headerRow!.getCell(99), undefined);
       });
 
       test('keyboard-accessible resize: entering via the app-wired trigger enables arrow-key adjust and Escape exit', async () => {

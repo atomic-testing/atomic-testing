@@ -10,6 +10,10 @@ import React, { JSX } from 'react';
  * exercise `getOrientation()`. Both are uncontrolled (`defaultSelectedValue`)
  * — selection state after a driven `click()` is read straight back off the
  * DOM, no app-level state needed.
+ *
+ * List C carries NO `defaultSelectedValue`, so nothing is selected: the only
+ * fixture covering the "nothing selected" branch of `getSelectedLabel` /
+ * `getSelectedValue`, which returns `undefined` per ADR-006 §7.
  */
 const TabListExample = () => (
   <FluentProvider theme={webLightTheme}>
@@ -24,6 +28,11 @@ const TabListExample = () => (
     <TabList data-testid='tab-list-b' vertical defaultSelectedValue='overview'>
       <Tab value='overview'>Overview</Tab>
       <Tab value='details'>Details</Tab>
+    </TabList>
+
+    <TabList data-testid='tab-list-c'>
+      <Tab value='alpha'>Alpha</Tab>
+      <Tab value='beta'>Beta</Tab>
     </TabList>
   </FluentProvider>
 );

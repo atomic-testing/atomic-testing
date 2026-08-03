@@ -7,6 +7,7 @@ import {
   IInputDriver,
   locatorUtil,
   PartLocator,
+  Nullable,
 } from '@atomic-testing/core';
 
 /**
@@ -64,7 +65,7 @@ export class RatingDriver extends ComponentDriver<{}> implements IInputDriver<nu
   }
 
   /** The currently selected value, or `null` when no item is selected ("no rating"). */
-  async getValue(): Promise<number | null> {
+  async getValue(): Promise<Nullable<number>> {
     const value = await this.interactor.getAttribute(this.checkedInputLocator, 'value');
     return value == null ? null : Number.parseFloat(value);
   }

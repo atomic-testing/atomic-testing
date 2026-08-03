@@ -88,7 +88,7 @@ export const swatchPickerExampleTestSuite: TestSuiteInfo<typeof swatchPickerExam
       });
 
       test('selectByIndex/selectByColor throw when no swatch matches', async () => {
-        assertEqual(await engine().parts.pickerOne.getSwatchByIndex(99), null);
+        assertEqual(await engine().parts.pickerOne.getSwatchByIndex(99), undefined);
 
         let threwOnIndex = false;
         try {

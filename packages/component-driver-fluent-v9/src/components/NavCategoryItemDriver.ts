@@ -1,4 +1,4 @@
-import { byCssSelector, childListHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
+import { byCssSelector, childListHelper, locatorUtil, PartLocator, Optional } from '@atomic-testing/core';
 
 import { NavItemDriver } from './NavItemDriver';
 
@@ -71,10 +71,10 @@ export class NavCategoryItemDriver extends NavItemDriver {
 
   /**
    * The first sub-item (direct `NavSubItem` or nested `NavCategoryItem`)
-   * whose visible label matches `label`, or `null` when absent. Expands
+   * whose visible label matches `label`, or `undefined` when absent. Expands
    * first, per {@link getSubItemCount}.
    */
-  async getSubItemByLabel(label: string): Promise<NavItemDriver | null> {
+  async getSubItemByLabel(label: string): Promise<Optional<NavItemDriver>> {
     await this.expand();
     try {
       for await (const item of childListHelper.iterateMatchingChildren(
@@ -90,7 +90,7 @@ export class NavCategoryItemDriver extends NavItemDriver {
     } catch {
       // Not currently mounted even after a best-effort expand — no sub-items reachable.
     }
-    return null;
+    return undefined;
   }
 
   private async setExpanded(expanded: boolean, timeoutMs: number): Promise<void> {

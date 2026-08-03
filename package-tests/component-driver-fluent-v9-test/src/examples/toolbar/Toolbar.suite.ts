@@ -44,7 +44,7 @@ export const toolbarExampleTestSuite: TestSuiteInfo<typeof toolbarExample.scene>
         assertEqual(await engine().parts.toolbarB.getDividerCount(), 1);
       });
 
-      test('getButtonByLabel resolves a plain or grouped button, or null when absent', async () => {
+      test('getButtonByLabel resolves a plain or grouped button, or undefined when absent', async () => {
         const cut = await engine().parts.toolbarA.getButtonByLabel('Cut');
         assertFalse(await cut!.isDisabled());
 
@@ -54,8 +54,8 @@ export const toolbarExampleTestSuite: TestSuiteInfo<typeof toolbarExample.scene>
         const left = await engine().parts.toolbarA.getButtonByLabel('Left');
         assertTrue(left != null);
 
-        assertEqual(await engine().parts.toolbarA.getButtonByLabel('Nonexistent'), null);
-        assertEqual(await engine().parts.toolbarB.getButtonByLabel('Cut'), null);
+        assertEqual(await engine().parts.toolbarA.getButtonByLabel('Nonexistent'), undefined);
+        assertEqual(await engine().parts.toolbarB.getButtonByLabel('Cut'), undefined);
       });
 
       test('ToolbarDividerDriver reports its own axis, inverted relative to its toolbar', async () => {

@@ -6,6 +6,7 @@ import {
   Interactor,
   PartLocator,
   ScenePart,
+  Optional,
 } from '@atomic-testing/core';
 
 export const drawerParts = {
@@ -44,22 +45,22 @@ export abstract class DrawerDriverBase extends ComponentDriver<typeof drawerPart
     });
   }
 
-  /** The drawer header's title text, or `null` when `DrawerHeaderTitle` is absent. */
-  async getHeaderTitle(): Promise<string | null> {
+  /** The drawer header's title text, or `undefined` when `DrawerHeaderTitle` is absent. */
+  async getHeaderTitle(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.parts.headerTitle.locator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.parts.headerTitle.getText()) ?? null;
+    return (await this.parts.headerTitle.getText()) ?? undefined;
   }
 
-  /** The drawer body's text content, or `null` when `DrawerBody` is absent. */
-  async getBodyText(): Promise<string | null> {
+  /** The drawer body's text content, or `undefined` when `DrawerBody` is absent. */
+  async getBodyText(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.parts.body.locator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.parts.body.getText()) ?? null;
+    return (await this.parts.body.getText()) ?? undefined;
   }
 
   /** Whether the drawer is mounted. Fluent mounts a drawer's root only while open. */

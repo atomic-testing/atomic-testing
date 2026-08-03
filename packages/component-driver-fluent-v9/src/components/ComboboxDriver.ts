@@ -1,5 +1,5 @@
 import { HTMLTextInputDriver } from '@atomic-testing/component-driver-html';
-import { byLinkedElement, childListHelper, ComponentDriver, PartLocator } from '@atomic-testing/core';
+import { byLinkedElement, childListHelper, ComponentDriver, PartLocator, Optional } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
 import { ComboboxOptionDriver } from './ComboboxOptionDriver';
@@ -145,18 +145,18 @@ export class ComboboxDriver extends HTMLTextInputDriver {
   }
 
   /**
-   * The option whose visible label matches `label`, or `null` when absent
+   * The option whose visible label matches `label`, or `undefined` when absent
    * (e.g. no option has that text, or the listbox is empty). Opens the
    * listbox first — Fluent only mounts options while open.
    */
-  async getOptionByLabel(label: string): Promise<ComboboxOptionDriver | null> {
+  async getOptionByLabel(label: string): Promise<Optional<ComboboxOptionDriver>> {
     await this.open();
     for await (const option of this.iterateOptions()) {
       if ((await option.getLabel()) === label) {
         return option;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

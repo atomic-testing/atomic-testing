@@ -45,16 +45,16 @@ export const comboboxExampleTestSuite: TestSuiteInfo<typeof comboboxExample.scen
 
       test('reads per-option disabled state', async () => {
         const fish = await engine().parts.animals.getOptionByLabel('Fish');
-        assertNotEqual(fish, null);
+        assertNotEqual(fish, undefined);
         assertTrue(await fish!.isDisabled());
 
         const cat = await engine().parts.animals.getOptionByLabel('Cat');
-        assertNotEqual(cat, null);
+        assertNotEqual(cat, undefined);
         assertFalse(await cat!.isDisabled());
       });
 
-      test('getOptionByLabel returns null for a label with no matching option', async () => {
-        assertEqual(await engine().parts.animals.getOptionByLabel('Zebra'), null);
+      test('getOptionByLabel returns undefined for a label with no matching option', async () => {
+        assertEqual(await engine().parts.animals.getOptionByLabel('Zebra'), undefined);
       });
 
       test('selectByLabel clicks the option, closes the listbox, and mirrors its text onto the value', async () => {
@@ -70,8 +70,8 @@ export const comboboxExampleTestSuite: TestSuiteInfo<typeof comboboxExample.scen
 
         const cat = await engine().parts.animals.getOptionByLabel('Cat');
         const dog = await engine().parts.animals.getOptionByLabel('Dog');
-        assertNotEqual(cat, null);
-        assertNotEqual(dog, null);
+        assertNotEqual(cat, undefined);
+        assertNotEqual(dog, undefined);
         assertTrue(await cat!.isSelected());
         assertFalse(await dog!.isSelected());
       });
@@ -99,7 +99,7 @@ export const comboboxExampleTestSuite: TestSuiteInfo<typeof comboboxExample.scen
       test('an empty combobox has no options and resolves no match', async () => {
         assertEqual(await engine().parts.empty.getOptionCount(), 0);
         assertEqual(await engine().parts.empty.getOptionLabels(), []);
-        assertEqual(await engine().parts.empty.getOptionByLabel('Anything'), null);
+        assertEqual(await engine().parts.empty.getOptionByLabel('Anything'), undefined);
       });
 
       test('two simultaneously open instances resolve independent listboxes (locator disambiguation)', async () => {

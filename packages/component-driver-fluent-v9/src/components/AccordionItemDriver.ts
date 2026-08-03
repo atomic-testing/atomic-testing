@@ -37,7 +37,7 @@ const defaultTransitionDuration = 1000;
  * never opened never mounts at all, and toggling open→closed plays the exit
  * animation before removing it from the DOM — a STRONGER case than Radix's
  * accordion, whose content wrapper stays mounted with lazily-rendered
- * children. {@link getPanelText} therefore returns `null` whenever the panel
+ * children. {@link getPanelText} therefore returns `undefined` whenever the panel
  * isn't currently present (collapsed, or mid-exit-animation under a real
  * browser's timing), not merely when the item has never been opened.
  *
@@ -75,13 +75,13 @@ export class AccordionItemDriver extends ComponentDriver<{}> implements IDisable
     return this.interactor.isDisabled(this.headerButtonLocator);
   }
 
-  /** The panel's text content, or `null` when the panel is not currently mounted — see class doc. */
-  async getPanelText(): Promise<string | null> {
+  /** The panel's text content, or `undefined` when the panel is not currently mounted — see class doc. */
+  async getPanelText(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.panelLocator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.interactor.getText(this.panelLocator)) ?? null;
+    return (await this.interactor.getText(this.panelLocator)) ?? undefined;
   }
 
   /**

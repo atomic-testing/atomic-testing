@@ -70,31 +70,31 @@ export class TeachingPopoverDriver extends ComponentDriver<typeof teachingPopove
     return 'Same';
   }
 
-  /** The header's text (icon excluded — it renders no text node), or `null` when `TeachingPopoverHeader` is absent. */
-  async getHeaderText(): Promise<string | null> {
+  /** The header's text (icon excluded — it renders no text node), or `undefined` when `TeachingPopoverHeader` is absent. */
+  async getHeaderText(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.parts.header.locator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.parts.header.getText()) ?? null;
+    return (await this.parts.header.getText()) ?? undefined;
   }
 
-  /** The popover's title text, or `null` when `TeachingPopoverTitle` is absent. */
-  async getTitle(): Promise<string | null> {
+  /** The popover's title text, or `undefined` when `TeachingPopoverTitle` is absent. */
+  async getTitle(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.parts.title.locator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.parts.title.getText()) ?? null;
+    return (await this.parts.title.getText()) ?? undefined;
   }
 
-  /** The popover's body text, or `null` when `TeachingPopoverBody` is absent. */
-  async getBodyText(): Promise<string | null> {
+  /** The popover's body text, or `undefined` when `TeachingPopoverBody` is absent. */
+  async getBodyText(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.parts.body.locator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.parts.body.getText()) ?? null;
+    return (await this.parts.body.getText()) ?? undefined;
   }
 
   /** Whether the popover's surface is mounted. */

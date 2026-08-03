@@ -8,6 +8,7 @@ import { tabListUIExample } from './TabList.examples';
 export const tabListExampleScenePart = {
   listA: { locator: byDataTestId('tab-list-a'), driver: TabListDriver },
   listB: { locator: byDataTestId('tab-list-b'), driver: TabListDriver },
+  listNoSelection: { locator: byDataTestId('tab-list-c'), driver: TabListDriver },
 } satisfies ScenePart;
 
 export const tabListExample: IExampleUnit<typeof tabListExampleScenePart, JSX.Element> = {
@@ -36,6 +37,15 @@ export const tabListExampleTestSuite: TestSuiteInfo<typeof tabListExample.scene>
         assertEqual(await engine().parts.listA.getSelectedIndex(), 0);
         assertEqual(await engine().parts.listA.getSelectedLabel(), 'Home');
         assertEqual(await engine().parts.listA.getSelectedValue(), 'home');
+      });
+
+      // "no tab is selected" is a lookup miss, not a value the tab list holds, so
+      // both reads answer `undefined` — ADR-006 §7. Without this fixture the branch
+      // has no coverage at all: every other list here has a defaultSelectedValue.
+      test('a list with nothing selected reads undefined, not null', async () => {
+        assertEqual(await engine().parts.listNoSelection.getTabCount(), 2);
+        assertEqual(await engine().parts.listNoSelection.getSelectedLabel(), undefined);
+        assertEqual(await engine().parts.listNoSelection.getSelectedValue(), undefined);
       });
 
       test('selectByIndex selects a different tab, leaving the other list untouched', async () => {

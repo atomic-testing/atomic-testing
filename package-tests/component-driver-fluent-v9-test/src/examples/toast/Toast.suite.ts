@@ -54,9 +54,9 @@ export const toastExampleTestSuite: TestSuiteInfo<typeof toastExample.scene> = {
         assertEqual(await toast?.getBodyText(), 'Second toast body');
       });
 
-      test('getToastByIndex is null out of range', async () => {
+      test('getToastByIndex is undefined out of range', async () => {
         const toast = await engine().parts.toaster.getToastByIndex(0);
-        assertEqual(toast, null);
+        assertEqual(toast, undefined);
       });
     });
   },

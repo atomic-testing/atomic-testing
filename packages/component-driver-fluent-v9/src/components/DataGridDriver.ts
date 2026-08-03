@@ -87,11 +87,11 @@ export class DataGridDriver<ItemT extends DataGridRowDriver = DataGridRowDriver>
     return this.getItemByIndex(index);
   }
 
-  /** The header row as a {@link DataGridHeaderRowDriver}, or `null` when the grid has no header (`DataGridHeader` wasn't rendered). */
-  async getHeaderRow(): Promise<DataGridHeaderRowDriver | null> {
+  /** The header row as a {@link DataGridHeaderRowDriver}, or `undefined` when the grid has no header (`DataGridHeader` wasn't rendered). */
+  async getHeaderRow(): Promise<Optional<DataGridHeaderRowDriver>> {
     const locator = locatorUtil.append(this.locator, headerRowLocator);
     if (!(await this.interactor.exists(locator))) {
-      return null;
+      return undefined;
     }
     return new DataGridHeaderRowDriver(locator, this.interactor, this.commutableOption);
   }

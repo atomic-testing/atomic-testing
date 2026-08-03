@@ -1,4 +1,4 @@
-import { ComponentDriver, IDisableableDriver, IToggleDriver, Optional } from '@atomic-testing/core';
+import { ComponentDriver, IDisableableDriver, IToggleDriver, Optional, Nullable } from '@atomic-testing/core';
 
 import { resolveLinkedLabelText } from '../internal/linkedLocators';
 
@@ -50,7 +50,7 @@ export class RadioDriver extends ComponentDriver<{}> implements IToggleDriver, I
   }
 
   /** The `value` this radio represents (native `value` attribute). */
-  async getValue(): Promise<string | null> {
+  async getValue(): Promise<Nullable<string>> {
     return (await this.interactor.getAttribute(this.locator, 'value')) ?? null;
   }
 

@@ -1,4 +1,4 @@
-import { childListHelper, ComponentDriver, ComponentDriverCtor } from '@atomic-testing/core';
+import { childListHelper, ComponentDriver, ComponentDriverCtor, Optional } from '@atomic-testing/core';
 
 /**
  * Shared cell-iteration surface for the Fluent v9 `DataGrid` row family —
@@ -45,8 +45,8 @@ export abstract class DataGridRowDriverBase<ItemT extends ComponentDriver> exten
     return childListHelper.countMatchingChildren(this.interactor, this.locator, this.getCellSelector());
   }
 
-  /** The cell driver at the given zero-based column index, or `null` when out of range. */
-  async getCell(index: number): Promise<ItemT | null> {
+  /** The cell driver at the given zero-based column index, or `undefined` when out of range. */
+  async getCell(index: number): Promise<Optional<ItemT>> {
     let position = 0;
     for await (const cell of childListHelper.iterateMatchingChildren(
       this,
@@ -59,7 +59,7 @@ export abstract class DataGridRowDriverBase<ItemT extends ComponentDriver> exten
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   /** The text of every cell, in column order. */

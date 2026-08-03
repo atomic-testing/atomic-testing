@@ -1,4 +1,4 @@
-import { childListHelper, ComponentDriver, Interactor, PartLocator } from '@atomic-testing/core';
+import { childListHelper, ComponentDriver, Interactor, PartLocator, Optional } from '@atomic-testing/core';
 
 import { NavCategoryItemDriver } from '../components/NavCategoryItemDriver';
 import { NavItemDriver } from '../components/NavItemDriver';
@@ -46,43 +46,43 @@ export function iterateNavCategoryItems(
   );
 }
 
-/** The first item (of any kind) whose visible label matches `label`, or `null` when absent. */
+/** The first item (of any kind) whose visible label matches `label`, or `undefined` when absent. */
 export async function getNavItemByLabel(
   host: ComponentDriver,
   containerLocator: PartLocator,
   label: string
-): Promise<NavItemDriver | null> {
+): Promise<Optional<NavItemDriver>> {
   for await (const item of iterateNavItems(host, containerLocator)) {
     if ((await item.getLabel()) === label) {
       return item;
     }
   }
-  return null;
+  return undefined;
 }
 
-/** The first `NavCategoryItem` whose visible label matches `label`, or `null` when absent. */
+/** The first `NavCategoryItem` whose visible label matches `label`, or `undefined` when absent. */
 export async function getNavCategoryByLabel(
   host: ComponentDriver,
   containerLocator: PartLocator,
   label: string
-): Promise<NavCategoryItemDriver | null> {
+): Promise<Optional<NavCategoryItemDriver>> {
   for await (const item of iterateNavCategoryItems(host, containerLocator)) {
     if ((await item.getLabel()) === label) {
       return item;
     }
   }
-  return null;
+  return undefined;
 }
 
-/** The label of the selected item (`aria-current="page"`), or `null` when none is selected. */
+/** The label of the selected item (`aria-current="page"`), or `undefined` when none is selected. */
 export async function getSelectedNavItemLabel(
   host: ComponentDriver,
   containerLocator: PartLocator
-): Promise<string | null> {
+): Promise<Optional<string>> {
   for await (const item of iterateNavItems(host, containerLocator)) {
     if (await item.isSelected()) {
-      return (await item.getLabel()) ?? null;
+      return (await item.getLabel()) ?? undefined;
     }
   }
-  return null;
+  return undefined;
 }

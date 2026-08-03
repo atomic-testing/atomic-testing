@@ -5,8 +5,8 @@ import {
   ListComponentDriver,
   ListComponentDriverSpecificOption,
   listHelper,
-  Nullable,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { ToolbarRadioButtonDriver } from './ToolbarRadioButtonDriver';
@@ -64,14 +64,14 @@ export class ToolbarRadioGroupDriver<
     return labels;
   }
 
-  /** Label of the selected option, or `null` when none is selected. */
-  async getSelectedLabel(): Promise<Nullable<string>> {
+  /** Label of the selected option, or `undefined` when none is selected. */
+  async getSelectedLabel(): Promise<Optional<string>> {
     for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await item.isSelected()) {
-        return (await item.getText())?.trim() ?? null;
+        return (await item.getText())?.trim() ?? undefined;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

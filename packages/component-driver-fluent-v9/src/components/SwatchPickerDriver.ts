@@ -35,8 +35,8 @@ export class SwatchPickerDriver extends ComponentDriver<{}> {
     return childListHelper.countMatchingChildren(this.interactor, this.locator, swatchSelector);
   }
 
-  /** The swatch driver at the given zero-based index, or `null` if out of range. */
-  async getSwatchByIndex(index: number): Promise<SwatchPickerItemDriver | null> {
+  /** The swatch driver at the given zero-based index, or `undefined` if out of range. */
+  async getSwatchByIndex(index: number): Promise<Optional<SwatchPickerItemDriver>> {
     let position = 0;
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
@@ -49,7 +49,7 @@ export class SwatchPickerDriver extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   /** The rendered color of every swatch, in DOM order (see {@link SwatchPickerItemDriver.getColor}). */
