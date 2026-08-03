@@ -28,6 +28,6 @@
     "build": "tsdown",
     "check:type": "tsc --noEmit",
     "check:api": "api-extractor run",
-    "test": "jest"
+    "test:dom": "jest"
   }
 }

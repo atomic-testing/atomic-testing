@@ -5,6 +5,7 @@ import {
   ListComponentDriver,
   ListComponentDriverSpecificOption,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { TableCellDriver } from './TableCellDriver';
@@ -57,7 +58,7 @@ export class TableRowDriver<ItemT extends TableCellDriver = TableCellDriver> ext
   /**
    * The cell driver at the given zero-based column index, or `null` when out of range.
    */
-  async getCell(index: number): Promise<ItemT | null> {
+  async getCell(index: number): Promise<Optional<ItemT>> {
     return this.getItemByIndex(index);
   }
 

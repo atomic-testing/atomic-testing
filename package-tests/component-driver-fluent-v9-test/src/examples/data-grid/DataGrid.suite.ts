@@ -135,8 +135,8 @@ export const dataGridExampleTestSuite: TestSuiteInfo<typeof dataGridExample.scen
         assertEqual(await engine().parts.gridB.getColumnWidth(0), undefined);
       });
 
-      test('getRow/getHeaderRow return null and out-of-range reads degrade gracefully', async () => {
-        assertEqual(await engine().parts.gridA.getRow(99), null);
+      test('getRow/getHeaderRow return undefined and out-of-range reads degrade gracefully', async () => {
+        assertEqual(await engine().parts.gridA.getRow(99), undefined);
 
         const headerRow = await engine().parts.gridA.getHeaderRow();
         assertTrue(headerRow != null);

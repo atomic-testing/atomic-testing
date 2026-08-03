@@ -93,7 +93,7 @@ export const accountMenuTestSuite: TestSuiteInfo<typeof accountMenuExample.scene
         const first = await engine().parts.menu.getMenuItemByIndex(0);
         assertEqual(await first?.label(), 'Profile');
         const outOfRange = await engine().parts.menu.getMenuItemByIndex(99);
-        assertEqual(outOfRange, null);
+        assertEqual(outOfRange, undefined);
       });
     });
   },

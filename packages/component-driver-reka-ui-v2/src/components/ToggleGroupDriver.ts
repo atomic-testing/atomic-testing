@@ -1,4 +1,4 @@
-import { byTagName, ComponentDriver, listHelper, locatorUtil, PartLocator } from '@atomic-testing/core';
+import { byTagName, ComponentDriver, listHelper, locatorUtil, PartLocator, Optional } from '@atomic-testing/core';
 
 import { ToggleDriver } from './ToggleDriver';
 
@@ -40,7 +40,7 @@ export class ToggleGroupDriver extends ComponentDriver<{}> {
     return locatorUtil.append(this.locator, itemLocator);
   }
 
-  async getItemByIndex(index: number): Promise<ToggleDriver | null> {
+  async getItemByIndex(index: number): Promise<Optional<ToggleDriver>> {
     return listHelper.getListItemByIndex(this, this.itemsLocator, index, ToggleDriver);
   }
 

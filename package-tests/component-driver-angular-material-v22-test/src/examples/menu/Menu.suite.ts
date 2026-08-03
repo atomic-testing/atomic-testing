@@ -53,7 +53,7 @@ export const menuTestSuite: TestSuiteInfo<typeof menuScenePart> = {
           const first = await engine().parts.accountMenu.getMenuItemByIndex(0);
           assertEqual(await first?.label(), 'Profile');
           const outOfRange = await engine().parts.accountMenu.getMenuItemByIndex(99);
-          assertEqual(outOfRange, null);
+          assertEqual(outOfRange, undefined);
         });
 
         test('reads items by label, including disabled state', async () => {

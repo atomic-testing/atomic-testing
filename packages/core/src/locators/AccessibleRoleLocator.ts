@@ -2,12 +2,6 @@ import { CssLocator, CssLocatorInitializer } from './CssLocator';
 import { LocatorComplexity } from './LocatorComplexity';
 import type { LocatorRelativePosition } from './LocatorRelativePosition';
 
-export type AccessibleRoleLocatorSource = {
-  _id: 'byAccessibleRole';
-  role: string;
-  name?: string;
-};
-
 /**
  * The only two {@link LocatorRelativePosition} values `AccessibleRoleLocator`
  * resolution actually honors — `'Root'` escapes to the document root,

@@ -44,9 +44,9 @@ export const tableTestSuite: TestSuiteInfo<typeof tableScenePart> = {
         assertEqual(await banana!.getCellTexts(), ['Banana', 'Yellow']);
       });
 
-      test('returns null for an out-of-range row', async () => {
-        assertEqual(await engine().parts.elements.getRowByIndex(4), null);
-        assertEqual(await engine().parts.fruits.getRowByIndex(99), null);
+      test('returns undefined for an out-of-range row', async () => {
+        assertEqual(await engine().parts.elements.getRowByIndex(4), undefined);
+        assertEqual(await engine().parts.fruits.getRowByIndex(99), undefined);
       });
 
       test('reads cell text by column header and by column index', async () => {

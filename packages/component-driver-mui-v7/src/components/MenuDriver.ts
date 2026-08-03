@@ -83,7 +83,7 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
    * Get the menu item at the given zero-based index, or `null` if out of range.
    * Complements the existing label-based {@link getMenuItemByLabel}.
    */
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+  async getMenuItemByIndex(index: number): Promise<Optional<MenuItemDriver>> {
     return listHelper.getListItemByIndex(this, menuItemLocator, index, MenuItemDriver);
   }
 

@@ -1,5 +1,6 @@
 import {
   ComponentDriver,
+  ElementNotFoundError,
   IComponentDriverOption,
   IDisableableDriver,
   IInputDriver,
@@ -29,10 +30,22 @@ export class HTMLRangeInputDriver
 
   /**
    * Read the current value of the range input.
+   *
+   * Throws {@link ElementNotFoundError} when the element is absent, rather than
+   * reporting absence in the return value. A range's value is a `number`, which has
+   * no spare inhabitant for "nothing found" — the sibling drivers can say
+   * `Nullable<string>` because `null` is a legitimate form value for them, whereas
+   * this read previously returned `Number.parseFloat('')` — `NaN` — so every
+   * comparison against a missing slider was silently false. See ADR-006 §7.
+   *
+   * @throws {ElementNotFoundError} If the range input is not found.
    */
   async getValue(): Promise<number> {
     const value = await this.interactor.getInputValue(this.locator);
-    return Number.parseFloat(value ?? '');
+    if (value == null) {
+      throw new ElementNotFoundError(this.locator, 'getValue');
+    }
+    return Number.parseFloat(value);
   }
 
   /**

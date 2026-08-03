@@ -37,11 +37,17 @@ export function isHtmlInputDateTimeFormat(input: string): boolean {
 }
 
 /**
- * Supported html input date types
+ * Supported html input date types.
+ *
+ * Deliberately un-annotated: a `readonly string[]` annotation would widen the
+ * `as const` tuple back to `string`, and {@link HtmlInputDateType} — a frozen
+ * public type — would degrade with it, making {@link isHtmlDateInputType} a
+ * no-op guard and {@link dateValidationDescriptors} lose its exhaustiveness
+ * check. Narrowing a public type is major-only once 1.0 tags.
  */
-export const htmlInputDateTypes: readonly string[] = ['date', 'datetime-local', 'time'] as const;
+export const htmlInputDateTypes = ['date', 'datetime-local', 'time'] as const;
 export type HtmlInputDateType = (typeof htmlInputDateTypes)[number];
-const htmlInputDateSet: Set<string> = new Set(htmlInputDateTypes);
+const htmlInputDateSet: ReadonlySet<string> = new Set<string>(htmlInputDateTypes);
 
 export interface IDateValidationDescriptor {
   type: HtmlInputDateType;

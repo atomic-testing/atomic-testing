@@ -32,12 +32,12 @@ export const treeExampleTestSuite: TestSuiteInfo<typeof treeExample.scene> = {
         assertEqual(await engine().parts.treeC.getItemCount(), 3);
       });
 
-      test('getItemByIndex reads top-level labels in DOM order; out-of-range is null', async () => {
+      test('getItemByIndex reads top-level labels in DOM order; out-of-range is undefined', async () => {
         const fruits = await engine().parts.treeA.getItemByIndex(0);
         const vegetables = await engine().parts.treeA.getItemByIndex(1);
         assertEqual(await fruits!.getLabel(), 'Fruits');
         assertEqual(await vegetables!.getLabel(), 'Vegetables');
-        assertEqual(await engine().parts.treeA.getItemByIndex(99), null);
+        assertEqual(await engine().parts.treeA.getItemByIndex(99), undefined);
       });
 
       test('getLabel reads only this item’s own text, not an expanded descendant’s (over-inclusion hazard)', async () => {

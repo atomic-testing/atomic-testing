@@ -89,7 +89,7 @@ A `PartLocator` is always a chain — `CssLocator[]` ([PartLocator.ts](../packag
   - `Same` → the selector applies to the same element / no descendant hop (e.g. `:checked`, `:nth-of-type(n)`).
   - `Child` → a direct child of the parent (CSS child combinator, `>`).
   - `Root` → **resets** the chain; selectors from the `Root` element onward are used, ignoring the parent context. Used by portal-rendered components (dialog/menu) to escape their declared parent.
-- **`type`** — `'css'` (the only supported `LocatorType` today).
+- **`type`** — `'css'`; CSS is the only engine the locator model supports ([ADR-008](adr/008-css-dom-only-locator-boundary.md)).
 - **`complexity`** — `'primitive'` for `CssLocator`, `'linked'` for `LinkedCssLocator`.
 
 Builders (all in [locators/](../packages/core/src/locators/index.ts)) each produce a one-element `PartLocator` chain — see [modules/core.md](modules/core.md#locators) for the full `by*` catalog. Compound same-element matchers onto one another with `locatorUtil.and(base, ...matchers)`; append chains with `locatorUtil.append(...)`.
