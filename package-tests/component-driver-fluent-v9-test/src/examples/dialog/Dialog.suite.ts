@@ -90,7 +90,7 @@ export const dialogExampleTestSuite: TestSuiteInfo<typeof dialogExample.scene> =
       test('getTitle returns null when DialogTitle is absent', async () => {
         await engine().parts.noTitleTrigger.click();
         await engine().parts.dialogNoTitle.waitForOpen();
-        assertEqual(await engine().parts.dialogNoTitle.getTitle(), null);
+        assertEqual(await engine().parts.dialogNoTitle.getTitle(), undefined);
       });
     });
   },

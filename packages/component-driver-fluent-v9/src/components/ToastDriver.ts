@@ -1,4 +1,11 @@
-import { byCssClass, ComponentDriver, IComponentDriverOption, Interactor, PartLocator } from '@atomic-testing/core';
+import {
+  byCssClass,
+  ComponentDriver,
+  IComponentDriverOption,
+  Interactor,
+  PartLocator,
+  Optional,
+} from '@atomic-testing/core';
 
 import { readOptionalDescendantText } from '../internal/optionalText';
 
@@ -39,14 +46,14 @@ export class ToastDriver extends ComponentDriver<{}> {
     });
   }
 
-  /** The toast's title text, or `null` when `ToastTitle` is absent. */
-  async getTitle(): Promise<string | null> {
-    return (await readOptionalDescendantText(this.interactor, this.locator, titleLocator)) ?? null;
+  /** The toast's title text, or `undefined` when `ToastTitle` is absent. */
+  async getTitle(): Promise<Optional<string>> {
+    return (await readOptionalDescendantText(this.interactor, this.locator, titleLocator)) ?? undefined;
   }
 
-  /** The toast's body text, or `null` when `ToastBody` is absent. */
-  async getBodyText(): Promise<string | null> {
-    return (await readOptionalDescendantText(this.interactor, this.locator, bodyLocator)) ?? null;
+  /** The toast's body text, or `undefined` when `ToastBody` is absent. */
+  async getBodyText(): Promise<Optional<string>> {
+    return (await readOptionalDescendantText(this.interactor, this.locator, bodyLocator)) ?? undefined;
   }
 
   get driverName(): string {

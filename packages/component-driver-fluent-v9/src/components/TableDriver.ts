@@ -72,11 +72,11 @@ export class TableDriver<ItemT extends TableRowDriver = TableRowDriver> extends 
     return this.getItemByIndex(index);
   }
 
-  /** The header row as a {@link TableHeaderRowDriver}, or `null` when the table has no header. */
-  async getHeaderRow(): Promise<TableHeaderRowDriver | null> {
+  /** The header row as a {@link TableHeaderRowDriver}, or `undefined` when the table has no header. */
+  async getHeaderRow(): Promise<Optional<TableHeaderRowDriver>> {
     const locator = locatorUtil.append(this.locator, headerRowLocator);
     if (!(await this.interactor.exists(locator))) {
-      return null;
+      return undefined;
     }
     return new TableHeaderRowDriver(locator, this.interactor, this.commutableOption);
   }

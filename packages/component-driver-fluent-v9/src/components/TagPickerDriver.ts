@@ -10,6 +10,7 @@ import {
   IValidatableDriver,
   locatorUtil,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { TagPickerOptionNotFoundError } from '../errors/TagPickerOptionNotFoundError';
@@ -136,14 +137,14 @@ export class TagPickerDriver
 
   /**
    * The freeform input's current filter text (a native `<input>`'s own
-   * `.value`, so genuinely empty reads back as `''`, never `null` in
-   * practice — `null` is only the theoretical "locator matched nothing" case,
+   * `.value`, so genuinely empty reads back as `''`, never `undefined` in
+   * practice — `undefined` is only the theoretical "locator matched nothing" case,
    * mirroring `HTMLTextInputDriver.getValue`'s identical `string | null`
    * contract and `ComboboxDriver.getValue`'s own observed `''` default).
    */
-  async getFilterText(): Promise<string | null> {
+  async getFilterText(): Promise<Optional<string>> {
     const value = await this.interactor.getInputValue(this.inputLocator);
-    return value ?? null;
+    return value ?? undefined;
   }
 
   /** Replace the freeform input's filter text. */
@@ -204,17 +205,17 @@ export class TagPickerDriver
 
   /**
    * The option whose visible label matches `label` — opens the list first if
-   * not already open (see class doc); `null` when no option matches, or when
+   * not already open (see class doc); `undefined` when no option matches, or when
    * the listbox still can't be resolved after that best-effort open, not
    * merely because the picker started closed.
    */
-  async getOptionByLabel(label: string): Promise<TagPickerOptionDriver | null> {
+  async getOptionByLabel(label: string): Promise<Optional<TagPickerOptionDriver>> {
     for await (const option of this.iterateOptions()) {
       if ((await option.getLabel()) === label) {
         return option;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

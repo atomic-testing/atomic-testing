@@ -1,4 +1,4 @@
-import { childListHelper, ComponentDriver } from '@atomic-testing/core';
+import { childListHelper, ComponentDriver, Optional } from '@atomic-testing/core';
 
 import { ToolbarButtonDriver } from './ToolbarButtonDriver';
 
@@ -49,9 +49,9 @@ export class ToolbarDriver extends ComponentDriver<{}> {
 
   /**
    * The first button (of any kind — see class doc) whose visible label
-   * matches `label`, or `null` when absent.
+   * matches `label`, or `undefined` when absent.
    */
-  async getButtonByLabel(label: string): Promise<ToolbarButtonDriver | null> {
+  async getButtonByLabel(label: string): Promise<Optional<ToolbarButtonDriver>> {
     for await (const button of childListHelper.iterateMatchingChildren(
       this,
       this.locator,
@@ -64,7 +64,7 @@ export class ToolbarDriver extends ComponentDriver<{}> {
         return button;
       }
     }
-    return null;
+    return undefined;
   }
 
   get driverName(): string {

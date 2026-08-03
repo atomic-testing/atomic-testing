@@ -31,12 +31,12 @@ export const navExampleTestSuite: TestSuiteInfo<typeof navExample.scene> = {
         assertEqual(await engine().parts.navB.getItemCount(), 2);
       });
 
-      test('getItemByLabel resolves a leaf item, or null when absent', async () => {
+      test('getItemByLabel resolves a leaf item, or undefined when absent', async () => {
         const home = await engine().parts.navA.getItemByLabel('Home');
         assertTrue(await home!.isSelected());
 
-        assertEqual(await engine().parts.navA.getItemByLabel('Nonexistent'), null);
-        assertEqual(await engine().parts.navB.getItemByLabel('Home'), null);
+        assertEqual(await engine().parts.navA.getItemByLabel('Nonexistent'), undefined);
+        assertEqual(await engine().parts.navB.getItemByLabel('Home'), undefined);
       });
 
       test('getSelectedLabel reads the selected item per instance', async () => {
@@ -50,7 +50,7 @@ export const navExampleTestSuite: TestSuiteInfo<typeof navExample.scene> = {
         assertTrue(await reports!.isExpanded());
         assertEqual(await reports!.getSubItemCount(), 2);
 
-        assertEqual(await engine().parts.navB.getCategoryByLabel('Reports'), null);
+        assertEqual(await engine().parts.navB.getCategoryByLabel('Reports'), undefined);
       });
 
       test('NavCategoryItemDriver.collapse()/expand() toggle the category and its sub-items reachability', async () => {
@@ -63,7 +63,7 @@ export const navExampleTestSuite: TestSuiteInfo<typeof navExample.scene> = {
 
         const daily = await reports!.getSubItemByLabel('Daily');
         assertEqual(await daily?.getLabel(), 'Daily');
-        assertEqual(await reports!.getSubItemByLabel('Nonexistent'), null);
+        assertEqual(await reports!.getSubItemByLabel('Nonexistent'), undefined);
       });
 
       test('selectByLabel clicks the matching item without throwing, scoped to its own Nav', async () => {

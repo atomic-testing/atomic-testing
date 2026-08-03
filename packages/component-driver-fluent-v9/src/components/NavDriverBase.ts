@@ -1,4 +1,4 @@
-import { ComponentDriver } from '@atomic-testing/core';
+import { ComponentDriver, Optional } from '@atomic-testing/core';
 
 import { NavItemNotFoundError } from '../errors/NavItemNotFoundError';
 import * as navLocators from '../internal/navLocators';
@@ -31,22 +31,22 @@ export abstract class NavDriverBase extends ComponentDriver<{}> {
     return labels;
   }
 
-  /** The first item (leaf or category trigger) whose visible label matches `label`, or `null` when absent. */
-  async getItemByLabel(label: string): Promise<NavItemDriver | null> {
+  /** The first item (leaf or category trigger) whose visible label matches `label`, or `undefined` when absent. */
+  async getItemByLabel(label: string): Promise<Optional<NavItemDriver>> {
     return navLocators.getNavItemByLabel(this, this.locator, label);
   }
 
   /**
    * The first `NavCategoryItem` whose visible label matches `label`, or
-   * `null` when absent — use this (rather than {@link getItemByLabel}) to
+   * `undefined` when absent — use this (rather than {@link getItemByLabel}) to
    * reach the expand/collapse-capable driver. See {@link NavCategoryItemDriver}.
    */
-  async getCategoryByLabel(label: string): Promise<NavCategoryItemDriver | null> {
+  async getCategoryByLabel(label: string): Promise<Optional<NavCategoryItemDriver>> {
     return navLocators.getNavCategoryByLabel(this, this.locator, label);
   }
 
-  /** The label of the currently selected item, or `null` when none is selected. */
-  async getSelectedLabel(): Promise<string | null> {
+  /** The label of the currently selected item, or `undefined` when none is selected. */
+  async getSelectedLabel(): Promise<Optional<string>> {
     return navLocators.getSelectedNavItemLabel(this, this.locator);
   }
 

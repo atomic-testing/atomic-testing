@@ -4,6 +4,7 @@ import {
   IComponentDriverOption,
   Interactor,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -118,8 +119,8 @@ export class MenuDriver extends ComponentDriver<{}> {
     return this.waitForClose(timeoutMs);
   }
 
-  /** The item whose visible label matches `label`, or `null` when absent (matches plain, checkbox, and radio items alike). */
-  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
+  /** The item whose visible label matches `label`, or `undefined` when absent (matches plain, checkbox, and radio items alike). */
+  async getMenuItemByLabel(label: string): Promise<Optional<MenuItemDriver>> {
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
       this.locator,
@@ -131,7 +132,7 @@ export class MenuDriver extends ComponentDriver<{}> {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Click the item whose visible label matches `label`. @throws {MenuItemNotFoundError} when absent. */
@@ -149,8 +150,8 @@ export class MenuDriver extends ComponentDriver<{}> {
     return childListHelper.countMatchingChildren(this.interactor, this.locator, menuItemSelector);
   }
 
-  /** The item at the given zero-based index, or `null` if out of range. */
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+  /** The item at the given zero-based index, or `undefined` if out of range. */
+  async getMenuItemByIndex(index: number): Promise<Optional<MenuItemDriver>> {
     let position = 0;
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
@@ -163,11 +164,11 @@ export class MenuDriver extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
-  /** The `MenuItemCheckbox` whose visible label matches `label`, or `null` when absent. */
-  async getCheckboxItemByLabel(label: string): Promise<MenuItemCheckboxDriver | null> {
+  /** The `MenuItemCheckbox` whose visible label matches `label`, or `undefined` when absent. */
+  async getCheckboxItemByLabel(label: string): Promise<Optional<MenuItemCheckboxDriver>> {
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
       this.locator,
@@ -178,11 +179,11 @@ export class MenuDriver extends ComponentDriver<{}> {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
-  /** The `MenuItemRadio` whose visible label matches `label`, or `null` when absent. */
-  async getRadioItemByLabel(label: string): Promise<MenuItemRadioDriver | null> {
+  /** The `MenuItemRadio` whose visible label matches `label`, or `undefined` when absent. */
+  async getRadioItemByLabel(label: string): Promise<Optional<MenuItemRadioDriver>> {
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
       this.locator,
@@ -193,7 +194,7 @@ export class MenuDriver extends ComponentDriver<{}> {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   get driverName(): string {

@@ -43,11 +43,11 @@ export const flatTreeExampleTestSuite: TestSuiteInfo<typeof flatTreeExample.scen
         assertEqual(await engine().parts.flatTreeA.getItemByIndex(99), undefined);
       });
 
-      test('getItemByValue finds an item by its Fluent-stamped value at any level; absent value is null', async () => {
+      test('getItemByValue finds an item by its Fluent-stamped value at any level; absent value is undefined', async () => {
         const citrus = await engine().parts.flatTreeA.getItemByValue('citrus');
         assertEqual(await citrus!.getLabel(), 'Citrus');
         assertEqual(await citrus!.getValue(), 'citrus');
-        assertEqual(await engine().parts.flatTreeA.getItemByValue('does-not-exist'), null);
+        assertEqual(await engine().parts.flatTreeA.getItemByValue('does-not-exist'), undefined);
       });
 
       test('getItemByValue matches by value, not incidentally by label, when two items share a visible label', async () => {
@@ -96,8 +96,8 @@ export const flatTreeExampleTestSuite: TestSuiteInfo<typeof flatTreeExample.scen
       });
 
       test('a collapsed branch’s descendants are absent from the flat list until expand()ed', async () => {
-        assertEqual(await engine().parts.flatTreeA.getItemByValue('orange'), null);
-        assertEqual(await engine().parts.flatTreeA.getItemByValue('lemon'), null);
+        assertEqual(await engine().parts.flatTreeA.getItemByValue('orange'), undefined);
+        assertEqual(await engine().parts.flatTreeA.getItemByValue('lemon'), undefined);
 
         const citrus = await engine().parts.flatTreeA.getItemByValue('citrus');
         assertFalse(await citrus!.isExpanded());
@@ -112,7 +112,7 @@ export const flatTreeExampleTestSuite: TestSuiteInfo<typeof flatTreeExample.scen
 
         await citrus!.collapse();
         assertFalse(await citrus!.isExpanded());
-        assertEqual(await engine().parts.flatTreeA.getItemByValue('orange'), null);
+        assertEqual(await engine().parts.flatTreeA.getItemByValue('orange'), undefined);
       });
 
       test('expand()/collapse() no-op on a leaf item (nothing to toggle)', async () => {

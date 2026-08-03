@@ -5,8 +5,8 @@ import {
   ListComponentDriver,
   ListComponentDriverSpecificOption,
   listHelper,
-  Nullable,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { TabDriver } from './TabDriver';
@@ -84,24 +84,24 @@ export class TabListDriver<ItemT extends TabDriver = TabDriver> extends ListComp
     return -1;
   }
 
-  /** Label of the selected tab, or `null` when no tab is selected. */
-  async getSelectedLabel(): Promise<Nullable<string>> {
+  /** Label of the selected tab, or `undefined` when no tab is selected. */
+  async getSelectedLabel(): Promise<Optional<string>> {
     for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
-        return (await tab.getText())?.trim() ?? null;
+        return (await tab.getText())?.trim() ?? undefined;
       }
     }
-    return null;
+    return undefined;
   }
 
-  /** The `value` of the selected tab (see {@link TabDriver.getValue}), or `null` when no tab is selected. */
-  async getSelectedValue(): Promise<Nullable<string>> {
+  /** The `value` of the selected tab (see {@link TabDriver.getValue}), or `undefined` when no tab is selected. */
+  async getSelectedValue(): Promise<Optional<string>> {
     for await (const tab of listHelper.getListItemIterator(this, this.getItemLocator(), this.getItemClass())) {
       if (await tab.isSelected()) {
-        return (await tab.getValue()) ?? null;
+        return (await tab.getValue()) ?? undefined;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

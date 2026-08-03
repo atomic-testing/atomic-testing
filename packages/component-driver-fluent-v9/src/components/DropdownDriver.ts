@@ -30,7 +30,7 @@ const optionSelector = '[role="option"]';
  * `FluentProvider` on `document.body` (the same recipe every Wave 2 overlay
  * uses). Every method that reads the option list — {@link getOptionCount},
  * {@link getOptionLabels}, {@link getOptionByLabel} — guards the listbox
- * resolution and simply returns the empty result (`0`/`[]`/`null`) while the
+ * resolution and simply returns the empty result (`0`/`[]`/`undefined`) while the
  * dropdown is closed, rather than requiring a prior {@link open} call; only
  * {@link selectByLabel} throws when closed, since no option can ever match
  * with nothing mounted to search.
@@ -134,14 +134,14 @@ export class DropdownDriver extends ComponentDriver<{}> implements IDisableableD
     return labels.filter((label): label is string => label != null);
   }
 
-  /** The option whose visible label matches `label`, or `null` when absent (or while closed). */
-  async getOptionByLabel(label: string): Promise<DropdownOptionDriver | null> {
+  /** The option whose visible label matches `label`, or `undefined` when absent (or while closed). */
+  async getOptionByLabel(label: string): Promise<Optional<DropdownOptionDriver>> {
     for (const option of await this.getOptions()) {
       if ((await option.getLabel()) === label) {
         return option;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

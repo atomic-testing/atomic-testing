@@ -1,4 +1,11 @@
-import { byCssSelector, childListHelper, ComponentDriver, locatorUtil, PartLocator } from '@atomic-testing/core';
+import {
+  byCssSelector,
+  childListHelper,
+  ComponentDriver,
+  locatorUtil,
+  PartLocator,
+  Optional,
+} from '@atomic-testing/core';
 
 import { MenuDriver } from './MenuDriver';
 import { OverflowItemDriver } from './OverflowItemDriver';
@@ -48,14 +55,14 @@ export class OverflowDriver extends ComponentDriver<{}> {
     return labels;
   }
 
-  /** The first registered item whose visible label matches `label`, or `null` when absent. */
-  async getItemByLabel(label: string): Promise<OverflowItemDriver | null> {
+  /** The first registered item whose visible label matches `label`, or `undefined` when absent. */
+  async getItemByLabel(label: string): Promise<Optional<OverflowItemDriver>> {
     for await (const item of this.iterateItems()) {
       if ((await item.getLabel()) === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** The visible labels of items currently overflowed (hidden behind the "+N" trigger). */

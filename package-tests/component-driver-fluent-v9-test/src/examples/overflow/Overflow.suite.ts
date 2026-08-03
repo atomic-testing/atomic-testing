@@ -26,12 +26,12 @@ export const overflowExampleTestSuite: TestSuiteInfo<typeof overflowExample.scen
         assertEqual(await engine().parts.row.getItemLabels(), ['Item one', 'Item two', 'Item three']);
       });
 
-      test('getItemByLabel resolves an item, or null when absent', async () => {
+      test('getItemByLabel resolves an item, or undefined when absent', async () => {
         const item = await engine().parts.row.getItemByLabel('Item two');
         assertEqual(await item?.getLabel(), 'Item two');
         assertFalse(await item!.isOverflowing());
 
-        assertEqual(await engine().parts.row.getItemByLabel('Nonexistent'), null);
+        assertEqual(await engine().parts.row.getItemByLabel('Nonexistent'), undefined);
       });
 
       test('no items overflow when the row has enough room (default layout)', async () => {

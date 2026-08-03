@@ -47,8 +47,8 @@ export class BreadcrumbDriver extends ComponentDriver<{}> {
     return labels;
   }
 
-  /** The item at the given zero-based index, or `null` when out of range. */
-  async getItemByIndex(index: number): Promise<BreadcrumbItemDriver | null> {
+  /** The item at the given zero-based index, or `undefined` when out of range. */
+  async getItemByIndex(index: number): Promise<Optional<BreadcrumbItemDriver>> {
     let position = 0;
     for await (const item of this.iterateItems()) {
       if (position === index) {
@@ -56,27 +56,27 @@ export class BreadcrumbDriver extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
-  /** The first item whose visible label equals `label`, or `null` when absent. */
-  async getItemByLabel(label: string): Promise<BreadcrumbItemDriver | null> {
+  /** The first item whose visible label equals `label`, or `undefined` when absent. */
+  async getItemByLabel(label: string): Promise<Optional<BreadcrumbItemDriver>> {
     for await (const item of this.iterateItems()) {
       if ((await item.getLabel()) === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
-  /** The item marked as the current page (`aria-current="page"`), or `null` when none is. */
-  async getCurrentItem(): Promise<BreadcrumbItemDriver | null> {
+  /** The item marked as the current page (`aria-current="page"`), or `undefined` when none is. */
+  async getCurrentItem(): Promise<Optional<BreadcrumbItemDriver>> {
     for await (const item of this.iterateItems()) {
       if (await item.isCurrent()) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

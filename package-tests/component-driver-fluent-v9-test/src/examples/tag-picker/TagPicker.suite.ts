@@ -47,8 +47,8 @@ export const tagPickerExampleTestSuite: TestSuiteInfo<typeof tagPickerExample.sc
         assertEqual(await engine().parts.one.getOptionLabels(), ['Cherry', 'Date', 'Elderberry']);
       });
 
-      test('getOptionByLabel returns null for a label with no matching option', async () => {
-        assertEqual(await engine().parts.one.getOptionByLabel('Nonexistent'), null);
+      test('getOptionByLabel returns undefined for a label with no matching option', async () => {
+        assertEqual(await engine().parts.one.getOptionByLabel('Nonexistent'), undefined);
       });
 
       test('selectByLabel adds the option to the selected tags and closes the list', async () => {

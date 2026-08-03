@@ -59,8 +59,8 @@ export class ToasterDriver extends ComponentDriver<{}> {
     );
   }
 
-  /** The toast at the given zero-based index (in display order), or `null` if out of range. */
-  async getToastByIndex(index: number): Promise<ToastDriver | null> {
+  /** The toast at the given zero-based index (in display order), or `undefined` if out of range. */
+  async getToastByIndex(index: number): Promise<Optional<ToastDriver>> {
     let position = 0;
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
@@ -74,11 +74,11 @@ export class ToasterDriver extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
-  /** The first toast whose title matches `title`, or `null` when absent. */
-  async getToastByTitle(title: string): Promise<ToastDriver | null> {
+  /** The first toast whose title matches `title`, or `undefined` when absent. */
+  async getToastByTitle(title: string): Promise<Optional<ToastDriver>> {
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
       this.locator,
@@ -90,7 +90,7 @@ export class ToasterDriver extends ComponentDriver<{}> {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   get driverName(): string {

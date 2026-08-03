@@ -75,13 +75,13 @@ export class DialogDriver extends ComponentDriver<typeof dialogParts> {
     return 'Same';
   }
 
-  /** The dialog's title text, or `null` when `DialogTitle` is absent. */
-  async getTitle(): Promise<string | null> {
+  /** The dialog's title text, or `undefined` when `DialogTitle` is absent. */
+  async getTitle(): Promise<Optional<string>> {
     const exists = await this.interactor.exists(this.parts.title.locator);
     if (!exists) {
-      return null;
+      return undefined;
     }
-    return (await this.parts.title.getText()) ?? null;
+    return (await this.parts.title.getText()) ?? undefined;
   }
 
   /** Whether this dialog is modal (`aria-modal="true"`) or non-modal (`"false"`). */

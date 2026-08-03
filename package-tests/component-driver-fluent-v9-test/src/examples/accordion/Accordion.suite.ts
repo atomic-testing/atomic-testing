@@ -69,7 +69,7 @@ export const accordionExampleTestSuite: TestSuiteInfo<typeof accordionExample.sc
         assertEqual(await openItem!.getPanelText(), 'Section one content');
 
         const closedItem = await engine().parts.accordionA.getItemByIndex(1);
-        assertEqual(await closedItem!.getPanelText(), null);
+        assertEqual(await closedItem!.getPanelText(), undefined);
       });
 
       test('AccordionItemDriver.expand()/collapse() toggle a single item directly', async () => {

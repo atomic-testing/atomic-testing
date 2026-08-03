@@ -80,8 +80,8 @@ export class TagGroupDriver extends ComponentDriver<{}> implements IDisableableD
     return labels;
   }
 
-  /** The tag at the given zero-based index, or `null` when out of range. Returns whichever concrete driver matches that position. */
-  async getTagByIndex(index: number): Promise<TagDriver | InteractionTagDriver | null> {
+  /** The tag at the given zero-based index, or `undefined` when out of range. Returns whichever concrete driver matches that position. */
+  async getTagByIndex(index: number): Promise<Optional<TagDriver | InteractionTagDriver>> {
     let position = 0;
     for await (const tag of this.iterateTags()) {
       if (position === index) {
@@ -89,7 +89,7 @@ export class TagGroupDriver extends ComponentDriver<{}> implements IDisableableD
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   /** Walk direct children positionally, yielding a {@link TagDriver} or {@link InteractionTagDriver} per matching child. */

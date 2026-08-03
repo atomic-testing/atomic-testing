@@ -128,7 +128,7 @@ export class CarouselDriver<ItemT extends CarouselCardDriver = CarouselCardDrive
   }
 
   /**
-   * The `CarouselNav` this carousel renders, or `null` when it has none.
+   * The `CarouselNav` this carousel renders, or `undefined` when it has none.
    * Container existence is portable; its item surface is E2E-only — see
    * {@link CarouselNavDriver}'s class doc.
    *
@@ -141,11 +141,11 @@ export class CarouselDriver<ItemT extends CarouselCardDriver = CarouselCardDrive
    * race, not a jsdom-only approximation issue (see class doc's jsdom
    * caveat, which is a separate, permanent gap).
    */
-  async getNav(): Promise<CarouselNavDriver | null> {
+  async getNav(): Promise<Optional<CarouselNavDriver>> {
     const resolvedNavLocator = locatorUtil.append(this.locator, navLocator);
     const exists = await this.interactor.exists(resolvedNavLocator);
     if (!exists) {
-      return null;
+      return undefined;
     }
     await this.interactor.waitUntil({
       probeFn: () => this.interactor.getElementCount(locatorUtil.append(resolvedNavLocator, navButtonLocator)),
