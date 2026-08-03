@@ -64,7 +64,7 @@ export const accordionExampleTestSuite: TestSuiteInfo<typeof accordionExample.sc
         assertFalse(await disabledItem!.isExpanded());
       });
 
-      test('getPanelText reads the expanded panel; returns null while collapsed', async () => {
+      test('getPanelText reads the expanded panel; returns undefined while collapsed', async () => {
         const openItem = await engine().parts.accordionA.getItemByIndex(0);
         assertEqual(await openItem!.getPanelText(), 'Section one content');
 

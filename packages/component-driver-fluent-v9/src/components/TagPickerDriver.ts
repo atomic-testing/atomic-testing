@@ -136,11 +136,16 @@ export class TagPickerDriver
   }
 
   /**
-   * The freeform input's current filter text (a native `<input>`'s own
-   * `.value`, so genuinely empty reads back as `''`, never `undefined` in
-   * practice — `undefined` is only the theoretical "locator matched nothing" case,
-   * mirroring `HTMLTextInputDriver.getValue`'s identical `string | null`
-   * contract and `ComboboxDriver.getValue`'s own observed `''` default).
+   * The freeform input's current filter text (a native `<input>`'s own `.value`,
+   * so genuinely empty reads back as `''`, never absent in practice — absence is
+   * only the theoretical "locator matched nothing" case, the same `''` default
+   * `ComboboxDriver.getValue` shows).
+   *
+   * That "matched nothing" reading is why this is `Optional` per ADR-006 §7, and
+   * it is a deliberate divergence from `HTMLTextInputDriver.getValue`, which still
+   * answers `null`. The html field drivers are outside this package and stay on
+   * the form-value spelling; converting them would change the frozen surface of
+   * `component-driver-html` and belongs to that decision, not this one.
    */
   async getFilterText(): Promise<Optional<string>> {
     const value = await this.interactor.getInputValue(this.inputLocator);
