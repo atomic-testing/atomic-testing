@@ -82,8 +82,8 @@ export class DataGridDriver<ItemT extends DataGridRowDriver = DataGridRowDriver>
     return this.getItemCount();
   }
 
-  /** The data-row driver at the given zero-based index, or `null` when out of range. */
-  async getRow(index: number): Promise<ItemT | null> {
+  /** The data-row driver at the given zero-based index, or `undefined` when out of range. */
+  async getRow(index: number): Promise<Optional<ItemT>> {
     return this.getItemByIndex(index);
   }
 

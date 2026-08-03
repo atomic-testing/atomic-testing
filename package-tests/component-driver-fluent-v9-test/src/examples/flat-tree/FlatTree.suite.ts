@@ -33,14 +33,14 @@ export const flatTreeExampleTestSuite: TestSuiteInfo<typeof flatTreeExample.scen
         assertEqual(await engine().parts.flatTreeC.getItemCount(), 4);
       });
 
-      test('getItemByIndex reads items in flat DOM order; out-of-range is null', async () => {
+      test('getItemByIndex reads items in flat DOM order; out-of-range is undefined', async () => {
         const fruits = await engine().parts.flatTreeA.getItemByIndex(0);
         const apple = await engine().parts.flatTreeA.getItemByIndex(1);
         const citrus = await engine().parts.flatTreeA.getItemByIndex(2);
         assertEqual(await fruits!.getLabel(), 'Fruits');
         assertEqual(await apple!.getLabel(), 'Apple');
         assertEqual(await citrus!.getLabel(), 'Citrus');
-        assertEqual(await engine().parts.flatTreeA.getItemByIndex(99), null);
+        assertEqual(await engine().parts.flatTreeA.getItemByIndex(99), undefined);
       });
 
       test('getItemByValue finds an item by its Fluent-stamped value at any level; absent value is null', async () => {

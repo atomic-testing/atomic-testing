@@ -1,4 +1,4 @@
-import { byTagName, ComponentDriver, IInputDriver, listHelper, locatorUtil } from '@atomic-testing/core';
+import { byTagName, ComponentDriver, IInputDriver, listHelper, locatorUtil, Optional } from '@atomic-testing/core';
 
 import { ToggleButtonDriver } from './ToggleButtonDriver';
 
@@ -46,9 +46,9 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
   }
 
   /**
-   * Get the toggle button at the given zero-based index, or `null` if out of range.
+   * Get the toggle button at the given zero-based index, or `undefined` if out of range.
    */
-  async getButtonByIndex(index: number): Promise<ToggleButtonDriver | null> {
+  async getButtonByIndex(index: number): Promise<Optional<ToggleButtonDriver>> {
     return listHelper.getListItemByIndex(this, this.itemLocator, index, ToggleButtonDriver);
   }
 

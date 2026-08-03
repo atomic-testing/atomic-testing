@@ -9,6 +9,7 @@ import {
   listHelper,
   locatorUtil,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { TableRowDriver } from './TableRowDriver';
@@ -99,7 +100,7 @@ export class TableDriver extends ListComponentDriver<TableRowDriver> {
    * The driver of the data row at the given zero-based index, or `null` when
    * the index is out of range.
    */
-  async getRowByIndex(rowIndex: number): Promise<TableRowDriver | null> {
+  async getRowByIndex(rowIndex: number): Promise<Optional<TableRowDriver>> {
     return this.getItemByIndex(rowIndex);
   }
 

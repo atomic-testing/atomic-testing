@@ -1,3 +1,4 @@
+import { Optional } from '../dataTypes';
 import { byCssSelector, type PartLocator } from '../locators';
 import { ComponentDriverCtor, ScenePart } from '../partTypes';
 import { append } from '../utils/locatorUtil';
@@ -10,14 +11,14 @@ import { ComponentDriver } from './ComponentDriver';
  * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
  * @param index The index of the list item
  * @param driverClass The driver class of the list item
- * @returns
+ * @returns The item's driver, or `undefined` when the index is out of range.
  */
 export async function getListItemByIndex<HostPartT extends ScenePart, ItemT extends ComponentDriver>(
   host: ComponentDriver<HostPartT>,
   itemLocatorBase: PartLocator,
   index: number,
   driverClass: ComponentDriverCtor<ItemT>
-): Promise<ItemT | null> {
+): Promise<Optional<ItemT>> {
   // Address the i-th item by tag position among siblings. `:nth-of-type` is the
   // pseudo both jsdom and Playwright resolve identically here, but it counts by
   // tag — so this addressing (and thus its agreement with getListItemCount)
@@ -30,7 +31,7 @@ export async function getListItemByIndex<HostPartT extends ScenePart, ItemT exte
   if (exists) {
     return new driverClass(itemLocator, host.interactor, host.commutableOption);
   }
-  return null;
+  return undefined;
 }
 
 /**
@@ -48,7 +49,7 @@ export async function* getListItemIterator<HostPartT extends ScenePart, ItemT ex
   startIndex: number = 0
 ): AsyncGenerator<ItemT, void, unknown> {
   let index = startIndex;
-  let item: ItemT | null = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
+  let item: Optional<ItemT> = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
   while (item != null) {
     yield item;
     index++;

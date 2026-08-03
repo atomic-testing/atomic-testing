@@ -1,3 +1,4 @@
+import { Optional } from '../dataTypes';
 import { Interactor } from '../interactor';
 import { PartLocator } from '../locators/PartLocator';
 import { IComponentDriverOption, ComponentDriverCtor } from '../partTypes';
@@ -41,12 +42,14 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    * Get the item's driver instance at the given index
    * @param index
    * @param itemDriverClass
-   * @returns The item's driver instance at the given index, if the index is out of range, return null
+   * @returns The item's driver instance at the given index, or `undefined` when the
+   * index is out of range. Absence is `undefined` (never `null`) across every core
+   * read — see ADR-006 §7.
    */
   async getItemByIndex<ItemClass extends ComponentDriver = ItemT>(
     index: number,
     itemDriverClass?: ComponentDriverCtor<ItemClass>
-  ): Promise<ItemClass | null> {
+  ): Promise<Optional<ItemClass>> {
     const driverClass = this.getItemClass<ItemClass>(itemDriverClass);
     return listHelper.getListItemByIndex(this, this._itemLocator, index, driverClass);
   }
@@ -55,12 +58,14 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    * Get the item's driver instance by the given text
    * @param text
    * @param itemDriverClass
-   * @returns The item's driver instance by the given text, if the text is not found, return null
+   * @returns The item's driver instance with the given text, or `undefined` when no
+   * item matches. Absence is `undefined` (never `null`) across every core read — see
+   * ADR-006 §7.
    */
   async getItemByLabel<ItemClass extends ComponentDriver = ItemT>(
     text: string,
     itemDriverClass?: ComponentDriverCtor<ItemClass>
-  ): Promise<ItemClass | null> {
+  ): Promise<Optional<ItemClass>> {
     const driverClass = this.getItemClass(itemDriverClass);
 
     for await (const item of listHelper.getListItemIterator(this, this._itemLocator, driverClass)) {
@@ -69,7 +74,7 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

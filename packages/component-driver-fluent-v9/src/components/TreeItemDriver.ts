@@ -212,8 +212,8 @@ export class TreeItemDriver extends ComponentDriver<{}> implements IToggleDriver
     return listHelper.getListItemCount(this, this.childItemLocatorBase);
   }
 
-  /** The child item at the given zero-based index, or `null` when out of range or not currently mounted. */
-  async getChildItemByIndex(index: number): Promise<TreeItemDriver | null> {
+  /** The child item at the given zero-based index, or `undefined` when out of range or not currently mounted. */
+  async getChildItemByIndex(index: number): Promise<Optional<TreeItemDriver>> {
     return listHelper.getListItemByIndex(this, this.childItemLocatorBase, index, TreeItemDriver);
   }
 

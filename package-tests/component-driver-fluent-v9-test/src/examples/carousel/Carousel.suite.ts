@@ -48,10 +48,10 @@ export const carouselExampleTestSuite: TestSuiteInfo<typeof carouselExample.scen
         assertEqual(await cards[2]?.getText(), 'Slide three');
       });
 
-      test('getCardByIndex resolves a card, or null when out of range', async () => {
+      test('getCardByIndex resolves a card, or undefined when out of range', async () => {
         const card = await engine().parts.gallery.getCardByIndex(1);
         assertEqual(await card?.getText(), 'Slide two');
-        assertEqual(await engine().parts.gallery.getCardByIndex(99), null);
+        assertEqual(await engine().parts.gallery.getCardByIndex(99), undefined);
       });
 
       // The CarouselNav container itself mounts under jsdom regardless of

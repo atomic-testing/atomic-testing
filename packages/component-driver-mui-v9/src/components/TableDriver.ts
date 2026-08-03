@@ -62,7 +62,7 @@ export class TableDriver<ItemT extends TableRowDriver = TableRowDriver> extends 
   /**
    * The data-row driver at the given zero-based index, or `null` when out of range.
    */
-  async getRow(index: number): Promise<ItemT | null> {
+  async getRow(index: number): Promise<Optional<ItemT>> {
     return this.getItemByIndex(index);
   }
 

@@ -1,5 +1,5 @@
 export { AccessibleRoleLocator } from './AccessibleRoleLocator';
-export type { AccessibleRoleLocatorRelativePosition, AccessibleRoleLocatorSource } from './AccessibleRoleLocator';
+export type { AccessibleRoleLocatorRelativePosition } from './AccessibleRoleLocator';
 export { byAriaLabel } from './byAriaLabel';
 export { byAttribute } from './byAttribute';
 export { byChecked } from './byChecked';
@@ -17,6 +17,4 @@ export { findByRole } from './findByRole';
 export type { LocatorComplexity } from './LocatorComplexity';
 export { LinkedCssLocator } from './LinkedCssLocator';
 export type { LocatorRelativePosition } from './LocatorRelativePosition';
-export type { LocatorType } from './LocatorType';
-export { LocatorTypeLookup } from './LocatorType';
 export type { PartLocator } from './PartLocator';

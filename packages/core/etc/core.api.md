@@ -23,13 +23,6 @@ export class AccessibleRoleLocator extends CssLocator {
 // @public
 export type AccessibleRoleLocatorRelativePosition = Extract<LocatorRelativePosition, 'Root' | 'Descendant'>;
 
-// @public (undocumented)
-export type AccessibleRoleLocatorSource = {
-    _id: 'byAccessibleRole';
-    role: string;
-    name?: string;
-};
-
 // @public
 export type AssertScenePlaceableDriver<Ctor extends ScenePlaceableDriverCtor> = Ctor;
 
@@ -323,7 +316,7 @@ export interface HoverOption extends MouseOption {}
 export type HtmlInputDateType = (typeof htmlInputDateTypes)[number];
 
 // @public
-export const htmlInputDateTypes: readonly string[];
+export const htmlInputDateTypes: readonly ["date", "datetime-local", "time"];
 
 // @public
 export interface IClickableDriver {
@@ -479,8 +472,8 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
     constructor(locator: PartLocator, interactor: Interactor, option: ListComponentDriverSpecificOption<ItemT>);
     // (undocumented)
     get driverName(): string;
-    getItemByIndex<ItemClass extends ComponentDriver = ItemT>(index: number, itemDriverClass?: ComponentDriverCtor<ItemClass>): Promise<ItemClass | null>;
-    getItemByLabel<ItemClass extends ComponentDriver = ItemT>(text: string, itemDriverClass?: ComponentDriverCtor<ItemClass>): Promise<ItemClass | null>;
+    getItemByIndex<ItemClass extends ComponentDriver = ItemT>(index: number, itemDriverClass?: ComponentDriverCtor<ItemClass>): Promise<Optional<ItemClass>>;
+    getItemByLabel<ItemClass extends ComponentDriver = ItemT>(text: string, itemDriverClass?: ComponentDriverCtor<ItemClass>): Promise<Optional<ItemClass>>;
     // (undocumented)
     protected getItemClass<ItemClass extends ComponentDriver = ItemT>(itemDriverClass?: ComponentDriverCtor<ItemClass>): ComponentDriverCtor<ItemClass>;
     getItemCount(): Promise<number>;
@@ -525,12 +518,6 @@ export class LocatorResolutionError extends InteractorErrorBase {
 
 // @public (undocumented)
 export const LocatorResolutionErrorId = "LocatorResolutionError";
-
-// @public (undocumented)
-export type LocatorType = 'css';
-
-// @public (undocumented)
-export const LocatorTypeLookup: Record<string, LocatorType>;
 
 // @public (undocumented)
 export namespace locatorUtil {
@@ -579,7 +566,7 @@ export type Nullable<T> = T | null;
 export type Optional<T> = T | undefined;
 
 // @public
-export type PartLocator = CssLocator[];
+export type PartLocator = readonly CssLocator[];
 
 // @public (undocumented)
 export type PartName<T extends ScenePart> = keyof T;

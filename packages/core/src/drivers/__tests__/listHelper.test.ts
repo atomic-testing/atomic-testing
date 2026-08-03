@@ -35,13 +35,15 @@ describe('getListItemByIndex', () => {
     expect(item?.locator.at(-1)?.relative).toBe('Same');
   });
 
-  it('returns null when no element exists at that index', async () => {
+  // Absence is `undefined`, never `null` — ADR-006 §7. Asserted with toBeUndefined
+  // rather than a loose falsy check so a regression back to `null` fails here.
+  it('returns undefined when no element exists at that index', async () => {
     const interactor = createInteractor(0);
     const host = new LeafDriver(itemLocatorBase, interactor);
 
     const item = await getListItemByIndex(host, itemLocatorBase, 0, LeafDriver);
 
-    expect(item).toBeNull();
+    expect(item).toBeUndefined();
   });
 
   it('constructs the item driver with the host interactor and commutableOption', async () => {

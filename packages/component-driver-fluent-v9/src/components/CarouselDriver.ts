@@ -122,8 +122,8 @@ export class CarouselDriver<ItemT extends CarouselCardDriver = CarouselCardDrive
     return this.getItems();
   }
 
-  /** The `CarouselCard` at the given zero-based index, or `null` when out of range. Portable — see class doc. */
-  async getCardByIndex(index: number): Promise<ItemT | null> {
+  /** The `CarouselCard` at the given zero-based index, or `undefined` when out of range. Portable — see class doc. */
+  async getCardByIndex(index: number): Promise<Optional<ItemT>> {
     return this.getItemByIndex(index);
   }
 

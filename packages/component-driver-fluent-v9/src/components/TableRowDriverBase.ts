@@ -1,4 +1,4 @@
-import { ComponentDriver, ListComponentDriver } from '@atomic-testing/core';
+import { ComponentDriver, ListComponentDriver, Optional } from '@atomic-testing/core';
 
 /**
  * Shared cell-iteration surface for the Fluent v9 plain-`Table` row family —
@@ -23,8 +23,8 @@ export abstract class TableRowDriverBase<ItemT extends ComponentDriver> extends 
     return this.getItemCount();
   }
 
-  /** The cell driver at the given zero-based column index, or `null` when out of range. */
-  async getCell(index: number): Promise<ItemT | null> {
+  /** The cell driver at the given zero-based column index, or `undefined` when out of range. */
+  async getCell(index: number): Promise<Optional<ItemT>> {
     return this.getItemByIndex(index);
   }
 

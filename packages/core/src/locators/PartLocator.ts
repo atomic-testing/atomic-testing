@@ -21,5 +21,11 @@ import { CssLocator } from './CssLocator';
  * now always `CssLocator[]`, so every builder returns a chain and every
  * consumer can index/slice/concat it directly — see
  * [ADR-017](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/017-part-locator-chain-reshape.md).
+ *
+ * **Readonly.** A driver hands its own locator out by reference, so a mutable
+ * array would let a caller's `push` permanently corrupt the driver. Every
+ * `locatorUtil` operation is already non-mutating (`concat`/`map`/`slice`), so
+ * this costs nothing today — and `readonly T[]` is not assignable to `T[]`, so
+ * tightening it after the 1.0 tag would be a major.
  */
-export type PartLocator = CssLocator[];
+export type PartLocator = readonly CssLocator[];

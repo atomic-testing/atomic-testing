@@ -83,13 +83,13 @@ export const tableExampleTestSuite: TestSuiteInfo<typeof tableExample.scene> = {
         assertEqual(await engine().parts.tableA.getCellText(0, 1), '25');
       });
 
-      test('getRow/getHeaderRow return null and out-of-range reads degrade gracefully', async () => {
-        assertEqual(await engine().parts.tableA.getRow(99), null);
+      test('getRow/getHeaderRow return undefined and out-of-range reads degrade gracefully', async () => {
+        assertEqual(await engine().parts.tableA.getRow(99), undefined);
 
         const headerRow = await engine().parts.tableA.getHeaderRow();
         assertTrue(headerRow != null);
         assertEqual(await headerRow!.getCellCount(), 3);
-        assertEqual(await headerRow!.getCell(99), null);
+        assertEqual(await headerRow!.getCell(99), undefined);
       });
 
       test('TableCellActions: present but hidden until the row is hovered; absent where none is wired', async () => {
