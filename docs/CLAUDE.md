@@ -115,9 +115,17 @@ and installs standalone. Install from `docs/` with `pnpm install --frozen-lockfi
 pnpm read this lockfile at all: without it pnpm walks up to the monorepo
 `pnpm-workspace.yaml`, adopts that root, and resolves fresh from the registry — which is
 how this lockfile sat 19 minors stale while CI installed something else entirely.
-Because the install no longer inherits the root's settings, this project carries its own
-`pnpm.overrides` (the security bumps) and build-script allow-list in
-[`package.json`](package.json); keep them in step with the root's when either changes.
+This project resolves independently of the monorepo and carries its own build-script
+allow-list in [`package.json`](package.json).
+
+**Do not copy the root's `pnpm.overrides` here.** They are unbounded security floors
+(`">=8.18.0"`, no upper bound) curated against the monorepo's tree, and pnpm resolves an
+unbounded floor to the newest version overall — across major boundaries. Applied to this
+tree they collapsed two dual-version resolutions Docusaurus depends on: `js-yaml` 3+4
+became 4-only, breaking `gray-matter`'s `safeLoad`, and `ajv` 6+8 became 8-only, breaking
+`ajv-keywords@3` under `raw-loader`. Both surfaced only in a real `pnpm build`. If this
+site ever needs its own security overrides, curate them against its own dependency tree,
+bound each to its major, and verify with a full build.
 
 On a machine with no npm-registry network but a warm global pnpm store, install offline:
 
