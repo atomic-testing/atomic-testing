@@ -100,7 +100,8 @@ exist, so TypeDoc resolves nothing, aborts every package's conversion, and the e
 API reference comes out **empty** (which then cascades into broken-link failures for the
 `/docs/api-reference/` nav link). CI does the right order in
 [`doc-ci.yml`](../.github/workflows/doc-ci.yml): `./publish.sh --build-only` (build every
-package) → `pnpm install .` in `docs/` → `pnpm build`. Reproduce that order locally.
+package) → `pnpm install --frozen-lockfile --ignore-workspace` in `docs/` → `pnpm build`.
+Reproduce that order locally.
 
 From a fresh checkout, the simplest path is the root `package.json` scripts: `pnpm run
 setup` installs both the monorepo and this standalone project, then `pnpm run docs:dev`
@@ -109,10 +110,16 @@ useful for offline/standalone installs of `docs/` alone.
 
 `docs/` is **not part of the pnpm workspace** (`pnpm-workspace.yaml` covers only
 `packages/*` and `package-tests/*`); it has its own [`pnpm-lock.yaml`](pnpm-lock.yaml)
-and installs standalone. Per [`README.md`](README.md), install from `docs/` with
-`pnpm install .`. On a machine with no npm-registry network but a warm global pnpm store,
-install offline and standalone — `--ignore-workspace` is essential, or pnpm walks up to
-the monorepo `pnpm-workspace.yaml` and tries (and offline, fails) to install all of it:
+and installs standalone. Install from `docs/` with `pnpm install --frozen-lockfile
+--ignore-workspace`. **Both flags are load-bearing.** `--ignore-workspace` is what makes
+pnpm read this lockfile at all: without it pnpm walks up to the monorepo
+`pnpm-workspace.yaml`, adopts that root, and resolves fresh from the registry — which is
+how this lockfile sat 19 minors stale while CI installed something else entirely.
+Because the install no longer inherits the root's settings, this project carries its own
+`pnpm.overrides` (the security bumps) and build-script allow-list in
+[`package.json`](package.json); keep them in step with the root's when either changes.
+
+On a machine with no npm-registry network but a warm global pnpm store, install offline:
 
 ```bash
 pnpm install --offline --ignore-workspace --store-dir ~/Library/pnpm/store

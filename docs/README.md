@@ -5,10 +5,10 @@ This website is built using [Docusaurus](https://docusaurus.io/), a modern stati
 ### Installation
 
 ```
-$ pnpm install .
+$ pnpm install --frozen-lockfile --ignore-workspace
 ```
 
-Note that the documentation is within a monorepo, thus `pnpm install` without `.` would install dependencies for packages within monorepo
+This site sits inside a monorepo but is not one of its workspace projects — it has its own `pnpm-lock.yaml`. `--ignore-workspace` is what makes pnpm read that lockfile instead of walking up and installing the monorepo, and `--frozen-lockfile` is what makes the install reproducible.
 
 ### Local Development
 

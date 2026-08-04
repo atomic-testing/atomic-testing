@@ -25,23 +25,23 @@ importers:
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@atomic-testing/component-driver-astryx':
-        specifier: ^0.97.0
-        version: 0.97.0(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.100.0
+        version: 0.100.0(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@atomic-testing/component-driver-html':
-        specifier: ^0.97.0
-        version: 0.97.0
+        specifier: ^0.100.0
+        version: 0.100.0
       '@atomic-testing/core':
-        specifier: ^0.97.0
-        version: 0.97.0
+        specifier: ^0.100.0
+        version: 0.100.0
       '@atomic-testing/dom-core':
-        specifier: ^0.97.0
-        version: 0.97.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))
+        specifier: ^0.100.0
+        version: 0.100.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))
       '@atomic-testing/playwright':
-        specifier: ^0.97.0
-        version: 0.97.0(@playwright/test@1.61.1)
+        specifier: ^0.100.0
+        version: 0.100.0(@playwright/test@1.61.1)
       '@atomic-testing/react-19':
-        specifier: ^0.97.0
-        version: 0.97.0(@testing-library/dom@10.4.1)(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.100.0
+        version: 0.100.0(@testing-library/dom@10.4.1)(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@playwright/test':
         specifier: ^1.61.1
         version: 1.61.1
@@ -97,32 +97,32 @@ packages:
       '@astryxdesign/core': 0.1.3
       react: '>=19'
 
-  '@atomic-testing/component-driver-astryx@0.97.0':
-    resolution: {integrity: sha512-wM3f4wkYK9xfiLkdCpDhySpsFuzXCilzsQiH+WS0ZeU6k5tgZWSDzowwE5aoXpoEvzYvM7W+rPlZ8PmDG4EPCg==}
+  '@atomic-testing/component-driver-astryx@0.100.0':
+    resolution: {integrity: sha512-11hFXeHlUm3R0trOSeWTvQxdQ0AldFhG/wPqEp5nn2D4tJkRGve7SrePDiVMgK91nUhpchziwJXhhbYEz6M5LQ==}
     peerDependencies:
-      '@astryxdesign/core': ^0.1.3
+      '@astryxdesign/core': ^0.1.9
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
 
-  '@atomic-testing/component-driver-html@0.97.0':
-    resolution: {integrity: sha512-/vDI085etkIUBs+ET1a38T3hm1aatVc0kM0Mz3I9PzHwYCWbrRfp/VddQPEuabyga4Sc8Ov12hBqPZp273gJsw==}
+  '@atomic-testing/component-driver-html@0.100.0':
+    resolution: {integrity: sha512-fG9cKzAX2ovcyxyzumho/NRhkspeQdRMGQkDtzr2HkrbAQ5/vQIKtAON/DqpWPelYjjjEHsteleWmMLpl+npfw==}
 
-  '@atomic-testing/core@0.97.0':
-    resolution: {integrity: sha512-YXEDBe/tcja+V3I/kg4lBLBxab7F9e8FJ4nXudaMhD+ly7RTu9GskZReFNdBYg0j0SchGLVH42ZX5Y4W3xOGeg==}
+  '@atomic-testing/core@0.100.0':
+    resolution: {integrity: sha512-HhEO+0SiUvQQUXnjZSOFRRj52B43kqZTu+sznmrNzCI8bur8uG5LqDjtq2jvn9SMynG1IQ6HM2g5i/Svy297Kg==}
 
-  '@atomic-testing/dom-core@0.97.0':
-    resolution: {integrity: sha512-HozAgTHU4BrrfcDddMygLezKvjBsH2FvFl9kFlV1ydx3pQdgbJPQU2um38WG5nZ+paYKlU6e3acr7fu7g6UjLQ==}
+  '@atomic-testing/dom-core@0.100.0':
+    resolution: {integrity: sha512-0VhHd760tVi2b1zte0oIPGXvkWZPajHu/PIVIuqqC9G/syDHtgdH1h2CRMcMOjZ8EY+XEjcbj6pqGP9yBM+4ig==}
     peerDependencies:
       '@testing-library/dom': '>=10.4.1'
       '@testing-library/user-event': '>=14.0.0'
 
-  '@atomic-testing/playwright@0.97.0':
-    resolution: {integrity: sha512-wuAPdk+aflzb32b5Xriw1kfP28FCYmb4EAtaKpj7n6qj3KPc8VVrEe9kDgK4X6ob109HYKf5JvhpMhZzdRRL8Q==}
+  '@atomic-testing/playwright@0.100.0':
+    resolution: {integrity: sha512-xwvf5x8b+HWYB/0ZoSzmWXNpqRTBLcJcT4XX7cwg/RsKhClPd0phM2Usa2kedsNfl2QmG688s8PbSYRXVAdXKA==}
     peerDependencies:
       '@playwright/test': '>=1.50.0'
 
-  '@atomic-testing/react-19@0.97.0':
-    resolution: {integrity: sha512-X1h+SO6jG1MwZvZJdaFti0cWeJ+4o/EMJbi1T6Clo4FNcmF8+VsmsUv/bOI0Nw7Y3n2sgmyRhYQuO48598TSBg==}
+  '@atomic-testing/react-19@0.100.0':
+    resolution: {integrity: sha512-eHJBMxR5je7LkDNS8KGqZh56yPBOxZYC3xiU1Id7RN2PtGaUon9dO+kvZRUKmXl8d/LqbxiLgR67oDnXFoj6Hw==}
     peerDependencies:
       '@testing-library/dom': '>=10.2.0'
       '@testing-library/react': '>=16.2.0'
@@ -130,8 +130,8 @@ packages:
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
 
-  '@atomic-testing/react-core@0.97.0':
-    resolution: {integrity: sha512-US5026b3MdI0MlCozdqS4szm9Ws6e6UGYz79HrawApvTzSy46U7iyozq82VE1YCz/Txp3Qw4fYsZfBJdvGRKVw==}
+  '@atomic-testing/react-core@0.100.0':
+    resolution: {integrity: sha512-VskY1ufud3q4uuaaK8r6OF9YqexLmXtW+oKqb/+p86L2101OnIPilx+Zm4WjD1uB4rb1ZwHuOvlla5pgWv/zJA==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -925,36 +925,36 @@ snapshots:
       lucide-react: 1.22.0(react@19.2.7)
       react: 19.2.7
 
-  '@atomic-testing/component-driver-astryx@0.97.0(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@atomic-testing/component-driver-astryx@0.100.0(@astryxdesign/core@0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@astryxdesign/core': 0.1.3(@stylexjs/stylex@0.18.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@atomic-testing/component-driver-html': 0.97.0
-      '@atomic-testing/core': 0.97.0
+      '@atomic-testing/component-driver-html': 0.100.0
+      '@atomic-testing/core': 0.100.0
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@atomic-testing/component-driver-html@0.97.0':
+  '@atomic-testing/component-driver-html@0.100.0':
     dependencies:
-      '@atomic-testing/core': 0.97.0
+      '@atomic-testing/core': 0.100.0
 
-  '@atomic-testing/core@0.97.0': {}
+  '@atomic-testing/core@0.100.0': {}
 
-  '@atomic-testing/dom-core@0.97.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))':
+  '@atomic-testing/dom-core@0.100.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))':
     dependencies:
-      '@atomic-testing/core': 0.97.0
+      '@atomic-testing/core': 0.100.0
       '@testing-library/dom': 10.4.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
 
-  '@atomic-testing/playwright@0.97.0(@playwright/test@1.61.1)':
+  '@atomic-testing/playwright@0.100.0(@playwright/test@1.61.1)':
     dependencies:
-      '@atomic-testing/core': 0.97.0
+      '@atomic-testing/core': 0.100.0
       '@playwright/test': 1.61.1
 
-  '@atomic-testing/react-19@0.97.0(@testing-library/dom@10.4.1)(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@atomic-testing/react-19@0.100.0(@testing-library/dom@10.4.1)(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@atomic-testing/core': 0.97.0
-      '@atomic-testing/dom-core': 0.97.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))
-      '@atomic-testing/react-core': 0.97.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@atomic-testing/core': 0.100.0
+      '@atomic-testing/dom-core': 0.100.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))
+      '@atomic-testing/react-core': 0.100.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@testing-library/dom': 10.4.1
       '@testing-library/react': 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
@@ -964,10 +964,10 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  '@atomic-testing/react-core@0.97.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@atomic-testing/react-core@0.100.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@atomic-testing/core': 0.97.0
-      '@atomic-testing/dom-core': 0.97.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))
+      '@atomic-testing/core': 0.100.0
+      '@atomic-testing/dom-core': 0.100.0(@testing-library/dom@10.4.1)(@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1))
       '@testing-library/react': 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)

@@ -21,7 +21,6 @@
     "@docusaurus/theme-mermaid": "^3.10.1",
     "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
-    "docs": "link:",
     "indexed-collection": "^3.2.0",
     "prism-react-renderer": "^2.4.1",
     "raw-loader": "^4.0.2",
@@ -29,9 +28,9 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@atomic-testing/core": "latest",
-    "@atomic-testing/dom-core": "latest",
-    "@atomic-testing/react-19": "latest",
+    "@atomic-testing/core": "^0.100.0",
+    "@atomic-testing/dom-core": "^0.100.0",
+    "@atomic-testing/react-19": "^0.100.0",
     "@chevrotain/regexp-to-ast": "^11.0.3",
     "@docusaurus/module-type-aliases": "^3.10.1",
     "@docusaurus/plugin-content-docs": "3.10.1",
@@ -58,5 +57,40 @@
   },
   "engines": {
     "node": ">=22.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "form-data": ">=4.0.6",
+      "glob@10": ">=10.5.0",
+      "minimatch@3": ">=3.1.4",
+      "minimatch@5": ">=5.1.8",
+      "minimatch@9": ">=9.0.7",
+      "picomatch": ">=2.3.2",
+      "lodash": ">=4.18.0",
+      "fast-uri": ">=3.1.2",
+      "js-cookie": ">=3.0.7",
+      "tmp": ">=0.2.6",
+      "ws": ">=8.21.0",
+      "js-yaml@3": ">=3.15.0",
+      "ajv": ">=8.18.0",
+      "brace-expansion@1": ">=1.1.13",
+      "brace-expansion@2": ">=2.0.3",
+      "yaml@1": ">=1.10.3",
+      "uuid": ">=11.1.1",
+      "@tootallnate/once": ">=2.0.1",
+      "esbuild": ">=0.28.1",
+      "@babel/core": ">=7.29.6",
+      "jest-environment-jsdom>jsdom": "^29.0.0"
+    },
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "core-js",
+      "core-js-pure",
+      "esbuild"
+    ],
+    "ignoredBuiltDependencies": [
+      "@mui/x-telemetry",
+      "unrs-resolver"
+    ]
   }
 }

@@ -497,7 +497,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-mui-signup-form
 
       - name: Run dom test
@@ -530,7 +530,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-astryx-workspace
 
       - name: Type check
@@ -567,7 +567,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-shadcn-workspace
 
       - name: Type check
@@ -604,7 +604,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-mui-ticket-console
 
       - name: Type check

@@ -17,12 +17,18 @@ function adjustFolderPackageJson(dir, version) {
   fs.writeFileSync(fileName, newContent);
 }
 
-// examples/* apps are standalone pnpm workspaces pinned to PUBLISHED @atomic-testing/*
-// versions (not workspace:*), so a release must float them forward too or they silently
-// freeze on the version that was current when the example was created. Only the
-// @atomic-testing/* specifiers are rewritten — the example app's own "version" field
+// examples/* apps and docs/ are standalone pnpm workspaces pinned to PUBLISHED
+// @atomic-testing/* versions (not workspace:*), so a release must float them forward
+// too or they silently freeze on the version that was current when they were written.
+// Only the @atomic-testing/* specifiers are rewritten — the app's own "version" field
 // (its unpublished 0.0.0) is left untouched.
-function adjustExampleFolderPackageJson(dir, version) {
+//
+// This rewrites MANIFESTS ONLY and deliberately does not regenerate the lockfiles it
+// invalidates: publish.yml's committing job holds the one credential that can write to
+// main and installs nothing, so that no third-party code runs beside it. Since CI now
+// enforces those lockfiles, the release ritual must regenerate them in the same change
+// that bumps the manifests — see agent-docs/RELEASING.md.
+function adjustPinnedAtomicSpecifiers(dir, version) {
   const fileName = path.join(dir, 'package.json');
   if (!fs.existsSync(fileName)) {
     return;
@@ -62,10 +68,15 @@ function bumpVersion(dir, version) {
     for (const child of fs.readdirSync(examplesDir)) {
       const childPath = path.join(examplesDir, child);
       if (isFolder(childPath)) {
-        adjustExampleFolderPackageJson(childPath, sanitizedVersion);
+        adjustPinnedAtomicSpecifiers(childPath, sanitizedVersion);
       }
     }
   }
+
+  // docs/ pins the same way an example does. It was previously on the `latest`
+  // dist-tag, which floated on its own and so needed no bump — and which also made
+  // its lockfile meaningless, since the specifier never changed while the tag moved.
+  adjustPinnedAtomicSpecifiers(path.join(dir, 'docs'), sanitizedVersion);
 }
 
 bumpVersion(process.cwd(), process.argv[2]);

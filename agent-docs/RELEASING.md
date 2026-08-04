@@ -40,6 +40,23 @@ version updates" step of [`publish.yml`](../.github/workflows/publish.yml) runs
 `bumpVersion`, so the new `CHANGELOG.md` section lands in the same commit as
 the version bump.
 
+## Standalone lockfiles must move with the bump
+
+Every `examples/*` app and `docs/` is its own pnpm workspace pinned to the
+**published** `@atomic-testing/*` versions, so `bumpVersion` floats their
+specifiers forward with the release. It rewrites **manifests only** — it runs no
+install, because the job that commits the bump is the one holding the credential
+that can write to `main` and deliberately installs nothing beside it.
+
+CI now installs those projects with `--frozen-lockfile`, so a bump that moves the
+specifiers without regenerating the lockfiles leaves each of them outdated and
+fails their jobs — on whatever unrelated PR happens to run next, since the bump
+commit carries `[skip ci]`. Regenerate them in the same change that bumps:
+
+```bash
+for dir in examples/*/ docs/; do (cd "$dir" && pnpm install --lockfile-only); done   # docs/ also needs --ignore-workspace
+```
+
 The script walks commit subjects since the previous release tag (the tag
 _before_ the one currently being published — see the comment in the script for
 why) and sorts them into sections by their `type` prefix:

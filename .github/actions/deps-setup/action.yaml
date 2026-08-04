@@ -18,4 +18,10 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install --no-frozen-lockfile
+      # No flag: pnpm already defaults `frozen-lockfile` to true when CI=true, so
+      # the bare command IS the frozen install and says so by not overriding it.
+      # The `--no-frozen-lockfile` this replaces meant every job — including the
+      # release build that publishes to npm — resolved against an unpinned tree
+      # nobody reviewed, and a PR that changed a dependency without committing the
+      # lockfile passed silently. See #1297 B9.
+      run: pnpm install

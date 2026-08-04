@@ -41,7 +41,7 @@ jobs:
         run: node docs/scripts/check-support-matrix-sync.mjs
 
       - name: Install documentation dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile --ignore-workspace
         working-directory: ./docs
 
       - name: Verify documentation build
