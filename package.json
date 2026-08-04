@@ -18,6 +18,7 @@
     "check:lint": "oxlint --fix",
     "check:style": "oxfmt --ignore-path .gitignore --ignore-path .oxfmtignore",
     "check:deps-pinning": "node scripts/check-dependency-pinning.mjs",
+    "check:manifests": "node scripts/check-package-manifests.mjs",
     "check:driver-structure": "node scripts/skills/check-driver-structure.mjs",
     "check:golden-fixtures": "node scripts/skills/check-golden-fixtures.mjs",
     "check:skill-sync": "node scripts/skills/check-skill-sync.mjs",

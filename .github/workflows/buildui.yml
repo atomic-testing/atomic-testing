@@ -119,6 +119,36 @@ jobs:
       - name: Verify public API reports
         run: pnpm check:api
 
+  # Published-package manifest gate (LICENSE-*, EXPORTS-*): fails if a package npm
+  # ships declares no license, or if its `exports` map stops resolving types per
+  # module mode — the shape that left every package untyped from CommonJS
+  # (TS1479) while dist/index.d.cts sat emitted and unreachable. Needs the build
+  # artifacts because EXPORTS-02 resolves each manifest pointer against the real
+  # dist; `--require-dist` turns a missing build into a failure rather than a
+  # silent skip. See agent-docs/adr/006-1.0-api-freeze-and-evolution.md.
+  package-manifests:
+    name: Package manifests & type resolution
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: built-packages
+          path: packages
+
+      - name: Verify published manifests
+        run: pnpm check:manifests --require-dist
+
   # Test matrix for component drivers
   component-driver-tests:
     name: Test ${{ matrix.name }}
