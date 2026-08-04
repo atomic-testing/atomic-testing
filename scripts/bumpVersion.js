@@ -41,12 +41,11 @@ function adjustPinnedAtomicSpecifiers(dir, version) {
   fs.writeFileSync(fileName, newContent);
 }
 
-function bumpVersion(dir, version) {
-  const sanitizedVersion = version.trim();
-  if (sanitizedVersion.length < 1) {
-    return;
-  }
-
+/**
+ * The packages that are about to be published. This is what the RELEASE PR
+ * contains, so CI verifies the exact manifests that ship.
+ */
+function bumpPackages(dir, version) {
   const packageDirs = ['packages'];
   const children = packageDirs.flatMap(p => {
     const full = path.join(dir, p);
@@ -59,16 +58,28 @@ function bumpVersion(dir, version) {
     }
     const childPath = path.join(dir, child);
     if (isFolder(childPath)) {
-      adjustFolderPackageJson(childPath, sanitizedVersion);
+      adjustFolderPackageJson(childPath, version);
     }
   }
+}
 
+/**
+ * The standalone projects that CONSUME the published packages from npm.
+ *
+ * Deliberately separate from {@link bumpPackages}, and deliberately not part of
+ * the release PR: these install the published versions, so floating them to
+ * X.Y.Z before X.Y.Z exists on the registry makes their jobs unresolvable — and
+ * since CI installs them with a frozen lockfile, the lockfiles cannot be
+ * regenerated either. Run this AFTER the release publishes, regenerate the
+ * lockfiles alongside it, and land both in a follow-up PR.
+ */
+function bumpConsumers(dir, version) {
   const examplesDir = path.join(dir, 'examples');
   if (fs.existsSync(examplesDir)) {
     for (const child of fs.readdirSync(examplesDir)) {
       const childPath = path.join(examplesDir, child);
       if (isFolder(childPath)) {
-        adjustPinnedAtomicSpecifiers(childPath, sanitizedVersion);
+        adjustPinnedAtomicSpecifiers(childPath, version);
       }
     }
   }
@@ -76,7 +87,19 @@ function bumpVersion(dir, version) {
   // docs/ pins the same way an example does. It was previously on the `latest`
   // dist-tag, which floated on its own and so needed no bump — and which also made
   // its lockfile meaningless, since the specifier never changed while the tag moved.
-  adjustPinnedAtomicSpecifiers(path.join(dir, 'docs'), sanitizedVersion);
+  adjustPinnedAtomicSpecifiers(path.join(dir, 'docs'), version);
 }
 
-bumpVersion(process.cwd(), process.argv[2]);
+function bumpVersion(dir, version, mode) {
+  const sanitizedVersion = (version ?? '').trim();
+  if (sanitizedVersion.length < 1) {
+    return;
+  }
+  if (mode === '--consumers') {
+    bumpConsumers(dir, sanitizedVersion);
+  } else {
+    bumpPackages(dir, sanitizedVersion);
+  }
+}
+
+bumpVersion(process.cwd(), process.argv[2], process.argv[3]);

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Bulk publish all packages (or just build if --build-only)
+# Bulk publish all packages (or just build if --build-only, or rehearse the whole
+# thing without uploading if --dry-run)
 # Use in conjunction with pnpm bumpVersion #.#.# to update all package versions
 #
 # Auth is npm Trusted Publishing (OIDC) — see .github/workflows/publish.yml.
@@ -12,6 +13,7 @@ set -euo pipefail
 # config at once: ./setup-trusted-publishers.sh
 
 BUILD_ONLY=false
+DRY_RUN=false
 
 # simple flags parser
 while [[ $# -gt 0 ]]; do
@@ -20,8 +22,18 @@ while [[ $# -gt 0 ]]; do
       BUILD_ONLY=true
       shift
       ;;
+    # Rehearsal: everything the publish path does — preflight, build, and npm's
+    # own validation of the tarball it would upload — except the upload. This is
+    # deliberately NOT --build-only, which skips the preflight because it runs on
+    # every PR (via build:packages and both composite setup actions) and would
+    # otherwise fire 30+ `npm view` calls per CI job. Before this existed the only
+    # mode that checked publishability was the one that published.
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
     *)
-      echo "Usage: $0 [--build-only|-b]"
+      echo "Usage: $0 [--build-only|-b] [--dry-run]"
       exit 1
       ;;
   esac
@@ -107,8 +119,13 @@ for pkg in "${publish_order[@]}"; do
         if npm view "${pkgName}@${pkgVer}" version > /dev/null 2>&1; then
           echo "↷ Skipping $pkgName@$pkgVer (already published)"
         else
-          echo "→ Publishing $pkgName@$pkgVer"
-          pnpm publish --access=public --no-git-checks
+          if [[ "$DRY_RUN" == true ]]; then
+            echo "→ [dry run] Validating $pkgName@$pkgVer"
+            pnpm publish --dry-run --access=public --no-git-checks
+          else
+            echo "→ Publishing $pkgName@$pkgVer"
+            pnpm publish --access=public --no-git-checks
+          fi
         fi
       fi
     else

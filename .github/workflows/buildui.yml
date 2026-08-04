@@ -5,6 +5,9 @@ on:
   merge_group:
     branches: ['main']
   workflow_dispatch:
+  # Called by publish.yml so the release path runs the SAME verification a pull
+  # request does, rather than a copy of it that can drift.
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
