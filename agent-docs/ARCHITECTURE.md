@@ -162,7 +162,7 @@ See [modules/test-runner.md](modules/test-runner.md) for the worked three-file e
 ## Cross-cutting concerns
 
 - **Reactivity sync** — handled per-environment by the interactor (`act()` / `nextTick()` / Playwright auto-wait), so test code stays identical. See interactor inheritance above.
-- **Waiting / timing** — two tools: `waitUntilComponentState` (state-based, throws on timeout) and `waitUntil` (probe-based, returns last value). Probe interval = `timeoutMs / probeCount` (default 10 probes) ([timingUtil.ts#L42-L81](../packages/core/src/utils/timingUtil.ts#L42-L81)).
+- **Waiting / timing** — two tools: `waitUntilComponentState` (state-based, throws on timeout) and `waitUntil` (probe-based, returns last value). Probes escalate by default — dense at first, then backing off — so a generous timeout still settles in milliseconds; an even `timeoutMs / probeCount` grid is opt-in via `probeCount` ([timingUtil.ts](../packages/core/src/utils/timingUtil.ts)).
 - **Portal / overlay components** — modeled with `overriddenParentLocator()` + `overrideLocatorRelativePosition()` returning a `Root` locator, e.g. `byRole('presentation', 'Root')` in `MenuDriver`/`DialogDriver` ([MenuDriver.ts#L24-L41](../packages/component-driver-mui-v7/src/components/MenuDriver.ts#L24-L41), [DialogDriver.ts#L25-L44](../packages/component-driver-mui-v7/src/components/DialogDriver.ts#L25-L44)).
 - **Error reporting** — failures throw typed errors carrying the locator or driver (see [DOMAIN.md → Failure modes](DOMAIN.md#failure-modes-error-catalog)); `driverName` identifies the offending driver.
 
