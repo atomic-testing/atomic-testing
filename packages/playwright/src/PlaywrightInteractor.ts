@@ -24,6 +24,7 @@ import {
   Point,
   PressKeyOption,
   timingUtil,
+  elementStateUtil,
   visibilityUtil,
   WaitForOption,
   WaitUntilOption,
@@ -683,7 +684,11 @@ export class PlaywrightInteractor implements Interactor {
     if (el == null) {
       return false;
     }
-    return el.isChecked();
+    // Evaluated in-page rather than delegated to `Locator.isChecked()`, which
+    // retargets through labels, and throws `Not a checkbox or radio button` where
+    // the jsdom leg answers `false`. Running core's predicate in both engines is
+    // what makes them agree; see elementStateUtil.
+    return el.evaluate(elementStateUtil.isElementChecked);
   }
 
   async isDisabled(locator: PartLocator): Promise<boolean> {
@@ -691,7 +696,10 @@ export class PlaywrightInteractor implements Interactor {
     if (el == null) {
       return false;
     }
-    return el.isDisabled();
+    // Evaluated in-page for the same reason as isChecked: `Locator.isDisabled()`
+    // retargets through labels and carries its own notion of which elements can be
+    // disabled. See elementStateUtil.
+    return el.evaluate(elementStateUtil.isElementDisabled);
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {

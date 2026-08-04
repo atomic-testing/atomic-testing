@@ -256,9 +256,7 @@ export interface ElementQueries {
     // (undocumented)
     hasCssClass(locator: PartLocator, className: string): Promise<boolean>;
     innerHTML(locator: PartLocator): Promise<string>;
-    // (undocumented)
     isChecked(locator: PartLocator): Promise<boolean>;
-    // (undocumented)
     isDisabled(locator: PartLocator): Promise<boolean>;
     isError(locator: PartLocator): Promise<boolean>;
     // (undocumented)
@@ -266,6 +264,11 @@ export interface ElementQueries {
     isRequired(locator: PartLocator): Promise<boolean>;
     // (undocumented)
     isVisible(locator: PartLocator): Promise<boolean>;
+}
+
+// @public (undocumented)
+export namespace elementStateUtil {
+    export { isElementChecked, isElementDisabled };
 }
 
 // @public (undocumented)

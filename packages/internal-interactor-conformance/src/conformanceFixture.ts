@@ -34,8 +34,32 @@ export const conformanceFixtureHtml = `
     <input type="text" data-testid="text-input" value="typed" />
     <div data-testid="not-input">not an input</div>
 
-    <!-- A checkbox so isChecked has a positive control. -->
+    <!-- Checked state: the native control, the ARIA widget a design system
+         actually ships, and the two-state boundary. Both engines run core's
+         elementStateUtil predicate, so these must agree runner-to-runner. -->
     <input type="checkbox" data-testid="checked-box" checked />
+    <input type="checkbox" data-testid="unchecked-box" />
+    <div role="checkbox" aria-checked="true" data-testid="aria-checked-true">aria checked</div>
+    <div role="checkbox" aria-checked="mixed" data-testid="aria-checked-mixed">aria mixed</div>
+    <span role="switch" aria-checked="true" data-testid="aria-switch-on">switch on</span>
+    <div aria-checked="true" data-testid="aria-checked-no-role">checked but no role</div>
+    <button type="button" data-testid="not-checkable">not checkable</button>
+
+    <!-- Disabled state: the two native cascades the HTML spec defines (a
+         disabled <fieldset> does NOT disable its own <legend>, and a disabled
+         <optgroup> disables its options), plus the aria-disabled escape hatch
+         non-native widgets use, including a re-enabled descendant. -->
+    <fieldset disabled>
+      <legend><input data-testid="input-in-disabled-legend" /></legend>
+      <input data-testid="input-in-disabled-fieldset" />
+    </fieldset>
+    <select data-testid="optgroup-select">
+      <optgroup disabled label="grp"><option data-testid="option-in-disabled-optgroup">Opt</option></optgroup>
+    </select>
+    <button type="button" aria-disabled="true" data-testid="aria-disabled-button">aria disabled</button>
+    <div role="button" aria-disabled="true"><span data-testid="span-in-aria-disabled">inner</span></div>
+    <div aria-disabled="true"><span aria-disabled="false" data-testid="span-reenabled">re-enabled</span></div>
+    <button type="button" data-testid="enabled-button">enabled</button>
 
     <!-- A selected <option> with NO value attribute: its value must fall back to
          the option text (HTML IDL semantics), not be dropped. A single option
