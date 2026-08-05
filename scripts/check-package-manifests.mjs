@@ -24,6 +24,10 @@
 //             and the declaration is never consulted):
 //               { ".": { import: { types: d.mts, default: .mjs },
 //                        require: { types: d.cts, default: .cjs } } }
+//             Nothing may sit beside those two branches either: first-match-wins
+//             applies across siblings, so a top-level `types` is matched by both
+//             modes ahead of either branch and restores the single-declaration
+//             shape the nesting exists to undo.
 //
 // EXPORTS-02  a manifest points at a dist file that does not exist. This is the
 //             defect that hid inside create-atomic-testing: tsdown's `dts.entry`
@@ -93,8 +97,30 @@ function checkExportsShape(relPath, json, errors) {
     );
     return;
   }
+  const dot = actual['.'];
+  if (dot === null || typeof dot !== 'object') {
+    errors.push(
+      `EXPORTS-01: ${relPath} exports["."] is ${JSON.stringify(dot)} — it must be a conditional map ` +
+        `carrying an \`import\` and a \`require\` branch.`
+    );
+    return;
+  }
+  // First-match-wins applies across SIBLINGS too, not just within a branch. An
+  // unconditional `types` here is matched by both module modes before either
+  // nested branch is reached, which resolves one declaration for CJS and ESM
+  // alike — the precise TS1479 shape the nested branches replace. Checking the
+  // branches without checking what sits beside them would let the gate pass the
+  // very manifest it exists to reject.
+  const unexpected = Object.keys(dot).filter(condition => !(condition in EXPECTED_EXPORTS['.']));
+  if (unexpected.length > 0) {
+    errors.push(
+      `EXPORTS-01: ${relPath} exports["."] carries ${JSON.stringify(unexpected)} alongside the ` +
+        `per-mode branches. Condition matching is first-match-wins across siblings, so a top-level ` +
+        `\`types\` resolves one declaration for BOTH module modes and reintroduces TS1479.`
+    );
+  }
   for (const [mode, expected] of Object.entries(EXPECTED_EXPORTS['.'])) {
-    const branch = actual['.']?.[mode];
+    const branch = dot[mode];
     if (branch === undefined || typeof branch !== 'object') {
       errors.push(
         `EXPORTS-01: ${relPath} exports["."].${mode} is ${JSON.stringify(branch)} — it must be a ` +

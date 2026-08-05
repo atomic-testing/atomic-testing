@@ -124,8 +124,13 @@ jobs:
               FAILED=1
             fi
           done
-          if ! head -n 20 CHANGELOG.md | grep -qF "## [$VERSION]"; then
-            echo "ERROR: CHANGELOG.md has no '## [$VERSION]' section near the top." >&2
+          # The newest section must BE this release, not merely appear near the
+          # top. Any fixed line window is both brittle and unsound: a release with
+          # few entries leaves the PREVIOUS version's heading inside the window, so
+          # a stale tag would satisfy the check meant to catch exactly that.
+          FIRST_SECTION="$(grep -m1 '^## \[' CHANGELOG.md || true)"
+          if [[ "$FIRST_SECTION" != "## [$VERSION]"* ]]; then
+            echo "ERROR: CHANGELOG.md's newest section is '${FIRST_SECTION:-<none>}', expected '## [$VERSION]'." >&2
             FAILED=1
           fi
           if [[ "$FAILED" != "0" ]]; then
