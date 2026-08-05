@@ -134,8 +134,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     permissions:
+      # No `id-token: write`: nothing here mints an OIDC token — it checks out,
+      # installs, downloads the build artifacts and runs a Node script. The
+      # sibling jobs all carry it, but none of them use it either; rather than
+      # inherit that by copy, a new job asks for what it needs.
       contents: read
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v7

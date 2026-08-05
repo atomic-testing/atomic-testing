@@ -21,13 +21,10 @@ function adjustFolderPackageJson(dir, version) {
 // @atomic-testing/* versions (not workspace:*), so a release must float them forward
 // too or they silently freeze on the version that was current when they were written.
 // Only the @atomic-testing/* specifiers are rewritten — the app's own "version" field
-// (its unpublished 0.0.0) is left untouched.
-//
-// This rewrites MANIFESTS ONLY and deliberately does not regenerate the lockfiles it
-// invalidates: publish.yml's committing job holds the one credential that can write to
-// main and installs nothing, so that no third-party code runs beside it. Since CI now
-// enforces those lockfiles, the release ritual must regenerate them in the same change
-// that bumps the manifests — see agent-docs/RELEASING.md.
+// (its unpublished 0.0.0) is left untouched. Manifests only: this script stays pure (no
+// network, no child process), so the lockfiles it invalidates are regenerated as a
+// separate step of the release ritual — see {@link bumpConsumers} and
+// agent-docs/RELEASING.md.
 function adjustPinnedAtomicSpecifiers(dir, version) {
   const fileName = path.join(dir, 'package.json');
   if (!fs.existsSync(fileName)) {
