@@ -25,18 +25,19 @@ export interface WaitUntilOption<T> {
    */
   timeoutMs: number;
   /**
-   * The number of times to probe before timing out. The interval between probes is
-   * calculated as timeoutMs / probeCount. Higher values mean more frequent checks.
-   * Ignored when {@link WaitUntilOption.probeIntervals} is provided.
-   * @default 10
+   * Probe on an even grid instead: `probeCount` probes spread across `timeoutMs`,
+   * plus a final probe on the timeout boundary. Supply this only when an even
+   * cadence is what you want — leaving it unset selects the escalating default
+   * described on {@link WaitUntilOption.probeIntervals}, which settles far sooner
+   * for the same timeout. Ignored when `probeIntervals` is provided.
    */
   probeCount?: number;
   /**
    * Escalating waits (in milliseconds) between probes; the last entry repeats until
    * timeoutMs elapses. Suits "settle a re-render" waits where the condition usually
    * flips within milliseconds but may occasionally take much longer — probe densely
-   * first, then back off — whereas the probeCount cadence spreads probes evenly
-   * across the full timeout. Takes precedence over probeCount.
+   * first, then back off. Takes precedence over probeCount, and applies by default
+   * when neither is supplied.
    */
   probeIntervals?: readonly number[];
   /**
@@ -45,13 +46,24 @@ export interface WaitUntilOption<T> {
   debug?: boolean;
 }
 
+// The waits this library performs settle within milliseconds or not at all, while
+// the timeouts guarding them are deliberately generous (30s for
+// `waitUntilComponentState`). An even grid across such a timeout would not look
+// again for 3 seconds, so probe densely first and back off. The last entry repeats,
+// which is what bounds how late a satisfied condition can be noticed.
+const defaultProbeIntervals: readonly number[] = [0, 10, 25, 50, 100];
+
 /**
  * Keep running a probe function until it returns a value that matches the terminate condition or timeout
  */
 export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
-  const { probeFn, terminateCondition, timeoutMs, probeCount = 10, probeIntervals, debug } = option;
-  const intervalMs = timeoutMs / probeCount;
-  const hasEscalatingIntervals = probeIntervals != null && probeIntervals.length > 0;
+  const { probeFn, terminateCondition, timeoutMs, probeCount, probeIntervals, debug } = option;
+  // An explicit probeCount asks for the even grid; with neither knob supplied the
+  // escalating default applies.
+  const intervals = probeIntervals?.length ? probeIntervals : probeCount == null ? defaultProbeIntervals : undefined;
+  // Only consulted on the even-grid path, which is reachable only when probeCount
+  // was supplied; the fallback preserves the historic documented default.
+  const intervalMs = timeoutMs / (probeCount ?? 10);
 
   const eqCheck: (currentValue: T) => boolean =
     typeof terminateCondition === 'function'
@@ -81,16 +93,25 @@ export async function waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
       break;
     }
 
-    if (hasEscalatingIntervals) {
-      const interval = probeIntervals[Math.min(probeIndex, probeIntervals.length - 1)];
+    if (intervals !== undefined) {
+      const interval = intervals[Math.min(probeIndex, intervals.length - 1)];
       probeIndex += 1;
       await wait(Math.min(interval, timeoutMs - elapsed));
     } else {
-      const nextStart = Math.round(elapsed / intervalMs) * intervalMs;
-      if (nextStart >= timeoutMs) {
-        break;
-      }
-      await wait(nextStart - elapsed);
+      // The next grid point strictly AFTER `elapsed`, so the wait is always
+      // positive. `Math.round` landed in the PAST for the first half of every
+      // window, making `wait()` resolve next-tick and the loop spin hot — a
+      // timeoutMs of 1000 produced ~447 probes rather than 10. Deriving the slot
+      // from actual elapsed time rather than a probe counter means a slow probe
+      // skips ahead instead of firing a catch-up burst.
+      //
+      // Clamping to `timeoutMs` puts the final probe exactly on the boundary. The
+      // `nextStart >= timeoutMs` break this replaces returned without ever looking
+      // there, so the loop both ended early and had a dead zone at the end of its
+      // own window: a condition satisfied at 240ms of a stated 250ms timeout was
+      // reported as never satisfied.
+      const nextStart = (Math.floor(elapsed / intervalMs) + 1) * intervalMs;
+      await wait(Math.min(nextStart, timeoutMs) - elapsed);
     }
   }
 

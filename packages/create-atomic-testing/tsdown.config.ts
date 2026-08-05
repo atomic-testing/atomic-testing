@@ -10,7 +10,11 @@ export default defineConfig({
   },
   dts: {
     // The bin has no importable surface; only emit declarations for the API.
-    entry: './src/index.ts',
+    // Unlike `entry` above, this is a GLOB, not a path — a leading `./` matches
+    // nothing and tsdown emits no declarations at all without failing, which is
+    // how this package shipped a dangling `types` pointer (no dist/index.d.mts
+    // or .d.cts) while every manifest claimed otherwise.
+    entry: 'src/index.ts',
   },
   sourcemap: true,
   outDir: 'dist',

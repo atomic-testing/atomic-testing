@@ -10,11 +10,36 @@ tests consume their `dist` — but are never published.
 
 ## Cut a release
 
+The version bump lands **before** the tag, in a reviewed PR, so the tagged commit
+_is_ what ships. Previously the bump happened inside the release runner and was
+pushed to `main` only after publishing, which meant `git checkout vX.Y.Z` rebuilt
+the _previous_ version and no commit ever carried both the tag and the version it
+published.
+
 1. Make sure `main` is green and has what you want to ship.
-2. Create a GitHub Release with tag `vX.Y.Z` (e.g. `v0.85.0`), targeting `main`.
-3. The publish workflow runs automatically: sets versions, publishes via OIDC
-   (with provenance), and commits the version bump back to `main`.
-4. Verify: `npm view @atomic-testing/core version` → `X.Y.Z`.
+2. Produce the release commit: `pnpm bumpVersion X.Y.Z && pnpm changelog X.Y.Z`.
+3. Open it as a PR and **review the generated changelog** — the first point in
+   the process where a human sees it before it ships. Full CI runs here, on the
+   exact tree, at the exact version, that will be published.
+4. Merge it.
+5. Optional rehearsal: dispatch **Publish Packages on Release** with `version:
+X.Y.Z` and `dry_run: true`. It preflights, builds and asks npm to validate
+   every tarball, uploading nothing.
+6. Create a GitHub Release with tag `vX.Y.Z`, targeting **the merged release
+   commit**.
+7. The publish workflow runs the full PR verification and the full e2e matrix
+   against the tagged tree, asserts that every manifest and the changelog agree
+   with the tag, then publishes via OIDC with provenance. It writes nothing back
+   to the repository.
+8. Verify: `npm view @atomic-testing/core version` → `X.Y.Z`.
+9. Float the consumers, now that the versions exist on npm:
+   `pnpm bumpVersion X.Y.Z --consumers`, regenerate the standalone lockfiles (see
+   below), and open that as a follow-up PR.
+
+Step 9 is separate on purpose. `examples/*` and `docs/` install the **published**
+packages, so bumping their specifiers in the release PR would point them at a
+version that is not on the registry yet — and since CI installs them with a
+frozen lockfile, the lockfiles could not be regenerated to match either.
 
 `publish.sh` publishes in **dependency (topological) order** — `core`/`dom-core`
 before the drivers that pin them, computed by
@@ -27,22 +52,25 @@ re-running after a partial publish resumes instead of failing.
 ### If a release fails
 
 1. Read the failed step: `gh run view <run-id> --repo atomic-testing/atomic-testing --log-failed`
-2. Fix forward on `main`, then re-fire: delete + recreate the release tag from
-   current `main` (a plain re-run reuses the old tag's workflow).
-3. If some packages already published, idempotency covers the re-fire at the same
+2. Fix forward with a new release PR (steps 2–4 above), then tag the new merged
+   commit. Re-firing by deleting and recreating the tag still works, but a fresh
+   release PR is preferable now that the tag is meant to name a specific reviewed
+   commit rather than "whatever main is".
+3. If some packages already published, idempotency covers a re-fire at the same
    version. If you prefer, bump to the next patch instead.
 
 ## Changelog generation
 
-`CHANGELOG.md` is generated automatically, not hand-written. The final "Commit
-version updates" step of [`publish.yml`](../.github/workflows/publish.yml) runs
-[`scripts/generateChangelog.js`](../scripts/generateChangelog.js) right after
-`bumpVersion`, so the new `CHANGELOG.md` section lands in the same commit as
-the version bump.
+`CHANGELOG.md` is generated, not hand-written — but it is generated in the
+release PR (`pnpm changelog X.Y.Z`, which runs
+[`scripts/generateChangelog.js`](../scripts/generateChangelog.js)), so it is
+reviewable before it ships rather than committed after the fact.
 
-The script walks commit subjects since the previous release tag (the tag
-_before_ the one currently being published — see the comment in the script for
-why) and sorts them into sections by their `type` prefix:
+The script walks commit subjects since the previous release tag. It finds that
+tag by looking for the version being released among the `v*` tags: run before
+the tag exists (the normal path now) the newest tag is the previous release;
+run after it exists (a re-fire) the newest tag is this release and the previous
+one is next. Subjects are sorted into sections by their `type` prefix:
 
 | Type           | Section          |
 | -------------- | ---------------- |
@@ -68,11 +96,29 @@ section — they're real history, just not release-notes material. See
   there's no need to regenerate the whole file, since only the newest section
   needs fixing.
 
+## Standalone lockfiles move with the consumer bump
+
+`bumpVersion` rewrites **manifests only**, and splits them in two:
+`pnpm bumpVersion X.Y.Z` touches the packages being published (the release PR),
+while `pnpm bumpVersion X.Y.Z --consumers` floats the `examples/*` and `docs/`
+specifiers that install those packages from npm (step 9, after they exist).
+
+CI installs every one of those projects with a frozen lockfile, so the consumer
+bump must regenerate the lockfiles in the same change — otherwise their jobs go
+red on whatever unrelated PR happens to run next:
+
+```bash
+pnpm bumpVersion X.Y.Z --consumers
+for dir in examples/*/; do (cd "$dir" && pnpm install --lockfile-only); done
+(cd docs && pnpm install --lockfile-only --ignore-workspace)
+```
+
 ## Rotate `CODEMOD_TOKEN` (before it expires, ~yearly)
 
-`CODEMOD_TOKEN` is the GitHub PAT used for checkout + the version commit-back.
-On expiry, releases fail at **checkout** with the cryptic
-`fatal: could not read Username for 'https://github.com': terminal prompts disabled`.
+`CODEMOD_TOKEN` is a GitHub PAT that the release path **no longer uses**: the
+workflow writes nothing back to the repository, so it holds no repo-write
+credential at all. Kept here for any other workflow that still needs one, and
+because a stale secret is worth retiring deliberately rather than by neglect.
 
 1. Create a fine-grained PAT: owner `atomic-testing`, repo `atomic-testing`,
    **Contents: Read and write**. Set an expiry **and a calendar reminder**.
@@ -104,7 +150,8 @@ packages (auto-discovers them); re-run anytime — it's idempotent.
 ## Gotchas
 
 - **No `NPM_TOKEN`** — auth is OIDC; the workflow needs `id-token: write`.
-- **npm ≥ 11.5.1** is required for OIDC; the workflow installs `npm@latest`
+- **npm ≥ 11.5.1** is required for OIDC; the workflow installs an exactly pinned
+  npm (`NPM_VERSION` in publish.yml), never `latest`
   (`pnpm publish` shells out to npm). Stay on **pnpm 10** — pnpm 11 has an OIDC regression.
 - **Provenance** is automatic; every `package.json` needs a `repository.url`
   matching the repo or publish fails `E422`.

@@ -35,19 +35,31 @@ function git(args) {
   return execFileSync('git', args, { encoding: 'utf8' }).trim();
 }
 
-// The release tag being published already exists by the time this script
-// runs (the `release: published` event fires after GitHub creates the tag),
-// so the *previous* release is the second-most-recent tag, not the first.
-function resolvePreviousReleaseRef(sinceOption) {
+// Which tag is "the previous release" depends on whether the one being released
+// exists yet. The changelog is now generated in a release PR, BEFORE the tag is
+// cut, so the newest tag is the previous release; when this runs after a tag
+// exists (a re-fire, or `--since` omitted on an already-tagged commit) the
+// newest tag is the release itself and the previous one is second. Deciding by
+// looking for the target version rather than assuming either shape is what keeps
+// both paths correct — assuming "always second" duplicated an entire release
+// section when run pre-tag.
+//
+// Only `v*` tags are considered, so a stray non-release tag can never become the
+// baseline, and they are ordered by version rather than by creation date:
+// re-firing a release deletes and recreates its tag, which moves it to the front
+// of a date ordering while leaving the version ordering correct.
+function resolvePreviousReleaseRef(sinceOption, version) {
   if (sinceOption) {
     return sinceOption;
   }
 
-  const tags = git(['for-each-ref', 'refs/tags', '--sort=-creatordate', '--format=%(refname:short)'])
+  const tags = git(['for-each-ref', 'refs/tags/v*', '--sort=-v:refname', '--format=%(refname:short)'])
     .split('\n')
     .filter(Boolean);
-  if (tags.length >= 2) {
-    return tags[1];
+  const releaseTagIndex = tags.indexOf(`v${version}`);
+  const previous = releaseTagIndex === -1 ? tags[0] : tags[releaseTagIndex + 1];
+  if (previous) {
+    return previous;
   }
 
   // Fewer than two tags (first-ever or second-ever release): there's no prior
@@ -170,7 +182,7 @@ function parseArgs(argv) {
 function main() {
   const { version, sinceOption } = parseArgs(process.argv.slice(2));
 
-  const previousReleaseRef = resolvePreviousReleaseRef(sinceOption);
+  const previousReleaseRef = resolvePreviousReleaseRef(sinceOption, version);
   const subjects = collectCommitSubjectsSince(previousReleaseRef);
   const groups = groupCommitsBySection(subjects);
   const section = buildChangelogSection(version, groups);

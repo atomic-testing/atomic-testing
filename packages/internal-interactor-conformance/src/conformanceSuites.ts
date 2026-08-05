@@ -139,6 +139,63 @@ export const interactorConformanceSuite: TestSuiteInfo<typeof conformanceScenePa
       });
     });
 
+    // The checked/disabled contract (#1297 B10). These two probes used to be the
+    // only boolean reads whose semantics were neither documented nor shared: the
+    // jsdom leg read native IDL properties only, while the Playwright leg
+    // delegated to Playwright's primitives, which retarget through labels and
+    // carry their own notion of disabled. A design-system control therefore got a
+    // different answer per runner. Both engines now run core's `elementStateUtil`
+    // predicate, and this block is what proves it — `check:api` cannot see
+    // behavior, only signatures.
+    describe('checked state', () => {
+      test('reads the native checkbox', async () => {
+        assertTrue(await interactor().isChecked(byDataTestId('checked-box')));
+        assertFalse(await interactor().isChecked(byDataTestId('unchecked-box')));
+      });
+
+      test('reads aria-checked on an explicit checkable role', async () => {
+        assertTrue(await interactor().isChecked(byDataTestId('aria-checked-true')));
+        assertTrue(await interactor().isChecked(byDataTestId('aria-switch-on')));
+      });
+
+      test('treats aria-checked="mixed" as not checked', async () => {
+        assertFalse(await interactor().isChecked(byDataTestId('aria-checked-mixed')));
+      });
+
+      test('ignores aria-checked without a checkable role', async () => {
+        assertFalse(await interactor().isChecked(byDataTestId('aria-checked-no-role')));
+      });
+
+      test('answers false for an element that cannot be checked', async () => {
+        // Rather than throwing, which is what Playwright's own isChecked does.
+        assertFalse(await interactor().isChecked(byDataTestId('not-checkable')));
+      });
+    });
+
+    describe('disabled state', () => {
+      test('honours the fieldset cascade and its legend carve-out', async () => {
+        assertTrue(await interactor().isDisabled(byDataTestId('input-in-disabled-fieldset')));
+        assertFalse(await interactor().isDisabled(byDataTestId('input-in-disabled-legend')));
+      });
+
+      test('honours a disabled optgroup', async () => {
+        assertTrue(await interactor().isDisabled(byDataTestId('option-in-disabled-optgroup')));
+      });
+
+      test('honours aria-disabled on the element and on an ancestor', async () => {
+        assertTrue(await interactor().isDisabled(byDataTestId('aria-disabled-button')));
+        assertTrue(await interactor().isDisabled(byDataTestId('span-in-aria-disabled')));
+      });
+
+      test('lets the nearest aria-disabled win', async () => {
+        assertFalse(await interactor().isDisabled(byDataTestId('span-reenabled')));
+      });
+
+      test('answers false for an enabled control', async () => {
+        assertFalse(await interactor().isDisabled(byDataTestId('enabled-button')));
+      });
+    });
+
     // Defect 3: a locator matching multiple elements resolves to the first,
     // matching querySelector, instead of a Playwright strict-mode violation.
     describe('multiple matches resolve to the first', () => {

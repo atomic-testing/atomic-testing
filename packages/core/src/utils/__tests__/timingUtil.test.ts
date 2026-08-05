@@ -16,9 +16,12 @@ describe('waitUntil', () => {
 
   test('should resolve early when condition becomes true', async () => {
     let flag = false;
+    // Deliberately off any probe boundary, so which probe observes the flip is
+    // unambiguous rather than a race between the flip's timer and a probe due at
+    // the same instant.
     setTimeout(() => {
       flag = true;
-    }, 50);
+    }, 30);
     const start = Date.now();
     const result = await waitUntil({
       probeFn: () => flag,
@@ -28,8 +31,51 @@ describe('waitUntil', () => {
     const elapsed = Date.now() - start;
     expect(result).toBe(true);
     // Should wait at least until flag turns true but not until timeout
-    expect(elapsed).toBeGreaterThanOrEqual(50);
+    expect(elapsed).toBeGreaterThanOrEqual(30);
     expect(elapsed).toBeLessThan(200);
+  });
+
+  test('should honour the full timeout when the condition is never met', async () => {
+    const start = Date.now();
+    await waitUntil({ probeFn: () => false, terminateCondition: true, timeoutMs: 100 });
+    // The old cadence stopped as soon as the NEXT probe would have landed on or
+    // past the timeout, giving up at ~95ms of a stated 100ms.
+    expect(Date.now() - start).toBeGreaterThanOrEqual(100);
+  });
+
+  test('should not busy-spin: an even grid probes about as often as asked', async () => {
+    let probes = 0;
+    await waitUntil({
+      probeFn: () => {
+        probes += 1;
+        return false;
+      },
+      terminateCondition: true,
+      timeoutMs: 200,
+      probeCount: 4,
+    });
+    // 4 grid probes plus one on the boundary. The old `Math.round` cadence
+    // computed a next-probe time in the PAST for the first half of every window,
+    // so `wait()` resolved next-tick and this produced ~100 probes.
+    expect(probes).toBeLessThanOrEqual(6);
+    expect(probes).toBeGreaterThanOrEqual(2);
+  });
+
+  test('should still observe a condition satisfied just before the timeout', async () => {
+    let flag = false;
+    setTimeout(() => {
+      flag = true;
+    }, 240);
+    const result = await waitUntil({
+      probeFn: () => flag,
+      terminateCondition: true,
+      timeoutMs: 250,
+      probeCount: 10,
+    });
+    // The window's last 5% used to be a dead zone: the loop stopped before ever
+    // probing there, so a condition that became true inside the stated timeout was
+    // reported as never satisfied.
+    expect(result).toBe(true);
   });
 
   describe('probeIntervals', () => {
@@ -71,6 +117,20 @@ describe('waitUntil', () => {
       // escalation sequence must have been walked past its last entry.
       expect(probes).toBeGreaterThanOrEqual(4);
       expect(elapsed).toBeLessThan(300);
+    });
+
+    test('should apply the escalating default when neither knob is supplied', async () => {
+      let flag = false;
+      setTimeout(() => {
+        flag = true;
+      }, 5);
+      const start = Date.now();
+      const result = await waitUntil({ probeFn: () => flag, terminateCondition: true, timeoutMs: 30000 });
+      expect(result).toBe(true);
+      // The generous timeout is the point: an even grid would divide it into ten
+      // 3-second slots and not look again until t=3000. The default has to settle
+      // in milliseconds without falling back on the busy-spin that used to make it.
+      expect(Date.now() - start).toBeLessThan(200);
     });
 
     test('should take precedence over probeCount', async () => {

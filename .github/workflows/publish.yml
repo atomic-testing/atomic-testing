@@ -3,10 +3,25 @@ name: Publish Packages on Release
 on:
   release:
     types: [published]
+  # A rehearsal entry point. `publish.sh --dry-run` runs the npm-existence
+  # preflight, builds, and asks npm to validate the tarballs it would upload —
+  # the only mode that checks publishability without publishing, since
+  # `--build-only` deliberately skips the preflight (it runs on every PR).
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish, without the leading v (e.g. 0.101.0)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Validate only — build, preflight and pack, but upload nothing'
+        required: false
+        default: true
+        type: boolean
 
-# Deny by default; each job grants only the scopes it actually needs. Notably the
-# `publish` job runs WITHOUT repository write access — the version-bump commit is
-# isolated in `commit-version` below.
+# Deny by default; each job grants only the scopes it actually needs. Nothing here
+# asks for `contents: write`: this workflow no longer writes to the repository at
+# all, because the version bump happens in a reviewed PR before the tag exists.
 permissions: {}
 
 env:
@@ -34,8 +49,18 @@ jobs:
     with:
       scope: full
 
+  # The same verification a pull request gets, against the tagged tree. Reused
+  # rather than reimplemented: a copy would drift, and the whole point is that
+  # what ships passed exactly what main passes. Runs beside `e2e-gate`, so it
+  # costs no extra wall clock.
+  verify:
+    uses: ./.github/workflows/buildui.yml
+    permissions:
+      contents: read
+      id-token: write
+
   publish:
-    needs: e2e-gate
+    needs: [e2e-gate, verify]
     runs-on: ubuntu-latest
     permissions:
       contents: read # read the tagged source
@@ -50,15 +75,21 @@ jobs:
           # No repository-write credential is persisted in this job. `./publish.sh`
           # builds all packages — arbitrary third-party build tooling — and then
           # publishes, so any code able to read this job's filesystem would
-          # otherwise reach a credential that can write to the repository. The
-          # push happens in `commit-version`, which installs no dependencies.
+          # otherwise reach a credential that can write to the repository.
           persist-credentials: false
 
       - name: Resolve and validate version
         id: get_version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
-          # Tag is expected to look like "v0.56.0".
-          VERSION="${GITHUB_REF#refs/tags/v}"
+          # Tag is expected to look like "v0.56.0"; a manual dispatch names the
+          # version directly. Both go through the same validation below.
+          if [[ -n "$INPUT_VERSION" ]]; then
+            VERSION="${INPUT_VERSION#v}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
           # Fail closed: bumpVersion writes this string verbatim into every
           # package manifest, so a malformed ref must never reach it. The
           # prerelease class includes '-' because SemVer prerelease identifiers
@@ -72,11 +103,45 @@ jobs:
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "Determined version: $VERSION"
 
+      # This replaces bumping the versions here. The bump now lands in a reviewed
+      # release PR, so the tagged commit already carries the versions being
+      # published — which is what makes the tag reproducible. Previously the bump
+      # was applied inside this runner and pushed to main only AFTER publishing,
+      # so `git checkout vX.Y.Z && ./publish.sh --build-only` rebuilt the
+      # PREVIOUS version's manifests, and no commit in history ever had both the
+      # tag and the version it published. Asserting here rather than trusting the
+      # tag keeps that guarantee enforced instead of conventional.
+      - name: Assert the tag matches what it ships
+        run: |
+          FAILED=0
+          for manifest in packages/*/package.json; do
+            if [[ "$(node -p "require('./$manifest').private === true")" == "true" ]]; then
+              continue
+            fi
+            ACTUAL="$(node -p "require('./$manifest').version")"
+            if [[ "$ACTUAL" != "$VERSION" ]]; then
+              echo "ERROR: $manifest is at $ACTUAL, but this release is $VERSION." >&2
+              FAILED=1
+            fi
+          done
+          # The newest section must BE this release, not merely appear near the
+          # top. Any fixed line window is both brittle and unsound: a release with
+          # few entries leaves the PREVIOUS version's heading inside the window, so
+          # a stale tag would satisfy the check meant to catch exactly that.
+          FIRST_SECTION="$(grep -m1 '^## \[' CHANGELOG.md || true)"
+          if [[ "$FIRST_SECTION" != "## [$VERSION]"* ]]; then
+            echo "ERROR: CHANGELOG.md's newest section is '${FIRST_SECTION:-<none>}', expected '## [$VERSION]'." >&2
+            FAILED=1
+          fi
+          if [[ "$FAILED" != "0" ]]; then
+            echo "The release PR for $VERSION was not merged, or the tag points at the wrong commit." >&2
+            echo "See agent-docs/RELEASING.md." >&2
+            exit 1
+          fi
+          echo "Tag, manifests and changelog all agree on $VERSION."
+
       - name: Setup
         uses: ./.github/actions/builderui-setup
-
-      - name: Set package versions
-        run: pnpm bumpVersion "$VERSION"
 
       - name: Upgrade npm for OIDC trusted publishing
         run: npm install -g "npm@${NPM_VERSION}"
@@ -88,59 +153,4 @@ jobs:
         # repo: atomic-testing, workflow file: publish.yml). npm attaches the
         # provenance attestation automatically on this path, so no extra flag is
         # needed — and `pnpm publish` exposes none.
-        run: ./publish.sh
-
-  # Split out from `publish` on purpose: this is the only job holding a credential
-  # that can write to `main`, and it installs NO dependencies. `bumpVersion.js` and
-  # `generateChangelog.js` use only Node built-ins (fs / path / child_process), so
-  # no third-party npm package — not even a dependency's install script — is ever
-  # installed or executed while that credential is present. The only external code
-  # here is the two GitHub-published actions below (`actions/checkout`,
-  # `actions/setup-node`); the point of the split is that the dependency tree,
-  # which is what `publish` necessarily exposes itself to, never enters this job.
-  commit-version:
-    needs: publish
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Check out main
-        uses: actions/checkout@v7
-        with:
-          # Latest main, so the bump fast-forwards even if main advanced (e.g. a
-          # merge) while the release was building. Full history + tags are
-          # required: generateChangelog.js resolves the previous release from
-          # `refs/tags` and walks `<prev>..HEAD`.
-          ref: main
-          fetch-depth: 0
-          token: ${{ secrets.CODEMOD_TOKEN }}
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-
-      - name: Commit version updates
-        env:
-          VERSION: ${{ needs.publish.outputs.version }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          node scripts/bumpVersion.js "$VERSION"
-          node scripts/generateChangelog.js "$VERSION"
-          git add -A
-          git diff --cached --quiet || git commit -m "chore: bump version to $VERSION [skip ci]"
-          # The packages are already on npm by the time this runs, so dropping this
-          # commit would leave the repo's manifests disagreeing with the published
-          # versions and corrupt the next release's changelog range. If main
-          # advanced while this job ran, rebase onto it and retry rather than
-          # failing the release on a non-fast-forward.
-          for attempt in 1 2 3; do
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-            echo "Push rejected (main advanced); rebasing and retrying ($attempt/3)…"
-            git pull --rebase origin main
-          done
-          echo "ERROR: could not push the version bump to main after 3 attempts." >&2
-          exit 1
+        run: ./publish.sh ${{ inputs.dry_run && '--dry-run' || '' }}

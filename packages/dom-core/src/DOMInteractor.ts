@@ -25,6 +25,7 @@ import {
   Point,
   PressKeyOption,
   timingUtil,
+  elementStateUtil,
   visibilityUtil,
   WaitForOption,
   WaitUntilOption,
@@ -1125,22 +1126,21 @@ export class DOMInteractor implements Interactor {
   }
 
   async isChecked(locator: PartLocator): Promise<boolean> {
-    const el = await this.getElement<HTMLInputElement>(locator);
-    if (el != null && el.nodeName === 'INPUT') {
-      return Promise.resolve(el.checked);
+    const el = await this.getElement(locator);
+    if (el == null) {
+      return false;
     }
-    return Promise.resolve(false);
+    // Shared with PlaywrightInteractor so both engines answer identically.
+    return elementStateUtil.isElementChecked(el);
   }
 
   async isDisabled(locator: PartLocator): Promise<boolean> {
     const el = await this.getElement(locator);
-    if (el != null) {
-      if ('disabled' in el) {
-        const isDisabled = Boolean(el.disabled);
-        return Promise.resolve(isDisabled);
-      }
+    if (el == null) {
+      return false;
     }
-    return Promise.resolve(false);
+    // Shared with PlaywrightInteractor so both engines answer identically.
+    return elementStateUtil.isElementDisabled(el);
   }
 
   async isReadonly(locator: PartLocator): Promise<boolean> {

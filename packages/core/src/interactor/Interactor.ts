@@ -405,7 +405,21 @@ export interface ElementQueries {
    * when the items are interleaved with a same-tag non-item (a header/divider).
    */
   getElementCount(locator: PartLocator): Promise<number>;
+  /**
+   * Whether the element is checked, via the native `checked` property of an
+   * `<input type="checkbox">`/`<input type="radio">` or `aria-checked="true"` on an
+   * element carrying an explicit checkable `role`. `aria-checked="mixed"` and a
+   * native `indeterminate` control both report `false` — the contract is two-state.
+   * The locator must address the control itself; a `<label>` is not retargeted.
+   */
   isChecked(locator: PartLocator): Promise<boolean>;
+  /**
+   * Whether the element is disabled, via the native disabled state — including the
+   * `<fieldset disabled>`/`<optgroup disabled>` cascades — or the nearest
+   * `aria-disabled` on the element or an ancestor being `"true"`, so a re-enabled
+   * descendant of a disabled container reports `false`. The locator must address the
+   * control itself; a `<label>` is not retargeted.
+   */
   isDisabled(locator: PartLocator): Promise<boolean>;
   isReadonly(locator: PartLocator): Promise<boolean>;
   /**

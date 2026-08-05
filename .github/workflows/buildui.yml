@@ -5,6 +5,9 @@ on:
   merge_group:
     branches: ['main']
   workflow_dispatch:
+  # Called by publish.yml so the release path runs the SAME verification a pull
+  # request does, rather than a copy of it that can drift.
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -118,6 +121,39 @@ jobs:
 
       - name: Verify public API reports
         run: pnpm check:api
+
+  # Published-package manifest gate (LICENSE-*, EXPORTS-*): fails if a package npm
+  # ships declares no license, or if its `exports` map stops resolving types per
+  # module mode — the shape that left every package untyped from CommonJS
+  # (TS1479) while dist/index.d.cts sat emitted and unreachable. Needs the build
+  # artifacts because EXPORTS-02 resolves each manifest pointer against the real
+  # dist; `--require-dist` turns a missing build into a failure rather than a
+  # silent skip. See agent-docs/adr/006-1.0-api-freeze-and-evolution.md.
+  package-manifests:
+    name: Package manifests & type resolution
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      # No `id-token: write`: nothing here mints an OIDC token — it checks out,
+      # installs, downloads the build artifacts and runs a Node script. The
+      # sibling jobs all carry it, but none of them use it either; rather than
+      # inherit that by copy, a new job asks for what it needs.
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dependencies only
+        uses: ./.github/actions/deps-setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: built-packages
+          path: packages
+
+      - name: Verify published manifests
+        run: pnpm check:manifests --require-dist
 
   # Test matrix for component drivers
   component-driver-tests:
@@ -467,7 +503,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-mui-signup-form
 
       - name: Run dom test
@@ -500,7 +536,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-astryx-workspace
 
       - name: Type check
@@ -537,7 +573,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-shadcn-workspace
 
       - name: Type check
@@ -574,7 +610,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install .
+        run: pnpm install --frozen-lockfile
         working-directory: ./examples/example-mui-ticket-console
 
       - name: Type check
