@@ -38,44 +38,25 @@ env:
   NPM_VERSION: '11.19.0'
 
 jobs:
-  # The release path publishes whatever the tag points at, with no gate of its
-  # own — a red main reaches npm silently. This runs the full e2e matrix
-  # against the tagged tree first, and `publish` needs it, so a browser-only
-  # regression blocks the release instead of shipping in it.
-  e2e-gate:
-    uses: ./.github/workflows/e2e.yml
-    permissions:
-      contents: read
-    with:
-      scope: full
-
-  # The same verification a pull request gets, against the tagged tree. Reused
-  # rather than reimplemented: a copy would drift, and the whole point is that
-  # what ships passed exactly what main passes. Runs beside `e2e-gate`, so it
-  # costs no extra wall clock.
-  verify:
-    uses: ./.github/workflows/buildui.yml
-    permissions:
-      contents: read
-      id-token: write
-
-  publish:
-    needs: [e2e-gate, verify]
+  # Everything the tagged checkout can answer on its own, before anything
+  # expensive starts. Whether the tag, the manifests and the changelog agree is
+  # decidable in seconds from the tree alone, so it must not sit downstream of
+  # the gates: when v0.101.0 was tagged without its release PR, this check was
+  # correct but only spoke after 88 jobs and ~25 minutes of e2e. A precondition
+  # that costs more to evaluate than the thing it guards is a precondition in
+  # name only.
+  preflight:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # read the tagged source
-      id-token: write # npm Trusted Publishing (OIDC)
+      contents: read
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0
-          # No repository-write credential is persisted in this job. `./publish.sh`
-          # builds all packages — arbitrary third-party build tooling — and then
-          # publishes, so any code able to read this job's filesystem would
-          # otherwise reach a credential that can write to the repository.
+          # Shallow: this job only reads the working tree. `publish` still takes
+          # full history for the build.
           persist-credentials: false
 
       - name: Resolve and validate version
@@ -103,14 +84,14 @@ jobs:
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "Determined version: $VERSION"
 
-      # This replaces bumping the versions here. The bump now lands in a reviewed
-      # release PR, so the tagged commit already carries the versions being
-      # published — which is what makes the tag reproducible. Previously the bump
-      # was applied inside this runner and pushed to main only AFTER publishing,
-      # so `git checkout vX.Y.Z && ./publish.sh --build-only` rebuilt the
-      # PREVIOUS version's manifests, and no commit in history ever had both the
-      # tag and the version it published. Asserting here rather than trusting the
-      # tag keeps that guarantee enforced instead of conventional.
+      # The bump lands in a reviewed release PR, so the tagged commit already
+      # carries the versions being published — which is what makes the tag
+      # reproducible. Previously the bump was applied inside the publish runner
+      # and pushed to main only AFTER publishing, so `git checkout vX.Y.Z &&
+      # ./publish.sh --build-only` rebuilt the PREVIOUS version's manifests, and
+      # no commit in history ever had both the tag and the version it published.
+      # Asserting here rather than trusting the tag keeps that guarantee
+      # enforced instead of conventional.
       - name: Assert the tag matches what it ships
         run: |
           FAILED=0
@@ -139,6 +120,49 @@ jobs:
             exit 1
           fi
           echo "Tag, manifests and changelog all agree on $VERSION."
+
+  # The release path publishes whatever the tag points at, with no gate of its
+  # own — a red main reaches npm silently. This runs the full e2e matrix
+  # against the tagged tree first, and `publish` needs it, so a browser-only
+  # regression blocks the release instead of shipping in it. Gated on
+  # `preflight` so a tag that cannot ship is rejected before the matrix starts.
+  e2e-gate:
+    needs: preflight
+    uses: ./.github/workflows/e2e.yml
+    permissions:
+      contents: read
+    with:
+      scope: full
+
+  # The same verification a pull request gets, against the tagged tree. Reused
+  # rather than reimplemented: a copy would drift, and the whole point is that
+  # what ships passed exactly what main passes. Runs beside `e2e-gate`, so it
+  # costs no extra wall clock.
+  verify:
+    needs: preflight
+    uses: ./.github/workflows/buildui.yml
+    permissions:
+      contents: read
+      id-token: write
+
+  publish:
+    needs: [preflight, e2e-gate, verify]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # read the tagged source
+      id-token: write # npm Trusted Publishing (OIDC)
+    outputs:
+      version: ${{ needs.preflight.outputs.version }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          # No repository-write credential is persisted in this job. `./publish.sh`
+          # builds all packages — arbitrary third-party build tooling — and then
+          # publishes, so any code able to read this job's filesystem would
+          # otherwise reach a credential that can write to the repository.
+          persist-credentials: false
 
       - name: Setup
         uses: ./.github/actions/builderui-setup
