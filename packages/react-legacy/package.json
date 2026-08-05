@@ -46,9 +46,9 @@
   "devDependencies": {
     "@atomic-testing/component-driver-html": "workspace:*",
     "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react-dom": "^19.2.4",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-dom": "^19.2.8"
   },
   "peerDependencies": {
     "@testing-library/dom": ">=10.4.1",

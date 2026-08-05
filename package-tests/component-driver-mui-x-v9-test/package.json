@@ -44,7 +44,7 @@
     "date-fns": "^4.1.0",
     "exceljs": "^4.3.0",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react-dom": "^19.2.8",
     "react-router-dom": "^7.7.1"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
     "@atomic-testing/react-19": "workspace:*",
     "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.4"
   },
   "browserslist": {
     "production": [

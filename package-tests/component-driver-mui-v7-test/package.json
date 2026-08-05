@@ -39,7 +39,7 @@
     "@mui/material": "^7.3.11",
     "indexed-collection": "^3.2.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
     "@atomic-testing/react-18": "workspace:*",
     "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0"
+    "@types/react-dom": "^19.2.4"
   },
   "browserslist": {
     "production": [
