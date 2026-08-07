@@ -27,10 +27,13 @@ X.Y.Z` and `dry_run: true`. It preflights, builds and asks npm to validate
    every tarball, uploading nothing.
 6. Create a GitHub Release with tag `vX.Y.Z`, targeting **the merged release
    commit**.
-7. The publish workflow runs the full PR verification and the full e2e matrix
-   against the tagged tree, asserts that every manifest and the changelog agree
-   with the tag, then publishes via OIDC with provenance. It writes nothing back
-   to the repository.
+7. The publish workflow first runs a **preflight** that asserts every manifest
+   and the changelog agree with the tag. It reads only the checkout, so it
+   answers in seconds and everything else depends on it — a tag that cannot ship
+   is rejected before the matrix starts, not after it. Then the full PR
+   verification and the full e2e matrix run against the tagged tree, and finally
+   it publishes via OIDC with provenance. It writes nothing back to the
+   repository.
 8. Verify: `npm view @atomic-testing/core version` → `X.Y.Z`.
 9. Float the consumers, now that the versions exist on npm:
    `pnpm bumpVersion X.Y.Z --consumers`, regenerate the standalone lockfiles (see

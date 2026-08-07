@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.101.0] - 2026-08-05
+
+### Breaking Changes
+
+- **core:** close 1.0-readiness gaps in timing, state semantics, packaging and release ([#1375](https://github.com/atomic-testing/atomic-testing/issues/1375))
+- **core:** close the breaking-if-deferred 1.0 API gaps and run core's tests ([#1304](https://github.com/atomic-testing/atomic-testing/issues/1304))
+
+### Fixes
+
+- **ci:** assert the tag before the gates, not after them
+- **example:** migrate shadcn workspace's DangerZoneDriver off content API
+- **mui-v7-test:** correct copy-paste name/description/keywords
+- **mui:** drop unused react-18 hard-dependency from mui-v7/mui-v9
+
+### Refactoring
+
+- **fluent-v9:** one absence convention across the package ([#1305](https://github.com/atomic-testing/atomic-testing/issues/1305))
+
+### Documentation
+
+- **mui:** fix stale line-range anchor after react-18 dep removal
+
+### Other
+
+- **e2e:** unblock the e2e tier and gate it in CI ([#1303](https://github.com/atomic-testing/atomic-testing/issues/1303))
+
 ## [0.100.0] - 2026-08-02
 
 ### Breaking Changes
