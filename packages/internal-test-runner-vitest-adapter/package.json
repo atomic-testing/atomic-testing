@@ -37,7 +37,7 @@
     "@atomic-testing/internal-test-runner": "workspace:*"
   },
   "devDependencies": {
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "vitest": ">= 3.0.0"
