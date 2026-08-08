@@ -199,14 +199,14 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
    * @param rowIndex
    * @returns
    */
-  async getRow(rowIndex: number): Promise<DataGridDataRowDriver | null> {
+  async getRow(rowIndex: number): Promise<Optional<DataGridDataRowDriver>> {
     const rowLocator = locatorUtil.append(this.locator, byCssSelector(`[role=row][data-rowindex="${rowIndex}"]`));
     const rowExists = await this.interactor.exists(rowLocator);
     if (rowExists) {
       return new DataGridDataRowDriver(rowLocator, this.interactor, this.commutableOption);
     }
 
-    return null;
+    return undefined;
   }
 
   /**
@@ -232,11 +232,11 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   async getCell<DriverT extends ComponentDriver>(
     query: DataGridCellQuery,
     driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
-  ): Promise<DriverT | null> {
+  ): Promise<Optional<DriverT>> {
     const rowDriver = await this.getRow(query.rowIndex);
 
-    if (rowDriver === null) {
-      return null;
+    if (rowDriver == null) {
+      return undefined;
     }
 
     if ('columnIndex' in query) {
@@ -900,9 +900,9 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   }
 
   /**
-   * The driver for the row's expanded detail-panel content, or `null` when the row exists but its
+   * The driver for the row's expanded detail-panel content, or `undefined` when the row exists but its
    * panel is not currently expanded. Throws when `rowIndex` does not correspond to any currently
-   * rendered row, matching {@link getRowText}/{@link getCellText} — `null` is reserved for "this
+   * rendered row, matching {@link getRowText}/{@link getCellText} — `undefined` is reserved for "this
    * row exists but its panel is collapsed."
    *
    * The panel renders as the row's next DOM sibling within the virtualized render zone rather than
@@ -910,7 +910,7 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
    * combinator rather than as a descendant. Caveat: MUI's virtualizer can render an off-window row
    * as a lone keyboard-focus placeholder (e.g. immediately after `scrollRowIntoView` moved focus
    * elsewhere) without stitching its panel in as a sibling for that render pass, even though the
-   * row is genuinely expanded — this can transiently return `null` for such a row.
+   * row is genuinely expanded — this can transiently return `undefined` for such a row.
    *
    * @param rowIndex The rendered `data-rowindex` of the row.
    * @param driverClass Optional, the driver class to use for the panel content, default to HTMLElementDriver.
@@ -918,13 +918,13 @@ export class DataGridPremiumDriver extends ComponentDriver<typeof parts> {
   async getRowDetailPanel<DriverT extends ComponentDriver = HTMLElementDriver>(
     rowIndex: number,
     driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
-  ): Promise<DriverT | null> {
+  ): Promise<Optional<DriverT>> {
     if (!(await this.interactor.exists(this.rowLocator(rowIndex)))) {
       throw new Error(`Row ${rowIndex} does not exist`);
     }
     const panel = this.rowDetailPanelLocator(rowIndex);
     if (!(await this.interactor.exists(panel))) {
-      return null;
+      return undefined;
     }
     return new driverClass(panel, this.interactor, this.commutableOption);
   }

@@ -107,14 +107,14 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
    * @param rowIndex
    * @returns
    */
-  async getRow(rowIndex: number): Promise<DataGridHeaderRowDriver | null> {
+  async getRow(rowIndex: number): Promise<Optional<DataGridHeaderRowDriver>> {
     const rowLocator = locatorUtil.append(this.locator, byCssSelector(`[role=row][data-rowindex="${rowIndex}"]`));
     const rowExists = await this.interactor.exists(rowLocator);
     if (rowExists) {
       return new DataGridHeaderRowDriver(rowLocator, this.interactor, this.commutableOption);
     }
 
-    return null;
+    return undefined;
   }
 
   /**
@@ -140,11 +140,11 @@ export class DataGridProDriver extends ComponentDriver<typeof parts> {
   async getCell<DriverT extends ComponentDriver>(
     query: DataGridCellQuery,
     driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
-  ): Promise<DriverT | null> {
+  ): Promise<Optional<DriverT>> {
     const rowDriver = await this.getRow(query.rowIndex);
 
-    if (rowDriver === null) {
-      return null;
+    if (rowDriver == null) {
+      return undefined;
     }
 
     if ('columnIndex' in query) {

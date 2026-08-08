@@ -53,14 +53,14 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
     return this.parts.menu.locator;
   }
 
-  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
+  async getMenuItemByLabel(label: string): Promise<Optional<MenuItemDriver>> {
     for await (const item of listHelper.getListItemIterator(this, menuItemLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   async selectByLabel(label: string): Promise<void> {

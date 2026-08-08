@@ -85,10 +85,10 @@ export class DateInputDriver extends ComponentDriver {
   }
 
   /** The open calendar popover's day cell for the given ISO date, scoped via `aria-controls`. */
-  protected async popoverDay(isoDate: string): Promise<PartLocator | null> {
+  protected async popoverDay(isoDate: string): Promise<Optional<PartLocator>> {
     const controlsId = await this.interactor.getAttribute(this.input, 'aria-controls');
     if (controlsId == null) {
-      return null;
+      return undefined;
     }
     return byCssSelector(`[id="${controlsId}"] [data-date="${isoDate}"]`, 'Root');
   }

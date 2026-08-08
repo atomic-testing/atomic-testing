@@ -474,6 +474,14 @@ jobs:
       - name: Dependency-major-pinning check
         run: pnpm check:deps-pinning
 
+      # Absence-convention gate (ABSENCE-*): fails if a read reports "nothing was
+      # found" with a bare `| null` instead of `Optional<T>`, per ADR-006 §7. The ADR
+      # ratified the split; until now nothing enforced it, which is how twelve driver
+      # packages kept the old spelling after fluent-v9 was converted. Same
+      # dependency-free, package.json/source-reading shape as its neighbours here.
+      - name: Absence-convention check
+        run: pnpm check:absence
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing

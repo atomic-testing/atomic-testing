@@ -20,6 +20,7 @@ import {
   PartLocator,
   ScenePart,
   ScenePartDriver,
+  Optional,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -109,7 +110,7 @@ export class SelectDriver
    * @param label
    * @returns
    */
-  async getMenuItemByLabel(label: string, option?: MenuItemGetOption): Promise<MenuItemDriver | null> {
+  async getMenuItemByLabel(label: string, option?: MenuItemGetOption): Promise<Optional<MenuItemDriver>> {
     if (!option?.skipDropdownCheck) {
       await this.openDropdown();
     }

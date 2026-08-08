@@ -51,7 +51,7 @@ export const dataTableTestSuite: TestSuiteInfo<typeof dataTableScenePart> = {
       });
 
       test('out-of-range reads resolve empty, not throwing', async () => {
-        assertEqual(await engine().parts.table.getRowByIndex(99), null);
+        assertEqual(await engine().parts.table.getRowByIndex(99), undefined);
         const firstRow = await engine().parts.table.getRowByIndex(0);
         assertEqual(await firstRow?.getCellText(99), undefined);
       });

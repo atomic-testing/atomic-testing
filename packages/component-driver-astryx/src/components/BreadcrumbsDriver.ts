@@ -21,7 +21,7 @@ export class BreadcrumbsDriver extends PositionalListDriver<BreadcrumbItemDriver
   protected readonly itemSelector = 'li.astryx-breadcrumb-item';
   protected readonly itemDriverClass: ComponentDriverCtor<BreadcrumbItemDriver> = BreadcrumbItemDriver;
 
-  protected override resolveListContainer(): Promise<PartLocator | null> {
+  protected override resolveListContainer(): Promise<Optional<PartLocator>> {
     return Promise.resolve(locatorUtil.append(this.locator, byCssSelector('ol')));
   }
 

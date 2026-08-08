@@ -6,6 +6,7 @@ import {
   listHelper,
   locatorUtil,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 // In MUI7, there is an extra div preceding the actual data cells. We need to skip it.
@@ -57,7 +58,7 @@ export abstract class DataGridRowDriverBase extends ComponentDriver {
   async getCell<DriverT extends ComponentDriver>(
     cellIndexOrField: number | string, // number: column index, string: column field
     driverClass: ComponentDriverCtor<DriverT> = HTMLElementDriver as ComponentDriverCtor<DriverT>
-  ): Promise<DriverT | null> {
+  ): Promise<Optional<DriverT>> {
     let cellLocator: PartLocator;
     if (typeof cellIndexOrField === 'number') {
       cellLocator = byAttribute('data-colindex', cellIndexOrField.toString());
@@ -70,7 +71,7 @@ export abstract class DataGridRowDriverBase extends ComponentDriver {
       return new driverClass(locator, this.interactor, this.commutableOption);
     }
 
-    return null;
+    return undefined;
   }
 
   protected abstract getCellLocator(): PartLocator;

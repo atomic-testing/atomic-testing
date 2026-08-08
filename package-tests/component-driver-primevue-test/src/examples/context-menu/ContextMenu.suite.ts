@@ -42,7 +42,7 @@ export const contextMenuTestSuite: TestSuiteInfo<typeof contextMenuScenePart> = 
         await engine().parts.target.waitForOpen();
         assertEqual(await (await engine().parts.target.getMenuItemByIndex(0))?.getLabel(), 'Copy');
         assertEqual(await (await engine().parts.target.getMenuItemByIndex(2))?.getLabel(), 'Delete');
-        assertEqual(await engine().parts.target.getMenuItemByIndex(3), null);
+        assertEqual(await engine().parts.target.getMenuItemByIndex(3), undefined);
       });
 
       test('reads the disabled item', async () => {

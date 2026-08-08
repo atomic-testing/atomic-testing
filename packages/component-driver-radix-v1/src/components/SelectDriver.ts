@@ -10,6 +10,7 @@ import {
   locatorUtil,
   PartLocator,
   ScenePart,
+  Optional,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -158,10 +159,10 @@ export class SelectDriver extends ComponentDriver<typeof selectParts> implements
   }
 
   /**
-   * The item whose visible label matches `label`, or `null` when absent. Opens
+   * The item whose visible label matches `label`, or `undefined` when absent. Opens
    * the dropdown first unless `option.skipDropdownCheck` is set.
    */
-  async getMenuItemByLabel(label: string, option?: SelectItemGetOption): Promise<MenuItemDriver | null> {
+  async getMenuItemByLabel(label: string, option?: SelectItemGetOption): Promise<Optional<MenuItemDriver>> {
     if (!option?.skipDropdownCheck) {
       await this.openDropdown();
     }
@@ -184,7 +185,7 @@ export class SelectDriver extends ComponentDriver<typeof selectParts> implements
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Click the item whose visible label matches `label`. @throws {MenuItemNotFoundError} when absent. */
@@ -204,8 +205,8 @@ export class SelectDriver extends ComponentDriver<typeof selectParts> implements
     return childListHelper.countMatchingChildren(this.interactor, container, optionSelector);
   }
 
-  /** The option at the given zero-based index, or `null` if out of range. */
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+  /** The option at the given zero-based index, or `undefined` if out of range. */
+  async getMenuItemByIndex(index: number): Promise<Optional<MenuItemDriver>> {
     const container = viewportLocator(this.parts.dropdown.locator);
     let position = 0;
     // childListHelper's `host` parameter is a bare `ComponentDriver` (no type
@@ -226,7 +227,7 @@ export class SelectDriver extends ComponentDriver<typeof selectParts> implements
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   /** Whether the trigger is disabled — Radix mirrors this as `aria-disabled`/`data-disabled`. */

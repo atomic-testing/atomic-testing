@@ -46,16 +46,16 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
   }
 
   /**
-   * Get the toggle button at the given zero-based index, or `null` if out of range.
+   * Get the toggle button at the given zero-based index, or `undefined` if out of range.
    */
   async getButtonByIndex(index: number): Promise<Optional<ToggleButtonDriver>> {
     return listHelper.getListItemByIndex(this, this.itemLocator, index, ToggleButtonDriver);
   }
 
   /**
-   * Get the toggle button whose `value` matches, or `null` if none.
+   * Get the toggle button whose `value` matches, or `undefined` if none.
    */
-  async getButtonByValue(value: string): Promise<ToggleButtonDriver | null> {
+  async getButtonByValue(value: string): Promise<Optional<ToggleButtonDriver>> {
     for await (const itemDriver of listHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
       if ((await itemDriver.getValue()) === value) {
         return itemDriver;
@@ -65,9 +65,9 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
   }
 
   /**
-   * Get the toggle button whose visible label (text content) matches, or `null` if none.
+   * Get the toggle button whose visible label (text content) matches, or `undefined` if none.
    */
-  async getButtonByLabel(label: string): Promise<ToggleButtonDriver | null> {
+  async getButtonByLabel(label: string): Promise<Optional<ToggleButtonDriver>> {
     for await (const itemDriver of listHelper.getListItemIterator(this, this.itemLocator, ToggleButtonDriver)) {
       if ((await itemDriver.getText())?.trim() === label) {
         return itemDriver;

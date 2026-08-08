@@ -8,6 +8,7 @@ import {
   listHelper,
   locatorUtil,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { RadioGroupItemDriver } from './RadioGroupItemDriver';
@@ -58,14 +59,14 @@ export class RadioGroupDriver
     return true;
   }
 
-  /** Get the item whose `value` matches, or `null` if none. */
-  async getItemByValue(value: string): Promise<RadioGroupItemDriver | null> {
+  /** Get the item whose `value` matches, or `undefined` if none. */
+  async getItemByValue(value: string): Promise<Optional<RadioGroupItemDriver>> {
     for await (const item of listHelper.getListItemIterator(this, this.itemsLocator, RadioGroupItemDriver)) {
       if ((await item.getValue()) === value) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Number of items in the group. */

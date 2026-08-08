@@ -60,19 +60,19 @@ export class TableDriver<ItemT extends TableRowDriver = TableRowDriver> extends 
   }
 
   /**
-   * The data-row driver at the given zero-based index, or `null` when out of range.
+   * The data-row driver at the given zero-based index, or `undefined` when out of range.
    */
   async getRow(index: number): Promise<Optional<ItemT>> {
     return this.getItemByIndex(index);
   }
 
   /**
-   * The header row as a {@link TableRowDriver}, or `null` when the table has no header.
+   * The header row as a {@link TableRowDriver}, or `undefined` when the table has no header.
    */
-  async getHeaderRow(): Promise<TableRowDriver | null> {
+  async getHeaderRow(): Promise<Optional<TableRowDriver>> {
     const locator = locatorUtil.append(this.locator, headerRowLocator);
     if (!(await this.interactor.exists(locator))) {
-      return null;
+      return undefined;
     }
     return new TableRowDriver(locator, this.interactor);
   }

@@ -55,7 +55,7 @@ export const selectTestSuite: TestSuiteInfo<typeof selectScenePart> = {
         await engine().parts.city.openDropdown();
         const first = await engine().parts.city.getMenuItemByIndex(0);
         assertEqual(await first?.getLabel(), 'Berlin');
-        assertEqual(await engine().parts.city.getMenuItemByIndex(99), null);
+        assertEqual(await engine().parts.city.getMenuItemByIndex(99), undefined);
       });
 
       test('two selects resolve their own overlays', async () => {

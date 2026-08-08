@@ -25,11 +25,11 @@ const contentChild = byCssSelector('.astryx-popover');
  * content is always mounted, so `getLabel`/`getContent` read in both states.
  */
 export class PopoverDriver extends ComponentDriver {
-  /** The popover panel element (the `aria-controls` target), or `null` when unlinked. */
-  private async resolvePanelLocator(): Promise<PartLocator | null> {
+  /** The popover panel element (the `aria-controls` target), or `undefined` when unlinked. */
+  private async resolvePanelLocator(): Promise<Optional<PartLocator>> {
     const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     if (!panelId) {
-      return null;
+      return undefined;
     }
     return byCssSelector(`[id="${panelId}"]`, 'Root');
   }

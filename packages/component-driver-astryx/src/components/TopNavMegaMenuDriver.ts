@@ -37,10 +37,10 @@ export class TopNavMegaMenuDriver extends PositionalListDriver<MenuItemDriver> {
   protected override readonly groupSelector = '*';
 
   /** The mega-menu panel, resolved via the trigger's `aria-controls` and re-rooted at the document. */
-  protected override async resolveListContainer(): Promise<PartLocator | null> {
+  protected override async resolveListContainer(): Promise<Optional<PartLocator>> {
     const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     if (!panelId) {
-      return null;
+      return undefined;
     }
     return byCssSelector(`[id="${panelId}"]`, 'Root');
   }

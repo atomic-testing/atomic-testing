@@ -89,7 +89,7 @@ export class CheckboxListDriver extends ListComponentDriver<CheckboxListItemDriv
     return resolveDescribedByRoleText(this.interactor, group, 'aria-describedby', 'tooltip');
   }
 
-  private async findByLabel(label: string): Promise<CheckboxListItemDriver | null> {
+  private async findByLabel(label: string): Promise<Optional<CheckboxListItemDriver>> {
     // Stream the rows and stop at the first match instead of materialising the
     // whole list first — rows are addressed by their button label, so this is the
     // label-aware analogue of the base `getItemByLabel` (which matches `getText`).
@@ -98,7 +98,7 @@ export class CheckboxListDriver extends ListComponentDriver<CheckboxListItemDriv
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   override get driverName(): string {

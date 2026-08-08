@@ -56,7 +56,7 @@ export const menuTestSuite: TestSuiteInfo<typeof menuScenePart> = {
         await openMenu();
         assertEqual(await (await engine().parts.menu.getMenuItemByIndex(0))?.getLabel(), 'New file');
         assertEqual(await (await engine().parts.menu.getMenuItemByIndex(2))?.getLabel(), 'Delete');
-        assertEqual(await engine().parts.menu.getMenuItemByIndex(3), null);
+        assertEqual(await engine().parts.menu.getMenuItemByIndex(3), undefined);
       });
 
       test('reads the disabled item', async () => {

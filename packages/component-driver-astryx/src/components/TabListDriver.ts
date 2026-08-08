@@ -31,7 +31,7 @@ export class TabListDriver extends PositionalListDriver<TabDriver> {
   protected readonly itemSelector = TAB_SELECTOR;
   protected readonly itemDriverClass: ComponentDriverCtor<TabDriver> = TabDriver;
 
-  protected override resolveListContainer(): Promise<PartLocator | null> {
+  protected override resolveListContainer(): Promise<Optional<PartLocator>> {
     return Promise.resolve(this.locator);
   }
 

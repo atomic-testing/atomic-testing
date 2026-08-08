@@ -160,8 +160,8 @@ export class DataTableDriver extends ComponentDriver<{}> {
     return childListHelper.countMatchingChildren(this.interactor, this.tbodyLocator, rowSelector);
   }
 
-  /** The body row at the given zero-based index, or `null` if out of range. */
-  async getRowByIndex(index: number): Promise<DataTableRowDriver | null> {
+  /** The body row at the given zero-based index, or `undefined` if out of range. */
+  async getRowByIndex(index: number): Promise<Optional<DataTableRowDriver>> {
     let position = 0;
     for await (const row of childListHelper.iterateMatchingChildren(
       this,
@@ -174,7 +174,7 @@ export class DataTableDriver extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   /**
@@ -182,12 +182,12 @@ export class DataTableDriver extends ComponentDriver<{}> {
    * on every body row (verified present outside virtual scroll too) and stable regardless of
    * scroll position, unlike {@link getRowByIndex}'s DOM-position addressing (which shifts once
    * virtual scroll windows the rendered rows — see {@link scrollRowIntoView}).
-   * @returns `null` when that row isn't currently rendered.
+   * @returns `undefined` when that row isn't currently rendered.
    */
-  async getRowByDataIndex(dataIndex: number): Promise<DataTableRowDriver | null> {
+  async getRowByDataIndex(dataIndex: number): Promise<Optional<DataTableRowDriver>> {
     const locator = locatorUtil.append(this.tbodyLocator, byCssSelector(`[data-p-index="${dataIndex}"]`));
     if (!(await this.interactor.exists(locator))) {
-      return null;
+      return undefined;
     }
     return new DataTableRowDriver(locator, this.interactor, this.commutableOption);
   }
@@ -240,7 +240,7 @@ export class DataTableDriver extends ComponentDriver<{}> {
     return (raw as Optional<SortDirection>) ?? 'none';
   }
 
-  private async getHeaderCellByLabel(columnLabel: string): Promise<HTMLElementDriver | null> {
+  private async getHeaderCellByLabel(columnLabel: string): Promise<Optional<HTMLElementDriver>> {
     for await (const header of childListHelper.iterateMatchingChildren(
       this,
       this.headerRowLocator,
@@ -251,7 +251,7 @@ export class DataTableDriver extends ComponentDriver<{}> {
         return header;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Select the row at `index` via its checkbox column, or a row click if there is none. @returns `false` if out of range */
@@ -367,8 +367,8 @@ export class DataTableDriver extends ComponentDriver<{}> {
     return locatorUtil.append(this.paginatorLocator, byCssSelector('[data-pc-section="pages"]'));
   }
 
-  /** The page-number button whose visible text is `pageNumber`, or `null` if not rendered. */
-  private async getPageButtonByNumber(pageNumber: number): Promise<HTMLElementDriver | null> {
+  /** The page-number button whose visible text is `pageNumber`, or `undefined` if not rendered. */
+  private async getPageButtonByNumber(pageNumber: number): Promise<Optional<HTMLElementDriver>> {
     const target = String(pageNumber);
     for await (const button of childListHelper.iterateMatchingChildren(
       this,
@@ -380,7 +380,7 @@ export class DataTableDriver extends ComponentDriver<{}> {
         return button;
       }
     }
-    return null;
+    return undefined;
   }
 
   private async clickPaginatorButton(section: 'next' | 'prev'): Promise<boolean> {

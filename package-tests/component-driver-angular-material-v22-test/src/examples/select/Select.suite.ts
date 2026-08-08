@@ -77,7 +77,7 @@ export const selectTestSuite: TestSuiteInfo<typeof selectScenePart> = {
         assertFalse(await green!.isDisabled());
 
         const missing = await engine().parts.color.getOptionByLabel('Purple');
-        assertEqual(missing, null);
+        assertEqual(missing, undefined);
       });
 
       test('selects an option by label and closes the panel', async () => {

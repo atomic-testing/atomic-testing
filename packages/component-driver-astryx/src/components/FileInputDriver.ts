@@ -113,13 +113,13 @@ export class FileInputDriver extends HTMLFileInputDriver {
   /**
    * The focusable `div[role="button"]` wrapper around the hidden input, resolved
    * from the document by the input's own `id` — the closest thing to a parent
-   * lookup this locator system supports. `null` when the input carries no `id`
+   * lookup this locator system supports. `undefined` when the input carries no `id`
    * (shouldn't happen; Astryx always sets one via `useId()`).
    */
-  private async wrapperLocator(): Promise<PartLocator | null> {
+  private async wrapperLocator(): Promise<Optional<PartLocator>> {
     const inputId = await this.interactor.getAttribute(this.locator, 'id');
     if (!inputId) {
-      return null;
+      return undefined;
     }
     return byCssSelector(`div[role="button"]:has(> input[id="${inputId}"])`, 'Root');
   }
