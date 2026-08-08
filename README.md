@@ -30,13 +30,21 @@ including but not limited to:
 
 ## Stability & version support policy
 
-The stable public API is the `.` barrel exports of the in-scope packages —
+The stable public API is the `.` barrel exports of the in-scope packages:
+
+<!-- frozen-set:start -->
+
 `core`, `dom-core`, `react-core`, `react-18`, `react-19`, `react-legacy`,
-`vue-3`, `playwright`, and `component-driver-html`. That surface is frozen under
-SemVer, machine-checked by a committed [API Extractor](https://api-extractor.com/)
-report per package (`etc/<package>.api.md`), and governed by a documented
-deprecation lifecycle. Anything else — every `@atomic-testing/internal-*` package
-and every export tagged `@internal` — is not covered by the guarantee.
+`vue-3`, `angular-core`, `angular-20`, `angular-21`, `angular-22`, `playwright`,
+`storybook`, and `component-driver-html`.
+
+<!-- frozen-set:end -->
+
+That surface is frozen under SemVer, machine-checked by a committed
+[API Extractor](https://api-extractor.com/) report per package
+(`etc/<package>.api.md`), and governed by a documented deprecation lifecycle.
+Anything else — every `@atomic-testing/internal-*` package and every export
+tagged `@internal` — is not covered by the guarantee.
 Full policy, including the framework/Playwright/Node support matrix:
 [ADR-006](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md).
 
