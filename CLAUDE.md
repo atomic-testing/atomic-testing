@@ -48,7 +48,7 @@ The local SCM may be **Git, Sapling (`sl`), or any git-compatible system** — t
 ## Commands
 
 ```bash
-pnpm install                    # Install dependencies (Node.js >=22.12, pnpm >=10)
+pnpm install                    # Install dependencies (Node.js >=22.13, pnpm >=10)
 pnpm run check:type             # Type check all packages with tsc (TypeScript 7 native)
 pnpm run check:lint             # oxlint with auto-fix (config: .oxlintrc.json)
 pnpm run check:style            # Format with oxfmt (JS/TS/JSX/JSON only; .md/.mdx/.css/.yaml left as-is)
@@ -284,6 +284,8 @@ export class MyDriver extends ComponentDriver<{}> implements IInputDriver<string
 > **Shipping a new component-driver _package_ (a new design system) or a framework engine?** Register it with the scaffolder so `create atomic-testing` offers it and it shows up in the generated **Framework & Runner Support** matrix (that matrix is derived from the same registry): add or extend a plugin in `packages/create-atomic-testing/src/registry/` (`designSystems.ts` / `frameworks.ts`) plus a `compatibility.ts` row. The `check:coverage` (COV-\*) CI gate fails if a shipped `component-driver-*` package isn't registered — **and separately if no CI job runs its tests**, so a new driver needs a `package-tests/*` package wired into `buildui.yml`'s matrix, not just a registry entry. Details: [`packages/create-atomic-testing/CLAUDE.md`](packages/create-atomic-testing/CLAUDE.md).
 
 > **Its `package.json`'s peer/framework dependencies** — don't copy a sibling package's `dependencies`/`peerDependencies` verbatim. Check the actual peerDependencies of the third-party library the new package wraps (its published `package.json`) and declare the framework-major range it really supports; don't assume it matches whatever an existing sibling declared. Only hard-depend on one specific `@atomic-testing/react-N`/`vue-N`/`angular-N` engine package if the wrapped design system's major is genuinely locked to that one framework major (e.g. Angular Material) — otherwise leave the framework as an open peerDependencies floor. `check:deps-pinning` (DEP-PIN-02) fails the build if a `component-driver-*` package's hard-depended engine major doesn't match its own. See [ADR-003](agent-docs/adr/003-version-specific-packages.md) for the mui-v7/mui-v9 case this guards against.
+
+> **And the ranges themselves** — `check:peer-floors` (PEER-01…04, [`scripts/check-peer-floors.mjs`](scripts/check-peer-floors.mjs)) holds the advertised peer ranges to the three rules ADR-006 §3 states: never advertise a range wider than one your own dependencies advertise for the same peer (a consumer in the gap satisfies you and breaks them), never declare a library as both a `dependency` and a `peerDependency` (the hard dep wins, so the peer is inert and a consumer gets a nested duplicate), and — for the `react-N`/`vue-N`/`angular-N` engines only — always bound the framework peer to your own major. Nothing else checks these: `auto-install-peers=true` plus `--no-frozen-lockfile` means every install resolves newest-satisfying, so a declared floor is prose that no CI run has ever executed.
 
 ## Testing Pattern
 

@@ -484,6 +484,15 @@ jobs:
       - name: Absence-convention check
         run: pnpm check:absence
 
+      # Peer-range coherence gate (PEER-*): ADR-006 §3 makes the advertised peer
+      # ranges part of the 1.0 contract, so a wrong one can only be corrected in a
+      # major. Nothing exercises them otherwise — `auto-install-peers=true` plus
+      # `pnpm install --no-frozen-lockfile` means every CI install resolves the
+      # NEWEST satisfying version, so the declared floors are pure prose until this
+      # compares them to each other.
+      - name: Peer-range coherence check
+        run: pnpm check:peer-floors
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing

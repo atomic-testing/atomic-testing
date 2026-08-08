@@ -28,7 +28,8 @@
     "bumpVersion": "node scripts/bumpVersion.js",
     "changelog": "node scripts/generateChangelog.js",
     "triage:dependabot": "tsx scripts/triage-dependabot-prs.ts",
-    "check:absence": "node scripts/check-absence-convention.mjs"
+    "check:absence": "node scripts/check-absence-convention.mjs",
+    "check:peer-floors": "node scripts/check-peer-floors.mjs"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.58.9",
