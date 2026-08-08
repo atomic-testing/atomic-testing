@@ -43,7 +43,7 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   override get driverName(): string {

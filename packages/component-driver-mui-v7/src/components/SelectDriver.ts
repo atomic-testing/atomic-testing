@@ -123,7 +123,7 @@ export class SelectDriver
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

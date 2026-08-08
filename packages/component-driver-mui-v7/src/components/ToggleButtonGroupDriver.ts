@@ -61,7 +61,7 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
         return itemDriver;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**
@@ -73,7 +73,7 @@ export class ToggleButtonGroupDriver extends ComponentDriver implements IInputDr
         return itemDriver;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

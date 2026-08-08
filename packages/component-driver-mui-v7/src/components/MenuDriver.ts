@@ -60,7 +60,7 @@ export class MenuDriver extends ComponentDriver<typeof parts> {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   async selectByLabel(label: string): Promise<void> {
