@@ -115,7 +115,7 @@ These steps are for working **on** Atomic Testing (this monorepo), not for using
 it in your own project — for that, see
 [Add Atomic Testing to your project](#add-atomic-testing-to-your-project) above.
 
-1. Install Node.js (v22.12 or newer) and [pnpm](https://pnpm.io/) (v10 or newer).
+1. Install Node.js (v22.13 or newer) and [pnpm](https://pnpm.io/) (v10 or newer).
 2. Install the dependencies:
 
    ```bash

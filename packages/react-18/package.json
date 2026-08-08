@@ -42,8 +42,7 @@
   "dependencies": {
     "@atomic-testing/core": "workspace:*",
     "@atomic-testing/dom-core": "workspace:*",
-    "@atomic-testing/react-core": "workspace:*",
-    "@testing-library/react": "^16.3.2"
+    "@atomic-testing/react-core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
