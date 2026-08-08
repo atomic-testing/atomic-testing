@@ -198,6 +198,15 @@ const parts = {
 | `ComponentDriver<T>`     | Base driver with child parts | Most drivers |
 | `ListComponentDriver<I>` | Driver for lists of items    | Menu, List   |
 
+`ListComponentDriver` (and `listHelper` generally) addresses item _i_ by `:nth-of-type`,
+which counts by **tag** — so it requires the items to be the homogeneous sibling set its
+item locator matches. A non-item sibling sharing the items' tag (a header or separator
+`<li>`, an `<optgroup>`) shifts that reckoning and used to truncate enumeration silently;
+a full walk now cross-checks itself against `getItemCount()` and throws
+`ListEnumerationMismatchError` instead. Mixed-sibling lists belong on `childListHelper`'s
+`:nth-child` + selector filter, which skips non-matching siblings without losing its place
+(and recurses into wrappers given a `groupSelector`).
+
 A caller-supplied interior is **not** a driver type — every driver inherits
 `within(parts)`, which resolves a `ScenePart` at call time (synchronously; locators
 are lazy) against the driver's `interiorLocator`. That anchor defaults to the driver's

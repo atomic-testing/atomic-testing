@@ -1,4 +1,5 @@
 import { Optional } from '../dataTypes';
+import { ListEnumerationMismatchError } from '../errors/ListEnumerationMismatchError';
 import { byCssSelector, type PartLocator } from '../locators';
 import { ComponentDriverCtor, ScenePart } from '../partTypes';
 import { append } from '../utils/locatorUtil';
@@ -37,10 +38,37 @@ export async function getListItemByIndex<HostPartT extends ScenePart, ItemT exte
 /**
  * Get an iterator of list item driver.
  * List item is an indefinite number of items under the same host
+ *
+ * Iteration stops at the first index that does not resolve. For the homogeneous
+ * sibling set this addressing requires (see {@link getListItemCount}) that is the
+ * end of the list — but when a non-item sibling shares the items' tag, the
+ * `:nth-of-type` reckoning shifts and the first shifted index misses, halting
+ * enumeration mid-list. So on running to completion this cross-checks the number
+ * of items it reached against the number the locator actually matches, and throws
+ * {@link ListEnumerationMismatchError} when they disagree.
+ *
+ * Truncation used to be silent, which made it strictly worse than a failure: a
+ * header `<li>` ahead of the items yielded an EMPTY list while `getListItemCount`
+ * reported 3, and `getItemByLabel` reported "no such item" for an item plainly
+ * present. Callers cannot detect this themselves — a short list and a genuinely
+ * short list are identical at the call site — so the check belongs here, in the
+ * primitive whose addressing creates the hazard, rather than in each of its
+ * consumers.
+ *
+ * Costs one extra {@link Interactor.getElementCount} per completed enumeration,
+ * against the n + 1 `exists()` round-trips the walk already spends. A consumer that
+ * breaks out early (a label search that finds its match) never reaches the check
+ * and never pays for it — and is not making a completeness claim to check.
+ *
+ * A walk with a non-zero `startIndex` is **not** checked; see the comment at the
+ * check for why the two reckonings cannot be reconciled across a tag-position offset.
+ *
  * @param host The component the list item is under
  * @param itemLocatorBase The locator of the list item without the index, the locator should already compound the host locator if needed
  * @param driverClass The driver class of the list item
  * @param startIndex The starting index of the list item iterator, default is 0
+ * @throws {@link ListEnumerationMismatchError} when enumeration completes having
+ * reached fewer items than `itemLocatorBase` matches.
  */
 export async function* getListItemIterator<HostPartT extends ScenePart, ItemT extends ComponentDriver>(
   host: ComponentDriver<HostPartT>,
@@ -54,6 +82,24 @@ export async function* getListItemIterator<HostPartT extends ScenePart, ItemT ex
     yield item;
     index++;
     item = await getListItemByIndex(host, itemLocatorBase, index, driverClass);
+  }
+
+  // Only a walk from 0 can be checked. `startIndex` is an offset into TAG positions,
+  // not into matched elements, and the two are not convertible: MUI X's
+  // DataGridRowDriverBase passes startIndex 1 to skip a filler <div> that precedes the
+  // real cells, and that filler holds tag position 1 while matching none of the five
+  // `[role=columnheader]` elements the locator counts. Subtracting startIndex from the
+  // match count would therefore expect 4 where 5 is right — which is exactly the false
+  // positive this guard produced against the DataGrid suites before being scoped here.
+  // Establishing how many matched elements sit below startIndex would take extra
+  // queries to answer a question the caller has already opted out of by asking for an
+  // offset walk, so a partial walk stays unchecked.
+  if (startIndex !== 0) {
+    return;
+  }
+  const matchedCount = await getListItemCount(host, itemLocatorBase);
+  if (index !== matchedCount) {
+    throw new ListEnumerationMismatchError(itemLocatorBase, host, matchedCount, index);
   }
 }
 

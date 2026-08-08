@@ -503,6 +503,20 @@ export interface ListComponentPartDefinition<ItemT extends ComponentDriver<any>>
     option: ListComponentDriverSpecificOption<ItemT> & Partial<IComponentDriverOption<ScenePart>>;
 }
 
+// @public
+export class ListEnumerationMismatchError extends ErrorBase {
+    constructor(itemLocator: PartLocator, driver: {
+        driverName: string;
+    }, matchedCount: number, enumeratedCount: number);
+    readonly enumeratedCount: number;
+    // (undocumented)
+    readonly locatorDescription: string;
+    readonly matchedCount: number;
+}
+
+// @public (undocumented)
+export const ListEnumerationMismatchErrorId = "ListEnumerationMismatchError";
+
 // @public (undocumented)
 export namespace listHelper {
     export { collectItemLabels, getListItemByIndex, getListItemCount, getListItemIterator };

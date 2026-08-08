@@ -1,3 +1,4 @@
+import { ListEnumerationMismatchError } from '../../errors/ListEnumerationMismatchError';
 import { Interactor } from '../../interactor/Interactor';
 import { byDataTestId } from '../../locators/byDataTestId';
 import type { PartLocator } from '../../locators/PartLocator';
@@ -13,15 +14,24 @@ class LeafDriver extends ComponentDriver<{}> {
 const itemLocatorBase = byDataTestId('row');
 
 /** A fake Interactor whose `exists()` answers true for :nth-of-type positions
- * below `matchCount`, modeling a homogeneous list of exactly that many items. */
-function createInteractor(matchCount: number): Interactor {
+ * below `positionCount`, modeling a homogeneous list of exactly that many items.
+ *
+ * `getElementCount` answers `matchCount`, which defaults to agreeing with the
+ * positional view. Passing the two separately is what lets a test model a
+ * NON-homogeneous list — the disagreement between "positions walked" and "elements
+ * matched" IS the defect — but note this fake can only model the disagreement, not
+ * produce it: it parses `:nth-of-type(n)` out of the selector rather than resolving
+ * it, so it encodes the homogeneity assumption by construction. The real-DOM
+ * consequences are covered in dom-core/__tests__/listEnumeration.dom.test.ts. */
+function createInteractor(positionCount: number, matchCount: number = positionCount): Interactor {
   const exists = jest.fn(async (locator: PartLocator) => {
     const [{ selector }] = locator.slice(-1);
     const match = /:nth-of-type\((\d+)\)$/.exec(selector);
     const position = match ? Number(match[1]) : NaN;
-    return position >= 1 && position <= matchCount;
+    return position >= 1 && position <= positionCount;
   });
-  return { exists } as unknown as Interactor;
+  const getElementCount = jest.fn(async () => matchCount);
+  return { exists, getElementCount } as unknown as Interactor;
 }
 
 describe('getListItemByIndex', () => {
@@ -96,6 +106,55 @@ describe('getListItemIterator', () => {
     }
 
     expect(items).toEqual([]);
+  });
+
+  // Truncation used to be silent, which made it worse than a failure: the caller got
+  // a short array indistinguishable from a genuinely short list.
+  it('throws when a completed walk reached fewer items than the locator matches', async () => {
+    const interactor = createInteractor(2, 5);
+    const host = new LeafDriver(itemLocatorBase, interactor);
+
+    const walk = async () => {
+      for await (const _ of getListItemIterator(host, itemLocatorBase, LeafDriver)) {
+        // drain
+      }
+    };
+
+    await expect(walk()).rejects.toThrow(ListEnumerationMismatchError);
+    await expect(walk()).rejects.toMatchObject({ matchedCount: 5, enumeratedCount: 2 });
+  });
+
+  // Regression guard for a false positive this check originally had, caught by MUI X's
+  // DataGrid suites. `startIndex` is an offset into TAG positions, not into matched
+  // elements: DataGridRowDriverBase skips a filler <div> that holds tag position 1 while
+  // matching none of the [role=columnheader] elements the locator counts. So "walked 5,
+  // matched 5, started at 1" is correct and must not be read as a shortfall of one.
+  it('leaves an offset walk unchecked rather than misreading the offset as a shortfall', async () => {
+    const interactor = createInteractor(6, 5);
+    const host = new LeafDriver(itemLocatorBase, interactor);
+
+    const items = [];
+    for await (const item of getListItemIterator(host, itemLocatorBase, LeafDriver, 1)) {
+      items.push(item);
+    }
+
+    expect(items).toHaveLength(5);
+  });
+
+  // A consumer that stops early is not claiming it saw everything, so it must not
+  // pay for the check — nor be failed by it.
+  it('does not check completeness when the consumer breaks out early', async () => {
+    const interactor = createInteractor(2, 5);
+    const host = new LeafDriver(itemLocatorBase, interactor);
+
+    const firstOnly = [];
+    for await (const item of getListItemIterator(host, itemLocatorBase, LeafDriver)) {
+      firstOnly.push(item);
+      break;
+    }
+
+    expect(firstOnly).toHaveLength(1);
+    expect(interactor.getElementCount).not.toHaveBeenCalled();
   });
 });
 

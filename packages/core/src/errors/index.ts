@@ -2,6 +2,7 @@ export { ElementNotFoundError, ElementNotFoundErrorId } from './ElementNotFoundE
 export { ErrorBase } from './ErrorBase';
 export { InteractorErrorBase } from './InteractorErrorBase';
 export { ItemNotFoundError, ItemNotFoundErrorId } from './ItemNotFoundError';
+export { ListEnumerationMismatchError, ListEnumerationMismatchErrorId } from './ListEnumerationMismatchError';
 export { LocatorResolutionError, LocatorResolutionErrorId } from './LocatorResolutionError';
 export { MissingPartError, MissingPartErrorId } from './MissingPartError';
 export { WaitForFailureError, WaitForFailureErrorId } from './WaitForFailureError';
