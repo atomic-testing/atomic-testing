@@ -41,11 +41,13 @@ export async function getListItemByIndex<HostPartT extends ScenePart, ItemT exte
  *
  * Iteration stops at the first index that does not resolve. For the homogeneous
  * sibling set this addressing requires (see {@link getListItemCount}) that is the
- * end of the list — but when a non-item sibling shares the items' tag, the
- * `:nth-of-type` reckoning shifts and the first shifted index misses, halting
- * enumeration mid-list. So on running to completion this cross-checks the number
- * of items it reached against the number the locator actually matches, and throws
- * {@link ListEnumerationMismatchError} when they disagree.
+ * end of the list — but any list whose items are not a uniform run of siblings can
+ * halt it mid-list instead (a same-tag non-item shifting the reckoning, per-item
+ * wrappers making every item `:nth-of-type(1)`; see
+ * {@link ListEnumerationMismatchError} for the full set). So on running to
+ * completion this cross-checks the number of items it reached against the number the
+ * locator actually matches, and throws {@link ListEnumerationMismatchError} when
+ * they disagree.
  *
  * Truncation used to be silent, which made it strictly worse than a failure: a
  * header `<li>` ahead of the items yielded an EMPTY list while `getListItemCount`
