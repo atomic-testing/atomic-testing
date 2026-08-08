@@ -68,13 +68,13 @@ export const selectTestSuite: TestSuiteInfo<typeof selectScenePart> = {
         assertEqual(await banana?.getLabel(), 'Banana');
       });
 
-      test('getMenuItemByIndex returns options positionally, and null out of range', async () => {
+      test('getMenuItemByIndex returns options positionally, and undefined out of range', async () => {
         await engine().parts.fruit.openDropdown();
 
         assertEqual(await (await engine().parts.fruit.getMenuItemByIndex(0))?.getLabel(), 'Apple');
         assertEqual(await (await engine().parts.fruit.getMenuItemByIndex(1))?.getLabel(), 'Banana');
         assertEqual(await (await engine().parts.fruit.getMenuItemByIndex(2))?.getLabel(), 'Cherry');
-        assertEqual(await engine().parts.fruit.getMenuItemByIndex(3), null);
+        assertEqual(await engine().parts.fruit.getMenuItemByIndex(3), undefined);
       });
 
       test('reads the disabled item', async () => {

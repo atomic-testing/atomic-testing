@@ -30,14 +30,14 @@ export class ToggleGroupDriver extends ComponentDriver<{}> {
     return listHelper.getListItemByIndex(this, this.itemsLocator, index, ToggleDriver);
   }
 
-  /** Get the item whose visible label (text content) matches, or `null` if none. */
-  async getItemByLabel(label: string): Promise<ToggleDriver | null> {
+  /** Get the item whose visible label (text content) matches, or `undefined` if none. */
+  async getItemByLabel(label: string): Promise<Optional<ToggleDriver>> {
     for await (const item of listHelper.getListItemIterator(this, this.itemsLocator, ToggleDriver)) {
       if ((await item.getText())?.trim() === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Number of items in the group. */

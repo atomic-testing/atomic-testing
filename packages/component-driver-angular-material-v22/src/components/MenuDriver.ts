@@ -54,17 +54,17 @@ export class MenuDriver extends ComponentDriver<{}> {
   }
 
   /**
-   * Get the driver of the item whose visible label equals `label`, or `null`
+   * Get the driver of the item whose visible label equals `label`, or `undefined`
    * when no item matches. The menu must be open.
    */
-  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
+  async getMenuItemByLabel(label: string): Promise<Optional<MenuItemDriver>> {
     for await (const item of listHelper.getListItemIterator(this, this.menuItemsLocator, MenuItemDriver)) {
       const itemLabel = await item.label();
       if (itemLabel === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**
@@ -88,7 +88,7 @@ export class MenuDriver extends ComponentDriver<{}> {
   }
 
   /**
-   * Get the menu item at the given zero-based index, or `null` if out of
+   * Get the menu item at the given zero-based index, or `undefined` if out of
    * range. Complements the label-based {@link getMenuItemByLabel}.
    */
   async getMenuItemByIndex(index: number): Promise<Optional<MenuItemDriver>> {

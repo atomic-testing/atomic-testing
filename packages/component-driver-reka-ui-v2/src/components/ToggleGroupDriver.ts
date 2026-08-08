@@ -44,13 +44,13 @@ export class ToggleGroupDriver extends ComponentDriver<{}> {
     return listHelper.getListItemByIndex(this, this.itemsLocator, index, ToggleDriver);
   }
 
-  async getItemByLabel(label: string): Promise<ToggleDriver | null> {
+  async getItemByLabel(label: string): Promise<Optional<ToggleDriver>> {
     for await (const item of listHelper.getListItemIterator(this, this.itemsLocator, ToggleDriver)) {
       if ((await item.getText())?.trim() === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   async getItemCount(): Promise<number> {

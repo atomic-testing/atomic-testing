@@ -1,4 +1,4 @@
-import { byCssSelector, PartLocator } from '@atomic-testing/core';
+import { byCssSelector, PartLocator, Optional } from '@atomic-testing/core';
 
 import { AstryxMenuDriver } from './AstryxMenuDriver';
 
@@ -15,10 +15,10 @@ import { AstryxMenuDriver } from './AstryxMenuDriver';
  * clicks the trigger, and verifying the panel actually opened is E2E-only.
  */
 export class BreadcrumbMenuDriver extends AstryxMenuDriver {
-  protected override async resolveMenuLocator(): Promise<PartLocator | null> {
+  protected override async resolveMenuLocator(): Promise<Optional<PartLocator>> {
     const menuId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     if (!menuId) {
-      return null;
+      return undefined;
     }
     return byCssSelector(`[id="${menuId}"]`, 'Root');
   }

@@ -55,7 +55,7 @@ export const masterDetailDataGridPremiumTestSuite: TestSuiteInfo<typeof masterDe
 
     test('getRowDetailPanel returns null before expansion and a driver over the panel content after', async () => {
       await engine().parts.grid.waitForLoad();
-      assertEqual(await engine().parts.grid.getRowDetailPanel(detailedRowIndex), null);
+      assertEqual(await engine().parts.grid.getRowDetailPanel(detailedRowIndex), undefined);
 
       await engine().parts.grid.expandRowDetail(detailedRowIndex);
       const panel = await engine().parts.grid.getRowDetailPanel(detailedRowIndex);

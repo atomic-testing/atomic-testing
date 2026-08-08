@@ -189,12 +189,12 @@ export class DataTableRowDriver extends ComponentDriver<{}> {
     return editing === 'false';
   }
 
-  private cellEditorInputLocator(cell: PartLocator | null): PartLocator | null {
-    return cell == null ? null : locatorUtil.append(cell, byCssSelector('input'));
+  private cellEditorInputLocator(cell: Optional<PartLocator>): Optional<PartLocator> {
+    return cell == null ? undefined : locatorUtil.append(cell, byCssSelector('input'));
   }
 
-  /** The `role="cell"` `<td>` at `columnIndex`, or `null` when out of range. */
-  private async getCellLocatorByIndex(columnIndex: number): Promise<PartLocator | null> {
+  /** The `role="cell"` `<td>` at `columnIndex`, or `undefined` when out of range. */
+  private async getCellLocatorByIndex(columnIndex: number): Promise<Optional<PartLocator>> {
     let position = 0;
     for await (const cell of childListHelper.iterateMatchingChildren(
       this,
@@ -207,7 +207,7 @@ export class DataTableRowDriver extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   get driverName(): string {

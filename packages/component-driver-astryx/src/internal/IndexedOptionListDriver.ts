@@ -46,14 +46,14 @@ export abstract class IndexedOptionListDriver extends ComponentDriver {
     return locators;
   }
 
-  /** The option locator whose visible text matches `label`, or `null` when absent. */
-  protected async findOptionByLabel(label: string): Promise<PartLocator | null> {
+  /** The option locator whose visible text matches `label`, or `undefined` when absent. */
+  protected async findOptionByLabel(label: string): Promise<Optional<PartLocator>> {
     for (const locator of await this.optionLocators()) {
       if ((await this.interactor.getText(locator))?.trim() === label) {
         return locator;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** The visible labels of the options currently in the open popup, in DOM order. */

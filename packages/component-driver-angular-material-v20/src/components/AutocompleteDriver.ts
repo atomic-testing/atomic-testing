@@ -11,6 +11,7 @@ import {
   listHelper,
   locatorUtil,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -149,15 +150,15 @@ export class AutocompleteDriver
   /**
    * Get the driver of the option whose visible label equals `label`, opening
    * the panel first unless `skipDropdownCheck` says the caller already did.
-   * Returns `null` when no option matches — including when the panel cannot
+   * Returns `undefined` when no option matches — including when the panel cannot
    * open because filtering has left nothing to show.
    */
-  async getOptionByLabel(label: string, option?: OptionGetOption): Promise<OptionDriver | null> {
+  async getOptionByLabel(label: string, option?: OptionGetOption): Promise<Optional<OptionDriver>> {
     if (!option?.skipDropdownCheck) {
       await this.openDropdown();
     }
     if (!(await this.isDropdownOpen())) {
-      return null;
+      return undefined;
     }
     for await (const item of listHelper.getListItemIterator(this, this.optionsLocator, OptionDriver)) {
       const itemLabel = await item.label();
@@ -165,7 +166,7 @@ export class AutocompleteDriver
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**
@@ -205,7 +206,7 @@ export class AutocompleteDriver
    * window
    */
   async selectByLabel(label: string): Promise<void> {
-    const item = await this.interactor.waitUntil<OptionDriver | null>({
+    const item = await this.interactor.waitUntil<Optional<OptionDriver>>({
       probeFn: () => this.getOptionByLabel(label),
       terminateCondition: value => value != null,
       timeoutMs: defaultFilterSettleMs,
@@ -262,7 +263,7 @@ export class AutocompleteDriver
       return true;
     }
     await this.enterText(value);
-    const item = await this.interactor.waitUntil<OptionDriver | null>({
+    const item = await this.interactor.waitUntil<Optional<OptionDriver>>({
       probeFn: () => this.getOptionByLabel(value),
       terminateCondition: candidate => candidate != null,
       timeoutMs: defaultFilterSettleMs,

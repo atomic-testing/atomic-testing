@@ -61,7 +61,7 @@ export const menuTestSuite: TestSuiteInfo<typeof menuScenePart> = {
           assertTrue(await logout?.isDisabled());
           const profile = await engine().parts.accountMenu.getMenuItemByLabel('Profile');
           assertFalse(await profile?.isDisabled());
-          assertEqual(await engine().parts.accountMenu.getMenuItemByLabel('Missing'), null);
+          assertEqual(await engine().parts.accountMenu.getMenuItemByLabel('Missing'), undefined);
         });
 
         test('activating an item runs its handler and closes the menu', async () => {

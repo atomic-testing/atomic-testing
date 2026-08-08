@@ -140,7 +140,7 @@ export const autocompleteTestSuite: TestSuiteInfo<typeof autocompleteScenePart> 
         const red = await engine().parts.color.getOptionByLabel('Red');
         assertFalse(await red!.isDisabled());
         const missing = await engine().parts.color.getOptionByLabel('Purple');
-        assertEqual(missing, null);
+        assertEqual(missing, undefined);
       });
 
       test('reports disabled and required state', async () => {

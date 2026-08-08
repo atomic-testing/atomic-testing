@@ -1,4 +1,4 @@
-import { childListHelper, ComponentDriver } from '@atomic-testing/core';
+import { childListHelper, ComponentDriver, Optional } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
 import { MenuItemDriver } from './MenuItemDriver';
@@ -31,8 +31,8 @@ const menuItemSelector = '[role="menuitem"]';
  * @internal
  */
 export abstract class MenuContentDriverBase extends ComponentDriver<{}> {
-  /** The item whose visible label matches `label`, or `null` when absent. */
-  async getMenuItemByLabel(label: string): Promise<MenuItemDriver | null> {
+  /** The item whose visible label matches `label`, or `undefined` when absent. */
+  async getMenuItemByLabel(label: string): Promise<Optional<MenuItemDriver>> {
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
       this.locator,
@@ -44,7 +44,7 @@ export abstract class MenuContentDriverBase extends ComponentDriver<{}> {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Click the item whose visible label matches `label`. @throws {MenuItemNotFoundError} when absent. */
@@ -62,8 +62,8 @@ export abstract class MenuContentDriverBase extends ComponentDriver<{}> {
     return childListHelper.countMatchingChildren(this.interactor, this.locator, menuItemSelector);
   }
 
-  /** The item at the given zero-based index, or `null` if out of range. */
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+  /** The item at the given zero-based index, or `undefined` if out of range. */
+  async getMenuItemByIndex(index: number): Promise<Optional<MenuItemDriver>> {
     let position = 0;
     for await (const item of childListHelper.iterateMatchingChildren(
       this,
@@ -76,6 +76,6 @@ export abstract class MenuContentDriverBase extends ComponentDriver<{}> {
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 }

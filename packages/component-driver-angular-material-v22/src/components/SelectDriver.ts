@@ -11,6 +11,7 @@ import {
   listHelper,
   locatorUtil,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -148,9 +149,9 @@ export class SelectDriver
   /**
    * Get the driver of the option whose visible label equals `label`, opening
    * the panel first unless `skipDropdownCheck` says the caller already did.
-   * Returns `null` when no option matches.
+   * Returns `undefined` when no option matches.
    */
-  async getOptionByLabel(label: string, option?: OptionGetOption): Promise<OptionDriver | null> {
+  async getOptionByLabel(label: string, option?: OptionGetOption): Promise<Optional<OptionDriver>> {
     if (!option?.skipDropdownCheck) {
       await this.openDropdown();
     }
@@ -160,7 +161,7 @@ export class SelectDriver
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

@@ -21,10 +21,10 @@ import { AstryxMenuDriver } from './AstryxMenuDriver';
  * popover is not interactable in a real browser.
  */
 export class DropdownMenuDriver extends AstryxMenuDriver {
-  protected override async resolveMenuLocator(): Promise<PartLocator | null> {
+  protected override async resolveMenuLocator(): Promise<Optional<PartLocator>> {
     const menuId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     if (!menuId) {
-      return null;
+      return undefined;
     }
     return byCssSelector(`[id="${menuId}"]`, 'Root');
   }

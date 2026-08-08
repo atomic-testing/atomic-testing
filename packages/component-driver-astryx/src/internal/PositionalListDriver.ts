@@ -35,10 +35,10 @@ export abstract class PositionalListDriver<ItemT extends LabelledItemDriver> ext
   protected readonly groupSelector?: string;
 
   /**
-   * The element whose children are the list items, or `null` when it cannot be
+   * The element whose children are the list items, or `undefined` when it cannot be
    * resolved (e.g. a closed menu with no `aria-controls`).
    */
-  protected abstract resolveListContainer(): Promise<PartLocator | null>;
+  protected abstract resolveListContainer(): Promise<Optional<PartLocator>>;
 
   /** Every item driver, in DOM order. */
   async getItems(): Promise<ItemT[]> {
@@ -69,14 +69,14 @@ export abstract class PositionalListDriver<ItemT extends LabelledItemDriver> ext
     return listHelper.collectItemLabels(await this.getItems());
   }
 
-  /** The item driver whose visible label matches `label`, or `null` when absent. */
-  async getItemByLabel(label: string): Promise<ItemT | null> {
+  /** The item driver whose visible label matches `label`, or `undefined` when absent. */
+  async getItemByLabel(label: string): Promise<Optional<ItemT>> {
     for (const item of await this.getItems()) {
       if ((await item.getLabel()) === label) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /**

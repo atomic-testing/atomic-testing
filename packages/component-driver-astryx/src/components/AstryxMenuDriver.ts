@@ -47,12 +47,12 @@ export abstract class AstryxMenuDriver extends PositionalListDriver<MenuItemDriv
 
   /**
    * The `role="menu"` element whose `role="menuitem"` children are this menu's
-   * items, or `null` when it cannot be resolved (e.g. a closed menu with no
+   * items, or `undefined` when it cannot be resolved (e.g. a closed menu with no
    * `aria-controls`).
    */
-  protected abstract resolveMenuLocator(): Promise<PartLocator | null>;
+  protected abstract resolveMenuLocator(): Promise<Optional<PartLocator>>;
 
-  protected override resolveListContainer(): Promise<PartLocator | null> {
+  protected override resolveListContainer(): Promise<Optional<PartLocator>> {
     return this.resolveMenuLocator();
   }
 

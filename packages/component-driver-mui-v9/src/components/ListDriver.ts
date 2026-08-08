@@ -6,6 +6,7 @@ import {
   ListComponentDriverSpecificOption,
   listHelper,
   PartLocator,
+  Optional,
 } from '@atomic-testing/core';
 
 import { ListItemDriver } from './ListItemDriver';
@@ -27,13 +28,13 @@ export class ListDriver<ItemT extends ListItemDriver = ListItemDriver> extends L
     super(locator, interactor, option);
   }
 
-  async getSelected(): Promise<ListItemDriver | null> {
+  async getSelected(): Promise<Optional<ListItemDriver>> {
     for await (const item of listHelper.getListItemIterator(this, this.getItemLocator(), ListItemDriver)) {
       if (await item.isSelected()) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   override get driverName(): string {

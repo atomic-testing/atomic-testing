@@ -1,4 +1,4 @@
-import { byCssSelector, PartLocator } from '@atomic-testing/core';
+import { byCssSelector, PartLocator, Optional } from '@atomic-testing/core';
 
 import { AstryxMenuDriver } from './AstryxMenuDriver';
 
@@ -43,7 +43,7 @@ export class ContextMenuDriver extends AstryxMenuDriver {
    * body-level popover with no id link back to the trigger, so this is best-effort
    * for a single ContextMenu per scene (documented v1 limit).
    */
-  protected override resolveMenuLocator(): Promise<PartLocator | null> {
+  protected override resolveMenuLocator(): Promise<Optional<PartLocator>> {
     return Promise.resolve(byCssSelector('[role="menu"]', 'Root'));
   }
 

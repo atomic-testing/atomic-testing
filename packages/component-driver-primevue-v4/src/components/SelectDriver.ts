@@ -11,6 +11,7 @@ import {
   locatorUtil,
   PartLocator,
   ScenePart,
+  Optional,
 } from '@atomic-testing/core';
 
 import { MenuItemNotFoundError } from '../errors/MenuItemNotFoundError';
@@ -150,10 +151,10 @@ export class SelectDriver
   }
 
   /**
-   * The item whose visible label matches `label`, or `null` when absent. Opens
+   * The item whose visible label matches `label`, or `undefined` when absent. Opens
    * the dropdown first unless `option.skipDropdownCheck` is set.
    */
-  async getMenuItemByLabel(label: string, option?: SelectItemGetOption): Promise<MenuItemDriver | null> {
+  async getMenuItemByLabel(label: string, option?: SelectItemGetOption): Promise<Optional<MenuItemDriver>> {
     if (!option?.skipDropdownCheck) {
       await this.openDropdown();
     }
@@ -174,7 +175,7 @@ export class SelectDriver
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Click the item whose visible label matches `label`. @throws {MenuItemNotFoundError} when absent. */
@@ -193,8 +194,8 @@ export class SelectDriver
     return childListHelper.countMatchingChildren(this.interactor, this.parts.dropdown.locator, optionSelector);
   }
 
-  /** The option at the given zero-based index, or `null` if out of range. */
-  async getMenuItemByIndex(index: number): Promise<MenuItemDriver | null> {
+  /** The option at the given zero-based index, or `undefined` if out of range. */
+  async getMenuItemByIndex(index: number): Promise<Optional<MenuItemDriver>> {
     let position = 0;
     // See the variance-cast note in getMenuItemByLabel.
     for await (const item of childListHelper.iterateMatchingChildren(
@@ -208,7 +209,7 @@ export class SelectDriver
       }
       position++;
     }
-    return null;
+    return undefined;
   }
 
   /** Whether the select is disabled — `aria-disabled` on the combobox, per PrimeVue's a11y contract. */

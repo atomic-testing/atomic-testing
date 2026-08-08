@@ -1,4 +1,4 @@
-import { childListHelper, ComponentDriver, IInputDriver } from '@atomic-testing/core';
+import { childListHelper, ComponentDriver, IInputDriver, Optional } from '@atomic-testing/core';
 
 import { RadioButtonDriver } from './RadioButtonDriver';
 
@@ -47,14 +47,14 @@ export class RadioButtonGroupDriver extends ComponentDriver<{}> implements IInpu
     return true;
   }
 
-  /** The radio whose `value` matches, or `null` if none. */
-  async getItemByValue(value: string): Promise<RadioButtonDriver | null> {
+  /** The radio whose `value` matches, or `undefined` if none. */
+  async getItemByValue(value: string): Promise<Optional<RadioButtonDriver>> {
     for await (const item of this.iterateItems()) {
       if ((await item.getValue()) === value) {
         return item;
       }
     }
-    return null;
+    return undefined;
   }
 
   /** Number of radios in the group. */

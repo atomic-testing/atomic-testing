@@ -29,7 +29,7 @@ export class TopNavDriver extends PositionalListDriver<TopNavItemDriver> {
   protected readonly itemDriverClass: ComponentDriverCtor<TopNavItemDriver> = TopNavItemDriver;
   protected override readonly groupSelector = '*';
 
-  protected override resolveListContainer(): Promise<PartLocator | null> {
+  protected override resolveListContainer(): Promise<Optional<PartLocator>> {
     return Promise.resolve(this.locator);
   }
 

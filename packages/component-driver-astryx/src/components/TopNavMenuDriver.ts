@@ -29,14 +29,14 @@ import { AstryxMenuDriver } from './AstryxMenuDriver';
 export class TopNavMenuDriver extends AstryxMenuDriver {
   /**
    * The `role="menu"` inside the popover panel linked by the trigger's
-   * `aria-controls` → dialog `id`, or `null` when unlinked. The id is matched
+   * `aria-controls` → dialog `id`, or `undefined` when unlinked. The id is matched
    * through the escaping `byAttribute` builder, then drilled to the menu the
    * dialog wraps.
    */
-  protected override async resolveMenuLocator(): Promise<PartLocator | null> {
+  protected override async resolveMenuLocator(): Promise<Optional<PartLocator>> {
     const panelId = await this.interactor.getAttribute(this.locator, 'aria-controls');
     if (!panelId) {
-      return null;
+      return undefined;
     }
     return locatorUtil.append(byAttribute('id', panelId, 'Root'), byCssSelector('[role="menu"]'));
   }

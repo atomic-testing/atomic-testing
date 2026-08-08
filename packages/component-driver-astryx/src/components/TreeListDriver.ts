@@ -18,13 +18,13 @@ import { collectTreeItems, labelElement, toggleButton, TreeItemRef } from '../in
  * depth attribute, so depth is derived from the walk rather than read from the DOM.
  */
 export class TreeListDriver extends ComponentDriver {
-  private async findByLabel(label: string): Promise<TreeItemRef | null> {
+  private async findByLabel(label: string): Promise<Optional<TreeItemRef>> {
     for (const ref of await collectTreeItems(this.interactor, this.locator)) {
       if ((await this.ownLabel(ref.li)) === label) {
         return ref;
       }
     }
-    return null;
+    return undefined;
   }
 
   private async ownLabel(li: PartLocator): Promise<Optional<string>> {
