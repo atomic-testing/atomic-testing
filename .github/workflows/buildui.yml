@@ -484,6 +484,22 @@ jobs:
       - name: Absence-convention check
         run: pnpm check:absence
 
+      # Frozen-set agreement gate (FROZEN-*): the 1.0 frozen package set was
+      # defined three different ways at once — ADR-006 §1 and the root README named
+      # 9, `check:api` gated 14, and 10 package READMEs promised stability. Each
+      # definition lived somewhere different and nothing compared them. ADR-006 §1's
+      # marked list is now the source of truth and this fails the build when the
+      # gate, the committed reports or any README disagrees with it.
+      - name: Frozen-set agreement check
+        run: pnpm check:frozen-set
+
+      # The gates' own detection tests. A check that only ever runs against a
+      # reconciled tree proves it executed, not that it can still SEE the drift it
+      # was written for — so each rule carries a fixture reintroducing the original
+      # disagreement, including B13 exactly as filed.
+      - name: Gate detection tests
+        run: pnpm test:scripts
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing
