@@ -30,6 +30,7 @@
     "changelog": "node scripts/generateChangelog.js",
     "triage:dependabot": "tsx scripts/triage-dependabot-prs.ts",
     "check:absence": "node scripts/check-absence-convention.mjs",
+    "check:peer-floors": "node scripts/check-peer-floors.mjs",
     "check:frozen-set": "node scripts/check-frozen-set.mjs"
   },
   "devDependencies": {
