@@ -61,6 +61,10 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
    * @returns The item's driver instance with the given text, or `undefined` when no
    * item matches. Absence is `undefined` (never `null`) across every core read — see
    * ADR-006 §7.
+   * @throws {@link ListEnumerationMismatchError} when it searched the whole list
+   * without a match but the list is not the homogeneous sibling set positional
+   * addressing requires — in that case "no item matches" cannot be distinguished
+   * from "enumeration stopped before reaching it", so it is not reported as absence.
    */
   async getItemByLabel<ItemClass extends ComponentDriver = ItemT>(
     text: string,
@@ -78,9 +82,12 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
   }
 
   /**
-   * Get all the items' driver instances in the list
+   * Get all the items' driver instances in the list, in DOM order.
    * @param itemDriverClass
-   * @returns
+   * @returns Every item in the list — never a partial set: see the `@throws` below.
+   * @throws {@link ListEnumerationMismatchError} when the list is not the
+   * homogeneous sibling set positional addressing requires, so enumeration would
+   * otherwise have returned a silently short array.
    */
   async getItems<ItemClass extends ComponentDriver = ItemT>(
     itemDriverClass?: ComponentDriverCtor<ItemClass>
@@ -94,10 +101,18 @@ export class ListComponentDriver<ItemT extends ComponentDriver> extends Componen
   }
 
   /**
-   * Get the number of items in the list.
-   * This is more efficient than calling getItems().length when you only need the count,
-   * as it does not instantiate driver instances for each item.
-   * @returns The number of items in the list
+   * Get the number of items in the list, in a single interactor round-trip and
+   * without instantiating an item driver — so prefer it to `getItems().length` when
+   * only the count is wanted.
+   *
+   * It is not merely a cheaper `getItems().length`, though: this counts the elements
+   * the item locator **matches**, while {@link getItems} walks `:nth-of-type`
+   * **positions**. The two agree exactly for the homogeneous sibling set this driver
+   * requires, and a list that breaks that requirement makes {@link getItems} throw
+   * {@link ListEnumerationMismatchError} rather than let the two answers diverge in
+   * silence.
+   *
+   * @returns The number of elements the item locator matches
    */
   async getItemCount(): Promise<number> {
     return listHelper.getListItemCount(this, this._itemLocator);
