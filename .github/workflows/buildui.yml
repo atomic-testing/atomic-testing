@@ -195,6 +195,8 @@ jobs:
             directory: 'component-driver-primevue-test'
           - name: 'Fluent v9 components'
             directory: 'component-driver-fluent-v9-test'
+          - name: 'Reka UI components'
+            directory: 'component-driver-reka-ui-test'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
