@@ -35,6 +35,13 @@ matrix automatically — you do not edit the matrix by hand.
   (or on the script's small allow-list), and every engine/driver the registry
   emits is a real package. This is what turns "forgot to register the new driver"
   into a red build instead of a silent omission.
+  **COV-04/05 additionally require that something _executes_ it**: a driver must be
+  depended on by a `package-tests/*` package that `buildui.yml` actually runs.
+  Registration and execution are different claims, and reka-ui-v2 held the first
+  without the second while 100% red. The only exemption is a pure star re-export of
+  another driver (`REEXPORT_ALIASES`), whose barrel COV-05 verifies rather than
+  trusts — the moment the alias exports anything of its own, the inherited coverage
+  stops being real and the gate fires.
 
 Both import the built `dist/index.mjs`, so run `pnpm --filter create-atomic-testing
 build` before them (CI does this in the `create-atomic-testing-test` job).

@@ -22,6 +22,29 @@ const reactModuleMappings = existsSync(path.join(process.cwd(), 'node_modules', 
     }
   : {};
 
+// The Vue counterpart of reactModuleMappings, and it is load-bearing for the same
+// reason: Vue keeps the active component instance in module-level state, so two
+// copies cannot cooperate. pnpm resolves each dependency's `vue` peer against the
+// version that dependency's own subtree asked for, and the test packages do not
+// agree on a range (reka-ui-test wants `^3.5.40`, vue-3-test `^3.5.39`) — so one
+// suite could get `@testing-library/vue` bound to vue@3.5.39 while `reka-ui` was
+// bound to vue@3.5.40. The component mounted by one copy is then invisible to the
+// other, and the failure surfaces far from its cause: `renderSlot` reading `.ce`
+// off a null `currentRenderingInstance`, i.e. "no component is rendering", inside
+// a component that demonstrably is.
+//
+// Aligning the declared ranges would also have collapsed the two copies, but only
+// until the next bump of either package — this maps the specifier instead, so the
+// invariant holds no matter what the manifests say. Only bare `vue` is mapped:
+// `@vue/*` runtime packages are resolved by vue's own subtree, so redirecting them
+// to a test package that does not depend on them directly would break resolution.
+const vueModuleMappings = existsSync(path.join(process.cwd(), 'node_modules', 'vue'))
+  ? {
+      '^vue$': '<rootDir>/node_modules/vue',
+      '^vue/(.*)$': '<rootDir>/node_modules/vue/$1',
+    }
+  : {};
+
 module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/__tests__'],
   transform: {
@@ -59,6 +82,7 @@ module.exports = {
       return acc;
     }, {}),
     ...reactModuleMappings,
+    ...vueModuleMappings,
     '^.+\\.(css|less)$': path.resolve(__dirname, 'jest.css.js'),
   },
   globals: {
