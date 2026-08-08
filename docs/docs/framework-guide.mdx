@@ -104,6 +104,8 @@ Core MUI v6 components with stable APIs.
 </TabItem>
 </Tabs>
 
+**Support history:** MUI v5 / MUI-X v5 driver support ended (EOL) on 2026-06-27 under the published [versioning & EOL policy](./evaluate/api-stability.mdx). The `@atomic-testing/component-driver-mui-v5` and `@atomic-testing/component-driver-mui-x-v5` packages remain installable at their frozen final version, `0.81.0`, but receive no fixes, new drivers, or CI coverage. Rationale: [ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md); the packages were later extracted with full history to a separate repo ([ADR-014](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/014-extract-mui-5-to-separate-repo.md)).
+
 ### MUI X
 
 _React · verified._ Drivers for the MUI X data components (Data Grid and friends), shipped separately from MUI Core because their DOM is its own surface. Match the package major to your `@mui/x-*` major.

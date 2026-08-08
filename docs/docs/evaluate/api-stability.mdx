@@ -1,0 +1,169 @@
+---
+title: API stability, versioning & EOL
+sidebar_label: API stability
+description: What Pre-1.0 means for Atomic Testing — a machine-checked frozen API surface, the SemVer and deprecation policy that governs it, and an already-executed end-of-support precedent.
+---
+
+# API stability, versioning & EOL
+
+If you landed here from the **Pre-1.0** badge, you're asking the two questions that
+badge should raise: **will the API break under me**, and **does support get pulled
+without warning?** Both have specific, verifiable answers here — not "trust us"
+answers. This page states the policy, links the decision records behind it, and
+shows you the one breaking change to the frozen surface that has actually
+shipped so you can judge how the project behaves rather than what it promises.
+
+## What "Pre-1.0" means here, concretely
+
+The current release line is **0.x** (0.98.0 at the time of writing — check
+[CHANGELOG.md](https://github.com/atomic-testing/atomic-testing/blob/main/CHANGELOG.md)
+for the latest). Pre-1.0 does **not** mean the API is undefined or drifting freely.
+The stable-intent surface is already declared and machine-enforced:
+
+- **The surface is explicit.** The stable API is exactly the `.` barrel exports of
+  the in-scope packages — `core`, `dom-core`, `react-core`, `react-18`, `react-19`,
+  `react-legacy`, `vue-3`, `playwright`, and `component-driver-html`. Every
+  `@atomic-testing/internal-*` package, every non-`.` import path, and every export
+  tagged `@internal` is outside the guarantee. This is ratified in
+  [ADR-006](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md),
+  the 1.0 API freeze decision.
+- **The surface is machine-checked, not prose-checked.** Each package commits an
+  [API Extractor](https://api-extractor.com/) report at `etc/<package>.api.md`, and a
+  CI gate (`check:api`) fails the build if a package's exported surface drifts from
+  its committed report. Adding, removing, or changing any export is a visible,
+  reviewed diff — the report *is* the contract. You can verify this yourself: read
+  [`packages/core/etc/core.api.md`](https://github.com/atomic-testing/atomic-testing/blob/main/packages/core/etc/core.api.md)
+  and diff it across releases. Today 14 packages carry committed reports —
+  the check has been extended beyond ADR-006's original nine to cover the Angular
+  adapters and the Storybook package as well.
+- **Breaking changes still happen — deliberately, and in one direction.** Release
+  0.96.0's changelog carries a Breaking Changes entry for `core` ("narrow
+  ComponentDriver primitives", [#1082](https://github.com/atomic-testing/atomic-testing/issues/1082)).
+  If the surface is frozen, why did that ship? Because pre-1.0 is precisely the
+  window for **narrowing** — and the project treats it that way on purpose.
+
+### Why the remaining pre-1.0 breaks are narrowings
+
+[ADR-015](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/015-component-driver-protected-primitives.md)
+moved `ComponentDriver`'s raw low-level gesture primitives from `public` to
+`protected`, keeping only the semantic API (`click`, `setValue`, `getText`, …)
+public. Its rationale is the asymmetry worth quoting in full:
+
+> The reversibility here is **asymmetric**:
+>
+> - Widening a member from `protected` to `public` later is **non-breaking** —
+>   existing callers keep working.
+> - Narrowing a member from `public` to `protected` later is **breaking** — it
+>   removes something callers may depend on.
+>
+> So the conservative 1.0 choice is to ship these primitives `protected` and widen
+> any that earn a public use case, rather than freeze the whole uniform surface and
+> be unable to take it back.
+
+That is the shape of every remaining pre-1.0 break you should expect: shrink the
+surface now, while shrinking is still allowed, so that after 1.0 evolution can be
+purely additive. A break that *widens* risk — renaming a semantic method, changing
+call semantics — is not what the 0.x window is being used for, and each executed
+narrowing is recorded as an ADR you can read before adopting.
+
+## How the surface is governed after 1.0
+
+Once 1.0 tags, the in-scope packages follow SemVer against the frozen surface, per
+[ADR-006](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md):
+
+- **patch** — bug fixes, no surface change.
+- **minor** — additive only; never removes or narrows existing surface.
+- **major** — the only release allowed to remove or break frozen surface.
+
+The deprecation lifecycle is explicit: a member is first marked `@deprecated`
+(TSDoc, so it surfaces as an editor and compiler hint), **survives at least one
+minor release** in that state, and is removed only at the **next major**. The old
+thing stays installable and warning while you migrate — the same deprecate-in-place
+pattern the project already executed for MUI 5 (below), so the lifecycle is modeled
+on something that actually happened, not something hypothetical.
+
+The riskiest post-1.0 evolution problem — growing the `Interactor` contract that
+every environment adapter implements — has its own decision record.
+[ADR-007](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/007-interactor-evolution-and-composition.md)
+fixes the additive-growth mechanism: new members land as working defaults on the
+base adapter (`DOMInteractor`), which extenders inherit non-breakingly, falling
+back to optional members and capability detection where no default exists. The
+interface is also expressed as **capability facets** (pointer, keyboard, form,
+query, and so on), giving partial-capability environments a real type rather than
+an informal convention. The point for an evaluator: the "how do we add things
+without breaking implementers" question was answered *before* the freeze, not
+improvised after it.
+
+## Driver packages: one per library major, with a real EOL
+
+The design-system driver packages (MUI, MUI-X, Astryx, and friends) are
+**deliberately outside the 1.0 freeze**. They track fast-moving third-party DOM, so
+they follow a different, per-major policy
+([ADR-003](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/003-version-specific-packages.md)):
+one driver package per upstream major (`component-driver-mui-v6`, `-v7`, `-v9`, …),
+each pinning the matching peer range. No runtime version sniffing, no selector
+branching — and no pretending one package can honestly support every major of a
+library that changes its rendered DOM between majors.
+
+That policy has an executed precedent you should read in both directions.
+
+**MUI 5 and MUI-X 5 reached end of support on 2026-06-27**
+([ADR-005](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/005-drop-mui-5-support.md)).
+What that looked like in practice:
+
+- The packages were **frozen at `0.81.0`**, which remains installable from npm
+  unchanged — no yank, no breakage for existing consumers.
+- They were deprecated in place (a `deprecated` field in `package.json`, a README
+  warning banner) and excluded from the release pipeline and the CI test matrix;
+  their suites no longer run.
+- Their source and full commit history were later extracted to a
+  [separate repo](https://github.com/atomic-testing/component-driver-mui-v5)
+  ([ADR-014](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/014-extract-mui-5-to-separate-repo.md)),
+  so v5-era behavior stays traceable without dead weight in the maintained tree.
+
+Read one way, this is evidence the EOL process is real and orderly: announced,
+dated, recorded as an ADR, non-destructive to installed consumers, with history
+preserved. Read the other way, it is a commitment you are signing up for: **if your
+app stays on a lagging major of a covered design system, driver support for that
+major will end on a schedule** — the suites stop running and fixes stop landing,
+even though the last published version keeps installing. Two honest caveats from
+the ADRs themselves: the v5 packages were *not* marked deprecated on the npm
+registry, so `npm install` prints no warning — the signal is in the package and its
+README, not at install time. And the MUI-X v5 date/time picker drivers were the
+only picker coverage at the time and were not carried forward (the v9 package
+has since revived picker coverage — desktop/mobile date, time, date-time, and
+date-range drivers with keystroke-driven read/write `setValue`, shipped in
+0.97.0).
+
+Currently supported driver majors are listed in the
+[README's stability & version support policy](https://github.com/atomic-testing/atomic-testing/blob/main/README.md#stability--version-support-policy)
+— at the time of writing, MUI core v6/v7/v9 and MUI-X v6/v7/v8/v9.
+
+## What your team should actually do
+
+Concrete guidance for adopting a pre-1.0 dependency without getting surprised:
+
+1. **Pin exact versions.** While the project is 0.x, use exact pins rather than
+   caret ranges, and upgrade on your own schedule with the changelog open.
+2. **Check the support tier for your exact stack** on the
+   [support matrix](../support-matrix.mdx). The tiers are honest — combinations
+   without a proving fixture are labeled experimental, and the scaffolder warns
+   before writing one. Adopt a verified combination if stability is your priority.
+3. **Watch the changelog's Breaking Changes section.** The
+   [CHANGELOG](https://github.com/atomic-testing/atomic-testing/blob/main/CHANGELOG.md)
+   is generated from the commit convention
+   ([CONTRIBUTING.md](https://github.com/atomic-testing/atomic-testing/blob/main/CONTRIBUTING.md)),
+   and breaking commits are flagged (`!`) into their own section regardless of type
+   — so a surface break cannot ship as an unlabeled "fix".
+4. **Diff the API report of the package you depend on** across the releases you
+   upgrade between (`etc/<package>.api.md` in each package directory). It is the
+   machine-readable answer to "did my surface change", independent of release
+   notes.
+
+## Where to go next
+
+- [Governance & risk](./governance.mdx) — who maintains this, the bus-factor
+  disclosure, and how cross-cutting-change risk is managed.
+- [Proof of portability](./proof-of-portability.mdx) — the evidence that the same
+  test genuinely runs across engines, which is the claim the API contract exists to
+  protect.

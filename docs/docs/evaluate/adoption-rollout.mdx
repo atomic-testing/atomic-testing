@@ -1,0 +1,159 @@
+---
+title: Adoption & rollout
+sidebar_label: Adoption & rollout
+description: How teams adopt Atomic Testing without a migration project — existing tests keep running, new tests come first, and a measurable pilot produces the evidence to roll out further.
+---
+
+# Adoption & rollout
+
+This page is the direct answer to the question every evaluating team asks first:
+**"what about our existing tests?"** The short version: nothing happens to them.
+There is no migration project, no codemod, and no big-bang rewrite — and that is
+a deliberate stance, not a gap. What follows is the playbook: how a single team
+runs a pilot that produces real before/after evidence, and how a platform team
+rolls the result out org-wide.
+
+## There is no migration project — and that's deliberate
+
+**No codemod exists, and none is planned as the primary adoption path.** A
+mechanical translation of React Testing Library, Vue Test Utils, or raw
+Playwright tests into driver calls would produce driver-shaped tests without the
+thing that makes drivers pay off: a deliberately decomposed scene that models
+your UI. That modeling step is where the value comes from, so it is done where
+it's worth doing — not everywhere at once.
+
+Your existing tests keep running unchanged:
+
+- Atomic Testing does not wrap or patch your test runner. The scaffolder writes
+  a **standalone runner config** alongside whatever you already have, and it
+  never overwrites an existing file.
+- For DOM testing it is a **sibling** of RTL, not a replacement layer — both sit
+  on the same `@testing-library` foundations (see
+  [Why Atomic Testing?](../why-atomic-testing.mdx) for that breakdown). An RTL
+  suite and a driver suite coexist in the same repo, indefinitely, with no
+  interference.
+
+Adoption is **strangler-style**, in the sequence
+[Why Atomic Testing?](../why-atomic-testing.mdx) already sketches: write **new
+tests** with drivers first, then convert only the suites that **break most often**
+during refactors and library upgrades. Tests that never churn never need to move.
+You do not need to migrate an existing suite to benefit — and the strangler
+approach assumes you may never fully do so.
+
+## A team pilot that produces evidence
+
+If you manage the team, the goal of a pilot is not "we tried it and liked it" —
+it's a before/after number you can defend. The playbook:
+
+1. **Pick a surface with real test churn.** The highest-signal window is an
+   upcoming **component-library major bump** (a MUI, PrimeVue, or Angular
+   Material major), because that is precisely the event drivers are designed to
+   absorb: markup and class-name changes land in the driver package, not across
+   your tests (see the
+   [upgrade scenario](../why-atomic-testing.mdx#component-library-upgrades)).
+   A form-heavy flow that breaks every sprint is the next-best candidate.
+2. **Scaffold in one command.** [`create atomic-testing`](../quick-start.mdx)
+   detects your stack and leaves you with a green example test plus a test
+   script — the setup cost of the pilot is minutes, not days. The
+   [example apps](./example-apps.mdx) show what a fully wired project looks
+   like beyond the generated starter.
+3. **Write the pilot's new tests with drivers.** Leave the existing suite alone
+   — it is your control group.
+4. **Measure through the churn event.** Compare hours spent fixing tests in the
+   pilot suite against a comparable non-pilot suite (or the same suite's history
+   through the previous bump). Useful proxies: test files touched by the upgrade
+   PR, and elapsed time from the bump branch opening to green CI.
+5. **Decide on the evidence**, not the vibe.
+
+**Be clear-eyed about one thing: the library does not measure this for you.**
+There is no built-in telemetry counting hours saved or tests un-broken. The
+measurement discipline — choosing the control, recording the hours — is the
+adopter's. This page tells you what to measure; doing it is on you.
+
+## Check your stack's tier before the pilot
+
+Every combination the scaffolder offers carries a support tier, published in the
+[Framework and Runner Support](../support-matrix.mdx) matrix (generated from the
+scaffolder's own compatibility data, so it cannot drift from what the CLI
+offers):
+
+- **Verified** — backed by a green fixture in the monorepo. Today that is
+  **React + Jest** and **Vue 3 + Jest**, together with their design-system
+  drivers.
+- **Experimental** — composed best-effort with no proving fixture yet:
+  everything on **Vitest**, **Angular**, or **Playwright**. The CLI **prints a
+  warning before writing** an experimental recipe.
+
+This matters for a pilot because the pilot *is* the first impression. If the
+point is to convince skeptics, run it on a verified stack — or knowingly accept
+that an experimental-tier warning is part of what you're evaluating. Note also
+that the Playwright recipe scaffolds a placeholder e2e starter test that only
+turns green once your app serves the page, unlike the in-process runners whose
+generated example passes on the first run.
+
+## Org-level rollout
+
+For a platform or DevEx team, three pieces of the machinery are built to be
+rolled out rather than re-invented per team.
+
+### Scaffold in CI, deterministically
+
+The scaffolder runs fully non-interactive: every prompt has a flag, ambiguity
+fails fast with a distinct exit code that names the missing flag, and unsupported
+combinations are refused rather than half-written. That makes "add Atomic
+Testing to a repo" a scriptable, idempotent pipeline step:
+
+```bash
+npm create atomic-testing@latest -- --framework react --runner jest --design-system mui --yes --no-install
+```
+
+The full flag reference, the exit-code table to script against, and the
+`--dry-run` pre-flight are in
+[Scaffold in CI / non-interactive](../guides/scaffold-in-ci.md).
+
+### Make your internal design system a first-class recipe
+
+The scaffolder's recipes are **composed, not hard-coded**: a framework, a
+runner, and a design system are three independent plugins, and a compatibility
+matrix decides which combinations are offered and at what tier. Registering an
+internal design system is therefore a **data change at a documented seam** — a
+design-system plugin plus a compatibility row — after which your system appears
+in the CLI's prompts like MUI or Radix does, backed by your own driver package.
+One registration feeds both surfaces: the CLI's offered combinations and the
+generated support matrix. The seam is documented in the
+[create-atomic-testing README](https://github.com/atomic-testing/atomic-testing/blob/main/packages/create-atomic-testing/README.md)
+(see "Adding a new combination"), and the plugin code lives in
+[`src/registry/`](https://github.com/atomic-testing/atomic-testing/tree/main/packages/create-atomic-testing/src/registry).
+A CI gate in the repo fails the build if a shipped driver package isn't
+registered — the same discipline applies if you fork the registry pattern
+internally: registration should be enforced, not remembered.
+
+### Ship the agent skills as the org standard
+
+By default the scaffolder also writes four Claude Code skills (scaffolding
+drivers, authoring tests, diagnosing failures, and syncing drivers after UI
+changes) plus a `CLAUDE.md` guide adapted to the detected stack — controllable
+with `--agents` / `--no-agents`. For an org where AI agents write a meaningful
+share of tests, this is the piece that makes the driver pattern *self-propagating*:
+every scaffolded repo teaches the agent the same conventions. What the skills
+contain and why they change agent output is covered in
+[Testing with AI agents](./testing-with-ai-agents.mdx).
+
+## When not to adopt
+
+Atomic Testing is not a universal answer, and the project says so itself.
+Prototypes you won't maintain, single simple elements, codebases with no
+component reuse, and teams without buy-in for a shared pattern are all cases
+where the abstraction earns less than it costs — the specifics are in
+[when *not* to use Atomic Testing](../why-atomic-testing.mdx#when-not-to-use-atomic-testing).
+If your evaluation lands there, that's a correct outcome of the evaluation, not
+a failure of it.
+
+## Where to go next
+
+Two pages complete the adoption picture for whoever signs off:
+
+- [Governance & risk](./governance.mdx) — the project's risk profile, stated
+  plainly, including the weaknesses your own diligence would find anyway.
+- [API stability, versioning & EOL](./api-stability.mdx) — what pre-1.0 means
+  here, the deprecation policy, and how to pin versions while you roll out.

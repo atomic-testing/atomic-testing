@@ -171,6 +171,21 @@
   border-radius: 999px;
   font-size: 11.5px;
 }
+/* The chip doubles as a link to the stability policy — keep the pill styling
+   across every link state so theme/user-agent anchor styles can't leak
+   through (visited color, focus underline). */
+a.badgeChip,
+a.badgeChip:hover,
+a.badgeChip:visited,
+a.badgeChip:focus,
+a.badgeChip:active {
+  color: #fff;
+  text-decoration: none;
+}
+a.badgeChip:focus-visible {
+  outline: 2px solid var(--at-blue);
+  outline-offset: 2px;
+}
 
 .heroTitle {
   font-family: var(--at-font-display);
@@ -747,6 +762,74 @@
   align-items: center;
   color: #3a567c;
   font-size: 22px;
+}
+
+/* ============================ EVALUATOR DOORS ============================ */
+/* A quiet strip, not a second hero: three role-based doors into the
+   "Evaluating Atomic Testing" docs track. */
+.evaluator {
+  border-top: 1px solid var(--at-border);
+  background: var(--at-bg);
+}
+.evaluatorInner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 56px 24px;
+}
+.evaluatorHead {
+  max-width: 620px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+.evaluatorTitle {
+  font-family: var(--at-font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--at-text);
+}
+.evaluatorSubtitle {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--at-text-muted);
+  margin: 10px 0 0;
+}
+.evaluatorRow {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.evaluatorCard {
+  flex: 1;
+  min-width: 220px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  background: var(--at-surface);
+  border: 1px solid var(--at-border);
+  border-radius: 14px;
+  padding: 20px 22px;
+}
+.evaluatorCardTitle {
+  font-family: var(--at-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--at-text-faint);
+  margin: 0 0 4px;
+}
+.evaluatorLink {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--at-blue);
+  text-decoration: none;
+}
+.evaluatorLink:hover {
+  text-decoration: underline;
 }
 
 /* ============================ TRADEOFFS ============================ */

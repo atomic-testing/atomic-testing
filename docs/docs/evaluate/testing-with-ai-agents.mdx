@@ -1,0 +1,169 @@
+---
+title: Testing with AI agents
+sidebar_label: AI agents
+description: Atomic Testing ships four agent skills that encode its testing discipline — scaffolding, authoring, diagnosis, and driver sync — and a CI gate that fails the build if those instructions drift from the shipped API.
+---
+
+# Testing with AI agents
+
+Most UI-testing libraries hope a coding agent writes good tests against them.
+Atomic Testing ships the **operating instructions** that make it likely: four
+skills that encode the library's testing discipline — how to decompose a page
+into drivers, how to write a test that cannot flake, how to diagnose a failure
+without reaching for a sleep, and how to update drivers when the UI moves.
+
+The claim that matters to an evaluator is not "we have agent docs" — everyone
+can write a markdown file. It is this: **the skills' concrete claims are
+cross-checked against the library source in CI**. A skill that names a method
+that no longer exists, or omits a shipped driver package, fails the build. The
+instructions cannot silently rot, because rot is a red build.
+
+## What ships, and how
+
+One scaffold command sets up both the testing stack and the agent instructions:
+
+```bash
+npm create atomic-testing@latest
+```
+
+Alongside the runner config and a passing example test, the scaffolder emits —
+**on by default**, skipped with `--no-agents`:
+
+- **Four skills** under `.claude/skills/` — `scaffold-test-driver`,
+  `author-component-tests`, `diagnose-test-failure`, and `sync-test-driver`.
+- **A `CLAUDE.md` guide adapted to your detected stack** — framework and major
+  version, runner, and driver package, so the agent starts from your project's
+  actual setup rather than a generic template.
+
+The full scaffolder output and flag reference are in the
+[Quick Start](../quick-start.mdx) and the
+[`create-atomic-testing` README](https://github.com/atomic-testing/atomic-testing/blob/main/packages/create-atomic-testing/README.md);
+this page covers what the skills encode and why you can trust them.
+
+## The four skills
+
+Each skill is a workflow with phases, hard rules, and named failure modes — not
+a style guide. Read them directly in
+[`.claude/skills/`](https://github.com/atomic-testing/atomic-testing/tree/main/.claude/skills);
+here is what each one encodes and the failure it exists to prevent.
+
+### `scaffold-test-driver` — decomposition and locators
+
+Encodes the end-to-end workflow for building a driver tree for your own
+components: inventory what shipped `@atomic-testing` drivers already cover (reuse,
+never reinvent), decompose the page with a **six-rule algorithm** applied per
+node in fixed priority order, show the resulting plan as a tree and get
+sign-off *before* generating files, probe the real rendered DOM instead of
+guessing (design systems rarely render what you'd assume), then pick each
+locator off an **escalation ladder** that prefers test-ids, roles, and
+accessibility links over structural CSS — and prove every locator with a
+two-instance disambiguation test. It prevents the two ways agents ruin driver
+codebases: the **god driver** (a flat bag of every part on the page) and the
+clever selector that works on exactly one instance in exactly one browser. The
+decomposition rules themselves are documented for humans in
+[Decomposing driver trees](../guides/decomposing-driver-trees.md).
+
+### `author-component-tests` — behavior tests that cannot flake
+
+Encodes translating a plain-language behavior ("the user filters, edits, saves,
+and sees a toast") into driver calls and assertions, with the **anti-flake
+toolkit applied by default**: `waitUntil` probes instead of sleeps, tolerance-based
+comparison for geometry (browsers disagree by sub-pixel offsets), and
+environment gating for assertions jsdom cannot evaluate — an ungated layout
+assertion in jsdom doesn't fail, it *vacuously passes*, which is worse. Its
+hard boundary is the **handoff rule**: when the driver tree is missing a method
+or part, the skill stops rather than hacking around it with a raw
+`document.querySelector` in the test — the gap gets fixed in the driver, where
+every other test inherits it. This is the skill that keeps agents from writing
+the sleep-riddled, DOM-poking tests that make teams distrust agent-written
+tests in the first place.
+
+### `diagnose-test-failure` — classification before fixes
+
+A decision tree that classifies a red, intermittently red, or suspiciously
+green test into one of **four failure modes — flaky, brittle, vacuously green,
+contaminated** — each with a matchable symptom, a confirming check, and the
+library's intended fix. It bans the one move agents (and humans) reach for
+first: **adding a sleep or lengthening a timeout without a diagnosis**, which
+converts a diagnosable failure into a slower, rarer one. The "suspiciously
+green" mode is the one most teams don't have a name for: tests that pass while
+proving nothing, such as jsdom comparing two zero-height bounding boxes, or two
+absent elements agreeing that `undefined === undefined`.
+
+### `sync-test-driver` — when the UI moves
+
+Encodes incremental driver maintenance as a **diff, not a rewrite**: re-probe
+the current DOM and check it against every locator the driver assumes, re-walk
+the locator escalation ladder for anything broken (never a one-off
+`:nth-child` patch — a locator that broke once from markup drift will break
+again), apply the six-rule decomposition to new UI surface to decide whether it
+becomes a part or its own driver, and update in place while keeping
+hand-written methods and public names stable. It prevents the failure mode
+specific to agents doing maintenance: regenerating a whole driver file and
+silently erasing the hand-written methods, waits, and JSDoc that accumulated in
+it.
+
+## Why you can trust the instructions
+
+Hand-written agent docs decay: the API moves, the markdown doesn't, and the
+agent confidently follows instructions for a library that no longer exists.
+Atomic Testing treats its skills as governed artifacts:
+
+- **A CI gate fails the build on drift.** `check:skill-sync`
+  ([`scripts/skills/check-skill-sync.mjs`](https://github.com/atomic-testing/atomic-testing/blob/main/scripts/skills/check-skill-sync.mjs))
+  runs six checks: every core class and method the skills name must still exist
+  in `packages/core/src` (and the canonical claim list must stay honest in the
+  other direction — a listed symbol no skill mentions is also a failure); every
+  shipped `component-driver-*` family must be accounted for in the skills'
+  prose or explicitly acknowledged; and the copy of the skills **embedded in
+  the scaffolder** must match `.claude/skills/` byte-for-byte.
+- **The scaffolder's copy is generated, not transcribed.** The skill content
+  `create atomic-testing` writes into your project is rendered from the source
+  skill files by
+  [`gen-skill-content.mjs`](https://github.com/atomic-testing/atomic-testing/blob/main/scripts/skills/gen-skill-content.mjs)
+  into a generated module, and the same gate fails if the committed module
+  drifts from the source. What you scaffold is what the repo tests.
+- **The taught decomposition is regression-tested.** A structural analyzer
+  checks the golden example drivers against the composite-driver idioms the
+  skills teach — and can score an agent-regenerated driver against the same
+  rules. The whole harness, including the deliberately manual parts, is
+  documented in
+  [`scripts/skills/README.md`](https://github.com/atomic-testing/atomic-testing/blob/main/scripts/skills/README.md).
+
+Honest scope of the gate: it verifies the skills' **concrete claims** — symbol
+names, package families, copy integrity — not that the advice is wise. Whether
+the workflow produces good drivers is tested separately, by the golden-fixture
+eval workflow above, and its grading step is manual on purpose: there is no
+script pretending to judge decomposition quality. You can audit both halves
+yourself; nothing here asks you to take prose on faith.
+
+## Honest scope
+
+- **The skills are plain markdown.** They follow Claude Code's conventions
+  (`.claude/skills/`, a root `CLAUDE.md`), but any agent that ingests project
+  instructions can read them — wire the same files into whatever
+  instruction mechanism your tooling uses. Nothing in them is
+  Claude-proprietary; they are workflows, written down.
+- **They encode discipline; they don't create it.** The skills make an agent
+  follow this library's testing rules. They will not make a weak test suite
+  strong on their own, and agent-written drivers and tests still deserve the
+  same review as human-written ones — that's why the structural analyzer
+  exists.
+- **The experience is best on verified-tier stacks.** The scaffolder marks each
+  framework × runner × design-system combination **verified** or
+  **experimental**, and the skills inherit that reality: on a verified stack
+  the whole loop is proven against green fixtures in the monorepo; on an
+  experimental one you are further from the tested path. Check yours in the
+  [support matrix](../support-matrix.mdx).
+
+## For platform and DevEx owners
+
+If your org is rolling out coding agents, the expensive part is not access to a
+model — it is that every team independently rediscovers how to make agents
+write non-flaky tests, encodes it in a private prompt file, and lets it rot.
+Scaffolding Atomic Testing into a project ships the discipline with the
+dependency: one command, four maintained skills, a stack-adapted guide, and an
+upstream CI gate keeping the instructions honest so your teams don't have to.
+That makes the golden path cheaper than reinvention, which is the only rollout
+strategy that survives contact with real teams — see
+[Adoption & rollout](./adoption-rollout.mdx) for the staged plan.

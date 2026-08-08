@@ -273,8 +273,16 @@ function HeroSection(): JSX.Element {
       <div className={styles.heroInner}>
         <div className={styles.heroCopy}>
           <div className={styles.badge}>
-            <span className={styles.badgeChip}>Pre-1.0</span>
-            Portable UI testing for React · Vue · Playwright
+            {/* The chip links to the stability policy so "Pre-1.0" reads as a
+                disclosed, governed state rather than a bare warning label. */}
+            <Link
+              className={styles.badgeChip}
+              to='/docs/evaluate/api-stability'
+              aria-label='Pre-1.0 — read the API stability, versioning and EOL policy'
+              title='What pre-1.0 means here — stability policy'>
+              Pre-1.0
+            </Link>
+            <span>Portable UI testing for React · Vue · Playwright</span>
           </div>
 
           <h1 className={styles.heroTitle}>
@@ -463,6 +471,66 @@ function ComposableSection(): JSX.Element {
   );
 }
 
+type EvaluatorDoor = {
+  title: string;
+  links: { label: string; to: string }[];
+};
+
+// One door per decision-maker role, each opening into the "Evaluating Atomic
+// Testing" docs track (see sidebars.ts).
+const evaluatorDoors: EvaluatorDoor[] = [
+  {
+    title: 'Engineering manager',
+    links: [
+      { label: 'Why Atomic Testing →', to: '/docs/why-atomic-testing' },
+      { label: 'Example apps →', to: '/docs/evaluate/example-apps' },
+    ],
+  },
+  {
+    title: 'Staff / platform owner',
+    links: [
+      { label: 'Proof of portability →', to: '/docs/evaluate/proof-of-portability' },
+      { label: 'API stability & EOL →', to: '/docs/evaluate/api-stability' },
+    ],
+  },
+  {
+    title: 'Rolling out org-wide',
+    links: [
+      { label: 'Adoption & rollout →', to: '/docs/evaluate/adoption-rollout' },
+      { label: 'Governance & risk →', to: '/docs/evaluate/governance' },
+    ],
+  },
+];
+
+// A quiet strip, not a second hero: the hero and features already serve the
+// hands-on IC; this routes the person deciding on behalf of a team.
+function EvaluatorDoorsSection(): JSX.Element {
+  return (
+    <section className={styles.evaluator}>
+      <div className={styles.evaluatorInner}>
+        <header className={styles.evaluatorHead}>
+          <h2 className={styles.evaluatorTitle}>Deciding for a team?</h2>
+          <p className={styles.evaluatorSubtitle}>
+            Evidence for the people who approve adoption — proof, policy, and rollout paths, not just a demo.
+          </p>
+        </header>
+        <div className={styles.evaluatorRow}>
+          {evaluatorDoors.map(door => (
+            <div key={door.title} className={styles.evaluatorCard}>
+              <h3 className={styles.evaluatorCardTitle}>{door.title}</h3>
+              {door.links.map(link => (
+                <Link key={link.to} className={styles.evaluatorLink} to={link.to}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function TradeoffsSection(): JSX.Element {
   return (
     <section className={styles.tradeoffs}>
@@ -529,6 +597,7 @@ export default function Home(): JSX.Element {
         <MagicSection active={activeFramework} onSelect={setActiveFramework} />
         <ComposableSection />
         <HomepageFeatures />
+        <EvaluatorDoorsSection />
         <TradeoffsSection />
         <FinalCtaSection />
       </main>

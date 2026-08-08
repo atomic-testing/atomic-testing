@@ -1,0 +1,167 @@
+---
+title: Example apps
+sidebar_label: Example apps
+description: Four realistic example apps — a MUI ticket console, an Astryx workspace, a shadcn/ui settings app, and the tutorial's signup form — showing what an Atomic Testing suite looks like at feature scale.
+---
+
+# Example apps
+
+Per-component fixtures prove that each driver works (see
+[Examples and starter fixtures](../guides/examples.md)). They cannot show you what
+a real suite looks like when a page has a filter bar, a data grid, a dialog, and a
+toast that all have to cooperate. The apps under
+[`examples/`](https://github.com/atomic-testing/atomic-testing/tree/main/examples)
+exist for that: three of the four are small but realistic applications with
+composed page-object drivers whose flows run under both jsdom and real
+browsers; the fourth, the signup form, is deliberately kept per-step as the
+documented counter-example (see its section below).
+
+Two properties make them useful as evaluation evidence rather than demos:
+
+- **Each app installs the way your team would.** Every app is its own pnpm
+  workspace root with its own lockfile, outside the monorepo workspace, pinning
+  `@atomic-testing/*` from the npm registry — not `workspace:*` links. What you
+  see is a consumer install, not a monorepo shortcut.
+- **The suites run under Vitest (jsdom) and Playwright (Chromium, Firefox,
+  WebKit) from shared definitions.** The ticket console goes furthest: its
+  scenario flows are written once and imported unchanged by both runs. The two
+  workspace apps share the same scene and composed drivers across parallel DOM
+  and E2E specs; the signup form is the per-step exception. That is the
+  portability claim exercised at feature scale — the contract-level evidence is
+  on [Proof of portability](./proof-of-portability.mdx).
+
+You can verify any of this yourself: clone the repo, `cd examples/<app>`,
+`pnpm install`, then `pnpm test:dom` and `pnpm test:e2e:chrome`. The CodeSandbox
+links below open each app directly from GitHub in a cloud editor.
+
+## The flagship: a MUI ticket console
+
+[`example-mui-ticket-console`](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-ticket-console)
+is a data-dense support-ticket triage console — MUI Material v9 + MUI-X v9 on
+React 19: a tree-view queue sidebar, a filter bar (search, autocomplete, select,
+date-range pickers), tabs, a DataGrid with per-row menus, an edit dialog, and a
+snackbar. Small shipped drivers compose into feature drivers (`FilterBarDriver`,
+`TicketGridDriver`, `TicketEditorDriver`), which compose into one top-level
+`TicketConsoleDriver`.
+
+The app's own framing is the right one: **a test reads like a person triaging
+tickets** — filter to Open due this week, open the first ticket, reassign it to
+me, save, expect a success toast. Compacted from
+[`src/testing/scenarios.ts`](https://github.com/atomic-testing/atomic-testing/blob/main/examples/example-mui-ticket-console/src/testing/scenarios.ts):
+
+```ts
+export async function triageFlow(console: TicketConsoleDriver, assert: Assert) {
+  await console.filterBar.filterByStatus('Open');
+  await console.filterBar.setDueRange(week.from, week.to);
+  await console.grid.openRow(0);
+  await console.editor.setValue({ assignee: 'Me', priority: 'High' });
+  await console.editor.save();
+  assert.includes(await console.toast.getLabel(), 'saved');
+  assert.equal(await console.grid.getAssignee(0), 'Me');
+}
+```
+
+### The DOM/E2E dedup story
+
+Each scenario is written once as a flow over `TicketConsoleDriver`. The DOM test
+and the E2E spec are thin adapters around the same shared modules — from the
+app's [README](https://github.com/atomic-testing/atomic-testing/blob/main/examples/example-mui-ticket-console/README.md):
+
+|        | DOM (Vitest, jsdom)                                       | E2E (Playwright, 3 browsers)                             |
+| ------ | --------------------------------------------------------- | -------------------------------------------------------- |
+| Engine | `createTestEngine(<App/>, consoleParts)` from `@atomic-testing/react-19` | `createTestEngine(page, consoleParts)` from `@atomic-testing/playwright` |
+| Scene  | `consoleParts` — imported                                  | the same import                                          |
+| Flows  | `triageFlow`, `emptyQueueFlow`, … — imported               | the same functions                                       |
+
+All state is client-side and the app uses a fixed reference "today", so
+date-dependent assertions ("due this week", "overdue") are deterministic across
+both runs.
+
+One more signal worth noting: building this scenario exposed two capabilities the
+shipped MUI-X drivers lacked (setting a date picker, selecting a tree item). Both
+were added to the library as general driver methods rather than example-local
+workarounds — the examples feed the shipped driver surface, not a fork of it.
+
+- [Open in CodeSandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-ticket-console) — opens the app from GitHub.
+
+## Astryx workspace: chat + admin console
+
+[`example-astryx-workspace`](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-astryx-workspace)
+is an AI chat + admin workspace built on the Astryx design system
+(`@astryxdesign/core`, React 19, `react-router-dom`): a chat panel with a
+composer, deterministic assistant replies and tool-call groups, a command
+palette, and an admin settings console with tabs, a full form surface, an
+unsaved-changes banner, a save toast, and a delete-confirmation dialog.
+
+What it demonstrates: shipped Astryx drivers composed into four feature drivers
+and one top-level `WorkspaceDriver`, so a flow reads
+`workspace.gotoAdmin()` → `workspace.admin.setValue({...})` →
+`workspace.admin.save()`. The Astryx driver surface used here is gap-free —
+every action the scenarios need is a shipped driver method. jsdom's missing
+overlay APIs (Popover, modal `<dialog>` methods, observers) are polyfilled in
+the test setup; real overlay behaviour is covered by the Playwright run of the
+same flows.
+
+- [Open in CodeSandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-astryx-workspace) — opens the app from GitHub.
+
+## shadcn/ui workspace: the jsdom pain point, solved
+
+[`example-shadcn-workspace`](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-shadcn-workspace)
+is a workspace-settings app built from **unmodified shadcn/ui CLI output**
+(Radix engine, Tailwind v4) — the generated `src/components/ui/` files are
+untouched, because every `data-testid` anchor lives on a usage site.
+
+It exists for a specific, widely-hit failure: jsdom implements no Pointer Events
+capture API ([jsdom#2527](https://github.com/jsdom/jsdom/issues/2527)), so the
+first click on any Radix/shadcn `Select` under jsdom throws
+`target.hasPointerCapture is not a function` — the bug that makes teams give up
+on unit-testing shadcn selects. This app's
+[`vitest.setup.ts`](https://github.com/atomic-testing/atomic-testing/blob/main/examples/example-shadcn-workspace/vitest.setup.ts)
+polyfill set plus the shipped drivers make the same select
+open/enumerate/select-by-label flow pass in jsdom **and** in a real browser,
+from one test definition. The polyfills are inert, factually-accurate stubs;
+real capture and scroll behaviour is covered by the Playwright run.
+
+One honest caveat from the app itself: it was verified on Chromium; the Firefox
+and WebKit Playwright projects are configured but need an environment where
+those browsers can be downloaded.
+
+- [Open in CodeSandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-shadcn-workspace) — opens the app from GitHub.
+
+## The signup form: the tutorial's teaching app — and a named anti-pattern
+
+[`example-mui-signup-form`](https://github.com/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form)
+is a multi-step signup wizard (React 18 + MUI, with Storybook interaction tests)
+and the app the [step-by-step tutorial](../getting-started-tutorial.mdx) tours in
+its optional last section. It is deliberately kept **per-step**: each wizard step
+has its own colocated feature driver and its own unit test.
+
+Read it for what it is. The
+[driver-tree decomposition guide](../guides/decomposing-driver-trees.md) names
+this app as its counter-example: the per-step feature drivers are the right
+half, but there is no page-object driver composing the steps into a wizard, so a
+cross-step flow ("fill credentials, advance, fill shipping, submit") has nowhere
+to live. A structural checker in the repo asserts that gap still exists, so the
+counter-example cannot silently rot into a false one. A docs site that keeps a
+named anti-pattern on display — and regression-tests it — is telling you how it
+expects real suites to go wrong, which is exactly what you want from teaching
+material.
+
+- [Open in CodeSandbox](https://codesandbox.io/p/sandbox/github/atomic-testing/atomic-testing/tree/main/examples/example-mui-signup-form) — opens the app from GitHub.
+
+## Fixtures vs. apps
+
+The monorepo has two kinds of worked examples, and they answer different
+evaluation questions:
+
+- **Per-component fixtures** (`package-tests/`) — one CI-green project per
+  design-system package, proving each shipped driver against a rendered
+  component in DOM and browser. Catalogued in
+  [Examples and starter fixtures](../guides/examples.md).
+- **Apps** (`examples/`, this page) — feature-scale suites showing driver
+  composition, page objects, and DOM/E2E dedup on something shaped like the
+  product you actually maintain.
+
+If you are evaluating whether a specific driver works, read a fixture. If you
+are evaluating what your team's suite would look like in six months, read the
+ticket console.

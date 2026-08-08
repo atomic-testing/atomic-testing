@@ -1,0 +1,211 @@
+---
+title: Proof of portability
+sidebar_label: Proof of portability
+description: How Atomic Testing proves its portability claim with an executable interactor conformance kit and shared test suites that run unchanged under jsdom and real browsers.
+---
+
+import ArchitectureDiagram from '@site/src/components/ArchitectureDiagram';
+
+# Proof of portability
+
+Atomic Testing's core claim is that the same scene definition and the same test
+logic run unchanged across environments — jsdom under Jest, and real browsers
+under Playwright. This page exists so you don't have to take that claim on
+faith: it is pinned by executable suites in the repository, and if the claim
+were false, those suites would fail.
+
+## The claim, stated so it can fail
+
+Concretely: a test suite written against the driver API is executed by
+different `Interactor` implementations — a jsdom-backed
+[`DOMInteractor`](https://github.com/atomic-testing/atomic-testing/blob/main/packages/dom-core/src/DOMInteractor.ts)
+and a browser-backed
+[`PlaywrightInteractor`](https://github.com/atomic-testing/atomic-testing/blob/main/packages/playwright/src/PlaywrightInteractor.ts)
+— with **zero branching in the suite itself**. The two implementations share
+no inheritance: `PlaywrightInteractor` implements the
+[`Interactor` interface](https://github.com/atomic-testing/atomic-testing/blob/main/packages/core/src/interactor/Interactor.ts)
+directly rather than extending `DOMInteractor`
+([ADR-002](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/002-interactor-abstraction.md)).
+Both draw on shared `@atomic-testing/core` utilities — locator resolution, the
+style-visibility predicate — but each drives its environment through its own
+independently written DOM layer. So any suite that passes under both is
+evidence of a behavioral contract enforced across two independently written
+implementations, not of one implementation run twice.
+
+Two artifact families carry that evidence: a dedicated conformance kit that
+pins the interactor contract itself, and the shared per-driver suites that
+exercise it at scale.
+
+## The interactor conformance kit
+
+[`@atomic-testing/internal-interactor-conformance`](https://github.com/atomic-testing/atomic-testing/tree/main/packages/internal-interactor-conformance)
+is a test-compatibility kit (TCK): one set of specs, one framework-agnostic
+HTML fixture, executed verbatim against both interactors by
+[`internal-interactor-conformance-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/internal-interactor-conformance-test).
+The [Jest leg](https://github.com/atomic-testing/atomic-testing/blob/main/package-tests/internal-interactor-conformance-test/__tests__/InteractorConformance.dom.test.ts)
+mounts the fixture into jsdom and drives it with `DOMInteractor`; the
+[Playwright leg](https://github.com/atomic-testing/atomic-testing/blob/main/package-tests/internal-interactor-conformance-test/__tests__/InteractorConformance.e2e.test.ts)
+loads the *same* HTML string via `page.setContent` and drives it with
+`PlaywrightInteractor` across Chromium, Firefox and WebKit.
+
+### What it pins
+
+jsdom's behavior is the reference; the kit asserts the browser leg converges on
+it rather than leaking Playwright-isms. The
+[suite source](https://github.com/atomic-testing/atomic-testing/blob/main/packages/internal-interactor-conformance/src/conformanceSuites.ts)
+is short enough to read in one sitting. It covers:
+
+- **Missing-element reads** — text/attribute/value reads on an absent element
+  return `undefined`, boolean state reads return `false`, in both
+  environments — instead of Playwright's auto-wait timing out and throwing.
+- **Multi-match resolution** — a locator matching several elements resolves to
+  the first (`querySelector` semantics), not a Playwright strict-mode
+  violation.
+- **Value-read semantics** — reading the value of a non-input yields
+  `undefined`; a selected `<option>` with no `value` attribute falls back to
+  its text, per HTML IDL semantics.
+- **Ancestor-chain visibility** — an element inside a `display: none` or
+  `opacity: 0` ancestor reports not-visible, even though those properties are
+  not inherited by the descendant's own computed style.
+- **Element counting** — counting is by locator match, not by tag position
+  among siblings.
+- **One error hierarchy** — a mutation on a missing element throws
+  `ElementNotFoundError` and an unresolvable linked locator throws
+  `LocatorResolutionError` in every environment, both catchable via the shared
+  base class ([ADR-010](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/010-narrow-error-payload.md)).
+  Before this was pinned, a missing element threw a *different error class per
+  environment* — a real divergence, found and fixed as part of the 1.0 freeze
+  ([ADR-006](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md)).
+
+Several of these cases encode real defects that were found in
+`PlaywrightInteractor`'s read paths and fixed; the kit is regression-proof
+shaped by actual divergence history, not hypothetical symmetry.
+
+### What it deliberately does not cover
+
+Precision matters more than breadth here, so the boundaries are explicit:
+
+- The kit runs **two legs**: `DOMInteractor` and `PlaywrightInteractor`. The
+  framework interactors (React, Vue, Angular) extend `DOMInteractor` and
+  inherit its conformant behavior plus reactivity handling; they are proven by
+  their own package suites, not by extra TCK legs.
+- It is **black-box** and read/error-path focused. Mutation behavior is
+  exercised only for its error contract. The internal `runInteraction` routing
+  seam is verified white-box in a
+  [separate dom-core test](https://github.com/atomic-testing/atomic-testing/blob/main/packages/dom-core/__tests__/runInteractionRouting.dom.test.ts)
+  because routing is invisible to a black-box kit.
+- It proves the **interactor contract**, not any particular driver. Driver
+  behavior is proven by the per-package suites below.
+- In CI, the
+  [conformance job](https://github.com/atomic-testing/atomic-testing/blob/main/.github/workflows/buildui.yml)
+  currently runs the jsdom leg; the browser leg is fully runnable locally
+  (`pnpm test:e2e`, no dev server needed) and its promotion to a per-push CI
+  job is tracked as follow-up work — the workflow file says so in a comment
+  rather than hiding it.
+
+## The broader proof surface: every driver suite runs twice
+
+The conformance kit pins the contract narrowly; the shared three-file test
+pattern ([ADR-004](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/004-shared-three-file-test-pattern.md))
+exercises it broadly. Every driver package's tests are written **once** as a
+framework-agnostic `*.suite.ts`, then executed by two thin adapters: a
+`*.dom.test.ts` (Jest + jsdom in most fixtures; the Angular Material fixtures
+run this leg as browser-mode Vitest in Chromium) and a `*.e2e.test.ts`
+(Playwright, configured for Chromium, Firefox and WebKit). The suite file
+contains the `ScenePart` and all assertions; the adapters contain no test
+logic.
+
+A representative example:
+[`SingleCheckbox.suite.ts`](https://github.com/atomic-testing/atomic-testing/blob/main/package-tests/component-driver-html-test/src/examples/checkbox/SingleCheckbox.suite.ts)
+— one scene, one set of assertions, no environment branching — run by both
+adapters in the same fixture project. The same pattern repeats across every
+design-system fixture, for example:
+
+- [`component-driver-html-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-html-test) — plain HTML drivers, React 19
+- [`component-driver-mui-v9-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-mui-v9-test) — Material UI
+- [`component-driver-primevue-test`](https://github.com/atomic-testing/atomic-testing/tree/main/package-tests/component-driver-primevue-test) — PrimeVue on Vue 3
+
+Each fixture is a real project with its own rendered example app; the full
+catalog, including the Angular Material and Storybook fixtures that run as
+browser-mode Vitest tests, lives on the
+[Examples and starter fixtures](../guides/examples.md) page. Every suite that
+passes under both adapters is another data point for the portability claim —
+across roughly twenty fixture projects covering React, Vue, Angular and
+Storybook.
+
+Where these legs execute: the DOM/browser-mode legs of every fixture run
+per-push in the
+[CI test matrix](https://github.com/atomic-testing/atomic-testing/blob/main/.github/workflows/buildui.yml);
+the Playwright three-browser legs are part of the documented pre-merge
+workflow rather than the per-push matrix. That split is visible in the
+workflow file — check it rather than taking this page's word.
+
+## Which artifact proves which layer
+
+<ArchitectureDiagram />
+
+Reading the diagram as an evidence map: the **driver** layer is proven by each
+package's shared suite running under both adapters; the **interactor** layer's
+contract is pinned by the conformance kit; the **engine/scene** wiring is
+exercised by every fixture, since each one constructs a real `TestEngine` from
+the same `ScenePart` in both environments.
+
+## Verify it yourself
+
+Everything above is runnable from a clone. No account, no service:
+
+```bash
+git clone https://github.com/atomic-testing/atomic-testing.git
+cd atomic-testing
+pnpm install && pnpm -r build   # test runners resolve built dist, so build first
+
+# 1. The conformance kit — same specs, two interactors
+cd package-tests/internal-interactor-conformance-test
+pnpm test:dom     # DOMInteractor under jsdom (Jest)
+pnpm test:e2e     # PlaywrightInteractor in Chromium, Firefox and WebKit
+
+# 2. A driver fixture — same suite, two adapters
+cd ../component-driver-html-test
+pnpm test:dom     # suite under Jest + jsdom
+pnpm start &      # Vite dev server for the example app
+pnpm test:e2e     # identical suite under Playwright, three browsers
+```
+
+If you would rather read than run: the
+[conformance suite](https://github.com/atomic-testing/atomic-testing/blob/main/packages/internal-interactor-conformance/src/conformanceSuites.ts),
+its [shared HTML fixture](https://github.com/atomic-testing/atomic-testing/blob/main/packages/internal-interactor-conformance/src/conformanceFixture.ts),
+and the [CI workflow](https://github.com/atomic-testing/atomic-testing/blob/main/.github/workflows/buildui.yml)
+that executes the matrix are each a few minutes of reading. Diff the two
+adapter files of any fixture against each other — the absence of test logic in
+them is the point.
+
+## What portability does not mean
+
+- **Not "every driver is proven everywhere."** The interactor contract is
+  portable; each driver's behavior against a design system's real DOM is
+  proven per package, and per supported major version, by its own fixture.
+  A driver without a fixture leg in an environment is not proven there — the
+  [support matrix](../support-matrix.mdx) states which combinations are tested
+  and labels the experimental ones.
+- **Not "jsdom and a browser are interchangeable."** jsdom has no layout
+  engine: geometry is all zeros and scroll/drag are no-ops there. Suites gate
+  layout-dependent assertions on the runner's
+  [`hasLayout` flag](https://github.com/atomic-testing/atomic-testing/blob/main/packages/internal-test-runner/src/types.ts)
+  instead of faking a green result — for example the
+  [scroll suite](https://github.com/atomic-testing/atomic-testing/blob/main/package-tests/component-driver-html-test/src/examples/scroll/Scroll.suite.ts).
+  The difference is surfaced and gated, not hidden.
+- **Not free.** Behavioral parity is engineered case by case —
+  [ADR-002](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/002-interactor-abstraction.md)
+  records where the implementations legitimately differ (e.g. extra
+  detached-element handling in Playwright's visibility check), and the
+  conformance kit exists precisely because divergences have occurred and will
+  again. The kit turns them into failing tests instead of user bug reports.
+
+## Where to go next
+
+- [API stability, versioning & EOL](./api-stability.mdx) — whether the
+  contract the conformance kit pins is itself stable over time.
+- [Example apps](./example-apps.mdx) — runnable applications, beyond the
+  monorepo's own fixtures.
+- [Examples and starter fixtures](../guides/examples.md) — the full fixture
+  catalog, one reference project per stack.

@@ -10,13 +10,17 @@ import Tabs from '@theme/Tabs';
 
 # Why Atomic Testing?
 
+:::tip Evaluating for a team?
+If you're deciding whether a team should adopt this — not just trying it yourself — the **Evaluating Atomic Testing** section holds the evidence: [proof that the portability claim holds](./evaluate/proof-of-portability.mdx), [how the project is governed and where its risks are](./evaluate/governance.mdx), and a [phased adoption playbook](./evaluate/adoption-rollout.mdx).
+:::
+
 ## The problem
 
 Testing a UI built on third-party component libraries — Material UI, Radix, PrimeVue — is hard to keep maintainable. Each component's markup is an implementation detail, so tests that reach into it break every time the component changes or the library upgrades. And each framework and test runner has its own interaction API, so the same intent (`fill this field`, `click submit`) is written differently in React, Vue, Angular, and Playwright, with nothing shared between them.
 
 ## The solution
 
-Atomic Testing gives you one consistent way to interact with components across every testing environment. You describe the components you care about once, as a **ScenePart**, and drive them through **component drivers** that expose semantic actions (`click()`, `setValue()`, `getText()`) instead of DOM manipulation. The same scene and the same test body then run under React, Vue, Angular, Storybook play functions, and Playwright — because only the `Interactor` underneath changes, not your test.
+Atomic Testing gives you one consistent way to interact with components across every testing environment. You describe the components you care about once, as a **ScenePart**, and drive them through **component drivers** that expose semantic actions (`click()`, `setValue()`, `getText()`) instead of DOM manipulation. The same scene and the same test body then run under React, Vue, Angular, Storybook play functions, and Playwright — because only the `Interactor` underneath changes, not your test. That's a testable claim, and the evidence behind it is collected in [Proof of portability](./evaluate/proof-of-portability.mdx).
 
 Three principles guide the design:
 
@@ -110,17 +114,18 @@ Changing framework means changing the engine creation. The test logic is untouch
 
 ### Component library upgrades
 
-A design-system major upgrade often changes the markup and class names your tests asserted on. With drivers, those details live in the driver package, so an upgrade is an import change rather than a sweep across hundreds of tests.
+A design-system major upgrade often changes the markup and class names your tests asserted on. With drivers, those details live in the driver package, so an upgrade is an import change rather than a sweep across hundreds of tests — and the [API stability, versioning & EOL policy](./evaluate/api-stability.mdx) is what makes that one-import story durable across majors.
 
 <Tabs>
 <TabItem value="traditional" label="Asserting on markup">
 
 ```typescript
-// Before a MUI major upgrade:
-expect(button).toHaveClass('MuiButton-containedPrimary');
+// Before the MUI v6 → v7 upgrade, tests assert on generated class names:
+expect(button).toHaveClass('MuiButton-<internal-v6-class>');
 
-// After: the classes changed, and every test asserting them breaks.
-expect(button).toHaveClass('MuiButton-contained MuiButton-colorPrimary');
+// After the upgrade: internal class names changed between majors,
+// and every test asserting them breaks.
+expect(button).toHaveClass('MuiButton-<internal-v7-class>');
 ```
 
 </TabItem>
@@ -209,7 +214,7 @@ The benefits scale with maintenance and reuse, so the payoff is smaller when tho
 
 If the trade-offs land on the "worth it" side, you don't have to wire anything up by hand. [`create atomic-testing`](./quick-start.mdx) detects your framework, runner, and design system and writes a runnable example test for you — see the [Quick Start](./quick-start.mdx) for the one-liner and exactly what it generates.
 
-Adopt it gradually: use it for new tests first, then convert the tests that break most often during refactors and library upgrades. You don't need to migrate an existing suite to benefit.
+Adopt it gradually: use it for new tests first, then convert the tests that break most often during refactors and library upgrades. You don't need to migrate an existing suite to benefit — the [adoption & rollout playbook](./evaluate/adoption-rollout.mdx) turns this into a concrete phased plan.
 
 <div className='card-container' style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
   <div className='card'>
