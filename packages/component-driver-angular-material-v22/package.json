@@ -52,8 +52,8 @@
     "@atomic-testing/dom-core": "workspace:*"
   },
   "devDependencies": {
-    "@angular/common": "^22.0.0",
-    "@angular/core": "^22.0.0",
+    "@angular/common": "^20.3.27",
+    "@angular/core": "^22.1.1",
     "@angular/forms": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "rxjs": "^7.8.0"
