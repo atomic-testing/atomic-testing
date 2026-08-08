@@ -493,6 +493,13 @@ jobs:
       - name: Frozen-set agreement check
         run: pnpm check:frozen-set
 
+      # The gates' own detection tests. A check that only ever runs against a
+      # reconciled tree proves it executed, not that it can still SEE the drift it
+      # was written for — so each rule carries a fixture reintroducing the original
+      # disagreement, including B13 exactly as filed.
+      - name: Gate detection tests
+        run: pnpm test:scripts
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing

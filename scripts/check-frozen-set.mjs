@@ -36,7 +36,7 @@
 // Dependency-free Node ESM, modelled on scripts/check-dependency-pinning.mjs.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packagesDir = resolve(repoRoot, 'packages');
@@ -44,138 +44,172 @@ const packagesDir = resolve(repoRoot, 'packages');
 const ADR_PATH = 'agent-docs/adr/006-1.0-api-freeze-and-evolution.md';
 const README_PATH = 'README.md';
 const STABILITY_HEADING = 'Public API & stability';
-
-const errors = [];
+// Anchored to a real ATX heading line, not a substring. A bare `includes()` would
+// be satisfied by the phrase appearing in prose, a link title, or a fenced code
+// block — so renaming the heading while leaving any mention behind would keep the
+// gate green while the promise a consumer actually reads had moved or vanished.
+const STABILITY_HEADING_LINE = /^#{1,6}[ \t]+Public API & stability[ \t]*$/m;
 
 /**
- * The package names inside the `frozen-set` marker block, in document order.
- * Returns null when the block is absent or names nothing — the caller turns that
- * into FROZEN-05 rather than an empty set, because an empty set would agree with
- * nothing and pass every comparison below.
+ * The package names inside a `frozen-set` marker block, in document order, or
+ * null when the block is absent or names nothing. Null rather than an empty set
+ * on purpose: an empty set agrees with everything and would pass every
+ * comparison below, which is the silent-success shape this gate exists to reject.
+ *
+ * Exported so the marker contract can be tested directly.
  */
-function readMarkedSet(relPath) {
-  const text = readFileSync(resolve(repoRoot, relPath), 'utf8');
+export function readMarkedSet(text) {
   const block = /<!--\s*frozen-set:start\s*-->([\s\S]*?)<!--\s*frozen-set:end\s*-->/.exec(text);
-  if (!block) {
-    errors.push(
-      `FROZEN-05: ${relPath} has no <!-- frozen-set:start --> … <!-- frozen-set:end --> block. ` +
-        `The frozen package set is declared between those markers so this check can read it; ` +
-        `restore them around the list rather than removing them.`
-    );
-    return null;
-  }
+  if (!block) return null;
   const names = [...block[1].matchAll(/`([^`]+)`/g)].map(match => match[1]);
-  if (names.length === 0) {
-    errors.push(`FROZEN-05: ${relPath}'s frozen-set block is empty. An empty set silently agrees with everything.`);
-    return null;
-  }
-  return names;
+  return names.length === 0 ? null : names;
 }
 
-const declared = readMarkedSet(ADR_PATH);
-const readmeDeclared = readMarkedSet(README_PATH);
-if (declared == null) {
-  console.error(`[frozen-set] ${errors.length} problem(s):`);
-  for (const error of errors) console.error(`  - ${error}`);
-  process.exit(1);
-}
-
-const declaredSet = new Set(declared);
-const packageDirs = new Set(readdirSync(packagesDir).filter(dir => existsSync(join(packagesDir, dir, 'package.json'))));
-
-for (const name of declared) {
-  if (!packageDirs.has(name)) {
-    errors.push(`FROZEN-05: ${ADR_PATH} declares "${name}" frozen, but packages/${name} does not exist.`);
-  }
-}
-
-/** Observe a fact about the tree, as the set of package directories exhibiting it. */
-function observe(predicate) {
-  return new Set([...packageDirs].filter(predicate));
-}
-
-const hasApiScript = observe(dir => {
-  const manifestPath = join(packagesDir, dir, 'package.json');
-  try {
-    return 'check:api' in (JSON.parse(readFileSync(manifestPath, 'utf8')).scripts ?? {});
-  } catch {
-    return false;
-  }
-});
-
-const hasApiReport = observe(dir => existsSync(join(packagesDir, dir, 'etc', `${dir}.api.md`)));
-
-const hasStabilitySection = observe(dir => {
-  const readmePath = join(packagesDir, dir, 'README.md');
-  return existsSync(readmePath) && readFileSync(readmePath, 'utf8').includes(STABILITY_HEADING);
-});
+/** Does this README carry a real "Public API & stability" heading? */
+export const promisesStability = readme => STABILITY_HEADING_LINE.test(readme);
 
 /**
- * Compare an observed set against the declaration, reporting each direction with
- * its own consequence — "declared but not gated" and "gated but not declared" are
- * different bugs and the second is the one B13 actually found.
+ * Decide the verdict from already-gathered facts, so the rules can be exercised
+ * against hand-built inputs — see check-frozen-set.test.mjs, which reintroduces
+ * each drift direction and asserts the matching rule fires. A gate nothing ever
+ * proves can DETECT is only evidence that it ran.
+ *
+ * @param facts.declared        names in ADR-006 §1's marker block (null if unreadable)
+ * @param facts.readmeDeclared  names in the root README's marker block (null if unreadable)
+ * @param facts.packageDirs     every directory under packages/
+ * @param facts.hasApiScript    dirs whose manifest declares a `check:api` script
+ * @param facts.hasApiReport    dirs with a committed etc/<name>.api.md
+ * @param facts.hasStabilitySection  dirs whose README promises a frozen surface
  */
-function requireAgreement(rule, observed, { missing, extra }) {
-  for (const name of declared) {
-    if (!observed.has(name) && packageDirs.has(name)) errors.push(`${rule}: ${missing(name)}`);
-  }
-  for (const name of [...observed].sort()) {
-    if (!declaredSet.has(name)) errors.push(`${rule}: ${extra(name)}`);
-  }
-}
+export function evaluate(facts) {
+  const { declared, readmeDeclared, packageDirs, hasApiScript, hasApiReport, hasStabilitySection } = facts;
+  const errors = [];
 
-requireAgreement('FROZEN-01', hasApiScript, {
-  missing: name =>
-    `${name} is declared frozen in ${ADR_PATH} but has no "check:api" script, so nothing enforces ` +
-    `its surface — the freeze is a promise no gate keeps. Add the script and commit an API report.`,
-  extra: name =>
-    `packages/${name} runs "check:api" and commits an API report, but ${ADR_PATH} does not declare ` +
-    `it frozen. Either add it to the marked list (and give its README the stability section), or ` +
-    `remove the gate — a defended surface the contract never mentions is exactly the ambiguity ` +
-    `B13 was filed about.`,
-});
-
-requireAgreement('FROZEN-02', hasApiReport, {
-  missing: name =>
-    `${name} is declared frozen but has no packages/${name}/etc/${name}.api.md, so there is no ` +
-    `committed record of the surface being frozen. Generate it with \`api-extractor run --local\`.`,
-  extra: name =>
-    `packages/${name}/etc/${name}.api.md exists but ${name} is not declared frozen. Declare it or ` +
-    `delete the stale report.`,
-});
-
-requireAgreement('FROZEN-03', hasStabilitySection, {
-  missing: name =>
-    `${name} is declared frozen but its README has no "${STABILITY_HEADING}" section. Consumers read ` +
-    `the README that ships to npm, not this repo's ADRs.`,
-  extra: name =>
-    `packages/${name}/README.md promises a stable surface under "${STABILITY_HEADING}", but ${name} ` +
-    `is not declared frozen in ${ADR_PATH}. That README ships to npm, so it is the copy a consumer ` +
-    `will rely on — make it true or remove the claim.`,
-});
-
-// FROZEN-04 — the root README restates the list for readers who never open an
-// ADR, which makes it a fourth place to drift.
-if (readmeDeclared != null) {
-  const onlyInAdr = declared.filter(name => !readmeDeclared.includes(name));
-  const onlyInReadme = readmeDeclared.filter(name => !declaredSet.has(name));
-  if (onlyInAdr.length > 0 || onlyInReadme.length > 0) {
+  if (declared == null) {
     errors.push(
-      `FROZEN-04: ${README_PATH}'s frozen-set list disagrees with ${ADR_PATH}'s` +
-        (onlyInAdr.length > 0 ? ` — missing ${onlyInAdr.join(', ')}` : '') +
-        (onlyInReadme.length > 0 ? ` — extra ${onlyInReadme.join(', ')}` : '') +
-        `. The ADR is the source of truth; update the README to match.`
+      `FROZEN-05: ${ADR_PATH} has no readable <!-- frozen-set:start --> … <!-- frozen-set:end --> block. ` +
+        `The frozen package set is declared between those markers so this check can read it; ` +
+        `restore them around a non-empty list rather than removing them.`
+    );
+    return errors;
+  }
+  if (readmeDeclared == null) {
+    errors.push(
+      `FROZEN-05: ${README_PATH} has no readable <!-- frozen-set:start --> … <!-- frozen-set:end --> block. ` +
+        `The frozen package set is declared between those markers so this check can read it; ` +
+        `restore them around a non-empty list rather than removing them.`
     );
   }
+
+  const declaredSet = new Set(declared);
+
+  for (const name of declared) {
+    if (!packageDirs.has(name)) {
+      errors.push(`FROZEN-05: ${ADR_PATH} declares "${name}" frozen, but packages/${name} does not exist.`);
+    }
+  }
+
+  /**
+   * Compare an observed set against the declaration, reporting each direction with
+   * its own consequence — "declared but not gated" and "gated but not declared" are
+   * different bugs and the second is the one B13 actually found.
+   */
+  function requireAgreement(rule, observed, { missing, extra }) {
+    for (const name of declared) {
+      if (!observed.has(name) && packageDirs.has(name)) errors.push(`${rule}: ${missing(name)}`);
+    }
+    for (const name of [...observed].sort()) {
+      if (!declaredSet.has(name)) errors.push(`${rule}: ${extra(name)}`);
+    }
+  }
+
+  requireAgreement('FROZEN-01', hasApiScript, {
+    missing: name =>
+      `${name} is declared frozen in ${ADR_PATH} but has no "check:api" script, so nothing enforces ` +
+      `its surface — the freeze is a promise no gate keeps. Add the script and commit an API report.`,
+    extra: name =>
+      `packages/${name} runs "check:api" and commits an API report, but ${ADR_PATH} does not declare ` +
+      `it frozen. Either add it to the marked list (and give its README the stability section), or ` +
+      `remove the gate — a defended surface the contract never mentions is exactly the ambiguity ` +
+      `B13 was filed about.`,
+  });
+
+  requireAgreement('FROZEN-02', hasApiReport, {
+    missing: name =>
+      `${name} is declared frozen but has no packages/${name}/etc/${name}.api.md, so there is no ` +
+      `committed record of the surface being frozen. Generate it with \`api-extractor run --local\`.`,
+    extra: name =>
+      `packages/${name}/etc/${name}.api.md exists but ${name} is not declared frozen. Declare it or ` +
+      `delete the stale report.`,
+  });
+
+  requireAgreement('FROZEN-03', hasStabilitySection, {
+    missing: name =>
+      `${name} is declared frozen but its README has no "${STABILITY_HEADING}" section. Consumers read ` +
+      `the README that ships to npm, not this repo's ADRs.`,
+    extra: name =>
+      `packages/${name}/README.md promises a stable surface under "${STABILITY_HEADING}", but ${name} ` +
+      `is not declared frozen in ${ADR_PATH}. That README ships to npm, so it is the copy a consumer ` +
+      `will rely on — make it true or remove the claim.`,
+  });
+
+  // FROZEN-04 — the root README restates the list for readers who never open an
+  // ADR, which makes it a fourth place to drift.
+  if (readmeDeclared != null) {
+    const onlyInAdr = declared.filter(name => !readmeDeclared.includes(name));
+    const onlyInReadme = readmeDeclared.filter(name => !declaredSet.has(name));
+    if (onlyInAdr.length > 0 || onlyInReadme.length > 0) {
+      errors.push(
+        `FROZEN-04: ${README_PATH}'s frozen-set list disagrees with ${ADR_PATH}'s` +
+          (onlyInAdr.length > 0 ? ` — missing ${onlyInAdr.join(', ')}` : '') +
+          (onlyInReadme.length > 0 ? ` — extra ${onlyInReadme.join(', ')}` : '') +
+          `. The ADR is the source of truth; update the README to match.`
+      );
+    }
+  }
+
+  return errors;
 }
 
-if (errors.length > 0) {
-  console.error(`[frozen-set] ${errors.length} problem(s):`);
-  for (const error of errors) console.error(`  - ${error}`);
-  process.exit(1);
+/** Gather every fact `evaluate` needs by reading the working tree. */
+function gatherFacts() {
+  const read = relPath => readFileSync(resolve(repoRoot, relPath), 'utf8');
+  const packageDirs = new Set(
+    readdirSync(packagesDir).filter(dir => existsSync(join(packagesDir, dir, 'package.json')))
+  );
+  const observe = predicate => new Set([...packageDirs].filter(predicate));
+
+  return {
+    declared: readMarkedSet(read(ADR_PATH)),
+    readmeDeclared: readMarkedSet(read(README_PATH)),
+    packageDirs,
+    hasApiScript: observe(dir => {
+      try {
+        return 'check:api' in (JSON.parse(readFileSync(join(packagesDir, dir, 'package.json'), 'utf8')).scripts ?? {});
+      } catch {
+        return false;
+      }
+    }),
+    hasApiReport: observe(dir => existsSync(join(packagesDir, dir, 'etc', `${dir}.api.md`))),
+    hasStabilitySection: observe(dir => {
+      const readmePath = join(packagesDir, dir, 'README.md');
+      return existsSync(readmePath) && promisesStability(readFileSync(readmePath, 'utf8'));
+    }),
+  };
 }
 
-process.stdout.write(
-  `[frozen-set] OK — ${declared.length} package(s) declared frozen in ADR-006 §1; the API gate, the ` +
-    `committed reports, the package READMEs and the root README all name the same set.\n`
-);
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  const facts = gatherFacts();
+  const errors = evaluate(facts);
+
+  if (errors.length > 0) {
+    console.error(`[frozen-set] ${errors.length} problem(s):`);
+    for (const error of errors) console.error(`  - ${error}`);
+    process.exit(1);
+  }
+
+  process.stdout.write(
+    `[frozen-set] OK — ${facts.declared.length} package(s) declared frozen in ADR-006 §1; the API gate, ` +
+      `the committed reports, the package READMEs and the root README all name the same set.\n`
+  );
+}
