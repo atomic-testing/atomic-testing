@@ -51,28 +51,28 @@ All DOM + E2E (Chromium/Firefox/WebKit).
 
 ## Coverage — media & status
 
-| Component   | Driver              | E2E-only behavior                                                    |
-| ----------- | ------------------- | -------------------------------------------------------------------- |
-| StatusDot   | `StatusDotDriver`   | hover tooltip                                                        |
-| Citation    | `CitationDriver`    | —                                                                    |
-| Token       | `TokenDriver`       | disabled state (class-only — not exposed)                            |
-| Avatar      | `AvatarDriver`      | image load-failure → initials fallback (jsdom never fires `onError`) |
-| AvatarGroup | `AvatarGroupDriver` | —                                                                    |
-| Thumbnail   | `ThumbnailDriver`   | hover tooltip & lightbox preview                                     |
+| Component   | Driver              | E2E-only behavior                                                             |
+| ----------- | ------------------- | ----------------------------------------------------------------------------- |
+| StatusDot   | `StatusDotDriver`   | hover tooltip                                                                 |
+| Citation    | `CitationDriver`    | —                                                                             |
+| Token       | `TokenDriver`       | disabled state (class-only — not exposed)                                     |
+| Avatar      | `AvatarDriver`      | image load-failure → initials fallback (jsdom never fires `onError`)          |
+| AvatarGroup | `AvatarGroupDriver` | —                                                                             |
+| Thumbnail   | `ThumbnailDriver`   | hover tooltip & lightbox preview                                              |
 | Lightbox    | `LightboxDriver`    | double-click zoom & drag-to-pan (real double-click timing / pointer geometry) |
 
 ## Coverage — nav chrome
 
-| Component      | Driver                 | E2E-only behavior                                                           |
-| -------------- | ---------------------- | --------------------------------------------------------------------------- |
-| TopNav         | `TopNavDriver`         | —                                                                           |
-| TopNavItem     | `TopNavItemDriver`     | —                                                                           |
-| TopNavMenu     | `TopNavMenuDriver`     | menu **open** (native popover); items read while closed via `aria-controls` |
-| TopNavMegaMenu | `TopNavMegaMenuDriver` | panel **open** (native popover); items read while closed via `aria-controls` |
+| Component      | Driver                 | E2E-only behavior                                                                                                                       |
+| -------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| TopNav         | `TopNavDriver`         | —                                                                                                                                       |
+| TopNavItem     | `TopNavItemDriver`     | —                                                                                                                                       |
+| TopNavMenu     | `TopNavMenuDriver`     | menu **open** (native popover); items read while closed via `aria-controls`                                                             |
+| TopNavMegaMenu | `TopNavMegaMenuDriver` | panel **open** (native popover); items read while closed via `aria-controls`                                                            |
 | Breadcrumbs    | `BreadcrumbsDriver`    | a crumb's `menu` (0.1.9): item reads/`selectByLabel` work closed; the trigger carries no `aria-expanded`, so open state is **E2E-only** |
-| SideNav        | `SideNavDriver`        | collapsed visual state                                                      |
-| SideNavItem    | `SideNavItemDriver`    | flyout (collapsed mode)                                                     |
-| MobileNav      | `MobileNavDriver`      | `dialog[open]` (set by `showModal`)                                         |
+| SideNav        | `SideNavDriver`        | collapsed visual state                                                                                                                  |
+| SideNavItem    | `SideNavItemDriver`    | flyout (collapsed mode)                                                                                                                 |
+| MobileNav      | `MobileNavDriver`      | `dialog[open]` (set by `showModal`)                                                                                                     |
 
 ## Coverage — chat suite
 
