@@ -33,3 +33,10 @@ rationale.
 See the per-major package READMEs, or the validation fixture in
 `package-tests/angular-20-test` for a runnable example covering both zone.js
 and zoneless configurations.
+
+## Public API & stability
+
+The stable surface of this package is its `.` barrel exports, frozen under
+SemVer and machine-checked by the committed [API Extractor](https://api-extractor.com/)
+report at [`etc/angular-core.api.md`](https://github.com/atomic-testing/atomic-testing/blob/main/packages/angular-core/etc/angular-core.api.md). Exports tagged `@internal` are
+not part of that guarantee. See the [1.0 API freeze & evolution policy](https://github.com/atomic-testing/atomic-testing/blob/main/agent-docs/adr/006-1.0-api-freeze-and-evolution.md).

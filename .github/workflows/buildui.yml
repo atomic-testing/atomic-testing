@@ -484,6 +484,31 @@ jobs:
       - name: Absence-convention check
         run: pnpm check:absence
 
+      # Peer-range coherence gate (PEER-*): ADR-006 §3 makes the advertised peer
+      # ranges part of the 1.0 contract, so a wrong one can only be corrected in a
+      # major. Nothing exercises them otherwise — `auto-install-peers=true` plus
+      # `pnpm install --no-frozen-lockfile` means every CI install resolves the
+      # NEWEST satisfying version, so the declared floors are pure prose until this
+      # compares them to each other.
+      - name: Peer-range coherence check
+        run: pnpm check:peer-floors
+
+      # Frozen-set agreement gate (FROZEN-*): the 1.0 frozen package set was
+      # defined three different ways at once — ADR-006 §1 and the root README named
+      # 9, `check:api` gated 14, and 10 package READMEs promised stability. Each
+      # definition lived somewhere different and nothing compared them. ADR-006 §1's
+      # marked list is now the source of truth and this fails the build when the
+      # gate, the committed reports or any README disagrees with it.
+      - name: Frozen-set agreement check
+        run: pnpm check:frozen-set
+
+      # The gates' own detection tests. A check that only ever runs against a
+      # healthy tree proves it executed, not that it can still SEE the defect it
+      # was written for — so each rule carries a fixture reintroducing the original
+      # failure, B13 as filed included.
+      - name: Gate detection tests
+        run: pnpm test:scripts
+
       - name: Run unit tests
         run: pnpm test:dom
         working-directory: ./packages/create-atomic-testing
