@@ -90,8 +90,8 @@ export interface StorybookPlayContext {
 }
 
 // @public
-export function withDriver<D extends ComponentDriver<any>, // eslint-disable-line @typescript-eslint/no-explicit-any -- matches ComponentDriverCtor's variance-driven `any`
-C extends StorybookPlayContext = StorybookPlayContext>(driverClass: ComponentDriverCtor<D>, fn: (context: C & {
+export function withDriver<D extends ComponentDriver<any> // eslint-disable-line @typescript-eslint/no-explicit-any -- matches ComponentDriverCtor's variance-driven `any`
+, C extends StorybookPlayContext = StorybookPlayContext>(driverClass: ComponentDriverCtor<D>, fn: (context: C & {
     driver: D;
 }) => Promise<void>, option?: WithDriverOption): (context: C) => Promise<void>;
 
