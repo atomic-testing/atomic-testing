@@ -45,6 +45,31 @@ jobs:
             packages/*/dist
           retention-days: 1
 
+  # Fast, install-free diagnostic for the drift that broke PR #1382: Dependabot's
+  # own updater regenerated pnpm-lock.yaml's `overrides:` snapshot from stale
+  # data and silently dropped every real override, so `build`'s frozen-lockfile
+  # `pnpm install` failed with a generic ERR_PNPM_LOCKFILE_CONFIG_MISMATCH and
+  # every job depending on `build` was skipped without ever saying why. This
+  # reads only committed files (package.json + pnpm-lock.yaml) — no pnpm
+  # install — so it runs independently of `build` and names the exact key that
+  # disagrees instead. See scripts/check-lockfile-overrides.mjs.
+  lockfile-overrides-check:
+    name: Lockfile overrides consistency
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Check pnpm.overrides matches the lockfile snapshot
+        run: node scripts/check-lockfile-overrides.mjs
+
   # Lint and type-check jobs that need built packages
   lint:
     name: Linting and formatting
