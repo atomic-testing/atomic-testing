@@ -35,7 +35,7 @@ against a fresh `tsc --lsp` server: with the mapping, cross-package go-to-defini
 resolves to `packages/core/src/drivers/ComponentDriver.ts` (source), not `dist`.
 
 **But it cannot be scoped to the LSP.** The LSP server and `check:type` (`tsc --noEmit`)
-discover the *same* per-file `tsconfig.json`. So the same `paths→src` mapping forces
+discover the _same_ per-file `tsconfig.json`. So the same `paths→src` mapping forces
 `check:type` to compile cross-package **source**, which collides with the repo's
 per-package emit model:
 
@@ -97,8 +97,8 @@ today.
 ```
 
 - **Cost:** ~37 thin new configs + 37 `check:type` script edits + root `paths` addition
-  + teach the scaffolder (`packages/create-atomic-testing`) to emit both configs for new
-  packages.
+  - teach the scaffolder (`packages/create-atomic-testing`) to emit both configs for new
+    packages.
 - **Risk:** low — `check:type` semantics are unchanged; only the LSP config gains
   `paths`. The LSP tolerates `paths→src` even with `composite` set (it resolves, it does
   not run the emit-time `rootDir` check that blocks `check:type`).
@@ -149,12 +149,12 @@ cross-project `rootDir` error (references are the sanctioned cross-project bound
 
 ## Alternatives considered
 
-| Alternative | Why not chosen (now) |
-| --- | --- |
+| Alternative                                       | Why not chosen (now)                                                                                                             |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Add `paths→src` to the shared per-package configs | Breaks `check:type` (60 `TS6059`/`TS6307` errors); the LSP and `check:type` share the config, so it cannot be scoped to the LSP. |
-| Split configs (option 1) | Viable, but ~37 new configs + permanent two-config-per-package overhead outweigh the narrow gap today. |
-| Dismantle the emit model (option 2) | Repo-wide `check:type` semantic change with per-variant revalidation cost, disproportionate to the benefit. |
-| Declaration maps (option 3) | Blocked by the bundled-`.d.ts` toolchain and the tool's lack of `goToSourceDefinition`. |
+| Split configs (option 1)                          | Viable, but ~37 new configs + permanent two-config-per-package overhead outweigh the narrow gap today.                           |
+| Dismantle the emit model (option 2)               | Repo-wide `check:type` semantic change with per-variant revalidation cost, disproportionate to the benefit.                      |
+| Declaration maps (option 3)                       | Blocked by the bundled-`.d.ts` toolchain and the tool's lack of `goToSourceDefinition`.                                          |
 
 ## When to revisit
 

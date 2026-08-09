@@ -21,7 +21,7 @@
 - An **LSP** gives an agent IDE-grade navigation — **go-to-definition, find-references,
   hover, workspace-symbol, implementations, call hierarchy** — plus **live diagnostics
   after edits**. This is type-aware, unlike `grep`/text search.
-- The benefit is **precision and fewer wasted turns**: the agent jumps to the *right*
+- The benefit is **precision and fewer wasted turns**: the agent jumps to the _right_
   symbol instead of wading through text matches, and learns immediately when an edit
   breaks a type.
 - **Whether it pays off depends on your codebase, not on hype.** Adopt it if your repo is
@@ -40,25 +40,25 @@
 ## 2. Background — why an LSP helps an agent
 
 By default, coding agents explore code with **text tools**: `grep`, `glob`, read-file.
-That works, but it is *lexical*, not *semantic*:
+That works, but it is _lexical_, not _semantic_:
 
 - A search for a common method or class name returns **every textual occurrence** — across
   unrelated definitions, comments, and strings — and the agent must spend reasoning (and
   tokens, and turns) filtering them.
-- The agent cannot reliably answer "where is *this* symbol defined?" or "who calls it?"
+- The agent cannot reliably answer "where is _this_ symbol defined?" or "who calls it?"
   without reading many candidates.
 
 An LSP answers those questions **by type**, in one call:
 
-| Operation | What the agent gets |
-| --- | --- |
-| `goToDefinition` | The exact definition of the symbol under the cursor |
-| `findReferences` | Every real reference (not text matches) |
-| `hover` | The resolved type signature + doc comment |
-| `workspaceSymbol` | Fuzzy symbol search across the whole workspace |
+| Operation            | What the agent gets                                      |
+| -------------------- | -------------------------------------------------------- |
+| `goToDefinition`     | The exact definition of the symbol under the cursor      |
+| `findReferences`     | Every real reference (not text matches)                  |
+| `hover`              | The resolved type signature + doc comment                |
+| `workspaceSymbol`    | Fuzzy symbol search across the whole workspace           |
 | `goToImplementation` | Concrete implementations of an interface/abstract member |
-| call hierarchy | Incoming/outgoing callers of a function |
-| diagnostics | Type/lint errors, pushed automatically after each edit |
+| call hierarchy       | Incoming/outgoing callers of a function                  |
+| diagnostics          | Type/lint errors, pushed automatically after each edit   |
 
 **An honest word on evidence.** As of mid-2026, public head-to-head benchmarks of
 "LSP-tooled agent vs. grep-only agent" (token cost, task success, latency) are **thin and
@@ -70,7 +70,7 @@ not someone's benchmark. Adopt on fit, not on a number.
 
 ## 3. Should you adopt it? — an evaluation framework
 
-LSP navigation pays off in proportion to how much *semantic ambiguity* your codebase has
+LSP navigation pays off in proportion to how much _semantic ambiguity_ your codebase has
 that text search cannot resolve. Score your repo against these:
 
 **Strong signals to adopt**
@@ -102,7 +102,7 @@ git grep -n "getValue" | wc -l                                  # git repos — 
 grep -rn "getValue" . --exclude-dir={node_modules,dist,build,.git} | wc -l   # portable fallback
 ```
 
-The worked-example repo had `getValue` *appearing* (textual matches, not distinct
+The worked-example repo had `getValue` _appearing_ (textual matches, not distinct
 definitions — which is the point) **256 times across 112 files**, and **444** exported
 `*Driver` classes sharing names across packages — a textbook high-benefit case.
 
@@ -128,8 +128,8 @@ as of mid-2026). You enable it by installing a small **plugin** whose config fil
     "command": "pnpm",
     "args": ["exec", "tsc", "--lsp", "--stdio"],
     "extensionToLanguage": { ".ts": "typescript", ".tsx": "typescriptreact" },
-    "transport": "stdio"
-  }
+    "transport": "stdio",
+  },
 }
 ```
 
@@ -169,7 +169,7 @@ highest and add others incrementally.
 ### 5.1 Match the LSP engine to your CI type-check engine
 
 **The single most important principle.** If your CI type-checks with compiler **X**, drive
-the LSP with **X**. Otherwise the agent's navigation and diagnostics reflect a *different*
+the LSP with **X**. Otherwise the agent's navigation and diagnostics reflect a _different_
 engine than the one that gates merges — it can report an error CI won't, or miss one CI
 will. Consistency with CI is worth more than any single feature.
 
@@ -177,10 +177,10 @@ will. Consistency with CI is worth more than any single feature.
 
 Do not assume the command that "should" run the compiler does. **Check what your toolchain
 actually resolves.** In the worked example, at an early point during adoption `pnpm exec
-tsc` resolved to the *classic* compiler while the native compiler shipped under a *different
-name* (`tsgo`, from the then-current preview package), and the native compiler's own
+tsc` resolved to the _classic_ compiler while the native compiler shipped under a _different
+name_ (`tsgo`, from the then-current preview package), and the native compiler's own
 `--help` banner even mis-identified itself. After the coexistence aliasing (§5.3) was set
-up, `pnpm exec tsc` resolves to the *native* compiler — the same engine CI type-checks with
+up, `pnpm exec tsc` resolves to the _native_ compiler — the same engine CI type-checks with
 and the one §4's `.lsp.json` drives (verify: `pnpm exec tsc --version` → 7.x), with the
 classic compiler moved to `tsc6`. The lesson holds either way: a five-minute check of the
 real binary saves hours.
@@ -193,7 +193,7 @@ python3 -c "import os, shutil; print(os.path.realpath(shutil.which('<tool>')))"
 
 ### 5.3 Coexistence — your build/docs tooling may lag your type-checker
 
-A new, fast native compiler may **not yet expose the programmatic API** that your *build*,
+A new, fast native compiler may **not yet expose the programmatic API** that your _build_,
 `.d.ts` emit, doc generator, or API-extractor depend on. Forcing everything onto the new
 compiler then **breaks the build**. The fix is **coexistence, not replacement**: run the
 new compiler for **type-check + LSP**, and keep the classic compiler for the **build/docs**
@@ -207,10 +207,10 @@ build tools resolve).
 > two engines in parallel during the transition.
 
 **Watch for the dependency that won't stay removed.** When you swap one engine for another
-(e.g. a preview build for a stable one), the package you *removed* can be silently
+(e.g. a preview build for a stable one), the package you _removed_ can be silently
 **re-installed as another tool's transitive optional peer** — so a fresh install quietly
 brings it back. Concretely, in the worked example a bundler's declaration plugin
-(`rolldown-plugin-dts`) declared the preview compiler as an *optional peer*, and the package
+(`rolldown-plugin-dts`) declared the preview compiler as an _optional peer_, and the package
 manager's auto-install-peers behavior re-pulled it. The fix is a **package-manager hook**
 that strips the unwanted optional peer at resolution time (a `.pnpmfile.cjs` in pnpm; the
 equivalent varies by ecosystem). Generally: after removing a compiler/tool, confirm it's
@@ -253,26 +253,26 @@ config is enough.
 
 Cloud agent sessions typically run in an **ephemeral container**: the repo is cloned fresh,
 the container is reclaimed after inactivity, outbound network goes through a proxy, and disk
-is a per-session allowance. That changes *how* you enable and *persist* the LSP.
+is a per-session allowance. That changes _how_ you enable and _persist_ the LSP.
 
 ### 7.1 Two enablement mechanisms
 
-| Mechanism | When it runs | Persistence | Use it as |
-| --- | --- | --- | --- |
-| **Environment setup script** | Once, **pre-launch**, as root | Cached into the environment image | **Preferred.** LSP live from session 1; no plugin-load race |
-| **SessionStart hook** (in-repo) | **Every** session start | Not cached; re-runs | Fallback when you can't edit the setup script |
+| Mechanism                       | When it runs                  | Persistence                       | Use it as                                                   |
+| ------------------------------- | ----------------------------- | --------------------------------- | ----------------------------------------------------------- |
+| **Environment setup script**    | Once, **pre-launch**, as root | Cached into the environment image | **Preferred.** LSP live from session 1; no plugin-load race |
+| **SessionStart hook** (in-repo) | **Every** session start       | Not cached; re-runs               | Fallback when you can't edit the setup script               |
 
 A setup script installs dependencies + enables the plugin **before the agent starts**, so
 the language server is ready on turn one. A SessionStart hook (committed in the repo) is the
-in-repo alternative, but because it runs *as* the session starts, the plugin may only attach
-on the **next** session (or after a plugin reload) — it *converges* rather than being
+in-repo alternative, but because it runs _as_ the session starts, the plugin may only attach
+on the **next** session (or after a plugin reload) — it _converges_ rather than being
 instant.
 
 **Guardrail for the hook:** gate auto-install to the **remote** environment only (e.g. a
 `CLAUDE_CODE_REMOTE`-style check), so a repo hook never silently mutates a **local**
 developer's global agent config.
 
-### 7.2 Cloud caveats to verify in *your* environment
+### 7.2 Cloud caveats to verify in _your_ environment
 
 - **Install type matters.** Native/standalone agent binaries have historically differed
   from npm/bun installs in whether they can spawn LSP plugins — and this changes across
@@ -308,7 +308,7 @@ See [`tools/ts7-lsp/enable.sh`](../tools/ts7-lsp/enable.sh) and
 ## 8. Verifying it works — a methodology
 
 **Don't trust "it should work" — prove it.** Build a small **acceptance test** that drives
-the language server *directly* (independent of the agent) and asserts resolution. This makes
+the language server _directly_ (independent of the agent) and asserts resolution. This makes
 adoption reproducible and catches regressions.
 
 A minimal test: spawn the server over stdio, send `initialize` → `initialized` →
@@ -328,7 +328,7 @@ result is fine) and the server proceeds.
 - **Within-module** go-to-definition lands in **source**.
 - **Cross-module** go-to-definition — **in a monorepo whose packages import each other's
   built output** (`exports` → `dist`), it may land in the **built declaration**, which is
-  *expected* there (see §9). In a single package, or a workspace that resolves imports to
+  _expected_ there (see §9). In a single package, or a workspace that resolves imports to
   source (a Cargo/Go workspace, or a TS monorepo mapped to source), it should reach
   **source**. Either way, **hover** and **workspaceSymbol** should work.
 - **Diagnostics** appear after an edit that introduces a type error.
@@ -349,20 +349,20 @@ In a monorepo where packages import each other through their published **`export
 point at built output, e.g. `dist/`), **cross-package go-to-definition resolves into the
 built declaration file** (or is treated as an "external library"), **not** the source.
 Within-package navigation is perfect; cross-package **hover** and **workspaceSymbol** work;
-only cross-package *jump-to-source* is affected.
+only cross-package _jump-to-source_ is affected.
 
 Two things make this stubborn:
 
 1. **It needs the build.** Cross-package results require the dependency's `dist` to be built
    at all — a "stale/missing `dist`" trap.
 2. **The obvious fixes aren't free.** Mapping imports to source (a `paths`-to-`src` mapping)
-   *does* fix navigation — but the LSP and the type-checker usually **share the same
-   config**, so the same mapping forces the type-checker to compile cross-package *source*,
+   _does_ fix navigation — but the LSP and the type-checker usually **share the same
+   config**, so the same mapping forces the type-checker to compile cross-package _source_,
    which can collide with a monorepo's project/emit model (composite projects, `rootDir`,
    declaration emit). Declaration maps can help in principle, but **bundled** `.d.ts` output
    (from bundlers) often lacks the per-file maps needed.
 
-**The point for adopters:** this is a *known, bounded* limitation, not a blocker — decide
+**The point for adopters:** this is a _known, bounded_ limitation, not a blocker — decide
 deliberately whether the fix is worth its cost, and **record the decision** (an Architecture
 Decision Record, or ADR — a short dated markdown file capturing the context, the decision,
 and the options considered — is a good vehicle) so future maintainers inherit the reasoning. The worked example did exactly
@@ -394,7 +394,7 @@ Hard-won, generalized. Each cost real time in the worked example:
 - [ ] **Match the LSP engine to the CI type-check engine** (§5.1).
 - [ ] **Install the language-server binary** — it isn't bundled with the plugin/wrapper (§5.4).
 - [ ] **Workspace trust** must be accepted before the LSP starts (§6, §7.2).
-- [ ] **Config version gates** can *silently skip* the server on older agent versions — know
+- [ ] **Config version gates** can _silently skip_ the server on older agent versions — know
       your minimum and warn (§7.2).
 - [ ] **Native vs npm/bun install** can differ in LSP support in the cloud — verify (§7.2).
 - [ ] **Build/docs tooling may need the classic compiler** — plan for coexistence, not
@@ -442,7 +442,7 @@ This guide was distilled from a real adoption in a ~40-package TypeScript monore
   cross-package-navigation note.
 - [ADR-016](adr/016-defer-paths-src-cross-package-navigation.md) — the recorded decision to
   defer cross-package source navigation, with four future options.
-- The root `CLAUDE.md` *Toolchain note* and *Code intelligence* section — how the compiler
+- The root `CLAUDE.md` _Toolchain note_ and _Code intelligence_ section — how the compiler
   coexistence and the LSP fit into the day-to-day toolchain.
 
 Read those for the concrete commands; use this guide for the reasoning that ports to any
