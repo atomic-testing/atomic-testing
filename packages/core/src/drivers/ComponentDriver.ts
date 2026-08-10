@@ -1,5 +1,6 @@
 import { Optional } from '../dataTypes';
 import { MissingPartError } from '../errors/MissingPartError';
+import { PostconditionNotMetError } from '../errors/PostconditionNotMetError';
 import { BoundingRect, Point } from '../geometry';
 import {
   ClickOption,
@@ -433,6 +434,53 @@ export abstract class ComponentDriver<T extends ScenePart = {}> implements IComp
 
   waitUntil<T>(option: WaitUntilOption<T>): Promise<T> {
     return this.interactor.waitUntil(option);
+  }
+
+  /**
+   * Hold an action open until its own postcondition holds, so the action does
+   * not resolve while the DOM it promised is still arriving.
+   *
+   * **Why actions, not reads or assertions.** An interactor settles the
+   * framework's scheduler after a write (React `act()`, Vue `nextTick()`,
+   * Angular `whenStable()`) and then treats the DOM as final. A component that
+   * defers its own DOM work onto a host timer — a `setTimeout` to re-register a
+   * select's options, to restore a picker's section spans — lands *after* that
+   * settle, so the next single-shot read observes a transient state that is
+   * neither the old value nor the new one. Making reads retry cannot fix this
+   * (a read does not know what it is waiting for, and negative reads must stay
+   * fast); making every mutation drain a fixed extra macrotask is a sleep at
+   * framework scale. The action is the only layer that knows what it promised,
+   * so the action is where the wait belongs.
+   *
+   * Probing uses {@link waitUntil}'s escalating intervals, so a postcondition
+   * that already holds costs one probe and no delay.
+   *
+   * @param postcondition Human-readable description of the awaited state, used
+   *   verbatim in {@link PostconditionNotMetError}. Phrase it as the state that
+   *   must arrive, not the action taken.
+   * @param probeFn Returns true once the postcondition holds. Keep it cheap —
+   *   it runs repeatedly.
+   * @param option.timeoutMs Defaults to {@link defaultWaitForOption}.timeoutMs so
+   *   every wait in the library shares one flake-tolerance source (#1057).
+   * @throws {PostconditionNotMetError} If the postcondition never holds. Failing
+   *   here is deliberate: an action that cannot keep its promise is a real
+   *   defect, and reporting it at the action gives a far better diagnostic than
+   *   the downstream assertion mismatch it would otherwise become.
+   */
+  protected async awaitPostcondition(
+    postcondition: string,
+    probeFn: () => Promise<boolean> | boolean,
+    option?: { readonly timeoutMs?: number }
+  ): Promise<void> {
+    const timeoutMs = option?.timeoutMs ?? defaultWaitForOption.timeoutMs;
+    const met = await this.interactor.waitUntil({
+      probeFn,
+      terminateCondition: true,
+      timeoutMs,
+    });
+    if (!met) {
+      throw new PostconditionNotMetError(this, postcondition, timeoutMs);
+    }
   }
 
   /**

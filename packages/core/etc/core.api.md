@@ -108,6 +108,9 @@ export type CommutableComponentDriverOption = Omit<IComponentDriverOption, 'part
 export abstract class ComponentDriver<T extends ScenePart = {}> implements IComponentDriver<T> {
     constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption<T>>);
     protected activate(): Promise<void>;
+    protected awaitPostcondition(postcondition: string, probeFn: () => Promise<boolean> | boolean, option?: {
+        readonly timeoutMs?: number;
+    }): Promise<void>;
     // (undocumented)
     click(option?: Partial<ClickOption>): Promise<void>;
     readonly commutableOption: CommutableComponentDriverOption;
@@ -618,6 +621,18 @@ export interface PointerActions {
     // (undocumented)
     mouseUp(locator: PartLocator, option?: Partial<MouseUpOption>): Promise<void>;
 }
+
+// @public
+export class PostconditionNotMetError extends ErrorBase {
+    constructor(driver: {
+        driverName: string;
+    }, postcondition: string, timeoutMs: number);
+    // (undocumented)
+    readonly postcondition: string;
+}
+
+// @public (undocumented)
+export const PostconditionNotMetErrorId = "PostconditionNotMetError";
 
 // @public
 export interface PressKeyOption {
