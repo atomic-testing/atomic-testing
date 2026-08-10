@@ -39,7 +39,7 @@
     "@atomic-testing/internal-test-runner-playwright-adapter": "workspace:*",
     "@atomic-testing/vue-3": "workspace:*",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/user-event": "^14.6.3",
     "@testing-library/vue": "^8.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/compiler-sfc": "^3.5.40"
