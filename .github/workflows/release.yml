@@ -1,0 +1,244 @@
+name: Release
+
+# The one-step release entry point. Dispatch it with a version and it does
+# everything the old ritual asked a human to do in two places: bump the
+# manifests, generate the changelog, land that commit on main, tag it, publish
+# the GitHub Release, and hand off to `publish.yml`.
+#
+# WHY THIS EXISTS. #1375 inverted the release model — the version bump moved
+# from inside the publish runner (pushed to main only AFTER publishing) to a
+# commit that must exist BEFORE the tag, so that `git checkout vX.Y.Z` rebuilds
+# exactly what shipped. That ordering is worth keeping. What it accidentally
+# bought was a second manual step that nothing enforced and nothing announced:
+# creating a Release in the GitHub UI looks identical before and after the
+# change, so v0.101.0 and v0.102.0 were both tagged on plain main and both
+# rejected by preflight. A precondition a human must remember, in a different
+# tool from the one that needs it, is a precondition that will be missed.
+#
+# This workflow keeps the ordering guarantee and removes the remembering: the
+# commit it tags is one it just created, so the tag cannot name an unbumped
+# tree.
+#
+# WHY IT DISPATCHES publish.yml INSTEAD OF LETTING THE RELEASE EVENT FIRE.
+# GitHub deliberately does not start workflow runs from events created with the
+# repository's GITHUB_TOKEN, to stop recursion. A Release published from here
+# would therefore trigger nothing — silently. `workflow_dispatch` is one of the
+# two documented exceptions to that rule, so the hand-off is explicit rather
+# than relying on an event that will not arrive. It targets the new tag, so
+# `publish.yml` and the workflows it calls check out exactly the tagged tree,
+# identical to the release-event path.
+#
+# WHY IT DOES NOT GATE ON "IS MAIN GREEN". It could read check runs for main's
+# tip, but it would be reading nothing: `buildui.yml` runs on `pull_request` and
+# `merge_group` only, so a squash-merged commit on main carries no verification
+# run of its own. A gate that finds zero checks and reports success is the
+# failure class this repo has already been bitten by twice (B1's unrun e2e tier,
+# B2's tests wired to a script CI never invoked). The real gate is downstream and
+# stronger: `publish.yml` runs the full `buildui.yml` as `verify` and the full
+# e2e matrix as `e2e-gate`, both against the tagged tree, and `publish` needs
+# both. A red main cannot reach npm through this path.
+#
+# See agent-docs/RELEASING.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without the leading v (e.g. 0.103.0)'
+        required: true
+        type: string
+      preview:
+        description: 'Preview only — generate the bump and changelog, print them, change nothing'
+        required: false
+        default: false
+        type: boolean
+
+# Deny by default. Note what is NOT here: `id-token: write`. This workflow holds
+# a repository-write credential, so it must never also hold the npm publishing
+# identity — that separation is why publishing stays in publish.yml, whose
+# publish job checks out with `persist-credentials: false` precisely so build
+# tooling cannot reach a token that can write to the repository.
+permissions: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the release commit, create the tag and the Release
+      actions: write # dispatch publish.yml at the new tag
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          # Full history and tags: generateChangelog.js resolves the previous
+          # release by walking `v*` tags, and a shallow clone would silently give
+          # it the wrong baseline — the same way a stale local tag would.
+          fetch-depth: 0
+          fetch-tags: true
+
+      # Before the first `node -p`: the runner's preinstalled Node is whatever the
+      # image ships, and every version comparison below runs through it.
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      # RELVER-01…03 — format, tag-already-exists, and SemVer precedence against
+      # the version in the tree. A tested script rather than inline shell,
+      # because this is the only thing between a typo in the dispatch box and 38
+      # rewritten manifests: see scripts/assert-release-version.test.mjs, which
+      # makes every rule fire. It also normalises a leading `v` in exactly one
+      # place and writes the result to $GITHUB_OUTPUT.
+      #
+      # `inputs.version` reaches the script through `env:` and never through
+      # `${{ }}` interpolation into the `run:` body. This job holds
+      # `contents: write`, so an interpolated input would be a shell-injection
+      # seam straight to a credential that can push to main.
+      - name: Validate the requested version
+        id: validate
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: node scripts/assert-release-version.mjs "$INPUT_VERSION"
+
+      # Everything downstream reads $VERSION, which by construction is the
+      # script's normalised, validated output rather than the raw input.
+      - name: Export the validated version
+        env:
+          VALIDATED_VERSION: ${{ steps.validate.outputs.version }}
+        run: echo "VERSION=${VALIDATED_VERSION}" >> "$GITHUB_ENV"
+
+      # bumpVersion.js and generateChangelog.js are dependency-free Node scripts
+      # by design, so this job installs nothing. Fewer moving parts on the path
+      # that can write to main.
+      - name: Generate the release commit
+        run: |
+          set -euo pipefail
+          node scripts/bumpVersion.js "$VERSION"
+          node scripts/generateChangelog.js "$VERSION"
+
+          if git diff --quiet; then
+            echo "ERROR: bumpVersion and generateChangelog produced no change." >&2
+            echo "That should be impossible after the version checks above — refusing to tag a no-op." >&2
+            exit 1
+          fi
+
+      # Fail here, before anything is pushed, rather than after the tag exists.
+      # This is publish.yml's "Assert the tag matches what it ships" verbatim: if
+      # the two ever disagree, the release stops while it is still cheap and
+      # reversible, instead of leaving a published Release pointing at a tree npm
+      # will refuse.
+      - name: Assert the commit matches what it will ship
+        run: |
+          set -euo pipefail
+          FAILED=0
+          for manifest in packages/*/package.json; do
+            if [[ "$(node -p "require('./$manifest').private === true")" == "true" ]]; then
+              continue
+            fi
+            ACTUAL="$(node -p "require('./$manifest').version")"
+            if [[ "$ACTUAL" != "$VERSION" ]]; then
+              echo "ERROR: $manifest is at $ACTUAL, but this release is $VERSION." >&2
+              FAILED=1
+            fi
+          done
+          FIRST_SECTION="$(grep -m1 '^## \[' CHANGELOG.md || true)"
+          if [[ "$FIRST_SECTION" != "## [$VERSION]"* ]]; then
+            echo "ERROR: CHANGELOG.md's newest section is '${FIRST_SECTION:-<none>}', expected '## [$VERSION]'." >&2
+            FAILED=1
+          fi
+          if [[ "$FAILED" != "0" ]]; then
+            echo "Refusing to push: this commit would be rejected by publish.yml's preflight." >&2
+            exit 1
+          fi
+          echo "Manifests and changelog agree on $VERSION."
+
+      # The changelog is derived from commit subjects, so the one thing a human
+      # might want to look at before it ships is what that derivation produced.
+      # Surfacing it here keeps that visible without making it a blocking step —
+      # and `preview: true` turns it into one on demand.
+      - name: Summarise the release
+        run: |
+          set -euo pipefail
+          # The section for THIS version only: from its heading up to the next
+          # `## [` heading, exclusive. Anchored with index(...)==1 so a version
+          # string appearing inside an entry cannot start the capture.
+          {
+            echo "## Release $VERSION"
+            echo
+            echo "### Generated changelog section"
+            echo
+            awk -v heading="## [$VERSION]" '
+              index($0, heading) == 1 { capturing = 1; print; next }
+              capturing && /^## \[/  { exit }
+              capturing              { print }
+            ' CHANGELOG.md
+            echo
+            echo "### Manifests"
+            echo
+            echo '```'
+            git diff --stat | tail -3
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Stop here (preview)
+        if: ${{ inputs.preview }}
+        run: |
+          echo "Preview only — nothing was pushed, tagged or published."
+          echo "The generated changelog is in this run's summary."
+
+      - name: Push the release commit to main
+        if: ${{ !inputs.preview }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "chore(release): ${VERSION}"
+
+          # Deliberately no rebase-and-retry. If main advanced since checkout, the
+          # changelog range this commit was generated from is stale and the new
+          # commits were never considered for these release notes. Rebasing would
+          # quietly ship them under a changelog that does not mention them, so
+          # this fails and asks for a re-dispatch instead.
+          if ! git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            echo "ERROR: push to ${GITHUB_REF_NAME} was rejected." >&2
+            echo "Either main advanced during this run — re-dispatch to regenerate the changelog —" >&2
+            echo "or branch protection does not permit this workflow to push. In the second case, add" >&2
+            echo "a bypass for the 'GitHub Actions' actor to the ruleset protecting ${GITHUB_REF_NAME}." >&2
+            exit 1
+          fi
+
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Tag it and publish the GitHub Release
+        if: ${{ !inputs.preview }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # --target pins the Release to the commit just pushed rather than to
+          # whatever main's tip is when GitHub processes this, which is the exact
+          # ambiguity that produced the v0.101.0 and v0.102.0 failures.
+          gh release create "v${VERSION}" \
+            --target "$RELEASE_SHA" \
+            --title "v${VERSION}" \
+            --generate-notes
+          echo "Released v${VERSION} at ${RELEASE_SHA}"
+
+      # See the header: a Release created with GITHUB_TOKEN does not fire
+      # `release: published`, so publish.yml is started explicitly. Dispatching
+      # AT the tag is what makes this equivalent to the event path — publish.yml
+      # and the workflows it calls all resolve `github.ref` to the tag, so
+      # preflight, verify and e2e-gate every one of them read the tagged tree.
+      - name: Hand off to publish.yml
+        if: ${{ !inputs.preview }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run publish.yml \
+            --ref "refs/tags/v${VERSION}" \
+            -f version="${VERSION}" \
+            -f dry_run=false
+          echo "Dispatched publish.yml against refs/tags/v${VERSION}."
+          echo "Follow it at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/workflows/publish.yml"

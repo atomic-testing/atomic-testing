@@ -10,39 +10,86 @@ tests consume their `dist` — but are never published.
 
 ## Cut a release
 
-The version bump lands **before** the tag, in a reviewed PR, so the tagged commit
-_is_ what ships. Previously the bump happened inside the release runner and was
-pushed to `main` only after publishing, which meant `git checkout vX.Y.Z` rebuilt
-the _previous_ version and no commit ever carried both the tag and the version it
-published.
+**Actions → [Release](../.github/workflows/release.yml) → Run workflow → enter
+`X.Y.Z`.** That is the whole thing. Do not create the GitHub Release by hand —
+see [Why you no longer tag by hand](#why-you-no-longer-tag-by-hand).
 
-1. Make sure `main` is green and has what you want to ship.
-2. Produce the release commit: `pnpm bumpVersion X.Y.Z && pnpm changelog X.Y.Z`.
-3. Open it as a PR and **review the generated changelog** — the first point in
-   the process where a human sees it before it ships. Full CI runs here, on the
-   exact tree, at the exact version, that will be published.
-4. Merge it.
-5. Optional rehearsal: dispatch **Publish Packages on Release** with `version:
-X.Y.Z` and `dry_run: true`. It preflights, builds and asks npm to validate
-   every tarball, uploading nothing.
-6. Create a GitHub Release with tag `vX.Y.Z`, targeting **the merged release
-   commit**.
-7. The publish workflow first runs a **preflight** that asserts every manifest
-   and the changelog agree with the tag. It reads only the checkout, so it
-   answers in seconds and everything else depends on it — a tag that cannot ship
-   is rejected before the matrix starts, not after it. Then the full PR
-   verification and the full e2e matrix run against the tagged tree, and finally
-   it publishes via OIDC with provenance. It writes nothing back to the
-   repository.
-8. Verify: `npm view @atomic-testing/core version` → `X.Y.Z`.
-9. Float the consumers, now that the versions exist on npm:
+The workflow bumps all 38 manifests, generates the `CHANGELOG.md` section,
+commits that to `main`, tags **that commit**, publishes the GitHub Release, and
+starts [`publish.yml`](../.github/workflows/publish.yml) against the new tag.
+Tick **preview** first if you want to read the generated changelog before
+anything moves — it runs the bump and prints the section into the run summary,
+then stops without pushing, tagging or publishing.
+
+Then two things remain:
+
+1. Verify: `npm view @atomic-testing/core version` → `X.Y.Z`.
+2. Float the consumers, now that the versions exist on npm:
    `pnpm bumpVersion X.Y.Z --consumers`, regenerate the standalone lockfiles (see
    below), and open that as a follow-up PR.
 
-Step 9 is separate on purpose. `examples/*` and `docs/` install the **published**
-packages, so bumping their specifiers in the release PR would point them at a
-version that is not on the registry yet — and since CI installs them with a
-frozen lockfile, the lockfiles could not be regenerated to match either.
+Step 2 stays separate on purpose. `examples/*` and `docs/` install the
+**published** packages, so bumping their specifiers alongside the release would
+point them at a version that is not on the registry yet — and since CI installs
+them with a frozen lockfile, the lockfiles could not be regenerated to match
+either.
+
+### Why you no longer tag by hand
+
+The version bump lands **before** the tag, so the tagged commit _is_ what ships.
+Before #1375 the bump happened inside the release runner and was pushed to `main`
+only after publishing, which meant `git checkout vX.Y.Z` rebuilt the _previous_
+version and no commit ever carried both the tag and the version it published.
+
+Inverting that fixed the reproducibility hole and introduced a subtler one: the
+new precondition lived in this document, while the action that had to satisfy it
+— creating a Release in the GitHub UI — looked exactly as it always had. Both
+v0.101.0 and v0.102.0 were tagged on plain `main` and refused by preflight. A
+precondition a human must remember, in a different tool from the one that
+enforces it, is a precondition that gets missed.
+
+`release.yml` keeps the ordering guarantee and removes the remembering: the
+commit it tags is one it just created, so the tag cannot name an unbumped tree.
+Creating a Release by hand still works mechanically, and preflight will still
+catch it — but you would be re-entering the trap the workflow exists to close.
+
+Three details of that workflow are load-bearing and easy to undo by accident:
+
+- It **dispatches** `publish.yml` rather than relying on the `release: published`
+  event. GitHub does not start workflow runs from events created with the
+  repository's `GITHUB_TOKEN`, so a Release published from CI triggers nothing —
+  silently. `workflow_dispatch` is a documented exception to that rule. The
+  dispatch targets the new tag, so `publish.yml` and everything it calls resolve
+  `github.ref` to the tag exactly as the event path would.
+- It **never rebases**. If `main` advanced mid-run the push is rejected and the
+  release stops, because the changelog was generated from a range that no longer
+  matches `main`. Re-dispatch; do not force it through.
+- It holds `contents: write` and therefore deliberately withholds
+  `id-token: write`. Publishing stays in `publish.yml`, whose publish job checks
+  out with `persist-credentials: false` so build tooling can never reach a
+  credential that writes to the repository. Keep those two capabilities in
+  separate workflows.
+
+### Cutting one by hand
+
+Only needed if `release.yml` cannot push to `main` — branch protection without a
+bypass for the GitHub Actions actor, which the run reports explicitly.
+
+1. `pnpm bumpVersion X.Y.Z && pnpm changelog X.Y.Z`
+2. Open it as a PR titled `chore(release): X.Y.Z`, review the generated
+   changelog, merge it.
+3. Optional rehearsal: dispatch **Publish Packages on Release** with `version:
+X.Y.Z` and `dry_run: true`. It preflights, builds and asks npm to validate
+   every tarball, uploading nothing.
+4. Create a GitHub Release with tag `vX.Y.Z`, targeting **the merged release
+   commit** — not `main`, which may have moved.
+
+Either way, `publish.yml` first runs a **preflight** asserting every manifest and
+the changelog agree with the tag. It reads only the checkout, so it answers in
+seconds and everything else depends on it — a tag that cannot ship is rejected
+before the matrix starts, not after it. Then the full PR verification and the
+full e2e matrix run against the tagged tree, and finally it publishes via OIDC
+with provenance. It writes nothing back to the repository.
 
 `publish.sh` publishes in **dependency (topological) order** — `core`/`dom-core`
 before the drivers that pin them, computed by
@@ -55,19 +102,27 @@ re-running after a partial publish resumes instead of failing.
 ### If a release fails
 
 1. Read the failed step: `gh run view <run-id> --repo atomic-testing/atomic-testing --log-failed`
-2. Fix forward with a new release PR (steps 2–4 above), then tag the new merged
-   commit. Re-firing by deleting and recreating the tag still works, but a fresh
-   release PR is preferable now that the tag is meant to name a specific reviewed
-   commit rather than "whatever main is".
-3. If some packages already published, idempotency covers a re-fire at the same
-   version. If you prefer, bump to the next patch instead.
+2. If `release.yml` failed **before** the push, nothing happened — fix the cause
+   and dispatch it again. Everything it does before pushing is read-only, and it
+   runs `publish.yml`'s own preflight assertion against the generated commit
+   first, precisely so a release that cannot ship stops while it is still free to
+   abandon.
+3. If it failed **after** the tag existed, the tag and Release are real. Delete
+   both, then dispatch again at the next version — re-cutting the same version
+   would point an existing tag at a new commit, which `RELVER-02` refuses.
+4. If some packages already published, `publish.sh` is idempotent, so a re-fire
+   at the same version resumes rather than failing. If you prefer, bump to the
+   next patch instead.
 
 ## Changelog generation
 
-`CHANGELOG.md` is generated, not hand-written — but it is generated in the
-release PR (`pnpm changelog X.Y.Z`, which runs
-[`scripts/generateChangelog.js`](../scripts/generateChangelog.js)), so it is
-reviewable before it ships rather than committed after the fact.
+`CHANGELOG.md` is generated, not hand-written — by
+[`scripts/generateChangelog.js`](../scripts/generateChangelog.js), which
+`release.yml` runs against the commit it is about to tag (`pnpm changelog X.Y.Z`
+is the same thing by hand). It is generated **before** the release rather than
+committed after the fact, so what ships and what the changelog claims shipped are
+the same commit. Dispatch the Release workflow with **preview** ticked to read
+the generated section before anything is pushed.
 
 The script walks commit subjects since the previous release tag. It finds that
 tag by looking for the version being released among the `v*` tags: run before
