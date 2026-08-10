@@ -142,5 +142,16 @@ export abstract class PickerFieldDriverBase<TValue = Date>
     await this.interactor.pressKey(firstSection, 'a', { ctrl: true });
     await this.interactor.pressKey(sectionsContainer, 'Backspace');
     await this.interactor.blur(sectionsContainer);
+    // The blur only SCHEDULES the sections' return. MUI drops the section spans
+    // for the whole select-all editing window (`useFieldRootProps` rewrites the
+    // root's innerHTML) and restores them via `setSelectedSections(null)`
+    // deferred in a bare `setTimeout` inside its blur handler — a host macrotask
+    // no framework settle covers. Returning here with restoration merely queued
+    // left `typeIntoField`'s single-shot `click` racing that timer on a ~2-3ms
+    // margin, surfacing as an intermittent
+    // `ElementNotFoundError: Cannot click: element not found`.
+    await this.awaitPostcondition('the cleared field to restore its editable sections', () =>
+      this.interactor.exists(firstSection)
+    );
   }
 }

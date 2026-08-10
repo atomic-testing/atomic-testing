@@ -202,6 +202,7 @@ export class SelectDriver extends ComponentDriver<typeof selectParts> implements
       return false;
     }
     await item.click();
+    await this.awaitSelectionCommitted(value);
     return true;
   }
 
@@ -239,11 +240,42 @@ export class SelectDriver extends ComponentDriver<typeof selectParts> implements
   async selectByLabel(label: string): Promise<void> {
     await this.openDropdown();
     const item = await this.getMenuItemByLabel(label, { skipDropdownCheck: true });
-    if (item) {
-      await item.click();
-    } else {
+    if (!item) {
       throw new MenuItemNotFoundError(label, this);
     }
+    await item.click();
+    await this.awaitSelectionCommitted(label);
+  }
+
+  /**
+   * Hold a selection open until Reka has actually committed it — the
+   * postcondition every selecting action here shares.
+   *
+   * **The race this closes.** Choosing an item closes the dropdown, which
+   * unmounts `SelectContentImpl`; that fires `SelectItemText`'s `onUnmounted`
+   * → `onOptionRemove`, leaving `SelectValue` with no registered option, so it
+   * falls back to `props.placeholder` — `''` when the consumer passes none.
+   * The items are only re-registered when Reka re-mounts them into an off-DOM
+   * `DocumentFragment`, and that assignment is made **inside a `setTimeout`**
+   * (`reka-ui@2.10.1`), i.e. on a host macrotask no framework settle covers.
+   * An in-page `MutationObserver` measured the trigger's text going
+   * `"Banana"` → `""` → `"Banana"` across a **7.8–10.7 ms** window; any read
+   * landing inside it sees the empty span, which {@link getSelectedLabel}
+   * reports as `null`. That is the intermittent
+   * `Expected: "Banana" / Received: null` this package saw in CI.
+   *
+   * Waiting on the label alone would be ambiguous — `''` is also what a
+   * genuinely empty select reads — so the probe additionally requires the
+   * trigger to have finished closing, which is the transition that causes the
+   * blank in the first place.
+   */
+  private async awaitSelectionCommitted(label: string): Promise<void> {
+    await this.awaitPostcondition(`the dropdown to close with "${label}" committed to the trigger`, async () => {
+      if (await this.isDropdownOpen()) {
+        return false;
+      }
+      return (await this.getSelectedLabel()) === label;
+    });
   }
 
   /** The number of options in the open dropdown. */
