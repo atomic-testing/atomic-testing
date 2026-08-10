@@ -13,12 +13,26 @@
 // toward. SemVer §11 says the opposite — a prerelease has LOWER precedence than
 // its release — so precedence is implemented here rather than borrowed.
 //
-// RELVER-01  the requested version is not a bare semver version. Fail closed:
-//            bumpVersion.js writes this string verbatim into 38 manifests.
+// RELVER-01  the requested version is not a valid SemVer version. Fail closed:
+//            bumpVersion.js writes this string verbatim into 38 manifests, and
+//            every gate downstream compares it by STRING equality — so an
+//            invalid-but-consistent version sails through the bump, the commit,
+//            the tag and the full e2e matrix, and is first rejected by npm at
+//            the very end, with main already carrying the damage.
 // RELVER-02  a tag for it already exists. Re-releasing a version would point an
 //            existing tag at a different commit, or publish a version npm has.
-// RELVER-03  it does not have higher precedence than the version in the tree.
-//            Catches both a typo'd older version and a re-run of the current one.
+// RELVER-03  it has LOWER precedence than the version in the tree. Equal
+//            precedence is not an error by itself — see `mode` below.
+//
+// RESUMING. release.yml mutates three things in sequence after its checks pass:
+// it pushes the release commit, pushes the tag, then dispatches the publish. A
+// run that dies between the first and second leaves main correctly bumped with
+// no tag, and a guard that treated "the tree is already at X" as fatal would
+// make that state unfinishable by the automated path — forcing exactly the
+// manual tagging step this whole change set exists to remove. So an
+// already-bumped tree with no tag reports `mode: 'resume'` rather than an error,
+// and release.yml skips straight to tagging. The tag-exists case stays a hard
+// refusal, because past that point the release is no longer resumable here.
 //
 // Dependency-free Node ESM, modelled on scripts/check-peer-floors.mjs.
 import { execFileSync } from 'node:child_process';
@@ -28,11 +42,32 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-const SEMVER = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/;
+// The official SemVer grammar, minus build metadata. Deliberately NOT `(\d+)`
+// per component: SemVer §2 forbids leading zeros in the release triple and §9
+// forbids them in numeric prerelease identifiers and forbids empty identifiers.
+// A looser regex accepts `0.103.00`, `1.0.0-rc.01` and `1.0.0-.`, all of which
+// `semver.valid()` — the library npm itself publishes through — rejects. Since
+// every check between here and the registry is string equality against this same
+// value, npm is otherwise the FIRST thing in the pipeline to notice, long after
+// main has been rewritten and tagged.
+const SEMVER =
+  /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?$/;
+
+/**
+ * The canonical form of a requested version: trimmed, with one optional leading
+ * `v` removed. Every rule and every caller goes through this, so no code path
+ * can be reached with a half-normalised value — the bug shape where RELVER-01
+ * and RELVER-03 re-parse (and so re-trim) while RELVER-02's tag lookup uses the
+ * raw string and silently matches nothing.
+ */
+export const normalizeVersion = requested =>
+  String(requested ?? '')
+    .trim()
+    .replace(/^v/, '');
 
 /**
  * `{ release: [major, minor, patch], prerelease: string[] | null }`, or null when
- * the input is not a bare semver version. Build metadata (`+…`) is deliberately
+ * the input is not a valid SemVer version. Build metadata (`+…`) is deliberately
  * unsupported: nothing here publishes it, and accepting a shape the rest of the
  * release path has never seen is how a bad string reaches 38 manifests.
  */
@@ -48,9 +83,18 @@ export function parseSemver(version) {
 const isNumeric = identifier => /^\d+$/.test(identifier);
 
 /**
- * SemVer §11 precedence for prerelease identifier lists. Numeric identifiers
- * compare numerically and always rank below alphanumeric ones; when one list is
- * a prefix of the other, the longer list wins.
+ * SemVer §11 precedence for prerelease identifier lists:
+ *   rule 1  identifiers are compared left to right
+ *   rule 2  numeric identifiers compare numerically
+ *   rule 3  numeric identifiers ALWAYS rank below non-numeric ones
+ *   rule 4  when one list is a prefix of the other, the longer list wins
+ *
+ * Rule 3 is not redundant with the lexical fallback below it, even though the
+ * spec's own canonical example never separates them: ASCII digits sort below
+ * letters, so `1` vs `beta` gets the same answer either way. It only bites when
+ * the non-numeric identifier sorts lexically BELOW the numeric one — i.e. when
+ * it starts with a digit or a hyphen, as in `2` vs `1a`. The test file pins that
+ * case specifically, because deleting rule 3 leaves the canonical chain green.
  */
 function comparePrerelease(a, b) {
   for (let index = 0; index < Math.max(a.length, b.length); index++) {
@@ -92,30 +136,37 @@ export function compareSemver(a, b) {
 }
 
 /**
- * Every reason the requested version may not be released, in rule order.
- * An empty array means it may.
+ * Whether the requested version may be released, and in which mode.
+ *
+ * Returns `{ version, errors, mode }` — `version` is the normalised form every
+ * caller should use from then on (returning it is what keeps normalisation from
+ * being re-derived at a second site and drifting), `errors` is empty when the
+ * release may proceed, and `mode` is `'fresh'` or `'resume'` (see the header).
  *
  * @param requested     the version asked for, with or without a leading `v`
  * @param current       the version the working tree currently carries
  * @param existingTags  every tag name in the repository (`v*` and otherwise)
  */
 export function validateReleaseVersion({ requested, current, existingTags }) {
+  const version = normalizeVersion(requested);
   const errors = [];
-  const version = String(requested ?? '')
-    .trim()
-    .replace(/^v/, '');
+  const refuse = (mode = 'fresh') => ({ version, errors, mode });
 
   if (!parseSemver(version)) {
     errors.push(
-      `RELVER-01: "${version}" is not a bare semver version. Expected e.g. 0.103.0 or 1.0.0-rc.1 ` +
-        `(build metadata is not supported on this release path).`
+      // The RAW input, not the normalised one: reporting the post-strip form
+      // hands the operator a string they never typed (`version1.2.3` would come
+      // back as `ersion1.2.3`).
+      `RELVER-01: "${requested}" is not a valid semver version. Expected e.g. 0.103.0 or 1.0.0-rc.1 — ` +
+        `no leading zeros, no empty prerelease identifiers, and no build metadata on this release path.`
     );
     // Every rule below needs a parseable version; reporting them against a
     // string we could not read would invent findings.
-    return errors;
+    return refuse();
   }
 
-  if (new Set(existingTags).has(`v${version}`)) {
+  const tagExists = new Set(existingTags).has(`v${version}`);
+  if (tagExists) {
     errors.push(
       `RELVER-02: tag v${version} already exists. Releasing a version twice would point an existing ` +
         `tag at a new commit, and npm rejects a republished version outright. Pick the next version, ` +
@@ -127,20 +178,27 @@ export function validateReleaseVersion({ requested, current, existingTags }) {
     errors.push(
       `RELVER-03: the tree's current version "${current}" is not parseable, so precedence cannot be checked.`
     );
-    return errors;
+    return refuse();
   }
 
   const order = compareSemver(version, current);
-  if (order === 0) {
-    errors.push(`RELVER-03: the tree is already at ${current} — there is nothing to bump.`);
-  } else if (order < 0) {
+  if (order < 0) {
     errors.push(
       `RELVER-03: ${version} has lower precedence than the current ${current}. Releasing it would ` +
         `move the "latest" dist-tag backwards.`
     );
+    return refuse();
   }
 
-  return errors;
+  if (order === 0) {
+    // The tree already carries this version. With a tag, that is a re-release
+    // and RELVER-02 has already refused it. Without one, it is the leftover of a
+    // run that pushed the release commit and then died — finishable, not broken.
+    if (tagExists) return refuse();
+    return { version, errors, mode: 'resume' };
+  }
+
+  return refuse();
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
@@ -151,18 +209,25 @@ if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) 
     .map(line => line.trim())
     .filter(Boolean);
 
-  const errors = validateReleaseVersion({ requested, current, existingTags });
+  const { version, errors, mode } = validateReleaseVersion({ requested, current, existingTags });
   if (errors.length > 0) {
     console.error(`[release-version] refusing to release "${requested}":`);
     for (const error of errors) console.error(`  - ${error}`);
     process.exit(1);
   }
 
-  const version = String(requested).trim().replace(/^v/, '');
-  process.stdout.write(`[release-version] OK — ${current} -> ${version}\n`);
-  // Consumed by release.yml; keeping the normalisation here means the leading
-  // `v` is stripped in exactly one place.
+  if (mode === 'resume') {
+    process.stdout.write(
+      `[release-version] RESUMING ${version} — the tree is already bumped and no tag exists, so a ` +
+        `previous run pushed the release commit and stopped before tagging.\n`
+    );
+  } else {
+    process.stdout.write(`[release-version] OK — ${current} -> ${version}\n`);
+  }
+
+  // Both consumed by release.yml. The values written here are the ones the rules
+  // above actually validated, never a re-derivation of the raw input.
   if (process.env.GITHUB_OUTPUT) {
-    appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+    appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\nmode=${mode}\n`);
   }
 }

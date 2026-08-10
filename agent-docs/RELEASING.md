@@ -10,9 +10,15 @@ tests consume their `dist` — but are never published.
 
 ## Cut a release
 
-**Actions → [Release](../.github/workflows/release.yml) → Run workflow → enter
-`X.Y.Z`.** That is the whole thing. Do not create the GitHub Release by hand —
-see [Why you no longer tag by hand](#why-you-no-longer-tag-by-hand).
+**Actions → [Release](../.github/workflows/release.yml) → Run workflow → leave
+"Use workflow from" on `main` → enter `X.Y.Z`.** That is the whole thing. Do not
+create the GitHub Release by hand — see
+[Why you no longer tag by hand](#why-you-no-longer-tag-by-hand).
+
+The ref selector matters, which is why the run refuses outright if it is set to
+anything but the default branch: left unchecked, a release dispatched from a
+feature branch would bump and tag a commit that is not on `main` and publish it
+to npm as `latest`, bypassing branch protection entirely.
 
 The workflow bumps all 38 manifests, generates the `CHANGELOG.md` section,
 commits that to `main`, tags **that commit**, publishes the GitHub Release, and
@@ -101,18 +107,28 @@ re-running after a partial publish resumes instead of failing.
 
 ### If a release fails
 
-1. Read the failed step: `gh run view <run-id> --repo atomic-testing/atomic-testing --log-failed`
-2. If `release.yml` failed **before** the push, nothing happened — fix the cause
-   and dispatch it again. Everything it does before pushing is read-only, and it
-   runs `publish.yml`'s own preflight assertion against the generated commit
-   first, precisely so a release that cannot ship stops while it is still free to
-   abandon.
-3. If it failed **after** the tag existed, the tag and Release are real. Delete
-   both, then dispatch again at the next version — re-cutting the same version
-   would point an existing tag at a new commit, which `RELVER-02` refuses.
-4. If some packages already published, `publish.sh` is idempotent, so a re-fire
-   at the same version resumes rather than failing. If you prefer, bump to the
-   next patch instead.
+Read the failed step first:
+`gh run view <run-id> --repo atomic-testing/atomic-testing --log-failed`.
+
+`release.yml` mutates shared state in exactly three steps, in this order: push
+the commit, push the tag, dispatch the publish (the GitHub Release is created
+last, so a failure never leaves a public announcement for a version nothing is
+publishing). Which of them completed is what determines the recovery, and the
+run's step list tells you directly.
+
+| Failed at                            | State left behind                                                                                                                                                                                          | Recovery                                                                                                                                                                                                                                                                                |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Anything **before** the push         | Nothing. Every earlier step is read-only, and the run replays `publish.yml`'s own preflight assertion against the generated commit, so a release that cannot ship stops while it is still free to abandon. | Fix the cause, dispatch again at the same version.                                                                                                                                                                                                                                      |
+| **Pushed**, not tagged               | `main` carries `chore(release): X.Y.Z`; no tag, no Release, nothing on npm.                                                                                                                                | Dispatch again **at the same version**. `RELVER-03` reports `mode: resume` for an already-bumped tree with no tag, and the run skips the bump and goes straight to tagging. Do not bump to X.Y.Z+1 — that would strand an orphan `## [X.Y.Z]` section for a version that never shipped. |
+| **Tagged**, not dispatched           | Tag exists; no Release, nothing on npm.                                                                                                                                                                    | Start the publish by hand — the run only ever dispatches it once, and no event will: `gh workflow run publish.yml --ref refs/tags/vX.Y.Z -f version=X.Y.Z -f dry_run=false`                                                                                                             |
+| **Dispatched**; `publish.yml` failed | Tag and Release exist; npm may be partially published.                                                                                                                                                     | Fix the cause and re-dispatch the same command. `publish.sh` is idempotent — it skips any `name@version` already on the registry, so a re-fire resumes rather than failing.                                                                                                             |
+
+Re-cutting the _same_ version after its tag exists is refused by `RELVER-02`, on
+purpose: the tag would then point at a different commit than the one it was
+created for. If you genuinely need to abandon a version, delete both the tag and
+its GitHub Release before dispatching again — and note that an abandoned tag can
+no longer poison the next changelog's baseline, since `generateChangelog.js` now
+skips any tag whose tree was never bumped to match it.
 
 ## Changelog generation
 
@@ -173,15 +189,28 @@ for dir in examples/*/; do (cd "$dir" && pnpm install --lockfile-only); done
 
 ## Rotate `CODEMOD_TOKEN` (before it expires, ~yearly)
 
-`CODEMOD_TOKEN` is a GitHub PAT that the release path **no longer uses**: the
-workflow writes nothing back to the repository, so it holds no repo-write
-credential at all. Kept here for any other workflow that still needs one, and
-because a stale secret is worth retiring deliberately rather than by neglect.
+`CODEMOD_TOKEN` is a GitHub PAT with **Contents: Read and write**. Be precise
+about which half of the release path holds a repo-write credential, because the
+two are deliberately different:
+
+- **`publish.yml` holds none.** It declares `permissions: {}`, its publish job
+  takes `contents: read` plus `id-token: write`, and it checks out with
+  `persist-credentials: false` — so the build tooling that runs beside the npm
+  publishing identity cannot reach anything that writes to the repository.
+- **`release.yml` deliberately does.** It takes `contents: write` to push the
+  release commit and tag, and `actions: write` to start the publish — and just as
+  deliberately withholds `id-token: write`. Keeping those two capabilities in
+  separate workflows is the point.
+
+`release.yml` uses the built-in `GITHUB_TOKEN` for that, not this PAT. The PAT is
+the standard remedy if branch protection on `main` has no bypass for the GitHub
+Actions actor and the push step fails — see [Cutting one by hand](#cutting-one-by-hand)
+for the alternative. Kept here regardless, because a stale secret is worth
+retiring deliberately rather than by neglect.
 
 1. Create a fine-grained PAT: owner `atomic-testing`, repo `atomic-testing`,
    **Contents: Read and write**. Set an expiry **and a calendar reminder**.
 2. `gh secret set CODEMOD_TOKEN --repo atomic-testing/atomic-testing`
-3. Re-fire the failed release (see above).
 
 ## Add a new package
 
