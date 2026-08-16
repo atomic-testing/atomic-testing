@@ -18,7 +18,7 @@ import { OutlineItemDriver } from './OutlineItemDriver';
  * entry is a `<li role="listitem">` wrapping one anchor; all rows share the `<ul>`
  * parent, so the `<li>` tag is the portable item anchor and per-row data lives on
  * the inner `<a>` (see {@link OutlineItemDriver}). The active entry is whichever
- * anchor carries `aria-current="true"`: with an explicit `activeId` this is
+ * anchor carries `aria-current="location"`: with an explicit `activeId` this is
  * deterministic in jsdom; without it Astryx derives it from scroll position
  * (scroll-spy), which has no layout in jsdom and is therefore an E2E-only concern.
  */
@@ -33,7 +33,7 @@ export class OutlineDriver extends ListComponentDriver<OutlineItemDriver> {
     return listHelper.collectItemLabels(items);
   }
 
-  /** The active entry's label (`aria-current="true"`), or `undefined` when none is active. */
+  /** The active entry's label (`aria-current="location"`), or `undefined` when none is active. */
   async getActiveLabel(): Promise<Optional<string>> {
     for (const item of await this.getItems()) {
       if (await item.isActive()) {

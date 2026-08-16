@@ -1,5 +1,5 @@
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
-import { Optional } from '@atomic-testing/core';
+import { byCssSelector, Optional } from '@atomic-testing/core';
 
 import { resolveDescribedByRoleText, resolveLinkedLabelText } from '../internal/linkedLocators';
 
@@ -55,6 +55,29 @@ export class SwitchDriver extends HTMLCheckboxDriver {
    * ids, so this picks out whichever target has `role="tooltip"`. `undefined`
    * when the switch has no disabled-reason tooltip.
    */
+  /**
+   * The control's size token (`'sm'` | `'md'`), added in Astryx 0.2.0 to match
+   * CheckboxInput and RadioList.
+   *
+   * The size rides on the switch's *painted track*, not on the `<input>` this
+   * driver anchors — the track is the element carrying the theming target, and it
+   * is the input's `aria-hidden` sibling. CSS has no parent axis here, so the
+   * track is resolved from the document by the input's own `id`, the same shape
+   * `FileInputDriver` uses to reach its trigger. `undefined` on an Astryx old
+   * enough not to emit the attribute.
+   */
+  async getSize(): Promise<Optional<string>> {
+    const inputId = await this.interactor.getAttribute(this.locator, 'id');
+    if (!inputId) {
+      return undefined;
+    }
+    const track = byCssSelector(`div:has(> input[id="${inputId}"]) > div[data-size]`, 'Root');
+    if (!(await this.interactor.exists(track))) {
+      return undefined;
+    }
+    return this.interactor.getAttribute(track, 'data-size');
+  }
+
   async getDisabledMessage(): Promise<Optional<string>> {
     return resolveDescribedByRoleText(this.interactor, this.locator, 'aria-describedby', 'tooltip');
   }

@@ -1,7 +1,18 @@
-import { byAriaLabel, byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
+import {
+  byAriaLabel,
+  byCssSelector,
+  childListHelper,
+  ComponentDriver,
+  locatorUtil,
+  Optional,
+  PartLocator,
+} from '@atomic-testing/core';
 
 const SCROLL_LEFT = byAriaLabel('Scroll left');
 const SCROLL_RIGHT = byAriaLabel('Scroll right');
+
+/** Astryx wraps each slide in the APG carousel pattern's `role="group"`. */
+const SLIDE_SELECTOR = '[role="group"]';
 
 /**
  * Driver for the Astryx Carousel (`@astryxdesign/core/Carousel`).
@@ -19,8 +30,15 @@ const SCROLL_RIGHT = byAriaLabel('Scroll right');
  * in the browser). The label and item count read faithfully everywhere.
  */
 export class CarouselDriver extends ComponentDriver {
-  private trackChild(position: number): PartLocator {
-    return locatorUtil.append(this.locator, byCssSelector(`> div:first-child > *:nth-child(${position})`));
+  /**
+   * The horizontal scroll track — the root's first `<div>`.
+   *
+   * `:first-of-type` rather than `:first-child`: it counts among `<div>` siblings
+   * only, so the inert `<template>` layer markers Astryx 0.4.2 emits for any
+   * context layer in the carousel cannot displace it.
+   */
+  private get track(): PartLocator {
+    return locatorUtil.append(this.locator, byCssSelector('> div:first-of-type'));
   }
 
   /** The carousel's accessible label (`aria-label`). */
@@ -28,13 +46,16 @@ export class CarouselDriver extends ComponentDriver {
     return this.interactor.getAttribute(this.locator, 'aria-label');
   }
 
-  /** Number of items in the scroll track. */
+  /**
+   * Number of items in the scroll track.
+   *
+   * Astryx wraps every slide in a `role="group"`
+   * (`aria-roledescription="slide"`, the APG carousel pattern), so the slides are
+   * counted by that role rather than by "every element child" — which would also
+   * count a layer marker parked in the track.
+   */
   async getItemCount(): Promise<number> {
-    let count = 0;
-    for (let i = 1; await this.interactor.exists(this.trackChild(i)); i++) {
-      count++;
-    }
-    return count;
+    return childListHelper.countMatchingChildren(this.interactor, this.track, SLIDE_SELECTOR);
   }
 
   /** Whether the prev/next controls are mounted (always true in jsdom; overflow-gated in the browser). */

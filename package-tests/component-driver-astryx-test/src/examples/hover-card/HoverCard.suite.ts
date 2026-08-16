@@ -29,9 +29,12 @@ export const hoverCardExampleTestSuite: TestSuiteInfo<typeof hoverCardExample.sc
         assertEqual(await engine().parts.hc.getTriggerText(), 'Hover me');
       });
 
-      // The layer stays mounted in jsdom, so getContent reads through aria-describedby.
-      // Open/visibility is E2E-only and NOT asserted here.
-      test(`getContent reads the layer content via aria-describedby`, async () => {
+      // Astryx 0.4.2 gave HoverCard's layer `lazyMount`: the content is absent
+      // from the DOM until the card opens. getContent therefore hovers and probes
+      // for the reveal — which the component's own open state drives, so it lands
+      // in jsdom as well as in a real browser. What stays E2E-only is whether the
+      // revealed layer is actually *visible*, which this does not assert.
+      test(`getContent reads the layer content once the card is open`, async () => {
         assertEqual(await engine().parts.hc.getContent(), 'Hover card content');
       });
     });

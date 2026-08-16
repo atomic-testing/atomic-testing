@@ -1,8 +1,10 @@
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSubMenu,
 } from '@astryxdesign/core/DropdownMenu';
 import { IExampleUIUnit } from '@atomic-testing/core';
 import React, { JSX, useState } from 'react';
@@ -24,6 +26,11 @@ import React, { JSX, useState } from 'react';
  * `role="menuitemradio"`) — composed as children alongside a plain item, so the
  * mixed-role enumeration (`getItemLabels`/`getItemCount`/`isItemChecked`) is
  * exercised the way a real app would compose them.
+ *
+ * A third menu covers Astryx 0.2.0's `DropdownMenuSubMenu` alongside 0.4.0's
+ * `variant="destructive"`: the submenu's trigger is a `role="menuitem"` row that
+ * carries `aria-haspopup="menu"` and is named by its flyout's `aria-labelledby`,
+ * which is what lets the submenu's items be read while it is closed.
  */
 export const DropdownMenuExample = () => {
   const [last, setLast] = useState('none');
@@ -44,10 +51,19 @@ export const DropdownMenuExample = () => {
 
       <DropdownMenu data-testid='dropdown-selectable' button={{ label: 'View' }}>
         <DropdownMenuCheckboxItem label='Show archived' value={showArchived} onChange={setShowArchived} />
-        <DropdownMenuRadioGroup value={sort} onChange={setSort} aria-label='Sort by'>
+        <DropdownMenuRadioGroup value={sort} onChange={setSort} label='Sort by'>
           <DropdownMenuRadioItem value='newest' label='Newest' />
           <DropdownMenuRadioItem value='oldest' label='Oldest' isDisabled />
         </DropdownMenuRadioGroup>
+      </DropdownMenu>
+
+      <DropdownMenu data-testid='dropdown-nested' button={{ label: 'Organise' }}>
+        <DropdownMenuItem label='Rename' onClick={() => setLast('Rename')} />
+        <DropdownMenuSubMenu label='Move to' data-testid='dropdown-submenu'>
+          <DropdownMenuItem label='Inbox' onClick={() => setLast('Inbox')} />
+          <DropdownMenuItem label='Archive' onClick={() => setLast('Archive')} />
+        </DropdownMenuSubMenu>
+        <DropdownMenuItem label='Delete' variant='destructive' onClick={() => setLast('Delete')} />
       </DropdownMenu>
     </div>
   );

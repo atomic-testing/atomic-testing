@@ -1,5 +1,7 @@
 import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+import { resolveLabelledByText } from '../internal/linkedLocators';
+
 /**
  * Driver for the Astryx Spinner (`@astryxdesign/core/Spinner`).
  *
@@ -8,10 +10,13 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  * - Labeled — the root is a roleless `<div>` wrapping the `role="status"` span
  *   plus a visible label `<span class="astryx-text">`.
  *
- * So the role's `aria-label` (the accessible name, defaulting to `"Loading"`)
- * lives on the root in the unlabeled case but on a descendant in the labeled
- * case. {@link getAccessibleName} reads the root first and falls back to the
- * descendant. The size is the root's `data-size`. (The spinner draws onto a
+ * So the accessible name lives on the root in the unlabeled case but on a
+ * descendant in the labeled case, and the two cases now spell it differently:
+ * Astryx 0.2.0 stopped duplicating a visible label as an `aria-label`, so a
+ * labeled spinner's status region points at the visible label through
+ * `aria-labelledby` instead. {@link getAccessibleName} walks all three — root
+ * `aria-label`, then the descendant's `aria-label`, then its `aria-labelledby`
+ * target. The size is the root's `data-size`. (The spinner draws onto a
  * `<canvas>`; jsdom logs a non-fatal `getContext` warning that does not affect
  * these structural reads.)
  */
@@ -27,9 +32,10 @@ export class SpinnerDriver extends ComponentDriver<{}> {
   }
 
   /**
-   * The accessible name (`aria-label`, default `"Loading"`). Read from the root
-   * when the root itself carries the role (unlabeled), otherwise from the
-   * descendant `role="status"` span (labeled).
+   * The accessible name (default `"Loading"`). Read from the root when the root
+   * itself carries the role (unlabeled), otherwise from the descendant
+   * `role="status"` span — either its own `aria-label` or, when a visible label
+   * names it, the `aria-labelledby` target's text.
    */
   async getAccessibleName(): Promise<Optional<string>> {
     const rootLabel = await this.getAttribute('aria-label');
@@ -39,7 +45,8 @@ export class SpinnerDriver extends ComponentDriver<{}> {
     if (!(await this.interactor.exists(this.statusRegion))) {
       return undefined;
     }
-    return this.interactor.getAttribute(this.statusRegion, 'aria-label');
+    const statusLabel = await this.interactor.getAttribute(this.statusRegion, 'aria-label');
+    return statusLabel || resolveLabelledByText(this.interactor, this.statusRegion);
   }
 
   /** The visible label text, or `undefined` when the spinner has no visible label. */

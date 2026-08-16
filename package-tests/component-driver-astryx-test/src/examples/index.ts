@@ -38,6 +38,7 @@ export * from './carousel';
 export * from './table';
 export * from './tree-list';
 export * from './selector';
+export * from './complex-selector';
 export * from './multi-selector';
 export * from './typeahead';
 export * from './tokenizer';

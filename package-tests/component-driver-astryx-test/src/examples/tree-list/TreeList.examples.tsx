@@ -12,6 +12,11 @@ const noop = () => {};
  * `<ul role="group">`. Row state is ARIA on the `<li>` (`aria-expanded`,
  * `aria-selected`). `src` is seeded expanded and `docs` collapsed, so the visible
  * set (and expand/collapse) can be exercised; a second tree verifies scoping.
+ *
+ * A third tree uses Astryx 0.2.0's `variant="noGuides"`, which omits the
+ * connector-guide `<div>` every row otherwise leads with. That shifts each row's
+ * content wrapper up by one position, so this is the scene that catches a driver
+ * addressing the wrapper by index instead of naming it.
  */
 export const TreeListExample = () => (
   <>
@@ -42,6 +47,19 @@ export const TreeListExample = () => (
       items={[
         { id: 'file', label: 'File', onClick: noop },
         { id: 'edit', label: 'Edit', onClick: noop },
+      ]}
+    />
+    <TreeList
+      data-testid='plain'
+      variant='noGuides'
+      items={[
+        {
+          id: 'root',
+          label: 'Root',
+          isExpanded: true,
+          onClick: noop,
+          children: [{ id: 'leaf', label: 'Leaf', onClick: noop }],
+        },
       ]}
     />
   </>

@@ -45,9 +45,9 @@ For a larger, driver-per-component version of this pattern, see the real suites 
 
 ## Target package & version pin
 
-This driver targets the published Astryx package **[`@astryxdesign/core`](https://www.npmjs.com/package/@astryxdesign/core)** (the components live here; theme packages such as `@astryxdesign/theme-neutral` are separate). It is declared as a **peer dependency pinned to `^0.1.9`**: consumers bring their own Astryx, and the caret on a `0.x` release locks the `0.1` minor (`>=0.1.9 <0.2.0`)—the closest analogue to "pin a major" while Astryx is pre-1.0. Astryx peer-requires **React ≥19** and, as of Astryx 0.1.9, **`@stylexjs/stylex` ≥0.19.0** (also a peer dependency of `@astryxdesign/core`).
+This driver targets the published Astryx package **[`@astryxdesign/core`](https://www.npmjs.com/package/@astryxdesign/core)** (the components live here; theme packages such as `@astryxdesign/theme-neutral` are separate). It is declared as a **peer dependency pinned to `^0.4.1`**: consumers bring their own Astryx, and the caret on a `0.x` release locks the `0.4` minor (`>=0.4.1 <0.5.0`)—the closest analogue to "pin a major" while Astryx is pre-1.0. Astryx peer-requires **React ≥19** and **`@stylexjs/stylex` ≥0.19.0** (also a peer dependency of `@astryxdesign/core`).
 
-> Astryx forks (`-vN`) are deferred: a single package tracks one `0.x` minor until a breaking Astryx release warrants a versioned fork.
+> Astryx forks (`-vN`) are deferred: a single package tracks one `0.x` minor at a time. Astryx 0.2.0, 0.3.0 and 0.4.0 each carried breaking changes, and this package was **retargeted in place** rather than forked — Astryx is pre-1.0 with no long-term-support branch, so a fork per breaking minor would multiply maintenance against an API that has not settled. To test an app still on Astryx 0.1.x, pin the last `@atomic-testing/component-driver-astryx` release that targeted it.
 
 ## Installation
 
@@ -80,37 +80,37 @@ any E2E-only behaviour live in each driver's source doc comment.
 
 ### Text inputs
 
-| Driver                   | Astryx component | Notes                                                                                 |
-| ------------------------ | ---------------- | ------------------------------------------------------------------------------------- |
-| `TextInputDriver`        | `TextInput`      | Value, `clear`, `getLabel`/`getStatusMessage` (a11y links), `isRequired`/`isInvalid`. |
-| `TextAreaDriver`         | `TextArea`       | Value, `getRows`, `getCharCount`.                                                     |
-| `NumberInputDriver`      | `NumberInput`    | Value, `getMin`/`getMax`/`getStep`/`getUnits`; `stepUp`/`stepDown` (E2E).             |
-| `TimeInputDriver`        | `TimeInput`      | `getValue` returns the display string (not ISO); `increment`/`decrement` (E2E).       |
-| `AstryxFieldInputDriver` | —                | Shared base for the field inputs above (linked label/status resolution).              |
+| Driver                   | Astryx component | Notes                                                                                                                                                                           |
+| ------------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TextInputDriver`        | `TextInput`      | Value, `clear`, `getLabel`/`getStatusMessage` (a11y links), `isRequired`/`isInvalid`.                                                                                           |
+| `TextAreaDriver`         | `TextArea`       | Value, `getRows`, `getCharCount`.                                                                                                                                               |
+| `NumberInputDriver`      | `NumberInput`    | Value, `getMin`/`getMax` (`aria-valuemin`/`max` since Astryx 0.4.0's text-backed spinbutton), `getUnits`; `stepUp`/`stepDown`. No `getStep` — `step` has no DOM representation. |
+| `TimeInputDriver`        | `TimeInput`      | `getValue` returns the display string (not ISO); `increment`/`decrement` (E2E).                                                                                                 |
+| `AstryxFieldInputDriver` | —                | Shared base for the field inputs above (linked label/status resolution).                                                                                                        |
 
 ### Selection controls
 
-| Driver                   | Astryx component   | Notes                                                                      |
-| ------------------------ | ------------------ | -------------------------------------------------------------------------- |
-| `CheckboxInputDriver`    | `CheckboxInput`    | `isChecked`/`toggle`; `isIndeterminate` (`aria-checked="mixed"`).          |
-| `RadioListDriver`        | `RadioList`        | `getSelectedValue`/`selectByValue` by radio `value`; `isItemChecked`.      |
-| `CheckboxListDriver`     | `CheckboxList`     | Label/index addressed (item value is not in the DOM); `getCheckedLabels`.  |
-| `CheckboxListItemDriver` | —                  | A single `CheckboxList` row: `getLabel`/`isChecked`/`toggle`.              |
-| `SwitchDriver`           | `Switch`           | `isOn`/`turnOn`/`turnOff` via the `role="switch"` input.                   |
-| `SegmentedControlDriver` | `SegmentedControl` | Single-select radiogroup; value via `data-value`.                          |
-| `SelectableCardDriver`   | `SelectableCard`   | `isSelected`/`toggle` via the card's hidden checkbox; clicks the card.     |
-| `SliderDriver`           | `Slider`           | Single-thumb; `getValue` (`aria-valuenow`), keyboard `setValue` (no drag). |
+| Driver                   | Astryx component   | Notes                                                                                       |
+| ------------------------ | ------------------ | ------------------------------------------------------------------------------------------- |
+| `CheckboxInputDriver`    | `CheckboxInput`    | `isChecked`/`toggle`; `isIndeterminate` (`aria-checked="mixed"`).                           |
+| `RadioListDriver`        | `RadioList`        | `getSelectedValue`/`selectByValue` by radio `value`; `isItemChecked`.                       |
+| `CheckboxListDriver`     | `CheckboxList`     | Label/index addressed (item value is not in the DOM); `getCheckedLabels`.                   |
+| `CheckboxListItemDriver` | —                  | A single `CheckboxList` row: `getLabel`/`isChecked`/`toggle`.                               |
+| `SwitchDriver`           | `Switch`           | `isOn`/`turnOn`/`turnOff` via the `role="switch"` input; `getSize` reads the painted track. |
+| `SegmentedControlDriver` | `SegmentedControl` | Single-select radiogroup; value via `data-value`.                                           |
+| `SelectableCardDriver`   | `SelectableCard`   | `isSelected`/`toggle` via the card's hidden checkbox; clicks the card.                      |
+| `SliderDriver`           | `Slider`           | Single-thumb; `getValue` (`aria-valuenow`), keyboard `setValue` (no drag).                  |
 
 ### Structure & feedback
 
-| Driver              | Astryx component | Notes                                                                             |
-| ------------------- | ---------------- | --------------------------------------------------------------------------------- |
-| `FieldDriver`       | `Field`          | `getLabel`/`getDescription`/`getStatusMessage`, `isRequired`/`isOptional`.        |
-| `InputGroupDriver`  | `InputGroup`     | `getLabel`, `getAddonTexts`.                                                      |
-| `FieldStatusDriver` | `FieldStatus`    | `getStatus`/`getMessage`/`isError` via stable `data-type` (role is conditional).  |
-| `BannerDriver`      | `Banner`         | `getTitle`/`getDescription`/`getStatus`, `dismiss`, `toggleExpand`.               |
-| `PaginationDriver`  | `Pagination`     | `getCurrentPage`, `goToPage`/`next`/`previous`, `getCountText`.                   |
-| `CollapsibleDriver` | `Collapsible`    | `isExpanded`/`expand`/`collapse` via the trigger's `aria-expanded`; `isDisabled`. |
+| Driver              | Astryx component | Notes                                                                                                                          |
+| ------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `FieldDriver`       | `Field`          | `getLabel`/`getDescription`/`getStatusMessage`, `isRequired`/`isOptional`.                                                     |
+| `InputGroupDriver`  | `InputGroup`     | `getLabel`, `getAddonTexts`.                                                                                                   |
+| `FieldStatusDriver` | `FieldStatus`    | `getStatus`/`getMessage`/`isError` via stable `data-type` (role is conditional).                                               |
+| `BannerDriver`      | `Banner`         | `getTitle`/`getDescription`/`getStatus`, `dismiss`, `toggleExpand`.                                                            |
+| `PaginationDriver`  | `Pagination`     | `getVariant`, `getCurrentPage` (button or `input`-variant spinbutton), `goToPage`/`setPage`/`next`/`previous`, `getCountText`. |
+| `CollapsibleDriver` | `Collapsible`    | `isExpanded`/`expand`/`collapse` via the trigger's `aria-expanded`; `isDisabled`.                                              |
 
 Wave 2 — overlays & menus. Astryx renders these **in-tree** (no portal): menus and
 popovers mount their panel as a sibling of the trigger via the native Popover API,
@@ -123,16 +123,17 @@ comment.
 
 ### Menus & navigation
 
-| Driver               | Astryx component | Notes                                                                                                                                                                         |
-| -------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NavMenuDriver`      | `NavHeadingMenu` | Flat link/action menu; `getItemLabels`/`getItemCount`/`clickItem`/`getItemHref`.                                                                                              |
-| `DropdownMenuDriver` | `DropdownMenu`   | Trigger-anchored; `open`/`close`/`isOpen`, `selectByLabel`, `getTriggerLabel`, `isItemChecked` (for the `DropdownMenuCheckboxItem`/`DropdownMenuRadioItem` selectable items). |
-| `MoreMenuDriver`     | `MoreMenu`       | Icon-only `DropdownMenu`; `getTriggerLabel` reads the `aria-label`.                                                                                                           |
-| `TabListDriver`      | `TabList`        | `getItemLabels`/`getActiveLabel`/`selectTab`/`isActive`/`getTabHref`.                                                                                                         |
-| `TabDriver`          | `Tab`            | A single tab: `getLabel`/`isActive` (`aria-current="page"`)/`getHref`.                                                                                                        |
-| `ToolbarDriver`      | `Toolbar`        | `getLabel`/`getOrientation`/`getSize`/`getItemCount`.                                                                                                                         |
-| `AstryxMenuDriver`   | —                | Shared menu base; positional iteration over `menuitem`/`menuitemcheckbox`/`menuitemradio`.                                                                                    |
-| `MenuItemDriver`     | —                | A single menu item (`<a>`/`<div>`): `getLabel`/`isDisabled`/`getHref`/`getRole`/`isChecked`.                                                                                  |
+| Driver               | Astryx component      | Notes                                                                                                                                                                                                                                 |
+| -------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NavMenuDriver`      | `NavHeadingMenu`      | Flat link/action menu; `getItemLabels`/`getItemCount`/`clickItem`/`getItemHref`.                                                                                                                                                      |
+| `DropdownMenuDriver` | `DropdownMenu`        | Trigger-anchored; `open`/`close`/`isOpen`, `selectByLabel`, `getTriggerLabel`, `isItemChecked` (for the `DropdownMenuCheckboxItem`/`DropdownMenuRadioItem` selectable items).                                                         |
+| `MoreMenuDriver`     | `MoreMenu`            | Icon-only `DropdownMenu`; `getTriggerLabel` reads the `aria-label`.                                                                                                                                                                   |
+| `TabListDriver`      | `TabList`             | `getItemLabels`/`getActiveLabel`/`selectTab`/`isActive`/`getTabHref`.                                                                                                                                                                 |
+| `TabDriver`          | `Tab`                 | A single tab: `getLabel`/`isActive` (`aria-current="page"`)/`getHref`.                                                                                                                                                                |
+| `ToolbarDriver`      | `Toolbar`             | `getLabel`/`getOrientation`/`getSize`/`getItemCount`.                                                                                                                                                                                 |
+| `AstryxMenuDriver`   | —                     | Shared menu base; positional iteration over `menuitem`/`menuitemcheckbox`/`menuitemradio`.                                                                                                                                            |
+| `MenuItemDriver`     | —                     | A single menu item (`<a>`/`<div>`): `getLabel`/`isDisabled`/`getHref`/`getRole`/`isChecked`/`isDestructive`/`hasSubMenu`. `description`/`endContent` are unmarked sibling spans upstream, so `getLabel` returns the row's whole text. |
+| `SubMenuDriver`      | `DropdownMenuSubMenu` | A nested flyout; anchor it on the submenu's trigger row. Items read while closed (resolved by the flyout's `aria-labelledby` back-link).                                                                                              |
 
 ### Overlays & feedback
 
@@ -168,22 +169,23 @@ driver's source doc comment.
 
 ### Tables & trees
 
-| Driver           | Astryx component | Notes                                                                                                                                                   |
-| ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `TableDriver`    | `Table`          | `data-column-key`/`aria-sort`/`aria-selected`; headers, data rows (empty-state row excluded), sort, row selection. `TableSortDirection` is re-exported. |
-| `TreeListDriver` | `TreeList`       | `ul[role="tree"]` walked depth-first; `getVisibleItemLabels`/`getItemDepth`/`expandItem`/`collapseItem`/`clickItem`.                                    |
+| Driver           | Astryx component | Notes                                                                                                                                                                  |
+| ---------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TableDriver`    | `Table`          | `data-column-key`/`aria-sort`/`aria-selected`; headers, data rows (empty-state row excluded), sort, row selection. `TableSortDirection` is re-exported.                |
+| `TreeListDriver` | `TreeList`       | `ul[role="tree"]` walked depth-first; `getVisibleItemLabels`/`getItemDepth`/`expandItem`/`collapseItem`/`clickItem`/`hasGuides` (the `lineGuides`/`noGuides` variant). |
 
 ### Selectors, typeaheads & search
 
-| Driver                 | Astryx component | Notes                                                                                                                                           |
-| ---------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AstryxComboboxDriver` | —                | Shared combobox base: trigger `open`/`close`/`isExpanded` over the option-enumeration surface.                                                  |
-| `SelectorDriver`       | `Selector`       | Single-select; `getOptionLabels`/`selectByLabel`/`getSelectedLabel`/`isOptionSelected`.                                                         |
-| `MultiSelectorDriver`  | `MultiSelector`  | Multi-select; `toggleByLabel`/`getSelectedLabels` (excludes select-all)/`selectAll`/`clearAll`.                                                 |
-| `TypeaheadDriver`      | `Typeahead`      | Search-as-you-type single-select; `type`/`getResultLabels`/`selectByLabel`/`clear`/`isLoading`.                                                 |
-| `TokenizerDriver`      | `Tokenizer`      | Multi-token; `getTokenLabels`/`addByLabel`/`create`/`removeToken`/`clearAll`/`isLoading`.                                                       |
-| `CommandPaletteDriver` | `CommandPalette` | Host-controlled `<dialog>`; `search`/`getOptionLabels`/`getOptionValue`/`selectByLabel`/`getActiveValue`.                                       |
-| `PowerSearchDriver`    | `PowerSearch`    | **Best-effort v1**: `getFilterLabels`/`removeFilter`/`clearAll`/`getFieldSuggestionLabels`/`getResultCount` (in-popover edit is E2E/follow-up). |
+| Driver                  | Astryx component  | Notes                                                                                                                                                    |
+| ----------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AstryxComboboxDriver`  | —                 | Shared combobox base: trigger `open`/`close`/`isExpanded` over the option-enumeration surface.                                                           |
+| `SelectorDriver`        | `Selector`        | Single-select; `getOptionLabels`/`selectByLabel`/`getSelectedLabel`/`isOptionSelected`/`typeToSelect` (the closed-trigger typeahead Astryx 0.4.0 added). |
+| `ComplexSelectorDriver` | `ComplexSelector` | The 0.3.0 shell: trigger text and state, `open`/`close`; the popup's interior is scene-owned and reached through `within(parts)`.                        |
+| `MultiSelectorDriver`   | `MultiSelector`   | Multi-select; `toggleByLabel`/`getSelectedLabels` (excludes select-all)/`selectAll`/`clearAll`.                                                          |
+| `TypeaheadDriver`       | `Typeahead`       | Search-as-you-type single-select; `type`/`getResultLabels`/`selectByLabel`/`clear`/`isLoading`.                                                          |
+| `TokenizerDriver`       | `Tokenizer`       | Multi-token; `getTokenLabels`/`addByLabel`/`create`/`removeToken`/`clearAll`/`isLoading`.                                                                |
+| `CommandPaletteDriver`  | `CommandPalette`  | Host-controlled `<dialog>`; `search`/`getOptionLabels`/`getOptionValue`/`selectByLabel`/`getActiveValue`.                                                |
+| `PowerSearchDriver`     | `PowerSearch`     | **Best-effort v1**: `getFilterLabels`/`removeFilter`/`clearAll`/`getFieldSuggestionLabels`/`getResultCount` (in-popover edit is E2E/follow-up).          |
 
 ### Dates
 
@@ -227,27 +229,27 @@ E2E-only behaviour live in each driver's source doc comment.
 
 ### Feedback & misc
 
-| Driver              | Astryx component | Notes                                                                                                                                                                        |
-| ------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `EmptyStateDriver`  | `EmptyState`     | `getTitle`/`getDescription`/`getHeadingLevel`/`isPresent`/`hasAction`; probed across `h1`–`h6` (description is the heading's next-sibling `<div>`).                          |
-| `ProgressBarDriver` | `ProgressBar`    | `getValueNow`/`getValueMin`/`getValueMax`/`getValueText`/`getLabel`/`getVariant`/`isIndeterminate`; both modes share `role="progressbar"`.                                   |
-| `SpinnerDriver`     | `Spinner`        | `getAccessibleName`/`getLabelText`/`getSize`; accessible name falls back to the nested `role="status"` span when labeled.                                                    |
-| `NavIconDriver`     | `NavIcon`        | No custom methods; presence via inherited `exists` (the icon has no role/text semantics).                                                                                    |
-| `ItemDriver`        | `Item`           | `getLabel`/`getDensity`/`getAlign`/`getHref`; `isSelected` checks `aria-selected` (when the role permits it) or `aria-current` otherwise (Astryx 0.1.9; mutually exclusive). |
-| `MarkdownDriver`    | `Markdown`       | `isInline`/`getDensity`/`getHeadingCount`/`getLinkCount`; copy-code is E2E-only (clipboard).                                                                                 |
-| `CodeBlockDriver`   | `CodeBlock`      | `getLanguage`/`getCode`/`getLineCount`/`isCollapsed`/`toggleCollapse`; copy-state flip is E2E-only (clipboard).                                                              |
+| Driver              | Astryx component | Notes                                                                                                                                                                                                                |
+| ------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EmptyStateDriver`  | `EmptyState`     | `getTitle`/`getDescription`/`getHeadingLevel`/`isPresent`/`hasAction`; probed across `h1`–`h6` (description is the heading's next-sibling `<div>`).                                                                  |
+| `ProgressBarDriver` | `ProgressBar`    | `getValueNow`/`getValueMin`/`getValueMax`/`getValueText`/`getLabel`/`getVariant`/`isIndeterminate`/`getMarkCount`; both modes share `role="progressbar"`. Mark labels live in a lazy hover Tooltip and are E2E-only. |
+| `SpinnerDriver`     | `Spinner`        | `getAccessibleName`/`getLabelText`/`getSize`; accessible name falls back to the nested `role="status"` span when labeled.                                                                                            |
+| `NavIconDriver`     | `NavIcon`        | No custom methods; presence via inherited `exists` (the icon has no role/text semantics).                                                                                                                            |
+| `ItemDriver`        | `Item`           | `getLabel`/`getDensity`/`getAlign`/`getHref`; `isSelected` checks `aria-selected` (when the role permits it) or `aria-current` otherwise (Astryx 0.1.9; mutually exclusive).                                         |
+| `MarkdownDriver`    | `Markdown`       | `isInline`/`getDensity`/`getHeadingCount`/`getLinkCount`; copy-code is E2E-only (clipboard).                                                                                                                         |
+| `CodeBlockDriver`   | `CodeBlock`      | `getLanguage`/`getCode`/`getLineCount`/`isCollapsed`/`toggleCollapse`; copy-state flip is E2E-only (clipboard).                                                                                                      |
 
 ### Hard set (best-effort v1)
 
-| Driver                    | Astryx component    | Notes                                                                                                                                                                                                               |
-| ------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `FileInputDriver`         | `FileInput`         | **Best-effort v1**: `getAccept`/`isMultiple`/`isRequired`/`isInvalid`/`isDisabled`/`getLabel`/`getStatusMessage` + `uploadFiles` (via `setInputFiles`); file-chip readback and dropzone drag-and-drop are E2E-only. |
-| `ContextMenuDriver`       | `ContextMenu`       | **Best-effort v1**: `open` (via the `contextMenu` primitive); items read from the document-rooted `role="menu"` (no `aria-controls` link). No `isOpen`; single-instance per scene.                                  |
-| `AppShellDriver`          | `AppShell`          | **Best-effort v1**: `getVariant`/`hasHeader`/`hasSideNav`/`hasMain`/`getMainText`/`hasSkipLink` confirm landmarks and variant, then delegate to child drivers; responsive collapse/mobile drawer are E2E-only.      |
-| `ChatComposerInputDriver` | `ChatComposerInput` | **Best-effort v1**: `getValue`/`appendValue` on the `contenteditable` via `textContent` (`getInputValue` returns `null`; typing is append-only). Suggestions-menu open is E2E-only.                                 |
-| `ChatComposerDriver`      | `ChatComposer`      | **Best-effort v1**: `submit`/`canSend`/`isStopShown`/`getStatusMessage` anchor the send/stop button by verbatim `aria-label` (`"Send"`/`"Stop"`) — no stable class/testid upstream. Enter-to-send is E2E-only.      |
-| `HoverCardDriver`         | `HoverCard`         | **Best-effort v1**: `getContent` resolves the body-level popover via the trigger's `aria-describedby` → layer `id` (no role/testid/open attr on the layer); open state is E2E-only.                                 |
-| `TooltipDriver`           | `Tooltip`           | **Best-effort v1**: same `aria-describedby` → layer `id` anchor as HoverCard; open state is E2E-only.                                                                                                               |
+| Driver                    | Astryx component    | Notes                                                                                                                                                                                                                                                                                                    |
+| ------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FileInputDriver`         | `FileInput`         | **Best-effort v1**: `getAccept`/`isMultiple`/`isInvalid`/`isDisabled`/`getLabel`/`getStatusMessage` + `uploadFiles` (via `setInputFiles`); file-chip readback and dropzone drag-and-drop are E2E-only. No `isRequired` — Astryx 0.2.0 replaced `aria-required` with a translated visually-hidden string. |
+| `ContextMenuDriver`       | `ContextMenu`       | **Best-effort v1**: `open` (via the `contextMenu` primitive); items read from the document-rooted `role="menu"` (no `aria-controls` link). No `isOpen`; single-instance per scene.                                                                                                                       |
+| `AppShellDriver`          | `AppShell`          | **Best-effort v1**: `getVariant`/`hasHeader`/`hasSideNav`/`hasMain`/`getMainText`/`hasSkipLink` confirm landmarks and variant, then delegate to child drivers; responsive collapse/mobile drawer are E2E-only.                                                                                           |
+| `ChatComposerInputDriver` | `ChatComposerInput` | **Best-effort v1**: `getValue`/`appendValue` on the `contenteditable` via `textContent` (`getInputValue` returns `null`; typing is append-only). Suggestions-menu open is E2E-only.                                                                                                                      |
+| `ChatComposerDriver`      | `ChatComposer`      | **Best-effort v1**: `submit`/`canSend`/`isStopShown`/`getStatusMessage` anchor the send/stop button by verbatim `aria-label` (`"Send"`/`"Stop"`) — no stable class/testid upstream. Enter-to-send is E2E-only.                                                                                           |
+| `HoverCardDriver`         | `HoverCard`         | **Best-effort v1**: `getContent` hovers, then resolves the body-level popover via the trigger's `aria-describedby` → layer `id` — the layer is `lazyMount`ed since Astryx 0.4.2, so it must be opened first. No role/testid/open attr on the layer, so open state stays E2E-only.                        |
+| `TooltipDriver`           | `Tooltip`           | **Best-effort v1**: same `aria-describedby` → layer `id` anchor as HoverCard; open state is E2E-only.                                                                                                                                                                                                    |
 
 ### Nav chrome
 

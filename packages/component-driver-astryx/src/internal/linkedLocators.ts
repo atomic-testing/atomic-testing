@@ -64,6 +64,41 @@ export async function resolveLinkedElementText(
 }
 
 /**
+ * Resolve the accessible name a control takes from `aria-labelledby`.
+ *
+ * Astryx moved several controls off a duplicated `aria-label` onto a link to the
+ * element already showing the name — Slider's label became a group label wired by
+ * `aria-labelledby` (Astryx 0.2.0), and a labelled Spinner names its status region
+ * from the visible label rather than repeating it. `aria-labelledby` is an IDREF
+ * *list* whose targets concatenate, so this joins them in order with a single
+ * space, the way the accessible-name algorithm does. Re-roots at the document
+ * (`'Root'`) because the target need not be inside the control's subtree.
+ *
+ * Returns `undefined` when the attribute is absent or resolves to no text.
+ */
+export async function resolveLabelledByText(
+  interactor: Interactor,
+  controlLocator: PartLocator
+): Promise<Optional<string>> {
+  const ids = await interactor.getAttribute(controlLocator, 'aria-labelledby');
+  if (!ids) {
+    return undefined;
+  }
+  const parts: string[] = [];
+  for (const id of ids.split(/\s+/).filter(Boolean)) {
+    const target = byAttribute('id', id, 'Root');
+    if (!(await interactor.exists(target))) {
+      continue;
+    }
+    const text = (await interactor.getText(target))?.trim();
+    if (text) {
+      parts.push(text);
+    }
+  }
+  return parts.length > 0 ? parts.join(' ') : undefined;
+}
+
+/**
  * Resolve the text of the element linked through a whitespace-separated IDREF
  * attribute (e.g. `aria-describedby`) whose target carries a specific `role`.
  * Astryx composes `aria-describedby` from multiple ids (description, status
