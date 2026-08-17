@@ -130,7 +130,7 @@ describe('detectDesignSystem', () => {
     );
     expect(detectDesignSystem(snapshot({ packageJson: { dependencies: { 'radix-ui': '^1.0.0' } } }))?.id).toBe('radix');
     expect(
-      detectDesignSystem(snapshot({ packageJson: { dependencies: { '@astryxdesign/core': '^0.1.3' } } }))?.id
+      detectDesignSystem(snapshot({ packageJson: { dependencies: { '@astryxdesign/core': '^0.4.1' } } }))?.id
     ).toBe('astryx');
     expect(
       detectDesignSystem(snapshot({ packageJson: { dependencies: { '@fluentui/react-components': '^9.0.0' } } }))?.id

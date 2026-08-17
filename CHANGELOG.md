@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.102.0] - 2026-08-09
+
+### Breaking Changes
+
+- **drivers:** report lookup absence as Optional, not null, across every driver package ([#1381](https://github.com/atomic-testing/atomic-testing/issues/1381))
+- **core:** make list enumeration fail loudly instead of truncating silently ([#1380](https://github.com/atomic-testing/atomic-testing/issues/1380))
+
+### Fixes
+
+- **packaging:** gate the advertised peer ranges instead of declaring them ([#1383](https://github.com/atomic-testing/atomic-testing/issues/1383))
+- **ci:** collapse the dual-Vue instance and gate driver packages on execution ([#1379](https://github.com/atomic-testing/atomic-testing/issues/1379))
+
+### Documentation
+
+- **freeze:** make the frozen package set one answer, and keep it that way ([#1384](https://github.com/atomic-testing/atomic-testing/issues/1384))
+- **quick-start:** answer the existing-tests question instead of promising a guide ([#1385](https://github.com/atomic-testing/atomic-testing/issues/1385))
+
 ## [0.101.0] - 2026-08-05
 
 ### Breaking Changes

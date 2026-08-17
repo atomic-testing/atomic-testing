@@ -30,11 +30,14 @@ const counterLocator: PartLocator = locatorUtil.append(
 
 // The media-area wrapper is the <div> with a <div> grandchild wrapping the
 // <img>/<video> (two levels down); the caption, when rendered, is that
-// wrapper's LAST child that is not also its first (":not(:first-child)" excludes
-// the image wrapper itself when it is the sole child, i.e. no caption).
+// wrapper's LAST <div> that is not also its first (":not(:first-of-type)"
+// excludes the image wrapper itself when it is the sole child, i.e. no caption).
+// The of-type pair counts among <div> siblings only, so the inert <template>
+// layer markers Astryx 0.4.2 emits cannot be mistaken for the caption the way a
+// bare "*:last-child" would.
 const captionLocator: PartLocator = locatorUtil.append(
   byCssSelector('div:has(> div > img, > div > video)'),
-  byCssSelector('*:last-child:not(:first-child)', 'Child')
+  byCssSelector('div:last-of-type:not(:first-of-type)', 'Child')
 );
 
 // The image wrapper is the direct parent of the <img>/<video> — Astryx wires

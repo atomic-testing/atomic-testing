@@ -4,11 +4,17 @@ import { PositionalListDriver } from '../internal/PositionalListDriver';
 import { TabDriver } from './TabDriver';
 
 /**
- * Real tabs are the `<nav>`'s direct `<button>`/`<a>` children, excluding the
- * overflow menu trigger (`aria-haspopup="menu"`) and the overflow popover panel
- * (a `<div>`). Expressed without a `,` union so the scope is not lost.
+ * Real tabs are the `<nav>`'s direct children carrying `data-tab-value` — the
+ * per-tab identity Astryx emits on each `<button>`/`<a>`.
+ *
+ * This is deliberately a **positive** match. The previous exclusion list
+ * (`:not(div):not([aria-haspopup="menu"])`) was open by construction: it named the
+ * two non-tab children that existed at the time, so the inert `<template>` markers
+ * Astryx 0.4.2 started emitting for each context layer matched it and inflated the
+ * tab count. An attribute every tab has and nothing else does cannot drift that
+ * way — the overflow trigger carries `data-tab-menu`, not `data-tab-value`.
  */
-const TAB_SELECTOR = ':not(div):not([aria-haspopup="menu"])';
+const TAB_SELECTOR = '[data-tab-value]';
 const activeTab = byCssSelector('[aria-current="page"]');
 
 /**
@@ -20,8 +26,9 @@ const activeTab = byCssSelector('[aria-current="page"]');
  * (there is no `role="tab"`/`role="tablist"`). The labels/count/lookup/select
  * surface comes from {@link PositionalListDriver} — the tabs are the nav's direct
  * children ({@link resolveListContainer} returns the nav), filtered by
- * {@link TAB_SELECTOR} so the overflow trigger and panel are skipped (no section
- * recursion). This class adds the tab-specific reads (active tab, href).
+ * {@link TAB_SELECTOR} so the overflow trigger, its panel and the layer markers
+ * around them are skipped (no section recursion). This class adds the tab-specific
+ * reads (active tab, href).
  *
  * The overflow menu's open/close is a native-popover behaviour that is only
  * meaningful in the E2E run; the base tabs (labels, count, active state,

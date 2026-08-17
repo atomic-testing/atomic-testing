@@ -6,7 +6,7 @@ import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } fr
  *
  * Each entry renders an anchor that carries the stable `data-level` (heading
  * depth) and links to the target heading via `href="#id"`; the active entry is
- * marked `aria-current="true"` on that anchor. The driver reads these from the
+ * marked `aria-current="location"` on that anchor. The driver reads these from the
  * `<a>`, never from StyleX-hashed classes.
  */
 export class OutlineItemDriver extends ComponentDriver {
@@ -34,9 +34,15 @@ export class OutlineItemDriver extends ComponentDriver {
     return Number.isNaN(parsed) ? undefined : parsed;
   }
 
-  /** Whether this is the active entry — Astryx marks it `aria-current="true"`. */
+  /**
+   * Whether this is the active entry.
+   *
+   * Astryx 0.2.0 corrected the marker from the generic `aria-current="true"` to
+   * `aria-current="location"` — the token WAI-ARIA defines for "the current item
+   * within a set of related pages", which a table-of-contents entry is.
+   */
   async isActive(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.anchor, 'aria-current')) === 'true';
+    return (await this.interactor.getAttribute(this.anchor, 'aria-current')) === 'location';
   }
 
   override get driverName(): string {

@@ -12,12 +12,22 @@ import { resolveDescribedByRoleText, resolveLinkedLabelText } from '../internal/
  * needs) plus `setInputFiles`'s target are all the input's. The scene therefore
  * anchors this driver on that input.
  *
- * Astryx 0.1.3 moved `aria-describedby`/`aria-required`/`aria-invalid` off the
- * hidden, never-focused input onto the focusable `div[role="button"]` wrapper
- * that describes the operable control (forms-6). Since this codebase's CSS
- * locators have no parent axis, those three reads resolve the wrapper via `:has()`
+ * The operable control is a **sibling** of that input, not an ancestor of it, and
+ * it is where `aria-describedby`/`aria-invalid` live. Astryx 0.2.0 reshaped it: the
+ * old `div[role="button"]` wrapper nested the clear and status buttons inside
+ * itself, which is a nested-interactive violation (WCAG 4.1.2), so the trigger is
+ * now a real, visually hidden `<button>` sitting alongside them in a
+ * non-interactive container. Since this codebase's CSS locators have no parent
+ * axis, {@link triggerLocator} resolves that button from the document via `:has()`
  * keyed on the input's own `id` (which Astryx always sets via `useId()`) rather
  * than walking up from `this.locator`.
+ *
+ * **The required state is no longer readable.** `aria-required` is unsupported on
+ * `role="button"`, so Astryx 0.2.0 replaced it with a visually hidden, *translated*
+ * sentence pointed at by `aria-describedby` — indistinguishable in the DOM from the
+ * field's description except by matching its English text. There is therefore no
+ * `isRequired()`; assert the requirement through the form's own submit behaviour,
+ * or through {@link getLabel}, which includes Astryx's required marker.
  *
  * It extends {@link HTMLFileInputDriver} to inherit `uploadFiles` (the
  * `setInputFiles` primitive — `userEvent.upload` in jsdom, `locator.setInputFiles`
@@ -37,16 +47,10 @@ export class FileInputDriver extends HTMLFileInputDriver {
     return this.interactor.hasAttribute(this.locator, 'multiple');
   }
 
-  /** Whether the field is required (`aria-required="true"` on the `role="button"` wrapper). */
-  async isRequired(): Promise<boolean> {
-    const wrapper = await this.wrapperLocator();
-    return wrapper != null && (await this.interactor.getAttribute(wrapper, 'aria-required')) === 'true';
-  }
-
-  /** Whether the field is in an error state (`aria-invalid="true"` on the `role="button"` wrapper). */
+  /** Whether the field is in an error state (`aria-invalid="true"` on the trigger button). */
   async isInvalid(): Promise<boolean> {
-    const wrapper = await this.wrapperLocator();
-    return wrapper != null && (await this.interactor.getAttribute(wrapper, 'aria-invalid')) === 'true';
+    const trigger = await this.triggerLocator();
+    return trigger != null && (await this.interactor.getAttribute(trigger, 'aria-invalid')) === 'true';
   }
 
   /** Whether the field is disabled (native `disabled` on the input). */
@@ -65,7 +69,7 @@ export class FileInputDriver extends HTMLFileInputDriver {
   }
 
   /**
-   * The validation message text, resolved through the `role="button"` wrapper's
+   * The validation message text, resolved through the trigger button's
    * `aria-describedby` → status element id link. `undefined` when the field
    * carries no status.
    *
@@ -78,11 +82,11 @@ export class FileInputDriver extends HTMLFileInputDriver {
    * mirrors {@link AstryxFieldInputDriver.getStatusMessage}.
    */
   async getStatusMessage(): Promise<Optional<string>> {
-    const wrapper = await this.wrapperLocator();
-    if (wrapper == null) {
+    const trigger = await this.triggerLocator();
+    if (trigger == null) {
       return undefined;
     }
-    const describedBy = await this.interactor.getAttribute(wrapper, 'aria-describedby');
+    const describedBy = await this.interactor.getAttribute(trigger, 'aria-describedby');
     if (!describedBy) {
       return undefined;
     }
@@ -96,32 +100,34 @@ export class FileInputDriver extends HTMLFileInputDriver {
   }
 
   /**
-   * The `disabledMessage` tooltip text, resolved via the `role="button"`
-   * wrapper's `aria-describedby` link — like `aria-required`/`aria-invalid`
-   * (see the class doc), the disabled-message tooltip describes the operable
-   * wrapper, not the hidden native input. `undefined` when the field isn't in
-   * that disabled-with-message state.
+   * The `disabledMessage` tooltip text, resolved via the trigger button's
+   * `aria-describedby` link — like `aria-invalid` (see the class doc), the
+   * disabled-message tooltip describes the operable trigger, not the hidden native
+   * input. `undefined` when the field isn't in that disabled-with-message state.
    */
   async getDisabledMessage(): Promise<Optional<string>> {
-    const wrapper = await this.wrapperLocator();
-    if (wrapper == null) {
+    const trigger = await this.triggerLocator();
+    if (trigger == null) {
       return undefined;
     }
-    return resolveDescribedByRoleText(this.interactor, wrapper, 'aria-describedby', 'tooltip');
+    return resolveDescribedByRoleText(this.interactor, trigger, 'aria-describedby', 'tooltip');
   }
 
   /**
-   * The focusable `div[role="button"]` wrapper around the hidden input, resolved
-   * from the document by the input's own `id` — the closest thing to a parent
-   * lookup this locator system supports. `undefined` when the input carries no `id`
-   * (shouldn't happen; Astryx always sets one via `useId()`).
+   * The visually hidden trigger `<button>` beside the input, resolved from the
+   * document by the input's own `id` — the closest thing to a sibling-before
+   * lookup this locator system supports, since CSS has no preceding-sibling
+   * combinator. Astryx renders the trigger first inside the control container, so
+   * `:first-child` picks it out from the clear/status buttons that follow.
+   * `undefined` when the input carries no `id` (shouldn't happen; Astryx always
+   * sets one via `useId()`).
    */
-  private async wrapperLocator(): Promise<Optional<PartLocator>> {
+  private async triggerLocator(): Promise<Optional<PartLocator>> {
     const inputId = await this.interactor.getAttribute(this.locator, 'id');
     if (!inputId) {
       return undefined;
     }
-    return byCssSelector(`div[role="button"]:has(> input[id="${inputId}"])`, 'Root');
+    return byCssSelector(`div:has(> input[id="${inputId}"]) > :first-child > button`, 'Root');
   }
 
   override get driverName(): string {

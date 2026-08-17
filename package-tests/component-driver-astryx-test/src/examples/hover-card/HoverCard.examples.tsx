@@ -8,8 +8,11 @@ import React, { JSX } from 'react';
  * The floating layer is a body-level popover with no role/testid/open-state; the
  * only stable link is the trigger's injected `aria-describedby` → the layer's `id`.
  * The scene anchors on the trigger (`data-testid`); the driver follows that link to
- * read the layer's content. The layer stays mounted in jsdom (no native Popover API),
- * so content reads in both states — but open/visibility is E2E-only and not asserted.
+ * read the layer's content. Since Astryx 0.4.2 the layer is `lazyMount`ed — it is a
+ * bare `<template>` until the card opens — so the driver hovers and probes for the
+ * reveal. The component's own open state drives that mount, so it lands under jsdom
+ * as well as in a real browser; what stays E2E-only is whether the revealed layer is
+ * actually *visible*, which nothing here asserts.
  */
 export const HoverCardExample = () => (
   <HoverCard content={<div>Hover card content</div>}>
