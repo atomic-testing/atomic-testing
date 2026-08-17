@@ -70,17 +70,35 @@ export const normalizeVersion = requested =>
  * the input is not a valid SemVer version. Build metadata (`+…`) is deliberately
  * unsupported: nothing here publishes it, and accepting a shape the rest of the
  * release path has never seen is how a bad string reaches 38 manifests.
+ *
+ * The release triple stays as the matched DIGIT STRINGS rather than numbers.
+ * SemVer puts no ceiling on a component, and `Number` silently collapses
+ * anything past 2^53 — `9007199254740992.0.0` and `…93.0.0` would compare equal,
+ * which would let RELVER-03 mistake a lower request for a resume and skip the
+ * changelog. {@link compareNumericIdentifier} compares them exactly instead.
  */
 export function parseSemver(version) {
   const match = SEMVER.exec(String(version ?? '').trim());
   if (!match) return null;
   return {
-    release: [Number(match[1]), Number(match[2]), Number(match[3])],
+    release: [match[1], match[2], match[3]],
     prerelease: match[4] == null ? null : match[4].split('.'),
   };
 }
 
 const isNumeric = identifier => /^\d+$/.test(identifier);
+
+/**
+ * Exact ordering of two non-negative integers held as digit strings, with no
+ * conversion and so no precision ceiling. The grammar above forbids leading
+ * zeros, so a longer string is always the larger number and equal lengths order
+ * lexically — which for equal-length digit strings is numeric order.
+ */
+function compareNumericIdentifier(a, b) {
+  if (a.length !== b.length) return a.length < b.length ? -1 : 1;
+  if (a === b) return 0;
+  return a < b ? -1 : 1;
+}
 
 /**
  * SemVer §11 precedence for prerelease identifier lists:
@@ -106,7 +124,7 @@ function comparePrerelease(a, b) {
 
     const leftNumeric = isNumeric(left);
     const rightNumeric = isNumeric(right);
-    if (leftNumeric && rightNumeric) return Number(left) < Number(right) ? -1 : 1;
+    if (leftNumeric && rightNumeric) return compareNumericIdentifier(left, right);
     if (leftNumeric !== rightNumeric) return leftNumeric ? -1 : 1;
     return left < right ? -1 : 1;
   }
@@ -123,9 +141,8 @@ export function compareSemver(a, b) {
   if (!left || !right) throw new Error(`Cannot compare unparseable version(s): ${a}, ${b}`);
 
   for (let index = 0; index < 3; index++) {
-    if (left.release[index] !== right.release[index]) {
-      return left.release[index] < right.release[index] ? -1 : 1;
-    }
+    const order = compareNumericIdentifier(left.release[index], right.release[index]);
+    if (order !== 0) return order;
   }
   // A prerelease has LOWER precedence than its release — the case `sort -V`
   // gets backwards, and the one that matters for `1.0.0-rc.1` -> `1.0.0`.

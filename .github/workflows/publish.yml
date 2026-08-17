@@ -24,6 +24,18 @@ on:
 # all, because the version bump happens in a reviewed PR before the tag exists.
 permissions: {}
 
+# Serialise publishes, and never cancel one. `publish.sh` uploads under npm's
+# default `latest` dist-tag, so two overlapping runs let whichever finishes LAST
+# decide what `latest` points at — an older release can move it backwards. The
+# lock has to live here rather than in release.yml, whose own `concurrency: release`
+# is released the instant it dispatches this workflow, ~25 minutes before the
+# upload happens. Cancelling is worse than queueing: a run killed mid-publish
+# leaves a partial release, which `publish.sh`'s idempotency can resume but only
+# if it is allowed to finish.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 env:
   # `pnpm publish` shells out to npm, and OIDC trusted publishing requires
   # npm >= 11.5.1: the Node 22 runner ships npm 10.x, which doesn't attempt the

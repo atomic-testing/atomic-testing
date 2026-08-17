@@ -186,13 +186,34 @@ test('compareSemver throws rather than inventing an order for junk', () => {
 });
 
 test('parseSemver splits release and prerelease, and rejects what SemVer forbids', () => {
-  assert.deepEqual(parseSemver('1.2.3'), { release: [1, 2, 3], prerelease: null });
-  assert.deepEqual(parseSemver('1.2.3-alpha-1.2'), { release: [1, 2, 3], prerelease: ['alpha-1', '2'] });
-  assert.deepEqual(parseSemver('0.0.0'), { release: [0, 0, 0], prerelease: null });
+  assert.deepEqual(parseSemver('1.2.3'), { release: ['1', '2', '3'], prerelease: null });
+  assert.deepEqual(parseSemver('1.2.3-alpha-1.2'), { release: ['1', '2', '3'], prerelease: ['alpha-1', '2'] });
+  assert.deepEqual(parseSemver('0.0.0'), { release: ['0', '0', '0'], prerelease: null });
   assert.equal(parseSemver('1.2.3+build.5'), null);
   assert.equal(parseSemver('01.2.3'), null);
   assert.equal(parseSemver('1.2.3-01'), null);
   assert.equal(parseSemver('v1.2.3'), null); // the leading v is normalizeVersion's job, not this one
+});
+
+test('numeric components compare exactly, with no precision ceiling', () => {
+  // `Number` collapses anything past 2^53, so a Number-based comparator reports
+  // these as equal — which would let RELVER-03 mistake a lower request for a
+  // resume and skip regenerating the changelog.
+  const big = '9007199254740992';
+  const bigger = '9007199254740993';
+  assert.equal(Number(big) === Number(bigger), true, 'precondition: Number really does collapse these');
+  assert.equal(Math.sign(compareSemver(`${big}.0.0`, `${bigger}.0.0`)), -1);
+  assert.equal(Math.sign(compareSemver(`1.0.0-${bigger}`, `1.0.0-${big}`)), 1);
+
+  // And the ordinary cases still hold: no leading zeros means longer == larger.
+  assert.equal(Math.sign(compareSemver('0.9.0', '0.10.0')), -1);
+  assert.equal(Math.sign(compareSemver('2.0.0', '10.0.0')), -1);
+});
+
+test('the release triple is kept as digit strings, not numbers', () => {
+  // The representation is load-bearing for the test above; pin it so a
+  // "tidy-up" back to Number has to break something visible.
+  assert.deepEqual(parseSemver('1.2.3').release, ['1', '2', '3']);
 });
 
 test('normalizeVersion is the single normalisation, and is idempotent', () => {

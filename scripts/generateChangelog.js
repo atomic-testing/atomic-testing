@@ -11,6 +11,12 @@ const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// `require()` of an ES module is stable from Node 22.12, and the repo's `engines`
+// floor is 22.13 — so the SemVer comparator can be shared with the release-version
+// guard instead of being written a second time here. Two implementations of
+// precedence is exactly how the `sort -V` bug got in.
+const { compareSemver, parseSemver } = require('./assert-release-version.mjs');
+
 const REPO_URL = 'https://github.com/atomic-testing/atomic-testing';
 const CHANGELOG_HEADER = '# Changelog';
 
@@ -88,9 +94,16 @@ function resolvePreviousReleaseRef(sinceOption, version) {
     return sinceOption;
   }
 
-  const tags = git(['for-each-ref', 'refs/tags/v*', '--sort=-v:refname', '--format=%(refname:short)'])
+  // Re-sorted by SemVer precedence rather than trusting git's `-v:refname`, which
+  // is a version sort, not a SemVer one: it ranks `1.0.0-rc.1` ABOVE `1.0.0`. Left
+  // alone, the release after an rc promotion would baseline at the rc and repeat
+  // the promotion's commits. Same defect class as the `sort -V` the release-version
+  // guard replaced, which is why the comparator is shared rather than re-derived.
+  const tags = git(['for-each-ref', 'refs/tags/v*', '--format=%(refname:short)'])
     .split('\n')
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter(tag => parseSemver(tag.replace(/^v/, '')) != null)
+    .sort((a, b) => compareSemver(b.replace(/^v/, ''), a.replace(/^v/, '')));
   const releaseTagIndex = tags.indexOf(`v${version}`);
   const candidates = releaseTagIndex === -1 ? tags : tags.slice(releaseTagIndex + 1);
   const previous = candidates.find(namesAReleasedTree);

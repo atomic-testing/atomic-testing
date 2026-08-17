@@ -193,28 +193,65 @@ jobs:
             echo "Refusing to push: this commit would be rejected by publish.yml's preflight." >&2
             exit 1
           fi
+
+          # Resume only proves the tree still carries this version and has no tag.
+          # It does NOT prove HEAD is still the release commit: if the branch
+          # advanced after that commit was pushed, the manifests and the changelog
+          # heading both still match (later commits need not touch either), so
+          # every check above passes while tagging HEAD would ship commits the
+          # changelog never mentions — and resume skips regenerating it.
+          if [[ "$RELEASE_MODE" == "resume" ]]; then
+            SUBJECT="$(git log -1 --format=%s HEAD)"
+            if [[ "$SUBJECT" != "chore(release): ${VERSION}"* ]]; then
+              echo "ERROR: resuming $VERSION, but HEAD is not its release commit." >&2
+              echo "  HEAD subject: $SUBJECT" >&2
+              echo "The branch advanced after the release commit was pushed. Tagging HEAD would" >&2
+              echo "include commits absent from the $VERSION changelog. Release the next version" >&2
+              echo "instead, which regenerates the notes over the full range." >&2
+              exit 1
+            fi
+            echo "Resuming at the $VERSION release commit."
+          fi
+
           echo "Manifests and changelog agree on $VERSION."
 
       # The changelog is derived from commit subjects, so the one thing a human
       # might want to look at before it ships is what that derivation produced.
       # Surfacing it here keeps that visible without making it a blocking step —
       # and `preview: true` turns it into one on demand.
-      - name: Summarise the release
+      - name: Extract the release notes
         run: |
           set -euo pipefail
           # The section for THIS version only: from its heading up to the next
           # `## [` heading, exclusive. Anchored with index(...)==1 so a version
           # string appearing inside an entry cannot start the capture.
+          #
+          # Written to a file because it becomes BOTH the run summary and the
+          # GitHub Release body. `--generate-notes` is deliberately not used: it
+          # asks GitHub to pick its own previous tag, which is neither the
+          # baseline generateChangelog.js resolved nor aware that an abandoned tag
+          # should be skipped — so the Release notes could omit exactly the
+          # commits CHANGELOG.md correctly includes. One source, rendered twice.
+          awk -v heading="## [$VERSION]" '
+            index($0, heading) == 1 { capturing = 1; print; next }
+            capturing && /^## \[/  { exit }
+            capturing              { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
+
+          if [[ ! -s "$RUNNER_TEMP/release-notes.md" ]]; then
+            echo "ERROR: no '## [$VERSION]' section found in CHANGELOG.md to use as release notes." >&2
+            exit 1
+          fi
+
+      - name: Summarise the release
+        run: |
+          set -euo pipefail
           {
             echo "## Release $VERSION (${RELEASE_MODE})"
             echo
-            echo "### Generated changelog section"
+            echo "### Release notes (CHANGELOG section, verbatim)"
             echo
-            awk -v heading="## [$VERSION]" '
-              index($0, heading) == 1 { capturing = 1; print; next }
-              capturing && /^## \[/  { exit }
-              capturing              { print }
-            ' CHANGELOG.md
+            cat "$RUNNER_TEMP/release-notes.md"
             echo
             echo "### Manifests"
             echo
@@ -293,6 +330,11 @@ jobs:
       # and `--target` pins the Release to the commit just tagged rather than to
       # whatever the branch tip is when GitHub processes this — the exact
       # ambiguity that produced the v0.101.0 and v0.102.0 failures.
+      #
+      # `--notes-file`, never `--generate-notes`: the notes must be the changelog
+      # section this run generated, not GitHub's own reckoning of "since the
+      # previous release" — which would reintroduce the orphaned-baseline bug on
+      # the Release even while CHANGELOG.md is right.
       - name: Publish the GitHub Release
         if: ${{ !inputs.preview }}
         env:
@@ -303,5 +345,5 @@ jobs:
             --verify-tag \
             --target "$RELEASE_SHA" \
             --title "v${VERSION}" \
-            --generate-notes
+            --notes-file "$RUNNER_TEMP/release-notes.md"
           echo "Released v${VERSION} at ${RELEASE_SHA}"
