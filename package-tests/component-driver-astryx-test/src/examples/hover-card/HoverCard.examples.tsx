@@ -9,8 +9,10 @@ import React, { JSX } from 'react';
  * only stable link is the trigger's injected `aria-describedby` → the layer's `id`.
  * The scene anchors on the trigger (`data-testid`); the driver follows that link to
  * read the layer's content. Since Astryx 0.4.2 the layer is `lazyMount`ed — it is a
- * bare `<template>` until the native popover opens — so the content is only
- * observable in the E2E run, and open/visibility remains E2E-only too.
+ * bare `<template>` until the card opens — so the driver hovers and probes for the
+ * reveal. The component's own open state drives that mount, so it lands under jsdom
+ * as well as in a real browser; what stays E2E-only is whether the revealed layer is
+ * actually *visible*, which nothing here asserts.
  */
 export const HoverCardExample = () => (
   <HoverCard content={<div>Hover card content</div>}>

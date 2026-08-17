@@ -17,9 +17,12 @@ import { DropdownMenuDriver } from './DropdownMenuDriver';
  * trigger is (a menu row, not a standalone button) and therefore in how it names
  * itself.
  *
- * Reach one through {@link MenuItemDriver.subMenu} rather than constructing it: the
- * parent menu's item enumeration already yields the trigger row, submenu triggers
- * included.
+ * Anchor it on the submenu's **trigger row**, the way a scene names any other
+ * overlay: Astryx forwards `data-testid` onto that row. There is deliberately no
+ * accessor for it on `MenuItemDriver` — a submenu driver is a menu driver, and
+ * every menu driver already depends on `MenuItemDriver` for its items, so reaching
+ * one from there would close an import cycle. `MenuItemDriver.hasSubMenu` tells you
+ * whether a given row has a flyout to anchor on.
  *
  * The one contract that differs is which link reaches the flyout, and it is the
  * reason {@link resolveMenuLocator} is overridden rather than inherited: Astryx

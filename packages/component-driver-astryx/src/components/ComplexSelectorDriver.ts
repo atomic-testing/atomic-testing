@@ -7,7 +7,7 @@ import {
   PartLocator,
 } from '@atomic-testing/core';
 
-import { resolveDescribedByRoleText, resolveLabelledByText } from '../internal/linkedLocators';
+import { resolveLabelledByText } from '../internal/linkedLocators';
 
 /** The trigger `<button>` inside the root — the element carrying every ARIA state. */
 const TRIGGER = byCssSelector('button[aria-haspopup="dialog"]');
@@ -34,6 +34,13 @@ const TRIGGER = byCssSelector('button[aria-haspopup="dialog"]');
  * React-state-driven `aria-expanded` (faithful everywhere) while what a user can
  * actually see is the E2E run's concern. The popup content is always mounted, so
  * `within(...)` parts read in both environments.
+ *
+ * There is deliberately **no tooltip read** here, unlike the field-input drivers.
+ * ComplexSelector has no `disabledMessage` prop, and it composes the trigger's
+ * `aria-describedby` from the description and status ids only — so a
+ * `role="tooltip"` probe over that list can never match. Its one tooltip,
+ * `labelTooltip`, belongs to the `Field` label's info control rather than the
+ * trigger; reach that through the label if a scene needs it.
  */
 export class ComplexSelectorDriver extends ComponentDriver<{}> {
   protected get trigger(): PartLocator {
@@ -165,14 +172,6 @@ export class ComplexSelectorDriver extends ComponentDriver<{}> {
       }
     }
     return undefined;
-  }
-
-  /**
-   * The `disabledMessage`-style tooltip text, if the consumer wired one through
-   * `aria-describedby`. `undefined` otherwise.
-   */
-  async getTooltipMessage(): Promise<Optional<string>> {
-    return resolveDescribedByRoleText(this.interactor, this.trigger, 'aria-describedby', 'tooltip');
   }
 
   override get driverName(): string {
