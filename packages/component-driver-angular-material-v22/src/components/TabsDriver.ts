@@ -134,6 +134,7 @@ export class TabsDriver<ItemT extends TabDriver = TabDriver> extends ListCompone
       return false;
     }
     await tab.click();
+    await this.awaitSelected(tab, `the tab at index ${index} to report itself selected`);
     return true;
   }
 
@@ -147,7 +148,24 @@ export class TabsDriver<ItemT extends TabDriver = TabDriver> extends ListCompone
       return false;
     }
     await tab.click();
+    await this.awaitSelected(tab, `the "${label}" tab to report itself selected`);
     return true;
+  }
+
+  /**
+   * Hold a selection open until the clicked tab actually reports itself selected.
+   *
+   * `MatTabGroup` propagates the new selection through Angular change detection
+   * rather than on the click itself, so `aria-selected` — what `TabDriver.isSelected`
+   * reads, and therefore what `getSelectedIndex`/`getSelectedLabel` report — flips
+   * some time AFTER the click resolves. The DOM tier settles via
+   * `AngularInteractor.whenStable()` and so rarely observes the gap, but the e2e
+   * tier drives the browser through `PlaywrightInteractor`, which has no Angular
+   * settle at all: there the read races change detection directly. That is the
+   * intermittent `selects a tab by label` / `by index` failure seen in CI.
+   */
+  private async awaitSelected(tab: TabDriver, postcondition: string): Promise<void> {
+    await this.awaitPostcondition(postcondition, () => tab.isSelected());
   }
 
   /**
