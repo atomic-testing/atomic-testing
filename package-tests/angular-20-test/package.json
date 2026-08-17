@@ -13,7 +13,7 @@
     "test:browser": "vitest run"
   },
   "devDependencies": {
-    "@angular/common": "^20.3.0",
+    "@angular/common": "^20.3.28",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.26",
     "@angular/platform-browser": "^20.3.0",
