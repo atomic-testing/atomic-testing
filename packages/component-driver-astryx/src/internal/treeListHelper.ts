@@ -15,12 +15,19 @@ function liChildAt(ul: PartLocator, position: number): PartLocator {
 }
 
 /**
- * The row's own content wrapper — its second element child. The optional nested
- * `<ul role="group">` is the third child, so scoping label/toggle lookups here
- * excludes descendant rows' controls.
+ * The row's own content wrapper — the last `<div>` directly inside the `<li>`.
+ * The nested `<ul role="group">` holding descendant rows is a `<ul>`, not a
+ * `<div>`, so scoping label/toggle lookups here excludes their controls.
+ *
+ * `div:last-of-type` rather than the `*:nth-child(2)` this replaced. That index
+ * assumed exactly one preceding sibling — the connector-guide `<div>` — which two
+ * later Astryx changes each invalidate: `variant="noGuides"` (0.2.0) omits the
+ * guides entirely, making the row wrapper the *first* child, and 0.4.2's inert
+ * `<template>` layer markers can occupy any position. Counting from the end among
+ * `<div>` siblings only is stable under both.
  */
 export function ownRow(li: PartLocator): PartLocator {
-  return locatorUtil.append(li, byCssSelector('> *:nth-child(2)'));
+  return locatorUtil.append(li, byCssSelector('> div:last-of-type'));
 }
 
 /**

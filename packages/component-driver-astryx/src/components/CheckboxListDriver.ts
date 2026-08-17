@@ -17,10 +17,11 @@ import { CheckboxListItemDriver } from './CheckboxListItemDriver';
  * Driver for the Astryx CheckboxList (`@astryxdesign/core/CheckboxList`).
  *
  * CheckboxList self-emits `data-testid` on its outer `<div>` (anchored by the
- * scene); inside is a `<ul role="list">` of `<li aria-checked>` rows. The
- * per-item `value` is a React key and is NOT emitted to the DOM, so rows are
- * addressed by their visible label (the row button's text) or by index — this is
- * the documented BYROLE_NAME-gap behaviour for CheckboxList (see #909).
+ * scene); inside is a `<ul role="list">` of `<li>` rows. The per-item `value` is a
+ * React key and is NOT emitted to the DOM, so rows are addressed by their visible
+ * label (see {@link CheckboxListItemDriver} for where that label is read from) or
+ * by index — this is the documented BYROLE_NAME-gap behaviour for CheckboxList
+ * (see #909).
  */
 export class CheckboxListDriver extends ListComponentDriver<CheckboxListItemDriver> {
   constructor(locator: PartLocator, interactor: Interactor, option?: Partial<IComponentDriverOption>) {

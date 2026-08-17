@@ -47,6 +47,27 @@ export class SelectorDriver extends AstryxComboboxDriver {
   }
 
   /**
+   * Select an option by typing on the **closed** trigger, the way a native
+   * `<select>` behaves — Astryx 0.4.0 wired Selector to the shared `useTypeahead`,
+   * so tabbing to a state picker and pressing "C" lands on "CA".
+   *
+   * Distinct from {@link selectByLabel}, which opens the popup and clicks: this
+   * exercises the closed-trigger path, where the match commits without the popup
+   * ever opening and is announced through the live region instead. Repeated
+   * presses of the same letter cycle through options sharing it, and spaces count
+   * as match characters, so pass the prefix a user would actually type.
+   *
+   * With `hasSearch` the same keystrokes open the popup and seed its search field
+   * instead — that is Astryx's behaviour, not a driver limitation.
+   */
+  async typeToSelect(prefix: string): Promise<void> {
+    await this.interactor.focus(this.combobox);
+    for (const character of prefix) {
+      await this.interactor.pressKey(this.combobox, character);
+    }
+  }
+
+  /**
    * Select the option with the given label (opens the popup first).
    * @returns `false` when no such option exists.
    */

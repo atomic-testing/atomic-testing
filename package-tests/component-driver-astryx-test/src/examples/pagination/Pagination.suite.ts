@@ -14,6 +14,10 @@ export const paginationExampleScenePart = {
     locator: byDataTestId('count-pager'),
     driver: PaginationDriver,
   },
+  inputPager: {
+    locator: byDataTestId('input-pager'),
+    driver: PaginationDriver,
+  },
 } satisfies ScenePart;
 
 export const paginationExample: IExampleUnit<typeof paginationExampleScenePart, JSX.Element> = {
@@ -51,6 +55,20 @@ export const paginationExampleTestSuite: TestSuiteInfo<typeof paginationExample.
       // The count variant exposes its summary text.
       test(`getCountText returns the count summary`, async () => {
         assertEqual(await engine().parts.countPager.getCountText(), '21–40 of 200');
+      });
+
+      // The input variant renders no numbered buttons, so getCurrentPage falls
+      // through to the editable page box's aria-valuenow.
+      test(`reads the current page from the input variant`, async () => {
+        assertEqual(await engine().parts.inputPager.getVariant(), 'input');
+        assertEqual(await engine().parts.inputPager.getCurrentPage(), 3);
+      });
+
+      // setPage types into that box; it is a no-op on the other variants.
+      test(`setPage drives the input variant and declines the others`, async () => {
+        assertTrue(await engine().parts.inputPager.setPage(5));
+        assertEqual(await engine().parts.inputPager.getCurrentPage(), 5);
+        assertFalse(await engine().parts.pager.setPage(5));
       });
     });
   },

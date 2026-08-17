@@ -1,4 +1,4 @@
-import { DropdownMenuDriver } from '@atomic-testing/component-driver-astryx';
+import { DropdownMenuDriver, SubMenuDriver } from '@atomic-testing/component-driver-astryx';
 import { HTMLElementDriver } from '@atomic-testing/component-driver-html';
 import { byDataTestId, IExampleUnit, ScenePart } from '@atomic-testing/core';
 import { TestSuiteInfo, useTestEngine } from '@atomic-testing/internal-test-runner';
@@ -19,6 +19,16 @@ export const dropdownMenuExampleScenePart = {
   selectableMenu: {
     locator: byDataTestId('dropdown-selectable'),
     driver: DropdownMenuDriver,
+  },
+  nestedMenu: {
+    locator: byDataTestId('dropdown-nested'),
+    driver: DropdownMenuDriver,
+  },
+  // A submenu is named the way any other overlay is: anchor its driver on the
+  // trigger, which Astryx forwards `data-testid` onto.
+  subMenu: {
+    locator: byDataTestId('dropdown-submenu'),
+    driver: SubMenuDriver,
   },
 } satisfies ScenePart;
 
@@ -114,6 +124,45 @@ export const dropdownMenuExampleTestSuite: TestSuiteInfo<typeof dropdownMenuExam
         await engine().parts.selectableMenu.waitUntil({
           probeFn: () => engine().parts.selectableMenu.isItemChecked('Show archived'),
           terminateCondition: true,
+          timeoutMs: 2000,
+        });
+      });
+
+      // A submenu trigger is itself a menuitem, so it enumerates with the rest.
+      test(`the parent menu lists the submenu trigger among its items`, async () => {
+        assertEqual(await engine().parts.nestedMenu.getItemLabels(), ['Rename', 'Move to', 'Delete']);
+        const trigger = await engine().parts.nestedMenu.getItemByLabel('Move to');
+        assertTrue(await trigger!.hasSubMenu());
+        const plain = await engine().parts.nestedMenu.getItemByLabel('Rename');
+        assertFalse(await plain!.hasSubMenu());
+      });
+
+      // Astryx 0.4.0 reflects variant="destructive" on the row as data-variant.
+      test(`isDestructive marks the destructive row`, async () => {
+        const remove = await engine().parts.nestedMenu.getItemByLabel('Delete');
+        assertTrue(await remove!.isDestructive());
+        const rename = await engine().parts.nestedMenu.getItemByLabel('Rename');
+        assertFalse(await rename!.isDestructive());
+      });
+
+      // The flyout is resolved by its aria-labelledby back-link rather than the
+      // trigger's aria-controls (which Astryx omits while closed), so the
+      // submenu's items read without opening anything.
+      test(`the submenu enumerates its items while closed`, async () => {
+        assertFalse(await engine().parts.subMenu.isOpen());
+        assertEqual(await engine().parts.subMenu.getItemLabels(), ['Inbox', 'Archive']);
+        assertEqual(await engine().parts.subMenu.getItemCount(), 2);
+      });
+
+      // Selecting inside the flyout is a real interaction, so WebKit is gated.
+      test(`selecting a submenu item fires its action`, async () => {
+        if (skipInteractionOnWebkit(test, browser())) return;
+        await engine().parts.nestedMenu.open();
+        await engine().parts.subMenu.open();
+        assertTrue(await engine().parts.subMenu.selectByLabel('Archive'));
+        await engine().parts.last.waitUntil({
+          probeFn: () => engine().parts.last.getText(),
+          terminateCondition: 'Archive',
           timeoutMs: 2000,
         });
       });

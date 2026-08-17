@@ -17,14 +17,20 @@ import { BreadcrumbMenuDriver } from './BreadcrumbMenuDriver';
  */
 export class BreadcrumbItemDriver extends ComponentDriver {
   /**
-   * The crumb's content element — the child that is neither the `aria-hidden`
-   * separator nor, on a menu crumb, the popover panel Astryx renders as a
-   * *third* `<li>` child. Excluding `[popover]` matters only in a real browser:
-   * `querySelector` silently returns the trigger as the first match, while
-   * Playwright's strict mode rejects the two-element resolution outright.
+   * The crumb's content element — the `<a>`, `<button>` or `<span>` that carries
+   * the label, as opposed to the leading `aria-hidden` separator or, on a menu
+   * crumb, the popover panel and its layer marker.
+   *
+   * Named by tag rather than by excluding what it is not. The exclusion form this
+   * replaced (`> :not([aria-hidden="true"]):not([popover])`) was open by
+   * construction, and Astryx 0.4.2's inert `<template>` layer markers walked
+   * straight through it. That distinction is invisible under jsdom, whose
+   * `querySelector` silently returns the first match; Playwright's strict mode
+   * rejects the two-element resolution outright, so the bug surfaced in exactly one
+   * of the two runners.
    */
   private get content(): PartLocator {
-    return locatorUtil.append(this.locator, byCssSelector('> :not([aria-hidden="true"]):not([popover])'));
+    return locatorUtil.append(this.locator, byCssSelector('> :is(a, button, span):not([aria-hidden="true"])'));
   }
 
   /** The crumb's visible label, read from its content element (separator excluded). */

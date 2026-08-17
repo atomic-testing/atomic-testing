@@ -18,11 +18,12 @@ Barrel: [component-driver-astryx/src/index.ts](../../packages/component-driver-a
   - Nav chrome: `TopNavDriver` (+ `TopNavItemDriver`, `TopNavMenuDriver`, `TopNavMegaMenuDriver`), `BreadcrumbsDriver` (+ `BreadcrumbItemDriver`, `BreadcrumbMenuDriver`), `SideNavDriver` (+ `SideNavItemDriver`), `MobileNavDriver`.
   - Chat suite: `ChatMessageDriver` (+ `ChatMessageBubbleDriver`, `ChatMessageListDriver`, `ChatSystemMessageDriver`, `ChatToolCallsDriver`, `ChatLayoutDriver`), `ChatSendButtonDriver`, `ChatDictationButtonDriver`.
   - Hard set (best-effort v1): `FileInputDriver`, `ContextMenuDriver`, `AppShellDriver`, `ChatComposerInputDriver`, `ChatComposerDriver`, `HoverCardDriver`, `TooltipDriver`.
+  - Added for Astryx 0.2.0–0.4.2: `ComplexSelectorDriver` (the 0.3.0 shell — its popup interior is scene-owned, reached through `within`) and `SubMenuDriver` (a nested menu flyout; anchor it on the submenu's trigger row).
   - Full per-driver notes for all of Wave 4: [package README](../../packages/component-driver-astryx/README.md#display--typography).
 
 ## Dependency shape
 
-- `@astryxdesign/core` is a **peerDependency pinned `^0.1.9`** ([package.json](../../packages/component-driver-astryx/package.json)) — consumers supply Astryx; it is not bundled. Caret on a `0.x` locks the `0.1` minor (`>=0.1.9 <0.2.0`). `@astryxdesign/core` is **ESM-only** and **peer-requires React ≥19** and (as of Astryx 0.1.9) **`@stylexjs/stylex` ≥0.19.0**, so consumers test with `@atomic-testing/react-19`.
+- `@astryxdesign/core` is a **peerDependency pinned `^0.4.1`** ([package.json](../../packages/component-driver-astryx/package.json)) — consumers supply Astryx; it is not bundled. Caret on a `0.x` locks the `0.4` minor (`>=0.4.1 <0.5.0`). `@astryxdesign/core` is **ESM-only** and **peer-requires React ≥19** and **`@stylexjs/stylex` ≥0.19.0**, so consumers test with `@atomic-testing/react-19`. The package was retargeted from `^0.1.9` **in place** across three breaking Astryx minors rather than forked per-minor; the rationale and the escape hatch for consumers still on 0.1.x are in the [package README](../../packages/component-driver-astryx/README.md#target-package--version-pin).
 - Regular deps: `@atomic-testing/core`, `@atomic-testing/component-driver-html` (both `workspace:*`). The driver code imports nothing from `@astryxdesign/core` — it is a DOM driver, so the Astryx component is only present at the consumer's render site.
 
 ## How it works — `ButtonDriver`
@@ -51,6 +52,26 @@ Conditional/derived reads, not hard-coded roles: `Toast.getType` reads `data-typ
 **E2E-only / WebKit-gated.** Native-popover open/close visibility is not modelled in jsdom (reads still work — content is mounted), so it is covered by the Playwright run. Playwright's **WebKit** cannot drive these interactions: opening a native-popover overlay busies WebKit's main thread (subsequent automation times out) and Escape on the animating modal `<dialog>` never reaches a stable press target. The 6 open/close _interaction_ tests are therefore skipped on WebKit via [src/webkitGate.ts](../../package-tests/component-driver-astryx-test/src/webkitGate.ts) (`useBrowserName` + `skipInteractionOnWebkit`); all reads run on chromium/firefox/webkit, full interactions on chromium/firefox.
 
 **`LightboxDriver`** ([LightboxDriver.ts](../../packages/component-driver-astryx/src/components/LightboxDriver.ts)) is also a native `<dialog>` (like `Dialog`, no portal), but its own Escape-to-dismiss is E2E-only for a different reason than Dialog's WebKit gate: Lightbox relies on the browser firing a native `cancel` event on Escape (verified empirically that jsdom does not synthesize this from a dispatched `keydown`), so `close()` instead drives the close button, which is jsdom-faithful. Its gallery counter/caption have no `data-testid`/role of their own; the driver anchors them structurally (`:has()`/`:not(:has(*))` on the fixed child layout — see the locator comments in the driver). `zoom()`/`pan()` are E2E-only and use the `Interactor.click({ clickCount: 2 })` option (added alongside this driver — see `ClickOption.clickCount`) since two separate `click()` calls do not reliably register as a real double-click.
+
+## Layer markers and open-by-construction selectors
+
+Astryx 0.4.2 made `Layer` drop an inert `<template>` marker at each context layer's
+real JSX position. Those markers sit **among real content**, so any selector that
+says what an element is _not_ (`:not(div)`, `> :not([aria-hidden])`) silently
+starts matching them, and any index over "every element child" shifts. Two drivers
+were counting them before the sweep; four more were one layer-bearing scene away.
+
+The rule this leaves behind: **name what an element is, not what it is not.** Tabs
+are `[data-tab-value]`, carousel slides are `[role="group"]`, a tree row's content
+wrapper is `div:last-of-type`. Where an index is unavoidable, count of-type so the
+markers are invisible to it. `childListHelper` is already safe — it filters every
+position through the item selector — so drivers built on it needed no change.
+
+This also has a runner consequence worth knowing: **jsdom hides the bug and
+Playwright surfaces it.** `querySelector` returns the first match and moves on,
+while Playwright's strict mode rejects a two-element resolution outright, so a
+marker-contaminated selector can be green in the DOM suite and red in the E2E run
+(that is exactly how the Breadcrumbs regression showed up).
 
 ## Non-goals
 

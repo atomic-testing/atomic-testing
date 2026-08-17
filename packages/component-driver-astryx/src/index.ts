@@ -42,6 +42,7 @@ export { ToastDriver } from './components/ToastDriver';
 export { TabDriver } from './components/TabDriver';
 export { TabListDriver } from './components/TabListDriver';
 export { DropdownMenuDriver, MoreMenuDriver } from './components/DropdownMenuDriver';
+export { SubMenuDriver } from './components/SubMenuDriver';
 export { PopoverDriver } from './components/PopoverDriver';
 export { DialogDriver } from './components/DialogDriver';
 export { AlertDialogDriver } from './components/AlertDialogDriver';
@@ -60,6 +61,7 @@ export { TreeListDriver } from './components/TreeListDriver';
 // Selectors & typeaheads (Wave 3)
 export { AstryxComboboxDriver } from './components/AstryxComboboxDriver';
 export { SelectorDriver } from './components/SelectorDriver';
+export { ComplexSelectorDriver } from './components/ComplexSelectorDriver';
 export { MultiSelectorDriver } from './components/MultiSelectorDriver';
 export { TypeaheadDriver } from './components/TypeaheadDriver';
 export { TokenizerDriver } from './components/TokenizerDriver';
