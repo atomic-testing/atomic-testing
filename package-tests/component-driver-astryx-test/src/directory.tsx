@@ -33,6 +33,7 @@ import { codeBlockUIExample } from './examples/code-block/CodeBlock.examples';
 import { codeUIExample } from './examples/code/Code.examples';
 import { collapsibleUIExample } from './examples/collapsible/Collapsible.examples';
 import { commandPaletteUIExample } from './examples/command-palette/CommandPalette.examples';
+import { complexSelectorUIExample } from './examples/complex-selector/ComplexSelector.examples';
 import { contextMenuUIExample } from './examples/context-menu/ContextMenu.examples';
 import { dateInputUIExample } from './examples/date-input/DateInput.examples';
 import { dateRangeInputUIExample } from './examples/date-range-input/DateRangeInput.examples';
@@ -148,6 +149,7 @@ export const tocs: ExampleToc[] = [
   toc('Table', '/table', tableUIExample),
   toc('TreeList', '/tree-list', treeListUIExample),
   toc('Selector', '/selector', selectorUIExample),
+  toc('ComplexSelector', '/complex-selector', complexSelectorUIExample),
   toc('MultiSelector', '/multi-selector', multiSelectorUIExample),
   toc('Typeahead', '/typeahead', typeaheadUIExample),
   toc('Tokenizer', '/tokenizer', tokenizerUIExample),

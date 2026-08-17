@@ -38,11 +38,26 @@ export const numberInputExampleTestSuite: TestSuiteInfo<typeof numberInputExampl
         assertEqual(await engine().parts.qtyInput.getValue(), '5');
       });
 
-      // min/max/step come straight off the native attributes.
-      test(`getMin/getMax/getStep read the numeric constraints`, async () => {
+      // Astryx 0.4.0 made NumberInput a text-backed spinbutton, so the bounds are
+      // aria-valuemin/aria-valuemax rather than the native min/max. `step` has no
+      // DOM representation at all now — it is asserted behaviourally below.
+      test(`getMin/getMax read the numeric constraints`, async () => {
         assertEqual(await engine().parts.qtyInput.getMin(), 0);
         assertEqual(await engine().parts.qtyInput.getMax(), 10);
-        assertEqual(await engine().parts.qtyInput.getStep(), 2);
+      });
+
+      // The step (2) is only observable through what a step actually moves.
+      // Astryx steps onto the grid `min + n * step` rather than adding `step` to
+      // wherever the value happens to sit, so the first press off an off-grid
+      // start (5, on a step-2 grid based at min=0) snaps to 6 — after that each
+      // press is a whole step.
+      test(`stepUp and stepDown move the value along the step grid`, async () => {
+        await engine().parts.qtyInput.stepUp();
+        assertEqual(await engine().parts.qtyInput.getValue(), '6');
+        await engine().parts.qtyInput.stepUp();
+        assertEqual(await engine().parts.qtyInput.getValue(), '8');
+        await engine().parts.qtyInput.stepDown();
+        assertEqual(await engine().parts.qtyInput.getValue(), '6');
       });
 
       // getUnits resolves the trailing units span (sibling of the input).

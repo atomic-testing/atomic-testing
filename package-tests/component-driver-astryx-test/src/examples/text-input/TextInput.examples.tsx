@@ -19,7 +19,15 @@ import React, { JSX, useState } from 'react';
  * A third input is disabled with a `disabledMessage`, exercising
  * `getDisabledMessage`'s resolution of the tooltip id out of that same
  * multi-id `aria-describedby` list (Astryx composes the disabled-message
- * tooltip alongside description/status ids).
+ * tooltip alongside description/status ids). Because showing that message
+ * requires the field to stay focusable, Astryx renders it `aria-disabled` +
+ * `readonly` rather than natively `disabled` — the case `isReadOnly` must not
+ * mistake for read-only.
+ *
+ * The fourth input is Astryx 0.4.0's genuine `isReadOnly`, and the fifth carries
+ * `statusVariant="tooltip"` (0.2.0), whose message lives in a `role="tooltip"`
+ * layer with no `data-type` severity marker — the shape `getStatusMessage` needs
+ * its fallback for.
  */
 export const TextInputExample = () => {
   const [name, setName] = useState('');
@@ -45,6 +53,15 @@ export const TextInputExample = () => {
         onChange={v => setOwner(v)}
         isDisabled
         disabledMessage='You need the Editor role to change this'
+      />
+      <TextInput label='Workspace' data-testid='workspace-input' value='acme-prod' onChange={() => {}} isReadOnly />
+      <TextInput
+        label='Slug'
+        data-testid='slug-input'
+        value='my slug'
+        onChange={() => {}}
+        status={{ type: 'error', message: 'Slugs cannot contain spaces' }}
+        statusVariant='tooltip'
       />
     </div>
   );

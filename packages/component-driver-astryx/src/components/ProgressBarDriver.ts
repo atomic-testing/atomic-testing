@@ -1,5 +1,8 @@
 import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
+/** A target mark tick — `progressbar-mark` is a documented theme target, so a stable anchor. */
+const MARK = byCssSelector('.astryx-progressbar-mark');
+
 /**
  * Driver for the Astryx ProgressBar (`@astryxdesign/core/ProgressBar`).
  *
@@ -29,6 +32,26 @@ export class ProgressBarDriver extends ComponentDriver<{}> {
   /** The header label (`<span id>`, referenced by the track's `aria-labelledby`). */
   private get label(): PartLocator {
     return locatorUtil.append(this.locator, byCssSelector('span[id]'));
+  }
+
+  /**
+   * Number of target marks drawn on the track (Astryx 0.3.0's `marks`), counted
+   * on the stable `astryx-progressbar-mark` theme target.
+   *
+   * Counted as **descendants** of the track, not direct children, because a mark
+   * changes depth as the page settles: each one is wrapped in a lazily-imported
+   * Tooltip, so it starts as a bare tick directly on the track and is re-parented
+   * into a wrapper (alongside a `<template>` layer marker) once that chunk
+   * resolves. A child-scoped count reads 2 before the resolve and 0 after — the
+   * kind of ordering-dependent result that looks like flake.
+   *
+   * A mark's `label` is **not** readable: it is its accessible name only through
+   * that same Tooltip, which mounts on hover/focus, so there is no
+   * `getMarkLabels()` — reach a specific mark's label by hovering it in an E2E
+   * run. Marks are ignored by Astryx in indeterminate mode, so this is 0 there.
+   */
+  async getMarkCount(): Promise<number> {
+    return this.interactor.getElementCount(locatorUtil.append(this.track, MARK));
   }
 
   /** The current value (`aria-valuenow`), or `undefined` for an indeterminate bar. */

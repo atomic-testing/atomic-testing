@@ -1,6 +1,9 @@
-import { ComponentDriver, Optional, PartLocator } from '@atomic-testing/core';
+import { byCssSelector, ComponentDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
 import { collectTreeItems, labelElement, toggleButton, TreeItemRef } from '../internal/treeListHelper';
+
+/** A hierarchy connector line — a documented theme target, so a stable anchor. */
+const GUIDE = byCssSelector('.astryx-tree-list-guide');
 
 /**
  * Driver for the Astryx TreeList (`@astryxdesign/core/TreeList`).
@@ -12,12 +15,26 @@ import { collectTreeItems, labelElement, toggleButton, TreeItemRef } from '../in
  * exposes a label element (`aria-labelledby` → its `<span>`) plus, when expandable, a
  * `"Toggle children"` chevron. The driver walks the tree depth-first (see
  * `treeListHelper`) so labels, counts, and depth all reflect the *visible* rows;
- * `@astryxdesign/core@0.1.1` is not virtualized, so this is faithful in jsdom too.
+ * Astryx TreeList is not virtualized, so this is faithful in jsdom too.
  *
  * Rows are addressed by their visible label. Astryx exposes no per-row id or
  * depth attribute, so depth is derived from the walk rather than read from the DOM.
  */
 export class TreeListDriver extends ComponentDriver {
+  /**
+   * Whether the tree draws hierarchy connector lines — `variant="lineGuides"`
+   * (the default) rather than Astryx 0.2.0's `variant="noGuides"`.
+   *
+   * The variant itself is not reflected on the root (Astryx's `tree-list` theming
+   * target carries `density` only), so this reads the thing the variant actually
+   * controls: the presence of the guides, whose `astryx-tree-list-guide` class is
+   * a documented theme target. A fully flat tree draws no guides under either
+   * variant, so this reports `false` for one — which is what a reader sees.
+   */
+  async hasGuides(): Promise<boolean> {
+    return this.interactor.exists(locatorUtil.append(this.locator, GUIDE));
+  }
+
   private async findByLabel(label: string): Promise<Optional<TreeItemRef>> {
     for (const ref of await collectTreeItems(this.interactor, this.locator)) {
       if ((await this.ownLabel(ref.li)) === label) {

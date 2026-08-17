@@ -61,6 +61,14 @@ export const switchControlExampleTestSuite: TestSuiteInfo<typeof switchControlEx
         assertEqual(await engine().parts.orgWide.getDisabledMessage(), 'Notifications are turned off org-wide');
         assertEqual(await engine().parts.notifications.getDisabledMessage(), undefined);
       });
+
+      // Astryx 0.2.0 gave Switch a size scale. The token rides on the painted
+      // track, an aria-hidden sibling of the <input> this driver anchors, so the
+      // read has to reach across rather than down.
+      test(`getSize reads the control size`, async () => {
+        assertEqual(await engine().parts.darkMode.getSize(), 'sm');
+        assertEqual(await engine().parts.notifications.getSize(), 'md');
+      });
     });
   },
 };

@@ -21,7 +21,7 @@ export const SwitchExample = () => {
         <Switch label='Notifications' value={notifications} onChange={c => setNotifications(c)} />
       </div>
       <div data-testid='dark-wrap'>
-        <Switch label='Dark mode' value={darkMode} onChange={c => setDarkMode(c)} />
+        <Switch label='Dark mode' value={darkMode} onChange={c => setDarkMode(c)} size='sm' />
       </div>
       <div data-testid='orgwide-wrap'>
         <Switch

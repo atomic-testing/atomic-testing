@@ -50,6 +50,14 @@ export const progressBarExampleTestSuite: TestSuiteInfo<typeof progressBarExampl
         assertEqual(await engine().parts.indeterminate.getValueText(), undefined);
         assertEqual(await engine().parts.indeterminate.getLabel(), 'Loading...');
       });
+
+      // Astryx 0.3.0's `marks` draw target ticks on the track. Their labels are
+      // reachable only through a lazily-imported hover Tooltip, so the count is
+      // what reads portably.
+      test(`getMarkCount counts the target marks`, async () => {
+        assertEqual(await engine().parts.determinate.getMarkCount(), 2);
+        assertEqual(await engine().parts.indeterminate.getMarkCount(), 0);
+      });
     });
   },
 };
