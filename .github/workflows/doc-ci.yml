@@ -15,8 +15,13 @@ jobs:
   deploy:
     name: Verify documentation build
     runs-on: ubuntu-latest
+    # Read-only, and it must stay that way: this job executes repository code
+    # from the pull request it verifies (doc scripts, publish.sh, installs), so
+    # a write token here would hand that code a credential — one that any
+    # github-actions app entry on main's protection bypass list would let push
+    # straight to the default branch.
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v7
 

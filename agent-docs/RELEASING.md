@@ -78,9 +78,13 @@ Three details of that workflow are load-bearing and easy to undo by accident:
 
 ### Letting release.yml push to main
 
-The workflow's push to `main` (and the tag push) must get past `main`'s
-protection, and the fix depends on which kind of protection rejected it — the
-push error names it:
+The workflow pushes twice: the release commit to `main`, then the `vX.Y.Z` tag.
+These answer to **different protections**: branch protection governs only the
+commit push, while the tag push is governed solely by tag rulesets (if any
+target `v*`), whose bypass is configured independently — so a run can land the
+commit and still have its tag rejected, and the fix for one lives in a
+different setting than the other. For the branch push, the fix depends on which
+kind of protection rejected it — the push error names it:
 
 - **`GH006: Protected branch update failed`** — a **classic** branch-protection
   rule (Settings → Branches). Add the **github-actions** app under that rule's
@@ -97,11 +101,16 @@ push error names it:
   key is opt-in.
 
 Running both kinds of protection on `main` means satisfying both; consolidating
-on a single ruleset keeps this one bypass list. Either bypass exempts every
-workflow in this repo that can obtain `contents: write` — currently only
-`release.yml` requests it — and the deploy key's secret is readable by any
-workflow with secrets access, so treat additions of either with the same care as
-a new write credential.
+on a single ruleset keeps this one bypass list. And weigh the two bypasses
+differently, because their blast radii differ. The **app bypass** exempts the
+`GITHUB_TOKEN` of _every_ workflow that obtains `contents: write` — that is
+`release.yml` and `doc-deploy.yml`'s gh-pages push, not the release path alone.
+It is also why `doc-ci.yml` must stay on `contents: read`: that job executes
+repository code from the pull request it verifies, so a write grant there plus
+an app bypass would let any same-repo PR push straight to `main`. The **deploy
+key** is narrower — only a job that reads the `RELEASE_DEPLOY_KEY` secret can
+use it — but that secret is available to any workflow with secrets access, so
+treat it with the same care as any other write credential.
 
 v0.103.0's first dispatch hit exactly this: the run generated the release
 commit, the push was rejected with GH006, and — because the push is the first
