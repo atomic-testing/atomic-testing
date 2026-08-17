@@ -1,12 +1,18 @@
 import { ITestEngineOption } from '@atomic-testing/core';
-import { Plugin } from 'vue';
+import type { RenderOptions } from '@testing-library/vue';
 
 /**
  * A Vue plugin to install on the test app, optionally with its options —
- * the same shape Vue's `app.use(plugin, ...options)` and
- * `@testing-library/vue`'s `global.plugins` accept.
+ * the same shape Vue's `app.use(plugin, ...options)` accepts.
+ *
+ * Derived from `@testing-library/vue`'s own `global.plugins` type rather than
+ * re-declared from Vue's `Plugin`, so the two are identical by construction.
+ * A re-declaration is only equal while both resolve the same `vue` type
+ * instance: with two `vue` copies in the tree (a layout pnpm can produce),
+ * `Plugin`-from-copy-A is not assignable to `Plugin`-from-copy-B, and the
+ * v0.103.0 release was blocked by exactly that mismatch surfacing in CI.
  */
-export type VuePluginInput = Plugin | [Plugin, ...unknown[]];
+export type VuePluginInput = NonNullable<NonNullable<RenderOptions<unknown>['global']>['plugins']>[number];
 
 /**
  * Option for the Vue `createTestEngine`. Extends the shared engine option with
