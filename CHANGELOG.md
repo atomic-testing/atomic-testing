@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.103.0] - 2026-08-17
+
+### Breaking Changes
+
+- **component-driver-astryx:** retarget to Astryx 0.4.1 ([#1464](https://github.com/atomic-testing/atomic-testing/issues/1464))
+
+### Documentation
+
+- **release:** document branch protection bypass for release.yml ([#1465](https://github.com/atomic-testing/atomic-testing/issues/1465))
+
+### Other
+
+- **release:** collapse the release ritual to one dispatch ([#1388](https://github.com/atomic-testing/atomic-testing/issues/1388))
+
 ## [0.102.0] - 2026-08-09
 
 ### Breaking Changes
