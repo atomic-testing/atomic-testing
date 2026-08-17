@@ -56,6 +56,37 @@ export abstract class AstryxFieldInputDriver extends HTMLTextInputDriver {
   }
 
   /**
+   * Whether the field is read-only — Astryx 0.4.0's `isReadOnly`: the value stays
+   * at full opacity, still submits with the form, and cannot be edited.
+   *
+   * The native `readonly` attribute alone is **not** the signal. Astryx also
+   * swaps `disabled` for `aria-disabled` + `readOnly` when a field is disabled
+   * *with a `disabledMessage`*, so that the reason stays focus-discoverable — a
+   * field in that state is disabled, not read-only, and the two are distinguished
+   * by the accompanying `aria-disabled`. `isDisabled` takes precedence over
+   * `isReadOnly` upstream, so this reports the read-only state only when the field
+   * is not disabled at all.
+   */
+  async isReadOnly(): Promise<boolean> {
+    if (!(await this.interactor.hasAttribute(this.locator, 'readonly'))) {
+      return false;
+    }
+    return !(await this.isDisabled());
+  }
+
+  /**
+   * Whether the field is disabled, by either mechanism Astryx uses: the native
+   * `disabled` attribute, or — when a `disabledMessage` must stay reachable —
+   * `aria-disabled="true"` on a still-focusable control.
+   */
+  override async isDisabled(): Promise<boolean> {
+    if (await super.isDisabled()) {
+      return true;
+    }
+    return (await this.interactor.getAttribute(this.locator, 'aria-disabled')) === 'true';
+  }
+
+  /**
    * The status/validation message text, resolved via the control's
    * `aria-describedby` link to the floating status element.
    *
@@ -65,6 +96,16 @@ export abstract class AstryxFieldInputDriver extends HTMLTextInputDriver {
    * description is a plain `<span id>` without it), so each id is resolved and the
    * one with `data-type` is returned — matching the whole multi-id attribute as a
    * single id would find nothing. Returns `undefined` when no status is set.
+   *
+   * `statusVariant="tooltip"` (Astryx 0.2.0) is the exception the `data-type`
+   * probe alone misses: that variant hides the message box and surfaces the
+   * message from a focusable info-tip instead, whose layer is a plain
+   * `role="tooltip"` carrying no severity marker. So a `role="tooltip"` target is
+   * the fallback — but only on a field that is not disabled, because a
+   * `disabledMessage` renders through the same `useTooltip` primitive and would
+   * otherwise be reported as the status (see {@link getDisabledMessage}). A field
+   * that is *both* disabled-with-message and carrying a tooltip status cannot be
+   * told apart from the DOM; the disabled reason wins there.
    */
   async getStatusMessage(): Promise<Optional<string>> {
     const describedBy = await this.interactor.getAttribute(this.locator, 'aria-describedby');
@@ -79,7 +120,10 @@ export abstract class AstryxFieldInputDriver extends HTMLTextInputDriver {
         return (await this.interactor.getText(statusLocator)) ?? undefined;
       }
     }
-    return undefined;
+    if (await this.isDisabled()) {
+      return undefined;
+    }
+    return resolveDescribedByRoleText(this.interactor, this.locator, 'aria-describedby', 'tooltip');
   }
 
   /**

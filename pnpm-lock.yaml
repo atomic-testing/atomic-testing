@@ -395,11 +395,11 @@ importers:
   package-tests/component-driver-astryx-test:
     dependencies:
       '@astryxdesign/core':
-        specifier: ^0.1.9
-        version: 0.1.9(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.4.1
+        version: 0.4.2(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@astryxdesign/theme-neutral':
-        specifier: ^0.1.9
-        version: 0.1.9(@astryxdesign/core@0.1.9(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
+        specifier: ^0.4.1
+        version: 0.4.2(@astryxdesign/core@0.4.2(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
       '@atomic-testing/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -1525,8 +1525,8 @@ importers:
   packages/component-driver-astryx:
     dependencies:
       '@astryxdesign/core':
-        specifier: ^0.1.9
-        version: 0.1.9(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.4.1
+        version: 0.4.2(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@atomic-testing/component-driver-html':
         specifier: workspace:*
         version: link:../component-driver-html
@@ -2308,17 +2308,17 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@astryxdesign/core@0.1.9':
-    resolution: {integrity: sha512-2ZNypZFfujMPxdU8M9Jbe77vwFPP1FYvA0Pk/3L3OLxEIzi98qLbRJjhDEHLbrflANSFVB4l5+qYpJjYtFFXMQ==}
+  '@astryxdesign/core@0.4.2':
+    resolution: {integrity: sha512-maKoWTx460x6GLICUOFmYey5FbSTxeGuHHZ45+oWgxvN8NmGzHev8/skPVf5YhvC5Afeki0fRZ+dCy4vAlNINA==}
     peerDependencies:
       '@stylexjs/stylex': ^0.19.0
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
 
-  '@astryxdesign/theme-neutral@0.1.9':
-    resolution: {integrity: sha512-HZPJmzg0S+aKuxUBGJ1L9O+bBZzwzWlROey/7VilM8kUzHA4lYrFcIPzRixoiXs/qyR5sSfJE8YG7jsXuAuywA==}
+  '@astryxdesign/theme-neutral@0.4.2':
+    resolution: {integrity: sha512-lVCHNtertak3egsBdriXWpiascOj1odpCZZcUvg3e9kht29Zciow3n+AkqFoADWlR/ZGZJ10t8vSTAuZSwElpw==}
     peerDependencies:
-      '@astryxdesign/core': 0.1.9
+      '@astryxdesign/core': 0.4.2
       react: '>=19'
 
   '@babel/code-frame@7.29.7':
@@ -11215,8 +11215,8 @@ packages:
   vue-component-type-helpers@2.2.12:
     resolution: {integrity: sha512-YbGqHZ5/eW4SnkPNR44mKVc6ZKQoRs/Rux1sxC6rdwXb4qpbOSYfDr9DsTHolOTGmIKgM9j141mZbBeg05R1pw==}
 
-  vue-component-type-helpers@3.3.9:
-    resolution: {integrity: sha512-3c/UfMe0SqyEfcGTyH7mfshHagJ9QTCbppCb0/uGpHZpFug7+If3GeGZN7I0YheKEExemx3xldQPoO7PQSOLQg==}
+  vue-component-type-helpers@3.3.10:
+    resolution: {integrity: sha512-t7IQivQ3oD4D01b7s7a9AWzHAcr3DGBIa/1jZREsFQJcFgSL92gqUkqNiHTYgzTt7QDuJa0I9wCeDwEtZICoBQ==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -11640,16 +11640,16 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@astryxdesign/core@0.1.9(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@astryxdesign/core@0.4.2(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@stylexjs/stylex': 0.19.0
       intl-messageformat: 11.2.12
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@astryxdesign/theme-neutral@0.1.9(@astryxdesign/core@0.1.9(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
+  '@astryxdesign/theme-neutral@0.4.2(@astryxdesign/core@0.4.2(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@astryxdesign/core': 0.1.9(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@astryxdesign/core': 0.4.2(@stylexjs/stylex@0.19.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       lucide-react: 1.26.0(react@19.2.7)
       react: 19.2.7
 
@@ -17675,7 +17675,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.39(typescript@5.9.3)
-      vue-component-type-helpers: 3.3.9
+      vue-component-type-helpers: 3.3.10
 
   '@storybook/vue3@8.6.18(storybook@8.6.18(prettier@3.6.2))(vue@3.5.39(typescript@5.9.3))':
     dependencies:
@@ -17689,7 +17689,7 @@ snapshots:
       ts-dedent: 2.3.0
       type-fest: 2.19.0
       vue: 3.5.39(typescript@5.9.3)
-      vue-component-type-helpers: 3.3.9
+      vue-component-type-helpers: 3.3.10
 
   '@stylexjs/stylex@0.19.0':
     dependencies:
@@ -22060,7 +22060,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.12: {}
 
-  vue-component-type-helpers@3.3.9: {}
+  vue-component-type-helpers@3.3.10: {}
 
   vue-demi@0.14.10(vue@3.5.40(typescript@7.0.2)):
     dependencies:

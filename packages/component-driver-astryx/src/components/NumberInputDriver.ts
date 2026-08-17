@@ -5,25 +5,30 @@ import { AstryxFieldInputDriver } from './AstryxFieldInputDriver';
 /**
  * Driver for the Astryx NumberInput (`@astryxdesign/core/NumberInput`).
  *
- * NumberInput renders an `<input type="number">` (forwarding `data-testid` onto
- * it) with the `min`/`max`/`step` constraints as native attributes and an
- * optional trailing units `<span>` as a sibling inside the control container.
- * Value/label/validation come from {@link AstryxFieldInputDriver}.
+ * Astryx 0.4.0 replaced the native `<input type="number">` with a **text-backed
+ * spinbutton** — `type="text"` plus `role="spinbutton"` — so it can render
+ * formatted display values (thousands separators, currency) that a native number
+ * input rejects. The bounds moved with it: `min`/`max` are now `aria-valuemin`/
+ * `aria-valuemax`, and the current value is mirrored in `aria-valuenow` alongside
+ * the input's own `value`. `data-testid` is still forwarded onto the input, and an
+ * optional trailing units `<span>` is still its sibling inside the control
+ * container. Value/label/validation come from {@link AstryxFieldInputDriver}.
+ *
+ * **`step` has no DOM representation.** The native attribute is gone and Astryx
+ * keeps the effective step in React state (it clamps and integer-guards it before
+ * use), so there is nothing portable to read — hence no `getStep()`. Assert
+ * stepping behaviourally through {@link stepUp}/{@link stepDown} and the resulting
+ * value instead.
  */
 export class NumberInputDriver extends AstryxFieldInputDriver {
-  /** Minimum allowed value (`min` attribute), if set. */
+  /** Minimum allowed value (`aria-valuemin`), if set. */
   async getMin(): Promise<Optional<number>> {
-    return this.readNumericAttribute('min');
+    return this.readNumericAttribute('aria-valuemin');
   }
 
-  /** Maximum allowed value (`max` attribute), if set. */
+  /** Maximum allowed value (`aria-valuemax`), if set. */
   async getMax(): Promise<Optional<number>> {
-    return this.readNumericAttribute('max');
-  }
-
-  /** Step increment (`step` attribute), if set. */
-  async getStep(): Promise<Optional<number>> {
-    return this.readNumericAttribute('step');
+    return this.readNumericAttribute('aria-valuemax');
   }
 
   /**

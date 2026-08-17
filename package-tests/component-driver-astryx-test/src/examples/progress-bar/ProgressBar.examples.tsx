@@ -19,6 +19,10 @@ export const ProgressBarExample = () => (
       hasValueLabel
       variant='accent'
       data-testid='progress-determinate'
+      marks={[
+        { value: 50, label: 'Halfway' },
+        { value: 90, label: 'Goal' },
+      ]}
     />
     <ProgressBar label='Loading...' isIndeterminate data-testid='progress-indeterminate' />
   </div>
