@@ -1,6 +1,6 @@
 import { byRole, ComponentDriver, IInputDriver, locatorUtil, Optional, PartLocator } from '@atomic-testing/core';
 
-import { resolveDescribedByRoleText } from '../internal/linkedLocators';
+import { resolveDescribedByRoleText, resolveLabelledByText } from '../internal/linkedLocators';
 
 /**
  * Driver for the Astryx Slider (`@astryxdesign/core/Slider`), single-thumb scope.
@@ -69,9 +69,17 @@ export class SliderDriver extends ComponentDriver<{}> implements IInputDriver<nu
     return (await this.interactor.getAttribute(this.thumbLocator, 'aria-disabled')) === 'true';
   }
 
-  /** The slider's accessible name (`aria-label` on the thumb). */
+  /**
+   * The slider's accessible name.
+   *
+   * Astryx 0.2.0 stopped duplicating the visible label as an `aria-label` on the
+   * thumb: the label is now rendered once as a `<span>` and wired to the thumb
+   * through `aria-labelledby` (a group label, so a range slider's two thumbs share
+   * it). A verbatim `aria-label` still wins when a consumer sets one directly.
+   */
   async getLabel(): Promise<Optional<string>> {
-    return this.interactor.getAttribute(this.thumbLocator, 'aria-label');
+    const ariaLabel = await this.interactor.getAttribute(this.thumbLocator, 'aria-label');
+    return ariaLabel || resolveLabelledByText(this.interactor, this.thumbLocator);
   }
 
   /**

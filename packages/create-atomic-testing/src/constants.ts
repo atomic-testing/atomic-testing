@@ -87,6 +87,6 @@ export const THIRD_PARTY = {
   radixUi: { name: 'radix-ui', range: '^1.0.0' },
   cmdk: { name: 'cmdk', range: '^1.0.0', optional: true },
   rekaUi: { name: 'reka-ui', range: '^2.0.0' },
-  astryxCore: { name: '@astryxdesign/core', range: '^0.1.3' },
+  astryxCore: { name: '@astryxdesign/core', range: '^0.4.1' },
   fluentReactComponents: { name: '@fluentui/react-components', range: '^9.0.0' },
 } as const satisfies Record<string, DependencySpec>;

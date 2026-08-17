@@ -42,10 +42,12 @@ export const fileInputExampleTestSuite: TestSuiteInfo<typeof fileInputExample.sc
         assertEqual(await engine().parts.fiBasic.getLabel(), 'Resume');
       });
 
-      // isMultiple/isRequired reflect the multi-file dropzone's input attributes.
-      test(`isMultiple and isRequired read the multi field`, async () => {
+      // isMultiple reflects the multi-file dropzone's native `multiple`. There is
+      // no isRequired: Astryx 0.2.0 replaced `aria-required` (unsupported on
+      // role="button") with a translated visually-hidden sentence, so the required
+      // state is only reachable through the label's own marker.
+      test(`isMultiple reads the multi field`, async () => {
         assertTrue(await engine().parts.fiMulti.isMultiple());
-        assertTrue(await engine().parts.fiMulti.isRequired());
       });
 
       // isDisabled/isInvalid + the aria-describedby status link read the error field.
@@ -61,9 +63,8 @@ export const fileInputExampleTestSuite: TestSuiteInfo<typeof fileInputExample.sc
       });
 
       // The basic field is neither multiple nor required nor disabled.
-      test(`basic field is single, optional and enabled`, async () => {
+      test(`basic field is single and enabled`, async () => {
         assertFalse(await engine().parts.fiBasic.isMultiple());
-        assertFalse(await engine().parts.fiBasic.isRequired());
         assertFalse(await engine().parts.fiBasic.isDisabled());
       });
 

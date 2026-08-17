@@ -19,6 +19,14 @@ export const textInputExampleScenePart = {
     locator: byDataTestId('owner-input'),
     driver: TextInputDriver,
   },
+  workspaceInput: {
+    locator: byDataTestId('workspace-input'),
+    driver: TextInputDriver,
+  },
+  slugInput: {
+    locator: byDataTestId('slug-input'),
+    driver: TextInputDriver,
+  },
 } satisfies ScenePart;
 
 export const textInputExample: IExampleUnit<typeof textInputExampleScenePart, JSX.Element> = {
@@ -81,6 +89,28 @@ export const textInputExampleTestSuite: TestSuiteInfo<typeof textInputExample.sc
       test(`getDisabledMessage returns the disabled-reason tooltip, undefined when none`, async () => {
         assertEqual(await engine().parts.ownerInput.getDisabledMessage(), 'You need the Editor role to change this');
         assertEqual(await engine().parts.nameInput.getDisabledMessage(), undefined);
+      });
+
+      // Astryx 0.4.0's isReadOnly — visible, locked, still submitted.
+      test(`isReadOnly reads the read-only field`, async () => {
+        assertTrue(await engine().parts.workspaceInput.isReadOnly());
+        assertFalse(await engine().parts.nameInput.isReadOnly());
+      });
+
+      // A field disabled WITH a reason renders aria-disabled + readonly so the
+      // reason stays focusable. That is disabled, not read-only — the two must
+      // not be confused, and isDisabled has to see past the missing native attr.
+      test(`a disabled-with-reason field is disabled, not read-only`, async () => {
+        assertTrue(await engine().parts.ownerInput.isDisabled());
+        assertFalse(await engine().parts.ownerInput.isReadOnly());
+        assertFalse(await engine().parts.nameInput.isDisabled());
+      });
+
+      // statusVariant="tooltip" moves the message into a role="tooltip" layer
+      // that carries no data-type marker, so the plain probe finds nothing.
+      test(`getStatusMessage reads a tooltip-variant status`, async () => {
+        assertTrue(await engine().parts.slugInput.isInvalid());
+        assertEqual(await engine().parts.slugInput.getStatusMessage(), 'Slugs cannot contain spaces');
       });
     });
   },

@@ -14,6 +14,10 @@ export const treeListExampleScenePart = {
     locator: byDataTestId('menu'),
     driver: TreeListDriver,
   },
+  plain: {
+    locator: byDataTestId('plain'),
+    driver: TreeListDriver,
+  },
 } satisfies ScenePart;
 
 export const treeListExample: IExampleUnit<typeof treeListExampleScenePart, JSX.Element> = {
@@ -70,6 +74,20 @@ export const treeListExampleTestSuite: TestSuiteInfo<typeof treeListExample.scen
       test(`clickItem reports unknown labels`, async () => {
         assertFalse(await engine().parts.files.clickItem('Nope'));
         assertTrue(await engine().parts.files.clickItem('package.json'));
+      });
+
+      // variant="noGuides" (Astryx 0.2.0) drops the connector-guide <div> that
+      // otherwise leads every row, so a guided and an unguided tree disagree on
+      // where the row's content wrapper sits. Both must still enumerate.
+      test(`reads an unguided tree the same as a guided one`, async () => {
+        assertEqual(await engine().parts.plain.getVisibleItemLabels(), ['Root', 'Leaf']);
+        assertEqual(await engine().parts.plain.getItemDepth('Leaf'), 1);
+      });
+
+      // hasGuides reads the thing the variant actually controls.
+      test(`hasGuides distinguishes the two variants`, async () => {
+        assertTrue(await engine().parts.files.hasGuides());
+        assertFalse(await engine().parts.plain.hasGuides());
       });
     });
   },

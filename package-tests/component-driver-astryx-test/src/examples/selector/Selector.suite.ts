@@ -29,7 +29,10 @@ export const selectorExample: IExampleUnit<typeof selectorExampleScenePart, JSX.
 export const selectorExampleTestSuite: TestSuiteInfo<typeof selectorExample.scene> = {
   title: 'Astryx Selector',
   url: '/selector',
-  tests: (getTestEngine, { describe, test, beforeEach, afterEach, assertEqual, assertTrue, assertFalse }) => {
+  tests: (
+    getTestEngine,
+    { describe, test, beforeEach, afterEach, assertEqual, assertNotEqual, assertTrue, assertFalse }
+  ) => {
     describe(`${selectorExample.title}`, () => {
       const engine = useTestEngine(selectorExample.scene, getTestEngine, { beforeEach, afterEach });
       const browser = useBrowserName(beforeEach);
@@ -71,6 +74,20 @@ export const selectorExampleTestSuite: TestSuiteInfo<typeof selectorExample.scen
       test(`getDisabledMessage returns the disabled-reason tooltip text`, async () => {
         assertEqual(await engine().parts.locked.getDisabledMessage(), 'You need the Editor role to change this');
         assertEqual(await engine().parts.fruit.getDisabledMessage(), undefined);
+      });
+
+      // Astryx 0.4.0 wired Selector to the shared typeahead: typing a printable
+      // character on the CLOSED trigger commits the matching option, the way a
+      // native <select> does, without the popup ever opening.
+      test(`typeToSelect commits a match from the closed trigger`, async () => {
+        assertNotEqual(await engine().parts.fruit.getSelectedLabel(), 'Cherry');
+        await engine().parts.fruit.typeToSelect('c');
+        await engine().parts.fruit.waitUntil({
+          probeFn: () => engine().parts.fruit.getSelectedLabel(),
+          terminateCondition: 'Cherry',
+          timeoutMs: 2000,
+        });
+        assertFalse(await engine().parts.fruit.isExpanded());
       });
     });
   },
