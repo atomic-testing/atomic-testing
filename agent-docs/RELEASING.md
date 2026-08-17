@@ -76,10 +76,42 @@ Three details of that workflow are load-bearing and easy to undo by accident:
   credential that writes to the repository. Keep those two capabilities in
   separate workflows.
 
+### Letting release.yml push to main
+
+The workflow's push to `main` (and the tag push) must get past `main`'s
+protection, and the fix depends on which kind of protection rejected it — the
+push error names it:
+
+- **`GH006: Protected branch update failed`** — a **classic** branch-protection
+  rule (Settings → Branches). Add the **github-actions** app under that rule's
+  "Allow specified actors to bypass required pull requests". Deploy keys cannot
+  bypass classic protection, so with a classic rule in place the app bypass is
+  the only automated-path option.
+- **`GH013: Repository rule violations`** — a **ruleset** (Settings → Rules).
+  Add a bypass for the **github-actions** app, or — if the Apps picker won't
+  offer it — enable the ruleset's built-in **"Deploy keys"** bypass and give the
+  workflow a key: create a write-access deploy key (Settings → Deploy keys),
+  store its private half as the `RELEASE_DEPLOY_KEY` Actions secret, and the
+  checkout in `release.yml` switches its pushes to that key over SSH. With the
+  secret absent the checkout falls back to `GITHUB_TOKEN`, so configuring the
+  key is opt-in.
+
+Running both kinds of protection on `main` means satisfying both; consolidating
+on a single ruleset keeps this one bypass list. Either bypass exempts every
+workflow in this repo that can obtain `contents: write` — currently only
+`release.yml` requests it — and the deploy key's secret is readable by any
+workflow with secrets access, so treat additions of either with the same care as
+a new write credential.
+
+v0.103.0's first dispatch hit exactly this: the run generated the release
+commit, the push was rejected with GH006, and — because the push is the first
+mutating step — nothing was left to clean up; after fixing the bypass,
+re-dispatching the same version was all it took.
+
 ### Cutting one by hand
 
-Only needed if `release.yml` cannot push to `main` — branch protection without a
-bypass for the GitHub Actions actor, which the run reports explicitly.
+Only needed if `release.yml` cannot push to `main` and the bypass above cannot
+be granted — the run reports the rejection explicitly.
 
 1. `pnpm bumpVersion X.Y.Z && pnpm changelog X.Y.Z`
 2. Open it as a PR titled `chore(release): X.Y.Z`, review the generated
