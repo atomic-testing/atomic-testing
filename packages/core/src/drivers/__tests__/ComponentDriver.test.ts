@@ -1,8 +1,10 @@
+import { PostconditionNotMetError, PostconditionNotMetErrorId } from '../../errors/PostconditionNotMetError';
 import { Interactor } from '../../interactor/Interactor';
 import { byDataTestId } from '../../locators/byDataTestId';
 import type { PartLocator } from '../../locators/PartLocator';
 import { IComponentDriverOption, ScenePart } from '../../partTypes';
 import * as locatorUtil from '../../utils/locatorUtil';
+import { waitUntil } from '../../utils/timingUtil';
 import { ComponentDriver } from '../ComponentDriver';
 
 // within composes locators and never queries — a PartLocator resolves lazily
@@ -168,5 +170,81 @@ describe('ComponentDriver.within', () => {
     // Chrome is the driver author's; it is addressed from the root the driver was
     // given, and must NOT follow the interior into the surface.
     expect(selectorsOf(host.parts.title.locator)).toEqual(['[data-testid="dialog"]', '[data-testid="title"]']);
+  });
+});
+
+describe('ComponentDriver.awaitPostcondition', () => {
+  /** Exposes the protected helper, and delegates `waitUntil` to the real polling
+   * implementation so these assert the actual wait semantics, not a stub's. */
+  class PostconditionDriver extends ComponentDriver<{}> {
+    get driverName(): string {
+      return 'PostconditionDriver';
+    }
+
+    run(
+      postcondition: string,
+      probeFn: () => Promise<boolean> | boolean,
+      option?: { readonly timeoutMs?: number }
+    ): Promise<void> {
+      return this.awaitPostcondition(postcondition, probeFn, option);
+    }
+  }
+
+  const pollingInteractor = { waitUntil } as unknown as Interactor;
+  const makeDriver = () => new PostconditionDriver(byDataTestId('subject'), pollingInteractor);
+
+  it('resolves on the first probe when the postcondition already holds', async () => {
+    let probes = 0;
+    await makeDriver().run('the state to already hold', () => {
+      probes++;
+      return true;
+    });
+
+    // The happy path must cost nothing: an action whose promise is already kept
+    // should not pay a polling delay, or every driver call gets slower.
+    expect(probes).toBe(1);
+  });
+
+  it('resolves once a postcondition that starts false becomes true', async () => {
+    let probes = 0;
+    await makeDriver().run('the deferred state to arrive', () => {
+      probes++;
+      return probes >= 3;
+    });
+
+    expect(probes).toBe(3);
+  });
+
+  it('supports an async probe', async () => {
+    let probes = 0;
+    await makeDriver().run('an async probe to report true', async () => {
+      probes++;
+      return Promise.resolve(probes >= 2);
+    });
+
+    expect(probes).toBe(2);
+  });
+
+  it('throws PostconditionNotMetError when the postcondition never holds', async () => {
+    // The path that matters most and is hardest to reach in an e2e test: an
+    // action that cannot keep its promise must fail AT the action, rather than
+    // resolving and leaving a downstream read to report a confusing mismatch.
+    await expect(makeDriver().run('a state that never arrives', () => false, { timeoutMs: 50 })).rejects.toThrow(
+      PostconditionNotMetError
+    );
+  });
+
+  it('names the unmet postcondition, the timeout and the driver in the error', async () => {
+    const error = await makeDriver()
+      .run('the dropdown to close', () => false, { timeoutMs: 50 })
+      .catch((e: unknown) => e as PostconditionNotMetError);
+
+    expect(error.name).toBe(PostconditionNotMetErrorId);
+    expect(error.postcondition).toBe('the dropdown to close');
+    expect(error.driverName).toBe('PostconditionDriver');
+    // The message carries both halves a maintainer needs to act: what was awaited
+    // and how long it was awaited for.
+    expect(error.message).toContain('the dropdown to close');
+    expect(error.message).toContain('50ms');
   });
 });
