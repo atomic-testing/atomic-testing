@@ -12,17 +12,20 @@ import React, { JSX } from 'react';
  * `"Scroll right"` buttons. Actual scrolling/overflow is layout-driven and only
  * meaningful in the browser; the label and item count read everywhere.
  *
- * One slide hosts a `Tooltip` on purpose. Astryx 0.4.2 drops an inert
- * `<template>` marker wherever a context layer sits, and those markers land
- * amongst real content — so a scene with no layer in it cannot tell whether the
- * item count is counting slides or slides-plus-markers.
+ * One slide hosts a `Tooltip` on purpose, so the scene contains one of the inert
+ * `<template>` layer markers Astryx 0.4.2 emits. Note where it actually lands:
+ * Carousel wraps every child in its own `role="group"` slide, so the marker ends up
+ * *inside* a slide rather than beside them, and the item count cannot be displaced
+ * by it. That makes the count's `[role="group"]` selector defensive rather than a
+ * fix for an observable bug — what this scene pins is that a layer nested in a slide
+ * does not confuse the count, which is the realistic case a consumer creates.
  */
 export const CarouselExample = () => (
   <>
     <Carousel data-testid='gallery' aria-label='Photos'>
       <div>Slide 1</div>
       <div>
-        <Tooltip label='The second one'>
+        <Tooltip content='The second one'>
           <button type='button'>Slide 2</button>
         </Tooltip>
       </div>
