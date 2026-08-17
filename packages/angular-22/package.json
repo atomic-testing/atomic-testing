@@ -48,7 +48,7 @@
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
-    "@angular/platform-browser": "^22.0.0",
+    "@angular/platform-browser": "^20.3.28",
     "rxjs": "^7.8.0",
     "zone.js": "^0.16.2"
   },
