@@ -1,5 +1,6 @@
 import { HTMLCheckboxDriver } from '@atomic-testing/component-driver-html';
 import {
+  byCssSelector,
   byInputType,
   ComponentDriver,
   IComponentDriverOption,
@@ -8,6 +9,7 @@ import {
   Interactor,
   IRequirableDriver,
   IToggleDriver,
+  locatorUtil,
   Optional,
   PartLocator,
   ScenePart,
@@ -62,12 +64,22 @@ export class CheckboxDriver
   }
 
   /**
-   * Whether the checkbox is in the indeterminate ("mixed") state. Material
-   * signals it via `aria-checked="mixed"` on the native input — the attribute
-   * is only present while indeterminate.
+   * Whether the checkbox is in the indeterminate ("mixed") state.
+   *
+   * Reads the native control's `:indeterminate` state rather than Material's
+   * `aria-checked="mixed"` mirror of it. Both describe the same thing, but the
+   * ARIA attribute is a template binding that only updates on a change
+   * detection pass, so a read taken right after a click can still observe the
+   * pre-click value. The IDL state is owned by the browser and cleared as part
+   * of the click's own activation steps, so it is already correct by the time
+   * the interaction resolves.
    */
   async isIndeterminate(): Promise<boolean> {
-    return (await this.interactor.getAttribute(this.parts.input.locator, 'aria-checked')) === 'mixed';
+    return this.interactor.exists(this.indeterminateInputLocator);
+  }
+
+  private get indeterminateInputLocator(): PartLocator {
+    return locatorUtil.append(this.parts.input.locator, byCssSelector(':indeterminate', 'Same'));
   }
 
   /**

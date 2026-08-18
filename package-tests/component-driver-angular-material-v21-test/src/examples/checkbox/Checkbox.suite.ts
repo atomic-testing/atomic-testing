@@ -74,7 +74,7 @@ export const checkboxTestSuite: TestSuiteInfo<typeof checkboxScenePart> = {
         assertEqual(uncheckedEcho, 'false');
       });
 
-      test('reports indeterminate via aria-checked="mixed"', async () => {
+      test('reports the indeterminate state', async () => {
         assertTrue(await engine().parts.selectAll.isIndeterminate());
         assertFalse(await engine().parts.terms.isIndeterminate());
       });
