@@ -49,7 +49,15 @@ export const radioTestSuite: TestSuiteInfo<typeof radioScenePart> = {
       test('setValue selects the radio with that value and reaches the change handler', async () => {
         assertTrue(await engine().parts.flavorGroup.setValue('chocolate'));
         assertEqual(await engine().parts.flavorGroup.getValue(), 'chocolate');
-        assertEqual(await engine().parts.flavorState.getText(), 'chocolate');
+        // The echoed state is the app's own re-render, not the group's state —
+        // it lands a beat after the change event, so probe rather than assert
+        // immediately, or the read races it.
+        const flavorEcho = await engine().parts.flavorState.waitUntil({
+          probeFn: async () => (await engine().parts.flavorState.getText())?.trim(),
+          terminateCondition: 'chocolate',
+          timeoutMs: 5000,
+        });
+        assertEqual(flavorEcho, 'chocolate');
       });
 
       test('reports the selected label, undefined when nothing is selected', async () => {
