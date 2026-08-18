@@ -31,7 +31,8 @@
     "triage:dependabot": "tsx scripts/triage-dependabot-prs.ts",
     "check:absence": "node scripts/check-absence-convention.mjs",
     "check:peer-floors": "node scripts/check-peer-floors.mjs",
-    "check:frozen-set": "node scripts/check-frozen-set.mjs"
+    "check:frozen-set": "node scripts/check-frozen-set.mjs",
+    "check:angular-material-parity": "node scripts/check-angular-material-parity.mjs"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.58.12",
