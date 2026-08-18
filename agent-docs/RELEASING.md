@@ -228,6 +228,19 @@ for dir in examples/*/; do (cd "$dir" && pnpm install --lockfile-only); done
 (cd docs && pnpm install --lockfile-only --ignore-workspace)
 ```
 
+**`--lockfile-only` patches in place — it does not always re-resolve peers.**
+When a consumer's own third-party pin also needs bumping in the same change
+(not just the `@atomic-testing/*` specifiers `bumpVersion` touches), pnpm can
+keep an existing peer resolution that no longer satisfies the new peer's
+range instead of re-resolving it, and `pnpm install` only warns rather than
+failing. This bit `example-astryx-workspace`'s Astryx bump to 0.4.1 (#1467):
+`--lockfile-only` kept `@stylexjs/stylex` pinned at `0.18.3`, which satisfied
+Astryx 0.1.3's old `peerDependencies: '@stylexjs/stylex': '^0.18.3'` but not
+0.4.x's `^0.19.0` — a silent unmet-peer warning, not a failed install, so
+nothing red-flagged it. `rm pnpm-lock.yaml && pnpm install --lockfile-only`
+forces the fresh resolution; reach for it whenever a third-party pin changes
+alongside the consumer float, not just when a warning already showed up.
+
 ## Rotate `CODEMOD_TOKEN` (before it expires, ~yearly)
 
 `CODEMOD_TOKEN` is a GitHub PAT with **Contents: Read and write**. Be precise
