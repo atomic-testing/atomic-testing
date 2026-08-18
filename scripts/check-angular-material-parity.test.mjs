@@ -9,9 +9,12 @@
 // mentioning another major by number, and a denylisted file) that made the
 // real denylist non-obvious while writing this gate.
 import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { evaluate, normalize } from './check-angular-material-parity.mjs';
+import { evaluate, gatherGroupFacts, normalize, normalizeAcrossMajors } from './check-angular-material-parity.mjs';
 
 /** Build one group's `files` map from `{relPath: {major: content|null}}`. */
 function filesMap(entries) {
@@ -102,13 +105,13 @@ test('normalize collapses a file-local version token to a shared placeholder', (
 });
 
 test('false-positive trap: prose naming ANOTHER major is not collapsed by normalize', () => {
-  // This is the real failure mode this gate's own denylist exists to name:
-  // a comment on the v20 copy saying "... vs v21/v22" mentions v21 and v22
+  // This is the real failure mode `crossMajorNormalize` exists to name: a
+  // comment on the v20 copy saying "... vs v21/v22" mentions v21 and v22
   // literally, so normalizing only the v20 file's OWN token ('20') leaves
   // "v21/v22" untouched — a genuine, expected difference from the v21 copy's
-  // "v20/vXX", not drift. evaluate() has no way to know this on its own;
-  // that's why the real denylist exists and carries a rationale comment
-  // rather than the gate trying to be clever about detecting prose.
+  // "v20/vXX", not drift. evaluate() has no way to know this on its own; see
+  // the `gatherGroupFacts` tests below for the mechanism that resolves it
+  // while still comparing everything else in the same file.
   const prose = 'overlay strategy differs: container on v20, native popover on v21/v22';
 
   // Two majors are enough to show the trap: each file states the SAME fact,
@@ -122,10 +125,36 @@ test('false-positive trap: prose naming ANOTHER major is not collapsed by normal
   });
 
   const errors = evaluate([g]);
-  // Confirms the trap fires when NOT denylisted -- gatherFacts is what skips
-  // this file in the real gate, not evaluate(). evaluate() has no way to
-  // know the two copies are actually saying the same thing.
+  // Confirms the trap fires when normalized only by own major -- evaluate()
+  // has no way to know the two copies are actually saying the same thing.
   assert.deepEqual(codesOf(errors), ['PARITY-02']);
+});
+
+test('normalizeAcrossMajors collapses the same false-positive trap', () => {
+  const prose = 'overlay strategy differs: container on v20, native popover on v21/v22';
+  assert.equal(normalizeAcrossMajors(prose, ['20', '21', '22']), normalizeAcrossMajors(prose, ['20', '21', '22']));
+
+  const g = group({
+    majors: ['20', '21'],
+    files: filesMap({
+      'src/components/SelectDriver.ts': {
+        20: normalizeAcrossMajors(prose, ['20', '21']),
+        21: normalizeAcrossMajors(prose, ['20', '21']),
+      },
+    }),
+  });
+
+  // Both copies collapse to the same text once every major's token is
+  // replaced, not just the file's own -- the trap above no longer fires.
+  assert.deepEqual(evaluate([g]), []);
+});
+
+test('normalizeAcrossMajors still lets a real difference through', () => {
+  // Broadening the token replacement must not blind the gate to actual code
+  // divergence in the same file -- only the major-number prose collapses.
+  const a = normalizeAcrossMajors('return getAttribute(...) === "mixed"; // v20 vs v21/v22', ['20', '21']);
+  const b = normalizeAcrossMajors('return exists(indeterminateLocator); // v20 vs v21/v22', ['20', '21']);
+  assert.notEqual(a, b);
 });
 
 test('multiple groups are evaluated independently', () => {
@@ -135,4 +164,122 @@ test('multiple groups are evaluated independently', () => {
   const errors = evaluate([clean, broken]);
   assert.equal(errors.length, 1);
   assert.match(errors[0], /\[broken-group\]/);
+});
+
+// --- gatherGroupFacts: the filesystem half, against real (throwaway) fixture
+// directories rather than facts assembled by hand. This is what proves the
+// denylist / crossMajorNormalize filtering itself works -- the tests above
+// only prove evaluate() can react correctly to facts however they were
+// gathered.
+
+/** A fixture root with one directory per major, cleaned up by the caller. */
+function withFixtureDirs(majors, writeFn) {
+  const root = mkdtempSync(join(tmpdir(), 'angular-material-parity-'));
+  try {
+    const variants = majors.map(major => {
+      const dir = join(root, `pkg-v${major}`);
+      mkdirSync(dir, { recursive: true });
+      return { major, dir };
+    });
+    writeFn(variants);
+    return { root, variants };
+  } catch (error) {
+    rmSync(root, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+test('gatherGroupFacts skips a denylisted path but still compares its neighbor', () => {
+  const { root, variants } = withFixtureDirs(['20', '21'], vs => {
+    for (const { major, dir } of vs) {
+      // Denylisted: allowed to diverge freely, e.g. per-major dependency pins.
+      writeFileSync(join(dir, 'package.json'), `{"name": "pkg-v${major}", "dependencies": {"angular-${major}": "*"}}`);
+      // Neighboring, non-denylisted file: a fix landed on v21 only.
+      writeFileSync(join(dir, 'Driver.ts'), major === '21' ? 'return exists(loc);' : 'return getAttribute(loc);');
+    }
+  });
+
+  try {
+    const facts = gatherGroupFacts({ label: 'fixture-group', variants, denylist: new Set(['package.json']) });
+    const errors = evaluate([facts]);
+
+    assert.deepEqual(codesOf(errors), ['PARITY-02']);
+    assert.ok(errors[0].includes('Driver.ts'));
+    assert.ok(!errors.some(e => e.includes('package.json')));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('gatherGroupFacts still catches a PARITY-01 missing file alongside a denylisted one', () => {
+  const { root, variants } = withFixtureDirs(['20', '21'], vs => {
+    for (const { major, dir } of vs) {
+      writeFileSync(join(dir, 'package.json'), `{"name": "pkg-v${major}"}`);
+    }
+    // Only the v21 fixture gets the new file.
+    writeFileSync(join(vs[1].dir, 'NewDriver.ts'), 'export class New {}');
+  });
+
+  try {
+    const facts = gatherGroupFacts({ label: 'fixture-group', variants, denylist: new Set(['package.json']) });
+    const errors = evaluate([facts]);
+
+    assert.deepEqual(codesOf(errors), ['PARITY-01']);
+    assert.match(errors[0], /NewDriver\.ts.*exists for v21 but is missing for v20/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('gatherGroupFacts applies crossMajorNormalize only to the listed path', () => {
+  const prose = '// overlay strategy differs: container on v20, native popover on v21';
+  const { root, variants } = withFixtureDirs(['20', '21'], vs => {
+    for (const { dir } of vs) {
+      // Listed: the sibling-major prose collapses, so this stays clean.
+      writeFileSync(join(dir, 'SelectDriver.ts'), `${prose}\nexport class Select {}`);
+      // NOT listed: the same kind of prose here is real, unexplained drift.
+      writeFileSync(join(dir, 'Unrelated.ts'), prose);
+    }
+  });
+
+  try {
+    const facts = gatherGroupFacts({
+      label: 'fixture-group',
+      variants,
+      denylist: new Set(),
+      crossMajorNormalize: new Set(['SelectDriver.ts']),
+    });
+    const errors = evaluate([facts]);
+
+    assert.deepEqual(codesOf(errors), ['PARITY-02']);
+    assert.ok(errors[0].includes('Unrelated.ts'));
+    assert.ok(!errors.some(e => e.includes('SelectDriver.ts')));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('gatherGroupFacts with crossMajorNormalize still catches real divergence in that file', () => {
+  const { root, variants } = withFixtureDirs(['20', '21'], vs => {
+    for (const { major, dir } of vs) {
+      const body = major === '21' ? 'return exists(indeterminateLocator);' : 'return getAttribute(...) === "mixed";';
+      writeFileSync(join(dir, 'SelectDriver.ts'), `// v20 vs v21 overlay note\n${body}`);
+    }
+  });
+
+  try {
+    const facts = gatherGroupFacts({
+      label: 'fixture-group',
+      variants,
+      denylist: new Set(),
+      crossMajorNormalize: new Set(['SelectDriver.ts']),
+    });
+    const errors = evaluate([facts]);
+
+    // The prose collapses; the real code difference underneath does not.
+    assert.deepEqual(codesOf(errors), ['PARITY-02']);
+    assert.ok(errors[0].includes('SelectDriver.ts'));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });

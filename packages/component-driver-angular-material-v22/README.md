@@ -1,6 +1,6 @@
 # @atomic-testing/component-driver-angular-material-v22
 
-Component drivers for [Angular Material](https://material.angular.dev) v20 components. Component drivers expose simple APIs for unit tests or end‑to‑end tests to interact with Angular Material components—such as reading states and setting values—so test engineers can focus on test flows without needing to track how the inner Material components work.
+Component drivers for [Angular Material](https://material.angular.dev) v22 components. Component drivers expose simple APIs for unit tests or end‑to‑end tests to interact with Angular Material components—such as reading states and setting values—so test engineers can focus on test flows without needing to track how the inner Material components work.
 
 ## The problem
 

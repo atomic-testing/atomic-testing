@@ -19,11 +19,21 @@
 // same normalization already used by hand throughout #1472/#1474's manual
 // verification. A short, explicit denylist below excludes the handful of
 // files that are supposed to diverge beyond that: per-major dependency
-// versions, dev-server ports, and the CDK overlay-strategy differences
-// SelectDriver/AutocompleteDriver/overlayLocators document in prose. Adding a
-// file to the denylist should come with the same kind of comment those files
-// already carry explaining WHY the majors differ there — a bare path with no
-// rationale is a future maintainer's guess.
+// versions and dev-server ports. A separate, narrower list —
+// `crossMajorNormalize` — covers files that stay fully gated but need every
+// major's token collapsed, not just their own: SelectDriver/
+// AutocompleteDriver/overlayLocators document the CDK overlay-strategy split
+// in prose that names sibling majors by number ("container on v20,
+// native-popover on v21/v22"), so own-major-only normalization leaves that
+// prose diverging between copies even though it says the same thing
+// everywhere and the underlying code is identical (verified: with every
+// major's token collapsed, these files ARE byte-identical across v20/v21/v22
+// today). Cross-major normalization is strictly weaker than own-major
+// normalization — it would hide a copy-paste that leaves the wrong version
+// number behind — so it is opt-in per file, not the default. Adding a file to
+// either list should come with a comment explaining WHY, matching what the
+// files themselves already carry — a bare path with no rationale is a future
+// maintainer's guess.
 //
 // A brand new file (a new driver, a new example) is covered automatically:
 // it must appear under all three majors with matching content, or the gate
@@ -46,7 +56,26 @@ const EXCLUDED_DIRS = new Set([
   'playwright-report',
   'coverage',
 ]);
-const COMPARABLE_EXTENSIONS = ['.ts', '.tsx', '.json', '.md', '.html'];
+// Extensions that can't be meaningfully byte-compared as normalized text.
+// Everything else under a variant directory is traversed and compared —
+// deliberately a denylist, not an allowlist: an allowlist silently drops any
+// file whose extension nobody thought to add, which defeats the "a new file
+// is covered automatically" guarantee above.
+const EXCLUDED_EXTENSIONS = new Set([
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.webp',
+  '.avif',
+  '.ico',
+  '.svg',
+  '.woff',
+  '.woff2',
+  '.ttf',
+  '.eot',
+  '.otf',
+]);
 
 // Each group is a set of directories that are expected to be the same
 // package with a version token swapped. `denylist` names paths (relative to
@@ -61,13 +90,20 @@ const GROUPS = [
       { major: '22', dir: 'packages/component-driver-angular-material-v22' },
     ],
     denylist: new Set([
-      // Package identity and install snippets — correctly different per package.
-      'README.md',
       // Dependency majors are supposed to differ; DEP-PIN-01/02 already gate them.
       'package.json',
-      // Angular Material's CDK moved from an overlay-container strategy (v20) to
-      // a native-popover Top Layer host (v21/v22); these three files document
-      // exactly that split in prose and in which DOM node each locator walks to.
+    ]),
+    // Angular Material's CDK moved from an overlay-container strategy (v20) to
+    // a native-popover Top Layer host (v21/v22); these three files document
+    // exactly that split in prose and in which DOM node each locator walks to
+    // — the prose names sibling majors by number, own-major normalization
+    // alone can't collapse that. The locator/wait code itself does not branch
+    // on the major at all (each driver resolves the panel through Material's
+    // own aria-controls link, "insulated from that drift" per SelectDriver's
+    // own doc comment) — verified byte-identical across all three once every
+    // major's token is collapsed, so cross-major normalization loses no real
+    // coverage here, only the ability to catch a wrong major number in prose.
+    crossMajorNormalize: new Set([
       'src/components/SelectDriver.ts',
       'src/components/AutocompleteDriver.ts',
       'src/internal/overlayLocators.ts',
@@ -80,19 +116,17 @@ const GROUPS = [
       { major: '21', dir: 'package-tests/component-driver-angular-material-v21-test' },
       { major: '22', dir: 'package-tests/component-driver-angular-material-v22-test' },
     ],
+    // Each test package's dev server binds a fixed port (52<major>) so the
+    // three can run concurrently without colliding — normalize() collapses
+    // that port token, so vite.config.ts/playwright.config.ts (whose only
+    // divergence was that port, verified) need no denylist entry either.
     denylist: new Set([
-      'README.md',
-      'package.json',
-      // Each test package's dev server binds a fixed port (52<major>) so the
-      // three can run concurrently without colliding.
-      'vite.config.ts',
-      'playwright.config.ts',
-      // Both files carry a comment naming v20 vs v21/v22 by number to explain
-      // the CDK overlay-strategy split — same real divergence as the driver
-      // group above, just documented from the example app's side.
-      'src/examples/select/Select.examples.ts',
-      'src/examples/select/Select.suite.ts',
+      'package.json', // dependency majors are supposed to differ; DEP-PIN-01/02 gate them.
     ]),
+    // Same rationale and same verification as the driver group above — both
+    // files carry a comment naming v20 vs v21/v22 by number, from the example
+    // app's side of the same overlay-strategy split.
+    crossMajorNormalize: new Set(['src/examples/select/Select.examples.ts', 'src/examples/select/Select.suite.ts']),
   },
 ];
 
@@ -107,7 +141,21 @@ export function normalize(text, major) {
     .split(`V${major}`)
     .join('VXX')
     .split(`v${major}`)
-    .join('vXX');
+    .join('vXX')
+    .split(`52${major}`) // each test package's dev-server port, e.g. 5220/5221/5222 —
+    .join('52XX'); // bare digits, so the `v${major}` split above never touches it.
+}
+
+/**
+ * Like {@link normalize}, but collapses every major's own-token pattern, not
+ * just one — for the small set of files whose prose legitimately names
+ * sibling majors alongside their own. Not the default: replacing every major
+ * indiscriminately would also hide a real per-major typo (the wrong version
+ * number left behind after a copy-paste) that plain `normalize` still catches
+ * everywhere else it's used.
+ */
+export function normalizeAcrossMajors(text, majors) {
+  return majors.reduce((acc, major) => normalize(acc, major), text);
 }
 
 function collectRelativeFiles(root) {
@@ -119,7 +167,7 @@ function collectRelativeFiles(root) {
       const stat = statSync(abs);
       if (stat.isDirectory()) {
         walk(abs);
-      } else if (COMPARABLE_EXTENSIONS.some(ext => entry.endsWith(ext))) {
+      } else if (![...EXCLUDED_EXTENSIONS].some(ext => entry.endsWith(ext))) {
         results.push(relative(root, abs).split('\\').join('/'));
       }
     }
@@ -171,20 +219,35 @@ export function evaluate(groups) {
   return errors;
 }
 
-function gatherFacts() {
-  return GROUPS.map(group => {
-    const files = new Map();
-    for (const { major, dir } of group.variants) {
-      const abs = resolve(repoRoot, dir);
-      for (const relPath of collectRelativeFiles(abs)) {
-        if (group.denylist.has(relPath)) continue;
-        if (!files.has(relPath)) files.set(relPath, new Map());
-        const raw = readFileSync(join(abs, relPath), 'utf8');
-        files.get(relPath).set(major, normalize(raw, major));
-      }
+/**
+ * Gather one group's facts from disk. Exported (rather than inlined in
+ * {@link gatherFacts}) so tests can point `variants[].dir` at throwaway
+ * fixture directories instead of the real packages — the only way to prove
+ * the denylist / `crossMajorNormalize` filtering itself works, not just that
+ * {@link evaluate} can react to facts assembled by hand.
+ *
+ * @param {{label: string, variants: Array<{major: string, dir: string}>, denylist: Set<string>, crossMajorNormalize?: Set<string>}} group
+ */
+export function gatherGroupFacts(group) {
+  const majors = group.variants.map(v => v.major);
+  const files = new Map();
+  for (const { major, dir } of group.variants) {
+    const abs = resolve(repoRoot, dir);
+    for (const relPath of collectRelativeFiles(abs)) {
+      if (group.denylist.has(relPath)) continue;
+      if (!files.has(relPath)) files.set(relPath, new Map());
+      const raw = readFileSync(join(abs, relPath), 'utf8');
+      const content = group.crossMajorNormalize?.has(relPath)
+        ? normalizeAcrossMajors(raw, majors)
+        : normalize(raw, major);
+      files.get(relPath).set(major, content);
     }
-    return { label: group.label, majors: group.variants.map(v => v.major), files };
-  });
+  }
+  return { label: group.label, majors, files };
+}
+
+function gatherFacts() {
+  return GROUPS.map(gatherGroupFacts);
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
