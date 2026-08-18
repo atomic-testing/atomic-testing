@@ -649,7 +649,7 @@ export interface ScenePart extends Record<string, ScenePartDefinition> {}
 export type ScenePartDefinition = ComponentPartDefinition<ScenePart> | ListComponentPartDefinition<ComponentDriver<ScenePart>>;
 
 // @public (undocumented)
-export type ScenePartDriver<T extends ScenePart> = { [partName in keyof T]: InstanceType<T[partName]['driver']> };
+export type ScenePartDriver<T extends ScenePart> = { [partName in keyof T]: InstanceType<T[partName]['driver']>; };
 
 // @public
 export type ScenePlaceableDriverCtor = ComponentPartDefinition<ScenePart>['driver'];
