@@ -46,12 +46,12 @@ of what the target project happens to look like.
 ## Flag reference
 
 | Flag                               | Values                                                                                                        | Effect                                                                |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| `--framework`                      | `react` \| `vue` \| `angular`                                                                                | Override framework detection                                          |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `--framework`                      | `react` \| `vue` \| `angular`                                                                                 | Override framework detection                                          |
 | `--framework-major`                | integer                                                                                                       | Override the detected major version                                   |
-| `--runner`                         | `jest` \| `vitest` \| `vitest-browser` \| `playwright`                                                       | Choose the test runner                                                |
+| `--runner`                         | `jest` \| `vitest` \| `vitest-browser` \| `playwright`                                                        | Choose the test runner                                                |
 | `--design-system`                  | `html` \| `mui` \| `mui-x` \| `angular-material` \| `primevue` \| `radix` \| `shadcn` \| `astryx` \| `fluent` | Choose the driver package                                             |
-| `--package-manager`                | `npm` \| `pnpm` \| `yarn` \| `bun`                                                                           | Override lockfile-based detection                                     |
+| `--package-manager`                | `npm` \| `pnpm` \| `yarn` \| `bun`                                                                            | Override lockfile-based detection                                     |
 | `--typescript` / `--no-typescript` | —                                                                                                             | Force TypeScript on/off (default: detect)                             |
 | `--agents` / `--no-agents`         | —                                                                                                             | Emit the Claude Code testing skills + a CLAUDE.md guide (default: on) |
 | `--dir <path>`                     | path                                                                                                          | Target project directory (default: cwd)                               |

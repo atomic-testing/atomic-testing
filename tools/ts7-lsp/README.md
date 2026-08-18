@@ -17,11 +17,11 @@ in a Claude Code Cloud VM session.
 
 This repo runs TypeScript 7 and 6 side by side, following the official coexistence recipe:
 
-| Binary / import | Resolves to | Used for |
-| --- | --- | --- |
-| `tsc` | `@typescript/native` (`npm:typescript@^7.0.2`) | typecheck (`tsc --noEmit`) **and this LSP** |
-| `tsc6` | `@typescript/typescript6` (aliased as `typescript`) | classic CLI, if needed |
-| `import 'typescript'` | `@typescript/typescript6` (classic Strada API) | build/`.d.ts` (tsdown), TypeDoc, api-extractor |
+| Binary / import       | Resolves to                                         | Used for                                       |
+| --------------------- | --------------------------------------------------- | ---------------------------------------------- |
+| `tsc`                 | `@typescript/native` (`npm:typescript@^7.0.2`)      | typecheck (`tsc --noEmit`) **and this LSP**    |
+| `tsc6`                | `@typescript/typescript6` (aliased as `typescript`) | classic CLI, if needed                         |
+| `import 'typescript'` | `@typescript/typescript6` (classic Strada API)      | build/`.d.ts` (tsdown), TypeDoc, api-extractor |
 
 So `pnpm exec tsc --lsp --stdio` runs the **TS 7 native** language server — the same
 engine as CI's `tsc --noEmit`, so navigation and diagnostics match the typecheck. (This
@@ -38,14 +38,14 @@ can only give you navigation on _classic_ TypeScript, a different engine than th
 
 ## What's here
 
-| File | Purpose |
-| --- | --- |
-| `ts7-lsp-plugin/.lsp.json` | The LSP server config — runs `pnpm exec tsc --lsp --stdio`. |
-| `ts7-lsp-plugin/.claude-plugin/plugin.json` | Plugin manifest. |
-| `.claude-plugin/marketplace.json` | Local marketplace descriptor (`atomic-testing-ts7`). |
-| `enable.sh` | Idempotent install-if-missing. Shared by the setup script and the hook. |
-| `setup-script.example.sh` | Body to paste into the environment setup script (preferred path). |
-| `verify-navigation.py` | Reproducible acceptance test — drives `tsc --lsp` and reports resolution. |
+| File                                        | Purpose                                                                   |
+| ------------------------------------------- | ------------------------------------------------------------------------- |
+| `ts7-lsp-plugin/.lsp.json`                  | The LSP server config — runs `pnpm exec tsc --lsp --stdio`.               |
+| `ts7-lsp-plugin/.claude-plugin/plugin.json` | Plugin manifest.                                                          |
+| `.claude-plugin/marketplace.json`           | Local marketplace descriptor (`atomic-testing-ts7`).                      |
+| `enable.sh`                                 | Idempotent install-if-missing. Shared by the setup script and the hook.   |
+| `setup-script.example.sh`                   | Body to paste into the environment setup script (preferred path).         |
+| `verify-navigation.py`                      | Reproducible acceptance test — drives `tsc --lsp` and reports resolution. |
 
 ## Enabling it in a Cloud VM
 
@@ -89,9 +89,9 @@ definition of an imported `@atomic-testing/*` symbol.
 
 Empirically (via `verify-navigation.py`):
 
-| Navigation | Resolves to |
-| --- | --- |
-| **Within a package** (relative import) | the real source in `src/` ✓ |
+| Navigation                                | Resolves to                                 |
+| ----------------------------------------- | ------------------------------------------- |
+| **Within a package** (relative import)    | the real source in `src/` ✓                 |
 | **Across packages** (`@atomic-testing/*`) | the bundled `dist/*.d.mts` declaration file |
 
 Cross-package jumps land in the built declaration file, not source, because each
@@ -117,10 +117,10 @@ targets, so any `paths` mapping must use the TS7-compliant form above.
 
 ## Troubleshooting
 
-| Symptom | Cause / fix |
-| --- | --- |
-| No LSP tool in the session | Workspace not trusted, or plugin installed this session (run `/reload-plugins` or restart). |
-| Server silently absent | Claude Code < 2.1.205 skipping the restart fields — upgrade, or drop those two fields. |
-| `Executable not found` | `pnpm install` hasn't run; `tsc` isn't resolvable. |
-| Cross-package jumps go nowhere | `dist` not built — `pnpm --filter @atomic-testing/core build`. |
-| LSP works on native binary? | Yes, verified at 2.1.211. Older (≤2.1.15) native builds had a gap. |
+| Symptom                        | Cause / fix                                                                                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------- |
+| No LSP tool in the session     | Workspace not trusted, or plugin installed this session (run `/reload-plugins` or restart). |
+| Server silently absent         | Claude Code < 2.1.205 skipping the restart fields — upgrade, or drop those two fields.      |
+| `Executable not found`         | `pnpm install` hasn't run; `tsc` isn't resolvable.                                          |
+| Cross-package jumps go nowhere | `dist` not built — `pnpm --filter @atomic-testing/core build`.                              |
+| LSP works on native binary?    | Yes, verified at 2.1.211. Older (≤2.1.15) native builds had a gap.                          |
