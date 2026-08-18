@@ -188,13 +188,13 @@ await testEngine.parts.form.fillAndSubmit({
 
 The same amount of behavior driven through raw framework queries takes a query-and-fire block per field, repeated in every test that touches the form.
 
-| Situation             | Traditional per-framework testing         | Atomic Testing                       |
-| --------------------- | ----------------------------------------- | ------------------------------------ |
-| Framework migration   | Rewrite the tests                         | Change the engine creation           |
-| Library major upgrade | Update markup assertions across the suite | Update the driver package version    |
-| DOM + E2E coverage    | Duplicate the logic per runner            | Share one test body across runners   |
-| Refactoring internals | Tests break on markup changes             | Tests assert behavior, not markup    |
-| Onboarding            | Learn DOM and E2E patterns separately     | One driver API across environments   |
+| Situation             | Traditional per-framework testing         | Atomic Testing                     |
+| --------------------- | ----------------------------------------- | ---------------------------------- |
+| Framework migration   | Rewrite the tests                         | Change the engine creation         |
+| Library major upgrade | Update markup assertions across the suite | Update the driver package version  |
+| DOM + E2E coverage    | Duplicate the logic per runner            | Share one test body across runners |
+| Refactoring internals | Tests break on markup changes             | Tests assert behavior, not markup  |
+| Onboarding            | Learn DOM and E2E patterns separately     | One driver API across environments |
 
 ## When _not_ to use Atomic Testing
 
