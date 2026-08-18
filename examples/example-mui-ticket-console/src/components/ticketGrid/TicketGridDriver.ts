@@ -81,11 +81,11 @@ export class TicketGridDriver extends ComponentDriver<typeof parts> {
     await this.parts.rowMenu.selectByLabel(actionLabel);
   }
 
-  /** The data-row driver for the first row whose Title matches, or `null`. */
-  async getRowByTitle(title: string): Promise<DataGridDataRowDriver | null> {
+  /** The data-row driver for the first row whose Title matches, or `undefined`. */
+  async getRowByTitle(title: string): Promise<Optional<DataGridDataRowDriver>> {
     const titles = await this.getVisibleTitles();
     const index = titles.indexOf(title);
-    return index >= 0 ? this.parts.grid.getRow(index) : null;
+    return index >= 0 ? this.parts.grid.getRow(index) : undefined;
   }
 
   override get driverName(): string {

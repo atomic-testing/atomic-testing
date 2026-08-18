@@ -28,9 +28,9 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@atomic-testing/core": "^0.100.0",
-    "@atomic-testing/dom-core": "^0.100.0",
-    "@atomic-testing/react-19": "^0.100.0",
+    "@atomic-testing/core": "^0.103.0",
+    "@atomic-testing/dom-core": "^0.103.0",
+    "@atomic-testing/react-19": "^0.103.0",
     "@chevrotain/regexp-to-ast": "^11.0.3",
     "@docusaurus/module-type-aliases": "^3.10.1",
     "@docusaurus/plugin-content-docs": "3.10.1",
