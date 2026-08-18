@@ -76,10 +76,51 @@ Three details of that workflow are load-bearing and easy to undo by accident:
   credential that writes to the repository. Keep those two capabilities in
   separate workflows.
 
+### Letting release.yml push to main
+
+The workflow pushes twice: the release commit to `main`, then the `vX.Y.Z` tag.
+These answer to **different protections**: branch protection governs only the
+commit push, while the tag push is governed solely by tag rulesets (if any
+target `v*`), whose bypass is configured independently — so a run can land the
+commit and still have its tag rejected, and the fix for one lives in a
+different setting than the other. For the branch push, the fix depends on which
+kind of protection rejected it — the push error names it:
+
+- **`GH006: Protected branch update failed`** — a **classic** branch-protection
+  rule (Settings → Branches). Add the **github-actions** app under that rule's
+  "Allow specified actors to bypass required pull requests". Deploy keys cannot
+  bypass classic protection, so with a classic rule in place the app bypass is
+  the only automated-path option.
+- **`GH013: Repository rule violations`** — a **ruleset** (Settings → Rules).
+  Add a bypass for the **github-actions** app, or — if the Apps picker won't
+  offer it — enable the ruleset's built-in **"Deploy keys"** bypass and give the
+  workflow a key: create a write-access deploy key (Settings → Deploy keys),
+  store its private half as the `RELEASE_DEPLOY_KEY` Actions secret, and the
+  checkout in `release.yml` switches its pushes to that key over SSH. With the
+  secret absent the checkout falls back to `GITHUB_TOKEN`, so configuring the
+  key is opt-in.
+
+Running both kinds of protection on `main` means satisfying both; consolidating
+on a single ruleset keeps this one bypass list. And weigh the two bypasses
+differently, because their blast radii differ. The **app bypass** exempts the
+`GITHUB_TOKEN` of _every_ workflow that obtains `contents: write` — that is
+`release.yml` and `doc-deploy.yml`'s gh-pages push, not the release path alone.
+It is also why `doc-ci.yml` must stay on `contents: read`: that job executes
+repository code from the pull request it verifies, so a write grant there plus
+an app bypass would let any same-repo PR push straight to `main`. The **deploy
+key** is narrower — only a job that reads the `RELEASE_DEPLOY_KEY` secret can
+use it — but that secret is available to any workflow with secrets access, so
+treat it with the same care as any other write credential.
+
+v0.103.0's first dispatch hit exactly this: the run generated the release
+commit, the push was rejected with GH006, and — because the push is the first
+mutating step — nothing was left to clean up; after fixing the bypass,
+re-dispatching the same version was all it took.
+
 ### Cutting one by hand
 
-Only needed if `release.yml` cannot push to `main` — branch protection without a
-bypass for the GitHub Actions actor, which the run reports explicitly.
+Only needed if `release.yml` cannot push to `main` and the bypass above cannot
+be granted — the run reports the rejection explicitly.
 
 1. `pnpm bumpVersion X.Y.Z && pnpm changelog X.Y.Z`
 2. Open it as a PR titled `chore(release): X.Y.Z`, review the generated
