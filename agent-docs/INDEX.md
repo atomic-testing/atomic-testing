@@ -29,24 +29,27 @@ LLM-optimized docs for the `packages/` workspace of `atomic-testing` — a porta
 
 ## ADRs
 
-| ADR                                                        | Decision                                                                                              |
-| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [001](adr/001-component-driver-pattern.md)                 | Component-driver pattern with declarative scene parts.                                                |
-| [002](adr/002-interactor-abstraction.md)                   | `Interactor` abstraction for environment portability.                                                 |
-| [003](adr/003-version-specific-packages.md)                | Version-specific packages for React and MUI majors.                                                   |
-| [004](adr/004-shared-three-file-test-pattern.md)           | Shared three-file test pattern via `TestFrameworkMapper`.                                             |
-| [005](adr/005-drop-mui-5-support.md)                       | End of support for MUI 5 and MUI-X 5.                                                                 |
-| [006](adr/006-1.0-api-freeze-and-evolution.md)             | 1.0 public-API freeze, SemVer & deprecation policy.                                                   |
-| [007](adr/007-interactor-evolution-and-composition.md)     | Interactor evolution strategy & same-element `CssLocator.and` composition.                            |
-| [008](adr/008-css-dom-only-locator-boundary.md)            | The 1.0 locator boundary is CSS- and DOM-only.                                                        |
-| [010](adr/010-narrow-error-payload.md)                     | Narrow the error payload to a serializable shape.                                                     |
-| [011](adr/011-retract-locator-source-ast.md)               | Retract the locator descriptive `source` AST.                                                         |
-| [012](adr/012-remove-dead-clone-wait-from-interactor.md)   | Remove dead `clone()` / `wait()` from the `Interactor` contract.                                      |
-| [013](adr/013-angular-shared-core-thin-packages.md)        | Angular 20–22 support via a shared core and thin per-major packages.                                  |
-| [014](adr/014-extract-mui-5-to-separate-repo.md)           | Extract MUI 5 / MUI-X 5 to a separate repo, with full history.                                        |
-| [015](adr/015-component-driver-protected-primitives.md)    | Narrow `ComponentDriver`'s raw low-level primitives to `protected`.                                   |
-| [016](adr/016-defer-paths-src-cross-package-navigation.md) | Defer `paths→src` LSP source navigation; keep cross-package on built `.d.ts`.                         |
-| [017](adr/017-part-locator-chain-reshape.md)               | Reshape `PartLocator` to always be a chain; same-element `.and()` composition moves to `locatorUtil`. |
+| ADR                                                             | Decision                                                                                                      |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [001](adr/001-component-driver-pattern.md)                      | Component-driver pattern with declarative scene parts.                                                        |
+| [002](adr/002-interactor-abstraction.md)                        | `Interactor` abstraction for environment portability.                                                         |
+| [003](adr/003-version-specific-packages.md)                     | Version-specific packages for React and MUI majors.                                                           |
+| [004](adr/004-shared-three-file-test-pattern.md)                | Shared three-file test pattern via `TestFrameworkMapper`.                                                     |
+| [005](adr/005-drop-mui-5-support.md)                            | End of support for MUI 5 and MUI-X 5.                                                                         |
+| [006](adr/006-1.0-api-freeze-and-evolution.md)                  | 1.0 public-API freeze, SemVer & deprecation policy.                                                           |
+| [007](adr/007-interactor-evolution-and-composition.md)          | Interactor evolution strategy & same-element `CssLocator.and` composition.                                    |
+| [008](adr/008-css-dom-only-locator-boundary.md)                 | The 1.0 locator boundary is CSS- and DOM-only.                                                                |
+| [010](adr/010-narrow-error-payload.md)                          | Narrow the error payload to a serializable shape.                                                             |
+| [011](adr/011-retract-locator-source-ast.md)                    | Retract the locator descriptive `source` AST.                                                                 |
+| [012](adr/012-remove-dead-clone-wait-from-interactor.md)        | Remove dead `clone()` / `wait()` from the `Interactor` contract.                                              |
+| [013](adr/013-angular-shared-core-thin-packages.md)             | Angular 20–22 support via a shared core and thin per-major packages.                                          |
+| [014](adr/014-extract-mui-5-to-separate-repo.md)                | Extract MUI 5 / MUI-X 5 to a separate repo, with full history.                                                |
+| [015](adr/015-component-driver-protected-primitives.md)         | Narrow `ComponentDriver`'s raw low-level primitives to `protected`.                                           |
+| [016](adr/016-defer-paths-src-cross-package-navigation.md)      | Defer `paths→src` LSP source navigation; keep cross-package on built `.d.ts`.                                 |
+| [017](adr/017-part-locator-chain-reshape.md)                    | Reshape `PartLocator` to always be a chain; same-element `.and()` composition moves to `locatorUtil`.         |
+| [018](adr/018-findbyrole-accessible-role-locator.md)            | `findByRole` — a second, non-CSS resolution channel for computed accessible name via `AccessibleRoleLocator`. |
+| [019](adr/019-call-time-within-supersedes-container-content.md) | Call-time `ComponentDriver.within()` replaces `ContainerDriver` and its declared `content` option.            |
+| [020](adr/020-postcondition-ownership-driver-vs-suite.md)       | Postcondition ownership: which unmet conditions a driver may promise vs. what belongs in the suite.           |
 
 ## Fresh repo tree
 
