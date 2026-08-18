@@ -7,7 +7,7 @@
 import { Component } from 'vue';
 import { DOMInteractor } from '@atomic-testing/dom-core';
 import { ITestEngineOption } from '@atomic-testing/core';
-import { Plugin as Plugin_2 } from 'vue';
+import { RenderOptions } from '@testing-library/vue';
 import { ScenePart } from '@atomic-testing/core';
 import { TestEngine } from '@atomic-testing/core';
 
@@ -26,7 +26,7 @@ export class VueInteractor extends DOMInteractor {
 }
 
 // @public
-export type VuePluginInput = Plugin_2 | [Plugin_2, ...unknown[]];
+export type VuePluginInput = NonNullable<NonNullable<RenderOptions<unknown>['global']>['plugins']>[number];
 
 // @public (undocumented)
 export interface VueSFCLikeComponent {
