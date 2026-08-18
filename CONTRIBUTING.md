@@ -28,6 +28,11 @@ pnpm test:dom                   # Jest tests (run from the package directory)
 pnpm test:e2e                   # Playwright tests (requires dev server running)
 ```
 
+`check:lint` and `check:style` fix your tree in place. CI instead runs their
+verifying counterparts, `check:lint:verify` and `check:style:verify`, which
+write nothing and fail if anything is unformatted or unlinted — so commit what
+the fixing commands change.
+
 See the root [`CLAUDE.md`](CLAUDE.md) for the full command reference, including
 how to start the dev server for `test:e2e`.
 

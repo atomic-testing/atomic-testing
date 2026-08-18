@@ -44,7 +44,9 @@ From `CLAUDE.md` (toolchain: pnpm ≥10, Node ≥22.12; type-check via `tsc` (TS
 | Install          | `pnpm install`                             |
 | Type-check all   | `pnpm run check:type`                      |
 | Lint (autofix)   | `pnpm run check:lint`                      |
+| Lint (verify)    | `pnpm run check:lint:verify`               |
 | Format           | `pnpm run check:style`                     |
+| Format (verify)  | `pnpm run check:style:verify`              |
 | Unit (DOM/Jest)  | `pnpm test:dom` (in a package dir)         |
 | E2E (Playwright) | `pnpm test:e2e` (needs dev server running) |
 | Build a package  | `pnpm run build` (tsdown)                  |

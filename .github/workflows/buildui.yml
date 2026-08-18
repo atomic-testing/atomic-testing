@@ -66,11 +66,14 @@ jobs:
           name: built-packages
           path: packages
 
-      - name: Run code formatter
-        run: pnpm check:style
+      # Verifying variants: the bare check:style/check:lint scripts rewrite the
+      # working tree and always exit 0, so running them here reported success
+      # no matter what the tree looked like.
+      - name: Verify formatting
+        run: pnpm check:style:verify
 
-      - name: Run linter
-        run: pnpm check:lint
+      - name: Verify lint
+        run: pnpm check:lint:verify
 
   type-check:
     name: Type checking
