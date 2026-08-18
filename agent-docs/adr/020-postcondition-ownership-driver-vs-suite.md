@@ -7,8 +7,9 @@ Accepted (2026-08-18). Documents a doctrine already applied across four changes 
 `mui-x-v9` `PickerFieldDriverBase.clearField`, and `angular-material-v20/21/22`
 `TabsDriver` call sites (all landed together); the Angular Material
 `CheckboxDriver`/`RadioGroupDriver` split that motivated writing this down; and
-`SlideToggleDriver`'s reconciliation onto the same helper. Recorded now because the
-next driver fix that looks like a race needs a rule to apply, not four `git blame`s to
+`SlideToggleDriver`'s reconciliation onto the same helper (open as #1474 as of this
+writing — see the timeout-trap paragraph below). Recorded now because the next
+driver fix that looks like a race needs a rule to apply, not four `git blame`s to
 re-derive one.
 
 ## Context
@@ -57,17 +58,19 @@ questions, in order:
 
 **1. Is the value already correct, just mirrored somewhere that lags?** Some
 component state is set by the **browser itself**, as the native default action of
-the interaction — a checkbox's `:indeterminate` IDL slot, a radio's `:checked`
-pseudo-class, an input's `.value` after typing — and is therefore correct the
-instant the action resolves, before any framework render pass runs at all. A
-framework may _also_ render an ARIA mirror of that same fact (`aria-checked="mixed"`
-driven by `[attr.aria-checked]="indeterminate ? 'mixed' : null"`), and that mirror
-_can_ lag. If a read is racing the mirror, don't wait for the mirror to catch up —
-**read the browser-owned signal instead.**
-`CheckboxDriver.isIndeterminate` (`.../CheckboxDriver.ts:77-79`) does this: it moved
-from `aria-checked` to `:indeterminate`, which removes the race rather than
-outwaiting it. No probe, no timeout to tune, strictly stronger than a postcondition
-on the same driver would have been.
+the interaction — a checkbox's `HTMLInputElement.indeterminate` IDL property, a
+radio's `.checked` property, an input's `.value` after typing — and is therefore
+correct the instant the action resolves, before any framework render pass runs at
+all. `:indeterminate` and `:checked` are the CSS pseudo-classes a locator matches
+against to read those same properties, not a separate signal. A framework may
+_also_ render an ARIA mirror of the same fact (`aria-checked="mixed"` driven by
+`[attr.aria-checked]="indeterminate ? 'mixed' : null"`), and that mirror _can_ lag.
+If a read is racing the mirror, don't wait for the mirror to catch up — **read the
+browser-owned signal instead.** `CheckboxDriver.isIndeterminate`
+(`.../CheckboxDriver.ts:77-79`) does this: it moved from matching `aria-checked` to
+matching `:indeterminate`, which removes the race rather than outwaiting it. No
+probe, no timeout to tune, strictly stronger than a postcondition on the same
+driver would have been.
 
 **2. If not, does the driver's own read reach it?** If the state is a genuine
 property of the component the driver drives — reachable from the driver's own
@@ -88,8 +91,9 @@ needs to settle, colocated with the assertion it guards, matching the existing
 `Checkbox.suite.ts` `termsState` precedent and the `Radio.suite.ts` `flavorState`
 probe added alongside this doctrine.
 
-**The shipped idiom, for question 2.** Every driver-level call site follows the
-same shape:
+**The shipped idiom, for question 2.** The common call site — a driver action that
+needs the wait for more than one caller, or has more than one action that does —
+factors it into a private helper:
 
 ```ts
 private async awaitSelected(tab: TabDriver, postcondition: string): Promise<void> {
@@ -97,13 +101,15 @@ private async awaitSelected(tab: TabDriver, postcondition: string): Promise<void
 }
 ```
 
-— a `private async await<X>` helper, called as the action's last statement; the
-postcondition string phrased as the state that must arrive (`"the tab at index ${i}
-to report itself selected"`), not the action taken; no explicit `timeoutMs` unless
-the next paragraph applies. `reka-ui-v2`'s `awaitSelectionCommitted`
-(`SelectDriver.ts:272-273`) and `mui-x-v9`'s inline call in `clearField`
-(`PickerFieldDriverBase.ts:153`) are the other two original shapes this generalizes
-from.
+`private async await<X>`, called as the action's last statement; the postcondition
+string phrased as the state that must arrive (`"the tab at index ${i} to report
+itself selected"`), not the action taken; no explicit `timeoutMs` unless the next
+paragraph applies. `reka-ui-v2`'s `awaitSelectionCommitted` (`SelectDriver.ts:272-273`)
+follows the same shape. `mui-x-v9`'s `clearField` (`PickerFieldDriverBase.ts:153`)
+calls `awaitPostcondition` inline instead — a legitimate variant, not an exception:
+`clearField` is the only action on that driver needing the wait, so a helper would
+have no second caller to justify it. Reach for the helper once a second call site
+appears, not by default.
 
 **A timeout trap worth naming explicitly.** `awaitPostcondition` defaults to
 `defaultWaitForOption.timeoutMs` (30s), shared across the library so every wait
@@ -111,10 +117,12 @@ answers to one flake-tolerance knob (#1057). That default can exceed a test
 runner's _own_ per-test timeout — this package's Vitest browser-mode tests use the
 5s default, with no `testTimeout` override. When it does, the runner kills the test
 before `PostconditionNotMetError` ever gets a chance to report the real cause,
-defeating the entire point of a named diagnostic. `SlideToggleDriver.awaitToggled`
-(`SlideToggleDriver.ts:73-79`) passes an explicit `{ timeoutMs: 1000 }` for exactly
-this reason — check the runner's bound before leaving a postcondition on the
-library default.
+defeating the entire point of a named diagnostic. `SlideToggleDriver`'s
+reconciliation onto `awaitPostcondition` (open as of this writing — see #1474 —
+converting its pre-existing hand-rolled, silently-swallowed `waitUntil`) passes an
+explicit `{ timeoutMs: 1000 }` for exactly this reason, in a new `awaitToggled`
+helper following the same idiom: check the runner's bound before leaving a
+postcondition on the library default.
 
 ## Consequences
 
