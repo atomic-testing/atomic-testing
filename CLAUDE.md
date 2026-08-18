@@ -51,7 +51,9 @@ The local SCM may be **Git, Sapling (`sl`), or any git-compatible system** — t
 pnpm install                    # Install dependencies (Node.js >=22.13, pnpm >=10)
 pnpm run check:type             # Type check all packages with tsc (TypeScript 7 native)
 pnpm run check:lint             # oxlint with auto-fix (config: .oxlintrc.json)
+pnpm run check:lint:verify      # oxlint, no auto-fix — what CI runs
 pnpm run check:style            # Format with oxfmt (JS/TS/JSX/JSON/.md/.mdx; .css/.yaml left as-is)
+pnpm run check:style:verify     # oxfmt --check, writes nothing — what CI runs
 pnpm test:dom                   # Jest tests (in package directory)
 pnpm test:e2e                   # Playwright tests (requires dev server running)
 pnpm run build                  # Build package with tsdown
