@@ -289,6 +289,8 @@ export class MyDriver extends ComponentDriver<{}> implements IInputDriver<string
 
 > **And the ranges themselves** — `check:peer-floors` (PEER-01…04, [`scripts/check-peer-floors.mjs`](scripts/check-peer-floors.mjs)) holds the advertised peer ranges to the three rules ADR-006 §3 states: never advertise a range wider than one your own dependencies advertise for the same peer (a consumer in the gap satisfies you and breaks them), never declare a library as both a `dependency` and a `peerDependency` (the hard dep wins, so the peer is inert and a consumer gets a nested duplicate), and — for the `react-N`/`vue-N`/`angular-N` engines only — always bound the framework peer to your own major. Nothing else checks these: `auto-install-peers=true` plus `--no-frozen-lockfile` means every install resolves newest-satisfying, so a declared floor is prose that no CI run has ever executed.
 
+> **Fixing a bug in `component-driver-angular-material-v20/v21/v22`?** The three are the same drivers with a version token swapped, peer-locked one-to-one to their Angular major (the DEP-PIN-02 case just above) — so a fix belongs in all three unless a code comment says a specific behavior genuinely differs by Material major (the CDK's overlay-container-vs-native-popover split is the one that does today). `check:angular-material-parity` (PARITY-01/02, [`scripts/check-angular-material-parity.mjs`](scripts/check-angular-material-parity.mjs)) fails the build if a file in one major stops matching its siblings, modulo that version token. It exists because this went wrong for real: a Checkbox flakiness fix (#1472) landed on all three only because parity was checked by hand with a one-off shell diff before every push.
+
 ## Testing Pattern
 
 ### Simple DOM-Only Test

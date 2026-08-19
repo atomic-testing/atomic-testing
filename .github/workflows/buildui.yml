@@ -505,6 +505,14 @@ jobs:
       - name: Frozen-set agreement check
         run: pnpm check:frozen-set
 
+      # Angular Material per-major parity gate (PARITY-*): the v20/v21/v22
+      # driver and test packages are the same code with a version token
+      # swapped, peer-locked one-to-one to their Angular major (DEP-PIN-02) —
+      # but nothing enforced that they STAY the same. A fix landed on one
+      # major and not the other two is invisible to every other gate here.
+      - name: Angular Material parity check
+        run: pnpm check:angular-material-parity
+
       # The gates' own detection tests. A check that only ever runs against a
       # healthy tree proves it executed, not that it can still SEE the defect it
       # was written for — so each rule carries a fixture reintroducing the original
