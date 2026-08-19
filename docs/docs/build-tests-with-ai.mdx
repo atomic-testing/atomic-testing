@@ -1,16 +1,20 @@
 ---
-id: ai-assisted-testing
-title: AI-Assisted Testing with Claude Code Skills
-sidebar_label: AI-Assisted Testing
+id: build-tests-with-ai
+title: Build Tests with Claude Code Skills
+sidebar_label: Build Tests with AI
 ---
 
-# AI-Assisted Testing with Claude Code Skills
+# Build Tests with Claude Code Skills
 
 When [`create atomic-testing`](./quick-start.mdx) scaffolds your project, it also installs **four
 [Claude Code](https://claude.com/claude-code) skills** and a project `CLAUDE.md` guide. Together they
 mean an AI agent working in your repo already knows the component-driver method — so instead of
 learning driver decomposition and locator APIs before writing your first real test, you can describe
 what you want tested in plain language and review what the agent proposes.
+
+To be clear about where the AI sits: the skills help an agent **build** drivers and tests. What
+lands in your repo is ordinary atomic-testing code — deterministic, reviewable, and executed by
+your own test runner. Nothing about _running_ your test suite involves AI.
 
 :::tip The five-second version
 Scaffolded with the defaults? Open Claude Code in your project and say:

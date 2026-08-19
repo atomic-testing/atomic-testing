@@ -303,8 +303,8 @@ function HeroSection(): JSX.Element {
             <ScaffoldBox />
           </div>
 
-          <Link className={styles.heroWhyLink} to='/docs/ai-assisted-testing'>
-            Ships with Claude Code skills — let AI write the tests →
+          <Link className={styles.heroWhyLink} to='/docs/build-tests-with-ai'>
+            Ships with Claude Code skills — let AI build your tests →
           </Link>
           <Link className={styles.heroWhyLink} to='/docs/manual-installation'>
             Prefer to wire it up by hand? Manual install →
@@ -468,7 +468,7 @@ function ComposableSection(): JSX.Element {
 
 // The scaffolder installs four Claude Code testing skills by default; this
 // section surfaces that on the landing page (it was previously visible only in
-// the Quick Start file tree) and routes readers to /docs/ai-assisted-testing.
+// the Quick Start file tree) and routes readers to /docs/build-tests-with-ai.
 const agentPrompts: string[] = [
   'Write tests for CheckoutPage',
   'This test is flaky — diagnose it',
@@ -479,12 +479,13 @@ function AgentSkillsSection(): JSX.Element {
   return (
     <section className={styles.magic}>
       <header className={styles.sectionHead}>
-        <div className={clsx(styles.eyebrow, styles.eyebrowTeal)}>AI-assisted by default</div>
+        <div className={clsx(styles.eyebrow, styles.eyebrowTeal)}>AI builds the tests — your runner runs them</div>
         <h2 className={styles.sectionTitle}>Tell your agent what to test.</h2>
         <p className={styles.sectionSubtitle}>
           The scaffolder ships four Claude Code skills that teach an AI agent the component-driver method. Say what you
-          want covered — the agent reuses the drivers you installed, proposes a driver tree, writes the tests, and
-          verifies them in your own runner. You review the plan; it types the code.
+          want covered — the agent reuses the drivers you installed, proposes a driver tree, and writes the tests. What
+          lands in your repo is ordinary deterministic test code, verified by your own runner: AI helps build the suite,
+          it never runs it.
         </p>
       </header>
 
@@ -502,7 +503,7 @@ function AgentSkillsSection(): JSX.Element {
         <span>
           — installed by <code>create atomic-testing</code>, skipped with <code>--no-agents</code>.
         </span>
-        <Link className={styles.tradeoffsLink} to='/docs/ai-assisted-testing'>
+        <Link className={styles.tradeoffsLink} to='/docs/build-tests-with-ai'>
           Meet the skills →
         </Link>
       </div>

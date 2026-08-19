@@ -31,7 +31,7 @@ const sidebars = {
       items: [
         'why-atomic-testing', // The consolidated "why" — problem, solution, and the ROI case (absorbs the former Introduction)
         'quick-start', // `create atomic-testing` one-liner + 5-minute example
-        'ai-assisted-testing', // The Claude Code skills the scaffolder just installed — the lowest-typing path to a first real test
+        'build-tests-with-ai', // The Claude Code skills the scaffolder just installed — an agent builds the drivers/tests, your runner runs them
         'setup', // Runner config + step-by-step setup (must precede tutorial)
         'tutorial', // Detailed tutorial
       ],
