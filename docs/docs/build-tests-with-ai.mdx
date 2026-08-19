@@ -1,23 +1,27 @@
 ---
 id: build-tests-with-ai
-title: Build Tests with Claude Code Skills
+title: Build Tests with Agent Skills
 sidebar_label: Build Tests with AI
 ---
 
-# Build Tests with Claude Code Skills
+# Build Tests with Agent Skills
 
 When [`create atomic-testing`](./quick-start.mdx) scaffolds your project, it also installs **four
-[Claude Code](https://claude.com/claude-code) skills** and a project `CLAUDE.md` guide. Together they
-mean an AI agent working in your repo already knows the component-driver method — so instead of
-learning driver decomposition and locator APIs before writing your first real test, you can describe
-what you want tested in plain language and review what the agent proposes.
+agent skills** and a project `CLAUDE.md` guide. The skills are plain-Markdown `SKILL.md` workflows
+in the open [Agent Skills](https://agentskills.io) format, so they aren't tied to one tool:
+[Claude Code](https://claude.com/claude-code) and xAI's Grok Build discover them with zero setup,
+OpenAI's Codex CLI reads the same format, and any other agent can be pointed at them (see
+[Works with your agent](#works-with-your-agent)). Together they mean an AI agent working in your
+repo already knows the component-driver method — so instead of learning driver decomposition and
+locator APIs before writing your first real test, you can describe what you want tested in plain
+language and review what the agent proposes.
 
 To be clear about where the AI sits: the skills help an agent **build** drivers and tests. What
 lands in your repo is ordinary atomic-testing code — deterministic, reviewable, and executed by
 your own test runner. Nothing about _running_ your test suite involves AI.
 
 :::tip The five-second version
-Scaffolded with the defaults? Open Claude Code in your project and say:
+Scaffolded with the defaults? Open your coding agent in the project and say:
 
 > **Write tests for `CheckoutPage`**
 
@@ -39,10 +43,12 @@ your-project/
 └─ CLAUDE.md                              # names your detected framework, runner, and driver package
 ```
 
-A **skill** is a plain-Markdown workflow file that Claude Code loads automatically whenever your
-request matches its trigger — there is no command to memorize. The generated `CLAUDE.md` states your
-project's detected stack (framework, test engine, runner, driver package) so the agent reaches for
-the right packages without being told.
+A **skill** is a plain-Markdown workflow file that a skills-aware agent loads automatically
+whenever your request matches its trigger — there is no command to memorize. `.claude/skills/` is
+the canonical location: Claude Code and Grok Build discover it as-is, while Codex CLI looks in
+`.codex/skills/` (a copy or symlink away — see [Works with your agent](#works-with-your-agent)).
+The generated `CLAUDE.md` states your project's detected stack (framework, test engine, runner,
+driver package) so the agent reaches for the right packages without being told.
 
 ## The four skills
 
@@ -95,12 +101,22 @@ Prefer not to run it? The skills are plain files — copy the four directories f
 [`.claude/skills/`](https://github.com/atomic-testing/atomic-testing/tree/main/.claude/skills) in
 the atomic-testing repo into your project's `.claude/skills/`.
 
-### Not using Claude Code?
+### Works with your agent
 
-The skills are ordinary Markdown. Other coding agents can't auto-trigger them, but any agent that
-reads your repo can be pointed at `.claude/skills/<name>/SKILL.md` as instructions — "follow
-`.claude/skills/scaffold-test-driver/SKILL.md` to build a driver for `SettingsPanel`" works in any
-tool that accepts a prompt.
+The skills deliberately contain nothing vendor-specific — no Claude-only tools, no assumptions
+about which agent is reading them. How they load depends on the tool:
+
+| Agent                  | How the skills load                                                                                                                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Claude Code**        | Auto-discovers `.claude/skills/` — no setup.                                                                                                                                                       |
+| **Grok Build** (xAI)   | Reads `CLAUDE.md` and `.claude/` (skills included) natively — no setup.                                                                                                                            |
+| **Codex CLI** (OpenAI) | Supports the same `SKILL.md` format from `.codex/skills/` — copy or symlink the four skill directories there, or have your `AGENTS.md` point at `.claude/skills/`.                                 |
+| **Anything else**      | The skills are ordinary Markdown — point the agent at them: "follow `.claude/skills/scaffold-test-driver/SKILL.md` to build a driver for `SettingsPanel`" works in any tool that accepts a prompt. |
+
+One honest caveat: Claude Code is how the atomic-testing maintainers exercise these skills daily.
+Grok Build and Codex CLI compatibility follows from their adoption of the Agent Skills format
+rather than from this project's own CI — if you run the skills there, reports (good or bad) are
+welcome on the issue tracker.
 
 ## Where the skills come from
 

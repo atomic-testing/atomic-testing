@@ -304,7 +304,7 @@ function HeroSection(): JSX.Element {
           </div>
 
           <Link className={styles.heroWhyLink} to='/docs/build-tests-with-ai'>
-            Ships with Claude Code skills — let AI build your tests →
+            Ships with agent skills — let AI build your tests →
           </Link>
           <Link className={styles.heroWhyLink} to='/docs/manual-installation'>
             Prefer to wire it up by hand? Manual install →
@@ -466,9 +466,9 @@ function ComposableSection(): JSX.Element {
   );
 }
 
-// The scaffolder installs four Claude Code testing skills by default; this
-// section surfaces that on the landing page (it was previously visible only in
-// the Quick Start file tree) and routes readers to /docs/build-tests-with-ai.
+// The scaffolder installs four testing agent skills by default; this section
+// surfaces that on the landing page (it was previously visible only in the
+// Quick Start file tree) and routes readers to /docs/build-tests-with-ai.
 const agentPrompts: string[] = [
   'Write tests for CheckoutPage',
   'This test is flaky — diagnose it',
@@ -482,10 +482,10 @@ function AgentSkillsSection(): JSX.Element {
         <div className={clsx(styles.eyebrow, styles.eyebrowTeal)}>AI builds the tests — your runner runs them</div>
         <h2 className={styles.sectionTitle}>Tell your agent what to test.</h2>
         <p className={styles.sectionSubtitle}>
-          The scaffolder ships four Claude Code skills that teach an AI agent the component-driver method. Say what you
-          want covered — the agent reuses the drivers you installed, proposes a driver tree, and writes the tests. What
-          lands in your repo is ordinary deterministic test code, verified by your own runner: AI helps build the suite,
-          it never runs it.
+          The scaffolder ships four agent skills — read natively by Claude Code, Grok Build, and Codex CLI — that teach
+          your coding agent the component-driver method. Say what you want covered: the agent reuses the drivers you
+          installed, proposes a driver tree, and writes the tests. What lands in your repo is ordinary deterministic
+          test code, verified by your own runner. AI helps build the suite, it never runs it.
         </p>
       </header>
 
