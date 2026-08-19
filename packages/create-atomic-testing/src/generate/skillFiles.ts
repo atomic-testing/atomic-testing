@@ -53,15 +53,18 @@ function testCommand(ctx: GenerationContext): string {
  * gets a second-class guide; the never-clobber contract in `apply/` leaves any
  * existing file untouched (writing a sibling instead).
  */
+const AGENT_GUIDE_FILE_NAMES = ['CLAUDE.md', 'AGENTS.md'] as const;
+type AgentGuideFileName = (typeof AGENT_GUIDE_FILE_NAMES)[number];
+
 function agentGuideFiles(ctx: GenerationContext): FileOp[] {
-  return ['CLAUDE.md', 'AGENTS.md'].map(fileName => ({
+  return AGENT_GUIDE_FILE_NAMES.map(fileName => ({
     path: fileName,
     kind: 'agent-config',
     contents: agentGuideContents(ctx, fileName),
   }));
 }
 
-function agentGuideContents(ctx: GenerationContext, fileName: string): string {
+function agentGuideContents(ctx: GenerationContext, fileName: AgentGuideFileName): string {
   const lines = [
     `# ${fileName} — Atomic Testing`,
     '',

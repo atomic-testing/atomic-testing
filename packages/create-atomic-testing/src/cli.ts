@@ -51,7 +51,7 @@ ${pc.bold('Options')}
   --design-system <html|mui|mui-x|angular-material|primevue|radix|shadcn|astryx|fluent>
   --package-manager <npm|pnpm|yarn|bun>
   --typescript / --no-typescript    Force TypeScript on/off (default: detect)
-  --agents / --no-agents            Emit the Claude Code testing skills + a
+  --agents / --no-agents            Emit the testing agent skills + the
                                     CLAUDE.md + AGENTS.md guides (default: on)
   --dir <path>                      Target directory (default: cwd)
   -y, --yes                         Accept detected values, do not prompt
