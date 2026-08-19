@@ -40,9 +40,9 @@ export class SlideToggleDriver
   /**
    * Turn the toggle on or off by clicking the switch when its current state
    * differs from the desired one. The click's effect on `aria-checked` lands
-   * with Angular's change detection, so the new state is probed (bounded)
-   * rather than assumed — a straight follow-up read can beat the update under
-   * load.
+   * with Angular's change detection, so the action awaits the switch
+   * reporting the new state rather than assuming the click delivered it — a
+   * straight follow-up read can beat the update under load.
    *
    * No-ops on a disabled toggle rather than clicking it regardless: under
    * jsdom, `userEvent.click` already silently skips a disabled native
@@ -60,11 +60,22 @@ export class SlideToggleDriver
       return;
     }
     await this.interactor.click(this.switchLocator);
-    await this.interactor.waitUntil({
-      probeFn: () => this.isSelected(),
-      terminateCondition: selected,
-      timeoutMs: 1000,
-    });
+    await this.awaitToggled(selected);
+  }
+
+  /**
+   * Bounded well under the default {@link awaitPostcondition} timeout: this
+   * package's browser-mode tests run under Vitest's default 5s per-test
+   * timeout, which a 30s wait would blow through before
+   * {@link PostconditionNotMetError} ever had a chance to report the real
+   * cause.
+   */
+  private async awaitToggled(selected: boolean): Promise<void> {
+    await this.awaitPostcondition(
+      `the switch to report ${selected ? 'checked' : 'unchecked'}`,
+      async () => (await this.isSelected()) === selected,
+      { timeoutMs: 1000 }
+    );
   }
 
   /**
