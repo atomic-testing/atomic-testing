@@ -365,6 +365,10 @@ const config: Config = {
               to: '/docs/quick-start',
             },
             {
+              label: 'AI-assisted testing',
+              to: '/docs/ai-assisted-testing',
+            },
+            {
               label: 'Why Atomic Testing?',
               to: '/docs/why-atomic-testing',
             },

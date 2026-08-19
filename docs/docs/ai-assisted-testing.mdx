@@ -1,0 +1,106 @@
+---
+id: ai-assisted-testing
+title: AI-Assisted Testing with Claude Code Skills
+sidebar_label: AI-Assisted Testing
+---
+
+# AI-Assisted Testing with Claude Code Skills
+
+When [`create atomic-testing`](./quick-start.mdx) scaffolds your project, it also installs **four
+[Claude Code](https://claude.com/claude-code) skills** and a project `CLAUDE.md` guide. Together they
+mean an AI agent working in your repo already knows the component-driver method — so instead of
+learning driver decomposition and locator APIs before writing your first real test, you can describe
+what you want tested in plain language and review what the agent proposes.
+
+:::tip The five-second version
+Scaffolded with the defaults? Open Claude Code in your project and say:
+
+> **Write tests for `CheckoutPage`**
+
+The `scaffold-test-driver` skill takes over: it inventories the `@atomic-testing` drivers you
+already have installed, proposes a driver tree for the page, waits for your go-ahead, then writes
+the drivers, scene, and tests — and runs them in every runner your project configures.
+:::
+
+## What gets installed
+
+```text
+your-project/
+├─ .claude/
+│  └─ skills/
+│     ├─ scaffold-test-driver/SKILL.md    # create a driver tree for a component or page
+│     ├─ author-component-tests/SKILL.md  # write behavior tests against an existing tree
+│     ├─ diagnose-test-failure/SKILL.md   # classify and fix a red or flaky test
+│     └─ sync-test-driver/SKILL.md        # update a driver after the UI changed
+└─ CLAUDE.md                              # names your detected framework, runner, and driver package
+```
+
+A **skill** is a plain-Markdown workflow file that Claude Code loads automatically whenever your
+request matches its trigger — there is no command to memorize. The generated `CLAUDE.md` states your
+project's detected stack (framework, test engine, runner, driver package) so the agent reaches for
+the right packages without being told.
+
+## The four skills
+
+The skills cover the whole life of a test — **create → write → debug → maintain** — and hand off to
+each other, which is why the scaffolder always installs all four:
+
+| You say something like…                                                                        | Skill                    | What the agent does                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "Write tests for `CheckoutPage`" · "I need a driver for the settings panel" · "Test this page" | `scaffold-test-driver`   | Reuses the shipped drivers you already have, decomposes the component or page into a right-sized driver tree, **shows you the plan before writing any file**, then implements it with portable locators and verifies it in every configured runner. |
+| "Add a test for the empty state" · "Cover the case where saving fails"                         | `author-component-tests` | Translates a plain-language behavior into driver calls plus assertions against your existing tree — with anti-flake defaults (`waitUntil` probes instead of sleeps) applied from the start.                                                         |
+| "This test is flaky" · "It passes locally but fails in CI" · "Why is this red?"                | `diagnose-test-failure`  | Classifies the failure as flaky, brittle, vacuously green, or contaminated — confirms the diagnosis with a check, then applies the library's intended fix. Adding a sleep or stretching a timeout without a diagnosis is explicitly banned.         |
+| "I renamed the `data-testid`" · "This component changed — update its driver"                   | `sync-test-driver`       | Re-probes the current DOM, diffs it against every locator the driver assumes, and updates the driver in place without regenerating the tree or breaking hand-written methods.                                                                       |
+
+## What's left for you
+
+Less typing, not less control. The scaffolding skill stops at a **plan checkpoint** — a driver-tree
+diagram you approve before any file is written — and every skill runs your project's own test
+commands to prove its output, so what you review is a passing diff, not a promise.
+
+The skills also encode the same method the rest of these docs teach: reuse shipped drivers before
+writing new ones, keep drivers right-sized (the decomposition rules are narrated in
+[Decomposing driver trees](./guides/decomposing-driver-trees.md)), prefer portable locators, and
+verify in every environment. Understanding what came out is still worth your while — the
+[Step-by-Step Tutorial](./getting-started-tutorial.mdx) teaches the same workflow by hand, and
+[Core Concepts](./core-concepts.mdx) explains the pieces the agent assembled.
+
+## Getting the skills
+
+### Via the scaffolder (default)
+
+[`create atomic-testing`](./quick-start.mdx) writes the skills and `CLAUDE.md` **by default**; pass
+`--no-agents` to skip them. The flag reference lives in
+[Scaffold in CI / non-interactive](./guides/scaffold-in-ci.md).
+
+### Adding them to an existing project
+
+Installed the packages [by hand](./manual-installation.mdx), or scaffolded with `--no-agents`? Run
+the scaffolder now — it is safe on a configured project:
+
+```bash
+npm create atomic-testing@latest -- --no-install
+```
+
+It **never overwrites your files**: anything that already exists and differs (your runner config,
+your `CLAUDE.md`) is written as a `<file>.atomic-example` sibling for you to compare and delete,
+while the skills land in `.claude/skills/` as usual. `--no-install` skips dependency installation
+since your packages are already in place.
+
+Prefer not to run it? The skills are plain files — copy the four directories from
+[`.claude/skills/`](https://github.com/atomic-testing/atomic-testing/tree/main/.claude/skills) in
+the atomic-testing repo into your project's `.claude/skills/`.
+
+### Not using Claude Code?
+
+The skills are ordinary Markdown. Other coding agents can't auto-trigger them, but any agent that
+reads your repo can be pointed at `.claude/skills/<name>/SKILL.md` as instructions — "follow
+`.claude/skills/scaffold-test-driver/SKILL.md` to build a driver for `SettingsPanel`" works in any
+tool that accepts a prompt.
+
+## Where the skills come from
+
+They are the same skills the atomic-testing maintainers use to develop the library and its example
+apps, embedded verbatim into the scaffolder and kept in sync by CI — not a summary written for the
+docs. That's also why they're opinionated: they exist to keep generated driver trees consistent
+with the [best practices](./best-practices.mdx) these docs describe.
