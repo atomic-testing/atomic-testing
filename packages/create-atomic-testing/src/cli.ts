@@ -52,7 +52,7 @@ ${pc.bold('Options')}
   --package-manager <npm|pnpm|yarn|bun>
   --typescript / --no-typescript    Force TypeScript on/off (default: detect)
   --agents / --no-agents            Emit the Claude Code testing skills + a
-                                    CLAUDE.md guide (default: on)
+                                    CLAUDE.md + AGENTS.md guides (default: on)
   --dir <path>                      Target directory (default: cwd)
   -y, --yes                         Accept detected values, do not prompt
   --ci                              Non-interactive (implied when not a TTY)
