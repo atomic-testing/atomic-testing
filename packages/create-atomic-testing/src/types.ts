@@ -149,9 +149,10 @@ export interface RecipeSelection {
   readonly typescript: boolean;
   readonly packageManager: PackageManagerId;
   /**
-   * Emit the Claude Code testing skills (`.claude/skills/*`) and a project-root
-   * CLAUDE.md guide into the scaffolded project. Default-on; `--no-agents` opts
-   * out. Kept on the selection because it is a user choice that shapes generation.
+   * Emit the testing agent skills (`.claude/skills/*`) and the project-root
+   * agent guides (CLAUDE.md + AGENTS.md) into the scaffolded project.
+   * Default-on; `--no-agents` opts out. Kept on the selection because it is a
+   * user choice that shapes generation.
    */
   readonly agents: boolean;
 }

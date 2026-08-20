@@ -101,7 +101,7 @@ export function resolveRecipe(selection: RecipeSelection): RecipePlan {
   // mention of a feature they explicitly opted out of.
   if (effectiveSelection.agents) {
     nextSteps.push(
-      'Using Claude Code? `.claude/skills/` and `CLAUDE.md` are ready to help write and maintain tests — see https://atomic-testing.dev/docs/guides/decomposing-driver-trees to learn how.'
+      'Using a coding agent (Claude Code, Grok Build, Codex CLI, …)? `.claude/skills/`, `CLAUDE.md` and `AGENTS.md` are ready to help write and maintain tests — see https://atomic-testing.dev/docs/guides/decomposing-driver-trees to learn how.'
     );
   }
 

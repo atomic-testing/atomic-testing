@@ -3,9 +3,9 @@ import type { FileOp } from '../types';
 import { EMBEDDED_SKILLS } from './skillContent.generated';
 
 /**
- * Emit the Claude Code testing skills and a project-root CLAUDE.md guide when
- * the `agents` feature is on (default). Pure — like the rest of `generate/`, it
- * returns file operations and never touches disk.
+ * Emit the testing agent skills and the project-root agent guides (CLAUDE.md +
+ * AGENTS.md) when the `agents` feature is on (default). Pure — like the rest of
+ * `generate/`, it returns file operations and never touches disk.
  *
  * All four skills are emitted verbatim: they form a lifecycle
  * (scaffold → author → diagnose → sync) and cross-reference each other by name,
@@ -23,7 +23,7 @@ export function skillFileOps(ctx: GenerationContext): FileOp[] {
     kind: 'skill-file',
     contents: skill.contents,
   }));
-  return [...skills, agentGuideFile(ctx)];
+  return [...skills, ...agentGuideFiles(ctx)];
 }
 
 function enginePackage(ctx: GenerationContext): string {
@@ -45,13 +45,28 @@ function testCommand(ctx: GenerationContext): string {
 }
 
 /**
- * A minimal CLAUDE.md pointing an agent at the skills and stating this project's
- * detected stack. Emitted at the project root; the never-clobber contract in
- * `apply/` leaves any existing CLAUDE.md untouched (writing a sibling instead).
+ * A minimal agent guide pointing an agent at the skills and stating this
+ * project's detected stack, emitted at the project root as BOTH `CLAUDE.md`
+ * (read natively by Claude Code and Grok Build) and `AGENTS.md` (the
+ * cross-agent convention Codex CLI and the AGENTS.md-family tools read).
+ * The two carry identical content apart from the heading so neither ecosystem
+ * gets a second-class guide; the never-clobber contract in `apply/` leaves any
+ * existing file untouched (writing a sibling instead).
  */
-function agentGuideFile(ctx: GenerationContext): FileOp {
+const AGENT_GUIDE_FILE_NAMES = ['CLAUDE.md', 'AGENTS.md'] as const;
+type AgentGuideFileName = (typeof AGENT_GUIDE_FILE_NAMES)[number];
+
+function agentGuideFiles(ctx: GenerationContext): FileOp[] {
+  return AGENT_GUIDE_FILE_NAMES.map(fileName => ({
+    path: fileName,
+    kind: 'agent-config',
+    contents: agentGuideContents(ctx, fileName),
+  }));
+}
+
+function agentGuideContents(ctx: GenerationContext, fileName: AgentGuideFileName): string {
   const lines = [
-    '# CLAUDE.md — Atomic Testing',
+    `# ${fileName} — Atomic Testing`,
     '',
     'This project tests its UI with [Atomic Testing](https://atomic-testing.dev)',
     'and the component-driver pattern. When you write or maintain tests here,',
@@ -61,6 +76,10 @@ function agentGuideFile(ctx: GenerationContext): FileOp {
     '- `author-component-tests` — write behavior tests against an existing tree.',
     '- `diagnose-test-failure` — classify a flaky / brittle / vacuous / contaminated test.',
     '- `sync-test-driver` — update a driver after its component changed.',
+    '',
+    'The skills are plain-Markdown `SKILL.md` files (open Agent Skills format).',
+    "If your tool doesn't auto-discover `.claude/skills/`, read the relevant",
+    'skill file directly before starting the corresponding task.',
     '',
     "## This project's stack",
     '',
@@ -80,5 +99,5 @@ function agentGuideFile(ctx: GenerationContext): FileOp {
     '- The generated sample lives in `atomic-testing-example/`.',
     '',
   ];
-  return { path: 'CLAUDE.md', kind: 'agent-config', contents: lines.join('\n') };
+  return lines.join('\n');
 }

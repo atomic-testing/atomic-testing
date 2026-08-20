@@ -79,11 +79,16 @@ describe('applyPlan', () => {
     expect(raw).toContain('\n        "test": "jest"'); // 4-space base indent kept (8 inside scripts), not reformatted to 2
   });
 
-  it('writes the skill files and a CLAUDE.md guide into the project', () => {
+  it('writes the skill files and the CLAUDE.md + AGENTS.md guides into the project', () => {
     applyPlan(resolveRecipe(selection), root);
     expect(existsSync(join(root, '.claude/skills/scaffold-test-driver/SKILL.md'))).toBe(true);
     expect(existsSync(join(root, '.claude/skills/sync-test-driver/SKILL.md'))).toBe(true);
     expect(existsSync(join(root, 'CLAUDE.md'))).toBe(true);
+    expect(existsSync(join(root, 'AGENTS.md'))).toBe(true);
+    // Same guide for every agent ecosystem: identical apart from the heading.
+    const claudeGuide = readFileSync(join(root, 'CLAUDE.md'), 'utf8');
+    const agentsGuide = readFileSync(join(root, 'AGENTS.md'), 'utf8');
+    expect(claudeGuide.replace('# CLAUDE.md', '# AGENTS.md')).toBe(agentsGuide);
   });
 
   it('never clobbers an existing CLAUDE.md — writes a .atomic-example sibling', () => {
@@ -94,10 +99,19 @@ describe('applyPlan', () => {
     expect(result.files.some(f => f.path === 'CLAUDE.md.atomic-example' && f.outcome === 'wrote-example')).toBe(true);
   });
 
-  it('omits skills and CLAUDE.md when agents are disabled', () => {
+  it('never clobbers an existing AGENTS.md — writes a .atomic-example sibling', () => {
+    writeFileSync(join(root, 'AGENTS.md'), '# my agents config\n');
+    const result = applyPlan(resolveRecipe(selection), root);
+    expect(readFileSync(join(root, 'AGENTS.md'), 'utf8')).toBe('# my agents config\n');
+    expect(existsSync(join(root, 'AGENTS.md.atomic-example'))).toBe(true);
+    expect(result.files.some(f => f.path === 'AGENTS.md.atomic-example' && f.outcome === 'wrote-example')).toBe(true);
+  });
+
+  it('omits skills, CLAUDE.md and AGENTS.md when agents are disabled', () => {
     applyPlan(resolveRecipe({ ...selection, agents: false }), root);
     expect(existsSync(join(root, '.claude'))).toBe(false);
     expect(existsSync(join(root, 'CLAUDE.md'))).toBe(false);
+    expect(existsSync(join(root, 'AGENTS.md'))).toBe(false);
   });
 
   it('refuses to write outside the target root', () => {

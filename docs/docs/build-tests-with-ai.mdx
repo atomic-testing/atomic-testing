@@ -7,7 +7,7 @@ sidebar_label: Build Tests with AI
 # Build Tests with Agent Skills
 
 When [`create atomic-testing`](./quick-start.mdx) scaffolds your project, it also installs **four
-agent skills** and a project `CLAUDE.md` guide. The skills are plain-Markdown `SKILL.md` workflows
+agent skills** and project `CLAUDE.md` + `AGENTS.md` guides. The skills are plain-Markdown `SKILL.md` workflows
 in the open [Agent Skills](https://agentskills.io) format, so they aren't tied to one tool:
 [Claude Code](https://claude.com/claude-code) and xAI's Grok Build discover them with zero setup,
 OpenAI's Codex CLI reads the same format, and any other agent can be pointed at them (see
@@ -40,15 +40,18 @@ your-project/
 │     ├─ author-component-tests/SKILL.md  # write behavior tests against an existing tree
 │     ├─ diagnose-test-failure/SKILL.md   # classify and fix a red or flaky test
 │     └─ sync-test-driver/SKILL.md        # update a driver after the UI changed
-└─ CLAUDE.md                              # names your detected framework, runner, and driver package
+├─ CLAUDE.md                              # names your detected framework, runner, and driver package
+└─ AGENTS.md                              # the same guide for AGENTS.md-reading agents (Codex CLI, …)
 ```
 
 A **skill** is a plain-Markdown workflow file that a skills-aware agent loads automatically
 whenever your request matches its trigger — there is no command to memorize. `.claude/skills/` is
 the canonical location: Claude Code and Grok Build discover it as-is, while Codex CLI looks in
 `.codex/skills/` (a copy or symlink away — see [Works with your agent](#works-with-your-agent)).
-The generated `CLAUDE.md` states your project's detected stack (framework, test engine, runner,
-driver package) so the agent reaches for the right packages without being told.
+The generated `CLAUDE.md` and `AGENTS.md` carry the same guide — one for the Claude Code /
+Grok Build ecosystem, one for AGENTS.md-reading tools like Codex CLI — stating your project's
+detected stack (framework, test engine, runner, driver package) so the agent reaches for the right
+packages without being told.
 
 ## The four skills
 
@@ -79,8 +82,8 @@ verify in every environment. Understanding what came out is still worth your whi
 
 ### Via the scaffolder (default)
 
-[`create atomic-testing`](./quick-start.mdx) writes the skills and `CLAUDE.md` **by default**; pass
-`--no-agents` to skip them. The flag reference lives in
+[`create atomic-testing`](./quick-start.mdx) writes the skills and the `CLAUDE.md`/`AGENTS.md`
+guides **by default**; pass `--no-agents` to skip them. The flag reference lives in
 [Scaffold in CI / non-interactive](./guides/scaffold-in-ci.md).
 
 ### Adding them to an existing project
@@ -110,7 +113,7 @@ about which agent is reading them. How they load depends on the tool:
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Claude Code**        | Auto-discovers `.claude/skills/` — no setup.                                                                                                                                                       |
 | **Grok Build** (xAI)   | Reads `CLAUDE.md` and `.claude/` (skills included) natively — no setup.                                                                                                                            |
-| **Codex CLI** (OpenAI) | Supports the same `SKILL.md` format from `.codex/skills/` — copy or symlink the four skill directories there, or have your `AGENTS.md` point at `.claude/skills/`.                                 |
+| **Codex CLI** (OpenAI) | Supports the same `SKILL.md` format from `.codex/skills/` — copy or symlink the four skill directories there — the scaffolder's generated `AGENTS.md` already points Codex at `.claude/skills/`.   |
 | **Anything else**      | The skills are ordinary Markdown — point the agent at them: "follow `.claude/skills/scaffold-test-driver/SKILL.md` to build a driver for `SettingsPanel`" works in any tool that accepts a prompt. |
 
 One honest caveat: Claude Code is how the atomic-testing maintainers exercise these skills daily.
