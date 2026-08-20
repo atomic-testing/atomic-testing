@@ -303,6 +303,9 @@ function HeroSection(): JSX.Element {
             <ScaffoldBox />
           </div>
 
+          <Link className={styles.heroWhyLink} to='/docs/build-tests-with-ai'>
+            Ships with agent skills — let AI build your tests →
+          </Link>
           <Link className={styles.heroWhyLink} to='/docs/manual-installation'>
             Prefer to wire it up by hand? Manual install →
           </Link>
@@ -463,6 +466,51 @@ function ComposableSection(): JSX.Element {
   );
 }
 
+// The scaffolder installs four testing agent skills by default; this section
+// surfaces that on the landing page (it was previously visible only in the
+// Quick Start file tree) and routes readers to /docs/build-tests-with-ai.
+const agentPrompts: string[] = [
+  'Write tests for CheckoutPage',
+  'This test is flaky — diagnose it',
+  'SettingsPanel changed — update its driver',
+];
+
+function AgentSkillsSection(): JSX.Element {
+  return (
+    <section className={styles.magic}>
+      <header className={styles.sectionHead}>
+        <div className={clsx(styles.eyebrow, styles.eyebrowTeal)}>AI builds the tests — your runner runs them</div>
+        <h2 className={styles.sectionTitle}>Tell your agent what to test.</h2>
+        <p className={styles.sectionSubtitle}>
+          The scaffolder ships four agent skills — read natively by Claude Code, Grok Build, and Codex CLI — that teach
+          your coding agent the component-driver method. Say what you want covered: the agent reuses the drivers you
+          installed, proposes a driver tree, and writes the tests. What lands in your repo is ordinary deterministic
+          test code, verified by your own runner. AI helps build the suite, it never runs it.
+        </p>
+      </header>
+
+      <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {agentPrompts.map(prompt => (
+          <div key={prompt} className={styles.installBox} style={{ marginTop: 0 }}>
+            <span className={styles.installPrompt}>&gt;</span>
+            <code className={styles.installCmd}>{prompt}</code>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.magicCaption}>
+        <span className={styles.tealPill}>✓ scaffold · author · diagnose · sync</span>
+        <span>
+          — installed by <code>create atomic-testing</code>, skipped with <code>--no-agents</code>.
+        </span>
+        <Link className={styles.tradeoffsLink} to='/docs/build-tests-with-ai'>
+          Meet the skills →
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function TradeoffsSection(): JSX.Element {
   return (
     <section className={styles.tradeoffs}>
@@ -529,6 +577,7 @@ export default function Home(): JSX.Element {
         <MagicSection active={activeFramework} onSelect={setActiveFramework} />
         <ComposableSection />
         <HomepageFeatures />
+        <AgentSkillsSection />
         <TradeoffsSection />
         <FinalCtaSection />
       </main>
