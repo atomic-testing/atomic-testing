@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.104.0] - 2026-08-20
+
+### Features
+
+- **create-atomic-testing:** emit AGENTS.md alongside CLAUDE.md ([#1479](https://github.com/atomic-testing/atomic-testing/issues/1479))
+
+### Fixes
+
+- **angular-material:** read the checkbox indeterminate state from the control ([#1472](https://github.com/atomic-testing/atomic-testing/issues/1472))
+- **angular-material:** hold tab selection until the tab reports selected
+- **drivers:** make actions await their own postconditions
+- **vue-3:** derive VuePluginInput from testing-library's accepted plugin type
+
+### Refactoring
+
+- **angular-material:** make SlideToggleDriver's wait throw instead of swallow ([#1474](https://github.com/atomic-testing/atomic-testing/issues/1474))
+
+### Documentation
+
+- surface the scaffolded agent skills across the reader's journey ([#1478](https://github.com/atomic-testing/atomic-testing/issues/1478))
+- **adr:** record the postcondition ownership doctrine ([#1476](https://github.com/atomic-testing/atomic-testing/issues/1476))
+
+### Other
+
+- **angular-material:** gate v20/v21/v22 driver parity ([#1475](https://github.com/atomic-testing/atomic-testing/issues/1475))
+- **lint:** verify formatting and lint instead of silently fixing them ([#1473](https://github.com/atomic-testing/atomic-testing/issues/1473))
+
 ## [0.103.0] - 2026-08-17
 
 ### Breaking Changes
